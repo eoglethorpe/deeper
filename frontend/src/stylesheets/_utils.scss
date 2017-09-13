@@ -1,0 +1,20 @@
+@mixin shadow-medium() {
+    box-shadow: 0 2px 10px -3px $color-shadow-normal;
+}
+
+@mixin shadow-small() {
+    box-shadow: 0 1px 7px -2px $color-shadow-normal;
+}
+
+@mixin shadow-large() {
+    box-shadow: 0 3px 15px -5px $color-shadow-normal;
+}
+
+
+@mixin transition-medium() {
+    transition: .2s all ease-in-out;
+}
+
+@mixin transition-fast() {
+    transition: .1s all ease-in-out;
+}

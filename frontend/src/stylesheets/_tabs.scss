@@ -1,0 +1,70 @@
+@import '../../../stylesheets/base';
+
+.tabs-container {
+    height: 100%;
+    $tabbar-height: 48px;
+
+    .tabs-header-container {
+        @include shadow-small;
+        display: flex;
+        background-color: $color-foreground;
+        color: $color-primary;
+
+        .tab-header {
+            display: flex;
+            align-items: center;
+            border-bottom: $width-separator-normal solid transparent;
+            cursor: pointer;
+            padding: $spacing-large $spacing-super-large;
+            height: $tabbar-height;
+            text-transform: uppercase;
+            font-size: $font-size-medium;
+        }
+
+        :global .tab-link-active {
+            border-bottom-color: $color-accent;
+            background-color: lighten($color-accent, 40%);
+            color: $color-primary;
+            font-weight: $font-weight-medium;
+        }
+    }
+
+    .tabs-content {
+        height: calc(100% - #{$tabbar-height});
+    }
+}
+
+.tabs-container-vertical {
+    display: flex;
+    height: 100%;
+    $tabbar-width: 293px;
+
+    .tabs-header-container-vertical {
+        flex-basis: $tabbar-width;
+        flex-grow: 0;
+        flex-shrink: 0;
+        border-right: $width-separator-thin solid $color-separator;
+
+        .tab-header-vertical {
+            display: flex;
+            align-items: center;
+            border-bottom: $width-separator-thin solid $color-separator;
+            cursor: pointer;
+            padding: $spacing-large;
+            width: 100%;
+            text-transform: uppercase;
+        }
+
+        :global .tab-link-active {
+            background-color: lighten($color-accent, 40%);
+            color: $color-text;
+            border-left: 4px solid $color-accent;
+            font-weight: $font-weight-medium;
+        }
+    }
+
+    .tabs-content-vertical {
+        flex-basis: calc(100% - #{$tabbar-width});
+        padding: $spacing-small;
+    }
+}
