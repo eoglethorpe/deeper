@@ -5,6 +5,10 @@ services:
         image: postgres
         volumes:
             - ./postgres-data:/var/lib/postgresql/data
+    redis:
+        image: redis:latest
+        volumes:
+            - ./redis-data:/data
     web:
         build: .
         command: ['./wait-for-it.sh', 'db:5432', '--', '/code/run_develop.sh']
@@ -16,3 +20,4 @@ services:
             - '3000:3000'
         depends_on:
             - db
+            - redis

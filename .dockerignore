@@ -1,5 +1,6 @@
 media
 postgres-data
+redis-data
 
 production.env
 
