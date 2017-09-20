@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import Bundle from './Bundle';
 import PrivateRoute from './public/components/PrivateRoute';
 import styles from './styles.scss';
+import { pageTitles } from './common/utils/labels';
 
 const HomeScreen = props => (
     <Bundle load={() => import('./topic/HomeScreen/views')} {...props} />
@@ -21,23 +22,55 @@ class App extends React.Component {
         this.pages = [
             {
                 path: '/login',
-                name: 'Login',
+                name: pageTitles.login,
                 component: Login,
             },
             {
                 path: '/register',
-                name: 'Register',
-                component: () => <h1>Register</h1>,
+                name: pageTitles.register,
+                component: () => <h1>{pageTitles.register}</h1>,
             },
             {
                 path: '/',
-                name: 'Home',
+                name: pageTitles.dashboard,
                 component: HomeScreen,
                 private: true,
-                auth: {
-                    isAuthenticated: () => false,
-                    redirectTo: '/login',
-                },
+            },
+            {
+                path: '/:projectId/leads',
+                name: pageTitles.leads,
+                component: () => <h1>{pageTitles.leads}</h1>,
+                private: true,
+            },
+            {
+                path: '/:projectId/entries',
+                name: pageTitles.entries,
+                component: () => <h1>{pageTitles.entries}</h1>,
+                private: true,
+            },
+            {
+                path: '/:projectId/ary',
+                name: pageTitles.ary,
+                component: () => <h1>{pageTitles.ary}</h1>,
+                private: true,
+            },
+            {
+                path: '/:projectId/export',
+                name: pageTitles.export,
+                component: () => <h1>{pageTitles.export}</h1>,
+                private: true,
+            },
+            {
+                path: '/:projectId/leads/:leadId',
+                name: pageTitles.editLeads,
+                component: () => <h1>{pageTitles.editLeads}</h1>,
+                private: true,
+            },
+            {
+                path: '/:projectId/entries/:entryId',
+                name: pageTitles.editEntries,
+                component: () => <h1>{pageTitles.editEntries}</h1>,
+                private: true,
             },
         ];
     }
@@ -45,30 +78,27 @@ class App extends React.Component {
     render() {
         return (
             <div>
-                <div>
-                    <Switch>
-                        {
-                            this.pages.map(page => (
-                                page.private ? (
-                                    <PrivateRoute
-                                        exact
-                                        key={page.name}
-                                        path={page.path}
-                                        component={page.component}
-                                        auth={page.auth}
-                                    />
-                                ) : (
-                                    <Route
-                                        exact
-                                        key={page.name}
-                                        path={page.path}
-                                        component={page.component}
-                                    />
-                                )
-                            ))
-                        }
-                    </Switch>
-                </div>
+                <Switch>
+                    {
+                        this.pages.map(page => (
+                            page.private ? (
+                                <PrivateRoute
+                                    exact
+                                    key={page.name}
+                                    path={page.path}
+                                    component={page.component}
+                                />
+                            ) : (
+                                <Route
+                                    exact
+                                    key={page.name}
+                                    path={page.path}
+                                    component={page.component}
+                                />
+                            )
+                        ))
+                    }
+                </Switch>
             </div>
         );
     }

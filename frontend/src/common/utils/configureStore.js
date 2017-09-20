@@ -1,4 +1,5 @@
-import { createStore, applyMiddleware } from 'redux';
+import { compose, createStore, applyMiddleware } from 'redux';
+import { autoRehydrate } from 'redux-persist';
 import thunkMiddleware from 'redux-thunk';
 
 import reducer from '../reducers';
@@ -7,8 +8,11 @@ export default function configureStore(preloadedState) {
     return createStore(
         reducer,
         preloadedState,
-        applyMiddleware(
-            thunkMiddleware,
+        compose(
+            applyMiddleware(
+                thunkMiddleware,
+            ),
+            autoRehydrate(),
         ),
     );
 }
