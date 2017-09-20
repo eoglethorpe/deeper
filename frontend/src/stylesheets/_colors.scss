@@ -1,14 +1,17 @@
 $color-background: #e0e0e0;
 $color-background-header: #ececec;
+$color-background-header-alt: #e5e5e5;
 $color-background-alt-row: #f0f0f0;
 $color-background-disabled: rgba(0, 0, 0, .06);
 $color-foreground: #f8f8f8;
 $color-text: rgba(0, 0, 0, .8);
 $color-text-disabled: rgba(0, 0, 0, .3);
 $color-label: rgba(0, 0, 0, .5);
+$color-text-tab: rgba(0, 0, 0, .3);
 
 
 $color-primary: #34495e;
+$color-text-active-tab: $color-primary;
 $color-accent: #3498db;
 
 $color-danger: #e74c3c;
@@ -32,7 +35,7 @@ $color-shadow-normal: rgba(0, 0, 0, .5);
 $color-shadow-light: rgba(0, 0, 0, .3);
 $color-shadow-dark: rgba(0, 0, 0, .8);
 
-$color-background-hover: rgba(0, 0, 0, .04);
+$color-background-hover: #e5e5e5;
 
 $color-background-button-default: $color-foreground;
 $color-background-button-hover: #fff;

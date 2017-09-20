@@ -1,0 +1,10 @@
+@import '../../../../stylesheets/base';
+
+.login-form {
+    background-color: $color-foreground;
+    padding: $spacing-large;
+
+    .action-buttons {
+        margin-top: $spacing-medium;
+    }
+}
