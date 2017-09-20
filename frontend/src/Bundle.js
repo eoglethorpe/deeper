@@ -33,7 +33,7 @@ class Bundle extends Component {
     }
 
     render() {
-        return this.state.mod ? <this.state.mod /> : null;
+        return this.state.mod ? <this.state.mod {...this.props} /> : null;
     }
 }
 

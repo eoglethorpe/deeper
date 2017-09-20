@@ -1,0 +1,13 @@
+@import '../../../../stylesheets/base';
+
+.login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+
+    .login-form-wrapper {
+        width: 500px;
+    }
+}
