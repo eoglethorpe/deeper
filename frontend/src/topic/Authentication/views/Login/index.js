@@ -21,12 +21,24 @@ const mapDispatchToProps = dispatch => ({
 const loginProps = {
     login: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
+    location: PropTypes.shape({
+        state: PropTypes.shape({
+            from: PropTypes.shape({
+                pathname: PropTypes.string.isRequired,
+            }),
+        }),
+    }),
+};
+
+const loginDefaultProps = {
+    location: {},
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = loginProps;
+    static defaultProps = loginDefaultProps;
 
     render() {
         if (this.props.authenticated) {

@@ -1,6 +1,8 @@
-import React from 'react';
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Bundle from './Bundle';
 import PrivateRoute from './public/components/PrivateRoute';
@@ -15,7 +17,17 @@ const Login = props => (
 );
 
 
+const mapStateToProps = state => ({
+    authenticated: state.auth.authenticated,
+});
+
+
+@connect(mapStateToProps)
 class App extends React.Component {
+    static propTypes = {
+        authenticated: PropTypes.bool.isRequired,
+    };
+
     constructor(props) {
         super(props);
 
@@ -87,6 +99,7 @@ class App extends React.Component {
                                     key={page.name}
                                     path={page.path}
                                     component={page.component}
+                                    authenticated={this.props.authenticated}
                                 />
                             ) : (
                                 <Route
