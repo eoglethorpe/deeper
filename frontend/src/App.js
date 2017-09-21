@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Bundle from './Bundle';
@@ -9,11 +9,11 @@ import PrivateRoute from './public/components/PrivateRoute';
 import styles from './styles.scss';
 import { pageTitles } from './common/utils/labels';
 
-const HomeScreen = props => (
-    <Bundle load={() => import('./topic/HomeScreen/views')} {...props} />
+const HomeScreen = () => (
+    <Bundle load={() => import('./topic/HomeScreen/views')} />
 );
-const Login = props => (
-    <Bundle load={() => import('./topic/Authentication/views/Login')} {...props} />
+const Login = () => (
+    <Bundle load={() => import('./topic/Authentication/views/Login')} />
 );
 
 
@@ -23,6 +23,7 @@ const mapStateToProps = state => ({
 
 
 @connect(mapStateToProps)
+@CSSModules(styles)
 class App extends React.Component {
     static propTypes = {
         authenticated: PropTypes.bool.isRequired,
@@ -117,4 +118,4 @@ class App extends React.Component {
     }
 }
 
-export default CSSModules(App, styles);
+export default withRouter(App);
