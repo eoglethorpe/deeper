@@ -15,6 +15,9 @@ const HomeScreen = () => (
 const Login = () => (
     <Bundle load={() => import('./topic/Authentication/views/Login')} />
 );
+const Register = () => (
+    <Bundle load={() => import('./topic/Authentication/views/Register')} />
+);
 
 
 const mapStateToProps = state => ({
@@ -41,7 +44,7 @@ class App extends React.Component {
             {
                 path: '/register',
                 name: pageTitles.register,
-                component: () => <h1>{pageTitles.register}</h1>,
+                component: Register,
             },
             {
                 path: '/',

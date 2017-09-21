@@ -30,7 +30,7 @@ export default class LoginForm extends React.PureComponent {
             ],
             password: [
                 requiredCondition,
-                lengthGreaterThanCondition(5),
+                lengthGreaterThanCondition(4),
             ],
         };
 
@@ -102,7 +102,6 @@ export default class LoginForm extends React.PureComponent {
                 />
                 <TextInput
                     label="Password"
-                    hint="You can forget your girlfriend's birthday but not your password"
                     type="password"
                     required
 
