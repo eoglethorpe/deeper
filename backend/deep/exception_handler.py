@@ -2,6 +2,11 @@ from rest_framework.views import exception_handler
 from rest_framework.response import Response
 from rest_framework import status
 
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
@@ -23,5 +28,9 @@ def custom_exception_handler(exc, context):
 
     if hasattr(exc, 'link'):
         response.data['link'] = exc.link
+
+    if settings.DEBUG:
+        import traceback
+        logger.error(traceback.format_exc())
 
     return response
