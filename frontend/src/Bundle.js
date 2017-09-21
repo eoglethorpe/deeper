@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 
 class Bundle extends Component {
@@ -27,13 +28,13 @@ class Bundle extends Component {
 
         props.load().then((mod) => {
             this.setState({
-                mod: mod.default ? mod.default : mod,
+                mod: withRouter(mod.default ? mod.default : mod),
             });
         });
     }
 
     render() {
-        return this.state.mod ? <this.state.mod /> : null;
+        return this.state.mod ? <this.state.mod {...this.props} /> : null;
     }
 }
 
