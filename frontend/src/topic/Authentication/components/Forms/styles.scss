@@ -1,6 +1,7 @@
 @import '../../../../stylesheets/base';
 
-.login-form {
+.login-form,
+.register-form {
     background-color: $color-foreground;
     padding: $spacing-large;
 

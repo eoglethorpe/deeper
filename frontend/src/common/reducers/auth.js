@@ -1,6 +1,7 @@
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
+    REGISTER_ACTION,
 } from '../action-types/auth';
 
 
@@ -12,6 +13,12 @@ const initialAuthState = {
 const authReducer = (state = initialAuthState, action) => {
     switch (action.type) {
         case LOGIN_ACTION:
+            return {
+                ...initialAuthState,
+                authenticated: true,
+                email: action.email,
+            };
+        case REGISTER_ACTION:
             return {
                 ...initialAuthState,
                 authenticated: true,
