@@ -9,6 +9,7 @@ services:
     - docker
 
 before_install:
+    - eval "echo \"$(cat ./.env-travis-sample)\"" > ./.env
     - docker-compose build
 
 before_script:
@@ -20,8 +21,8 @@ script:
 notifications:
   slack:
     rooms:
-        - secure:
+        - secure: "V74yUcOmhjKMCyvX5DxZrdOEfkJmzwlB4jqUXCLHYI9maIj8wQGjgXTKjANHgHg4jJheStGXmjTN6cIpk4WLN5YS3DeaKpdpotrUp3m2BV+nt5cPEpjdeQVo5Biii+JY7D/0aiRre15BlT4m0GhrIaR1Gqto5LUNS1sRoF05nn0B8MnhFczcVdk3XipfRgeyvzZ7oWTaFnWN1TQXaqMesJYoBE2Jg0j6Jis6fZO2Mwuk2nxLzm4KptlLCZHPPXLmqwEybmRo/amK7BE0i3NeLp+25UtVImILDjc3jGhA+IH0yhrUF3Cy2rYKqA7MjDJBTFIsLMvIaZ5QjEyr9JCE2b4suOpkvKl4+l+oY0TrM67z1c4/AZK84KyPzNOzdJhv7IeBbRP7j8KgzZvYx7Lq9uyIZAji6yFY53bIFVYn+LztHKb1WYfj6yTC3eLVkdEHk8JtCLixn7I1k32wlreiUCwZ45JfL6ZKIiiF2rVbEVEDd2GE8Bx2SS6bKABLkr2HZEeqf9Xl0G5Xd98hXZ2wtPPmaRSRgmXwQJfe2kFflRgrW3qFmBka7p7oHMH2KJugScLW+ApZSkOfVneX4MpD3ttDGc7e4c7GpNAgXEhO4pvp+dsL3ADcokLqzjuRIxvMydcW4KqDKuNr44bs/IQhPNzt71iPKOTmuFJxNxk+BIA="
 
 env:
   global:
-      - secure:
+      - secure: "Xz8FKxk2qsmG4ELHozkfX0wyFv0DLottXYIha4LzJYXfqlqOV2fkIi1wEkiWrkFdYzQBR3H7XGhaOgqAL2ISgluDw2ZHQsnK7GYH2kHokou2Sd6FM/NasCq+K02/60vJzElnGJkcAQ+2qnZUz4xLaIUg/wYfrjRKUZOTdt1Ad/1z0d0CtWSckeYm7zKJ/KZgH7KgxMVSP27qHv5Tbi5e3uAXW7Rt5GsOm0KtRtZm/iREs6EgrjTa6NyCa++bx1Eth7vRRPm5wBtcv78u0Bu6r9k1Cg4IABKlTw3LAo/XYB7jLTfUrDkx75HhWl4NOIiLpxxtbyBIaoVf1puQwJEnLJPrifKoHmeyNrn379z4iMbfQ26iaB+6d54tt73mmjdcokUhu82NhDGbQSpBlLLamUSiqIx9hJxlTuxatBRnBc5PSmV9EhZg3ZzIIgvf2IMN2iUtOo2yaic2BKhbc5cfViIUoX9kBg/Ckpa3B+zkFocQCXVjHCwDYZTCI+cNYc4k3qy/fcZVDOl5HtV10GDsYSGeIGEXpb6GazlWTOCzxu9vvEb7DCexV8eYoBtsRDM9dujbL426clzzLtccNb5BJfKNte0+qJy+N54kPNR1UEu6IQKGcAe/kevIFaC2HMlxfLtV37Z+CgfQWDa1Aew73ubpCFY3Lv8QJi7zszA/co4="

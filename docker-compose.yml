@@ -11,6 +11,8 @@ services:
             - ./redis-data:/data
     web:
         build: .
+        env_file:
+            - .env
         command: ['./wait-for-it.sh', 'db:5432', '--', '/code/run_develop.sh']
         volumes:
             - .:/code
