@@ -4,8 +4,7 @@
 cd backend
 python manage.py migrate --no-input
 python manage.py createinitialrevisions
-python manage.py runserver 0.0.0.0:8000 --noworker &
-python manage.py runworker &
+python manage.py runserver 0.0.0.0:8000 &
 celery -A deep worker -l info &
 
 cd ../frontend
