@@ -26,6 +26,9 @@ from geo.views import (
     AdminLevelViewSet,
     AdminLevelUploadViewSet,
 )
+from lead.views import (
+        LeadViewSet
+)
 from deep.views import FrontendView
 
 
@@ -38,6 +41,7 @@ router.register(r'project-memberships', ProjectMembershipViewSet)
 router.register(r'regions', RegionViewSet)
 router.register(r'admin-levels', AdminLevelViewSet)
 router.register(r'admin-levels-upload', AdminLevelUploadViewSet)
+router.register(r'leads', LeadViewSet)
 
 
 urlpatterns = [
@@ -46,14 +50,14 @@ urlpatterns = [
 
     # Future reference: (v1|v2|v3...)
 
-    url(r'^api/(?P<version>(v1))/token/$', TokenObtainPairView.as_view()),
-    url(r'^api/(?P<version>(v1))/token/refresh/$', TokenRefreshView.as_view()),
+    url(r'^api/v1/token/$', TokenObtainPairView.as_view()),
+    url(r'^api/v1/token/refresh/$', TokenRefreshView.as_view()),
 
-    url(r'^api/(?P<version>(v1))/', include(router.urls)),
+    url(r'^api/v1/', include(router.urls)),
 
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
 
     # url(r'^docs/', include_docs_urls(title='DEEP API')),
-    url(r'^docs/', get_swagger_view(title='DEEP API')),
+    url(r'^api/v1/docs/', get_swagger_view(title='DEEP API')),
 ] + static.static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
