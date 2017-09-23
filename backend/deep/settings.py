@@ -2,6 +2,7 @@
 Django settings for deep project.
 """
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -19,6 +20,10 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DJANGO_DEBUG', True)
 
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST', '*')]
+
+
+# See if we are inside a test environment
+TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
 
 
 # Application definition
@@ -170,7 +175,6 @@ MEDIA_ROOT = '/media'
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://redis:6379')
 CELERY_RESULT_BACKEND = os.environ.get('REDIS_URL', 'redis://redis:6379')
 CELERY_TIMEZONE = TIME_ZONE
-
 
 # REDIS STORE CONFIG
 
