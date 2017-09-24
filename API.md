@@ -25,7 +25,7 @@ If an invalid or expired token is provided, a 401 error with message "Token is i
 ```json
 {
     "errorCode": 4012,
-    "errorMessage": "Token is invalid or expired",
+    "errors": "Token is invalid or expired",
     "timestamp": "2017-09-24T06:49:59.699010Z"
 }
 ```
@@ -39,7 +39,7 @@ An expired or invalid refresh token gives 400 error.
 ```json
 {
     "errorCode": 4001,
-    "errorMessage": {
+    "errors": {
         "nonFieldErrors": [
             "Token is invalid or expired"
         ]
