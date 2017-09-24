@@ -51,6 +51,8 @@ const loginDefaultProps = {
     location: {},
 };
 
+
+// TODO: move these somewhere else
 const wsEndpoint = '/api/v1';
 const POST = 'POST';
 const postHeader = {
@@ -63,7 +65,7 @@ const paramsForUserCreate = (firstname, lastname, organization, country, email, 
     method: POST,
     headers: {
         ...postHeader,
-        // get jwt token from store here
+        // TODO: get jwt token from store here
     },
     body: JSON.stringify({
         firstName: firstname,
@@ -76,21 +78,16 @@ const paramsForUserCreate = (firstname, lastname, organization, country, email, 
     }),
 });
 
-/*
-"username": "",
-    "display_picture": null,
-    "last_name": "",
-    "email": "",
-    "organization": "",
-    "password": "",
-    "first_name": ""
-    */
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = loginProps;
     static defaultProps = loginDefaultProps;
+
+    constructor(props) {
+        super(props);
+        this.state = { pending: false };
+    }
 
     onRegister = (firstname, lastname, organization, country, email, password) => {
         const url = urlForUserCreate();
@@ -98,7 +95,11 @@ export default class Login extends React.PureComponent {
             firstname, lastname, organization, country, email, password,
         );
 
-        const someRequest = new RestBuilder()
+        // Stop any retry action
+        if (this.userCreateRequest) {
+            this.userCreateRequest.stop();
+        }
+        this.userCreateRequest = new RestBuilder()
             .url(url)
             .params(paramsFn)
             .success((response) => {
@@ -106,27 +107,43 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'userCreateResponse');
                     console.log('schema validation passed');
+
+                    // TODO: register will get tokens, save those
+                    // not the form data
+                    this.props.register(
+                        firstname,
+                        lastname,
+                        organization,
+                        country,
+                        email,
+                        password,
+                    );
                 } catch (er) {
                     console.log(er);
                 }
-
-                // TODO: register will get tokens, save those
-                // not the form data
-                this.props.register(
-                    firstname,
-                    lastname,
-                    organization,
-                    country,
-                    email,
-                    password,
-                );
+                this.setState({ pending: false });
             })
             .failure((response) => {
-                console.log('error:', response);
+                console.log('failure error:', response);
+                const { errors } = response;
+                const formErrors = {};
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formErrors[key] = errors[key].join(' ');
+                    }
+                });
+                formErrors.email = formErrors.username;
+
+                this.setState({ pending: false, formErrors });
+            })
+            .fatal((response) => {
+                console.log('fatal error', response);
+                this.setState({ pending: false });
             })
             .build();
 
-        someRequest.start();
+        this.setState({ pending: true });
+        this.userCreateRequest.start();
     }
 
     render() {
@@ -137,11 +154,15 @@ export default class Login extends React.PureComponent {
             );
         }
 
+        // TODO: Add div to show error from rest request
+
         return (
             <div styleName="register">
                 <div styleName="register-form-wrapper">
                     <RegisterForm
                         onRegister={this.onRegister}
+                        formErrors={this.state.formErrors}
+                        pending={this.state.pending}
                     />
                 </div>
             </div>

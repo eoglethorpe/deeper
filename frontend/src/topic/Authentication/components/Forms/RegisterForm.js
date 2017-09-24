@@ -11,12 +11,20 @@ import Form, {
     lengthGreaterThanCondition,
 } from '../../../../public/utils/Form';
 
+const propTypes = {
+    onRegister: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
+    formErrors: PropTypes.object.isRequired, // eslint-disable-line
+};
+
+const defaultProps = {
+    formErrors: {},
+};
 
 @CSSModules(styles)
 export default class LoginForm extends React.PureComponent {
-    static propTypes = {
-        onRegister: PropTypes.func.isRequired,
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -64,7 +72,6 @@ export default class LoginForm extends React.PureComponent {
                 data.email,
                 data.password,
             );
-            console.log(data);
         };
 
         form.setElements(elements);
@@ -80,9 +87,15 @@ export default class LoginForm extends React.PureComponent {
         this.form = form;
 
         this.state = {
-            formErrors: {},
             formValues: {},
+            formErrors: this.props.formErrors,
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.formErrors !== nextProps.formErrors) {
+            this.setState({ formErrors: nextProps.formErrors });
+        }
     }
 
     onFocus = (overrideName) => {
@@ -156,7 +169,9 @@ export default class LoginForm extends React.PureComponent {
                     onChange={this.onChange}
                 />
                 <div styleName="action-buttons">
-                    <PrimaryButton>
+                    <PrimaryButton
+                        disabled={this.props.pending}
+                    >
                         Register
                     </PrimaryButton>
                 </div>
