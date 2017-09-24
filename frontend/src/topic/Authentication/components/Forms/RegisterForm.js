@@ -6,19 +6,21 @@ import styles from './styles.scss';
 import { PrimaryButton } from '../../../../public/components/Button';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
-    requiredCondition,
     emailCondition,
     lengthGreaterThanCondition,
+    requiredCondition,
 } from '../../../../public/utils/Form';
 
 const propTypes = {
+    formErrors: PropTypes.object.isRequired, // eslint-disable-line
+    formValues: PropTypes.object.isRequired, // eslint-disable-line
     onRegister: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    formErrors: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
     formErrors: {},
+    formValues: {},
 };
 
 @CSSModules(styles)
@@ -87,7 +89,7 @@ export default class LoginForm extends React.PureComponent {
         this.form = form;
 
         this.state = {
-            formValues: {},
+            formValues: this.props.formValues,
             formErrors: this.props.formErrors,
         };
     }

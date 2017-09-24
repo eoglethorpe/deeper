@@ -4,8 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { RegisterForm } from '../../components/Forms';
 import { register } from '../../../../common/action-creators/auth';
+import { RegisterForm } from '../../components/Forms';
 import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
@@ -35,7 +35,7 @@ const mapDispatchToProps = dispatch => ({
     ),
 });
 
-const loginProps = {
+const propTypes = {
     register: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     location: PropTypes.shape({
@@ -47,7 +47,7 @@ const loginProps = {
     }),
 };
 
-const loginDefaultProps = {
+const defaultProps = {
     location: {},
 };
 
@@ -81,12 +81,19 @@ const paramsForUserCreate = (firstname, lastname, organization, country, email, 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
-    static propTypes = loginProps;
-    static defaultProps = loginDefaultProps;
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
         this.state = { pending: false };
+    }
+
+    componentWillUnmount() {
+        // Stop any retry action
+        if (this.userCreateRequest) {
+            this.userCreateRequest.stop();
+        }
     }
 
     onRegister = (firstname, lastname, organization, country, email, password) => {
@@ -102,11 +109,14 @@ export default class Login extends React.PureComponent {
         this.userCreateRequest = new RestBuilder()
             .url(url)
             .params(paramsFn)
+            .decay(0.3)
+            .maxRetryTime(2000)
+            .maxRetryAttempts(10)
             .success((response) => {
-                console.log('success:', response);
+                console.info('SUCCESS:', response);
                 try {
                     schema.validate(response, 'userCreateResponse');
-                    console.log('schema validation passed');
+                    console.info('Schema validation passed');
 
                     // TODO: register will get tokens, save those
                     // not the form data
@@ -119,12 +129,12 @@ export default class Login extends React.PureComponent {
                         password,
                     );
                 } catch (er) {
-                    console.log(er);
+                    console.error(er);
                 }
                 this.setState({ pending: false });
             })
             .failure((response) => {
-                console.log('failure error:', response);
+                console.info('FAILURE:', response);
                 const { errors } = response;
                 const formErrors = {};
                 Object.keys(errors).forEach((key) => {
@@ -137,7 +147,7 @@ export default class Login extends React.PureComponent {
                 this.setState({ pending: false, formErrors });
             })
             .fatal((response) => {
-                console.log('fatal error', response);
+                console.info('FATAL:', response);
                 this.setState({ pending: false });
             })
             .build();
@@ -154,14 +164,14 @@ export default class Login extends React.PureComponent {
             );
         }
 
-        // TODO: Add div to show error from rest request
-
+        // TODO: Add div to show error from rest request for nonFieldErrors
         return (
             <div styleName="register">
                 <div styleName="register-form-wrapper">
                     <RegisterForm
                         onRegister={this.onRegister}
                         formErrors={this.state.formErrors}
+                        formValues={{ organization: 'togglecorp' }}
                         pending={this.state.pending}
                     />
                 </div>
