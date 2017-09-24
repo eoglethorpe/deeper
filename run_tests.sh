@@ -6,6 +6,8 @@ BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Goto backend directory
 cd $BASE_DIR
 
+. /venv/bin/activate
+
 # Wait for the database
 $BASE_DIR/wait-for-it.sh db:5432
 
