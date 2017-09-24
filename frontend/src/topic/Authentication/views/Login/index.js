@@ -40,6 +40,10 @@ export default class Login extends React.PureComponent {
     static propTypes = loginProps;
     static defaultProps = loginDefaultProps;
 
+    onLogin = (email, password) => {
+        this.props.login(email, password);
+    }
+
     render() {
         if (this.props.authenticated) {
             const { from } = this.props.location.state || { from: { pathname: '/' } };
@@ -52,7 +56,7 @@ export default class Login extends React.PureComponent {
             <div styleName="login">
                 <div styleName="login-form-wrapper">
                     <LoginForm
-                        onLogin={(email, password) => this.props.login(email, password)}
+                        onLogin={this.onLogin}
                     />
                 </div>
             </div>

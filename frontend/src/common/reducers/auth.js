@@ -21,7 +21,7 @@ const authReducer = (state = initialAuthState, action) => {
         case REGISTER_ACTION:
             return {
                 ...initialAuthState,
-                authenticated: true,
+                authenticated: false, // TODO: not authenticated yet
                 email: action.email,
             };
         case LOGOUT_ACTION:
