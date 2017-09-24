@@ -14,6 +14,7 @@ before_install:
     - env > .env
     - ci_env=`bash <(curl -s https://codecov.io/env)`
     - eval "echo \"$(echo $ci_env | sed 's/-e /\n/g' | sed 's/ //g' |sed "s \(.*\) \1\='$\1' " | sed 's/ $//g')\"" >> .env
+    - echo .env
     - docker-compose build
 
 before_script:
