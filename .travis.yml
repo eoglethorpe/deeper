@@ -13,7 +13,7 @@ before_install:
     - git clone https://gitlab.com/toggle-corp/react-store.git frontend/src/public
     - env > .env
     - ci_env=`bash <(curl -s https://codecov.io/env)`
-    - eval "echo \"$(echo $ci_env | sed 's/-e /\n/g' | sed 's/ //g' |sed "s \(.*\) \1\='$\1' " | sed 's/ $//g')\"" > .env
+    - eval "echo \"$(echo $ci_env | sed 's/-e /\n/g' | sed 's/ //g' |sed "s \(.*\) \1\='$\1' " | sed 's/ $//g')\"" >> .env
     - docker-compose build
 
 before_script:
