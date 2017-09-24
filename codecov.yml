@@ -1,0 +1,3 @@
+fixes:
+  - "/code/backend/::backend/"  # move path   e.g., "before/path" => "after/path"
+  - "/code/frontend/::frontend/"  # move path   e.g., "before/path" => "after/path"

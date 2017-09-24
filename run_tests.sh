@@ -4,13 +4,12 @@
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Goto backend directory
-cd $BASE_DIR/backend
-
-. /venv/bin/activate
+cd $BASE_DIR
 
 # Wait for the database
 $BASE_DIR/wait-for-it.sh db:5432
 
 # Run other test as requeired
-coverage run --source='.' manage.py test
-codecov --token=$CODECOV_TOKEN
+#coverage run --source='.' manage.py test
+#codecov --token=$CODECOV_TOKEN
+tox

@@ -9,9 +9,9 @@ services:
     - docker
 
 before_install:
-    - eval "echo \"$(cat ./.env-travis-sample)\"" > ./.env
     - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${GITLAB_TOKEN}" > ~/.netrc
     - git clone https://gitlab.com/toggle-corp/react-store.git frontend/src/public
+    - env > .env
     - docker-compose build
 
 before_script:
