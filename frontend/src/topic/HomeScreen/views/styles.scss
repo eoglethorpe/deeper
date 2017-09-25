@@ -2,9 +2,16 @@
 
 .home-screen {
     display: flex;
+    flex-wrap: wrap;
+    align-content: center;
     align-items: center;
     justify-content: center;
     width: 100vw;
     height: 100vh;
     font-size: 5em;
+
+    p {
+        flex-basis: 100%;
+        text-align: center;
+    }
 }

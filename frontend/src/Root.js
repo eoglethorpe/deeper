@@ -21,14 +21,35 @@ export default class Root extends React.Component {
     componentWillMount() {
         const afterRehydrateCallback = () => this.setState({ rehydrated: true });
         // FIXME: load params and pass it instead of undefined
-        persistStore(this.store, undefined, () => afterRehydrateCallback);
+        // persistStore(this.store, undefined, () => afterRehydrateCallback);
+        persistStore(this.store, undefined, afterRehydrateCallback);
+    }
+
+    getRandomLoadingMessage = () => {
+        const lines = [
+            'Locating the required gigapixels to render ...',
+            'Spinning up the hamster ...',
+            'Shovelling coal into the server ...',
+            'Programming the flux capacitor ...',
+        ];
+
+        return lines[Math.round(Math.random() * (lines.length - 1))];
     }
 
     render() {
         if (!this.state.rehydrated) {
-            // Empty div unless the redux store is not rehydrated
+            // A simple message till the redux store is not rehydrated
             return (
-                <div />
+                <div
+                    style={{
+                        height: '100vh',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    { this.getRandomLoadingMessage() }
+                </div>
             );
         }
 
