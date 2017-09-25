@@ -3,6 +3,9 @@
 Websockets are used by clients to subscribe and unsubscribe to different events in the server.
 Client sends requests to server on websocket for subscriptions. Once subscribed, the server will notify the client whenever the subscribed event occurs.
 
+> In each request, a sequence number needs to be provided with key `sn` and the client should expect
+the response to contain the same sequence number.
+
 ## Authroization and connection
 
 Connect to the subscription endpoint at the following path. The client must pass an *access_token* available through the REST API.
@@ -19,6 +22,7 @@ It is a simple json request with action field set as `hb`.
 
 ```json
 {
+    "sn": 123,
     "action": "hb"
 }
 ```
@@ -27,6 +31,7 @@ It should expect a timestamp in the response and nothing else.
 
 ```json
 {
+    "sn": 123,
     "timestamp": "2017-09-24T12:41:54.131068Z"
 }
 ```
@@ -38,6 +43,7 @@ the user wants to be notified.
 
 ```json
 {
+    "sn": 123,
     "action": "subscribe",
     "channel": "<channel_name>",
     "event": "<event_name>",
@@ -50,6 +56,7 @@ Available channels, events and their corresponding parameters are listed at the 
 Expected response:
 ```json
 {
+    "sn": 123,
     "success": true,
     "code": "<subscription_code>"
 }
@@ -61,6 +68,7 @@ To unsubscribe to all events:
 
 ```json
 {
+    "sn": 123,
     "action": "unsubscribe",
     "channel": "all"
 }
@@ -69,6 +77,7 @@ To unsubscribe to all events:
 To unsubscribe to particular event:
 ```json
 {
+    "sn": 123,
     "action": "unsubscribe",
     "channel": "<channel_name>",
     "event": "<event_name>",
@@ -80,6 +89,7 @@ Expected response:
 
 ```json
 {
+    "sn": 123,
     "success": true,
     "unsubscribed_codes": ["<list_of_subscription_codes>"]
 }
@@ -91,6 +101,7 @@ When an error is encountered, `success: false` is sent along with the `error_cod
 
 ```json
 {
+    "sn": 123,
     "success": false,
     "error_code": 403,
     "error": "Permission denied"
@@ -102,7 +113,8 @@ Some common error codes are as follows:
 
 * 403 : Permission denied
 
-* 40011 : Action not provided or invalid
+* 40011: Sequence number not provided
+* 40012: Action not provided or invalid
 * 40021 : Channel not provided or invalid
 * 40022 : Event not provided or invalid
 * 40023 : Field not provided or invalid
