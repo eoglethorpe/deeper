@@ -89,6 +89,16 @@ export default class App extends React.Component {
                 component: () => <h1>{pageTitles.editEntries}</h1>,
                 private: true,
             },
+            {
+                path: '/users/:userId',
+                name: pageTitles.userProfile,
+                component: () => <h1>{pageTitles.userProfile}</h1>,
+            },
+            {
+                path: '/countrypanel',
+                name: pageTitles.countryPanel,
+                component: () => <h1>{pageTitles.countryPanel}</h1>,
+            },
         ];
     }
 

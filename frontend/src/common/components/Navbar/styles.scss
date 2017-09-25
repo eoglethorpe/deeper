@@ -1,0 +1,73 @@
+@import '../../../stylesheets/base';
+
+.navbar {
+    @include shadow-medium;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $color-primary;
+    padding: 0 $spacing-large;
+    height: $height-navbar;
+    color: $color-text-on-primary;
+
+    .menu-header {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: $color-text-on-primary;
+        font-size: $font-size-super-large;
+    }
+
+    .menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: .2s all ease-in-out;
+        border-top: $width-separator-thick solid transparent;
+        border-bottom: $width-separator-thick solid transparent;
+        padding: 0 $spacing-extra-large;
+
+        &:hover {
+            color: $color-accent;
+        }
+
+        &.active {
+            border-bottom-color: $color-accent;
+            background-color: lighten($color-primary, 10%);
+            color: $color-text-on-accent;
+        }
+    }
+
+    .menu-items {
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        height: 100%;
+    }
+}
+
+$width-dropdown: 196px;
+
+.item-icon {
+    display: inline-block;
+    width: $width-icon-large-alt;
+}
+
+.dropdown-item {
+    display: block;
+    outline: none;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-medium-alt $spacing-large;
+    width: $width-dropdown;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: $font-size-small;
+    font-weight: $font-weight-light;
+
+    &:hover {
+        background-color: $color-background-header;
+    }
+}
