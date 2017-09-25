@@ -1,0 +1,26 @@
+engines:
+  eslint:
+    enabled: true
+  pep8:
+    enabled: true
+  scss-lint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript:
+      - python:
+ratings:
+  paths:
+  - app/**
+  - lib/**
+  - "**.rb"
+  - "**.go"
+exclude_paths:
+  - "backend/*/migrations/*"
+  - "backend/*/tests/*"
+  - "backend/*/wsgi.py"
+  - "backend/manage.py"
+  - "frontend/config/"
+  - "frontend/scripts/"
