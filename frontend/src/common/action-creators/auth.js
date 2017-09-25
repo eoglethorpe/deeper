@@ -4,10 +4,10 @@ import {
     REGISTER_ACTION,
 } from '../action-types/auth';
 
-export const login = (email, password) => ({
+export const login = (email, token) => ({
     type: LOGIN_ACTION,
     email,
-    password,
+    token,
 });
 
 export const logout = () => ({

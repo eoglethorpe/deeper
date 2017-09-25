@@ -1,3 +1,7 @@
+/**
+ * @author frozenhelium <fren.ankit@gmail.com>
+ */
+
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -5,7 +9,9 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { LoginForm } from '../../components/Forms';
-import { login, logout } from '../../../../common/action-creators/auth';
+import { login } from '../../../../common/action-creators/auth';
+import { RestBuilder } from '../../../../public/utils/rest';
+import schema from '../../../../common/schema';
 import styles from './styles.scss';
 
 
@@ -14,11 +20,18 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    login: (email, password) => dispatch(login(email, password)),
-    logout: logout(),
+    login: (
+        email,
+        password,
+    ) => dispatch(
+        login(
+            email,
+            password,
+        ),
+    ),
 });
 
-const loginProps = {
+const propTypes = {
     login: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     location: PropTypes.shape({
@@ -30,18 +43,92 @@ const loginProps = {
     }),
 };
 
-const loginDefaultProps = {
+const defaultProps = {
     location: {},
 };
+
+
+// TODO: move these somewhere else
+const wsEndpoint = '/api/v1';
+const POST = 'POST';
+const postHeader = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+};
+
+const urlForUserLogin = () => `${wsEndpoint}/token/`;
+const paramsForUserLogin = (username, password) => ({
+    method: POST,
+    headers: postHeader,
+    body: JSON.stringify({
+        username,
+        password,
+    }),
+});
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
-    static propTypes = loginProps;
-    static defaultProps = loginDefaultProps;
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
-    onLogin = (email, password) => {
-        this.props.login(email, password);
+    constructor(props) {
+        super(props);
+        this.state = {
+            nonFieldErrors: undefined,
+        };
+    }
+
+    onSubmit = (email, password) => {
+        const url = urlForUserLogin();
+        const paramsFn = () => paramsForUserLogin(
+            email, // Username is the email
+            password,
+        );
+
+        // Stop any retry action
+        if (this.userLoginRequest) {
+            this.userLoginRequest.stop();
+        }
+
+        this.userLoginRequest = new RestBuilder()
+            .url(url)
+            .params(paramsFn)
+            .decay(0.3)
+            .maxRetryTime(2000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                console.info('SUCCESS: ', response);
+
+                try {
+                    schema.validate(response, 'userLoginResponse');
+                    console.info('Schema validation passed');
+
+                    this.props.login(email, response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                const { errors } = response;
+                const formErrors = {};
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formErrors[key] = errors[key].join(' ');
+                    }
+                });
+
+                this.setState({ formErrors, nonFieldErrors: errors.nonFieldErrors });
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+
+        this.setState({ pending: true });
+        this.userLoginRequest.start();
     }
 
     render() {
@@ -52,11 +139,25 @@ export default class Login extends React.PureComponent {
             );
         }
 
+        const { nonFieldErrors } = this.state;
+
         return (
+            // TODO: make and error component
             <div styleName="login">
+                {
+                    nonFieldErrors && (
+                        <div styleName="non-field-errors">
+                            {
+                                nonFieldErrors.map(err => (
+                                    <div key={err} styleName="error">{err}</div>
+                                ))
+                            }
+                        </div>
+                    )
+                }
                 <div styleName="login-form-wrapper">
                     <LoginForm
-                        onLogin={this.onLogin}
+                        onSubmit={this.onSubmit}
                     />
                 </div>
             </div>

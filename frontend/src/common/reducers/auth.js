@@ -17,6 +17,7 @@ const authReducer = (state = initialAuthState, action) => {
                 ...initialAuthState,
                 authenticated: true,
                 email: action.email,
+                token: action.token,
             };
         case REGISTER_ACTION:
             return {

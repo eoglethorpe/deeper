@@ -15,7 +15,7 @@ import Form, {
 @CSSModules(styles)
 export default class LoginForm extends React.PureComponent {
     static propTypes = {
-        onLogin: PropTypes.func.isRequired,
+        onSubmit: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -47,7 +47,7 @@ export default class LoginForm extends React.PureComponent {
         };
 
         const okay = (data) => {
-            this.props.onLogin(data.email, data.password);
+            this.props.onSubmit(data.email, data.password);
         };
 
         form.setElements(elements);
