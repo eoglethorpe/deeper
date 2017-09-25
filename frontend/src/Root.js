@@ -3,12 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 
-import configureStore from './common/utils/configureStore';
+import store from './common/store';
 import App from './App';
-
-// FIXME: configure this somewhere else so that it can be referenced
-// from elsewhere
-const store = configureStore();
 
 export default class Root extends React.Component {
     constructor(props) {
@@ -19,6 +15,7 @@ export default class Root extends React.Component {
     }
 
     componentWillMount() {
+        console.log('Mounting Root');
         const afterRehydrateCallback = () => this.setState({ rehydrated: true });
         // FIXME: load params and pass it instead of undefined
         // persistStore(this.store, undefined, () => afterRehydrateCallback);
@@ -42,9 +39,9 @@ export default class Root extends React.Component {
             return (
                 <div
                     style={{
-                        height: '100vh',
-                        display: 'flex',
                         alignItems: 'center',
+                        display: 'flex',
+                        height: '100vh',
                         justifyContent: 'center',
                     }}
                 >

@@ -91,6 +91,10 @@ class App extends React.Component {
         ];
     }
 
+    componentWillMount() {
+        console.log('Mounting App');
+    }
+
     render() {
         return (
             <div>
@@ -99,18 +103,18 @@ class App extends React.Component {
                         this.pages.map(page => (
                             page.private ? (
                                 <PrivateRoute
+                                    authenticated={this.props.authenticated}
+                                    component={page.component}
                                     exact
                                     key={page.name}
                                     path={page.path}
-                                    component={page.component}
-                                    authenticated={this.props.authenticated}
                                 />
                             ) : (
                                 <Route
+                                    component={page.component}
                                     exact
                                     key={page.name}
                                     path={page.path}
-                                    component={page.component}
                                 />
                             )
                         ))
