@@ -1,0 +1,4 @@
+fixes:
+  - "src/::frontend/src/"  # move path   e.g., "src/path" => "frontend/src/path"
+  - "backend/src/::frontend/src/"  # move path   e.g., "src/path" => "frontend/src/path"
+  - "::backend/"           # move root   e.g., "/" => "after/path/"
