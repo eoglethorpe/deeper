@@ -25,9 +25,10 @@ const mapStateToProps = state => ({
 });
 
 
+@withRouter
 @connect(mapStateToProps)
 @CSSModules(styles)
-class App extends React.Component {
+export default class App extends React.Component {
     static propTypes = {
         authenticated: PropTypes.bool.isRequired,
     };
@@ -93,6 +94,17 @@ class App extends React.Component {
 
     componentWillMount() {
         console.log('Mounting App');
+        // Retrive user refresh token
+        // if no refresh token, redirect to login
+
+        // request for access token using refresh token
+        // If failed, then redirect to login
+        // else save the access_token and go to user requested page
+
+        // create a timer to periodically request access token before expiry
+        // this should generally succeed, if it fails redirect to login (close all on-going
+        // requests and the websocket connection
+        // NOTE: should trigger it in login as well
     }
 
     render() {
@@ -124,5 +136,3 @@ class App extends React.Component {
         );
     }
 }
-
-export default withRouter(App);
