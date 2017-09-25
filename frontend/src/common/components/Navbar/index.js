@@ -66,10 +66,6 @@ export default class Navbar extends React.PureComponent {
         };
     }
 
-    handleDummyClick = () => {
-        console.log('dummy dummy');
-    }
-
     render() {
         const { pathname } = this.props.location;
         return (
