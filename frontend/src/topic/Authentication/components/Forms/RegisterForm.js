@@ -159,7 +159,7 @@ export default class LoginForm extends React.PureComponent {
                 />
                 <TextInput
                     label="Password"
-                    hint="Password should be at least four characters long"
+                    hint="Password should be more than four characters long."
                     type="password"
                     required
 

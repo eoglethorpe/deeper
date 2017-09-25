@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { register } from '../../../../common/action-creators/auth';
 import { RegisterForm } from '../../components/Forms';
 import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
@@ -16,27 +15,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    register: (
-        firstname,
-        lastname,
-        organization,
-        country,
-        email,
-        password,
-    ) => dispatch(
-        register(
-            firstname,
-            lastname,
-            organization,
-            country,
-            email,
-            password,
-        ),
-    ),
+    dispatch,
 });
 
 const propTypes = {
-    register: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     location: PropTypes.shape({
         state: PropTypes.shape({
@@ -117,17 +99,6 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'userCreateResponse');
                     console.info('Schema validation passed');
-
-                    // TODO: register will get tokens, save those
-                    // not the form data
-                    this.props.register(
-                        firstname,
-                        lastname,
-                        organization,
-                        country,
-                        email,
-                        password,
-                    );
                 } catch (er) {
                     console.error(er);
                 }
@@ -158,7 +129,7 @@ export default class Login extends React.PureComponent {
 
     render() {
         if (this.props.authenticated) {
-            const { from } = this.props.location.state || { from: { pathname: '/' } };
+            const from = this.props.location.state.from || { pathname: '/' };
             return (
                 <Redirect to={from} />
             );
@@ -169,9 +140,8 @@ export default class Login extends React.PureComponent {
             <div styleName="register">
                 <div styleName="register-form-wrapper">
                     <RegisterForm
-                        onRegister={this.onRegister}
                         formErrors={this.state.formErrors}
-                        formValues={{ organization: 'togglecorp' }}
+                        onRegister={this.onRegister}
                         pending={this.state.pending}
                     />
                 </div>
