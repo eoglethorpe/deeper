@@ -82,19 +82,19 @@ A json object `errors` is also returned. It indicates a key-value pair for each 
 
 #### Successful requests:
 
-201 :	when a new resource is created. Normally for POST requests only.
-200 :	for any other successful requests.
+* 201 :	when a new resource is created. Normally for POST requests only.
+* 200 :	for any other successful requests.
 
 #### Client errors:
 
-400 :	bad request: when the json request doesn’t contain proper fields
-401 :	unauthorized: needs a logged in user
-403 :	forbidden: user has no permission on requested resource
-404 :	resource is not found in the database
-405 :	not one of valid HTTP methods
+* 400 :	bad request: when the json request doesn’t contain proper fields
+* 401 :	unauthorized: needs a logged in user
+* 403 :	forbidden: user has no permission on requested resource
+* 404 :	resource is not found in the database
+* 405 :	not one of valid HTTP methods
 
 #### Server errors:
-500 :	See internal error code below for actual error
+* 500 :	See internal error code below for actual error
 
 Other codes like 502, 504 etc. may be unintentionally raised by nginx, wsgi, or dns servers which the web server is not responsible for.
 
