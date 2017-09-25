@@ -5,23 +5,27 @@ import { connect } from 'react-redux';
 
 import Button from '../../../public/components/Button';
 import styles from './styles.scss';
-import { logout } from '../../../common/action-creators/auth';
+import { logoutAction } from '../../../common/action-creators/auth';
 
 
 const mapStateToProps = state => ({
+    // FIXME: where is this used
+    // FIXME: don't access elements directly, use selectors
     authenticated: state.auth.authenticated,
 });
 
 const mapDispatchToProps = dispatch => ({
-    logout: () => dispatch(logout()),
+    logout: () => dispatch(logoutAction()),
 });
+
+const propTypes = {
+    logout: PropTypes.func.isRequired,
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
-    static propTypes = {
-        logout: PropTypes.func.isRequired,
-    };
+    static propTypes = propTypes;
 
     handleLogoutButtonClick = () => {
         this.props.logout();
@@ -30,8 +34,12 @@ export default class HomeScreen extends React.PureComponent {
     render() {
         return (
             <div styleName="home-screen">
-                <p>Hello</p>
-                <Button onClick={this.handleLogoutButtonClick}>Logout</Button>
+                <p>
+                    Hello
+                </p>
+                <Button onClick={this.handleLogoutButtonClick}>
+                    Logout
+                </Button>
             </div>
         );
     }

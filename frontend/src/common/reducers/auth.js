@@ -1,7 +1,6 @@
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
-    REGISTER_ACTION,
 } from '../action-types/auth';
 
 
@@ -14,22 +13,19 @@ const authReducer = (state = initialAuthState, action) => {
     switch (action.type) {
         case LOGIN_ACTION:
             return {
-                ...initialAuthState,
+                ...state,
                 authenticated: true,
                 email: action.email,
-                token: action.token,
-            };
-        case REGISTER_ACTION:
-            return {
-                ...initialAuthState,
-                authenticated: false, // TODO: not authenticated yet
-                email: action.email,
+                access: action.access,
+                refresh: action.access,
             };
         case LOGOUT_ACTION:
             return {
-                ...initialAuthState,
+                ...state,
                 authenticated: false,
                 email: undefined,
+                access: undefined,
+                refresh: undefined,
             };
         default:
             return state;

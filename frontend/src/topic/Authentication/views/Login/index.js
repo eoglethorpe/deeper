@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { LoginForm } from '../../components/Forms';
-import { login } from '../../../../common/action-creators/auth';
+import { loginAction } from '../../../../common/action-creators/auth';
 import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
@@ -20,19 +20,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    login: (
-        email,
-        password,
-    ) => dispatch(
-        login(
-            email,
-            password,
-        ),
-    ),
+    login: params => dispatch(loginAction(params)),
 });
 
 const propTypes = {
-    login: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     location: PropTypes.shape({
         state: PropTypes.shape({
@@ -41,6 +32,7 @@ const propTypes = {
             }),
         }),
     }),
+    login: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -74,9 +66,7 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            nonFieldErrors: undefined,
-        };
+        this.state = {};
     }
 
     onSubmit = (email, password) => {
@@ -99,12 +89,11 @@ export default class Login extends React.PureComponent {
             .maxRetryAttempts(10)
             .success((response) => {
                 console.info('SUCCESS: ', response);
-
                 try {
                     schema.validate(response, 'userLoginResponse');
                     console.info('Schema validation passed');
-
-                    this.props.login(email, response);
+                    const { refresh, access } = response;
+                    this.props.login({ email, refresh, access });
                 } catch (err) {
                     console.error(err);
                 }
@@ -113,6 +102,7 @@ export default class Login extends React.PureComponent {
                 console.info('FAILURE:', response);
                 const { errors } = response;
                 const formErrors = {};
+                const { nonFieldErrors } = errors;
 
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
@@ -120,7 +110,7 @@ export default class Login extends React.PureComponent {
                     }
                 });
 
-                this.setState({ formErrors, nonFieldErrors: errors.nonFieldErrors });
+                this.setState({ formErrors, nonFieldErrors });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -132,28 +122,32 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        if (this.props.authenticated) {
-            const { from } = this.props.location.state || { from: { pathname: '/' } };
+        const { authenticated } = this.props;
+        if (authenticated) {
+            const from = this.props.location.state.from || { pathname: '/' };
             return (
                 <Redirect to={from} />
             );
         }
 
         const { nonFieldErrors } = this.state;
-
         return (
             // TODO: make and error component
             <div styleName="login">
                 {
-                    nonFieldErrors && (
-                        <div styleName="non-field-errors">
-                            {
-                                nonFieldErrors.map(err => (
-                                    <div key={err} styleName="error">{err}</div>
-                                ))
-                            }
-                        </div>
-                    )
+                    nonFieldErrors &&
+                    <div styleName="non-field-errors">
+                        {
+                            nonFieldErrors.map(err => (
+                                <div
+                                    key={err}
+                                    styleName="error"
+                                >
+                                    {err}
+                                </div>
+                            ))
+                        }
+                    </div>
                 }
                 <div styleName="login-form-wrapper">
                     <LoginForm

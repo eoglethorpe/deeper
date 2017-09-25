@@ -1,25 +1,15 @@
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
-    REGISTER_ACTION,
 } from '../action-types/auth';
 
-export const login = (email, token) => ({
+export const loginAction = ({ email, access, refresh }) => ({
     type: LOGIN_ACTION,
     email,
-    token,
+    access,
+    refresh,
 });
 
-export const logout = () => ({
+export const logoutAction = () => ({
     type: LOGOUT_ACTION,
-});
-
-export const register = (firstname, lastname, organization, country, email, password) => ({
-    type: REGISTER_ACTION,
-    firstname,
-    lastname,
-    organization,
-    country,
-    email,
-    password,
 });
