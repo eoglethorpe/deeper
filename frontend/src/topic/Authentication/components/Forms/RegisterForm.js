@@ -66,14 +66,7 @@ export default class LoginForm extends React.PureComponent {
         };
 
         const okay = (data) => {
-            this.props.onRegister(
-                data.firstname,
-                data.lastname,
-                data.organization,
-                data.country,
-                data.email,
-                data.password,
-            );
+            this.props.onRegister(data);
         };
 
         form.setElements(elements);

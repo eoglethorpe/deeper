@@ -1,13 +1,20 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import { autoRehydrate } from 'redux-persist';
-import thunkMiddleware from 'redux-thunk';
+import thunk from 'redux-thunk';
+import logger from './middlewares/logger';
+import createRefreshAccessToken from './middlewares/refreshAccessToken';
 
 import reducer from './reducers';
 
+// refresh every 10min
+// const refreshAccessToken = createRefreshAccessToken(1000 * 60 * 10);
+const refreshAccessToken = createRefreshAccessToken();
+
 const middleware = [
     // TODO: add jwt-token-refresher
-    thunkMiddleware,
-    // TODO: add logger at the end
+    thunk,
+    refreshAccessToken,
+    logger,
 ];
 
 const enhancer = compose(

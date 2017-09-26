@@ -4,11 +4,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
-import { RegisterForm } from '../../components/Forms';
-import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
-
+import { RegisterForm } from '../../components/Forms';
+import { RestBuilder } from '../../../../public/utils/rest';
+import {
+    createParamsForUserCreate,
+    urlForUserCreate,
+} from '../../../../common/rest';
 
 const mapStateToProps = state => ({
     authenticated: state.auth.authenticated,
@@ -33,33 +36,6 @@ const defaultProps = {
     location: {},
 };
 
-
-// TODO: move these somewhere else
-const wsEndpoint = '/api/v1';
-const POST = 'POST';
-const postHeader = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-};
-
-const urlForUserCreate = () => `${wsEndpoint}/users/`;
-const paramsForUserCreate = (firstname, lastname, organization, country, email, password) => ({
-    method: POST,
-    headers: {
-        ...postHeader,
-        // TODO: get jwt token from store here
-    },
-    body: JSON.stringify({
-        firstName: firstname,
-        lastName: lastname,
-        organization,
-        country,
-        email,
-        password,
-        username: email,
-    }),
-});
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
@@ -81,27 +57,31 @@ export default class Login extends React.PureComponent {
         }
     }
 
-    onRegister = (firstname, lastname, organization, country, email, password) => {
-        const url = urlForUserCreate();
-        const paramsFn = () => paramsForUserCreate(
-            firstname, lastname, organization, country, email, password,
-        );
+    onRegister = ({ firstname, lastname, organization, country, email, password }) => {
+        const url = urlForUserCreate;
+        const params = createParamsForUserCreate({
+            firstName: firstname,
+            lastName: lastname,
+            organization,
+            country,
+            email,
+            password,
+        });
 
         // Stop any retry action
         if (this.userCreateRequest) {
             this.userCreateRequest.stop();
         }
+
         this.userCreateRequest = new RestBuilder()
             .url(url)
-            .params(paramsFn)
+            .params(params)
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
             .success((response) => {
-                console.info('SUCCESS:', response);
                 try {
                     schema.validate(response, 'userCreateResponse');
-                    console.info('Schema validation passed');
                 } catch (er) {
                     console.error(er);
                 }
@@ -137,7 +117,7 @@ export default class Login extends React.PureComponent {
 
     render() {
         if (this.props.authenticated) {
-            const from = this.props.location.state.from || { pathname: '/' };
+            const { from } = this.props.location.state || { from: { pathname: '/' } };
             return (
                 <Redirect to={from} />
             );
