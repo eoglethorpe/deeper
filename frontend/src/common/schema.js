@@ -56,5 +56,20 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 
+
+{
+    const name = 'tokenRefreshResponse';
+    const schema = {
+        doc: {
+            name: 'Token Refresh Response',
+            description: 'Response for POST /token/refresh/',
+        },
+        fields: {
+            access: { type: 'string', required: 'true' },
+        },
+    };
+    dict.put(name, schema);
+}
+
 export default dict;
 export { RavlError } from '../vendor/ravl/error';

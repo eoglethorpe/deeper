@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import Button from '../../../public/components/Button';
 import styles from './styles.scss';
 import { logoutAction } from '../../../common/action-creators/auth';
+import {
+    stopTokenRefreshAction,
+} from '../../../common/middlewares/refreshAccessToken';
 
 
 const mapStateToProps = state => ({
@@ -16,10 +19,12 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
+    stopTokenRefresh: () => dispatch(stopTokenRefreshAction()),
 });
 
 const propTypes = {
     logout: PropTypes.func.isRequired,
+    stopTokenRefresh: PropTypes.func.isRequired,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -28,6 +33,7 @@ export default class HomeScreen extends React.PureComponent {
     static propTypes = propTypes;
 
     handleLogoutButtonClick = () => {
+        this.props.stopTokenRefresh();
         this.props.logout();
     }
 

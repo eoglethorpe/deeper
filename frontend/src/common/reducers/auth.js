@@ -1,6 +1,7 @@
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
+    SET_ACCESS_TOKEN_ACTION,
 } from '../action-types/auth';
 
 import initialAuthState from '../initial-state/auth';
@@ -13,7 +14,7 @@ const authReducer = (state = initialAuthState, action) => {
                 authenticated: true,
                 email: action.email,
                 access: action.access,
-                refresh: action.access,
+                refresh: action.refresh,
             };
         case LOGOUT_ACTION:
             return {
@@ -22,6 +23,11 @@ const authReducer = (state = initialAuthState, action) => {
                 email: undefined,
                 access: undefined,
                 refresh: undefined,
+            };
+        case SET_ACCESS_TOKEN_ACTION:
+            return {
+                ...state,
+                access: action.access,
             };
         default:
             return state;

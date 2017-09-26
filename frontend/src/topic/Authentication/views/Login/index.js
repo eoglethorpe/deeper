@@ -8,11 +8,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
+import schema from '../../../../common/schema';
+import styles from './styles.scss';
 import { LoginForm } from '../../components/Forms';
 import { loginAction } from '../../../../common/action-creators/auth';
 import { RestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
-import styles from './styles.scss';
+import {
+    createParamsForTokenCreate,
+    urlForTokenCreate,
+} from '../../../../common/rest';
+import {
+    startTokenRefreshAction,
+} from '../../../../common/middlewares/refreshAccessToken';
 
 
 const mapStateToProps = state => ({
@@ -21,6 +28,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     login: params => dispatch(loginAction(params)),
+    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
 });
 
 const propTypes = {
@@ -29,30 +37,12 @@ const propTypes = {
         pathname: PropTypes.string,
     }),
     login: PropTypes.func.isRequired,
+    startTokenRefresh: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     from: undefined,
 };
-
-
-// TODO: move these somewhere else
-const wsEndpoint = '/api/v1';
-const POST = 'POST';
-const postHeader = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-};
-
-const urlForUserLogin = () => `${wsEndpoint}/token/`;
-const paramsForUserLogin = (username, password) => ({
-    method: POST,
-    headers: postHeader,
-    body: JSON.stringify({
-        username,
-        password,
-    }),
-});
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
@@ -67,12 +57,9 @@ export default class Login extends React.PureComponent {
         };
     }
 
-    onSubmit = (email, password) => {
-        const url = urlForUserLogin();
-        const paramsFn = () => paramsForUserLogin(
-            email, // Username is the email
-            password,
-        );
+    onSubmit = ({ email, password }) => {
+        const url = urlForTokenCreate;
+        const params = createParamsForTokenCreate({ username: email, password });
 
         // Stop any retry action
         if (this.userLoginRequest) {
@@ -81,17 +68,16 @@ export default class Login extends React.PureComponent {
 
         this.userLoginRequest = new RestBuilder()
             .url(url)
-            .params(paramsFn)
+            .params(params)
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
             .success((response) => {
-                console.info('SUCCESS: ', response);
                 try {
                     schema.validate(response, 'userLoginResponse');
-                    console.info('Schema validation passed');
                     const { refresh, access } = response;
                     this.props.login({ email, refresh, access });
+                    this.props.startTokenRefresh();
                 } catch (err) {
                     console.error(err);
                 }
