@@ -134,3 +134,9 @@ typings
 
 # dotenv environment variables file
 .env
+
+# tox
+./.tox
+
+# git
+./.git
