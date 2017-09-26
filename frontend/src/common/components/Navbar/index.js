@@ -79,7 +79,10 @@ export default class Navbar extends React.PureComponent {
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
-                    <Link to="/" styleName="menu-item">
+                    <Link
+                        to="/"
+                        styleName="menu-item"
+                    >
                         DEEP
                     </Link>
                 </div>
@@ -89,8 +92,8 @@ export default class Navbar extends React.PureComponent {
                             item.isHeader || (
                                 <Link
                                     key={item.name}
-                                    to={item.linkTo}
                                     styleName={pathname === item.linkTo ? 'menu-item active' : 'menu-item'}
+                                    to={item.linkTo}
                                 >
                                     {item.name}
                                 </Link>
@@ -98,53 +101,55 @@ export default class Navbar extends React.PureComponent {
                         ))
                     }
                 </div>
-                <DropdownMenu showDropdown title={this.headerText} iconLeft="ion-android-person" marginTop={18}>
-                    {
-                        Object.keys(this.dropdownItems).map(key => (
-                            <Group
-                                key={key}
-                            >
-                                <div>
-                                    {
-                                        !this.dropdownItems[key].label ||
-                                            <GroupTitle title={this.dropdownItems[key].label} />
-                                    }
-                                    {
-                                        this.dropdownItems[key].items.map(item => (
-                                            <LinkOutsideRouter
-                                                styleName="dropdown-item"
-                                                key={item.name}
-                                                to={item.linkTo}
-                                            >
-                                                { item.iconName !== '' &&
-                                                    <i
-                                                        styleName="item-icon"
-                                                        className={item.iconName}
-                                                    />
-                                                }
-                                                { item.iconName === '' &&
-                                                    <i
-                                                        styleName="item-icon"
-                                                    />
-                                                }
-                                                {item.name}
-                                            </LinkOutsideRouter>
-                                        ))
-                                    }
-                                </div>
-                            </Group>
-                        ))
-                    }
-                    <button
-                        styleName="dropdown-item"
-                    >
-                        <i
-                            className="ion-log-out"
-                            styleName="item-icon"
-                        />
-                        Logout
-                    </button>
-                </DropdownMenu>
+                <div styleName="dropdown-title">
+                    <DropdownMenu className="dropdown-title" title={this.headerText} iconLeft="ion-android-person">
+                        {
+                            Object.keys(this.dropdownItems).map(key => (
+                                <Group
+                                    key={key}
+                                >
+                                    <div>
+                                        {
+                                            !this.dropdownItems[key].label ||
+                                                <GroupTitle title={this.dropdownItems[key].label} />
+                                        }
+                                        {
+                                            this.dropdownItems[key].items.map(item => (
+                                                <LinkOutsideRouter
+                                                    key={item.name}
+                                                    styleName="dropdown-item"
+                                                    to={item.linkTo}
+                                                >
+                                                    { item.iconName !== '' &&
+                                                        <i
+                                                            className={item.iconName}
+                                                            styleName="item-icon"
+                                                        />
+                                                    }
+                                                    { item.iconName === '' &&
+                                                        <i
+                                                            styleName="item-icon"
+                                                        />
+                                                    }
+                                                    {item.name}
+                                                </LinkOutsideRouter>
+                                            ))
+                                        }
+                                    </div>
+                                </Group>
+                            ))
+                        }
+                        <button
+                            styleName="dropdown-item"
+                        >
+                            <i
+                                className="ion-log-out"
+                                styleName="item-icon"
+                            />
+                            Logout
+                        </button>
+                    </DropdownMenu>
+                </div>
             </div>
         );
     }
