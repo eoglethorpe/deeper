@@ -9,6 +9,9 @@ const pageTitles = {
     editLeads: 'Edit Leads',
     editEntries: 'Edit Entries',
     editAry: 'Edit Assessment Registry',
+    userProfile: 'User Profile',
+    countryPanel: 'Country Panel',
+
 };
 
 export default pageTitles;

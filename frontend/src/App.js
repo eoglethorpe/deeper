@@ -6,8 +6,11 @@ import { connect } from 'react-redux';
 
 import Bundle from './Bundle';
 import PrivateRoute from './public/components/PrivateRoute';
+import Navbar from './common/components/Navbar';
 import styles from './styles.scss';
 import { pageTitles } from './common/utils/labels';
+
+const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const HomeScreen = () => (
     <Bundle load={() => import('./topic/HomeScreen/views')} />
@@ -89,6 +92,16 @@ export default class App extends React.Component {
                 component: () => <h1>{pageTitles.editEntries}</h1>,
                 private: true,
             },
+            {
+                path: '/users/:userId',
+                name: pageTitles.userProfile,
+                component: () => <h1>{pageTitles.userProfile}</h1>,
+            },
+            {
+                path: '/countrypanel',
+                name: pageTitles.countryPanel,
+                component: () => <h1>{pageTitles.countryPanel}</h1>,
+            },
         ];
     }
 
@@ -110,6 +123,7 @@ export default class App extends React.Component {
     render() {
         return (
             <div>
+                <NavbarWithProps />
                 <Switch>
                     {
                         this.pages.map(page => (
