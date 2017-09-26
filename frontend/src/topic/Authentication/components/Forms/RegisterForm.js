@@ -119,8 +119,17 @@ export default class LoginForm extends React.PureComponent {
     }
 
     render() {
+        const { pending } = this.props;
+
         return (
             <form styleName="register-form" onSubmit={this.handleSubmit}>
+                {
+                    pending && (
+                        <div styleName="pending-overlay">
+                            <i className="ion-load-c" styleName="loading-icon" />
+                        </div>
+                    )
+                }
                 <TextInput
                     label="First name"
                     placeholder="John"
@@ -172,7 +181,7 @@ export default class LoginForm extends React.PureComponent {
                 />
                 <div styleName="action-buttons">
                     <PrimaryButton
-                        disabled={this.props.pending}
+                        disabled={pending}
                     >
                         Register
                     </PrimaryButton>

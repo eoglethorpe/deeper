@@ -2,7 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { RegisterForm } from '../../components/Forms';
 import { RestBuilder } from '../../../../public/utils/rest';
@@ -68,7 +68,10 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = { pending: false };
+        this.state = {
+            pending: false,
+            registrationSuccessful: false,
+        };
     }
 
     componentWillUnmount() {
@@ -102,11 +105,16 @@ export default class Login extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-                this.setState({ pending: false });
+
+                this.setState({
+                    pending: false,
+                    registrationSuccessful: true,
+                });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
                 const { errors } = response;
+                const { nonFieldErrors } = errors;
                 const formErrors = {};
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
@@ -115,7 +123,7 @@ export default class Login extends React.PureComponent {
                 });
                 formErrors.email = formErrors.username;
 
-                this.setState({ pending: false, formErrors });
+                this.setState({ pending: false, formErrors, nonFieldErrors });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -133,17 +141,37 @@ export default class Login extends React.PureComponent {
             return (
                 <Redirect to={from} />
             );
+        } else if (this.state.registrationSuccessful) {
+            return (
+                <Redirect to="/login" />
+            );
         }
 
-        // TODO: Add div to show error from rest request for nonFieldErrors
+        const { nonFieldErrors } = this.state;
         return (
             <div styleName="register">
+                <div styleName="non-field-errors">
+                    {
+                        (nonFieldErrors || []).map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                </div>
                 <div styleName="register-form-wrapper">
                     <RegisterForm
                         formErrors={this.state.formErrors}
                         onRegister={this.onRegister}
                         pending={this.state.pending}
                     />
+                </div>
+                <div styleName="login-link-container">
+                    <p>Already have an account yet?</p>
+                    <Link to="/login" styleName="login-link">Login</Link>
                 </div>
             </div>
         );

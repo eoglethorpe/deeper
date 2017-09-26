@@ -16,6 +16,7 @@ import Form, {
 export default class LoginForm extends React.PureComponent {
     static propTypes = {
         onSubmit: PropTypes.func.isRequired,
+        pending: PropTypes.bool.isRequired,
     };
 
     constructor(props) {
@@ -87,8 +88,17 @@ export default class LoginForm extends React.PureComponent {
     }
 
     render() {
+        const { pending } = this.props;
+
         return (
             <form styleName="login-form" onSubmit={this.handleSubmit}>
+                {
+                    pending && (
+                        <div styleName="pending-overlay">
+                            <i className="ion-load-c" styleName="loading-icon" />
+                        </div>
+                    )
+                }
                 <TextInput
                     label="Email"
                     placeholder="john.doe@mail.com"

@@ -16,11 +16,30 @@
         .error {
             padding: $spacing-medium $spacing-large;
             color: $color-danger;
+
+            &:not(:last-child) {
+                &::after {
+                    content: ', ';
+                }
+            }
         }
     }
 
     .login-form-wrapper {
-        // TODO: move to dimens;
-        width: 500px;
+        width: $width-login-form;
+    }
+
+    .register-link-container {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-medium;
+
+        .register-link {
+            margin: $spacing-medium;
+            color: $color-accent;
+            font-weight: $font-weight-medium;
+        }
     }
 }
