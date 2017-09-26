@@ -2,12 +2,45 @@
 
 .register {
     display: flex;
+    flex-wrap: wrap;
+    align-content: center;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100vh;
 
+    .non-field-errors {
+        flex-basis: 100%;
+        text-align: center;
+
+        .error {
+            padding: $spacing-medium $spacing-large;
+            color: $color-danger;
+
+            &:not(:last-child) {
+                &::after {
+                    content: ', ';
+                }
+            }
+        }
+    }
+
     .register-form-wrapper {
-        width: 500px;
+        width: $width-register-form;
+    }
+
+    .login-link-container {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        justify-content: center;
+        padding: $spacing-medium;
+
+        .login-link {
+            margin: $spacing-medium;
+            color: $color-accent;
+            font-weight: $font-weight-medium;
+        }
     }
 }
+

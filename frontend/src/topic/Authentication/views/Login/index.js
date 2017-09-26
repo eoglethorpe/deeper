@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import { LoginForm } from '../../components/Forms';
 import { loginAction } from '../../../../common/action-creators/auth';
@@ -25,16 +25,14 @@ const mapDispatchToProps = dispatch => ({
 
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
-    location: PropTypes.shape({
-        from: PropTypes.shape({
-            pathname: PropTypes.string.isRequired,
-        }),
+    from: PropTypes.shape({
+        pathname: PropTypes.string,
     }),
     login: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    location: {},
+    from: undefined,
 };
 
 
@@ -64,7 +62,9 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            pending: false,
+        };
     }
 
     onSubmit = (email, password) => {
@@ -108,10 +108,15 @@ export default class Login extends React.PureComponent {
                     }
                 });
 
-                this.setState({ formErrors, nonFieldErrors });
+                this.setState({
+                    formErrors,
+                    nonFieldErrors,
+                    pending: false,
+                });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({ pending: false });
             })
             .build();
 
@@ -121,36 +126,38 @@ export default class Login extends React.PureComponent {
 
     render() {
         const { authenticated } = this.props;
+
         if (authenticated) {
-            const from = this.props.location.from || { pathname: '/' };
+            const from = this.props.from || { pathname: '/' };
             return (
                 <Redirect to={from} />
             );
         }
 
-        const { nonFieldErrors } = this.state;
+        const { nonFieldErrors, pending } = this.state;
         return (
-            // TODO: make and error component
             <div styleName="login">
-                {
-                    nonFieldErrors &&
-                    <div styleName="non-field-errors">
-                        {
-                            nonFieldErrors.map(err => (
-                                <div
-                                    key={err}
-                                    styleName="error"
-                                >
-                                    {err}
-                                </div>
-                            ))
-                        }
-                    </div>
-                }
+                <div styleName="non-field-errors">
+                    {
+                        (nonFieldErrors || []).map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                </div>
                 <div styleName="login-form-wrapper">
                     <LoginForm
                         onSubmit={this.onSubmit}
+                        pending={pending}
                     />
+                </div>
+                <div styleName="register-link-container">
+                    <p>Don&apos;t have an account yet?</p>
+                    <Link to="/register" styleName="register-link">Register</Link>
                 </div>
             </div>
         );
