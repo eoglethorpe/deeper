@@ -3,52 +3,48 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 
-import configureStore from './common/utils/configureStore';
 import App from './App';
-
-// FIXME: configure this somewhere else so that it can be referenced
-// from elsewhere
-const store = configureStore();
+import store from './common/store';
+import storeConfig from './common/config/store';
+import { getRandomFromList } from './public/utils/common';
 
 export default class Root extends React.Component {
+    static loadingMessages = [
+        'Locating the required gigapixels to render ...',
+        'Spinning up the hamster ...',
+        'Shovelling coal into the server ...',
+        'Programming the flux capacitor ...',
+    ];
+
     constructor(props) {
         super(props);
 
         this.state = { rehydrated: false };
         this.store = store;
+
+        // TODO: rehydrating is very shortlived, so better move this code
+        // when a new token is retrieved for the first time
+        this.randomMessage = getRandomFromList(Root.loadingMessages);
+        this.randomMessageStyle = {
+            alignItems: 'center',
+            display: 'flex',
+            height: '100vh',
+            justifyContent: 'center',
+        };
     }
 
     componentWillMount() {
+        console.log('Mounting Root');
         const afterRehydrateCallback = () => this.setState({ rehydrated: true });
-        // FIXME: load params and pass it instead of undefined
-        // persistStore(this.store, undefined, () => afterRehydrateCallback);
-        persistStore(this.store, undefined, afterRehydrateCallback);
-    }
-
-    getRandomLoadingMessage = () => {
-        const lines = [
-            'Locating the required gigapixels to render ...',
-            'Spinning up the hamster ...',
-            'Shovelling coal into the server ...',
-            'Programming the flux capacitor ...',
-        ];
-
-        return lines[Math.round(Math.random() * (lines.length - 1))];
+        persistStore(this.store, storeConfig, afterRehydrateCallback);
     }
 
     render() {
         if (!this.state.rehydrated) {
             // A simple message till the redux store is not rehydrated
             return (
-                <div
-                    style={{
-                        height: '100vh',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    { this.getRandomLoadingMessage() }
+                <div style={this.randomMessageStyle} >
+                    { this.randomMessage }
                 </div>
             );
         }

@@ -3,11 +3,7 @@ import {
     LOGOUT_ACTION,
 } from '../action-types/auth';
 
-
-const initialAuthState = {
-    authenticated: false,
-    email: undefined,
-};
+import initialAuthState from '../initial-state/auth';
 
 const authReducer = (state = initialAuthState, action) => {
     switch (action.type) {
