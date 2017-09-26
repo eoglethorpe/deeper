@@ -64,10 +64,18 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         };
+
+        this.nonVisibleLinks = [
+            '/login',
+            '/register',
+        ];
     }
 
     render() {
         const { pathname } = this.props.location;
+        if (this.nonVisibleLinks.includes(pathname)) {
+            return null;
+        }
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">

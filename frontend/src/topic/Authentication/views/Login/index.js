@@ -26,10 +26,8 @@ const mapDispatchToProps = dispatch => ({
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
     location: PropTypes.shape({
-        state: PropTypes.shape({
-            from: PropTypes.shape({
-                pathname: PropTypes.string.isRequired,
-            }),
+        from: PropTypes.shape({
+            pathname: PropTypes.string.isRequired,
         }),
     }),
     login: PropTypes.func.isRequired,
@@ -124,7 +122,7 @@ export default class Login extends React.PureComponent {
     render() {
         const { authenticated } = this.props;
         if (authenticated) {
-            const from = this.props.location.state.from || { pathname: '/' };
+            const from = this.props.location.from || { pathname: '/' };
             return (
                 <Redirect to={from} />
             );
