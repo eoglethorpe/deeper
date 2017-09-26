@@ -1,6 +1,9 @@
 engines:
   eslint:
     enabled: true
+    channel: "eslint-4"
+    config:
+      config: frontend/.eslintrc
   pep8:
     enabled: true
   scss-lint:
@@ -9,18 +12,17 @@ engines:
     enabled: true
     config:
       languages:
-      - javascript:
-      - python:
+      - javascript: 
+      - python: 
 ratings:
   paths:
-  - app/**
-  - lib/**
-  - "**.rb"
-  - "**.go"
+  - "**.py"
+  - "**.js"
+  - "**.scss"
 exclude_paths:
-  - "backend/*/migrations/*"
-  - "backend/*/tests/*"
-  - "backend/*/wsgi.py"
-  - "backend/manage.py"
-  - "frontend/config/"
-  - "frontend/scripts/"
+- backend/*/migrations/*
+- backend/*/tests/*
+- backend/*/wsgi.py
+- backend/manage.py
+- frontend/config/
+- frontend/scripts/
