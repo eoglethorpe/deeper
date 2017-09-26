@@ -2,7 +2,7 @@ import React from 'react';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
-import browserHistory from './common/utils/routerUtils';
+import browserHistory from './common/browserHistory';
 
 import App from './App';
 import store from './common/store';
