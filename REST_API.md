@@ -76,6 +76,73 @@ A json object `errors` is also returned. It indicates a key-value pair for each 
 ```
 
 
+## Pagination and filtering
+
+If an api returns a list of results, it is possible to query only a set of those results using query parameters.
+
+You can use `limit` and `offset` query parameters to indicate the number of results to return as well as the
+initial index from which to return the results.
+
+The order of the results can be unique to each api. But if the resource returned by the api
+has modified and created datetime fields and unless anything else is explicitly defined for that
+api, the results are usually ordered by first the `modifiedAt` field and then the `createdAt`
+field.
+
+The list API response always contains the `count` and `results` fields where `count` is the total number
+of items available (not considering the limit and offset)
+and `results` is the actual list of items queried.
+It can also contain the `next` and `previous` fields indicating url
+to retrieve the next and previous set of items of same count.
+
+
+Example request:
+
+```
+GET /api/v1/leads/?offset=0&limit=1
+
+```
+
+Example response:
+
+```json
+{
+    "count": 2,
+    "next": "http://localhost:8000/api/v1/leads/?limit=1&offset=1",
+    "previous": null,
+    "results": [
+        {
+            "id": 1,
+            "createdAt": "2017-09-29T12:23:18.009158Z",
+            "modifiedAt": "2017-09-29T12:23:18.016450Z",
+            "createdBy": 1,
+            "modifiedBy": 1,
+            "title": "Test",
+            "source": "Test source",
+            "confidentiality": "unprotected",
+            "status": "pending",
+            "publishedOn": null,
+            "text": "This is a test lead and is a cool one.",
+            "url": "",
+            "website": "",
+            "attachment": null,
+            "project": 4,
+            "assignee": [
+                1
+            ]
+        }
+    ]
+}
+```
+
+Many APIs also take further query parameters to filter the query set. For example, we can filter
+the leads by project using:
+
+```
+GET /api/v1/leads/?project=2
+```
+
+The API documentation available at */api/v1/docs/* also list out filters available for each api.
+
 ## Error Codes
 
 ### HTTP Status Codes
