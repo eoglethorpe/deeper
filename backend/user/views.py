@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import viewsets, permissions
 from .serializers import UserSerializer
 
 
@@ -20,7 +19,7 @@ class UserViewSet(viewsets.ModelViewSet):
     Get an existing user
 
     list:
-    Get a list of all users
+    Get a list of all users ordered by date joined
 
     destroy:
     Delete an existing user
@@ -32,7 +31,8 @@ class UserViewSet(viewsets.ModelViewSet):
     Modify an existing user partially
     """
 
-    queryset = User.objects.all()  # .order_by('-date_joined)
+    queryset = User.objects.all()\
+        .order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [UserPermission]
 

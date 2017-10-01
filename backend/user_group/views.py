@@ -1,6 +1,4 @@
-from rest_framework import viewsets
-from rest_framework import permissions
-
+from rest_framework import viewsets, permissions
 from deep.permissions import ModifyPermission
 
 from .models import UserGroup, GroupMembership
@@ -9,7 +7,7 @@ from .serializers import UserGroupSerializer, GroupMembershipSerializer
 
 class UserGroupViewSet(viewsets.ModelViewSet):
     serializer_class = UserGroupSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
 
     def get_queryset(self):
@@ -18,7 +16,7 @@ class UserGroupViewSet(viewsets.ModelViewSet):
 
 class GroupMembershipViewSet(viewsets.ModelViewSet):
     serializer_class = GroupMembershipSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
 
     def get_queryset(self):

@@ -1,6 +1,4 @@
-from rest_framework import mixins
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework import mixins, viewsets, permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from deep.permissions import ModifyPermission
@@ -14,7 +12,7 @@ from .serializers import (
 
 class RegionViewSet(viewsets.ModelViewSet):
     serializer_class = RegionSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
 
     def get_queryset(self):
@@ -26,7 +24,7 @@ class AdminLevelViewSet(viewsets.ModelViewSet):
     Admin Level API Point
     """
     serializer_class = AdminLevelSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
 
     def get_queryset(self):
@@ -40,7 +38,7 @@ class AdminLevelUploadViewSet(mixins.UpdateModelMixin,
     """
     serializer_class = AdminLevelUploadSerializer
     parser_classes = (MultiPartParser, FormParser,)
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
+    permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
 
     def get_queryset(self):
