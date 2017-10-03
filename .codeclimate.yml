@@ -10,7 +10,7 @@ engines:
     enabled: true
     config: frontend/.scss-lint.yml
   duplication:
-    enabled: true
+    enabled: false
     config:
       languages:
       - javascript: 
