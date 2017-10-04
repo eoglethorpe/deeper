@@ -143,6 +143,23 @@ GET /api/v1/leads/?project=2
 
 The API documentation available at */api/v1/docs/* also list out filters available for each api.
 
+### Ordering
+
+To order the results by a particular field, one can use the `ordering` filter. It takes the name
+of the field to order the results by. By default, *ascending* order is used, but *descending*
+order can be enforced by using minus (-) sign with the field.
+
+```
+GET /api/v1/leads/?ordering=title
+GET /api/v1/leads/?ordering=-title
+```
+
+## Camel Case vs Snake Case
+
+The JSON requests and responses are, by default, in camel case. JSON requests in snake case are also
+supported. However, the filtering and ordering parameters need to be in snake case. This is because
+they need to directly correspond to proper sql column names, which by convention are in snake case.
+
 ## Error Codes
 
 ### HTTP Status Codes
