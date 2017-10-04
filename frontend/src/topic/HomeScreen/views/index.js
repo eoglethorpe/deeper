@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Button from '../../../public/components/Button';
+import { ImageInput } from '../../../public/components/FileInput';
 import styles from './styles.scss';
 import { logoutAction } from '../../../common/action-creators/auth';
 import {
@@ -46,6 +47,12 @@ export default class HomeScreen extends React.PureComponent {
                 <Button onClick={this.handleLogoutButtonClick}>
                     Logout
                 </Button>
+                <div>
+                    <ImageInput
+                        styleName="image-input"
+                        showPreview
+                    />
+                </div>
             </div>
         );
     }

@@ -32,6 +32,9 @@ const Login = () => (
 const Register = () => (
     <Bundle load={() => import('./topic/Authentication/views/Register')} />
 );
+const UserProfile = () => (
+    <Bundle load={() => import('./topic/UserProfile/views/')} />
+);
 
 const mapStateToProps = state => ({
     authenticated: state.auth.authenticated,
@@ -112,7 +115,7 @@ export default class App extends React.Component {
         {
             path: '/users/:userId',
             name: pageTitles.userProfile,
-            component: () => <h1>{pageTitles.userProfile}</h1>,
+            component: UserProfile,
         },
         {
             path: '/countrypanel',

@@ -1,0 +1,41 @@
+@import '../../../../stylesheets/base';
+
+.user-profile-edit-form {
+    position: relative;
+    background-color: $color-foreground;
+    padding: $spacing-large;
+
+    .display-picture {
+        :global .image-input-preview {
+            height: 240px;
+        }
+    }
+
+    .action-buttons {
+        margin-top: $spacing-medium;
+    }
+
+    .pending-overlay {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-background-overlay;
+        width: 100%;
+        height: 100%;
+
+        .loading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 1s linear infinite;
+            width: $width-icon-super-large;
+            height: $width-icon-super-large;
+            color: $color-accent;
+            font-size: $width-icon-super-large;
+        }
+
+    }
+}

@@ -69,7 +69,7 @@ class Helper {
     }
 }
 
-const createRefreshAccessToken = (refreshTime = 5000) => {
+const createRefreshAccessToken = (refreshTime = 150000) => {
     const refreshAccessToken = (store) => {
         const helper = new Helper(store, refreshTime);
         return next => (action) => {
