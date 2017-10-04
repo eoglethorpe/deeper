@@ -8,7 +8,7 @@ import reducer from './reducers';
 
 // refresh every 10min
 // const refreshAccessToken = createRefreshAccessToken(1000 * 60 * 10);
-const refreshAccessToken = createRefreshAccessToken();
+const refreshAccessToken = createRefreshAccessToken(2000);
 
 const middleware = [
     // TODO: add jwt-token-refresher
