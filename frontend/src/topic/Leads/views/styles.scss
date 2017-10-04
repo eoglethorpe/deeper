@@ -1,0 +1,30 @@
+@import '../../../stylesheets/base';
+
+.leads {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-large;
+    height: calc(100vh - #{$height-navbar});
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacing-medium;
+    }
+
+    .filters {
+        background-color: $color-foreground;
+        padding: $spacing-large;
+    }
+
+    .table-container {
+        flex-grow: 1;
+    }
+
+    .footer {
+        background-color: $color-accent;
+        padding: $spacing-large;
+        color: $color-text-on-primary;
+    }
+}
