@@ -18,19 +18,16 @@ body {
     * {
         box-sizing: border-box;
 
-        ::-webkit-scrollbar-track
-        {
+        ::-webkit-scrollbar-track {
             background-color: $color-background-scrollbar;
         }
 
-        ::-webkit-scrollbar
-        {
+        ::-webkit-scrollbar {
+            background-color: $color-background-scrollbar;
             width: $spacing-small;
-            background-color: $color-background-scrollbar;
         }
 
-        ::-webkit-scrollbar-thumb
-        {
+        ::-webkit-scrollbar-thumb {
             background-color: $color-foreground-scrollbar;
         }
 
@@ -43,9 +40,14 @@ body {
         color: inherit;
     }
 
-    h1, h2, h3, h4, h5 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
         margin: 0;
         text-transform: uppercase;
+        font-weight: $font-weight-light;
     }
 
 }

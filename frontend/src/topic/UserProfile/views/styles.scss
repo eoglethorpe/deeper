@@ -1,0 +1,82 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/modal';
+
+.user-profile {
+    $info-height: 144px;
+
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "info projects"
+        "stats projects"
+        "stats groups";
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: auto $info-height 3fr 2fr;
+    height: calc(100vh - #{$height-navbar});
+    padding: $spacing-large;
+
+    >* {
+        border: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-large;
+
+        h2 {
+            margin-bottom: $spacing-medium;
+        }
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        grid-area: header;
+    }
+
+    .info {
+        display: flex;
+        align-items: flex-start;
+        grid-area: info;
+
+        .display-picture {
+            border-radius: 50%;
+            width: $info-height - $spacing-large * 2;
+            height: 100%;
+            object-fit: cover;
+            object-position: center center;
+        }
+
+        .detail {
+            padding: $spacing-medium $spacing-extra-large;
+
+            .name {
+                margin: $spacing-small 0;
+                font-size: $font-size-super-large;
+
+                .first {
+                    margin-right: $spacing-small;
+                    color: $color-text;
+                }
+
+                .last {
+                    color: $color-text;
+                }
+            }
+
+            .email {
+                margin: 0;
+                color: $color-label;
+            }
+        }
+    }
+
+    .stats {
+        grid-area: stats;
+    }
+
+    .projects {
+        grid-area: projects;
+    }
+
+    .groups {
+        grid-area: groups;
+    }
+}

@@ -28,6 +28,9 @@ const authReducer = (state = initialAuthState, action) => {
             return {
                 ...state,
                 access: action.access,
+                firstName: 'Frozen',
+                lastName: 'Helium',
+                displayPicture: 'https://i.imgur.com/yJP07D6.png',
             };
         default:
             return state;

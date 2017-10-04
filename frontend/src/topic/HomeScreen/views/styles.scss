@@ -8,10 +8,19 @@
     justify-content: center;
     width: 100%;
     height: calc(100vh - $height-navbar);
-    font-size: 5em;
 
     p {
         flex-basis: 100%;
         text-align: center;
+    }
+
+    div {
+        flex-basis: 100%;
+    }
+
+    .image-input {
+        :global .image-input-preview {
+            height: 500px;
+        }
     }
 }

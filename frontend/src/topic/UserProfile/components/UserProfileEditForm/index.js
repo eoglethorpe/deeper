@@ -4,15 +4,16 @@ import React from 'react';
 import styles from './styles.scss';
 
 import { PrimaryButton } from '../../../../public/components/Button';
+import { ImageInput } from '../../../../public/components/FileInput';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
     emailCondition,
-    lengthGreaterThanCondition,
 } from '../../../../public/utils/Form';
 
+
 @CSSModules(styles)
-export default class LoginForm extends React.PureComponent {
+export default class UserProfileEditForm extends React.PureComponent {
     static propTypes = {
         onSubmit: PropTypes.func.isRequired,
         pending: PropTypes.bool.isRequired,
@@ -28,9 +29,13 @@ export default class LoginForm extends React.PureComponent {
                 requiredCondition,
                 emailCondition,
             ],
-            password: [
+
+            firstName: [
                 requiredCondition,
-                lengthGreaterThanCondition(4),
+            ],
+
+            lastName: [
+                requiredCondition,
             ],
         };
 
@@ -90,7 +95,7 @@ export default class LoginForm extends React.PureComponent {
         const { pending } = this.props;
 
         return (
-            <form styleName="login-form" onSubmit={this.handleSubmit}>
+            <form styleName="user-profile-edit-form" onSubmit={this.handleSubmit}>
                 {
                     pending && (
                         <div styleName="pending-overlay">
@@ -98,11 +103,15 @@ export default class LoginForm extends React.PureComponent {
                         </div>
                     )
                 }
+                <ImageInput
+                    showPreview
+                    styleName="display-picture"
+                />
                 <TextInput
-                    label="Email"
-                    placeholder="john.doe@mail.com"
+                    label="First name"
+                    placeholder="John"
 
-                    ref={this.form.updateRef('email')}
+                    ref={this.form.updateRef('first-name')}
                     initialValue={this.state.formValues.email}
                     error={this.state.formErrors.email}
 
@@ -110,20 +119,19 @@ export default class LoginForm extends React.PureComponent {
                     onChange={this.onChange}
                 />
                 <TextInput
-                    label="Password"
-                    type="password"
-                    required
+                    label="Last name"
+                    placeholder="Doe"
 
-                    ref={this.form.updateRef('password')}
-                    initialValue={this.state.formValues.password}
-                    error={this.state.formErrors.password}
+                    ref={this.form.updateRef('last-name')}
+                    initialValue={this.state.formValues.email}
+                    error={this.state.formErrors.email}
 
                     onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <div styleName="action-buttons">
                     <PrimaryButton>
-                        Login
+                        Save changes
                     </PrimaryButton>
                 </div>
             </form>
