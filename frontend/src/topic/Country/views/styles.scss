@@ -1,0 +1,52 @@
+@import '../../../stylesheets/base';
+
+.country-panel {
+    display: flex;
+    padding: $spacing-large;
+    $height-full-page: calc(100vh - #{$height-navbar} - 2 * #{$spacing-large});
+
+    .country-list {
+        @include shadow-medium;
+        flex-basis: 25%;
+        $height-header: 124px;
+        background-color: $color-foreground;
+
+        .list-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-medium $spacing-large;
+            height: $height-header;
+
+            .header-text {
+                font-size: 1.6em;
+                text-transform: uppercase;
+            }
+
+            .asd {
+                flex-basis: 100%;
+            }
+        }
+
+        .list {
+            height: calc(#{$height-full-page} - #{$height-header});
+            overflow: auto;
+
+            .list-item {
+                display: block;
+                border-bottom: $width-separator-thin solid $color-separator;
+                padding: $spacing-medium $spacing-large;
+            }
+        }
+    }
+
+    .country-details {
+        @include shadow-medium;
+        flex-basis: 75%;
+        background-color: darken($color-foreground, 1%);
+        padding: $spacing-large;
+        height: $height-full-page;
+    }
+}
