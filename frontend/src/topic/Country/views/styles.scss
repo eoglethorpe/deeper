@@ -2,8 +2,7 @@
 
 .country-panel {
     display: flex;
-    padding: $spacing-large;
-    $height-full-page: calc(100vh - #{$height-navbar} - 2 * #{$spacing-large});
+    $height-full-page: calc(100vh - #{$height-navbar});
 
     .country-list {
         @include shadow-medium;
@@ -46,7 +45,6 @@
         @include shadow-medium;
         flex-basis: 75%;
         background-color: darken($color-foreground, 1%);
-        padding: $spacing-large;
         height: $height-full-page;
     }
 }
