@@ -7,20 +7,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from '../../../public/components/Button';
 import Table from '../../../public/components/Table';
 import UserProfileEditForm from '../components/UserProfileEditForm';
-import Modal, { Header, Body } from '../../../public/components/Modal';
-import { pageTitles } from '../../../common/utils/labels';
 import styles from './styles.scss';
+import Modal, { Header, Body } from '../../../public/components/Modal';
+import { PrimaryButton } from '../../../public/components/Button';
+import { pageTitles } from '../../../common/utils/labels';
+import {
+    userSelector,
+} from '../../../common/selectors/auth';
 
 const mapStateToProps = state => ({
-    user: {
-        firstName: state.auth.firstName,
-        lastName: state.auth.lastName,
-        email: state.auth.email,
-        displayPicture: state.auth.displayPicture,
-    },
+    user: userSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -125,37 +123,33 @@ export default class HomeScreen extends React.PureComponent {
 
     handleEditProfileClick = () => {
         console.log(this.state.editProfile);
-        this.setState({
-            editProfile: true,
-        });
+        this.setState({ editProfile: true });
     }
 
     handleEditProfileClose = () => {
-        this.setState({
-            editProfile: false,
-        });
+        this.setState({ editProfile: false });
     }
 
     render() {
         const { user } = this.props;
 
+
+        console.log(this.props.match.params.userId);
         return (
             <div styleName="user-profile">
                 <header styleName="header">
-                    <h1>{ pageTitles.userProfile } ({ this.props.match.params.userId })</h1>
-                    <PrimaryButton
-                        onClick={this.handleEditProfileClick}
-                    >
+                    <h1>
+                        { pageTitles.userProfile } ({ user.id })
+                    </h1>
+                    <PrimaryButton onClick={this.handleEditProfileClick} >
                         Edit profile
                     </PrimaryButton>
                     <Modal
-                        show={this.state.editProfile}
-                        onClose={this.handleEditProfileClose}
                         closeOnEscape
+                        onClose={this.handleEditProfileClose}
+                        show={this.state.editProfile}
                     >
-                        <Header
-                            title="Edit profile"
-                        />
+                        <Header title="Edit profile" />
                         <Body>
                             <UserProfileEditForm
                                 onSubmit={() => {}}
@@ -165,10 +159,11 @@ export default class HomeScreen extends React.PureComponent {
                     </Modal>
                 </header>
                 <div styleName="info">
+                    {/* FIXME: add a default image in img */}
                     <img
-                        styleName="display-picture"
-                        src={user.displayPicture}
                         alt="User avatar"
+                        src={user.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
+                        styleName="display-picture"
                     />
                     <div styleName="detail">
                         <p styleName="name">
@@ -188,14 +183,18 @@ export default class HomeScreen extends React.PureComponent {
                     <h2>Stats</h2>
                 </div>
                 <div styleName="projects">
-                    <h2>Projects</h2>
+                    <h2>
+                        Projects
+                    </h2>
                     <Table
-                        headers={this.projectHeaders}
                         data={this.projectData}
+                        headers={this.projectHeaders}
                     />
                 </div>
                 <div styleName="groups">
-                    <h2>Groups</h2>
+                    <h2>
+                        Groups
+                    </h2>
                 </div>
             </div>
         );

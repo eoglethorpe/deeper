@@ -22,7 +22,7 @@ class Helper {
         this.refreshTime = refreshTime;
         const url = urlForTokenRefresh;
         const paramsFn = () => {
-            const { refresh } = store.getState().auth;
+            const { refresh } = store.getState().auth.token;
             return createParamsForTokenRefresh({ refresh });
         };
         this.refreshRequest = new RestBuilder()

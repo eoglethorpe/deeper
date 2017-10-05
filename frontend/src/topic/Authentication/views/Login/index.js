@@ -20,10 +20,13 @@ import {
 import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
+import {
+    authenticatedSelector,
+} from '../../../../common/selectors/auth';
 
 
 const mapStateToProps = state => ({
-    authenticated: state.auth.authenticated,
+    authenticated: authenticatedSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

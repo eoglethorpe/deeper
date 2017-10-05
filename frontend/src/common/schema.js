@@ -71,5 +71,25 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 
+{
+    const name = 'getUserResponse';
+    const schema = {
+        doc: {
+            name: 'User Object',
+            description: 'Response for GET /user/:id/',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            email: { type: 'email', required: true },
+            username: { type: 'string', required: true },
+            firstName: { type: 'string', required: true },
+            lastName: { type: 'string', required: true },
+            displayPicture: { type: 'string' },
+            organization: { type: 'string', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+
 export default dict;
 export { RavlError } from '../vendor/ravl/error';

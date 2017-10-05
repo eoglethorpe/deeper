@@ -6,31 +6,41 @@ import { withRouter } from 'react-router-dom';
 
 import Multiplexer from './Multiplexer';
 import schema from './common/schema';
+import styles from './styles.scss';
 import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
-import { setAccessTokenAction } from './common/action-creators/auth';
+import {
+    setAccessTokenAction,
+    setCurrentUserAction,
+} from './common/action-creators/auth';
 import {
     startTokenRefreshAction,
 } from './common/middlewares/refreshAccessToken';
 import {
+    createParamsForCurrentUser,
     createParamsForTokenRefresh,
+    urlForCurrentUser,
     urlForTokenRefresh,
 } from './common/rest';
-import styles from './styles.scss';
+import {
+    tokenSelector,
+} from './common/selectors/auth';
 
 const mapStateToProps = state => ({
-    auth: state.auth,
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setAccessToken: access => dispatch(setAccessTokenAction(access)),
     startTokenRefresh: () => dispatch(startTokenRefreshAction()),
+    setCurrentUser: user => dispatch(setCurrentUserAction(user)),
 });
 
 const propTypes = {
-    auth: PropTypes.object.isRequired, // eslint-disable-line
     setAccessToken: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setCurrentUser: PropTypes.func.isRequired,
 };
 
 @withRouter
@@ -41,9 +51,9 @@ export default class App extends React.PureComponent {
 
     static loadingMessages = [
         'Locating the required gigapixels to render ...',
-        'Spinning up the hamster ...',
-        'Shovelling coal into the server ...',
         'Programming the flux capacitor ...',
+        'Shovelling coal into the server ...',
+        'Spinning up the hamster ...',
     ];
 
     constructor(props) {
@@ -66,21 +76,47 @@ export default class App extends React.PureComponent {
         };
 
         // If there is no refresh token, no need to get a new access token
-        const { refresh: refreshToken } = this.props.auth;
+        const { refresh: refreshToken } = this.props.token;
         if (!refreshToken) {
             this.state.pending = false;
+            console.warn('There is no previous session');
             return;
         }
 
+        this.currentUserRequest = new RestBuilder()
+            .url(urlForCurrentUser)
+            .params(() => {
+                const { access } = this.props.token;
+                return createParamsForCurrentUser({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(20)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'getUserResponse');
+                    this.props.setCurrentUser(response);
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+
         // Create rest request to get a new access token from refresh token
-        const url = urlForTokenRefresh;
-        const paramsFn = () => {
-            const { refresh } = this.props.auth;
-            return createParamsForTokenRefresh({ refresh });
-        };
         this.refreshRequest = new RestBuilder()
-            .url(url)
-            .params(paramsFn)
+            .url(urlForTokenRefresh)
+            .params(() => {
+                const { refresh } = this.props.token;
+                return createParamsForTokenRefresh({ refresh });
+            })
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
@@ -91,6 +127,9 @@ export default class App extends React.PureComponent {
                     this.props.setAccessToken(access);
                     this.props.startTokenRefresh();
                     this.setState({ pending: false });
+
+                    // TODO: Let's get some other data now
+                    this.currentUserRequest.start();
                 } catch (er) {
                     console.error(er);
                 }
@@ -117,6 +156,9 @@ export default class App extends React.PureComponent {
         console.log('Unmounting App');
         if (this.refreshRequest) {
             this.refreshRequest.stop();
+        }
+        if (this.currentUserRequest) {
+            this.currentUserRequest.stop();
         }
     }
 

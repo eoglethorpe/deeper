@@ -1,7 +1,13 @@
 const initialAuthState = {
-    authenticated: false,
-    email: undefined,
-    refresh: undefined,
-    access: undefined,
+    authenticted: false,
+
+    token: {
+        access: undefined,
+        refresh: undefined,
+    },
+
+    user: {
+        email: undefined,
+    },
 };
 export default initialAuthState;

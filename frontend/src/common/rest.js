@@ -13,6 +13,7 @@ const commonHeaderForPost = {
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
+export const urlForCurrentUser = `${wsEndpoint}/users/me/`;
 
 export const createParamsForUserCreate = ({
     firstName, lastName, organization, country, email, password,
@@ -45,4 +46,12 @@ export const createParamsForTokenRefresh = ({ refresh }) => ({
     body: JSON.stringify({
         refresh,
     }),
+});
+
+export const createParamsForCurrentUser = ({ access }) => ({
+    method: GET,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
 });
