@@ -1,5 +1,5 @@
 const initialAuthState = {
-    authenticted: false,
+    authenticated: false,
 
     token: {
         access: undefined,
