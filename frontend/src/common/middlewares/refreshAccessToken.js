@@ -1,8 +1,10 @@
 import { RestBuilder } from '../../public/utils/rest';
-import { setAccessTokenAction } from '../action-creators/auth';
+import { setAccessTokenAction, setCurrentUserAction } from '../action-creators/auth';
 import schema from '../schema';
 import {
+    createParamsForCurrentUser,
     createParamsForTokenRefresh,
+    urlForCurrentUser,
     urlForTokenRefresh,
 } from '../rest';
 
@@ -17,17 +19,17 @@ export const stopTokenRefreshAction = () => ({
     type: STOP_TOKEN_REFRESH,
 });
 
-class Helper {
+class Refresher {
     constructor(store, refreshTime) {
         this.refreshTime = refreshTime;
-        const url = urlForTokenRefresh;
-        const paramsFn = () => {
-            const { refresh } = store.getState().auth.token;
-            return createParamsForTokenRefresh({ refresh });
-        };
+        this.refreshId = undefined;
         this.refreshRequest = new RestBuilder()
-            .url(url)
-            .params(paramsFn)
+            .url(urlForTokenRefresh)
+            .params(() => {
+                const { auth } = store.getState();
+                const { refresh } = auth.token;
+                return createParamsForTokenRefresh({ refresh });
+            })
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
@@ -50,7 +52,37 @@ class Helper {
             })
             .build();
 
-        this.refreshId = undefined;
+        this.currentUserRequest = new RestBuilder()
+            .url(urlForCurrentUser)
+            .params(() => {
+                const { auth } = store.getState();
+                const { access } = auth.token;
+                return createParamsForCurrentUser({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(20)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'getUserResponse');
+                    store.dispatch(setCurrentUserAction(response));
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+    }
+
+    load = () => {
+        this.currentUserRequest.start();
     }
 
     schedule = () => {
@@ -71,15 +103,16 @@ class Helper {
 
 const createRefreshAccessToken = (refreshTime = 150000) => {
     const refreshAccessToken = (store) => {
-        const helper = new Helper(store, refreshTime);
+        const refresher = new Refresher(store, refreshTime);
         return next => (action) => {
             // store, next, action
             switch (action.type) {
                 case START_TOKEN_REFRESH:
-                    helper.schedule();
+                    refresher.load();
+                    refresher.schedule();
                     break;
                 case STOP_TOKEN_REFRESH:
-                    helper.stop();
+                    refresher.stop();
                     break;
                 default:
             }

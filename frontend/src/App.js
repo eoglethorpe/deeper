@@ -11,15 +11,12 @@ import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
 import {
     setAccessTokenAction,
-    setCurrentUserAction,
 } from './common/action-creators/auth';
 import {
     startTokenRefreshAction,
 } from './common/middlewares/refreshAccessToken';
 import {
-    createParamsForCurrentUser,
     createParamsForTokenRefresh,
-    urlForCurrentUser,
     urlForTokenRefresh,
 } from './common/rest';
 import {
@@ -33,14 +30,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setAccessToken: access => dispatch(setAccessTokenAction(access)),
     startTokenRefresh: () => dispatch(startTokenRefreshAction()),
-    setCurrentUser: user => dispatch(setCurrentUserAction(user)),
 });
 
 const propTypes = {
     setAccessToken: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
-    setCurrentUser: PropTypes.func.isRequired,
 };
 
 @withRouter
@@ -83,32 +78,6 @@ export default class App extends React.PureComponent {
             return;
         }
 
-        this.currentUserRequest = new RestBuilder()
-            .url(urlForCurrentUser)
-            .params(() => {
-                const { access } = this.props.token;
-                return createParamsForCurrentUser({ access });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(20)
-            .success((response) => {
-                try {
-                    schema.validate(response, 'getUserResponse');
-                    this.props.setCurrentUser(response);
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
-            })
-            .build();
 
         // Create rest request to get a new access token from refresh token
         this.refreshRequest = new RestBuilder()
@@ -127,9 +96,6 @@ export default class App extends React.PureComponent {
                     this.props.setAccessToken(access);
                     this.props.startTokenRefresh();
                     this.setState({ pending: false });
-
-                    // TODO: Let's get some other data now
-                    this.currentUserRequest.start();
                 } catch (er) {
                     console.error(er);
                 }
@@ -156,9 +122,6 @@ export default class App extends React.PureComponent {
         console.log('Unmounting App');
         if (this.refreshRequest) {
             this.refreshRequest.stop();
-        }
-        if (this.currentUserRequest) {
-            this.currentUserRequest.stop();
         }
     }
 
