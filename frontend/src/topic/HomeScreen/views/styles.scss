@@ -14,8 +14,9 @@
         text-align: center;
     }
 
-    div {
-        flex-basis: 100%;
+    >div {
+        flex-basis: 50%;
+        padding: $spacing-extra-large;
     }
 
     .image-input {

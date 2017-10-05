@@ -3,6 +3,7 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 
 import { ImageInput } from '../../../public/components/FileInput';
+import SelectInput from '../../../public/components/SelectInput';
 
 import styles from './styles.scss';
 
@@ -21,6 +22,9 @@ export default class HomeScreen extends React.PureComponent {
                         styleName="image-input"
                         showPreview
                     />
+                </div>
+                <div>
+                    <SelectInput />
                 </div>
             </div>
         );
