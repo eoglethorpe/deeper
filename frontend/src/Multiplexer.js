@@ -95,14 +95,22 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/users/:userId',
+            path: '/users/me',
             name: pageTitles.userProfile,
             component: UserProfile,
+            private: true,
         },
         {
             path: '/countrypanel',
             name: pageTitles.countryPanel,
             component: () => <h1>{pageTitles.countryPanel}</h1>,
+            private: true,
+        },
+        {
+            path: undefined,
+            name: '404',
+            component: () => <h1>404</h1>,
+            private: false,
         },
     ];
 
@@ -112,14 +120,10 @@ export default class Multiplexer extends React.PureComponent {
 
     componentWillUnmount() {
         console.log('Unmounting Multiplexer');
-        if (this.refreshRequest) {
-            this.refreshRequest.stop();
-        }
     }
 
     render() {
         console.log('Rendering Multiplexer');
-
 
         return (
             <div>

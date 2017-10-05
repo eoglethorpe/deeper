@@ -1,26 +1,45 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter, Link } from 'react-router-dom';
 
 import DropdownMenu, { Group, GroupTitle } from '../../../public/components/DropdownMenu';
 import LinkOutsideRouter from '../LinkOutsideRouter';
 import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
+import { logoutAction } from '../../../common/action-creators/auth';
+import {
+    stopTokenRefreshAction,
+} from '../../../common/middlewares/refreshAccessToken';
 
+const mapStateToProps = state => ({
+});
+
+const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch(logoutAction()),
+    stopTokenRefresh: () => dispatch(stopTokenRefreshAction()),
+});
+
+const propTypes = {
+    location: PropTypes.shape({
+        pathname: PropTypes.string.isRequired,
+    }).isRequired,
+    logout: PropTypes.func.isRequired,
+    stopTokenRefresh: PropTypes.func.isRequired,
+};
+
+@withRouter
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Navbar extends React.PureComponent {
+    static propTypes = propTypes;
+
     constructor(props) {
         super(props);
 
         this.headerText = 'Aditya Khatri';
         this.navBarItems = [
-            {
-                linkTo: '/',
-                name: pageTitles.dashboard,
-                isHeader: true,
-                private: true,
-            },
             {
                 linkTo: '/:projectId/leads',
                 name: pageTitles.leads,
@@ -47,7 +66,7 @@ export default class Navbar extends React.PureComponent {
             group1: {
                 items: [
                     {
-                        linkTo: '/users/:userId',
+                        linkTo: '/users/me',
                         name: 'User Profile',
                         iconName: 'ion-android-person',
                     },
@@ -71,11 +90,18 @@ export default class Navbar extends React.PureComponent {
         ];
     }
 
+    handleLogoutButtonClick = () => {
+        this.props.stopTokenRefresh();
+        this.props.logout();
+    }
+
     render() {
         const { pathname } = this.props.location;
+        // If current pathname is inside nonVisibleLinks, don't show navbar
         if (this.nonVisibleLinks.includes(pathname)) {
             return null;
         }
+
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
@@ -83,26 +109,28 @@ export default class Navbar extends React.PureComponent {
                         to="/"
                         styleName="menu-item"
                     >
-                        DEEP
+                        Deep
                     </Link>
                 </div>
                 <div styleName="menu-items">
                     {
                         this.navBarItems.map(item => (
-                            item.isHeader || (
-                                <Link
-                                    key={item.name}
-                                    styleName={pathname === item.linkTo ? 'menu-item active' : 'menu-item'}
-                                    to={item.linkTo}
-                                >
-                                    {item.name}
-                                </Link>
-                            )
+                            <Link
+                                key={item.name}
+                                styleName={pathname === item.linkTo ? 'menu-item active' : 'menu-item'}
+                                to={item.linkTo}
+                            >
+                                {item.name}
+                            </Link>
                         ))
                     }
                 </div>
                 <div styleName="dropdown-title">
-                    <DropdownMenu className="dropdown-title" title={this.headerText} iconLeft="ion-android-person">
+                    <DropdownMenu
+                        className="dropdown-title"
+                        iconLeft="ion-android-person"
+                        title={this.headerText}
+                    >
                         {
                             Object.keys(this.dropdownItems).map(key => (
                                 <Group
@@ -127,9 +155,7 @@ export default class Navbar extends React.PureComponent {
                                                         />
                                                     }
                                                     { item.iconName === '' &&
-                                                        <i
-                                                            styleName="item-icon"
-                                                        />
+                                                        <i styleName="item-icon" />
                                                     }
                                                     {item.name}
                                                 </LinkOutsideRouter>
@@ -141,6 +167,7 @@ export default class Navbar extends React.PureComponent {
                         }
                         <button
                             styleName="dropdown-item"
+                            onClick={this.handleLogoutButtonClick}
                         >
                             <i
                                 className="ion-log-out"
@@ -154,9 +181,3 @@ export default class Navbar extends React.PureComponent {
         );
     }
 }
-
-Navbar.propTypes = {
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isRequired,
-    }).isRequired,
-};
