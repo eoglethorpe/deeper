@@ -1,11 +1,12 @@
 import CSSModules from 'react-css-modules';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import EditLeadForm from '../components/EditLeadForm';
 import Table from '../../../public/components/Table';
+import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
-import { PrimaryButton } from '../../../public/components/Button';
+import Button, { PrimaryButton } from '../../../public/components/Button';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
@@ -67,6 +68,18 @@ export default class Leads extends React.PureComponent {
                 key: 'actions',
                 label: 'Actions',
                 order: 9,
+                modifier: row => (
+                    <div className="actions">
+                        <Button
+                            onClick={() => this.handleEditLeadClick(row)}
+                        >
+                            <i className="ion-edit" />
+                        </Button>
+                        <PrimaryButton>
+                            <i className="ion-forward" />
+                        </PrimaryButton>
+                    </div>
+                ),
             },
         ];
 
@@ -94,6 +107,25 @@ export default class Leads extends React.PureComponent {
                 actions: 'GG WP',
             },
         ];
+
+        this.state = {
+            editRow: {},
+            showEditLeadModal: false,
+        };
+    }
+
+    handleEditLeadClick = (row) => {
+        this.setState({
+            editRow: row,
+            showEditLeadModal: true,
+        });
+    }
+
+    handleEditLeadModalClose = () => {
+        this.setState({
+            // editRow: {},
+            showEditLeadModal: false,
+        });
     }
 
     render() {
@@ -115,6 +147,22 @@ export default class Leads extends React.PureComponent {
                 <footer styleName="footer">
                     Footer
                 </footer>
+                <Modal
+                    show={this.state.showEditLeadModal}
+                    onClose={this.handleEditLeadModalClose}
+                    closeOnEscape
+                >
+                    <Header
+                        title="Edit lead"
+                    />
+                    <Body>
+                        <EditLeadForm
+                            onSubmit={() => {}}
+                            values={this.state.editRow}
+                            pending={false}
+                        />
+                    </Body>
+                </Modal>
             </div>
         );
     }
