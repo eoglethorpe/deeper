@@ -12,7 +12,7 @@ import Form, {
 
 
 @CSSModules(styles)
-export default class UserProfileEditForm extends React.PureComponent {
+export default class EditLeadForm extends React.PureComponent {
     static propTypes = {
         onSubmit: PropTypes.func.isRequired,
         pending: PropTypes.bool.isRequired,
