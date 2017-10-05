@@ -10,12 +10,15 @@ import { Link, Redirect } from 'react-router-dom';
 
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
+import { hidUrl } from '../../../../common/config/hid';
 import { LoginForm } from '../../components/Forms';
 import { loginAction } from '../../../../common/action-creators/auth';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForTokenCreate,
+    createParamsForTokenCreateHid,
     urlForTokenCreate,
+    urlForTokenCreateHid,
 } from '../../../../common/rest';
 import {
     startTokenRefreshAction,
@@ -35,6 +38,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    location: PropTypes.object.isRequired, // eslint-disable-line
     authenticated: PropTypes.bool.isRequired,
     from: PropTypes.shape({
         pathname: PropTypes.string,
@@ -60,10 +64,24 @@ export default class Login extends React.PureComponent {
         };
     }
 
+    componentWillMount() {
+        const query = RestRequest.parseUrlParams(
+            this.props.location.hash.replace('#', ''));
+        const params = createParamsForTokenCreateHid(query);
+
+        // Login User with HID access_token
+        if (query.access_token) {
+            this.loginUser({ url: urlForTokenCreateHid, params });
+        }
+    }
+
     onSubmit = ({ email, password }) => {
         const url = urlForTokenCreate;
         const params = createParamsForTokenCreate({ username: email, password });
+        this.loginUser({ url, params, email });
+    }
 
+    loginUser = ({ url, params, email }) => {
         // Stop any retry action
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
@@ -111,7 +129,7 @@ export default class Login extends React.PureComponent {
 
         this.setState({ pending: true });
         this.userLoginRequest.start();
-    }
+    };
 
     render() {
         const { authenticated } = this.props;
@@ -148,6 +166,7 @@ export default class Login extends React.PureComponent {
                     <p>Don&apos;t have an account yet?</p>
                     <Link to="/register" styleName="register-link">Register</Link>
                 </div>
+                <a href={hidUrl} styleName="register-link">Login With HID</a>
             </div>
         );
     }

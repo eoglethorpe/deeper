@@ -12,6 +12,7 @@ const commonHeaderForPost = {
 
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
+export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForCurrentUser = `${wsEndpoint}/users/me/`;
 
@@ -37,6 +38,17 @@ export const createParamsForTokenCreate = ({ username, password }) => ({
     body: JSON.stringify({
         username,
         password,
+    }),
+});
+
+export const createParamsForTokenCreateHid = ({ access_token, expires_in, state, token_type }) => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        accessToken: access_token,
+        expiresIn: expires_in,
+        state,
+        tokenType: token_type,
     }),
 });
 
