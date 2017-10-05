@@ -7,8 +7,11 @@ import { connect } from 'react-redux';
 import Bundle from './Bundle';
 import Navbar from './common/components/Navbar';
 import PrivateRoute from './public/components/PrivateRoute';
-import { pageTitles } from './common/utils/labels';
 import styles from './styles.scss';
+import { pageTitles } from './common/utils/labels';
+import {
+    authenticatedSelector,
+} from './common/selectors/auth';
 
 const HomeScreen = () => (
     <Bundle load={() => import('./topic/HomeScreen/views')} />
@@ -32,7 +35,7 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    authenticated: state.auth.authenticated,
+    authenticated: authenticatedSelector(state),
 });
 
 // NOTE: withRouter is required here so that link change are updated

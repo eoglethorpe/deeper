@@ -6,9 +6,12 @@ import { withRouter } from 'react-router-dom';
 
 import Multiplexer from './Multiplexer';
 import schema from './common/schema';
+import styles from './styles.scss';
 import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
-import { setAccessTokenAction } from './common/action-creators/auth';
+import {
+    setAccessTokenAction,
+} from './common/action-creators/auth';
 import {
     startTokenRefreshAction,
 } from './common/middlewares/refreshAccessToken';
@@ -16,10 +19,12 @@ import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
 } from './common/rest';
-import styles from './styles.scss';
+import {
+    tokenSelector,
+} from './common/selectors/auth';
 
 const mapStateToProps = state => ({
-    auth: state.auth,
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -28,9 +33,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    auth: PropTypes.object.isRequired, // eslint-disable-line
     setAccessToken: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 @withRouter
@@ -41,9 +46,9 @@ export default class App extends React.PureComponent {
 
     static loadingMessages = [
         'Locating the required gigapixels to render ...',
-        'Spinning up the hamster ...',
-        'Shovelling coal into the server ...',
         'Programming the flux capacitor ...',
+        'Shovelling coal into the server ...',
+        'Spinning up the hamster ...',
     ];
 
     constructor(props) {
@@ -66,21 +71,21 @@ export default class App extends React.PureComponent {
         };
 
         // If there is no refresh token, no need to get a new access token
-        const { refresh: refreshToken } = this.props.auth;
+        const { refresh: refreshToken } = this.props.token;
         if (!refreshToken) {
             this.state.pending = false;
+            console.warn('There is no previous session');
             return;
         }
 
+
         // Create rest request to get a new access token from refresh token
-        const url = urlForTokenRefresh;
-        const paramsFn = () => {
-            const { refresh } = this.props.auth;
-            return createParamsForTokenRefresh({ refresh });
-        };
         this.refreshRequest = new RestBuilder()
-            .url(url)
-            .params(paramsFn)
+            .url(urlForTokenRefresh)
+            .params(() => {
+                const { refresh } = this.props.token;
+                return createParamsForTokenRefresh({ refresh });
+            })
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)

@@ -12,9 +12,12 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
+import {
+    authenticatedSelector,
+} from '../../../../common/selectors/auth';
 
 const mapStateToProps = state => ({
-    authenticated: state.auth.authenticated,
+    authenticated: authenticatedSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

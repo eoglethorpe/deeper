@@ -12,8 +12,12 @@ import { logoutAction } from '../../../common/action-creators/auth';
 import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
+import {
+    userSelector,
+} from '../../../common/selectors/auth';
 
 const mapStateToProps = state => ({
+    user: userSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -27,6 +31,13 @@ const propTypes = {
     }).isRequired,
     logout: PropTypes.func.isRequired,
     stopTokenRefresh: PropTypes.func.isRequired,
+    user: PropTypes.shape({
+        email: PropTypes.string,
+    }),
+};
+
+const defaultProps = {
+    user: {},
 };
 
 @withRouter
@@ -34,11 +45,11 @@ const propTypes = {
 @CSSModules(styles, { allowMultiple: true })
 export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
 
-        this.headerText = 'Aditya Khatri';
         this.navBarItems = [
             {
                 linkTo: '/:projectId/leads',
@@ -101,6 +112,7 @@ export default class Navbar extends React.PureComponent {
         if (this.nonVisibleLinks.includes(pathname)) {
             return null;
         }
+        const { user } = this.props;
 
         return (
             <div styleName="navbar">
@@ -129,7 +141,7 @@ export default class Navbar extends React.PureComponent {
                     <DropdownMenu
                         className="dropdown-title"
                         iconLeft="ion-android-person"
-                        title={this.headerText}
+                        title={`${user.firstName || ''} ${user.lastName || ''}`}
                     >
                         {
                             Object.keys(this.dropdownItems).map(key => (
