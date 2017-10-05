@@ -14,6 +14,8 @@ export default class Root extends React.Component {
 
         this.state = { rehydrated: false };
         this.store = store;
+
+        console.info('React version:', React.version);
     }
 
     componentWillMount() {
