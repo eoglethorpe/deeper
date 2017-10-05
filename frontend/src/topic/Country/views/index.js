@@ -1,4 +1,5 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Switch, Link, Route } from 'react-router-dom';
 
@@ -8,8 +9,19 @@ import { PrimaryButton } from '../../../public/components/Button';
 import styles from './styles.scss';
 import TextInput from '../../../public/components/TextInput';
 
+const propTypes = {
+    location: PropTypes.shape({
+        pathname: PropTypes.string.isReqired,
+    }).isRequired,
+};
+
+// TODO:
+// Scroll to selected country
+
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPanel extends React.PureComponent {
+    static propTypes = propTypes;
+
     constructor(props) {
         super(props);
 
@@ -62,18 +74,56 @@ export default class CountryPanel extends React.PureComponent {
                 fullName: 'Hiati',
                 iso: 'HIA',
             },
+            {
+                fullName: 'Bangaladeh',
+                iso: 'BAN',
+            },
+            {
+                fullName: 'Pakistan',
+                iso: 'PAK',
+            },
+            {
+                fullName: 'Bhutan',
+                iso: 'BHU',
+            },
+            {
+                fullName: 'Italy',
+                iso: 'ITL',
+            },
+            {
+                fullName: 'France',
+                iso: 'FRA',
+            },
+            {
+                fullName: 'Germany',
+                iso: 'GER',
+            },
         ];
+
+        this.state = {
+            displayCountryList: this.countryList,
+            searchInputValue: '',
+        };
     }
 
     goToAddCountry = () => {
         browserHistory.push('/countrypanel/');
     };
 
-    dummy = (value) => {
-        console.log(value);
+    search = (value) => {
+        const displayCountryList = this.countryList.filter(country => (
+            country.fullName.toLowerCase().includes(value.toLowerCase())
+        ));
+
+        this.setState({
+            displayCountryList,
+            searchInputValue: value,
+        });
     };
 
     render() {
+        const { pathname } = this.props.location;
+
         return (
             <div styleName="country-panel">
                 <div styleName="country-list">
@@ -85,18 +135,18 @@ export default class CountryPanel extends React.PureComponent {
                             + Add country
                         </PrimaryButton>
                         <TextInput
-                            type="search"
+                            onChange={this.search}
                             placeholder="Search Country"
-                            onChange={this.dummy}
+                            type="search"
                         />
                     </div>
                     <div styleName="list">
                         {
-                            this.countryList.map(item => (
+                            this.state.displayCountryList.map(item => (
                                 <Link
                                     key={item.iso}
+                                    styleName={pathname === `/countrypanel/${item.iso}/` ? 'list-item active' : 'list-item'}
                                     to={`/countrypanel/${item.iso}/`}
-                                    styleName="list-item"
                                 >
                                     {item.fullName}
                                 </Link>
@@ -109,8 +159,6 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             this.countryList.map(item => (
                                 <Route
-                                    key={item.iso}
-                                    path={`/countrypanel/${item.iso}/`}
                                     component={
                                         () => (
                                             <CountryDetail
@@ -119,12 +167,14 @@ export default class CountryPanel extends React.PureComponent {
                                             />
                                         )
                                     }
+                                    key={item.iso}
+                                    path={`/countrypanel/${item.iso}/`}
                                 />
                             ))
                         }
                         <Route
-                            path="/countrypanel/"
                             component={() => <CountryDetail fullName="Add new country" />}
+                            path="/countrypanel/"
                         />
                     </Switch>
                 </div>

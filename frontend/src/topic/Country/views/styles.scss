@@ -20,8 +20,8 @@
             height: $height-header;
 
             .header-text {
-                font-size: 1.6em;
                 text-transform: uppercase;
+                font-size: 1.6em;
             }
 
             .asd {
@@ -37,6 +37,10 @@
                 display: block;
                 border-bottom: $width-separator-thin solid $color-separator;
                 padding: $spacing-medium $spacing-large;
+            }
+
+            .active {
+                background-color: $color-accent;
             }
         }
     }

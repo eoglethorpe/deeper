@@ -4,11 +4,13 @@ import React from 'react';
 
 import styles from './styles.scss';
 
+const propTypes = {
+    iso: PropTypes.string.isRequired,
+};
+
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
-    static propTypes = {
-        iso: PropTypes.string.isRequired,
-    }
+    static propTypes = propTypes;
 
     render() {
         const { iso } = this.props;

@@ -15,7 +15,10 @@ import styles from './styles.scss';
 export default class CountryDetail extends React.PureComponent {
     static propTypes = {
         fullName: PropTypes.string.isRequired,
-        iso: PropTypes.string.isRequired,
+        iso: PropTypes.string,
+    }
+    static defaultProps = {
+        iso: '',
     }
 
     render() {
@@ -67,7 +70,7 @@ export default class CountryDetail extends React.PureComponent {
                         >
                             Media Sources
                         </TabLink>
-                        <TabLink styleName="empty-tab" />
+                        <div styleName="empty-tab" />
                     </div>
                     <div styleName="tabs-content">
                         <TabContent for="general" styleName="tab">

@@ -52,12 +52,6 @@ export default class Navbar extends React.PureComponent {
 
         this.navBarItems = [
             {
-                linkTo: '/',
-                name: pageTitles.dashboard,
-                isHeader: true,
-                private: true,
-            },
-            {
                 linkTo: '/:projectId/leads/',
                 name: pageTitles.leads,
                 private: true,
@@ -151,9 +145,7 @@ export default class Navbar extends React.PureComponent {
                     >
                         {
                             Object.keys(this.dropdownItems).map(key => (
-                                <Group
-                                    key={key}
-                                >
+                                <Group key={key} >
                                     <div>
                                         {
                                             !this.dropdownItems[key].label ||
