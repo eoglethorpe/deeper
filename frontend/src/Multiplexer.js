@@ -22,7 +22,9 @@ const Register = () => (
 const UserProfile = () => (
     <Bundle load={() => import('./topic/UserProfile/views/')} />
 );
-
+const Leads = () => (
+    <Bundle load={() => import('./topic/Leads/views/')} />
+);
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
@@ -61,7 +63,7 @@ export default class Multiplexer extends React.PureComponent {
         {
             path: '/:projectId/leads',
             name: pageTitles.leads,
-            component: () => <h1>{pageTitles.leads}</h1>,
+            component: Leads,
             private: true,
         },
         {
