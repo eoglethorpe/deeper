@@ -38,11 +38,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    location: PropTypes.object.isRequired, // eslint-disable-line
     authenticated: PropTypes.bool.isRequired,
     from: PropTypes.shape({
         pathname: PropTypes.string,
     }),
+    location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
 };
@@ -59,26 +59,34 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            pending: false,
-        };
+        this.state = { pending: false };
     }
 
     componentWillMount() {
-        const query = RestRequest.parseUrlParams(
-            this.props.location.hash.replace('#', ''));
-        const params = createParamsForTokenCreateHid(query);
+        const { location } = this.props;
+        // Get params from the current url
+        // NOTE: hid provides query as hash
+        const query = RestRequest.parseUrlParams(location.hash.replace('#', ''));
 
         // Login User with HID access_token
         if (query.access_token) {
-            this.loginUser({ url: urlForTokenCreateHid, params });
+            const params = createParamsForTokenCreateHid(query);
+            this.loginUser({
+                url: urlForTokenCreateHid,
+                params,
+                // NOTE: we have no email info from hid
+            });
         }
     }
 
     onSubmit = ({ email, password }) => {
         const url = urlForTokenCreate;
         const params = createParamsForTokenCreate({ username: email, password });
-        this.loginUser({ url, params, email });
+        this.loginUser({
+            url,
+            params,
+            email,
+        });
     }
 
     loginUser = ({ url, params, email }) => {
@@ -163,10 +171,22 @@ export default class Login extends React.PureComponent {
                     />
                 </div>
                 <div styleName="register-link-container">
-                    <p>Don&apos;t have an account yet?</p>
-                    <Link to="/register" styleName="register-link">Register</Link>
+                    <p>
+                        Don&apos;t have an account yet?
+                    </p>
+                    <Link
+                        to="/register"
+                        styleName="register-link"
+                    >
+                        Register
+                    </Link>
                 </div>
-                <a href={hidUrl} styleName="register-link">Login With HID</a>
+                <a
+                    href={hidUrl}
+                    styleName="register-link"
+                >
+                    Login With HID
+                </a>
             </div>
         );
     }
