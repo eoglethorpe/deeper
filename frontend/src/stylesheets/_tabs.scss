@@ -1,37 +1,39 @@
-@import '../../../stylesheets/base';
+@import './base';
 
 .tabs-container {
-    $tabbar-height: 48px;
-
     .tabs-header-container {
-        @include shadow-small;
         display: flex;
-        background-color: $color-foreground;
+        width: 100%;
         color: $color-text-active-tab;
 
         .tab-header {
             display: flex;
             align-items: center;
-            border-bottom: $width-separator-normal solid transparent;
+            border-bottom: $width-separator-normal solid $color-separator;
             cursor: pointer;
-            padding: $spacing-large $spacing-super-large;
-            height: $tabbar-height;
+            padding: $spacing-medium $spacing-large;
+            height: $height-tabbar;
             text-transform: uppercase;
             color: $color-label;
             font-size: $font-size-medium;
             font-weight: $font-weight-medium;
         }
 
+        .empty-tab {
+            flex: 1;
+            border-bottom: $width-separator-normal solid $color-separator;
+        }
+
         :global .tab-link-active {
             border-bottom-color: $color-accent;
-            background-color: lighten($color-accent, 40%);
             color: $color-text-active-tab;
             font-weight: $font-weight-medium;
         }
     }
 
     .tabs-content {
-        height: calc(100% - #{$tabbar-height} - 96px);
+        height: calc(100% - #{$height-tabbar});
+        overflow: auto;
     }
 }
 

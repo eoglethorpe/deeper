@@ -28,6 +28,10 @@ const UserProfile = () => (
 const Leads = () => (
     <Bundle load={() => import('./topic/Leads/views/')} />
 );
+const CountryPanel = () => (
+    <Bundle load={() => import('./topic/Country/views')} />
+);
+
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
@@ -48,67 +52,67 @@ export default class Multiplexer extends React.PureComponent {
 
     static pages = [
         {
-            path: '/login',
+            path: '/login/',
             name: pageTitles.login,
             component: Login,
         },
         {
-            path: '/register',
+            path: '/register/',
             name: pageTitles.register,
             component: Register,
         },
         {
-            path: '/',
-            name: pageTitles.dashboard,
-            component: HomeScreen,
-            private: true,
-        },
-        {
-            path: '/:projectId/leads',
+            path: '/:projectId/leads/',
             name: pageTitles.leads,
             component: Leads,
             private: true,
         },
         {
-            path: '/:projectId/entries',
+            path: '/:projectId/entries/',
             name: pageTitles.entries,
             component: () => <h1>{pageTitles.entries}</h1>,
             private: true,
         },
         {
-            path: '/:projectId/ary',
+            path: '/:projectId/ary/',
             name: pageTitles.ary,
             component: () => <h1>{pageTitles.ary}</h1>,
             private: true,
         },
         {
-            path: '/:projectId/export',
+            path: '/:projectId/export/',
             name: pageTitles.export,
             component: () => <h1>{pageTitles.export}</h1>,
             private: true,
         },
         {
-            path: '/:projectId/leads/:leadId',
+            path: '/:projectId/leads/:leadId/',
             name: pageTitles.editLeads,
             component: () => <h1>{pageTitles.editLeads}</h1>,
             private: true,
         },
         {
-            path: '/:projectId/entries/:entryId',
+            path: '/:projectId/entries/:entryId/',
             name: pageTitles.editEntries,
             component: () => <h1>{pageTitles.editEntries}</h1>,
             private: true,
         },
         {
-            path: '/users/me',
+            path: '/users/me/',
             name: pageTitles.userProfile,
             component: UserProfile,
             private: true,
         },
         {
-            path: '/countrypanel',
+            path: '/countrypanel/*',
             name: pageTitles.countryPanel,
-            component: () => <h1>{pageTitles.countryPanel}</h1>,
+            component: CountryPanel,
+            private: true,
+        },
+        {
+            path: '/',
+            name: pageTitles.dashboard,
+            component: HomeScreen,
             private: true,
         },
         {

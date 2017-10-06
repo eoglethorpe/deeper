@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: calc(100vh - $height-navbar);
+    height: calc(100vh - #{$height-navbar});
 
     p {
         flex-basis: 100%;

@@ -8,7 +8,6 @@ import { ImageInput } from '../../../../public/components/FileInput';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
-    emailCondition,
 } from '../../../../public/utils/Form';
 
 
@@ -23,17 +22,11 @@ export default class UserProfileEditForm extends React.PureComponent {
         super(props);
 
         const form = new Form();
-        const elements = ['email', 'password'];
+        const elements = ['firstName', 'lastName'];
         const validations = {
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-
             firstName: [
                 requiredCondition,
             ],
-
             lastName: [
                 requiredCondition,
             ],
@@ -95,13 +88,18 @@ export default class UserProfileEditForm extends React.PureComponent {
         const { pending } = this.props;
 
         return (
-            <form styleName="user-profile-edit-form" onSubmit={this.handleSubmit}>
+            <form
+                styleName="user-profile-edit-form"
+                onSubmit={this.handleSubmit}
+            >
                 {
-                    pending && (
-                        <div styleName="pending-overlay">
-                            <i className="ion-load-c" styleName="loading-icon" />
-                        </div>
-                    )
+                    pending &&
+                    <div styleName="pending-overlay">
+                        <i
+                            className="ion-load-c"
+                            styleName="loading-icon"
+                        />
+                    </div>
                 }
                 <ImageInput
                     showPreview
@@ -111,9 +109,9 @@ export default class UserProfileEditForm extends React.PureComponent {
                     label="First name"
                     placeholder="John"
 
-                    ref={this.form.updateRef('first-name')}
-                    initialValue={this.state.formValues.email}
-                    error={this.state.formErrors.email}
+                    ref={this.form.updateRef('firstName')}
+                    initialValue={this.state.formValues.firstName}
+                    error={this.state.formErrors.firstName}
 
                     onFocus={this.onFocus}
                     onChange={this.onChange}
@@ -122,9 +120,9 @@ export default class UserProfileEditForm extends React.PureComponent {
                     label="Last name"
                     placeholder="Doe"
 
-                    ref={this.form.updateRef('last-name')}
-                    initialValue={this.state.formValues.email}
-                    error={this.state.formErrors.email}
+                    ref={this.form.updateRef('lastName')}
+                    initialValue={this.state.formValues.lastName}
+                    error={this.state.formErrors.lastName}
 
                     onFocus={this.onFocus}
                     onChange={this.onChange}

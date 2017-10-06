@@ -52,22 +52,22 @@ export default class Navbar extends React.PureComponent {
 
         this.navBarItems = [
             {
-                linkTo: '/:projectId/leads',
+                linkTo: '/:projectId/leads/',
                 name: pageTitles.leads,
                 private: true,
             },
             {
-                linkTo: '/:projectId/entries',
+                linkTo: '/:projectId/entries/',
                 name: pageTitles.entries,
                 private: true,
             },
             {
-                linkTo: '/:projectId/ary',
+                linkTo: '/:projectId/ary/',
                 name: pageTitles.ary,
                 private: true,
             },
             {
-                linkTo: '/:projectId/export',
+                linkTo: '/:projectId/export/',
                 name: pageTitles.export,
                 private: true,
             },
@@ -77,17 +77,17 @@ export default class Navbar extends React.PureComponent {
             group1: {
                 items: [
                     {
-                        linkTo: '/users/me',
+                        linkTo: '/users/me/',
                         name: 'User Profile',
                         iconName: 'ion-android-person',
                     },
                     {
-                        linkTo: '/countrypanel',
+                        linkTo: '/countrypanel/',
                         name: 'Country Panel',
                         iconName: 'ion-android-globe',
                     },
                     {
-                        linkTo: '/admin',
+                        linkTo: '/admin/',
                         name: 'Admin Panel',
                         iconName: 'ion-locked',
                     },
@@ -96,8 +96,8 @@ export default class Navbar extends React.PureComponent {
         };
 
         this.nonVisibleLinks = [
-            '/login',
-            '/register',
+            '/login/',
+            '/register/',
         ];
     }
 
@@ -145,9 +145,7 @@ export default class Navbar extends React.PureComponent {
                     >
                         {
                             Object.keys(this.dropdownItems).map(key => (
-                                <Group
-                                    key={key}
-                                >
+                                <Group key={key} >
                                     <div>
                                         {
                                             !this.dropdownItems[key].label ||

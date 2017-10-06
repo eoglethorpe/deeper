@@ -1,0 +1,30 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+
+.country-detail {
+    $height-header: 48px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-medium $spacing-large 0;
+        height: $height-header;
+
+        .header-title {
+            font-size: 1.6em;
+        }
+
+        .button-container {
+            font-size: inherit;
+        }
+    }
+
+    .tabs-container {
+        height: calc(100vh - #{$height-navbar} - #{$height-header});
+    }
+
+    .tab {
+        font-size: .9em;
+    }
+}
