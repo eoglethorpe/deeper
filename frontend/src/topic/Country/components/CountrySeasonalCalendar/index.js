@@ -15,7 +15,9 @@ export default class CountrySeasonalCalendar extends React.PureComponent {
     render() {
         const { iso } = this.props;
         return (
-            <div>Seasonal Calendar {iso}</div>
+            <div>
+                Seasonal Calendar {iso}
+            </div>
         );
     }
 }

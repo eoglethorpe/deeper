@@ -15,7 +15,9 @@ export default class CountryPopulationData extends React.PureComponent {
     render() {
         const { iso } = this.props;
         return (
-            <div>Population data {iso}</div>
+            <div>
+                Population data {iso}
+            </div>
         );
     }
 }

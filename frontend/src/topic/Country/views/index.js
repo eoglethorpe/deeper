@@ -5,9 +5,9 @@ import { Switch, Link, Route } from 'react-router-dom';
 
 import browserHistory from '../../../common/browserHistory';
 import CountryDetail from '../components/CountryDetail';
-import { PrimaryButton } from '../../../public/components/Button';
-import styles from './styles.scss';
 import TextInput from '../../../public/components/TextInput';
+import styles from './styles.scss';
+import { PrimaryButton } from '../../../public/components/Button';
 
 const propTypes = {
     location: PropTypes.shape({
@@ -111,9 +111,10 @@ export default class CountryPanel extends React.PureComponent {
     };
 
     search = (value) => {
-        const displayCountryList = this.countryList.filter(country => (
+        const caseInsensitiveSubmatch = country => (
             country.fullName.toLowerCase().includes(value.toLowerCase())
-        ));
+        );
+        const displayCountryList = this.countryList.filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayCountryList,
@@ -159,21 +160,21 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             this.countryList.map(item => (
                                 <Route
-                                    component={
-                                        () => (
-                                            <CountryDetail
-                                                iso={item.iso}
-                                                fullName={item.fullName}
-                                            />
-                                        )
-                                    }
+                                    component={() => (
+                                        <CountryDetail
+                                            fullName={item.fullName}
+                                            iso={item.iso}
+                                        />
+                                    )}
                                     key={item.iso}
                                     path={`/countrypanel/${item.iso}/`}
                                 />
                             ))
                         }
                         <Route
-                            component={() => <CountryDetail fullName="Add new country" />}
+                            component={() => (
+                                <CountryDetail fullName="Add new country" />
+                            )}
                             path="/countrypanel/"
                         />
                     </Switch>
