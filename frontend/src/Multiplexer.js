@@ -6,9 +6,11 @@ import { connect } from 'react-redux';
 
 import Bundle from './Bundle';
 import Navbar from './common/components/Navbar';
-import PrivateRoute from './public/components/PrivateRoute';
 import styles from './styles.scss';
 import { pageTitles } from './common/utils/labels';
+import PrivateRoute, {
+    ExclusivelyPublicRoute,
+} from './public/components/PrivateRoute';
 import {
     authenticatedSelector,
 } from './common/selectors/auth';
@@ -55,11 +57,15 @@ export default class Multiplexer extends React.PureComponent {
             path: '/login/',
             name: pageTitles.login,
             component: Login,
+            public: true,
+            redirectLink: '/',
         },
         {
             path: '/register/',
             name: pageTitles.register,
             component: Register,
+            public: true,
+            redirectLink: '/',
         },
         {
             path: '/:projectId/leads/',
@@ -119,7 +125,6 @@ export default class Multiplexer extends React.PureComponent {
             path: undefined,
             name: '404',
             component: () => <h1>404</h1>,
-            private: false,
         },
     ];
 
@@ -131,6 +136,41 @@ export default class Multiplexer extends React.PureComponent {
         console.log('Unmounting Multiplexer');
     }
 
+
+    getRoute = (page) => {
+        if (page.private) {
+            return (
+                <PrivateRoute
+                    authenticated={this.props.authenticated}
+                    component={page.component}
+                    exact
+                    key={page.name}
+                    path={page.path}
+                    redirectLink={page.redirectLink}
+                />
+            );
+        } else if (page.public) {
+            return (
+                <ExclusivelyPublicRoute
+                    authenticated={this.props.authenticated}
+                    component={page.component}
+                    exact
+                    key={page.name}
+                    path={page.path}
+                    redirectLink={page.redirectLink}
+                />
+            );
+        }
+        return (
+            <Route
+                component={page.component}
+                exact
+                key={page.name}
+                path={page.path}
+            />
+        );
+    }
+
     render() {
         console.log('Rendering Multiplexer');
 
@@ -138,26 +178,7 @@ export default class Multiplexer extends React.PureComponent {
             <div>
                 <NavbarWithProps />
                 <Switch>
-                    {
-                        Multiplexer.pages.map(page => (
-                            page.private ? (
-                                <PrivateRoute
-                                    authenticated={this.props.authenticated}
-                                    component={page.component}
-                                    exact
-                                    key={page.name}
-                                    path={page.path}
-                                />
-                            ) : (
-                                <Route
-                                    component={page.component}
-                                    exact
-                                    key={page.name}
-                                    path={page.path}
-                                />
-                            )
-                        ))
-                    }
+                    { Multiplexer.pages.map(this.getRoute) }
                 </Switch>
             </div>
         );

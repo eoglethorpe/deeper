@@ -1,7 +1,5 @@
 import CSSModules from 'react-css-modules';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
 import schema from '../../../../common/schema';
@@ -12,39 +10,9 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
-import {
-    authenticatedSelector,
-} from '../../../../common/selectors/auth';
 
-const mapStateToProps = state => ({
-    authenticated: authenticatedSelector(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-    dispatch,
-});
-
-const propTypes = {
-    authenticated: PropTypes.bool.isRequired,
-    location: PropTypes.shape({
-        state: PropTypes.shape({
-            from: PropTypes.shape({
-                pathname: PropTypes.string.isRequired,
-            }),
-        }),
-    }),
-};
-
-const defaultProps = {
-    location: {},
-};
-
-@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
-    static propTypes = propTypes;
-    static defaultProps = defaultProps;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -119,12 +87,7 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        if (this.props.authenticated) {
-            const { from } = this.props.location.state || { from: { pathname: '/' } };
-            return (
-                <Redirect to={from} />
-            );
-        } else if (this.state.registrationSuccessful) {
+        if (this.state.registrationSuccessful) {
             return (
                 <Redirect to="/login" />
             );
@@ -153,8 +116,15 @@ export default class Login extends React.PureComponent {
                     />
                 </div>
                 <div styleName="login-link-container">
-                    <p>Already have an account yet?</p>
-                    <Link to="/login" styleName="login-link">Login</Link>
+                    <p>
+                        Already have an account yet?
+                    </p>
+                    <Link
+                        to="/login"
+                        styleName="login-link"
+                    >
+                        Login
+                    </Link>
                 </div>
             </div>
         );

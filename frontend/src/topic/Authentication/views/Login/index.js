@@ -6,7 +6,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
@@ -24,13 +24,8 @@ import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
 import {
-    authenticatedSelector,
 } from '../../../../common/selectors/auth';
 
-
-const mapStateToProps = state => ({
-    authenticated: authenticatedSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     login: params => dispatch(loginAction(params)),
@@ -38,20 +33,15 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    authenticated: PropTypes.bool.isRequired,
-    from: PropTypes.shape({
-        pathname: PropTypes.string,
-    }),
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    from: undefined,
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -63,6 +53,8 @@ export default class Login extends React.PureComponent {
     }
 
     componentWillMount() {
+        console.log('MOUNTING Login');
+
         const { location } = this.props;
         // Get params from the current url
         // NOTE: hid provides query as hash
@@ -106,6 +98,7 @@ export default class Login extends React.PureComponent {
                     schema.validate(response, 'userLoginResponse');
                     const { refresh, access } = response;
                     this.props.login({ email, refresh, access });
+                    // TODO: make login start token refresh
                     this.props.startTokenRefresh();
                 } catch (err) {
                     console.error(err);
@@ -140,15 +133,6 @@ export default class Login extends React.PureComponent {
     };
 
     render() {
-        const { authenticated } = this.props;
-
-        if (authenticated) {
-            const from = this.props.from || { pathname: '/' };
-            return (
-                <Redirect to={from} />
-            );
-        }
-
         const { nonFieldErrors, pending } = this.state;
         return (
             <div styleName="login">
