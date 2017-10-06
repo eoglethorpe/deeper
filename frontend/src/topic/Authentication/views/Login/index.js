@@ -132,6 +132,10 @@ export default class Login extends React.PureComponent {
         this.userLoginRequest.start();
     };
 
+    handleHidLoginClick = () => {
+        this.setState({ pending: true });
+    }
+
     render() {
         const { nonFieldErrors, pending } = this.state;
         return (
@@ -166,6 +170,7 @@ export default class Login extends React.PureComponent {
                     </Link>
                 </div>
                 <a
+                    onClick={this.handleHidLoginClick}
                     href={hidUrl}
                     styleName="register-link"
                 >
