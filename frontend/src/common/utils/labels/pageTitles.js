@@ -5,6 +5,7 @@ const pageTitles = {
     dashboard: 'Dashboard',
 
     leads: 'Leads',
+    addLeads: 'Add Lead',
     entries: 'Entries',
     ary: 'Assessment Registry',
     export: 'Export',
