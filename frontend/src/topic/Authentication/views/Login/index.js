@@ -6,28 +6,26 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
+import { hidUrl } from '../../../../common/config/hid';
 import { LoginForm } from '../../components/Forms';
 import { loginAction } from '../../../../common/action-creators/auth';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForTokenCreate,
+    createParamsForTokenCreateHid,
     urlForTokenCreate,
+    urlForTokenCreateHid,
 } from '../../../../common/rest';
 import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
 import {
-    authenticatedSelector,
 } from '../../../../common/selectors/auth';
 
-
-const mapStateToProps = state => ({
-    authenticated: authenticatedSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     login: params => dispatch(loginAction(params)),
@@ -35,19 +33,15 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    authenticated: PropTypes.bool.isRequired,
-    from: PropTypes.shape({
-        pathname: PropTypes.string,
-    }),
+    location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    from: undefined,
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -55,15 +49,39 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            pending: false,
-        };
+        this.state = { pending: false };
+    }
+
+    componentWillMount() {
+        console.log('MOUNTING Login');
+
+        const { location } = this.props;
+        // Get params from the current url
+        // NOTE: hid provides query as hash
+        const query = RestRequest.parseUrlParams(location.hash.replace('#', ''));
+
+        // Login User with HID access_token
+        if (query.access_token) {
+            const params = createParamsForTokenCreateHid(query);
+            this.loginUser({
+                url: urlForTokenCreateHid,
+                params,
+                // NOTE: we have no email info from hid
+            });
+        }
     }
 
     onSubmit = ({ email, password }) => {
         const url = urlForTokenCreate;
         const params = createParamsForTokenCreate({ username: email, password });
+        this.loginUser({
+            url,
+            params,
+            email,
+        });
+    }
 
+    loginUser = ({ url, params, email }) => {
         // Stop any retry action
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
@@ -80,6 +98,7 @@ export default class Login extends React.PureComponent {
                     schema.validate(response, 'userLoginResponse');
                     const { refresh, access } = response;
                     this.props.login({ email, refresh, access });
+                    // TODO: make login start token refresh
                     this.props.startTokenRefresh();
                 } catch (err) {
                     console.error(err);
@@ -111,18 +130,13 @@ export default class Login extends React.PureComponent {
 
         this.setState({ pending: true });
         this.userLoginRequest.start();
+    };
+
+    handleHidLoginClick = () => {
+        this.setState({ pending: true });
     }
 
     render() {
-        const { authenticated } = this.props;
-
-        if (authenticated) {
-            const from = this.props.from || { pathname: '/' };
-            return (
-                <Redirect to={from} />
-            );
-        }
-
         const { nonFieldErrors, pending } = this.state;
         return (
             <div styleName="login">
@@ -145,9 +159,23 @@ export default class Login extends React.PureComponent {
                     />
                 </div>
                 <div styleName="register-link-container">
-                    <p>Don&apos;t have an account yet?</p>
-                    <Link to="/register" styleName="register-link">Register</Link>
+                    <p>
+                        Don&apos;t have an account yet?
+                    </p>
+                    <Link
+                        to="/register"
+                        styleName="register-link"
+                    >
+                        Register
+                    </Link>
                 </div>
+                <a
+                    onClick={this.handleHidLoginClick}
+                    href={hidUrl}
+                    styleName="register-link"
+                >
+                    Login With HID
+                </a>
             </div>
         );
     }
