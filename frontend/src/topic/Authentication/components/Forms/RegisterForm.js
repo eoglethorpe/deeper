@@ -14,6 +14,7 @@ import Form, {
 const propTypes = {
     formErrors: PropTypes.object.isRequired, // eslint-disable-line
     formValues: PropTypes.object.isRequired, // eslint-disable-line
+    onSubmit: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
 };
 
@@ -65,7 +66,7 @@ export default class RegisterForm extends React.PureComponent {
         };
 
         const okay = (data) => {
-            this.props.onRegister(data);
+            this.props.onSubmit(data);
         };
 
         form.setElements(elements);

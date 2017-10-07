@@ -111,7 +111,7 @@ export default class Login extends React.PureComponent {
                 <div styleName="register-form-wrapper">
                     <RegisterForm
                         formErrors={this.state.formErrors}
-                        onRegister={this.onRegister}
+                        onSubmit={this.onRegister}
                         pending={this.state.pending}
                     />
                 </div>
