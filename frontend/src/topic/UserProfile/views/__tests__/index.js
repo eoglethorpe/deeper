@@ -1,10 +1,22 @@
 import React from 'react';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
 import UserProfile from '../';
 
+const initialState = {
+};
+
 describe('<UserProfile />', () => {
+    const mockStore = configureStore();
+    const store = mockStore(initialState);
+
     const wrapper = shallow(
-        <UserProfile />,
+        <Provider
+            store={store}
+        >
+            <UserProfile />
+        </Provider>,
     );
 
     it('renders properly', () => {

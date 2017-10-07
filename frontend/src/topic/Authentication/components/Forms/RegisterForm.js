@@ -14,7 +14,6 @@ import Form, {
 const propTypes = {
     formErrors: PropTypes.object.isRequired, // eslint-disable-line
     formValues: PropTypes.object.isRequired, // eslint-disable-line
-    onRegister: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
 };
 
@@ -24,7 +23,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class LoginForm extends React.PureComponent {
+export default class RegisterForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
