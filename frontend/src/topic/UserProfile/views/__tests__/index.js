@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Leads from '../';
+import UserProfile from '../';
 
-describe('<Leads />', () => {
+describe('<UserProfile />', () => {
     const wrapper = shallow(
-        <Leads />,
+        <UserProfile />,
     );
 
     it('renders properly', () => {
