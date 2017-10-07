@@ -1,5 +1,13 @@
 # DEEP
 
+[![Build Status](https://travis-ci.org/eoglethorpe/deeper.svg?branch=develop)](https://travis-ci.org/eoglethorpe/deeper)
+
+[![Code Climate](https://codeclimate.com/github/eoglethorpe/deeper/badges/gpa.svg)](https://codeclimate.com/github/eoglethorpe/deeper)
+[![Issue Count](https://codeclimate.com/github/eoglethorpe/deeper/badges/issue_count.svg)](https://codeclimate.com/github/eoglethorpe/deeper)
+
+
+![Coverage(Codecov) Tree](https://codecov.io/gh/eoglethorpe/deeper/branch/develop/graphs/tree.svg)
+
 ## Installation
 
 ### Requirements
