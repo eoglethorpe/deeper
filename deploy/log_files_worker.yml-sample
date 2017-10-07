@@ -1,0 +1,11 @@
+files:
+  - path: /var/log/uwsgi/access.log
+    tag: uwsgi/access
+  - path: /var/log/uwsgi/error.log
+    tag: uwsgi/error
+
+hostname: <hostname>
+destination:
+  host: <host>
+  port: <port>
+  protocol: tls

@@ -135,4 +135,9 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+.env*
+!.env-sample
+!.env-dev.enc
+
+# Sensitive Deploy Files
+deploy/eb/

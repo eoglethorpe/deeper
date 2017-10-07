@@ -4,6 +4,9 @@ RUN apt-get update && \
     apt-get install -y \
         git \
         locales \
+        vim \
+        curl \
+        unzip \
         python3 \
         python3-dev \
         python3-setuptools \
@@ -12,9 +15,11 @@ RUN apt-get update && \
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 
+COPY deploy/remote2_syslog_init.sh /tmp/
+RUN /tmp/remote2_syslog_init.sh
+
 RUN pip3 install uwsgi
 
-RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
@@ -38,4 +43,5 @@ COPY frontend/package.json /code/frontend/
 RUN cd frontend && yarn install
 
 COPY . /code/
-RUN cd frontend && yarn build
+
+CMD ./deploy/eb_exec.sh
