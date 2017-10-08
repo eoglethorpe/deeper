@@ -2,9 +2,11 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
+import Helmet from 'react-helmet';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { RegisterForm } from '../../components/Forms';
+import { pageTitles } from '../../../../common/utils/labels';
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForUserCreate,
@@ -96,6 +98,9 @@ export default class Login extends React.PureComponent {
         const { nonFieldErrors } = this.state;
         return (
             <div styleName="register">
+                <Helmet>
+                    <title>{ pageTitles.register }</title>
+                </Helmet>
                 <div styleName="non-field-errors">
                     {
                         (nonFieldErrors || []).map(err => (

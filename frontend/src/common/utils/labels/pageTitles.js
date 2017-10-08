@@ -1,6 +1,6 @@
 const pageTitles = {
     login: 'Login',
-    register: 'register',
+    register: 'Register',
     dashboard: 'Dashboard',
     leads: 'Leads',
     entries: 'Entries',
@@ -11,6 +11,7 @@ const pageTitles = {
     editAry: 'Edit Assessment Registry',
     userProfile: 'User Profile',
     countryPanel: 'Country Panel',
+    weeklySnapshot: 'Weekly Snapshot',
 
 };
 

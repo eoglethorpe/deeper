@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Helmet from 'react-helmet';
 import Table from '../../../public/components/Table';
 import UserProfileEditForm from '../components/UserProfileEditForm';
 import styles from './styles.scss';
@@ -137,6 +138,9 @@ export default class HomeScreen extends React.PureComponent {
         console.log(this.props.match.params.userId);
         return (
             <div styleName="user-profile">
+                <Helmet>
+                    <title>{ pageTitles.userProfile }</title>
+                </Helmet>
                 <header styleName="header">
                     <h1>
                         { pageTitles.userProfile } ({ user.id })
