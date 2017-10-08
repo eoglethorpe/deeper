@@ -125,7 +125,7 @@ export default class Login extends React.PureComponent {
                         Already have an account yet?
                     </p>
                     <Link
-                        to="/login"
+                        to="/login/"
                         styleName="login-link"
                     >
                         Login

@@ -1,15 +1,16 @@
 import CSSModules from 'react-css-modules';
-import React from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 
-import Helmet from 'react-helmet';
 import EditLeadForm from '../components/EditLeadForm';
+import FormattedDate from '../../../public/components/FormattedDate';
 import Table from '../../../public/components/Table';
+import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
 import Button, { PrimaryButton } from '../../../public/components/Button';
-import styles from './styles.scss';
 import {
     leadsSelector,
 } from '../../../common/selectors/domainData';
@@ -45,6 +46,7 @@ export default class Leads extends React.PureComponent {
                 key: 'createdOn',
                 label: 'Created on',
                 order: 1,
+                modifier: row => <FormattedDate date={row.createdOn} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'createdBy',
@@ -60,6 +62,7 @@ export default class Leads extends React.PureComponent {
                 key: 'published',
                 label: 'Published',
                 order: 4,
+                modifier: row => <FormattedDate date={row.published} />,
             },
             {
                 key: 'confidentiality',
@@ -124,11 +127,17 @@ export default class Leads extends React.PureComponent {
         return (
             <div styleName="leads">
                 <Helmet>
-                    <title>{ pageTitles.leads }</title>
+                    <title>
+                        { pageTitles.leads }
+                    </title>
                 </Helmet>
                 <header styleName="header">
-                    <h1>{ pageTitles.leads }</h1>
-                    <PrimaryButton>Add lead</PrimaryButton>
+                    <h1>
+                        { pageTitles.leads }
+                    </h1>
+                    <PrimaryButton>
+                        Add lead
+                    </PrimaryButton>
                 </header>
                 <div styleName="filters">
                     Filters
@@ -143,9 +152,9 @@ export default class Leads extends React.PureComponent {
                     Footer
                 </footer>
                 <Modal
-                    show={this.state.showEditLeadModal}
-                    onClose={this.handleEditLeadModalClose}
                     closeOnEscape
+                    onClose={this.handleEditLeadModalClose}
+                    show={this.state.showEditLeadModal}
                 >
                     <Header
                         title="Edit lead"
@@ -153,8 +162,8 @@ export default class Leads extends React.PureComponent {
                     <Body>
                         <EditLeadForm
                             onSubmit={() => {}}
-                            values={this.state.editRow}
                             pending={false}
+                            values={this.state.editRow}
                         />
                     </Body>
                 </Modal>

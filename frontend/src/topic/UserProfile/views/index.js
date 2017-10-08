@@ -3,11 +3,12 @@
  */
 
 import CSSModules from 'react-css-modules';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Helmet from 'react-helmet';
+import FormattedDate from '../../../public/components/FormattedDate';
 import Table from '../../../public/components/Table';
 import UserProfileEditForm from '../components/UserProfileEditForm';
 import styles from './styles.scss';
@@ -77,6 +78,7 @@ export default class HomeScreen extends React.PureComponent {
                 key: 'createdOn',
                 label: 'Created on',
                 order: 3,
+                modifier: row => <FormattedDate date={row.createdOn} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'status',
@@ -87,6 +89,7 @@ export default class HomeScreen extends React.PureComponent {
                 key: 'lastModified',
                 label: 'Last Modified',
                 order: 5,
+                modifier: row => <FormattedDate date={row.lastModified} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'members',
