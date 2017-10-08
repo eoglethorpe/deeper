@@ -10,9 +10,14 @@ import styles from './styles.scss';
 import { PrimaryButton } from '../../../public/components/Button';
 
 const propTypes = {
+    // NOTE: is Required removed by @frozenhelium
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
-    }).isRequired,
+    }),
+};
+
+const defaultProps = {
+    location: {},
 };
 
 // TODO:
@@ -21,6 +26,7 @@ const propTypes = {
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPanel extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);

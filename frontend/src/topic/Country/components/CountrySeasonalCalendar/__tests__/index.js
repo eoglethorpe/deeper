@@ -1,0 +1,15 @@
+import React from 'react';
+import { shallow } from 'enzyme';
+import CountrySeasonalCalendar from '../';
+
+describe('<CountrySeasonalCalendar />', () => {
+    const wrapper = shallow(
+        <CountrySeasonalCalendar
+            iso=""
+        />,
+    );
+
+    it('renders properly', () => {
+        expect(wrapper.length).toEqual(1);
+    });
+});
