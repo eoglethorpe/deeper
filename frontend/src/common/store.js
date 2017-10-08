@@ -7,11 +7,9 @@ import createRefreshAccessToken from './middlewares/refreshAccessToken';
 import reducer from './reducers';
 
 // refresh every 10min
-// const refreshAccessToken = createRefreshAccessToken(1000 * 60 * 10);
-const refreshAccessToken = createRefreshAccessToken(30 * 60 * 60);
+const refreshAccessToken = createRefreshAccessToken(1000 * 60 * 10);
 
 const middleware = [
-    // TODO: add jwt-token-refresher
     thunk,
     refreshAccessToken,
     logger,

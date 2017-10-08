@@ -17,9 +17,32 @@ import { pageTitles } from '../../../common/utils/labels';
 import {
     userSelector,
 } from '../../../common/selectors/auth';
+import {
+    projectsSelector,
+} from '../../../common/selectors/domainData';
+
+const propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            userId: PropTypes.string,
+        }),
+    }),
+    user: PropTypes.object, // eslint-disable-line
+    projects: PropTypes.array, // eslint-disable-line
+};
+
+const defaultProps = {
+    match: {
+        params: {},
+    },
+    user: { },
+    projects: [],
+};
+
 
 const mapStateToProps = state => ({
     user: userSelector(state),
+    projects: projectsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -29,25 +52,8 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
-    static propTypes = {
-        match: PropTypes.shape({
-            params: PropTypes.shape({
-                userId: PropTypes.string,
-            }),
-        }),
-        user: PropTypes.shape({
-            email: PropTypes.string,
-        }),
-    };
-
-    static defaultProps = {
-        match: {
-            params: {},
-        },
-
-        user: {
-        },
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -71,9 +77,6 @@ export default class HomeScreen extends React.PureComponent {
                 key: 'createdOn',
                 label: 'Created on',
                 order: 3,
-                modifier: row => (
-                    (new Date(row.createdOn).toLocaleDateString())
-                ),
             },
             {
                 key: 'status',
@@ -84,9 +87,6 @@ export default class HomeScreen extends React.PureComponent {
                 key: 'lastModified',
                 label: 'Last Modified',
                 order: 5,
-                modifier: row => (
-                    (new Date(row.lastModified).toLocaleDateString())
-                ),
             },
             {
                 key: 'members',
@@ -97,27 +97,6 @@ export default class HomeScreen extends React.PureComponent {
                 key: 'actions',
                 label: 'Actions',
                 order: 7,
-            },
-        ];
-
-        this.projectData = [
-            {
-                name: 'Toggle crisis',
-                rights: 'Admin',
-                createdOn: 1023339302,
-                status: 'Active',
-                lastModified: 2003320921,
-                members: 10,
-                actions: 'GG WP',
-            },
-            {
-                name: 'Bibek ko birthday',
-                rights: 'Admin',
-                createdOn: 1023339302,
-                status: 'Active',
-                lastModified: 2003320921,
-                members: 10,
-                actions: 'GG WP',
             },
         ];
     }
@@ -191,7 +170,7 @@ export default class HomeScreen extends React.PureComponent {
                         Projects
                     </h2>
                     <Table
-                        data={this.projectData}
+                        data={this.props.projects}
                         headers={this.projectHeaders}
                     />
                 </div>
