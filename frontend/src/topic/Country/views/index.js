@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Switch, Link, Route } from 'react-router-dom';
 
+import Helmet from 'react-helmet';
 import browserHistory from '../../../common/browserHistory';
 import CountryDetail from '../components/CountryDetail';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
+import { pageTitles } from '../../../common/utils/labels';
 import { PrimaryButton } from '../../../public/components/Button';
 
 const propTypes = {
@@ -133,6 +135,9 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-panel">
+                <Helmet>
+                    <title>{ pageTitles.countryPanel }</title>
+                </Helmet>
                 <div styleName="country-list">
                     <div styleName="list-header">
                         <div styleName="header-text">

@@ -2,12 +2,14 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Helmet from 'react-helmet';
 import EditLeadForm from '../components/EditLeadForm';
 import Table from '../../../public/components/Table';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
 import Button, { PrimaryButton } from '../../../public/components/Button';
 import styles from './styles.scss';
+
 
 const mapStateToProps = state => ({
     state,
@@ -131,6 +133,9 @@ export default class Leads extends React.PureComponent {
     render() {
         return (
             <div styleName="leads">
+                <Helmet>
+                    <title>{ pageTitles.leads }</title>
+                </Helmet>
                 <header styleName="header">
                     <h1>{ pageTitles.leads }</h1>
                     <PrimaryButton>Add lead</PrimaryButton>

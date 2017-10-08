@@ -8,11 +8,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import Helmet from 'react-helmet';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
 import { LoginForm } from '../../components/Forms';
 import { loginAction } from '../../../../common/action-creators/auth';
+import { pageTitles } from '../../../../common/utils/labels';
 import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForTokenCreate,
@@ -140,6 +142,9 @@ export default class Login extends React.PureComponent {
         const { nonFieldErrors, pending } = this.state;
         return (
             <div styleName="login">
+                <Helmet>
+                    <title>{ pageTitles.login }</title>
+                </Helmet>
                 <div styleName="non-field-errors">
                     {
                         (nonFieldErrors || []).map(err => (
