@@ -90,6 +90,11 @@ printf "\n\n::::: DOCKER TASK :::::\n"
                     sed "s/server_name #ALLOWED_HOST.*/server_name $DJANGO_ALLOWED_HOST;/" -i ./.ebextensions/nginx.conf
                     sed "s/proxy_pass #S3_BUCKET_NAME_STATIC.*/proxy_pass https:\/\/$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC.s3.amazonaws.com\/static;/" -i ./.ebextensions/nginx.conf
                     sed "s/proxy_pass #S3_BUCKET_NAME_MEDIA.*/proxy_pass https:\/\/$DJANGO_AWS_STORAGE_BUCKET_NAME_MEDIA.s3.amazonaws.com\/media;/" -i ./.ebextensions/nginx.conf
+            else
+                 echo "      >> Creating nginx.conf"
+                    cp $SAMPLE_DIR/.ebextensions/01_nginx.config ./.ebextensions/01_nginx.config
+                    cp $SAMPLE_DIR/.ebextensions/nginx_websocket.conf-sample ./.ebextensions/nginx.conf
+                    sed "s/server_name #ALLOWED_HOST_WEBSOCKET.*/server_name $DJANGO_ALLOWED_HOST_WEBSOCKET;/" -i ./.ebextensions/nginx.conf
             fi
 
             echo "      >> Creating .mydockercfg "

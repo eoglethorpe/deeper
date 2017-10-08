@@ -17,8 +17,10 @@ service remote_syslog start # start remote_syslog for papaertail log collecter
 
 # To start workers [Channels/Celery]
 if [ "$EBS_ENV_TYPE" == "worker" ]; then
-    # TODO: Start django channel worker
-    cd $ROOT_DIR/backend && celery -A deep worker -l info
+    DJANGO_ALLOWED_HOST=$DJANGO_ALLOWED_HOST_WEBSOCKET
+    cd $ROOT_DIR/backend
+    daphne -b 0.0.0.0 -p 80 deep.asgi:channel_layer &
+    service celeryd start
 fi
 
 # To start Django Server [API]

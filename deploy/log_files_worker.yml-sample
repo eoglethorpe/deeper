@@ -1,8 +1,6 @@
 files:
-  - path: /var/log/uwsgi/access.log
-    tag: uwsgi/access
-  - path: /var/log/uwsgi/error.log
-    tag: uwsgi/error
+  - path: /var/log/celery/celery.log
+    tag: celery
 
 hostname: <hostname>
 destination:
