@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
@@ -9,10 +10,21 @@ import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
 import Button, { PrimaryButton } from '../../../public/components/Button';
 import styles from './styles.scss';
+import {
+    leadsSelector,
+} from '../../../common/selectors/domainData';
 
+const propTypes = {
+    leads: PropTypes.array, // eslint-disable-line
+};
+
+const defaultProps = {
+    leads: [],
+};
 
 const mapStateToProps = state => ({
     state,
+    leads: leadsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -22,6 +34,9 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Leads extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
 
@@ -77,36 +92,11 @@ export default class Leads extends React.PureComponent {
                         >
                             <i className="ion-edit" />
                         </Button>
-                        <PrimaryButton>
+                        <Button>
                             <i className="ion-forward" />
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 ),
-            },
-        ];
-
-        this.data = [
-            {
-                createdOn: 17263871623,
-                createdBy: 'Frozen Helium',
-                title: 'Family reunification in Greece with spouse in Syria',
-                published: 1230129312,
-                confidentiality: 'Confidential',
-                source: 'Bla bla',
-                numberOfEntries: 12,
-                status: 'Pending',
-                actions: 'GG WP',
-            },
-            {
-                createdOn: 78923230239,
-                createdBy: 'Bibek Dahal',
-                title: 'Voluntary return home and coming back to the EU',
-                published: 981274203420,
-                confidentiality: 'Public',
-                source: 'News that moves',
-                numberOfEntries: 6,
-                status: 'Processed',
-                actions: 'GG WP',
             },
         ];
 
@@ -146,7 +136,7 @@ export default class Leads extends React.PureComponent {
                 <div styleName="table-container">
                     <Table
                         headers={this.headers}
-                        data={this.data}
+                        data={this.props.leads}
                     />
                 </div>
                 <footer styleName="footer">

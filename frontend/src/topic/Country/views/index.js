@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Switch, Link, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
 import browserHistory from '../../../common/browserHistory';
@@ -10,21 +11,35 @@ import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
 import { PrimaryButton } from '../../../public/components/Button';
+import {
+    countriesSelector,
+} from '../../../common/selectors/domainData';
 
 const propTypes = {
     // NOTE: is Required removed by @frozenhelium
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
     }),
+    countries: PropTypes.array, // eslint-disable-line
 };
 
 const defaultProps = {
     location: {},
+    countries: [],
 };
 
 // TODO:
 // Scroll to selected country
 
+const mapStateToProps = state => ({
+    countries: countriesSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    dispatch,
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPanel extends React.PureComponent {
     static propTypes = propTypes;
@@ -33,83 +48,8 @@ export default class CountryPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.countryList = [
-            {
-                fullName: 'Afganistan',
-                iso: 'AFG',
-            },
-            {
-                fullName: 'Nepal',
-                iso: 'NPL',
-            },
-            {
-                fullName: 'China',
-                iso: 'CHI',
-            },
-            {
-                fullName: 'India',
-                iso: 'IND',
-            },
-            {
-                fullName: 'United States of America',
-                iso: 'USA',
-            },
-            {
-                fullName: 'Russia',
-                iso: 'RUS',
-            },
-            {
-                fullName: 'Belgium',
-                iso: 'BEL',
-            },
-            {
-                fullName: 'Argentina',
-                iso: 'ARG',
-            },
-            {
-                fullName: 'Brazil',
-                iso: 'BRA',
-            },
-            {
-                fullName: 'Columbia',
-                iso: 'COL',
-            },
-            {
-                fullName: 'Cuba',
-                iso: 'CUB',
-            },
-            {
-                fullName: 'Hiati',
-                iso: 'HIA',
-            },
-            {
-                fullName: 'Bangaladeh',
-                iso: 'BAN',
-            },
-            {
-                fullName: 'Pakistan',
-                iso: 'PAK',
-            },
-            {
-                fullName: 'Bhutan',
-                iso: 'BHU',
-            },
-            {
-                fullName: 'Italy',
-                iso: 'ITL',
-            },
-            {
-                fullName: 'France',
-                iso: 'FRA',
-            },
-            {
-                fullName: 'Germany',
-                iso: 'GER',
-            },
-        ];
-
         this.state = {
-            displayCountryList: this.countryList,
+            displayCountryList: this.props.countries,
             searchInputValue: '',
         };
     }
@@ -122,7 +62,7 @@ export default class CountryPanel extends React.PureComponent {
         const caseInsensitiveSubmatch = country => (
             country.fullName.toLowerCase().includes(value.toLowerCase())
         );
-        const displayCountryList = this.countryList.filter(caseInsensitiveSubmatch);
+        const displayCountryList = this.props.countries.filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayCountryList,
@@ -169,7 +109,7 @@ export default class CountryPanel extends React.PureComponent {
                 <div styleName="country-details">
                     <Switch>
                         {
-                            this.countryList.map(item => (
+                            this.props.countries.map(item => (
                                 <Route
                                     component={() => (
                                         <CountryDetail
