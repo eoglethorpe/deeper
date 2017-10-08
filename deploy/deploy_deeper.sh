@@ -1,5 +1,6 @@
 #! /bin/bash
 
+ONLY_DEPLOY=$2
 echo "::::: Gettings ENV Variables :::::"
     ENV_FILE=$1
     if [ -f "$ENV_FILE" ]; then
@@ -24,6 +25,7 @@ fi
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT_DIR=$(dirname "$BASE_DIR")
 
+if [ "${ONLY_DEPLOY}" == "" ] || [ "${ONLY_DEPLOY}" == "django" ] ; then
 printf "\n\n::::: DOCKER TASK :::::\n"
 
     if ! [ -z ${TRAVIS_BUILD_ID+x} ]; then
@@ -109,26 +111,32 @@ printf "\n\n::::: DOCKER TASK :::::\n"
                     > ./Dockerrun.aws.json
 
         echo "  >> Deploying to eb [$TYPE]"
-            if [ '${TRAVIS}' == 'true' ]; then
+            if [ "${TRAVIS}" == "true" ]; then
                 eb deploy --nohang
             else
                 eb deploy
             fi
     done
+fi
 
+if [ "${ONLY_DEPLOY}" == "" ] || [ "${ONLY_DEPLOY}" == "react" ] ; then
 printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     cd $ROOT_DIR
     echo "::::::  >> Starting docker contaniners"
     docker-compose up -d
-
-    # TODO: Use yarn params to change api host
+    # TODO: Use better way to pass variables
+    echo "
+    REACT_APP_API_HTTPS=${DEEP_HTTPS}
+    REACT_APP_API_END=${DJANGO_ALLOWED_HOST}
+    REACT_APP_HID_CLIENT_END=${HID_CLIENT_ID}
+    REACT_APP_HID_CLIENT_REDIRECT_URL=${HID_CLIENT_REDIRECT_URL}
+    REACT_APP_HID_AUTH_URI=${HID_AUTH_URI}
+    " > frontend/.env
     echo "::::::  >> Generating Reacts Builds"
-    cp ./frontend/src/common/rest.js /tmp/rest.js
-    sed "s/const wsEndpoint.*/const wsEndpoint = 'http:\/\/${DJANGO_ALLOWED_HOST}\/api\/v1';/" -i ./frontend/src/common/rest.js
     docker-compose exec web bash -c "cd frontend && yarn build"
-    mv /tmp/rest.js ./frontend/src/common/rest.js
 
     echo "::::::  >> Uploading Builds Files To S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 sync frontend/build/ s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC
     echo "::::::  >> Settings Configs for Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 website s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC --index-document index.html --error-document index.html
+fi

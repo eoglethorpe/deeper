@@ -9,10 +9,10 @@ let clientId = process.env.HID_CLIENT_ID;
 let redirectUrl = process.env.HID_CLIENT_REDIRECT_URL;
 let hidAuthUrl = process.env.HID_AUTH_URI;
 
-if (process.env.HID_CLIENT_ID) {
-    clientId = process.env.HID_CLIENT_ID;
-    redirectUrl = process.env.HID_CLIENT_REDIRECT_URL;
-    hidAuthUrl = process.env.HID_AUTH_URI;
+if (process.env.REACT_APP_HID_CLIENT_ID) {
+    clientId = process.env.REACT_APP_HID_CLIENT_ID;
+    redirectUrl = process.env.REACT_APP_HID_CLIENT_REDIRECT_URL;
+    hidAuthUrl = process.env.REACT_APP_HID_AUTH_URI;
 } else {
     clientId = 'deep-local';
     redirectUrl = 'http://localhost:3000/login/';

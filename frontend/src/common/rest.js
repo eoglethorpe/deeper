@@ -1,6 +1,6 @@
 let wsEndpoint;
-if (process.env.DJANGO_ALLOWED_HOST) {
-    wsEndpoint = `${process.env.DEEP_HTTPS}://${process.env.DJANGO_ALLOWED_HOST}/api/v1`;
+if (process.env.REACT_APP_API_END) {
+    wsEndpoint = `${process.env.REACT_APP_API_HTTPS}://${process.env.REACT_APP_API_END}/api/v1`;
 } else {
     wsEndpoint = '/api/v1';
 }
