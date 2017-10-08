@@ -11,7 +11,7 @@ echo "::::: Gettings ENV Variables :::::"
         exit 1
     fi
 
-if [ ${TRAVIS} == 'true' ]; then
+if [ '${TRAVIS}' == 'true' ]; then
     echo ":::::::: In Travis ::::::::"
     echo "::::: Configuring AWS :::::"
     aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
@@ -109,7 +109,7 @@ printf "\n\n::::: DOCKER TASK :::::\n"
                     > ./Dockerrun.aws.json
 
         echo "  >> Deploying to eb [$TYPE]"
-            if [ ${TRAVIS} == 'true' ]; then
+            if [ '${TRAVIS}' == 'true' ]; then
                 eb deploy --nohang
             else
                 eb deploy

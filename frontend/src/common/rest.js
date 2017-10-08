@@ -1,4 +1,9 @@
-const wsEndpoint = '/api/v1';
+let wsEndpoint;
+if (process.env.DJANGO_ALLOWED_HOST) {
+    wsEndpoint = `${process.env.DEEP_HTTPS}://${process.env.DJANGO_ALLOWED_HOST}/api/v1`;
+} else {
+    wsEndpoint = '/api/v1';
+}
 const POST = 'POST';
 const GET = 'GET'; // eslint-disable-line
 const PUT = 'PUT'; // eslint-disable-line
