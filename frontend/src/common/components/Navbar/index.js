@@ -8,7 +8,9 @@ import DropdownMenu, { Group, GroupTitle } from '../../../public/components/Drop
 import LinkOutsideRouter from '../LinkOutsideRouter';
 import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
+import SelectInput from '../../../public/components/SelectInput';
 import { logoutAction } from '../../../common/action-creators/auth';
+import logo from '../../../img/logo.png';
 import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
@@ -20,6 +22,7 @@ import {
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
 } from '../../../common/selectors/navbar';
+
 
 const mapStateToProps = state => ({
     navbarActiveLink: navbarActiveLinkSelector(state),
@@ -178,8 +181,15 @@ export default class Navbar extends React.PureComponent {
                         to="/"
                         styleName="menu-item"
                     >
-                        Deep
+                        <img src={logo} alt="DEEP" />
+                        <h3>Deep</h3>
                     </Link>
+                </div>
+                <div styleName="project-select-container">
+                    <SelectInput
+                        placeholder="Select Event"
+                        options={this.selectOptions}
+                    />
                 </div>
                 <div styleName="menu-items">
                     { navBarItems.map(this.renderNavbarItem) }

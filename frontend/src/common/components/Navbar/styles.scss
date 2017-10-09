@@ -16,10 +16,32 @@
 
     .menu-header {
         display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        flex-basis: 10%;
         color: $color-text-on-primary;
         font-size: $font-size-super-large;
+
+        img {
+            align-self: flex-start;
+            margin-right: $spacing-medium;
+            width: 48px;
+            height: 48px;
+        }
+
+    }
+
+    .project-select-container {
+        flex-basis: 20%;
+        margin-left: $spacing-large;
+        background-color: transparent;
+        font-size: $font-size-small;
+
+        input::-webkit-input-placeholder {
+            color: $color-background-overlay;
+        }
+
+        input {
+            color: $color-foreground;
+        }
     }
 
     .menu-item {
@@ -44,6 +66,7 @@
 
     .menu-items {
         display: flex;
+        flex-basis: 60%;
         align-items: stretch;
         justify-content: center;
         height: 100%;
