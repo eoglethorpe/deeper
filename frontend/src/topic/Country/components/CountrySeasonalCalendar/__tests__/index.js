@@ -5,7 +5,7 @@ import CountrySeasonalCalendar from '../';
 describe('<CountrySeasonalCalendar />', () => {
     const wrapper = shallow(
         <CountrySeasonalCalendar
-            iso=""
+            countryId=""
         />,
     );
 
