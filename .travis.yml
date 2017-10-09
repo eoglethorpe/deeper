@@ -29,7 +29,8 @@ script:
     - docker-compose exec web /code/run_tests.sh
 
 after_success:
-    - if [ "$TRAVIS_BRANCH" == "${DEEP_RC_BRANCH}" ];then ./deploy/deploy_deeper.sh .env-dev ; fi
+    - echo "Branch=${TRAVIS_BRANCH}, Pull request=${TRAVIS_PULL_REQUEST}"
+    - if [ "${TRAVIS_PULL_REQUEST}" == "false" ] && [ "${TRAVIS_BRANCH}" == "${DEEP_RC_BRANCH}" ];then ./deploy/deploy_deeper.sh .env-dev ; fi
 
 notifications:
   slack:
