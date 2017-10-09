@@ -1,9 +1,0 @@
-files:
-  - path: /var/log/celery/celery.log
-    tag: celery
-
-hostname: <hostname>
-destination:
-  host: <host>
-  port: <port>
-  protocol: tls

@@ -18,10 +18,6 @@ RUN . /venv/bin/activate && pip install -r backend/requirements.txt
 COPY frontend/package.json /code/frontend/
 RUN cd frontend && yarn install
 
-COPY deploy/celery_daemon_init.sh /tmp/
-COPY deploy/celeryd /etc/default/celeryd
-RUN  /tmp/celery_daemon_init.sh
-
 COPY . /code/
 
 CMD ./deploy/eb_exec.sh

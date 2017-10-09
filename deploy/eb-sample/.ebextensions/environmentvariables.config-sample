@@ -39,6 +39,10 @@ option_settings:
       value: \"$DJANGO_ALLOWED_HOST\"
     - option_name: \"FRONTEND_HOST\"
       value: \"$FRONTEND_HOST\"
+    - option_name: \"DJANGO_ALLOWED_HOST_API\"
+      value: \"$DJANGO_ALLOWED_HOST_API\"
+    - option_name: \"DJANGO_ALLOWED_HOST_WEBSOCKET\"
+      value: \"$DJANGO_ALLOWED_HOST_WEBSOCKET\"
 
     - option_name: \"DATABASE_NAME\"
       value: \"$DATABASE_NAME\"

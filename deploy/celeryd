@@ -1,9 +1,0 @@
-export DJANGO_SETTINGS_MODULE="deep.settings"
-
-# Absolute or relative path to the 'celery' command:
-CELERY_BIN="/venv/bin/celery"
-
-# Where to chdir at start.
-CELERYD_CHDIR="/code/backend/"
-
-CELERYD_USER="root"

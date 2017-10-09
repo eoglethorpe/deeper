@@ -3,6 +3,10 @@ files:
     tag: uwsgi/access
   - path: /var/log/uwsgi/error.log
     tag: uwsgi/error
+  - path: /var/log/celery/celery.log
+    tag: celery
+  - path: /var/log/daphne/access.log
+    tag: django-channel
 
 hostname: <hostname>
 destination:
