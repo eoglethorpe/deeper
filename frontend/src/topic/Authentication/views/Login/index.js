@@ -26,22 +26,24 @@ import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
 import {
-} from '../../../../common/selectors/auth';
-
-
-const mapDispatchToProps = dispatch => ({
-    login: params => dispatch(loginAction(params)),
-    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
-});
+    setNavbarStateAction,
+} from '../../../../common/action-creators/navbar';
 
 const propTypes = {
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
+    setNavbarState: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
+
+const mapDispatchToProps = dispatch => ({
+    login: params => dispatch(loginAction(params)),
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
+});
 
 @connect(null, mapDispatchToProps)
 @CSSModules(styles)
@@ -57,11 +59,16 @@ export default class Login extends React.PureComponent {
     componentWillMount() {
         console.log('MOUNTING Login');
 
+        this.props.setNavbarState({
+            visible: false,
+            activeLink: undefined,
+            validLinks: undefined,
+        });
+
         const { location } = this.props;
         // Get params from the current url
         // NOTE: hid provides query as hash
         const query = RestRequest.parseUrlParams(location.hash.replace('#', ''));
-
         // Login User with HID access_token
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);

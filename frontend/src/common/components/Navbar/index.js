@@ -15,8 +15,16 @@ import {
 import {
     userSelector,
 } from '../../../common/selectors/auth';
+import {
+    navbarVisibleSelector,
+    navbarActiveLinkSelector,
+    navbarValidLinksSelector,
+} from '../../../common/selectors/navbar';
 
 const mapStateToProps = state => ({
+    navbarActiveLink: navbarActiveLinkSelector(state),
+    navbarValidLinks: navbarValidLinksSelector(state),
+    navbarVisible: navbarVisibleSelector(state),
     user: userSelector(state),
 });
 
@@ -30,6 +38,13 @@ const propTypes = {
         pathname: PropTypes.string.isRequired,
     }).isRequired,
     logout: PropTypes.func.isRequired,
+
+    // eslint-disable-next-line
+    navbarActiveLink: PropTypes.string,
+    // eslint-disable-next-line
+    navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
+    navbarVisible: PropTypes.bool,
+
     stopTokenRefresh: PropTypes.func.isRequired,
     user: PropTypes.shape({
         email: PropTypes.string,
@@ -37,6 +52,9 @@ const propTypes = {
 };
 
 const defaultProps = {
+    navbarActiveLink: undefined,
+    navbarValidLinks: [],
+    navbarVisible: false,
     user: {},
 };
 
@@ -52,53 +70,54 @@ export default class Navbar extends React.PureComponent {
 
         this.navBarItems = [
             {
-                linkTo: '/:projectId/leads/',
+                linkTo: '/1/leads/',
                 name: pageTitles.leads,
                 private: true,
             },
             {
-                linkTo: '/:projectId/entries/',
+                linkTo: '/1/entries/',
                 name: pageTitles.entries,
                 private: true,
             },
             {
-                linkTo: '/:projectId/ary/',
+                linkTo: '/1/ary/',
                 name: pageTitles.ary,
                 private: true,
             },
             {
-                linkTo: '/:projectId/export/',
+                linkTo: '/1/export/',
                 name: pageTitles.export,
                 private: true,
             },
         ];
 
-        this.dropdownItems = {
-            group1: {
+        console.log(this.navBarItems);
+
+        this.dropdownItems = [
+            {
+                key: 'first-group',
+                label: undefined,
                 items: [
                     {
                         linkTo: '/users/me/',
-                        name: 'User Profile',
+                        name: pageTitles.userProfile,
                         iconName: 'ion-android-person',
                     },
                     {
                         linkTo: '/countrypanel/',
-                        name: 'Country Panel',
+                        name: pageTitles.countryPanel,
                         iconName: 'ion-android-globe',
                     },
                     {
                         linkTo: '/admin/',
-                        name: 'Admin Panel',
+                        name: pageTitles.adminPanel,
                         iconName: 'ion-locked',
                     },
                 ],
             },
-        };
-
-        this.nonVisibleLinks = [
-            '/login/',
-            '/register/',
         ];
+
+        console.log(this.props.location);
     }
 
     handleLogoutButtonClick = () => {
@@ -106,13 +125,61 @@ export default class Navbar extends React.PureComponent {
         this.props.logout();
     }
 
-    render() {
-        const { pathname } = this.props.location;
-        // If current pathname is inside nonVisibleLinks, don't show navbar
-        if (this.nonVisibleLinks.includes(pathname)) {
+    // TODO: AdityaKhatri: Why Link here?
+    renderNavbarItem = (item) => {
+        const { navbarActiveLink, navbarValidLinks } = this.props;
+        if (navbarValidLinks.indexOf(item.name) === -1) {
             return null;
         }
-        const { user } = this.props;
+        return (
+            <Link
+                key={item.name}
+                styleName={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
+                to={item.linkTo}
+            >
+                {item.name}
+            </Link>
+        );
+    }
+
+    // TODO: AdityaKhatri: Why LinkOusideRouter here?
+    renderDropdownItem = (item) => {
+        const { navbarValidLinks } = this.props;
+        if (navbarValidLinks.indexOf(item.name) === -1) {
+            return null;
+        }
+
+        return (
+            <LinkOutsideRouter
+                key={item.name}
+                styleName="dropdown-item"
+                to={item.linkTo}
+            >
+                {
+                    item.iconName &&
+                    <i
+                        className={item.iconName}
+                        styleName="item-icon"
+                    />
+                }
+                {
+                    item.iconName &&
+                    <i styleName="item-icon" />
+                }
+                {item.name}
+            </LinkOutsideRouter>
+        );
+    }
+
+    render() {
+        const {
+            navbarVisible,
+            user,
+        } = this.props;
+
+        if (!navbarVisible) {
+            return null;
+        }
 
         return (
             <div styleName="navbar">
@@ -125,17 +192,7 @@ export default class Navbar extends React.PureComponent {
                     </Link>
                 </div>
                 <div styleName="menu-items">
-                    {
-                        this.navBarItems.map(item => (
-                            <Link
-                                key={item.name}
-                                styleName={pathname === item.linkTo ? 'menu-item active' : 'menu-item'}
-                                to={item.linkTo}
-                            >
-                                {item.name}
-                            </Link>
-                        ))
-                    }
+                    { this.navBarItems.map(this.renderNavbarItem) }
                 </div>
                 <div styleName="dropdown-title">
                     <DropdownMenu
@@ -144,34 +201,13 @@ export default class Navbar extends React.PureComponent {
                         title={`${user.firstName || ''} ${user.lastName || ''}`}
                     >
                         {
-                            Object.keys(this.dropdownItems).map(key => (
-                                <Group key={key} >
-                                    <div>
-                                        {
-                                            !this.dropdownItems[key].label ||
-                                                <GroupTitle title={this.dropdownItems[key].label} />
-                                        }
-                                        {
-                                            this.dropdownItems[key].items.map(item => (
-                                                <LinkOutsideRouter
-                                                    key={item.name}
-                                                    styleName="dropdown-item"
-                                                    to={item.linkTo}
-                                                >
-                                                    { item.iconName !== '' &&
-                                                        <i
-                                                            className={item.iconName}
-                                                            styleName="item-icon"
-                                                        />
-                                                    }
-                                                    { item.iconName === '' &&
-                                                        <i styleName="item-icon" />
-                                                    }
-                                                    {item.name}
-                                                </LinkOutsideRouter>
-                                            ))
-                                        }
-                                    </div>
+                            this.dropdownItems.map(group => (
+                                <Group key={group.key} >
+                                    {
+                                        group.label &&
+                                        <GroupTitle title={group.label} />
+                                    }
+                                    { group.items.map(this.renderDropdownItem) }
                                 </Group>
                             ))
                         }

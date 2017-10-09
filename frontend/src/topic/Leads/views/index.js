@@ -14,9 +14,13 @@ import Button, { PrimaryButton } from '../../../public/components/Button';
 import {
     leadsSelector,
 } from '../../../common/selectors/domainData';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
 
 const propTypes = {
     leads: PropTypes.array, // eslint-disable-line
+    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -29,7 +33,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -107,6 +111,23 @@ export default class Leads extends React.PureComponent {
             editRow: {},
             showEditLeadModal: false,
         };
+    }
+
+    componentWillMount() {
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: pageTitles.leads,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.export,
+
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+            ],
+        });
     }
 
     handleEditLeadClick = (row) => {
