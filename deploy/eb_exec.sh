@@ -27,7 +27,8 @@ if [ "$EBS_ENV_TYPE" == "worker" ]; then
     elif [ "$WORKER_TYPE" == "channel" ]; then
         # Start channels
         mkdir -p /var/log/daphne/
-        daphne -b 0.0.0.0 -p 80 --access-log /var/log/daphne/access.log deep.asgi:channel_layer
+        daphne -b 0.0.0.0 -p 80 --access-log /var/log/daphne/access.log deep.asgi:channel_layer &
+        python3 manage.py runworker
     fi
 
 fi
