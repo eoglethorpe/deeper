@@ -1,0 +1,23 @@
+@import '../../../../stylesheets/base';
+
+.form-container {
+    .edit-admin-level-form {
+        .admin-level-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: $spacing-medium;
+
+            .text-input {
+                flex-basis: 100%;
+                background-color: transparent;
+            }
+        }
+
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+}

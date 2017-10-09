@@ -1,4 +1,5 @@
 @import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
 
 .country-general {
     .form-map-container {
@@ -24,12 +25,22 @@
         }
     }
 
+    .edit-admin-modal {
+        :global .modal-content {
+            width: 720px;
+        }
+    }
+
     .admin-levels {
         border-top: $width-separator-thin solid $color-separator;
 
         .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-medium $spacing-large;
+            width: 100%;
             text-transform: uppercase;
             font-size: 1.6em;
         }
@@ -37,40 +48,5 @@
         .admin-levels-list {
             font-size: 1.2em;
         }
-
-        .admin-level-details {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            background-color: $color-background-alt-row;
-            padding: $spacing-large $spacing-medium;
-
-            .text-input {
-                flex-basis: 19%;
-                background-color: transparent;
-
-                p {
-                    display: none;
-                }
-            }
-
-            .action-btns {
-                display: flex;
-                flex-basis: 100%;
-                justify-content: flex-end;
-                padding: 0 $spacing-medium;
-            }
-
-            &:nth-child(odd) {
-                background-color: $color-foreground;
-            }
-        }
-    }
-
-    .footer {
-        display: flex;
-        justify-content: flex-end;
-        padding: $spacing-large $spacing-medium;
-        width: 100%;
     }
 }

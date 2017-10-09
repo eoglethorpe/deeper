@@ -13,11 +13,11 @@ import { DangerButton, SuccessButton } from '../../../../public/components/Butto
 
 const propTypes = {
     fullName: PropTypes.string.isRequired,
-    iso: PropTypes.string,
+    countryId: PropTypes.string,
 };
 
 const defaultProps = {
-    iso: '',
+    countryId: '',
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -26,7 +26,7 @@ export default class CountryDetail extends React.PureComponent {
     static defaultProps = defaultProps;
 
     render() {
-        const { fullName, iso } = this.props;
+        const { fullName, countryId } = this.props;
 
         return (
             <div styleName="country-detail">
@@ -86,31 +86,31 @@ export default class CountryDetail extends React.PureComponent {
                             for="general"
                             styleName="tab"
                         >
-                            <CountryGeneral iso={iso} />
+                            <CountryGeneral countryId={countryId} />
                         </TabContent>
                         <TabContent
                             for="key-figures"
                             styleName="tab"
                         >
-                            <CountryKeyFigures iso={iso} />
+                            <CountryKeyFigures countryId={countryId} />
                         </TabContent>
                         <TabContent
                             for="population-data"
                             styleName="tab"
                         >
-                            <CountryPopulationData iso={iso} />
+                            <CountryPopulationData countryId={countryId} />
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
                             styleName="tab"
                         >
-                            <CountrySeasonalCalendar iso={iso} />
+                            <CountrySeasonalCalendar countryId={countryId} />
                         </TabContent>
                         <TabContent
                             for="media-sources"
                             styleName="tab"
                         >
-                            <CountryMediaSources iso={iso} />
+                            <CountryMediaSources countryId={countryId} />
                         </TabContent>
                     </div>
                 </Tabs>

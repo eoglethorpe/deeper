@@ -96,9 +96,9 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             this.state.displayCountryList.map(item => (
                                 <Link
-                                    key={item.iso}
-                                    styleName={pathname === `/countrypanel/${item.iso}/` ? 'list-item active' : 'list-item'}
-                                    to={`/countrypanel/${item.iso}/`}
+                                    key={item.countryId}
+                                    styleName={pathname === `/countrypanel/${item.countryId}/` ? 'list-item active' : 'list-item'}
+                                    to={`/countrypanel/${item.countryId}/`}
                                 >
                                     {item.fullName}
                                 </Link>
@@ -114,11 +114,11 @@ export default class CountryPanel extends React.PureComponent {
                                     component={() => (
                                         <CountryDetail
                                             fullName={item.fullName}
-                                            iso={item.iso}
+                                            countryId={item.countryId}
                                         />
                                     )}
-                                    key={item.iso}
-                                    path={`/countrypanel/${item.iso}/`}
+                                    key={item.countryId}
+                                    path={`/countrypanel/${item.countryId}/`}
                                 />
                             ))
                         }

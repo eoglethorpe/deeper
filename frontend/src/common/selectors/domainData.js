@@ -25,3 +25,6 @@ export const userProjectsSelector = createSelector(
     userSelector,
     user => (user.projects || emptyList),
 );
+export const adminLevelSelector = ({ domainData }, { countryId }) => (
+    domainData.adminLevels[countryId] || emptyList
+);

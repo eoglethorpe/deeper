@@ -1,98 +1,121 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import Button, { DangerButton } from '../../../../public/components/Button';
+import Button, { PrimaryButton } from '../../../../public/components/Button';
+import EditAdminLevelForm from '../EditAdminLevelForm';
+import Modal, { Header, Body } from '../../../../public/components/Modal';
+import Table from '../../../../public/components/Table';
 import TextInput from '../../../../public/components/TextInput';
 import styles from './styles.scss';
+import {
+    adminLevelSelector,
+} from '../../../../common/selectors/domainData';
 
 const propTypes = {
-    iso: PropTypes.string.isRequired,
+    adminLevelList: PropTypes.array,
+    countryId: PropTypes.string.isRequired,
 };
 
+const defaultProps = {
+    adminLevelList: [],
+};
+
+const mapStateToProps = (state, props) => ({
+    adminLevelList: adminLevelSelector(state, props),
+    state,
+});
+
+const mapDispatchToProps = dispatch => ({
+    dispatch,
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryGeneral extends React.PureComponent {
+    static defaultProps = defaultProps;
     static propTypes = propTypes;
 
     constructor(props) {
         super(props);
 
-        this.adminLevelList = [
+        this.adminLevelHeaders = [
             {
-                id: 1,
-                level: 1,
-                name: 'Country',
-                nameProperty: 'NAME_ENGL',
-                parentNameProperty: 'NAME_ENFG',
-                parentPcodeProperty: 'NAME_PPCODE',
-                pcodeProperty: 'NAME_PCODE',
+                key: 'level',
+                label: 'Admin Level',
+                order: 1,
             },
             {
-                id: 2,
-                level: 2,
-                name: 'Zone',
-                nameProperty: 'NAME_ENGL',
-                parentNameProperty: 'NAME_ENFG',
-                parentPcodeProperty: 'NAME_PPCODE',
-                pcodeProperty: 'NAME_PCODE',
+                key: 'name',
+                label: 'Admin Level Name',
+                order: 2,
             },
             {
-                id: 3,
-                level: 3,
-                name: 'District',
-                nameProperty: 'NAME_ENGL',
-                parentNameProperty: 'NAME_ENFG',
-                parentPcodeProperty: 'NAME_PPCODE',
-                pcodeProperty: 'NAME_PCODE',
+                key: 'nameProperty',
+                label: 'Name Property',
+                order: 3,
             },
             {
-                id: 4,
-                level: 4,
-                name: 'GABISA',
-                nameProperty: 'NAME_ENGL',
-                parentNameProperty: 'NAME_ENFG',
-                parentPcodeProperty: 'NAME_PPCODE',
-                pcodeProperty: 'NAME_PCODE',
+                key: 'pcodeProperty',
+                label: 'Pcode Property',
+                order: 4,
+            },
+            {
+                key: 'parentNameProperty',
+                label: 'Parent Name Property',
+                order: 5,
+            },
+            {
+                key: 'parentPcodeProperty',
+                label: 'Parent Pcode Property',
+                order: 6,
+            },
+            {
+                key: 'actions',
+                label: 'Actions',
+                order: 7,
+                modifier: row => (
+                    <div className="action-btns">
+                        <Button onClick={() => this.editAdminLevel(row)}>
+                            <i className="ion-edit" />
+                        </Button>
+                    </div>
+                ),
             },
         ];
 
         this.state = {
-            displayAdminLevelList: this.adminLevelList,
+            addAdminLevel: false,
+            clickedAdminLevel: {},
+            displayAdminLevelList: this.props.adminLevelList,
+            editAdminLevel: false,
         };
     }
 
     addAdminLevel = () => {
-        const len = this.state.displayAdminLevelList.length;
-        const displayAdminLevelList = [...this.state.displayAdminLevelList];
-        displayAdminLevelList.push({
-            level: len + 1,
-        });
-
-        this.setState({
-            displayAdminLevelList,
-        });
-
-        const parent = this.addAdminButton.parentNode.parentNode;
-        setTimeout(
-            () => {
-                parent.scrollTop = this.addAdminButton.scrollHeight;
-            },
-            0);
+        this.setState({ addAdminLevel: true });
     };
 
-    deleteAdminLevel = (adminLevel) => {
-        const displayAdminLevelList = this.state.displayAdminLevelList.filter(
-            level => level.id !== adminLevel.id,
-        );
-
+    editAdminLevel = (clickedAdminLevel) => {
         this.setState({
-            displayAdminLevelList,
+            editAdminLevel: true,
+            clickedAdminLevel,
         });
-    }
+    };
+
+    handleModalClose = () => {
+        this.setState({
+            editAdminLevel: false,
+            addAdminLevel: false,
+        });
+    };
 
     render() {
-        const { iso } = this.props;
+        const { countryId } = this.props;
         const { displayAdminLevelList } = this.state;
+        const iso = countryId;
+        console.log(iso, countryId);
 
         return (
             <div
@@ -162,57 +185,38 @@ export default class CountryGeneral extends React.PureComponent {
                 <div styleName="admin-levels">
                     <div styleName="header">
                         Admin Levels
+                        <Button onClick={this.addAdminLevel}>Add admin level</Button>
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            show={this.state.addAdminLevel}
+                        >
+                            <Header title="Add admin level" />
+                            <Body>
+                                <EditAdminLevelForm onClose={this.handleModalClose} />
+                            </Body>
+                        </Modal>
                     </div>
                     <div styleName="admin-levels-list">
-                        {
-                            displayAdminLevelList.map(adminLevel => (
-                                <div
-                                    key={adminLevel.id}
-                                    styleName="admin-level-details"
-                                >
-                                    <TextInput
-                                        initialValue={adminLevel.name}
-                                        label="Admin level name"
-                                        placeholder="Country"
-                                        styleName="text-input"
-                                    />
-                                    <TextInput
-                                        initialValue={adminLevel.nameProperty}
-                                        label="Name property"
-                                        placeholder="NAME_ENGL"
-                                        styleName="text-input"
-                                    />
-                                    <TextInput
-                                        initialValue={adminLevel.pcodeProperty}
-                                        label="Pcode property"
-                                        placeholder="NAME_PCODE"
-                                        styleName="text-input"
-                                    />
-                                    <TextInput
-                                        initialValue={adminLevel.parentNameProperty}
-                                        label="Parent name property"
-                                        placeholder="NAME_ENFG"
-                                        styleName="text-input"
-                                    />
-                                    <TextInput
-                                        initialValue={adminLevel.parentPcodeProperty}
-                                        label="Parent pcode property"
-                                        placeholder="NAME_PPCODE"
-                                        styleName="text-input"
-                                    />
-                                    <div styleName="action-btns">
-                                        <DangerButton
-                                            onClick={() => this.deleteAdminLevel(adminLevel)}
-                                        >
-                                            Delete
-                                        </DangerButton>
-                                    </div>
-                                </div>
-                            ))
-                        }
-                    </div>
-                    <div styleName="footer">
-                        <Button onClick={this.addAdminLevel}>Add admin level</Button>
+                        <Table
+                            headers={this.adminLevelHeaders}
+                            data={displayAdminLevelList}
+                        />
+                        <Modal
+                            styleName="edit-admin-modal"
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            show={this.state.editAdminLevel}
+                            closeOnBlur
+                        >
+                            <Header title="Edit admin level" />
+                            <Body>
+                                <EditAdminLevelForm
+                                    adminLevelDetail={this.state.clickedAdminLevel}
+                                    onClose={this.handleModalClose}
+                                />
+                            </Body>
+                        </Modal>
                     </div>
                 </div>
             </div>
