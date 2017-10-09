@@ -5,7 +5,7 @@ import React from 'react';
 import styles from './styles.scss';
 
 const propTypes = {
-    iso: PropTypes.string.isRequired,
+    countryId: PropTypes.string.isRequired,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -13,10 +13,10 @@ export default class CountryPopulationData extends React.PureComponent {
     static propTypes = propTypes;
 
     render() {
-        const { iso } = this.props;
+        const { countryId } = this.props;
         return (
             <div>
-                Population data {iso}
+                Population data {countryId}
             </div>
         );
     }

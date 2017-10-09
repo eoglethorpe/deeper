@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Button, { PrimaryButton } from '../../../../public/components/Button';
+import Button from '../../../../public/components/Button';
 import EditAdminLevelForm from '../EditAdminLevelForm';
 import Modal, { Header, Body } from '../../../../public/components/Modal';
 import Table from '../../../../public/components/Table';
@@ -14,7 +14,17 @@ import {
 } from '../../../../common/selectors/domainData';
 
 const propTypes = {
-    adminLevelList: PropTypes.array,
+    adminLevelList: PropTypes.arrayOf(
+        PropTypes.shape({
+            adminLevelId: PropTypes.number,
+            level: PropTypes.number,
+            name: PropTypes.string,
+            nameProperty: PropTypes.string,
+            parentNameProperty: PropTypes.string,
+            parentPcodeProperty: PropTypes.string,
+            podeProperty: PropTypes.string,
+        }),
+    ),
     countryId: PropTypes.string.isRequired,
 };
 
@@ -115,7 +125,6 @@ export default class CountryGeneral extends React.PureComponent {
         const { countryId } = this.props;
         const { displayAdminLevelList } = this.state;
         const iso = countryId;
-        console.log(iso, countryId);
 
         return (
             <div
