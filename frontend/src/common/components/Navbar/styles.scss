@@ -38,7 +38,7 @@
         &.active {
             border-bottom-color: $color-accent;
             background-color: lighten($color-primary, 10%);
-            color: $color-text-on-accent;
+            color: $color-text-on-primary;
         }
     }
 

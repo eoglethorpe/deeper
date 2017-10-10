@@ -1,4 +1,5 @@
 @import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
 
 .country-general {
     .form-map-container {
@@ -12,9 +13,6 @@
             .text-input {
                 padding: $spacing-small 0;
 
-                p {
-                    display: none;
-                }
             }
         }
 
@@ -23,6 +21,32 @@
             flex-basis: 64%;
             align-items: center;
             justify-content: center;
+            border: $width-separator-thin solid $color-separator;
+        }
+    }
+
+    .edit-admin-modal {
+        :global .modal-content {
+            width: 720px;
+        }
+    }
+
+    .admin-levels {
+        border-top: $width-separator-thin solid $color-separator;
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-medium $spacing-large;
+            width: 100%;
+            text-transform: uppercase;
+            font-size: 1.6em;
+        }
+
+        .admin-levels-list {
+            font-size: 1.2em;
         }
     }
 }

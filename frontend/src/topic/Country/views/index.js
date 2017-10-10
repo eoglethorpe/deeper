@@ -14,6 +14,9 @@ import { PrimaryButton } from '../../../public/components/Button';
 import {
     countriesSelector,
 } from '../../../common/selectors/domainData';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
 
 const propTypes = {
     // NOTE: is Required removed by @frozenhelium
@@ -21,6 +24,7 @@ const propTypes = {
         pathname: PropTypes.string.isReqired,
     }),
     countries: PropTypes.array, // eslint-disable-line
+    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,7 +40,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -52,6 +56,23 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList: this.props.countries,
             searchInputValue: '',
         };
+    }
+
+    componentWillMount() {
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: undefined,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.export,
+
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+            ],
+        });
     }
 
     goToAddCountry = () => {
@@ -96,9 +117,9 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             this.state.displayCountryList.map(item => (
                                 <Link
-                                    key={item.iso}
-                                    styleName={pathname === `/countrypanel/${item.iso}/` ? 'list-item active' : 'list-item'}
-                                    to={`/countrypanel/${item.iso}/`}
+                                    key={item.countryId}
+                                    styleName={pathname === `/countrypanel/${item.countryId}/` ? 'list-item active' : 'list-item'}
+                                    to={`/countrypanel/${item.countryId}/`}
                                 >
                                     {item.fullName}
                                 </Link>
@@ -114,11 +135,11 @@ export default class CountryPanel extends React.PureComponent {
                                     component={() => (
                                         <CountryDetail
                                             fullName={item.fullName}
-                                            iso={item.iso}
+                                            countryId={item.countryId}
                                         />
                                     )}
-                                    key={item.iso}
-                                    path={`/countrypanel/${item.iso}/`}
+                                    key={item.countryId}
+                                    path={`/countrypanel/${item.countryId}/`}
                                 />
                             ))
                         }

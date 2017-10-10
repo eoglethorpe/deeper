@@ -2,7 +2,8 @@
 
 .country-panel {
     display: flex;
-    $height-full-page: calc(100vh - #{$height-navbar});
+    padding: $spacing-large;
+    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
     .country-list {
         @include shadow-medium;
@@ -23,10 +24,6 @@
                 text-transform: uppercase;
                 font-size: 1.6em;
             }
-
-            .asd {
-                flex-basis: 100%;
-            }
         }
 
         .list {
@@ -41,6 +38,7 @@
 
             .active {
                 background-color: $color-accent;
+                color: $color-text-on-accent;
             }
         }
     }

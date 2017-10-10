@@ -21,7 +21,7 @@
     }
 
     .tabs-container {
-        height: calc(100vh - #{$height-navbar} - #{$height-header});
+        height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
     }
 
     .tab {
