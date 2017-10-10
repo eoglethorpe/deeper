@@ -7,7 +7,10 @@ const initialAuthState = {
     },
 
     user: {
-        email: undefined,
+        userId: undefined,
+        username: undefined,
+        displayName: undefined,
+        exp: undefined,
     },
 };
 export default initialAuthState;

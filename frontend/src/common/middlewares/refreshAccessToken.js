@@ -1,10 +1,13 @@
 import { RestBuilder } from '../../public/utils/rest';
-import { setAccessTokenAction, setCurrentUserAction } from '../action-creators/auth';
+import {
+    setAccessTokenAction,
+//     setCurrentUserAction,
+} from '../action-creators/auth';
 import schema from '../schema';
 import {
-    createParamsForCurrentUser,
+//    createParamsForCurrentUser,
+//    urlForCurrentUser,
     createParamsForTokenRefresh,
-    urlForCurrentUser,
     urlForTokenRefresh,
 } from '../rest';
 
@@ -52,6 +55,7 @@ class Refresher {
             })
             .build();
 
+        /*
         this.currentUserRequest = new RestBuilder()
             .url(urlForCurrentUser)
             .params(() => {
@@ -79,10 +83,13 @@ class Refresher {
                 // TODO: user couldn't be verfied screen
             })
             .build();
+        */
     }
 
     load = () => {
-        this.currentUserRequest.start();
+        /*
+            this.currentUserRequest.start();
+        */
     }
 
     schedule = () => {

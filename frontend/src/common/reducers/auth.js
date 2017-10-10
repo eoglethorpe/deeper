@@ -1,25 +1,42 @@
+import jwtDecode from 'jwt-decode';
+
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
     SET_ACCESS_TOKEN_ACTION,
     SET_CURRENT_USER_ACTION,
 } from '../action-types/auth';
-
 import initialAuthState from '../initial-state/auth';
 import update from '../../public/utils/immutable-update';
+import schema from '../../common/schema';
+
+const decodeAccessToken = (access) => {
+    const decodedToken = jwtDecode(access);
+    try {
+        schema.validate(decodedToken, 'accessToken');
+        return {
+            userId: decodedToken.userId,
+            username: decodedToken.username,
+            displayName: decodedToken.displayName,
+            exp: decodedToken.exp,
+        };
+    } catch (ex) {
+        console.warn('Access token schema has changed.');
+        return {};
+    }
+};
 
 const authReducer = (state = initialAuthState, action) => {
     switch (action.type) {
         case LOGIN_ACTION: {
+            const decodedToken = decodeAccessToken(action.access);
             const settings = {
                 authenticated: { $set: true },
                 token: { $set: {
                     access: action.access,
                     refresh: action.refresh,
                 } },
-                user: { $set: {
-                    email: action.email,
-                } },
+                user: { $set: decodedToken },
             };
             return update(state, settings);
         }
@@ -32,10 +49,12 @@ const authReducer = (state = initialAuthState, action) => {
             return update(state, settings);
         }
         case SET_ACCESS_TOKEN_ACTION: {
+            const decodedToken = decodeAccessToken(action.access);
             const settings = {
                 token: { $merge: {
                     access: action.access,
                 } },
+                user: { $set: decodedToken },
             };
             return update(state, settings);
         }
