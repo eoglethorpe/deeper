@@ -6,8 +6,12 @@ const initialAuthState = {
         refresh: undefined,
     },
 
+    // currently logged-in user-detail
     user: {
-        email: undefined,
+        userId: undefined,
+        username: undefined,
+        displayName: undefined,
+        exp: undefined,
     },
 };
 export default initialAuthState;

@@ -13,14 +13,28 @@ import Table from '../../../public/components/Table';
 import UserProfileEditForm from '../components/UserProfileEditForm';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
+import { RestBuilder } from '../../../public/utils/rest';
 import { PrimaryButton } from '../../../public/components/Button';
 import { pageTitles } from '../../../common/utils/labels';
 import {
-    userSelector,
+    tokenSelector,
 } from '../../../common/selectors/auth';
 import {
-    projectsSelector,
+    userInformationSelector,
+    userProjectsSelector,
 } from '../../../common/selectors/domainData';
+import {
+    setUserInformationAction,
+} from '../../../common/action-creators/domainData';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
+import {
+    createParamsForUser,
+    createUrlForUser,
+} from '../../../common/rest';
+
+import schema from '../../../common/schema';
 
 const propTypes = {
     match: PropTypes.shape({
@@ -28,8 +42,12 @@ const propTypes = {
             userId: PropTypes.string,
         }),
     }),
+    setNavbarState: PropTypes.func.isRequired,
+    setUserInformation: PropTypes.func.isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
-    projects: PropTypes.array, // eslint-disable-line
+    userInformation: PropTypes.object.isRequired, // eslint-disable-line
+    userProjects: PropTypes.array, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -37,22 +55,23 @@ const defaultProps = {
         params: {},
     },
     user: { },
-    projects: [],
 };
 
 
-const mapStateToProps = state => ({
-    user: userSelector(state),
-    projects: projectsSelector(state),
+const mapStateToProps = (state, props) => ({
+    userProjects: userProjectsSelector(state, props),
+    token: tokenSelector(state),
+    userInformation: userInformationSelector(state, props), // uses props.match
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class HomeScreen extends React.PureComponent {
+export default class UserProfile extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -102,6 +121,61 @@ export default class HomeScreen extends React.PureComponent {
                 order: 7,
             },
         ];
+
+        const { match } = this.props;
+        const userId = match.params.userId;
+
+        const urlForUser = createUrlForUser(userId);
+        this.userRequest = new RestBuilder()
+            .url(urlForUser)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'getUserResponse');
+                    this.props.setUserInformation(response);
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+    }
+
+    componentWillMount() {
+        this.userRequest.start();
+
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: undefined,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.export,
+
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+            ],
+        });
+    }
+
+    componentWillUnmount() {
+        this.userRequest.stop();
     }
 
     handleEditProfileClick = () => {
@@ -114,10 +188,8 @@ export default class HomeScreen extends React.PureComponent {
     }
 
     render() {
-        const { user } = this.props;
+        const { userInformation } = this.props;
 
-
-        console.log(this.props.match.params.userId);
         return (
             <div styleName="user-profile">
                 <Helmet>
@@ -125,7 +197,7 @@ export default class HomeScreen extends React.PureComponent {
                 </Helmet>
                 <header styleName="header">
                     <h1>
-                        { pageTitles.userProfile } ({ user.id })
+                        { pageTitles.userProfile }
                     </h1>
                     <PrimaryButton onClick={this.handleEditProfileClick} >
                         Edit profile
@@ -148,20 +220,23 @@ export default class HomeScreen extends React.PureComponent {
                     {/* FIXME: add a default image in img */}
                     <img
                         alt="User avatar"
-                        src={user.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
+                        src={userInformation.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
                         styleName="display-picture"
                     />
                     <div styleName="detail">
                         <p styleName="name">
                             <span styleName="first">
-                                { user.firstName }
+                                { userInformation.firstName }
                             </span>
                             <span styleName="last">
-                                { user.lastName }
+                                { userInformation.lastName }
                             </span>
                         </p>
                         <p styleName="email">
-                            { user.email }
+                            { userInformation.email }
+                        </p>
+                        <p styleName="organization">
+                            { userInformation.organization }
                         </p>
                     </div>
                 </div>
@@ -173,7 +248,7 @@ export default class HomeScreen extends React.PureComponent {
                         Projects
                     </h2>
                     <Table
-                        data={this.props.projects}
+                        data={this.props.userProjects}
                         headers={this.projectHeaders}
                     />
                 </div>

@@ -34,9 +34,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isRequired,
-    }).isRequired,
     logout: PropTypes.func.isRequired,
 
     // eslint-disable-next-line
@@ -47,7 +44,7 @@ const propTypes = {
 
     stopTokenRefresh: PropTypes.func.isRequired,
     user: PropTypes.shape({
-        email: PropTypes.string,
+        userId: PropTypes.number,
     }),
 };
 
@@ -91,15 +88,13 @@ export default class Navbar extends React.PureComponent {
             },
         ];
 
-        console.log(this.navBarItems);
-
         this.dropdownItems = [
             {
                 key: 'first-group',
                 label: undefined,
                 items: [
                     {
-                        linkTo: '/users/me/',
+                        linkTo: `/users/${this.props.user.userId}/`,
                         name: pageTitles.userProfile,
                         iconName: 'ion-android-person',
                     },
@@ -116,8 +111,6 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         ];
-
-        console.log(this.props.location);
     }
 
     handleLogoutButtonClick = () => {
@@ -177,6 +170,7 @@ export default class Navbar extends React.PureComponent {
             user,
         } = this.props;
 
+
         if (!navbarVisible) {
             return null;
         }
@@ -198,7 +192,7 @@ export default class Navbar extends React.PureComponent {
                     <DropdownMenu
                         className="dropdown-title"
                         iconLeft="ion-android-person"
-                        title={`${user.firstName || ''} ${user.lastName || ''}`}
+                        title={user.displayName}
                     >
                         {
                             this.dropdownItems.map(group => (

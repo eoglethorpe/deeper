@@ -1,2 +1,2 @@
-export const PATCH_ACTION = 'domain-data/PATCH';
-export const SUBSCRIBE_SCENE = 'domain-data/SUBSCRIBE_SCENE';
+export const SET_USER_INFORMATION = 'domain-data/SET_USER_INFORMATION';
+export const SET_USER_PROJECTS = 'domain-data/SET_USER_PROJECTS';

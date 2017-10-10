@@ -58,6 +58,23 @@ attachValidator(dict);
 
 
 {
+    const name = 'accessToken';
+    const schema = {
+        doc: {
+            name: 'Access Token',
+            description: 'Data decoded from access token',
+        },
+        fields: {
+            userId: { type: 'uint', required: 'true' },
+            tokenType: { type: 'string', required: 'true' },
+            username: { type: 'string', required: 'true' },
+            displayName: { type: 'string', required: 'true' },
+            exp: { type: 'uint', required: 'true' },
+        },
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'tokenRefreshResponse';
     const schema = {
         doc: {

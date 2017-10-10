@@ -24,26 +24,39 @@ const initialDomainDataState = {
         },
     ],
 
-    projects: [
-        {
-            name: 'Toggle crisis',
-            rights: 'Admin',
-            createdOn: 1023339302,
-            status: 'Active',
-            lastModified: 2003320921,
-            members: 10,
-            actions: 'GG WP',
+    users: {
+        1: {
+            information: {
+                id: 1,
+                username: 'hari@hari.com',
+                email: 'hari@hari.com',
+                firstName: 'hari',
+                lastName: 'hari',
+                displayPicture: null,
+                organization: 'hari',
+            },
+            projects: [
+                {
+                    name: 'Toggle crisis',
+                    rights: 'Admin',
+                    createdOn: 1023339302,
+                    status: 'Active',
+                    lastModified: 2003320921,
+                    members: 10,
+                    actions: 'GG WP',
+                },
+                {
+                    name: 'Bibek ko birthday',
+                    rights: 'Admin',
+                    createdOn: 1023339302,
+                    status: 'Active',
+                    lastModified: 2003320921,
+                    members: 10,
+                    actions: 'GG WP',
+                },
+            ],
         },
-        {
-            name: 'Bibek ko birthday',
-            rights: 'Admin',
-            createdOn: 1023339302,
-            status: 'Active',
-            lastModified: 2003320921,
-            members: 10,
-            actions: 'GG WP',
-        },
-    ],
+    },
 
     countries: [
         { fullName: 'Afghanistan', iso: 'AFG' },
