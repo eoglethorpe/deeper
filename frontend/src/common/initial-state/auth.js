@@ -6,6 +6,7 @@ const initialAuthState = {
         refresh: undefined,
     },
 
+    // currently logged-in user-detail
     user: {
         userId: undefined,
         username: undefined,

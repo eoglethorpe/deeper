@@ -18,10 +18,10 @@ import { PrimaryButton } from '../../../public/components/Button';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     tokenSelector,
-    userSelector,
 } from '../../../common/selectors/auth';
 import {
     projectsSelector,
+    userInfoSelector,
 } from '../../../common/selectors/domainData';
 
 import {
@@ -37,24 +37,25 @@ const propTypes = {
             userId: PropTypes.string,
         }),
     }),
-    user: PropTypes.object, // eslint-disable-line
-    token: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array, // eslint-disable-line
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    user: PropTypes.object, // eslint-disable-line
+    userInfo: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
     match: {
         params: {},
     },
-    user: { },
     projects: [],
+    user: { },
 };
 
 
-const mapStateToProps = state => ({
-    user: userSelector(state),
+const mapStateToProps = (state, props) => ({
     projects: projectsSelector(state),
     token: tokenSelector(state),
+    userInfo: userInfoSelector(state, props), // uses props.match
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -63,7 +64,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class HomeScreen extends React.PureComponent {
+export default class UserProfile extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -167,8 +168,9 @@ export default class HomeScreen extends React.PureComponent {
     }
 
     render() {
-        const { user } = this.props;
+        const { userInfo } = this.props;
 
+        console.log(userInfo);
 
         return (
             <div styleName="user-profile">
@@ -177,7 +179,7 @@ export default class HomeScreen extends React.PureComponent {
                 </Helmet>
                 <header styleName="header">
                     <h1>
-                        { pageTitles.userProfile } ({ user.id })
+                        { pageTitles.userProfile } ({ userInfo.id })
                     </h1>
                     <PrimaryButton onClick={this.handleEditProfileClick} >
                         Edit profile
@@ -200,20 +202,20 @@ export default class HomeScreen extends React.PureComponent {
                     {/* FIXME: add a default image in img */}
                     <img
                         alt="User avatar"
-                        src={user.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
+                        src={userInfo.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
                         styleName="display-picture"
                     />
                     <div styleName="detail">
                         <p styleName="name">
                             <span styleName="first">
-                                { user.firstName }
+                                { userInfo.firstName }
                             </span>
                             <span styleName="last">
-                                { user.lastName }
+                                { userInfo.lastName }
                             </span>
                         </p>
                         <p styleName="email">
-                            { user.email }
+                            { userInfo.email }
                         </p>
                     </div>
                 </div>

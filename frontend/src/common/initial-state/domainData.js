@@ -24,6 +24,25 @@ const initialDomainDataState = {
         },
     ],
 
+    // userInfo
+    // userProjects
+
+    users: {
+        14: {
+            information: {
+                displayPicture: null,
+                email: 'hari@hari.com',
+                firstName: 'hari',
+                id: 14,
+                lastName: 'hari',
+                organization: 'hari',
+                username: 'hari@hari.com',
+            },
+            projects: [
+            ],
+        },
+    },
+
     projects: [
         {
             name: 'Toggle crisis',
