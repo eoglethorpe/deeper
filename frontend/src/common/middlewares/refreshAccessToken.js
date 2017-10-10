@@ -27,8 +27,8 @@ class Refresher {
             .url(urlForTokenRefresh)
             .params(() => {
                 const { auth } = store.getState();
-                const { refresh } = auth.token;
-                return createParamsForTokenRefresh({ refresh });
+                const { refresh, access } = auth.token;
+                return createParamsForTokenRefresh({ refresh, access });
             })
             .decay(0.3)
             .maxRetryTime(2000)
