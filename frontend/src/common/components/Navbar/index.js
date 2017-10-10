@@ -62,57 +62,6 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-
-        this.navBarItems = [
-            {
-                linkTo: '/1/leads/',
-                name: pageTitles.leads,
-                private: true,
-            },
-            {
-                linkTo: '/1/entries/',
-                name: pageTitles.entries,
-                private: true,
-            },
-            {
-                linkTo: '/1/ary/',
-                name: pageTitles.ary,
-                private: true,
-            },
-            {
-                linkTo: '/1/export/',
-                name: pageTitles.export,
-                private: true,
-            },
-        ];
-
-        this.dropdownItems = [
-            {
-                key: 'first-group',
-                label: undefined,
-                items: [
-                    {
-                        linkTo: `/users/${this.props.user.userId}/`,
-                        name: pageTitles.userProfile,
-                        iconName: 'ion-android-person',
-                    },
-                    {
-                        linkTo: '/countrypanel/',
-                        name: pageTitles.countryPanel,
-                        iconName: 'ion-android-globe',
-                    },
-                    {
-                        linkTo: '/admin/',
-                        name: pageTitles.adminPanel,
-                        iconName: 'ion-locked',
-                    },
-                ],
-            },
-        ];
-    }
-
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
         this.props.logout();
@@ -175,6 +124,53 @@ export default class Navbar extends React.PureComponent {
             return null;
         }
 
+        const navBarItems = [
+            {
+                linkTo: '/1/leads/',
+                name: pageTitles.leads,
+                private: true,
+            },
+            {
+                linkTo: '/1/entries/',
+                name: pageTitles.entries,
+                private: true,
+            },
+            {
+                linkTo: '/1/ary/',
+                name: pageTitles.ary,
+                private: true,
+            },
+            {
+                linkTo: '/1/export/',
+                name: pageTitles.export,
+                private: true,
+            },
+        ];
+
+        const dropdownItems = [
+            {
+                key: 'first-group',
+                label: undefined,
+                items: [
+                    {
+                        linkTo: `/users/${this.props.user.userId}/`,
+                        name: pageTitles.userProfile,
+                        iconName: 'ion-android-person',
+                    },
+                    {
+                        linkTo: '/countrypanel/',
+                        name: pageTitles.countryPanel,
+                        iconName: 'ion-android-globe',
+                    },
+                    {
+                        linkTo: '/admin/',
+                        name: pageTitles.adminPanel,
+                        iconName: 'ion-locked',
+                    },
+                ],
+            },
+        ];
+
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
@@ -186,7 +182,7 @@ export default class Navbar extends React.PureComponent {
                     </Link>
                 </div>
                 <div styleName="menu-items">
-                    { this.navBarItems.map(this.renderNavbarItem) }
+                    { navBarItems.map(this.renderNavbarItem) }
                 </div>
                 <div styleName="dropdown-title">
                     <DropdownMenu
@@ -195,7 +191,7 @@ export default class Navbar extends React.PureComponent {
                         title={user.displayName}
                     >
                         {
-                            this.dropdownItems.map(group => (
+                            dropdownItems.map(group => (
                                 <Group key={group.key} >
                                     {
                                         group.label &&
