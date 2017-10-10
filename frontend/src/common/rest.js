@@ -1,4 +1,9 @@
-const wsEndpoint = '/api/v1';
+let wsEndpoint;
+if (process.env.REACT_APP_API_END) {
+    wsEndpoint = `${process.env.REACT_APP_API_HTTPS}://${process.env.REACT_APP_API_END}/api/v1`;
+} else {
+    wsEndpoint = '/api/v1';
+}
 const POST = 'POST';
 const GET = 'GET'; // eslint-disable-line
 const PUT = 'PUT'; // eslint-disable-line

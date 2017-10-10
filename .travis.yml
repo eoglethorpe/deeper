@@ -9,6 +9,12 @@ services:
     - docker
 
 before_install:
+    - sudo apt-get install jq
+    - sudo pip install --upgrade awscli
+    - sudo pip install --upgrade awsebcli
+
+    - openssl aes-256-cbc -K $encrypted_01c53514ef27_key -iv $encrypted_01c53514ef27_iv -in .env-dev.enc -out .env-dev -d
+
     - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${GITLAB_TOKEN}" > ~/.netrc
     - git clone https://gitlab.com/toggle-corp/react-store.git frontend/src/public
     - mkdir -p frontend/src/vendor
@@ -21,6 +27,10 @@ before_script:
 
 script:
     - docker-compose exec web /code/run_tests.sh
+
+after_success:
+    - echo "Branch=${TRAVIS_BRANCH}, Pull request=${TRAVIS_PULL_REQUEST}"
+    - if [ "${TRAVIS_PULL_REQUEST}" == "false" ] && [ "${TRAVIS_BRANCH}" == "${DEEP_RC_BRANCH}" ];then ./deploy/deploy_deeper.sh .env-dev ; fi
 
 notifications:
   slack:

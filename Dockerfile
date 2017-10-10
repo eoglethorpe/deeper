@@ -1,28 +1,9 @@
-FROM ubuntu:16.04
+FROM devtc/ubuntu-django-react:latest
 
-RUN apt-get update && \
-    apt-get install -y \
-        git \
-        locales \
-        python3 \
-        python3-dev \
-        python3-setuptools \
-        python3-pip
+MAINTAINER togglecorp info@togglecorp.com
 
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
-
-RUN pip3 install uwsgi
-
-RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
-RUN apt-get install -y nodejs
-
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install yarn
-
-RUN rm -rf /var/lib/apt/lists/*
+COPY deploy/remote2_syslog_init.sh /tmp/
+RUN /tmp/remote2_syslog_init.sh
 
 RUN mkdir /code/backend -p
 RUN mkdir /code/frontend -p
@@ -38,4 +19,5 @@ COPY frontend/package.json /code/frontend/
 RUN cd frontend && yarn install
 
 COPY . /code/
-RUN cd frontend && yarn build
+
+CMD ./deploy/eb_exec.sh

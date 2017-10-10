@@ -4,6 +4,9 @@ redis-data
 
 production.env
 
+# Swap files
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__
 *.py[cod]
@@ -134,6 +137,10 @@ typings
 
 # dotenv environment variables file
 .env
+.env*
+
+# Sensitive Deploy Files
+deploy/eb/
 
 # tox
 ./.tox
