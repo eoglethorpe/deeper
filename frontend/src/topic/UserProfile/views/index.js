@@ -23,6 +23,9 @@ import {
     projectsSelector,
     userInfoSelector,
 } from '../../../common/selectors/domainData';
+import {
+    setUserInformationAction,
+} from '../../../common/action-creators/domainData';
 
 import {
     createParamsForUser,
@@ -38,6 +41,7 @@ const propTypes = {
         }),
     }),
     projects: PropTypes.array, // eslint-disable-line
+    setUserInformation: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
     userInfo: PropTypes.object.isRequired, // eslint-disable-line
@@ -59,7 +63,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -133,8 +137,8 @@ export default class UserProfile extends React.PureComponent {
                 try {
                     schema.validate(response, 'getUserResponse');
 
-                    // dispatch here
                     console.log(response);
+                    this.props.setUserInformation(response);
                 } catch (er) {
                     console.error(er);
                 }
@@ -179,7 +183,7 @@ export default class UserProfile extends React.PureComponent {
                 </Helmet>
                 <header styleName="header">
                     <h1>
-                        { pageTitles.userProfile } ({ userInfo.id })
+                        { pageTitles.userProfile }
                     </h1>
                     <PrimaryButton onClick={this.handleEditProfileClick} >
                         Edit profile
@@ -216,6 +220,9 @@ export default class UserProfile extends React.PureComponent {
                         </p>
                         <p styleName="email">
                             { userInfo.email }
+                        </p>
+                        <p styleName="organization">
+                            { userInfo.organization }
                         </p>
                     </div>
                 </div>

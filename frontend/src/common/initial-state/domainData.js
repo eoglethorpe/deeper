@@ -28,15 +28,15 @@ const initialDomainDataState = {
     // userProjects
 
     users: {
-        14: {
+        1: {
             information: {
-                displayPicture: null,
+                id: 1,
+                username: 'hari@hari.com',
                 email: 'hari@hari.com',
                 firstName: 'hari',
-                id: 14,
                 lastName: 'hari',
+                displayPicture: null,
                 organization: 'hari',
-                username: 'hari@hari.com',
             },
             projects: [
             ],

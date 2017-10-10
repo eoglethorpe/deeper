@@ -1,2 +1,2 @@
-export const PATCH_ACTION = 'domain-data/PATCH';
-export const SUBSCRIBE_SCENE = 'domain-data/SUBSCRIBE_SCENE';
+// eslint-disable-next-line
+export const SET_USER_INFORMATION = 'domain-data/SET_USER_INFORMATION';
