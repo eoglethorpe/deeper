@@ -1,10 +1,13 @@
 #! /bin/bash
 
-# Script base directory [NOTE: keep the script at project root ]
+# Script base directory
+# /code/scripts/
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# /code/
+ROOT_DIR=$(dirname "$BASE_DIR")
 
 # Goto backend directory
-cd $BASE_DIR
+cd $ROOT_DIR
 
 . /venv/bin/activate
 
