@@ -26,7 +26,9 @@ import {
 import {
     setUserInformationAction,
 } from '../../../common/action-creators/domainData';
-
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
 import {
     createParamsForUser,
     createUrlForUser,
@@ -40,11 +42,12 @@ const propTypes = {
             userId: PropTypes.string,
         }),
     }),
-    userProjects: PropTypes.array, // eslint-disable-line
+    setNavbarState: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
+    userProjects: PropTypes.array, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -62,6 +65,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
@@ -153,6 +157,21 @@ export default class UserProfile extends React.PureComponent {
 
     componentWillMount() {
         this.userRequest.start();
+
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: undefined,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.export,
+
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+            ],
+        });
     }
 
     componentWillUnmount() {
