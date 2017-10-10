@@ -56,6 +56,7 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 
+
 {
     const name = 'accessToken';
     const schema = {
@@ -73,7 +74,6 @@ attachValidator(dict);
     };
     dict.put(name, schema);
 }
-
 {
     const name = 'tokenRefreshResponse';
     const schema = {

@@ -1,12 +1,9 @@
 import { RestBuilder } from '../../public/utils/rest';
 import {
     setAccessTokenAction,
-//     setCurrentUserAction,
 } from '../action-creators/auth';
 import schema from '../schema';
 import {
-//    createParamsForCurrentUser,
-//    urlForCurrentUser,
     createParamsForTokenRefresh,
     urlForTokenRefresh,
 } from '../rest';
@@ -54,42 +51,9 @@ class Refresher {
                 console.info('FATAL:', response);
             })
             .build();
-
-        /*
-        this.currentUserRequest = new RestBuilder()
-            .url(urlForCurrentUser)
-            .params(() => {
-                const { auth } = store.getState();
-                const { access } = auth.token;
-                return createParamsForCurrentUser({ access });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(20)
-            .success((response) => {
-                try {
-                    schema.validate(response, 'getUserResponse');
-                    store.dispatch(setCurrentUserAction(response));
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
-            })
-            .build();
-        */
     }
 
     load = () => {
-        /*
-            this.currentUserRequest.start();
-        */
     }
 
     schedule = () => {

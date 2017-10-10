@@ -13,14 +13,23 @@ import Table from '../../../public/components/Table';
 import UserProfileEditForm from '../components/UserProfileEditForm';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
+import { RestBuilder } from '../../../public/utils/rest';
 import { PrimaryButton } from '../../../public/components/Button';
 import { pageTitles } from '../../../common/utils/labels';
 import {
+    tokenSelector,
     userSelector,
 } from '../../../common/selectors/auth';
 import {
     projectsSelector,
 } from '../../../common/selectors/domainData';
+
+import {
+    createParamsForUser,
+    createUrlForUser,
+} from '../../../common/rest';
+
+import schema from '../../../common/schema';
 
 const propTypes = {
     match: PropTypes.shape({
@@ -29,6 +38,7 @@ const propTypes = {
         }),
     }),
     user: PropTypes.object, // eslint-disable-line
+    token: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array, // eslint-disable-line
 };
 
@@ -44,6 +54,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     user: userSelector(state),
     projects: projectsSelector(state),
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -102,6 +113,48 @@ export default class HomeScreen extends React.PureComponent {
                 order: 7,
             },
         ];
+
+        const { match } = this.props;
+        const userId = match.params.userId;
+
+        const urlForUser = createUrlForUser(userId);
+        this.userRequest = new RestBuilder()
+            .url(urlForUser)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'getUserResponse');
+
+                    // dispatch here
+                    console.log(response);
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+    }
+
+    componentWillMount() {
+        this.userRequest.start();
+    }
+
+    componentWillUnmount() {
+        this.userRequest.stop();
     }
 
     handleEditProfileClick = () => {
@@ -117,7 +170,6 @@ export default class HomeScreen extends React.PureComponent {
         const { user } = this.props;
 
 
-        console.log(this.props.match.params.userId);
         return (
             <div styleName="user-profile">
                 <Helmet>

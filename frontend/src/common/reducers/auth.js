@@ -4,7 +4,6 @@ import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
     SET_ACCESS_TOKEN_ACTION,
-    SET_CURRENT_USER_ACTION,
 } from '../action-types/auth';
 import initialAuthState from '../initial-state/auth';
 import update from '../../public/utils/immutable-update';
@@ -58,13 +57,6 @@ const authReducer = (state = initialAuthState, action) => {
             };
             return update(state, settings);
         }
-        case SET_CURRENT_USER_ACTION: {
-            const settings = {
-                user: { $set: action.user },
-            };
-            return update(state, settings);
-        }
-
         default:
             return state;
     }

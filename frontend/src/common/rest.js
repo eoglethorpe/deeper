@@ -19,7 +19,8 @@ export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
-export const urlForCurrentUser = `${wsEndpoint}/users/me/`;
+
+export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 
 export const createParamsForUserCreate = ({
     firstName, lastName, organization, country, email, password,
@@ -68,7 +69,7 @@ export const createParamsForTokenRefresh = ({ refresh, access }) => ({
     }),
 });
 
-export const createParamsForCurrentUser = ({ access }) => ({
+export const createParamsForUser = ({ access }) => ({
     method: GET,
     headers: {
         Authorization: `Bearer ${access}`,
