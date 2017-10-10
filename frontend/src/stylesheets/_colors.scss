@@ -12,9 +12,9 @@ $color-text-tab: rgba(0, 0, 0, .3);
 $color-hover: rgba(0, 0, 0, .06);
 
 
-$color-primary: #546e7a;
+$color-primary: #fff;
 $color-text-active-tab: $color-primary;
-$color-accent: #00e676;
+$color-accent: #00bfa5;
 
 $color-danger: #e74c3c;
 $color-success: #2ecc71;
@@ -26,8 +26,8 @@ $color-positive: #2ecc71;
 $color-positive-low: #66cfac;
 $color-negative-low: #ff5f5e;
 
-$color-text-on-primary: rgba(244, 255, 255, .8);
-$color-text-on-accent: #fff;
+$color-text-on-primary: rgba(0, 0, 0, .8);
+$color-text-on-accent: rgba(0, 0, 0, .9);
 
 $color-separator: rgba(0, 0, 0, .06);
 $color-separator-alt: rgba(0, 0, 0, .2);

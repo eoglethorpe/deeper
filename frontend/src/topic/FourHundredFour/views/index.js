@@ -24,24 +24,15 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class Entries extends React.PureComponent {
+export default class FourHundredFour extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     componentWillMount() {
         this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.entries,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-            ],
+            visible: false,
+            activeLink: undefined,
+            validLinks: undefined,
         });
     }
 
@@ -49,9 +40,9 @@ export default class Entries extends React.PureComponent {
         return (
             <div>
                 <Helmet>
-                    <title>{ pageTitles.entries }</title>
+                    <title>{ pageTitles.fourHundredFour }</title>
                 </Helmet>
-                { pageTitles.entries }
+                { pageTitles.fourHundredFour }
             </div>
         );
     }

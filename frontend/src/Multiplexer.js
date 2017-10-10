@@ -30,8 +30,21 @@ const UserProfile = () => (
 const Leads = () => (
     <Bundle load={() => import('./topic/Leads/views/')} />
 );
+const Entries = () => (
+    <Bundle load={() => import('./topic/Entries/views')} />
+);
+const Ary = () => (
+    <Bundle load={() => import('./topic/Ary/views')} />
+);
+const Export = () => (
+    <Bundle load={() => import('./topic/Export/views')} />
+);
+
 const CountryPanel = () => (
     <Bundle load={() => import('./topic/Country/views')} />
+);
+const FourHundredFour = () => (
+    <Bundle load={() => import('./topic/FourHundredFour/views')} />
 );
 
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
@@ -76,19 +89,19 @@ export default class Multiplexer extends React.PureComponent {
         {
             path: '/:projectId/entries/',
             name: pageTitles.entries,
-            component: () => <h1>{pageTitles.entries}</h1>,
+            component: Entries,
             private: true,
         },
         {
             path: '/:projectId/ary/',
             name: pageTitles.ary,
-            component: () => <h1>{pageTitles.ary}</h1>,
+            component: Ary,
             private: true,
         },
         {
             path: '/:projectId/export/',
             name: pageTitles.export,
-            component: () => <h1>{pageTitles.export}</h1>,
+            component: Export,
             private: true,
         },
         {
@@ -123,8 +136,8 @@ export default class Multiplexer extends React.PureComponent {
         },
         {
             path: undefined,
-            name: '404',
-            component: () => <h1>404</h1>,
+            name: pageTitles.fourHundredFour,
+            component: FourHundredFour,
         },
     ];
 
@@ -136,8 +149,7 @@ export default class Multiplexer extends React.PureComponent {
         console.log('Unmounting Multiplexer');
     }
 
-
-    getRoute = (page) => {
+    renderRoute = (page) => {
         if (page.private) {
             return (
                 <PrivateRoute
@@ -178,7 +190,7 @@ export default class Multiplexer extends React.PureComponent {
             <div>
                 <NavbarWithProps />
                 <Switch>
-                    { Multiplexer.pages.map(this.getRoute) }
+                    { Multiplexer.pages.map(this.renderRoute) }
                 </Switch>
             </div>
         );

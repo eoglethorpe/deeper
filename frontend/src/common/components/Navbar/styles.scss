@@ -50,11 +50,11 @@
     }
 }
 
-$width-dropdown: 196px;
+$width-dropdown: 200px;
 
 .item-icon {
     display: inline-block;
-    width: $width-icon-large-alt;
+    width: $width-icon-extra-large;
 }
 
 .dropdown-item {
@@ -68,7 +68,7 @@ $width-dropdown: 196px;
     text-align: left;
     text-transform: uppercase;
     font-family: inherit;
-    font-size: $font-size-small;
+    font-size: inherit;
     font-weight: $font-weight-light;
 
     &:hover {

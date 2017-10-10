@@ -1,5 +1,7 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
 
 import Helmet from 'react-helmet';
@@ -12,15 +14,42 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
+import {
+    setNavbarStateAction,
+} from '../../../../common/action-creators/navbar';
 
+
+const propTypes = {
+    setNavbarState: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+};
+
+const mapDispatchToProps = dispatch => ({
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+});
+
+@connect(null, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
         this.state = {
             pending: false,
             registrationSuccessful: false,
         };
+    }
+
+    componentWillMount() {
+        this.props.setNavbarState({
+            visible: false,
+            activeLink: undefined,
+            validLinks: undefined,
+        });
     }
 
     componentWillUnmount() {
