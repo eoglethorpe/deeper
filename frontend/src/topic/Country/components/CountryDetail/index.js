@@ -12,8 +12,8 @@ import styles from './styles.scss';
 import { DangerButton, SuccessButton } from '../../../../public/components/Button';
 
 const propTypes = {
-    fullName: PropTypes.string.isRequired,
     countryId: PropTypes.string,
+    fullName: PropTypes.string.isRequired,
 };
 
 const defaultProps = {

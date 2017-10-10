@@ -44,8 +44,8 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryGeneral extends React.PureComponent {
-    static defaultProps = defaultProps;
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -127,10 +127,7 @@ export default class CountryGeneral extends React.PureComponent {
         const iso = countryId;
 
         return (
-            <div
-                ref={(el) => { this.addAdminButton = el; }}
-                styleName="country-general"
-            >
+            <div styleName="country-general">
                 <div styleName="form-map-container">
                     <form styleName="details-form">
                         {
@@ -194,7 +191,9 @@ export default class CountryGeneral extends React.PureComponent {
                 <div styleName="admin-levels">
                     <div styleName="header">
                         Admin Levels
-                        <Button onClick={this.addAdminLevel}>Add admin level</Button>
+                        <Button onClick={this.addAdminLevel}>
+                            Add admin level
+                        </Button>
                         <Modal
                             closeOnEscape
                             onClose={this.handleModalClose}
