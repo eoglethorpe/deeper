@@ -1,48 +1,25 @@
-# DEEP
+# DEEP [![Build Status](https://travis-ci.org/eoglethorpe/deeper.svg?branch=develop)](https://travis-ci.org/eoglethorpe/deeper)
 
-[![Build Status](https://travis-ci.org/eoglethorpe/deeper.svg?branch=develop)](https://travis-ci.org/eoglethorpe/deeper)
+###### Data Entry and Exploration Platform (Extended Release)
 
 [![Code Climate](https://codeclimate.com/github/eoglethorpe/deeper/badges/gpa.svg)](https://codeclimate.com/github/eoglethorpe/deeper)
 [![Issue Count](https://codeclimate.com/github/eoglethorpe/deeper/badges/issue_count.svg)](https://codeclimate.com/github/eoglethorpe/deeper)
 
-
 ![Coverage(Codecov) Tree](https://codecov.io/gh/eoglethorpe/deeper/branch/develop/graphs/tree.svg)
 
-## Installation
+DEEP is a humanitarian tool to collect and analyze secondary data from various publications such as websites and PDF reports.
 
-### Requirements
+## Staging Servers
 
-* [Docker (1.13.0+)](https://docs.docker.com/engine/installation/)
-* [docker-compose](https://github.com/docker/compose/releases)
+- [Website](http://deeper.togglecorp.com)
+- [API](http://api.deeper.togglecorp.com)
+- [Websocket](http://websocket.deeper.togglecorp.com)
 
-### Build docker image
+## References
 
-```
-$ docker-compose build
-```
-
-Or, you can use docker:
-
-```
-$ docker build . -t deeper_web
-```
-
-### Running locally
-
-```
-$ docker-compose up
-```
-
-### Running on production
-
-Copy *production.envsample* to *production.env* and modify the environment settings to match postgres database settings.
-
-Make sure to also modify `ALLOWED_HOST`.
-
-The production configuration for docker-compose is in *production.yml*.
-
-```
-$ docker-compose -f production.yml build
-$ docker-compose -f production.yml up -d
-```
-
+- [Getting Started](docs/getting-started.md)
+- [Contributing](docs/contributing.md)
+- [Git For Noobs](docs/git.md)
+- [REST API](docs/api-rest.md)
+- [Websocet API](docs/api-websocket.md)
+- [Testing](docs/testing.md)
