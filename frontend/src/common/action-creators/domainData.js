@@ -1,9 +1,14 @@
 import {
     SET_USER_INFORMATION,
+    SET_USER_PROJECTS,
 } from '../action-types/domainData';
 
-// eslint-disable-next-line
-export const setUserInformationAction = (information) => ({
+export const setUserInformationAction = information => ({
     type: SET_USER_INFORMATION,
     information,
+});
+
+export const setUserProjectsAction = projects => ({
+    type: SET_USER_PROJECTS,
+    projects,
 });

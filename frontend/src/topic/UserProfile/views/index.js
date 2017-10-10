@@ -20,8 +20,8 @@ import {
     tokenSelector,
 } from '../../../common/selectors/auth';
 import {
-    projectsSelector,
-    userInfoSelector,
+    userInformationSelector,
+    userProjectsSelector,
 } from '../../../common/selectors/domainData';
 import {
     setUserInformationAction,
@@ -40,26 +40,25 @@ const propTypes = {
             userId: PropTypes.string,
         }),
     }),
-    projects: PropTypes.array, // eslint-disable-line
+    userProjects: PropTypes.array, // eslint-disable-line
     setUserInformation: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
-    userInfo: PropTypes.object.isRequired, // eslint-disable-line
+    userInformation: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
     match: {
         params: {},
     },
-    projects: [],
     user: { },
 };
 
 
 const mapStateToProps = (state, props) => ({
-    projects: projectsSelector(state),
+    userProjects: userProjectsSelector(state, props),
     token: tokenSelector(state),
-    userInfo: userInfoSelector(state, props), // uses props.match
+    userInformation: userInformationSelector(state, props), // uses props.match
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -136,8 +135,6 @@ export default class UserProfile extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'getUserResponse');
-
-                    console.log(response);
                     this.props.setUserInformation(response);
                 } catch (er) {
                     console.error(er);
@@ -172,9 +169,7 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
-        const { userInfo } = this.props;
-
-        console.log(userInfo);
+        const { userInformation } = this.props;
 
         return (
             <div styleName="user-profile">
@@ -206,23 +201,23 @@ export default class UserProfile extends React.PureComponent {
                     {/* FIXME: add a default image in img */}
                     <img
                         alt="User avatar"
-                        src={userInfo.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
+                        src={userInformation.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
                         styleName="display-picture"
                     />
                     <div styleName="detail">
                         <p styleName="name">
                             <span styleName="first">
-                                { userInfo.firstName }
+                                { userInformation.firstName }
                             </span>
                             <span styleName="last">
-                                { userInfo.lastName }
+                                { userInformation.lastName }
                             </span>
                         </p>
                         <p styleName="email">
-                            { userInfo.email }
+                            { userInformation.email }
                         </p>
                         <p styleName="organization">
-                            { userInfo.organization }
+                            { userInformation.organization }
                         </p>
                     </div>
                 </div>
@@ -234,7 +229,7 @@ export default class UserProfile extends React.PureComponent {
                         Projects
                     </h2>
                     <Table
-                        data={this.props.projects}
+                        data={this.props.userProjects}
                         headers={this.projectHeaders}
                     />
                 </div>
