@@ -83,8 +83,8 @@ export default class App extends React.PureComponent {
         this.refreshRequest = new RestBuilder()
             .url(urlForTokenRefresh)
             .params(() => {
-                const { refresh } = this.props.token;
-                return createParamsForTokenRefresh({ refresh });
+                const { refresh, access } = this.props.token;
+                return createParamsForTokenRefresh({ refresh, access });
             })
             .decay(0.3)
             .maxRetryTime(2000)

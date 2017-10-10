@@ -57,9 +57,12 @@ export const createParamsForTokenCreateHid = ({ access_token, expires_in, state,
     }),
 });
 
-export const createParamsForTokenRefresh = ({ refresh }) => ({
+export const createParamsForTokenRefresh = ({ refresh, access }) => ({
     method: POST,
-    headers: commonHeaderForPost,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
     body: JSON.stringify({
         refresh,
     }),
