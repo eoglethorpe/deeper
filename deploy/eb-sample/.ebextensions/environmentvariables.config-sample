@@ -44,6 +44,13 @@ option_settings:
     - option_name: \"DJANGO_ALLOWED_HOST_WEBSOCKET\"
       value: \"$DJANGO_ALLOWED_HOST_WEBSOCKET\"
 
+    - option_name: \"HID_CLIENT_ID\"
+      value: \"$HID_CLIENT_ID\"
+    - option_name: \"HID_CLIENT_REDIRECT_URL\"
+      value: \"$HID_CLIENT_REDIRECT_URL\"
+    - option_name: \"HID_AUTH_URI\"
+      value: \"$HID_AUTH_URI\"
+
     - option_name: \"DATABASE_NAME\"
       value: \"$DATABASE_NAME\"
     - option_name: \"DATABASE_USER\"
