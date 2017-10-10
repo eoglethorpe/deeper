@@ -14,6 +14,9 @@ import { PrimaryButton } from '../../../public/components/Button';
 import {
     countriesSelector,
 } from '../../../common/selectors/domainData';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
 
 const propTypes = {
     // NOTE: is Required removed by @frozenhelium
@@ -21,6 +24,7 @@ const propTypes = {
         pathname: PropTypes.string.isReqired,
     }),
     countries: PropTypes.array, // eslint-disable-line
+    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,7 +40,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -52,6 +56,23 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList: this.props.countries,
             searchInputValue: '',
         };
+    }
+
+    componentWillMount() {
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: undefined,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.export,
+
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+            ],
+        });
     }
 
     goToAddCountry = () => {
