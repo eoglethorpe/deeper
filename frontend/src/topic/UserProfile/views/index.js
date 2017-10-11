@@ -249,6 +249,7 @@ export default class UserProfile extends React.PureComponent {
                         <Body>
                             <UserProfileEditForm
                                 onSubmit={() => {}}
+                                initialValue={userInformation}
                                 pending={false}
                             />
                         </Body>
