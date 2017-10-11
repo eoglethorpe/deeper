@@ -67,6 +67,7 @@
     .icon {
         display: inline-block;
         flex-basis: $width-icon-extra-large;
+        flex-shrink: 0;
     }
 
     .label {
