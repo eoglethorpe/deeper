@@ -101,12 +101,12 @@ export default class Navbar extends React.PureComponent {
                     item.iconName &&
                     <span
                         className={item.iconName}
-                        styleName="item-icon"
+                        styleName="icon"
                     />
                 }
                 {
                     (!item.iconName) &&
-                    <span styleName="item-icon" />
+                    <span styleName="icon" />
                 }
                 {item.name}
             </LinkOutsideRouter>
@@ -207,7 +207,7 @@ export default class Navbar extends React.PureComponent {
                         >
                             <span
                                 className="ion-log-out"
-                                styleName="item-icon"
+                                styleName="icon"
                             />
                             Logout
                         </button>

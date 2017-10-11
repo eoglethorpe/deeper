@@ -165,8 +165,9 @@ export default class Leads extends React.PureComponent {
                 </div>
                 <div styleName="table-container">
                     <Table
-                        headers={this.headers}
                         data={this.props.leads}
+                        headers={this.headers}
+                        keyExtractor={rowData => rowData.id}
                     />
                 </div>
                 <footer styleName="footer">

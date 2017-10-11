@@ -289,6 +289,7 @@ export default class UserProfile extends React.PureComponent {
                     <Table
                         data={this.props.userProjects}
                         headers={this.projectHeaders}
+                        keyExtractor={rowData => rowData.id}
                     />
                 </div>
                 <div styleName="groups">

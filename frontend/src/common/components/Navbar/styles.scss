@@ -50,15 +50,8 @@
     }
 }
 
-$width-dropdown: 200px;
-
-.item-icon {
-    display: inline-block;
-    width: $width-icon-extra-large;
-}
-
 .dropdown-item {
-    display: block;
+    display: flex;
     outline: none;
     border: 0;
     background-color: transparent;
@@ -68,8 +61,18 @@ $width-dropdown: 200px;
     text-align: left;
     text-transform: uppercase;
     font-family: inherit;
-    font-size: inherit;
+    font-size: $font-size-small;
     font-weight: $font-weight-light;
+
+    .icon {
+        display: inline-block;
+        flex-basis: $width-icon-extra-large;
+    }
+
+    .label {
+        flex-basis: calc(100% - #{$width-icon-extra-large});
+        color: $color-text;
+    }
 
     &:hover {
         background-color: $color-background-header;
