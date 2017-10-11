@@ -51,3 +51,40 @@ git checkout develop
 git pull --rebase
 git checkout -b FEATURE_NAME
 ```
+
+5. Oh, i mistakenly committed in master/develop. What to do?
+
+    - If you haven’t pushed
+    ```bash
+    # Make new branch with the new commits
+    git checkout -b new-branch
+    # Push new branch with the new commits
+    git push --set-upstream origin new-branch
+    # Go back to develop
+    git checkout develop
+    # Rest develop back to original state
+    git reset --hard HEAD~1
+
+    # You can also use --soft and stash the changes to new branch
+    # but you have to re-commit
+    ```
+    - Else, Notify your project manager.
+
+
+6. Got conflict on rebase, What to do?
+```bash
+# Look for conflit files [both modified section]
+git status -u
+# Fix the conflict on *both modified files*
+vim conflicts-files.extension
+# Make sure all the files are ready to add (don’t add unwanted files, update .gitignore)
+git status -u
+# Add all the files
+git add .   # (Update .gitignore for unrelated repo files)
+# Continue rebase patch
+git rebase --continue
+# Push
+git push
+# if your branch is diverged, you can use use `git push --force`
+# But make sure others are not in that branch
+```
