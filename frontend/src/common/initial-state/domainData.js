@@ -1,6 +1,7 @@
 const initialDomainDataState = {
     leads: [
         {
+            id: 12,
             createdOn: 17263871623,
             createdBy: 'Frozen Helium',
             title: 'Family reunification in Greece with spouse in Syria',
@@ -12,6 +13,7 @@ const initialDomainDataState = {
             actions: 'GG WP',
         },
         {
+            id: 13,
             createdOn: 78923230239,
             createdBy: 'Bibek Dahal',
             title: 'Voluntary return home and coming back to the EU',
@@ -37,6 +39,7 @@ const initialDomainDataState = {
             },
             projects: [
                 {
+                    id: 1,
                     name: 'Toggle crisis',
                     rights: 'Admin',
                     createdOn: 1023339302,
@@ -46,6 +49,7 @@ const initialDomainDataState = {
                     actions: 'GG WP',
                 },
                 {
+                    id: 2,
                     name: 'Bibek ko birthday',
                     rights: 'Admin',
                     createdOn: 1023339302,
@@ -349,7 +353,7 @@ const initialDomainDataState = {
         ],
         NPL: [
             {
-                id: 1,
+                adminLevelId: 1,
                 level: 1,
                 name: 'Country',
                 nameProperty: 'NAME_ENGL',
@@ -358,7 +362,7 @@ const initialDomainDataState = {
                 pcodeProperty: 'NAME_PCODE',
             },
             {
-                id: 2,
+                adminLevelId: 2,
                 level: 2,
                 name: 'Zone',
                 nameProperty: 'NAME_ENGL',
@@ -367,7 +371,7 @@ const initialDomainDataState = {
                 pcodeProperty: 'NAME_PCODE',
             },
             {
-                id: 3,
+                adminLevelId: 3,
                 level: 3,
                 name: 'District',
                 nameProperty: 'NAME_ENGL',
@@ -376,7 +380,7 @@ const initialDomainDataState = {
                 pcodeProperty: 'NAME_PCODE',
             },
             {
-                id: 4,
+                adminLevelId: 4,
                 level: 4,
                 name: 'GABISA',
                 nameProperty: 'NAME_ENGL',
