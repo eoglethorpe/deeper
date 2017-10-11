@@ -25,6 +25,7 @@ import {
 } from '../../../common/selectors/domainData';
 import {
     setUserInformationAction,
+    setUserProjectsAction,
 } from '../../../common/action-creators/domainData';
 import {
     setNavbarStateAction,
@@ -32,6 +33,8 @@ import {
 import {
     createParamsForUser,
     createUrlForUser,
+    urlForProjects,
+    createParamsForProjects,
 } from '../../../common/rest';
 
 import schema from '../../../common/schema';
@@ -44,6 +47,7 @@ const propTypes = {
     }),
     setNavbarState: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
+    setUserProjects: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
@@ -67,6 +71,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
+    setUserProjects: params => dispatch(setUserProjectsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -84,8 +89,8 @@ export default class UserProfile extends React.PureComponent {
 
         this.projectHeaders = [
             {
-                key: 'name',
-                label: 'Name',
+                key: 'title',
+                label: 'Title',
                 order: 1,
             },
             {
@@ -94,31 +99,27 @@ export default class UserProfile extends React.PureComponent {
                 order: 2,
             },
             {
-                key: 'createdOn',
-                label: 'Created on',
+                key: 'createdAt',
+                label: 'Created at',
                 order: 3,
-                modifier: row => <FormattedDate date={row.createdOn} mode="dd-MM-yyyy hh:mm" />,
+                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+            },
+            {
+                key: 'modifiedAt',
+                label: 'Last Modified at',
+                order: 4,
+                modifier: row => <FormattedDate date={row.modifiedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'status',
                 label: 'Status',
-                order: 4,
-            },
-            {
-                key: 'lastModified',
-                label: 'Last Modified',
                 order: 5,
-                modifier: row => <FormattedDate date={row.lastModified} mode="dd-MM-yyyy hh:mm" />,
-            },
-            {
-                key: 'members',
-                label: 'Members',
-                order: 6,
+                modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
                 key: 'actions',
                 label: 'Actions',
-                order: 7,
+                order: 6,
             },
         ];
 
@@ -138,8 +139,43 @@ export default class UserProfile extends React.PureComponent {
             .maxRetryAttempts(1)
             .success((response) => {
                 try {
-                    schema.validate(response, 'getUserResponse');
-                    this.props.setUserInformation(response);
+                    schema.validate(response, 'userGetResponse');
+                    this.props.setUserInformation({
+                        userId,
+                        information: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+
+
+        this.projectsRequest = new RestBuilder()
+            .url(urlForProjects)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForProjects({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectsGetResponse');
+                    this.props.setUserProjects({
+                        userId,
+                        projects: response.results,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -157,6 +193,7 @@ export default class UserProfile extends React.PureComponent {
 
     componentWillMount() {
         this.userRequest.start();
+        this.projectsRequest.start();
 
         this.props.setNavbarState({
             visible: true,
@@ -176,6 +213,7 @@ export default class UserProfile extends React.PureComponent {
 
     componentWillUnmount() {
         this.userRequest.stop();
+        this.projectsRequest.stop();
     }
 
     handleEditProfileClick = () => {

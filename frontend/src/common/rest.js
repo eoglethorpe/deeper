@@ -19,8 +19,29 @@ export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
-
+export const urlForProjects = `${wsEndpoint}/projects/`;
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
+
+// PROJECTS RELATED
+
+export const createParamsForProjects = ({ access }) => ({
+    method: GET,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});
+
+
+// USER RELATED
+
+export const createParamsForUser = ({ access }) => ({
+    method: GET,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});
 
 export const createParamsForUserCreate = ({
     firstName, lastName, organization, country, email, password,
@@ -38,23 +59,14 @@ export const createParamsForUserCreate = ({
     }),
 });
 
+// TOKEN RELATED
+
 export const createParamsForTokenCreate = ({ username, password }) => ({
     method: POST,
     headers: commonHeaderForPost,
     body: JSON.stringify({
         username,
         password,
-    }),
-});
-
-export const createParamsForTokenCreateHid = ({ access_token, expires_in, state, token_type }) => ({
-    method: POST,
-    headers: commonHeaderForPost,
-    body: JSON.stringify({
-        accessToken: access_token,
-        expiresIn: expires_in,
-        state,
-        tokenType: token_type,
     }),
 });
 
@@ -69,10 +81,14 @@ export const createParamsForTokenRefresh = ({ refresh, access }) => ({
     }),
 });
 
-export const createParamsForUser = ({ access }) => ({
-    method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+export const createParamsForTokenCreateHid = ({ access_token, expires_in, state, token_type }) => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        accessToken: access_token,
+        expiresIn: expires_in,
+        state,
+        tokenType: token_type,
+    }),
 });
+
