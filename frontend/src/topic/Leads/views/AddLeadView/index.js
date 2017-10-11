@@ -8,11 +8,13 @@ import { pageTitles } from '../../../../common/utils/labels';
 import { PrimaryButton, DangerButton } from '../../../../public/components/Button';
 import styles from './styles.scss';
 import TextInput from '../../../../public/components/TextInput';
+import RadioInput from '../../../../public/components/RadioInput';
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
 import Form, {
     requiredCondition,
+    urlCondition,
 } from '../../../../public/utils/Form';
 
 const mapStateToProps = state => ({
@@ -31,11 +33,12 @@ const propTypes = {
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
-    static propTypes = propTypes;
-
+    static propTypes = {
+        onSubmit: PropTypes.func.isRequired,
+        pending: PropTypes.bool.isRequired,
+    };
     constructor(props) {
         super(props);
-        const selected = this.props;
         this.state = {
             selectedValue: 'website',
         };
@@ -46,7 +49,6 @@ export default class AddLead extends React.PureComponent {
             'confidentiality',
             'user',
             'date',
-            'type',
             'url',
             'website',
         ];
@@ -56,10 +58,27 @@ export default class AddLead extends React.PureComponent {
             confidentiality: [requiredCondition],
             user: [requiredCondition],
             date: [requiredCondition],
-            type: [requiredCondition],
-            url: [requiredCondition],
+            url: [
+                requiredCondition,
+                urlCondition,
+            ],
             website: [requiredCondition],
         };
+
+        this.radioOptions = [
+            {
+                key: '1',
+                label: 'MANUAL ENTRY',
+            },
+            {
+                key: '2',
+                label: 'ATTACHMENT',
+            },
+            {
+                key: '3',
+                label: 'WEBSITE',
+            },
+        ];
 
         const updateValues = (data) => {
             this.setState({
@@ -135,7 +154,7 @@ export default class AddLead extends React.PureComponent {
     };
 
     render() {
-        const { selectedValue, pending } = this.state;
+        const { pending } = this.props;
         return (
             <div styleName="add-lead">
                 <Helmet>
@@ -217,30 +236,11 @@ export default class AddLead extends React.PureComponent {
                             onFocus={this.onFocus}
                             onChange={this.onChange}
                         />
-                        <div styleName="radio-btn-container">
-                            Type:
-                            <input
-                                type="radio"
-                                value="website"
-                                checked={selectedValue === 'website'}
-                                onChange={this.handleOptionChange}
-                            />
-                            Website
-                            <input
-                                type="radio"
-                                value="manual-entry"
-                                checked={selectedValue === 'manual-entry'}
-                                onChange={this.handleOptionChange}
-                            />
-                            Manual Entry
-                            <input
-                                type="radio"
-                                value="attachment"
-                                checked={selectedValue === 'attachment'}
-                                onChange={this.handleOptionChange}
-                            />
-                            Attachment
-                        </div>
+                        <RadioInput
+                            name="manual-entry"
+                            options={this.radioOptions}
+                            selected="1"
+                        />
                         <TextInput
                             label="URL"
                             placeholder="Enter URL"
