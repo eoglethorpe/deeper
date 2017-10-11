@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { userSelector as authUserSelector } from './auth';
 
 // NOTE: Use these to make sure reference don't change
 const emptyList = [];
@@ -9,6 +10,10 @@ export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList);
 export const countriesSelector = ({ domainData }) => (domainData.countries || emptyList);
 export const usersSelector = ({ domainData }) => (domainData.users || emptyObject);
+
+export const adminLevelSelector = ({ domainData }, { countryId }) => (
+    domainData.adminLevels[countryId] || emptyList
+);
 
 export const userSelector = createSelector(
     userIdFromRoute,
@@ -25,6 +30,20 @@ export const userProjectsSelector = createSelector(
     userSelector,
     user => (user.projects || emptyList),
 );
-export const adminLevelSelector = ({ domainData }, { countryId }) => (
-    domainData.adminLevels[countryId] || emptyList
+
+
+export const currentUserSelector = createSelector(
+    authUserSelector,
+    usersSelector,
+    (authUser, users) => (users[authUser.userId] || emptyObject),
+);
+
+export const currentUserInformationSelector = createSelector(
+    currentUserSelector,
+    user => (user.information || emptyObject),
+);
+
+export const currentUserProjectsSelector = createSelector(
+    currentUserSelector,
+    user => (user.projects || emptyList),
 );

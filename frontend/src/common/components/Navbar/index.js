@@ -10,7 +10,7 @@ import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
 import SelectInput from '../../../public/components/SelectInput';
 import { logoutAction } from '../../../common/action-creators/auth';
-import logo from '../../../img/logo.png';
+import logo from '../../../img/black-logo.png';
 import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
@@ -18,17 +18,21 @@ import {
     userSelector,
 } from '../../../common/selectors/auth';
 import {
+    currentUserProjectsSelector,
+} from '../../../common/selectors/domainData';
+import {
     navbarVisibleSelector,
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
 } from '../../../common/selectors/navbar';
 
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
     user: userSelector(state),
+    userProjects: currentUserProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -49,6 +53,9 @@ const propTypes = {
     user: PropTypes.shape({
         userId: PropTypes.number,
     }),
+    userProjects: PropTypes.arrayOf({
+        name: PropTypes.string,
+    }),
 };
 
 const defaultProps = {
@@ -56,6 +63,7 @@ const defaultProps = {
     navbarValidLinks: [],
     navbarVisible: false,
     user: {},
+    userProjects: {},
 };
 
 @withRouter
@@ -173,7 +181,7 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         ];
-
+        console.log(this.props.userProjects);
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
@@ -188,7 +196,7 @@ export default class Navbar extends React.PureComponent {
                 <div styleName="project-select-container">
                     <SelectInput
                         placeholder="Select Event"
-                        options={this.selectOptions}
+                        options={this.userProjects}
                     />
                 </div>
                 <div styleName="menu-items">
