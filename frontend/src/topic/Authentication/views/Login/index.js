@@ -104,7 +104,7 @@ export default class Login extends React.PureComponent {
             .maxRetryAttempts(10)
             .success((response) => {
                 try {
-                    schema.validate(response, 'userLoginResponse');
+                    schema.validate(response, 'tokenGetResponse');
                     const { refresh, access } = response;
                     this.props.login({ email, refresh, access });
                     // TODO: make login start token refresh

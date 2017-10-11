@@ -10,26 +10,31 @@ import Form, {
     requiredCondition,
 } from '../../../../public/utils/Form';
 
+const propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    pending: PropTypes.bool,
+    initialValue: PropTypes.object, //eslint-disable-line
+};
+const defaultProps = {
+    initialValue: {},
+    pending: false,
+};
+
 
 @CSSModules(styles)
 export default class UserProfileEditForm extends React.PureComponent {
-    static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
-        pending: PropTypes.bool.isRequired,
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
 
         const form = new Form();
-        const elements = ['firstName', 'lastName'];
+        const elements = ['firstName', 'lastName', 'organization'];
         const validations = {
-            firstName: [
-                requiredCondition,
-            ],
-            lastName: [
-                requiredCondition,
-            ],
+            firstName: [requiredCondition],
+            lastName: [requiredCondition],
+            organization: [requiredCondition],
         };
 
         const updateValues = (data) => {
@@ -62,7 +67,9 @@ export default class UserProfileEditForm extends React.PureComponent {
 
         this.state = {
             formErrors: { },
-            formValues: { },
+            formValues: {
+                ...this.props.initialValue,
+            },
         };
     }
 
@@ -127,6 +134,18 @@ export default class UserProfileEditForm extends React.PureComponent {
                     onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
+                <TextInput
+                    label="Organization"
+                    placeholder="Togglecorp"
+
+                    ref={this.form.updateRef('organization')}
+                    initialValue={this.state.formValues.organization}
+                    error={this.state.formErrors.organization}
+
+                    onFocus={this.onFocus}
+                    onChange={this.onChange}
+                />
+
                 <div styleName="action-buttons">
                     <PrimaryButton>
                         Save changes

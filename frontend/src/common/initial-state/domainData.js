@@ -32,6 +32,7 @@ const initialDomainDataState = {
                 email: 'hari@hari.com',
                 firstName: 'hari',
                 lastName: 'hari',
+                displayName: 'hari',
                 displayPicture: null,
                 organization: 'hari',
             },

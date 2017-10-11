@@ -11,6 +11,26 @@ attachValidator(dict);
 
 // ATTACHING USER DEFINED SCHEMAS
 {
+    const name = 'accessToken';
+    const schema = {
+        doc: {
+            name: 'Access Token',
+            description: 'Data decoded from access token',
+        },
+        fields: {
+            userId: { type: 'uint', required: 'true' },
+            tokenType: { type: 'string', required: 'true' },
+            username: { type: 'string', required: 'true' },
+            displayName: { type: 'string', required: 'true' },
+            exp: { type: 'uint', required: 'true' },
+        },
+    };
+    dict.put(name, schema);
+}
+
+
+// User related requests
+{
     const name = 'userCreateResponse';
     const schema = {
         doc: {
@@ -40,36 +60,81 @@ attachValidator(dict);
     };
     dict.put(name, schema);
 }
-
 {
-    const name = 'userLoginResponse';
+    const name = 'userGetResponse';
     const schema = {
         doc: {
-            name: 'User Login Response',
-            description: 'Response for POST /token/',
+            name: 'User Get Response',
+            description: 'Response for GET /user/:id/',
         },
         fields: {
-            access: { type: 'string', required: 'true' },
-            refresh: { type: 'string', required: 'true' },
+            id: { type: 'uint', required: true },
+            email: { type: 'email', required: true },
+            username: { type: 'string', required: true },
+            firstName: { type: 'string', required: true },
+            lastName: { type: 'string', required: true },
+            displayPicture: { type: 'string' },
+            displayName: { type: 'string', required: true },
+            organization: { type: 'string', required: true },
         },
     };
     dict.put(name, schema);
 }
 
-
+// Project related requests
 {
-    const name = 'accessToken';
+    const name = 'project';
     const schema = {
         doc: {
-            name: 'Access Token',
-            description: 'Data decoded from access token',
+            name: 'Project',
+            description: 'One of the main entities',
         },
         fields: {
-            userId: { type: 'uint', required: 'true' },
-            tokenType: { type: 'string', required: 'true' },
-            username: { type: 'string', required: 'true' },
-            displayName: { type: 'string', required: 'true' },
-            exp: { type: 'uint', required: 'true' },
+            id: { type: 'uint', required: true },
+            createdAt: { type: 'string', required: true }, // change to date later
+            modifiedAt: { type: 'string', required: true }, // change to date later
+            createdBy: { type: 'uint', required: true },
+            modifiedBy: { type: 'uint', required: true },
+
+            title: { type: 'string', required: true },
+            members: { type: 'array.uint', required: true },
+            memberships: { type: 'array.uint', required: true },
+            regions: { type: 'array.uint', required: true },
+            userGroups: { type: 'array.uint', required: true },
+            data: { type: 'object' },
+        },
+    };
+    dict.put(name, schema);
+}
+
+{
+    const name = 'projectsGetResponse';
+    const schema = {
+        doc: {
+            name: 'Projects Get Response',
+            description: 'Response for GET /projects/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.project', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+
+// Token related requests
+{
+    const name = 'tokenGetResponse';
+    const schema = {
+        doc: {
+            name: 'Token Get Response',
+            description: 'Response for POST /token/',
+        },
+        fields: {
+            access: { type: 'string', required: 'true' },
+            refresh: { type: 'string', required: 'true' },
         },
     };
     dict.put(name, schema);
@@ -83,26 +148,6 @@ attachValidator(dict);
         },
         fields: {
             access: { type: 'string', required: 'true' },
-        },
-    };
-    dict.put(name, schema);
-}
-
-{
-    const name = 'getUserResponse';
-    const schema = {
-        doc: {
-            name: 'User Object',
-            description: 'Response for GET /user/:id/',
-        },
-        fields: {
-            id: { type: 'uint', required: true },
-            email: { type: 'email', required: true },
-            username: { type: 'string', required: true },
-            firstName: { type: 'string', required: true },
-            lastName: { type: 'string', required: true },
-            displayPicture: { type: 'string' },
-            organization: { type: 'string', required: true },
         },
     };
     dict.put(name, schema);
