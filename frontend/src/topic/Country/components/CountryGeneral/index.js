@@ -207,8 +207,9 @@ export default class CountryGeneral extends React.PureComponent {
                     </div>
                     <div styleName="admin-levels-list">
                         <Table
-                            headers={this.adminLevelHeaders}
                             data={displayAdminLevelList}
+                            headers={this.adminLevelHeaders}
+                            keyExtractor={rowData => rowData.adminLevelId}
                         />
                         <Modal
                             styleName="edit-admin-modal"
