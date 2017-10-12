@@ -214,7 +214,7 @@ export default class Navbar extends React.PureComponent {
                         styleName="project-select-input"
                         placeholder="Select Event"
                         keySelector={option => option.id}
-                        labelSelector={option => option.name}
+                        labelSelector={option => option.title}
                         options={this.props.userProjects}
                         selectedOptionKey={this.props.activeProject}
                         onChange={this.onSelectChangeHandler}
