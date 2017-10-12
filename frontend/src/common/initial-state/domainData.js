@@ -51,7 +51,7 @@ const initialDomainDataState = {
                 },
                 {
                     id: 2,
-                    name: 'Bibek ko birthday',
+                    name: 'Ghana Monitoring',
                     rights: 'Admin',
                     createdOn: 1023339302,
                     status: 'Active',
@@ -60,7 +60,8 @@ const initialDomainDataState = {
                     actions: 'GG WP',
                 },
                 {
-                    name: 'Ankit ko birthday',
+                    id: 3,
+                    name: 'Antigua and Barbuda Global Monitoring',
                     rights: 'Admin',
                     createdOn: 1043339302,
                     status: 'Active',
@@ -69,7 +70,18 @@ const initialDomainDataState = {
                     actions: 'GG WP',
                 },
                 {
-                    name: 'Khatri ko birthday',
+                    id: 4,
+                    name: 'French Polynesia Global Monitoring',
+                    rights: 'Admin',
+                    createdOn: 1023379302,
+                    status: 'Active',
+                    lastModified: 2003320921,
+                    members: 10,
+                    actions: 'GG WP',
+                },
+                {
+                    id: 5,
+                    name: 'Trump Crisis',
                     rights: 'Admin',
                     createdOn: 1023379302,
                     status: 'Active',

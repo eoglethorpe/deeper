@@ -36,13 +36,14 @@
         background-color: transparent;
         font-size: $font-size-small;
 
-        input::-webkit-input-placeholder {
-            color: $color-background-overlay;
+        .project-select-input {
+            color: $color-text;
+
+            input::-webkit-input-placeholder {
+                color: $color-label;
+            }
         }
 
-        input {
-            color: $color-foreground;
-        }
     }
 
     .menu-item {

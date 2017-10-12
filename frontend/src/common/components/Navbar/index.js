@@ -53,9 +53,12 @@ const propTypes = {
     user: PropTypes.shape({
         userId: PropTypes.number,
     }),
-    userProjects: PropTypes.arrayOf({
-        name: PropTypes.string,
-    }),
+    userProjects: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+        }),
+    ),
 };
 
 const defaultProps = {
@@ -181,7 +184,6 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         ];
-        console.log(this.props.userProjects);
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
@@ -195,8 +197,11 @@ export default class Navbar extends React.PureComponent {
                 </div>
                 <div styleName="project-select-container">
                     <SelectInput
+                        styleName="project-select-input"
                         placeholder="Select Event"
-                        options={this.userProjects}
+                        keySelector={option => option.id}
+                        labelSelector={option => option.name}
+                        options={this.props.userProjects}
                     />
                 </div>
                 <div styleName="menu-items">
