@@ -1,12 +1,14 @@
 #! /bin/bash
 
+/code/deploy/scripts/
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT_DIR=$(dirname "$BASE_DIR")
+/code/
+ROOT_DIR=$(dirname "$(dirname "$BASE_DIR")")
 instid=`curl -s -o - http://169.254.169.254/latest/meta-data/instance-id`
 export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
 
 ### PAPERTRAIL CONFIGS
-cp $ROOT_DIR/deploy/log_files.yml-sample /etc/log_files.yml
+cp $ROOT_DIR/deploy/configs/log_files.yml-sample /etc/log_files.yml
 sed "s/hostname:.*/hostname: $EBS_HOSTNAME/" -i /etc/log_files.yml
 sed "s/host:.*/host: $PAPERTRAIL_HOST/" -i /etc/log_files.yml
 sed "s/port:.*/port: $PAPERTRAIL_PORT/" -i /etc/log_files.yml
@@ -40,5 +42,5 @@ if [ "$EBS_ENV_TYPE" == "web" ]; then
     python3 $ROOT_DIR/backend/manage.py collectstatic --no-input
     python3 $ROOT_DIR/backend/manage.py migrate --no-input
 
-    uwsgi --ini $ROOT_DIR/deploy/uwsgi.ini # Start uwsgi server
+    uwsgi --ini $ROOT_DIR/deploy/configs/uwsgi.ini # Start uwsgi server
 fi
