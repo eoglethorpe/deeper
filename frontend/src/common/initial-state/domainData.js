@@ -41,23 +41,18 @@ const initialDomainDataState = {
             projects: [
                 {
                     id: 1,
-                    name: 'Toggle crisis',
-                    rights: 'Admin',
-                    createdOn: 1023339302,
-                    status: 'Active',
-                    lastModified: 2003320921,
-                    members: 10,
-                    actions: 'GG WP',
-                },
-                {
-                    id: 2,
-                    name: 'Bibek ko birthday',
-                    rights: 'Admin',
-                    createdOn: 1023339302,
-                    status: 'Active',
-                    lastModified: 2003320921,
-                    members: 10,
-                    actions: 'GG WP',
+                    title: 'Project #1',
+                    members: [14],
+                    regions: [],
+                    memberships: [1],
+                    userGroups: [],
+                    data: {
+                        owner: 'Dahal',
+                    },
+                    createdAt: '2017-10-11T09:14:41.294012Z',
+                    createdBy: 14,
+                    modifiedAt: '2017-10-11T09:14:41.436820Z',
+                    modifiedBy: 14,
                 },
             ],
         },
@@ -392,6 +387,6 @@ const initialDomainDataState = {
         ],
     },
 
-
+    activeProject: 1,
 };
 export default initialDomainDataState;

@@ -1,6 +1,7 @@
 import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
+    SET_ACTIVE_PROJECT,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -28,6 +29,14 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                             $set: action.projects,
                         },
                     } },
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_ACTIVE_PROJECT: {
+            const settings = {
+                activeProject: {
+                    $set: action.activeProject,
                 },
             };
             return update(state, settings);

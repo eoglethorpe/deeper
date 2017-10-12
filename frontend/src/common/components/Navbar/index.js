@@ -6,9 +6,16 @@ import { withRouter, Link } from 'react-router-dom';
 
 import DropdownMenu, { Group, GroupTitle } from '../../../public/components/DropdownMenu';
 import LinkOutsideRouter from '../LinkOutsideRouter';
+import logo from '../../../img/black-logo.png';
+import SelectInput from '../../../public/components/SelectInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
-import { logoutAction } from '../../../common/action-creators/auth';
+import {
+    logoutAction,
+} from '../../../common/action-creators/auth';
+import {
+    setActiveProjectAction,
+} from '../../../common/action-creators/domainData';
 import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
@@ -16,43 +23,59 @@ import {
     userSelector,
 } from '../../../common/selectors/auth';
 import {
+    currentUserProjectsSelector,
+    activeProjectSelector,
+} from '../../../common/selectors/domainData';
+import {
     navbarVisibleSelector,
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
 } from '../../../common/selectors/navbar';
 
-const mapStateToProps = state => ({
+
+const mapStateToProps = (state, props) => ({
+    activeProject: activeProjectSelector(state),
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
     user: userSelector(state),
+    userProjects: currentUserProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
+    setActiveProject: params => dispatch(setActiveProjectAction(params)),
     stopTokenRefresh: () => dispatch(stopTokenRefreshAction()),
 });
 
 const propTypes = {
+    activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-
     // eslint-disable-next-line
     navbarActiveLink: PropTypes.string,
     // eslint-disable-next-line
     navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
     navbarVisible: PropTypes.bool,
-
+    setActiveProject: PropTypes.func.isRequired,
     stopTokenRefresh: PropTypes.func.isRequired,
     user: PropTypes.shape({
         userId: PropTypes.number,
     }),
+    userProjects: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+        }),
+    ),
 };
 
 const defaultProps = {
     navbarActiveLink: undefined,
+    activeProject: undefined,
     navbarValidLinks: [],
     navbarVisible: false,
     user: {},
+    userProjects: {},
 };
 
 @withRouter
@@ -61,6 +84,13 @@ const defaultProps = {
 export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    onSelectChangeHandler = (key) => {
+        this.props.setActiveProject({ activeProject: key });
+    }
+
+    labelSelectorForSelectInput = option => (option.id)
+    keySelectorForSelectInput = option => (option.title)
 
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
@@ -112,6 +142,7 @@ export default class Navbar extends React.PureComponent {
             </LinkOutsideRouter>
         );
     }
+
 
     render() {
         const {
@@ -170,7 +201,6 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         ];
-
         return (
             <div styleName="navbar">
                 <div styleName="menu-header">
@@ -178,8 +208,20 @@ export default class Navbar extends React.PureComponent {
                         to="/"
                         styleName="menu-item"
                     >
-                        Deep
+                        <img src={logo} alt="DEEP" />
+                        <h3>Deep</h3>
                     </Link>
+                </div>
+                <div styleName="project-select-container">
+                    <SelectInput
+                        styleName="project-select-input"
+                        placeholder="Select Event"
+                        keySelector={this.labelSelectorForSelectInput}
+                        labelSelector={this.keySelectorForSelectInput}
+                        options={this.props.userProjects}
+                        selectedOptionKey={this.props.activeProject}
+                        onChange={this.onSelectChangeHandler}
+                    />
                 </div>
                 <div styleName="menu-items">
                     { navBarItems.map(this.renderNavbarItem) }
