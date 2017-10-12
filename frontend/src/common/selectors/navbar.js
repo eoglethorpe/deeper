@@ -6,4 +6,5 @@ const emptyObject = {}; // eslint-disable-line
 
 export const navbarVisibleSelector = ({ navbar }) => navbar.visible;
 export const navbarActiveLinkSelector = ({ navbar }) => navbar.activeLink;
-export const navbarValidLinksSelector = ({ navbar }) => navbar.validLinks || [];
+export const navbarValidLinksSelector = ({ navbar }) => navbar.validLinks || emptyList;
+export const navbarSelectedProjectSelector = ({ navbar }) => navbar.selectedProject;

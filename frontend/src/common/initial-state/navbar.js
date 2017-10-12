@@ -4,5 +4,7 @@ const initialNavbarState = {
     activeLink: undefined,
 
     validLinks: undefined,
+
+    selectedProject: 1,
 };
 export default initialNavbarState;

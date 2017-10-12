@@ -24,6 +24,7 @@ import {
     navbarVisibleSelector,
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
+    navbarSelectedProjectSelector,
 } from '../../../common/selectors/navbar';
 
 
@@ -31,6 +32,7 @@ const mapStateToProps = (state, props) => ({
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
+    navbarSelectedProject: navbarSelectedProjectSelector(state),
     user: userSelector(state),
     userProjects: currentUserProjectsSelector(state, props),
 });
@@ -45,6 +47,7 @@ const propTypes = {
 
     // eslint-disable-next-line
     navbarActiveLink: PropTypes.string,
+    navbarSelectedProject: PropTypes.number,
     // eslint-disable-next-line
     navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
     navbarVisible: PropTypes.bool,
@@ -63,6 +66,7 @@ const propTypes = {
 
 const defaultProps = {
     navbarActiveLink: undefined,
+    navbarSelectedProject: undefined,
     navbarValidLinks: [],
     navbarVisible: false,
     user: {},
@@ -202,6 +206,7 @@ export default class Navbar extends React.PureComponent {
                         keySelector={option => option.id}
                         labelSelector={option => option.name}
                         options={this.props.userProjects}
+                        selectedOptionKey={this.props.navbarSelectedProject}
                     />
                 </div>
                 <div styleName="menu-items">
