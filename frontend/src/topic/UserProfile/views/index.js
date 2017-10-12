@@ -31,8 +31,12 @@ import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
-    createParamsForUser,
     createUrlForUser,
+    createParamsForUser,
+
+    createUrlForUserPatch,
+    createParamsForUserPatch,
+
     urlForProjects,
     createParamsForProjects,
 } from '../../../common/rest';
@@ -85,6 +89,7 @@ export default class UserProfile extends React.PureComponent {
 
         this.state = {
             editProfile: false,
+            pending: false,
         };
 
         this.projectHeaders = [
@@ -214,10 +219,65 @@ export default class UserProfile extends React.PureComponent {
     componentWillUnmount() {
         this.userRequest.stop();
         this.projectsRequest.stop();
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+    }
+
+    handleUserProfileEditSubmit = (data) => {
+        const {
+            firstName,
+            lastName,
+            organization,
+        } = data;
+
+        const { match } = this.props;
+        const userId = match.params.userId;
+
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+
+        const urlForUser = createUrlForUserPatch(userId);
+        this.userPatchRequest = new RestBuilder()
+            .url(urlForUser)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUserPatch({ access }, { firstName, lastName, organization });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                this.setState({ pending: false });
+                try {
+                    schema.validate(response, 'userPatchResponse');
+                    this.props.setUserInformation({
+                        userId,
+                        information: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                this.setState({ pending: false });
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                this.setState({ pending: false });
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+
+        this.setState({ pending: true });
+        this.userPatchRequest.start();
     }
 
     handleEditProfileClick = () => {
-        console.log(this.state.editProfile);
         this.setState({ editProfile: true });
     }
 
@@ -248,9 +308,9 @@ export default class UserProfile extends React.PureComponent {
                         <Header title="Edit profile" />
                         <Body>
                             <UserProfileEditForm
-                                onSubmit={() => {}}
+                                onSubmit={this.handleUserProfileEditSubmit}
                                 initialValue={userInformation}
-                                pending={false}
+                                pending={this.state.pending}
                             />
                         </Body>
                     </Modal>

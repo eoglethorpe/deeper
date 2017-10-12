@@ -21,6 +21,7 @@ export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/`;
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
+export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
 
 // PROJECTS RELATED
 
@@ -58,6 +59,24 @@ export const createParamsForUserCreate = ({
         username: email,
     }),
 });
+
+export const createParamsForUserPatch = ({ access }, {
+    firstName,
+    lastName,
+    organization,
+}) => ({
+    method: PATCH,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify({
+        firstName,
+        lastName,
+        organization,
+    }),
+});
+
 
 // TOKEN RELATED
 
