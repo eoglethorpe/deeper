@@ -10,6 +10,66 @@ import dict from '../vendor/ravl/schema';
 attachValidator(dict);
 
 // ATTACHING USER DEFINED SCHEMAS
+
+
+// Base schema
+
+{
+    const name = 'dbentity';
+    const schema = {
+        doc: {
+            name: 'Database Entity',
+            description: 'Defines all the attributes common to db entities',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            createdAt: { type: 'string', required: true }, // date
+            modifiedAt: { type: 'string', required: true }, // date
+            createdBy: { type: 'uint', required: true },
+            modifiedBy: { type: 'uint', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'project';
+    const schema = {
+        doc: {
+            name: 'Project',
+            description: 'One of the main entities',
+        },
+        extends: 'dbentity',
+        fields: {
+            data: { type: 'object' },
+            members: { type: 'array.uint', required: true },
+            memberships: { type: 'array.uint', required: true },
+            regions: { type: 'array.uint', required: true },
+            title: { type: 'string', required: true },
+            userGroups: { type: 'array.uint', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'user';
+    const schema = {
+        doc: {
+            name: 'User',
+            description: 'Data for user',
+        },
+        fields: {
+            displayName: { type: 'string', required: true },
+            displayPicture: { type: 'string' }, // url
+            email: { type: 'email', required: true },
+            firstName: { type: 'string', required: true },
+            id: { type: 'uint', required: true },
+            lastName: { type: 'string', required: true },
+            organization: { type: 'string', required: true },
+            username: { type: 'string', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
 {
     const name = 'accessToken';
     const schema = {
@@ -29,7 +89,8 @@ attachValidator(dict);
 }
 
 
-// User related requests
+// User request related
+
 {
     const name = 'userCreateResponse';
     const schema = {
@@ -39,12 +100,12 @@ attachValidator(dict);
             note: 'This is the first schema',
         },
         fields: {
-            pk: { type: 'unit', required: true },
             displayPicture: { type: 'string' },
-            organization: { type: 'string' },
             email: { type: 'email', required: true },
             firstName: { type: 'string', required: true },
             lastName: { type: 'string', required: true },
+            organization: { type: 'string' },
+            pk: { type: 'unit', required: true },
             username: { type: 'string', required: true },
         },
         /*
@@ -67,16 +128,7 @@ attachValidator(dict);
             name: 'User Get Response',
             description: 'Response for GET /user/:id/',
         },
-        fields: {
-            displayName: { type: 'string', required: true },
-            displayPicture: { type: 'string' },
-            email: { type: 'email', required: true },
-            firstName: { type: 'string', required: true },
-            id: { type: 'uint', required: true },
-            lastName: { type: 'string', required: true },
-            organization: { type: 'string', required: true },
-            username: { type: 'string', required: true },
-        },
+        extends: 'user',
     };
     dict.put(name, schema);
 }
@@ -87,45 +139,13 @@ attachValidator(dict);
             name: 'User Patch Response',
             description: 'Response for PATCH /user/:id/',
         },
-        fields: {
-            displayName: { type: 'string', required: true },
-            displayPicture: { type: 'string' },
-            email: { type: 'email', required: true },
-            firstName: { type: 'string', required: true },
-            id: { type: 'uint', required: true },
-            lastName: { type: 'string', required: true },
-            organization: { type: 'string', required: true },
-            username: { type: 'string', required: true },
-        },
+        extends: 'user',
     };
     dict.put(name, schema);
 }
 
-// Project related requests
-{
-    const name = 'project';
-    const schema = {
-        doc: {
-            name: 'Project',
-            description: 'One of the main entities',
-        },
-        fields: {
-            id: { type: 'uint', required: true },
-            createdAt: { type: 'string', required: true }, // change to date later
-            modifiedAt: { type: 'string', required: true }, // change to date later
-            createdBy: { type: 'uint', required: true },
-            modifiedBy: { type: 'uint', required: true },
 
-            title: { type: 'string', required: true },
-            members: { type: 'array.uint', required: true },
-            memberships: { type: 'array.uint', required: true },
-            regions: { type: 'array.uint', required: true },
-            userGroups: { type: 'array.uint', required: true },
-            data: { type: 'object' },
-        },
-    };
-    dict.put(name, schema);
-}
+// Project request related
 
 {
     const name = 'projectsGetResponse';
