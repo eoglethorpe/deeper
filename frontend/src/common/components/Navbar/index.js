@@ -89,6 +89,9 @@ export default class Navbar extends React.PureComponent {
         this.props.setActiveProject({ activeProject: key });
     }
 
+    labelSelectorForSelectInput = option => (option.id)
+    keySelectorForSelectInput = option => (option.title)
+
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
         this.props.logout();
@@ -213,8 +216,8 @@ export default class Navbar extends React.PureComponent {
                     <SelectInput
                         styleName="project-select-input"
                         placeholder="Select Event"
-                        keySelector={option => option.id}
-                        labelSelector={option => option.title}
+                        keySelector={this.labelSelectorForSelectInput}
+                        labelSelector={this.keySelectorForSelectInput}
                         options={this.props.userProjects}
                         selectedOptionKey={this.props.activeProject}
                         onChange={this.onSelectChangeHandler}
