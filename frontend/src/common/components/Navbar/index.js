@@ -6,11 +6,16 @@ import { withRouter, Link } from 'react-router-dom';
 
 import DropdownMenu, { Group, GroupTitle } from '../../../public/components/DropdownMenu';
 import LinkOutsideRouter from '../LinkOutsideRouter';
+import logo from '../../../img/black-logo.png';
+import SelectInput from '../../../public/components/SelectInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
-import SelectInput from '../../../public/components/SelectInput';
-import { logoutAction } from '../../../common/action-creators/auth';
-import logo from '../../../img/black-logo.png';
+import {
+    logoutAction,
+} from '../../../common/action-creators/auth';
+import {
+    setActiveProjectAction,
+} from '../../../common/action-creators/domainData';
 import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
@@ -19,39 +24,39 @@ import {
 } from '../../../common/selectors/auth';
 import {
     currentUserProjectsSelector,
+    activeProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
     navbarVisibleSelector,
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
-    navbarSelectedProjectSelector,
 } from '../../../common/selectors/navbar';
 
 
 const mapStateToProps = (state, props) => ({
+    activeProject: activeProjectSelector(state),
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
-    navbarSelectedProject: navbarSelectedProjectSelector(state),
     user: userSelector(state),
     userProjects: currentUserProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
+    setActiveProject: params => dispatch(setActiveProjectAction(params)),
     stopTokenRefresh: () => dispatch(stopTokenRefreshAction()),
 });
 
 const propTypes = {
+    activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-
     // eslint-disable-next-line
     navbarActiveLink: PropTypes.string,
-    navbarSelectedProject: PropTypes.number,
     // eslint-disable-next-line
     navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
     navbarVisible: PropTypes.bool,
-
+    setActiveProject: PropTypes.func.isRequired,
     stopTokenRefresh: PropTypes.func.isRequired,
     user: PropTypes.shape({
         userId: PropTypes.number,
@@ -66,7 +71,7 @@ const propTypes = {
 
 const defaultProps = {
     navbarActiveLink: undefined,
-    navbarSelectedProject: undefined,
+    activeProject: undefined,
     navbarValidLinks: [],
     navbarVisible: false,
     user: {},
@@ -79,6 +84,10 @@ const defaultProps = {
 export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    onSelectChangeHandler = (key) => {
+        this.props.setActiveProject({ activeProject: key });
+    }
 
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
@@ -130,6 +139,7 @@ export default class Navbar extends React.PureComponent {
             </LinkOutsideRouter>
         );
     }
+
 
     render() {
         const {
@@ -206,7 +216,8 @@ export default class Navbar extends React.PureComponent {
                         keySelector={option => option.id}
                         labelSelector={option => option.name}
                         options={this.props.userProjects}
-                        selectedOptionKey={this.props.navbarSelectedProject}
+                        selectedOptionKey={this.props.activeProject}
+                        onChange={this.onSelectChangeHandler}
                     />
                 </div>
                 <div styleName="menu-items">

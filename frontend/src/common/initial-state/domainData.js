@@ -423,5 +423,7 @@ const initialDomainDataState = {
     },
 
 
+    activeProject: 1,
+
 };
 export default initialDomainDataState;

@@ -7,6 +7,7 @@ const emptyObject = {};
 
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 
+export const activeProjectSelector = ({ domainData }) => (domainData.activeProject);
 export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList);
 export const countriesSelector = ({ domainData }) => (domainData.countries || emptyList);
 export const usersSelector = ({ domainData }) => (domainData.users || emptyObject);
