@@ -68,14 +68,34 @@ attachValidator(dict);
             description: 'Response for GET /user/:id/',
         },
         fields: {
-            id: { type: 'uint', required: true },
-            email: { type: 'email', required: true },
-            username: { type: 'string', required: true },
-            firstName: { type: 'string', required: true },
-            lastName: { type: 'string', required: true },
-            displayPicture: { type: 'string' },
             displayName: { type: 'string', required: true },
+            displayPicture: { type: 'string' },
+            email: { type: 'email', required: true },
+            firstName: { type: 'string', required: true },
+            id: { type: 'uint', required: true },
+            lastName: { type: 'string', required: true },
             organization: { type: 'string', required: true },
+            username: { type: 'string', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'userPatchResponse';
+    const schema = {
+        doc: {
+            name: 'User Patch Response',
+            description: 'Response for PATCH /user/:id/',
+        },
+        fields: {
+            displayName: { type: 'string', required: true },
+            displayPicture: { type: 'string' },
+            email: { type: 'email', required: true },
+            firstName: { type: 'string', required: true },
+            id: { type: 'uint', required: true },
+            lastName: { type: 'string', required: true },
+            organization: { type: 'string', required: true },
+            username: { type: 'string', required: true },
         },
     };
     dict.put(name, schema);
