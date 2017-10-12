@@ -40,6 +40,7 @@ attachValidator(dict);
         },
         extends: 'dbentity',
         fields: {
+            analysisFramework: { type: 'object', required: false },
             data: { type: 'object' },
             members: { type: 'array.uint', required: true },
             memberships: { type: 'array.uint', required: true },
