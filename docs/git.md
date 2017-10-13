@@ -1,3 +1,17 @@
+# Guideline
+
+## [Commit Messages](https://chris.beams.io/posts/git-commit/)
+- Separate subject from body with a blank line
+- Limit the subject line to 50 characters
+- Capitalize the subject line
+- Do not end the subject line with a period
+- Use the imperative mood in the subject line
+- Wrap the body at 72 characters
+- Use the body to explain what and why vs. how
+
+
+## Branch
+
 There are 5 major branchlines:
 1. develop
 2. feature
@@ -5,27 +19,28 @@ There are 5 major branchlines:
 4. hotfix
 5. master
 
-## Develop
+### Develop
 Branch *develop* is a long-running branch.
 Branch *develop* should be stable.
 Never push a commit to develop directly.
 Branches *feature-M* start from branch *develop*.
 
-## Feature
+### Feature
 Branch *feature-M* should define a certain feature.
 After work on a feature is completed, branch *feature-M* is merged into branch *develop*.
 Once merged, the branch *feature-M* is deleted.
 
-## Release
+### Release
 Branch *master* is a long-running branch.
 Once all features are completed for a relase, branch *release-N* starts from branch *develop*.
 Never create branch *feature-M* in branch *release-N*.
 Never merge branch *relase* into branch *develop*.
 
-## Hotfix
+### Hotfix
 Branch *hotfix-M* should define a certain fix.
 After work on a fix is completed, branch *hotfix-M* is merged into branch *release*.
 Once merged, the branch *hotfix-M* is deleted.
+
 
 # FAQ
 
@@ -52,7 +67,7 @@ git pull --rebase
 git checkout -b FEATURE_NAME
 ```
 
-5. Oh, i mistakenly committed in master/develop. What to do?
+5. Oh, I mistakenly committed in master/develop. What should I do?
 
     - If you haven’t pushed
     ```bash
@@ -62,7 +77,9 @@ git checkout -b FEATURE_NAME
     git push --set-upstream origin new-branch
     # Go back to develop
     git checkout develop
-    # Rest develop back to original state
+    # Reset develop back to it's original state
+    # [Note: 1 for single commit, replace 1 with number of commits]
+    # use git log to make sure.
     git reset --hard HEAD~1
 
     # You can also use --soft and stash the changes to new branch
@@ -73,7 +90,7 @@ git checkout -b FEATURE_NAME
 
 6. Got conflict on rebase, What to do?
 ```bash
-# Look for conflit files [both modified section]
+# Look for conflict files [both modified section]
 git status -u
 # Fix the conflict on *both modified files*
 vim conflicts-files.extension
@@ -86,5 +103,5 @@ git rebase --continue
 # Push
 git push
 # if your branch is diverged, you can use use `git push --force`
-# But make sure others are not in that branch
+# But make sure others are not working in that branch
 ```
