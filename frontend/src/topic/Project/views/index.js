@@ -8,46 +8,24 @@ import Helmet from 'react-helmet';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
 import {
-    PrimaryButton,
-    TransparentPrimaryButton,
-} from '../../../public/components/Button';
-import {
-    countriesSelector,
-} from '../../../common/selectors/domainData';
-import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
+import {
+    TransparentPrimaryButton,
+} from '../../../public/components/Button';
 
 const propTypes = {
-    // NOTE: is Required removed by @frozenhelium
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isReqired,
-    }),
-    countries: PropTypes.array, // eslint-disable-line
     setNavbarState: PropTypes.func.isRequired,
 };
-
-const defaultProps = {
-    location: {},
-    countries: [],
-};
-
-// TODO:
-// Scroll to selected country
-
-const mapStateToProps = state => ({
-    countries: countriesSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(null, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectPanel extends React.PureComponent {
     static propTypes = propTypes;
-    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -88,9 +66,7 @@ export default class ProjectPanel extends React.PureComponent {
     };
 
     render() {
-        const { pathname } = this.props.location;
         const { sideBarVisibility } = this.state;
-        console.log(pathname);
 
         return (
             <div styleName="project-panel">
@@ -141,19 +117,19 @@ export default class ProjectPanel extends React.PureComponent {
                                 for="project-details"
                                 styleName="tab"
                             >
-                                De
+                                Details
                             </TabContent>
                             <TabContent
                                 for="geo-areas"
                                 styleName="tab"
                             >
-                                geo
+                                Geo Areas
                             </TabContent>
                             <TabContent
                                 for="analysis-framework"
                                 styleName="tab"
                             >
-                                Anak
+                                Analysis Framework
                             </TabContent>
                         </div>
                     </Tabs>
