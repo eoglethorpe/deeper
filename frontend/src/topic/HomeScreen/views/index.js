@@ -38,6 +38,7 @@ export default class HomeScreen extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
+                pageTitles.projectPanel,
             ],
         });
     }

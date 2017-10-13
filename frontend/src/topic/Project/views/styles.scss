@@ -1,0 +1,59 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+.project-panel {
+    @include shadow-medium;
+    display: flex;
+    margin: $spacing-large;
+    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+    $height-header: 56px;
+    background-color: $color-foreground;
+    height: $height-full-page;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-medium;
+        width: 100%;
+        height: $height-header;
+
+        .heading {
+            color: $color-primary;
+            font-size: $font-size-extra-large;
+        }
+    }
+
+    .content {
+        flex-basis: 100%;
+
+        .tabs-container {
+            height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
+        }
+
+        .tab {
+            font-size: .9em;
+        }
+
+        &.side-bar-shown {
+            flex-basis: 75%;
+        }
+    }
+
+    .side-bar {
+        @include shadow-medium;
+        display: none;
+        flex-basis: 0%;
+        transition: .2s all ease-in-out;
+
+        &.show {
+            display: block;
+            flex-basis: 25%;
+        }
+
+        .header {
+            border-bottom: $width-separator-thin solid $color-accent;
+        }
+    }
+}
+

@@ -41,6 +41,7 @@ export default class Ary extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
+                pageTitles.projectPanel,
             ],
         });
     }

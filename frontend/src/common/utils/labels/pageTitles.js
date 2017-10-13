@@ -16,6 +16,7 @@ const pageTitles = {
     userProfile: 'User Profile',
     adminPanel: 'Admin Panel',
     countryPanel: 'Country Panel',
+    projectPanel: 'Project Panel',
 
     weeklySnapshot: 'Weekly Snapshot',
 

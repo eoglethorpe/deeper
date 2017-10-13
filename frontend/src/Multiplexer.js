@@ -39,7 +39,9 @@ const Ary = () => (
 const Export = () => (
     <Bundle load={() => import('./topic/Export/views')} />
 );
-
+const ProjectPanel = () => (
+    <Bundle load={() => import('./topic/Project/views')} />
+);
 const CountryPanel = () => (
     <Bundle load={() => import('./topic/Country/views')} />
 );
@@ -126,6 +128,12 @@ export default class Multiplexer extends React.PureComponent {
             path: '/countrypanel/*',
             name: pageTitles.countryPanel,
             component: CountryPanel,
+            private: true,
+        },
+        {
+            path: '/projectpanel/*',
+            name: pageTitles.projectPanel,
+            component: ProjectPanel,
             private: true,
         },
         {
