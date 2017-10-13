@@ -4,6 +4,8 @@
 
 Tests are written using django/django-rest test class. Tests files are stored in *tests* directory which lies inside each apps and utils modules.
 
+      ▾ docs/
+          mixin_backend.md
       ▾ backend/
           ▾ project/
             ▾ tests/
@@ -81,3 +83,5 @@ class ExtractorTest(TestCase):
 [Writing django tests](https://docs.djangoproject.com/en/1.11/topics/testing/overview/).
 
 [Writing Api tests](http://www.django-rest-framework.org/api-guide/testing/).
+
+[Test Mixin](mixin_backend.md)
