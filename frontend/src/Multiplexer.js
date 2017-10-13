@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import Bundle from './Bundle';
 import Navbar from './common/components/Navbar';
+import ProjectRouteSynchronizer from './common/components/ProjectRouteSynchronizer';
 import styles from './styles.scss';
 import { pageTitles } from './common/utils/labels';
 import PrivateRoute, {
@@ -14,6 +15,30 @@ import PrivateRoute, {
 import {
     authenticatedSelector,
 } from './common/selectors/auth';
+
+const Leads = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/`} >
+        <Bundle load={() => import('./topic/Leads/views/')} />,
+    </ProjectRouteSynchronizer>
+);
+
+const Entries = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/entries/`} >
+        <Bundle load={() => import('./topic/Entries/views/')} />,
+    </ProjectRouteSynchronizer>
+);
+
+const Ary = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/ary/`} >
+        <Bundle load={() => import('./topic/Ary/views/')} />,
+    </ProjectRouteSynchronizer>
+);
+
+const Export = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/export/`} >
+        <Bundle load={() => import('./topic/Export/views/')} />,
+    </ProjectRouteSynchronizer>
+);
 
 const HomeScreen = () => (
     <Bundle load={() => import('./topic/HomeScreen/views')} />
@@ -27,20 +52,9 @@ const Register = () => (
 const UserProfile = () => (
     <Bundle load={() => import('./topic/UserProfile/views/')} />
 );
-const Leads = () => (
-    <Bundle load={() => import('./topic/Leads/views/')} />
-);
-const Entries = () => (
-    <Bundle load={() => import('./topic/Entries/views')} />
-);
-const Ary = () => (
-    <Bundle load={() => import('./topic/Ary/views')} />
-);
+
 const WeeklySnapshot = () => (
     <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
-);
-const Export = () => (
-    <Bundle load={() => import('./topic/Export/views')} />
 );
 const ProjectPanel = () => (
     <Bundle load={() => import('./topic/Project/views')} />

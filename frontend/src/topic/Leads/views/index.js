@@ -114,6 +114,8 @@ export default class Leads extends React.PureComponent {
     }
 
     componentWillMount() {
+        console.log('Mounting Leads');
+
         this.props.setNavbarState({
             visible: true,
             activeLink: pageTitles.leads,
@@ -159,6 +161,8 @@ export default class Leads extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering Leads');
+
         return (
             <div styleName="leads">
                 <Helmet>
