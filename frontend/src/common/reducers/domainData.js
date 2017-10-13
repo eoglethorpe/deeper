@@ -2,6 +2,7 @@ import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
     SET_ACTIVE_PROJECT,
+    DUMMY_ACTION,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -37,6 +38,26 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             const settings = {
                 activeProject: {
                     $set: action.activeProject,
+                },
+            };
+            return update(state, settings);
+        }
+        case DUMMY_ACTION: {
+            const dummy = {
+                id: 1,
+                createdOn: 17263871623,
+                createdBy: 'Frozen Helium',
+                title: 'If someone bit by a vampire turns into one when they die, how long until everyone is vampires?',
+                published: 1230129312,
+                confidentiality: 'Non-Confidential',
+                source: 'https://facebook.com',
+                numberOfEntries: 12,
+                status: 'Pending',
+                actions: 'GG WP',
+            };
+            const settings = {
+                leads: {
+                    $splice: [[0, 1, dummy]],
                 },
             };
             return update(state, settings);

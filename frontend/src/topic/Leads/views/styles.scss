@@ -21,6 +21,20 @@
 
     .table-container {
         flex-grow: 1;
+        overflow-y: auto;
+
+        .leads-table {
+            :global .header {
+                position: sticky;
+                top: 0;
+                background-color: $color-background-header;
+                text-align: left;
+            }
+
+            :global .title {
+                width: 20%;
+            }
+        }
     }
 
     .footer {

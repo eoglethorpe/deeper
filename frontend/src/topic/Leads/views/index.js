@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
 import FormattedDate from '../../../public/components/FormattedDate';
-import Table from '../../../public/components/Table';
+import RawTable from '../../../public/components/RawTable';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
@@ -144,6 +144,18 @@ export default class Leads extends React.PureComponent {
         });
     }
 
+    leadKeyExtractor = lead => (lead.id.toString())
+
+    leadModifier = (lead, columnKey) => {
+        const header = this.headers.find(d => d.key === columnKey);
+
+        if (header.modifier) {
+            return header.modifier(lead);
+        }
+
+        return lead[columnKey];
+    }
+
     render() {
         return (
             <div styleName="leads">
@@ -164,10 +176,12 @@ export default class Leads extends React.PureComponent {
                     Filters
                 </div>
                 <div styleName="table-container">
-                    <Table
+                    <RawTable
+                        styleName="leads-table"
                         data={this.props.leads}
                         headers={this.headers}
-                        keyExtractor={rowData => rowData.id}
+                        keyExtractor={this.leadKeyExtractor}
+                        dataModifier={this.leadModifier}
                     />
                 </div>
                 <footer styleName="footer">
