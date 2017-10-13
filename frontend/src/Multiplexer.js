@@ -36,6 +36,9 @@ const Entries = () => (
 const Ary = () => (
     <Bundle load={() => import('./topic/Ary/views')} />
 );
+const WeeklySnapshot = () => (
+    <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
+);
 const Export = () => (
     <Bundle load={() => import('./topic/Export/views')} />
 );
@@ -136,6 +139,14 @@ export default class Multiplexer extends React.PureComponent {
             component: ProjectPanel,
             private: true,
         },
+        {
+            path: '/weekly-snapshot/*',
+            name: pageTitles.weeklySnapshot,
+            component: WeeklySnapshot,
+            private: true,
+        },
+
+        // NOTE: never add new link below this comment
         {
             path: '/',
             name: pageTitles.dashboard,
