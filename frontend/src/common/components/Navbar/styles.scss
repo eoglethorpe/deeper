@@ -17,8 +17,8 @@
     .menu-header {
         display: inline-flex;
         flex-basis: 10%;
-        align-items: center;
-        justify-content: center;
+        // align-items: center;
+        // justify-content: center;
         color: $color-text-on-navbar;
         font-size: $font-size-super-large;
 
@@ -34,7 +34,8 @@
 
     .project-select-container {
         flex-basis: 20%;
-        margin-left: $spacing-large;
+        margin-right: $spacing-extra-large;
+        margin-left: $spacing-extra-large;
         background-color: transparent;
         font-size: $font-size-small;
 
@@ -71,7 +72,8 @@
         display: flex;
         flex-basis: 60%;
         align-items: stretch;
-        justify-content: center;
+        margin-right: $spacing-extra-large;
+        margin-left: $spacing-extra-large;
         height: 100%;
     }
 }

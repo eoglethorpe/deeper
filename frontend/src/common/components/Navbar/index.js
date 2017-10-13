@@ -86,6 +86,7 @@ export default class Navbar extends React.PureComponent {
     static defaultProps = defaultProps;
 
     onSelectChangeHandler = (key) => {
+        console.log('fjdslafjslakjfslkajfsla');
         this.props.setActiveProject({ activeProject: key });
     }
 
@@ -148,8 +149,10 @@ export default class Navbar extends React.PureComponent {
         const {
             navbarVisible,
             user,
+            activeProject,
         } = this.props;
 
+        console.log('Rendering Navbar');
 
         if (!navbarVisible) {
             return null;
@@ -157,22 +160,27 @@ export default class Navbar extends React.PureComponent {
 
         const navBarItems = [
             {
-                linkTo: '/1/leads/',
+                linkTo: `/${activeProject}/leads/`,
                 name: pageTitles.leads,
                 private: true,
             },
             {
-                linkTo: '/1/entries/',
+                linkTo: `/${activeProject}/entries/`,
                 name: pageTitles.entries,
                 private: true,
             },
             {
-                linkTo: '/1/ary/',
+                linkTo: `/${activeProject}/ary/`,
                 name: pageTitles.ary,
                 private: true,
             },
             {
-                linkTo: '/1/export/',
+                linkTo: '/weekly-snapshot/',
+                name: pageTitles.weeklySnapshot,
+                private: true,
+            },
+            {
+                linkTo: `/${activeProject}/export/`,
                 name: pageTitles.export,
                 private: true,
             },
@@ -224,7 +232,7 @@ export default class Navbar extends React.PureComponent {
                         keySelector={this.labelSelectorForSelectInput}
                         labelSelector={this.keySelectorForSelectInput}
                         options={this.props.userProjects}
-                        selectedOptionKey={this.props.activeProject}
+                        selectedOptionKey={activeProject}
                         onChange={this.onSelectChangeHandler}
                     />
                 </div>

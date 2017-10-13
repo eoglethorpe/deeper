@@ -36,6 +36,7 @@ export default class Ary extends React.PureComponent {
                 pageTitles.leads,
                 pageTitles.entries,
                 pageTitles.ary,
+                pageTitles.weeklySnapshot,
                 pageTitles.export,
 
                 pageTitles.userProfile,
