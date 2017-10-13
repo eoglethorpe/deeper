@@ -35,7 +35,7 @@ const authReducer = (state = initialAuthState, action) => {
                     access: action.access,
                     refresh: action.refresh,
                 } },
-                user: { $set: decodedToken },
+                activeUser: { $set: decodedToken },
             };
             return update(state, settings);
         }
@@ -43,7 +43,7 @@ const authReducer = (state = initialAuthState, action) => {
             const settings = {
                 authenticated: { $set: false },
                 token: { $set: {} },
-                user: { $set: {} },
+                activeUser: { $set: {} },
             };
             return update(state, settings);
         }
@@ -53,7 +53,7 @@ const authReducer = (state = initialAuthState, action) => {
                 token: { $merge: {
                     access: action.access,
                 } },
-                user: { $set: decodedToken },
+                activeUser: { $set: decodedToken },
             };
             return update(state, settings);
         }

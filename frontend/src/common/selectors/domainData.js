@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { userSelector as authUserSelector } from './auth';
+import { activeUserSelector } from './auth';
 
 // NOTE: Use these to make sure reference don't change
 const emptyList = [];
@@ -34,9 +34,9 @@ export const userProjectsSelector = createSelector(
 
 
 export const currentUserSelector = createSelector(
-    authUserSelector,
+    activeUserSelector,
     usersSelector,
-    (authUser, users) => (users[authUser.userId] || emptyObject),
+    (activeUser, users) => (users[activeUser.userId] || emptyObject),
 );
 
 export const currentUserInformationSelector = createSelector(
