@@ -126,6 +126,7 @@ export default class Leads extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
+                pageTitles.projectPanel,
             ],
         });
     }

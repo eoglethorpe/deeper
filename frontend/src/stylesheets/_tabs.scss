@@ -16,7 +16,7 @@
             text-transform: uppercase;
             color: $color-label;
             font-size: $font-size-medium;
-            font-weight: $font-weight-medium;
+            font-weight: $font-weight-normal;
         }
 
         .empty-tab {
@@ -27,7 +27,6 @@
         :global .tab-link-active {
             border-bottom-color: $color-accent;
             color: $color-accent;
-            font-weight: $font-weight-medium;
         }
     }
 

@@ -212,6 +212,7 @@ export default class UserProfile extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
+                pageTitles.projectPanel,
             ],
         });
     }

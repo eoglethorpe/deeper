@@ -5,10 +5,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: $color-primary;
+    background-color: $color-navbar;
     padding: 0 $spacing-large;
     height: $height-navbar;
-    color: $color-text-on-primary;
+    color: $color-text-on-navbar;
 
     .dropdown-title {
         align-self: stretch;
@@ -17,7 +17,9 @@
     .menu-header {
         display: inline-flex;
         flex-basis: 10%;
-        color: $color-text-on-primary;
+        align-items: center;
+        justify-content: center;
+        color: $color-text-on-navbar;
         font-size: $font-size-super-large;
 
         img {
@@ -61,8 +63,7 @@
 
         &.active {
             border-bottom-color: $color-accent;
-            background-color: lighten($color-primary, 10%);
-            color: $color-text-on-primary;
+            color: $color-text-on-navbar;
         }
     }
 

@@ -70,6 +70,7 @@ export default class CountryPanel extends React.PureComponent {
 
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
+                pageTitles.projectPanel,
                 pageTitles.countryPanel,
             ],
         });
