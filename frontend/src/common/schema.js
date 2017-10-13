@@ -100,15 +100,7 @@ attachValidator(dict);
             description: 'Response for POST /users/',
             note: 'This is the first schema',
         },
-        fields: {
-            displayPicture: { type: 'string' },
-            email: { type: 'email', required: true },
-            firstName: { type: 'string', required: true },
-            lastName: { type: 'string', required: true },
-            organization: { type: 'string' },
-            pk: { type: 'unit', required: true },
-            username: { type: 'string', required: true },
-        },
+        extends: 'user',
         /*
         validator: (self, context) => {
             if (isFalsy(self.token)) {
