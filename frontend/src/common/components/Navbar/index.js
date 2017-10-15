@@ -20,7 +20,7 @@ import {
     stopTokenRefreshAction,
 } from '../../../common/middlewares/refreshAccessToken';
 import {
-    userSelector,
+    activeUserSelector,
 } from '../../../common/selectors/auth';
 import {
     currentUserProjectsSelector,
@@ -38,7 +38,7 @@ const mapStateToProps = (state, props) => ({
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
-    user: userSelector(state),
+    activeUser: activeUserSelector(state),
     userProjects: currentUserProjectsSelector(state, props),
 });
 
@@ -58,7 +58,7 @@ const propTypes = {
     navbarVisible: PropTypes.bool,
     setActiveProject: PropTypes.func.isRequired,
     stopTokenRefresh: PropTypes.func.isRequired,
-    user: PropTypes.shape({
+    activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
     userProjects: PropTypes.arrayOf(
@@ -74,7 +74,7 @@ const defaultProps = {
     activeProject: undefined,
     navbarValidLinks: [],
     navbarVisible: false,
-    user: {},
+    activeUser: {},
     userProjects: {},
 };
 
@@ -148,7 +148,7 @@ export default class Navbar extends React.PureComponent {
     render() {
         const {
             navbarVisible,
-            user,
+            activeUser,
             activeProject,
         } = this.props;
 
@@ -192,7 +192,7 @@ export default class Navbar extends React.PureComponent {
                 label: undefined,
                 items: [
                     {
-                        linkTo: `/users/${this.props.user.userId}/`,
+                        linkTo: `/users/${activeUser.userId}/`,
                         name: pageTitles.userProfile,
                         iconName: 'ion-android-person',
                     },
@@ -243,7 +243,7 @@ export default class Navbar extends React.PureComponent {
                     <DropdownMenu
                         className="dropdown-title"
                         iconLeft="ion-android-person"
-                        title={user.displayName}
+                        title={activeUser.displayName}
                     >
                         {
                             dropdownItems.map(group => (

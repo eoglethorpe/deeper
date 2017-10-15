@@ -5,5 +5,5 @@ const emptyList = []; // eslint-disable-line
 const emptyObject = {};
 
 export const tokenSelector = ({ auth }) => (auth.token || emptyObject);
-export const userSelector = ({ auth }) => (auth.user || emptyObject);
+export const activeUserSelector = ({ auth }) => (auth.activeUser || emptyObject);
 export const authenticatedSelector = ({ auth }) => auth.authenticated;

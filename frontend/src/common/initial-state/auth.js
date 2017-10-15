@@ -7,7 +7,7 @@ const initialAuthState = {
     },
 
     // currently logged-in user-detail
-    user: {
+    activeUser: {
         userId: undefined,
         username: undefined,
         displayName: undefined,
