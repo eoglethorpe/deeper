@@ -2,12 +2,7 @@
 
 .add-lead {
 
-    .header-title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: $spacing-medium;
-    }
+
 
     .container {
         display: flex;
@@ -19,6 +14,13 @@
             flex-basis: 25%;
             $height-header: 124px;
             background-color: $color-foreground;
+
+            .header-title {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: $spacing-medium;
+            }
         }
 
         .leads-details-container {
