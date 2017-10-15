@@ -37,8 +37,8 @@ import {
     createUrlForUserPatch,
     createParamsForUserPatch,
 
-    urlForProjects,
-    createParamsForProjects,
+    createUrlForProjectsOfUser,
+    createParamsForProjectsOfUser,
 } from '../../../common/rest';
 
 import schema from '../../../common/schema';
@@ -166,11 +166,11 @@ export default class UserProfile extends React.PureComponent {
 
         // TODO: fix this, get project for X user
         this.projectsRequest = new RestBuilder()
-            .url(urlForProjects)
+            .url(createUrlForProjectsOfUser(userId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForProjects({ access });
+                return createParamsForProjectsOfUser({ access });
             })
             .decay(0.3)
             .maxRetryTime(3000)
