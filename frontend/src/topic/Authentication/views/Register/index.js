@@ -84,14 +84,13 @@ export default class Login extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'userCreateResponse');
+                    this.setState({
+                        pending: false,
+                        registrationSuccessful: true,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
-
-                this.setState({
-                    pending: false,
-                    registrationSuccessful: true,
-                });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
