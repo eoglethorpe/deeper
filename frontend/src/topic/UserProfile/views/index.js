@@ -164,6 +164,7 @@ export default class UserProfile extends React.PureComponent {
             .build();
 
 
+        // TODO: fix this, get project for X user
         this.projectsRequest = new RestBuilder()
             .url(urlForProjects)
             .params(() => {
@@ -197,6 +198,8 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillMount() {
+        console.log('Mounting UserProfile');
+
         this.userRequest.start();
         this.projectsRequest.start();
 
