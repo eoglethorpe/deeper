@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
@@ -7,7 +6,6 @@ import { connect } from 'react-redux';
 import Bundle from './Bundle';
 import Navbar from './common/components/Navbar';
 import ProjectRouteSynchronizer from './common/components/ProjectRouteSynchronizer';
-import styles from './styles.scss';
 import { pageTitles } from './common/utils/labels';
 import PrivateRoute, {
     ExclusivelyPublicRoute,
@@ -82,7 +80,6 @@ const mapStateToProps = state => ({
 
 @withRouter
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class Multiplexer extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -221,13 +218,11 @@ export default class Multiplexer extends React.PureComponent {
     render() {
         console.log('Rendering Multiplexer');
 
-        return (
-            <div>
-                <NavbarWithProps />
-                <Switch>
-                    { Multiplexer.pages.map(this.renderRoute) }
-                </Switch>
-            </div>
-        );
+        return ([
+            <NavbarWithProps key="navbar" />,
+            <Switch key="switch">
+                { Multiplexer.pages.map(this.renderRoute) }
+            </Switch>,
+        ]);
     }
 }

@@ -8,11 +8,14 @@ import EditLeadForm from '../components/EditLeadForm';
 import FormattedDate from '../../../public/components/FormattedDate';
 import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
-import Table from '../../../public/components/Table';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
-import Button, { PrimaryButton } from '../../../public/components/Button';
+import {
+    PrimaryButton,
+    TransparentAccentButton,
+    TransparentButton,
+} from '../../../public/components/Button';
 import {
     leadsSelector,
 } from '../../../common/selectors/domainData';
@@ -96,14 +99,15 @@ export default class Leads extends React.PureComponent {
                 order: 9,
                 modifier: row => (
                     <div className="actions">
-                        <Button
+                        <TransparentButton
+                            tooltip="Edit lead"
                             onClick={() => this.handleEditLeadClick(row)}
                         >
                             <i className="ion-edit" />
-                        </Button>
-                        <Button>
+                        </TransparentButton>
+                        <TransparentAccentButton >
                             <i className="ion-forward" />
-                        </Button>
+                        </TransparentAccentButton>
                     </div>
                 ),
             },
@@ -177,29 +181,32 @@ export default class Leads extends React.PureComponent {
                         { pageTitles.leads }
                     </title>
                 </Helmet>
+
                 <header styleName="header">
-                    <h1>{ pageTitles.leads }</h1>
+                    <h1>
+                        { pageTitles.leads }
+                    </h1>
                     <PrimaryButton
-                        onClick={() => this.handleAddLeadClick()}
+                        styleName="add-lead-button"
                     >
-                    Add lead
+                        Add lead
                     </PrimaryButton>
                 </header>
+
                 <div styleName="filters">
-                    Filters
+                    <p>Filters</p>
                 </div>
+
                 <div styleName="table-container">
                     <RawTable
-                        styleName="leads-table"
                         data={this.props.leads}
+                        dataModifier={this.leadModifier}
                         headers={this.headers}
                         keyExtractor={this.leadKeyExtractor}
-                        dataModifier={this.leadModifier}
+                        styleName="leads-table"
                     />
                 </div>
-                <footer styleName="footer">
-                    Footer
-                </footer>
+
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}
