@@ -168,8 +168,6 @@ export default class Leads extends React.PureComponent {
                 }
             })
             .build();
-
-        this.leadRequest.start();
     }
 
     componentWillMount() {
@@ -191,6 +189,11 @@ export default class Leads extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
+        this.leadRequest.start();
+    }
+
+    componentWillUnMount() {
+        this.leadRequest.stop();
     }
 
     handleEditLeadClick = (row) => {
@@ -259,10 +262,6 @@ export default class Leads extends React.PureComponent {
                         styleName="leads-table"
                     />
                 </div>
-<<<<<<< HEAD
-
-=======
->>>>>>> Update Lead Fields
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}
