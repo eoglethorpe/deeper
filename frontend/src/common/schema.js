@@ -27,6 +27,8 @@ attachValidator(dict);
             modifiedAt: { type: 'string', required: true }, // date
             createdBy: { type: 'uint', required: true },
             modifiedBy: { type: 'uint', required: true },
+            createdByName: { type: 'string' },
+            modifiedByName: { type: 'string' },
         },
     };
     dict.put(name, schema);
@@ -63,6 +65,7 @@ attachValidator(dict);
             assignee: { type: 'array.uint' },
             attachment: { type: 'string' }, // file url
             confidentiality: { type: 'string', required: true },
+            noOfEntries: { type: 'int' },
             project: { type: 'uint' },
             publishedOn: { type: 'string' },
             source: { type: 'string' }, // url

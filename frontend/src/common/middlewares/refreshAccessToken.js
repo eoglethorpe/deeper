@@ -4,9 +4,14 @@ import {
 } from '../action-creators/auth';
 import schema from '../schema';
 import {
+    createParamsForProjects,
     createParamsForTokenRefresh,
+    urlForProjects,
     urlForTokenRefresh,
 } from '../rest';
+import {
+    setUserProjectsAction,
+} from '../../common/action-creators/domainData';
 
 export const START_TOKEN_REFRESH = 'refresh-access-token/START';
 export const STOP_TOKEN_REFRESH = 'refresh-access-token/STOP';
@@ -51,9 +56,43 @@ class Refresher {
                 console.info('FATAL:', response);
             })
             .build();
+
+        this.projectsRequest = new RestBuilder()
+            .url(urlForProjects)
+            .params(() => {
+                const { auth } = store.getState();
+                const { access } = auth.token;
+                return createParamsForProjects({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectsGetResponse');
+                    const { auth } = store.getState();
+                    const { userId } = auth.activeUser;
+                    store.dispatch(setUserProjectsAction({
+                        userId,
+                        projects: response.results,
+                    }));
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
     }
 
     load = () => {
+        this.projectsRequest.start();
     }
 
     schedule = () => {

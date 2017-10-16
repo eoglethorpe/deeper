@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
@@ -80,6 +81,14 @@ export default class Leads extends React.PureComponent {
                 key: 'createdBy',
                 label: 'Created by',
                 order: 2,
+                modifier: row => (
+                    <Link
+                        key={row.createdBy}
+                        to={`/users/${row.createdBy}/`}
+                    >
+                        {row.createdByName}
+                    </Link>
+                ),
             },
             {
                 key: 'title',
@@ -90,7 +99,7 @@ export default class Leads extends React.PureComponent {
                 key: 'publishedOn',
                 label: 'Published',
                 order: 4,
-                modifier: row => <FormattedDate date={row.published} />,
+                modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
             },
             {
                 key: 'confidentiality',
@@ -103,7 +112,7 @@ export default class Leads extends React.PureComponent {
                 order: 6,
             },
             {
-                key: 'numberOfEntries',
+                key: 'noOfEntries',
                 label: 'No. of entries',
                 order: 7,
             },
@@ -250,7 +259,10 @@ export default class Leads extends React.PureComponent {
                         styleName="leads-table"
                     />
                 </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> Update Lead Fields
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}
