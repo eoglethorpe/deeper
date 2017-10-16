@@ -52,6 +52,30 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 {
+    const name = 'lead';
+    const schema = {
+        doc: {
+            name: 'Lead',
+            description: 'One of the main entities',
+        },
+        extends: 'dbentity',
+        fields: {
+            assignee: { type: 'array.uint' },
+            attachment: { type: 'string' }, // file url
+            confidentiality: { type: 'string', required: true },
+            project: { type: 'uint' },
+            publishedOn: { type: 'string' },
+            source: { type: 'string' }, // url
+            status: { type: 'string', required: true },
+            text: { type: 'string' },
+            title: { type: 'string', required: true },
+            url: { type: 'string' },
+            website: { type: 'string' },
+        },
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'user';
     const schema = {
         doc: {
@@ -156,6 +180,27 @@ attachValidator(dict);
     };
     dict.put(name, schema);
 }
+
+
+// Lead request related
+
+{
+    const name = 'leadsGetResponse';
+    const schema = {
+        doc: {
+            name: 'Lead Get Response',
+            description: 'Response for GET /leads/?params',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.lead', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+
 
 // Token related requests
 {

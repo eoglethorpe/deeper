@@ -2,6 +2,7 @@ import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
     SET_ACTIVE_PROJECT,
+    SET_LEADS,
     DUMMY_ACTION,
 } from '../action-types/domainData';
 
@@ -21,6 +22,12 @@ export const setUserProjectsAction = ({ userId, projects }) => ({
 export const setActiveProjectAction = ({ activeProject }) => ({
     type: SET_ACTIVE_PROJECT,
     activeProject,
+});
+
+export const setLeadsAction = ({ projectId, leads }) => ({
+    type: SET_LEADS,
+    projectId,
+    leads,
 });
 
 export const dummyAction = () => ({
