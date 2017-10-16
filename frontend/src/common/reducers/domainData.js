@@ -2,6 +2,7 @@ import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
     SET_ACTIVE_PROJECT,
+    SET_LEADS,
     DUMMY_ACTION,
 } from '../action-types/domainData';
 
@@ -32,6 +33,17 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
+            return update(state, settings);
+        }
+        case SET_LEADS: {
+            const settings = {
+                leads: {
+                    [action.projectId]: { $autoArray: {
+                        $set: action.leads,
+                    } },
+                },
+            };
+            console.log(settings);
             return update(state, settings);
         }
         case SET_ACTIVE_PROJECT: {

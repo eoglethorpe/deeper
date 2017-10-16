@@ -1,3 +1,8 @@
+import { RestRequest } from '../public/utils/rest';
+
+// Aliash for prepareQueryParams
+const p = RestRequest.prepareUrlParams;
+
 let wsEndpoint;
 if (process.env.REACT_APP_API_END) {
     wsEndpoint = `${process.env.REACT_APP_API_HTTPS}://${process.env.REACT_APP_API_END}/api/v1`;
@@ -15,11 +20,18 @@ const commonHeaderForPost = {
     'Content-Type': 'application/json',
 };
 
+
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/`;
+export const createUrlForProjectsOfUser = userId => (
+    `${wsEndpoint}/projects/?${p({ user: userId })}`
+);
+export const createUrlForLeadsOfProject = params => (
+    `${wsEndpoint}/leads/?${p(params)}`
+);
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
 

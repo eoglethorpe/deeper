@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
@@ -10,6 +11,7 @@ import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
+import { RestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     PrimaryButton,
@@ -17,15 +19,31 @@ import {
     TransparentButton,
 } from '../../../public/components/Button';
 import {
-    leadsSelector,
+    createParamsForUser,
+    createUrlForLeadsOfProject,
+} from '../../../common/rest';
+import {
+    tokenSelector,
+} from '../../../common/selectors/auth';
+import {
+    leadsForProjectSelector,
+    activeProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
+import {
+    setLeadsAction,
+} from '../../../common/action-creators/domainData';
+
+import schema from '../../../common/schema';
 
 const propTypes = {
+    activeProject: PropTypes.number.isRequired,
     leads: PropTypes.array, // eslint-disable-line
+    setLeads: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -33,11 +51,13 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    state,
-    leads: leadsSelector(state),
+    activeProject: activeProjectSelector(state),
+    leads: leadsForProjectSelector(state),
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
+    setLeads: params => dispatch(setLeadsAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
@@ -52,15 +72,23 @@ export default class Leads extends React.PureComponent {
 
         this.headers = [
             {
-                key: 'createdOn',
-                label: 'Created on',
+                key: 'createdAt',
+                label: 'Created at',
                 order: 1,
-                modifier: row => <FormattedDate date={row.createdOn} mode="dd-MM-yyyy hh:mm" />,
+                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'createdBy',
                 label: 'Created by',
                 order: 2,
+                modifier: row => (
+                    <Link
+                        key={row.createdBy}
+                        to={`/users/${row.createdBy}/`}
+                    >
+                        {row.createdByName}
+                    </Link>
+                ),
             },
             {
                 key: 'title',
@@ -68,10 +96,10 @@ export default class Leads extends React.PureComponent {
                 order: 3,
             },
             {
-                key: 'published',
+                key: 'publishedOn',
                 label: 'Published',
                 order: 4,
-                modifier: row => <FormattedDate date={row.published} />,
+                modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
             },
             {
                 key: 'confidentiality',
@@ -84,7 +112,7 @@ export default class Leads extends React.PureComponent {
                 order: 6,
             },
             {
-                key: 'numberOfEntries',
+                key: 'noOfEntries',
                 label: 'No. of entries',
                 order: 7,
             },
@@ -117,6 +145,29 @@ export default class Leads extends React.PureComponent {
             editRow: {},
             showEditLeadModal: false,
         };
+
+        const { token, activeProject } = this.props;
+
+        const urlForProjectLeads = createUrlForLeadsOfProject({ project: activeProject });
+        this.leadRequest = new RestBuilder()
+            .url(urlForProjectLeads)
+            .params(() => {
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'leadsGetResponse');
+                    this.props.setLeads({
+                        projectId: activeProject,
+                        leads: response.results,
+                    });
+                    console.log(response);
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
     }
 
     componentWillMount() {
@@ -138,6 +189,11 @@ export default class Leads extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
+        this.leadRequest.start();
+    }
+
+    componentWillUnMount() {
+        this.leadRequest.stop();
     }
 
     handleEditLeadClick = (row) => {
@@ -206,7 +262,6 @@ export default class Leads extends React.PureComponent {
                         styleName="leads-table"
                     />
                 </div>
-
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}

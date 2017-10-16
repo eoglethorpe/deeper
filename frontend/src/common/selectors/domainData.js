@@ -16,6 +16,8 @@ export const adminLevelSelector = ({ domainData }, { countryId }) => (
     domainData.adminLevels[countryId] || emptyList
 );
 
+// Selector depending on user id from route (url)
+
 export const userSelector = createSelector(
     userIdFromRoute,
     usersSelector,
@@ -32,6 +34,7 @@ export const userProjectsSelector = createSelector(
     user => (user.projects || emptyList),
 );
 
+// Selector depending on user id from state (logged-in user)
 
 export const currentUserSelector = createSelector(
     activeUserSelector,
@@ -47,4 +50,13 @@ export const currentUserInformationSelector = createSelector(
 export const currentUserProjectsSelector = createSelector(
     currentUserSelector,
     user => (user.projects || emptyList),
+);
+
+
+// Selector depending on project id from state (active project)
+
+export const leadsForProjectSelector = createSelector(
+    activeProjectSelector,
+    leadsSelector,
+    (activeProject, leads) => (leads[activeProject] || emptyList),
 );

@@ -54,6 +54,11 @@ export default class Entries extends React.PureComponent {
                     <title>{ pageTitles.entries }</title>
                 </Helmet>
                 { pageTitles.entries }
+                {/*
+                    <footer styleName="footer">
+                        Footer
+                    </footer>
+                */}
             </div>
         );
     }
