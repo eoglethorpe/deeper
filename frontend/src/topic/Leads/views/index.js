@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import EditLeadForm from '../components/EditLeadForm';
 import FormattedDate from '../../../public/components/FormattedDate';
 import RawTable from '../../../public/components/RawTable';
+import browserHistory from '../../../common/browserHistory';
+import Table from '../../../public/components/Table';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { pageTitles } from '../../../common/utils/labels';
@@ -160,6 +162,11 @@ export default class Leads extends React.PureComponent {
         return lead[columnKey];
     }
 
+    handleAddLeadClick = () => {
+        browserHistory.push('/:projectId/leads/new/');
+    }
+
+
     render() {
         console.log('Rendering Leads');
 
@@ -171,11 +178,11 @@ export default class Leads extends React.PureComponent {
                     </title>
                 </Helmet>
                 <header styleName="header">
-                    <h1>
-                        { pageTitles.leads }
-                    </h1>
-                    <PrimaryButton>
-                        Add lead
+                    <h1>{ pageTitles.leads }</h1>
+                    <PrimaryButton
+                        onClick={() => this.handleAddLeadClick()}
+                    >
+                    Add lead
                     </PrimaryButton>
                 </header>
                 <div styleName="filters">

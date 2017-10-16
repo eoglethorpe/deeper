@@ -65,7 +65,9 @@ const CountryPanel = () => (
 const FourHundredFour = () => (
     <Bundle load={() => import('./topic/FourHundredFour/views')} />
 );
-
+const AddLead = () => (
+    <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
+);
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
@@ -126,7 +128,7 @@ export default class Multiplexer extends React.PureComponent {
         {
             path: '/:projectId/leads/:leadId/',
             name: pageTitles.editLeads,
-            component: () => <h1>{pageTitles.editLeads}</h1>,
+            component: AddLead,
             private: true,
         },
         {
