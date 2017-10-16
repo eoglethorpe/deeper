@@ -2,33 +2,114 @@
 
 .add-lead {
 
-
-
     .container {
         display: flex;
         padding: $spacing-large;
         $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+        overflow-y: auto;
 
         .leads-list-container {
             @include shadow-medium;
             flex-basis: 25%;
-            $height-header: 124px;
+            $height-header: 72px;
+            $height-upload: 100px;
+            margin-right: $spacing-large;
             background-color: $color-foreground;
 
             .header-title {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                margin-bottom: $spacing-medium;
+                border-bottom: $width-separator-normal solid $color-separator;
+                padding: $spacing-large;
+                height: $height-header;
+
+            }
+
+            .list {
+                height: calc(#{$height-full-page} - #{$height-header} - #{$height-upload});
+                overflow: auto;
+                font-size: $font-size-normal;
+
+                .list-item {
+
+                    cursor: pointer;
+
+                    >div {
+                        display: flex;
+                        border-bottom: $width-separator-normal solid $color-separator;
+                        padding-top: $spacing-medium;
+                        height: 64px;
+
+                        &:hover {
+                            background-color: lighten($color-accent, 5%);
+                            color: $color-text-on-primary;
+
+                            .icon-checked {
+                                color: $color-foreground;
+                            }
+                        }
+                    }
+
+                    .icon {
+                        display: inline-block;
+                        flex-basis: $width-icon-large;
+                        flex-shrink: 0;
+                        padding: $spacing-small $spacing-large;
+                        font-size: $font-size-super-large;
+                    }
+
+                    .icon-checked {
+                        display: inline-block;
+                        flex-shrink: 0;
+                        padding: $spacing-medium;
+                        color: $color-success;
+                        font-size: $font-size-large;
+                    }
+                }
+            }
+
+            .upload-container {
+                @include shadow-medium;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: darken($color-foreground, 5%);
+                padding: $spacing-large;
+                height: $height-upload;
+                text-align: center;
+
+
+                >* {
+                    flex-basis: 30%;
+                    cursor: pointer;
+
+
+                    img {
+                        width: 48px;
+                        height: 48px;
+                    }
+                }
             }
         }
 
         .leads-details-container {
             @include shadow-medium;
             flex-basis: 75%;
-            background-color: darken($color-foreground, 1%);
+            flex-wrap: wrap;
+            background-color: darken($color-foreground, 5%);
             height: $height-full-page;
             $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+            overflow-y: auto;
+
+            .preview-container {
+                @include shadow-small;
+                flex-basis: 50%;
+                background-color: $color-foreground;
+                padding: $spacing-large;
+                height: 100%;
+                text-align: center;
+            }
         }
 
     }

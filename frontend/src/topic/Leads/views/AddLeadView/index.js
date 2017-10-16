@@ -6,8 +6,11 @@ import { connect } from 'react-redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import { pageTitles } from '../../../../common/utils/labels';
-import { PrimaryButton, DangerButton } from '../../../../public/components/Button';
+import { PrimaryButton } from '../../../../public/components/Button';
 import styles from './styles.scss';
+import dropbox from '../../../../img/dropbox.png';
+import googleDrive from '../../../../img/google-drive.png';
+import uploadIcon from '../../../../img/upload-icon.png';
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
@@ -90,8 +93,122 @@ export default class AddLead extends React.PureComponent {
                 <div styleName="container">
                     <div styleName="leads-list-container">
                         <header styleName="header-title">
-                            <h1>Leads List</h1>
+                            <h1>Leads Overview</h1>
+                            <PrimaryButton>
+                                Add New
+                            </PrimaryButton>
                         </header>
+                        <div styleName="list">
+                            <div styleName="list-item">
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>How long until everyone is vampire?</p>
+                                    <span
+                                        className="ion-ios-checkmark"
+                                        styleName="icon-checked"
+                                    />
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Voluntary return home and coming back to the EU</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some conflict in Syria</p>
+                                    <span
+                                        className="ion-ios-checkmark"
+                                        styleName="icon-checked"
+                                    />
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some flood in Bangladesh</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some conflict in Syria</p>
+                                    <span
+                                        className="ion-ios-checkmark"
+                                        styleName="icon-checked"
+                                    />
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Malnutrition in Somalia</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Voluntary return home and coming back to the EU</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Malnutrition in Somalia</p>
+                                    <span
+                                        className="ion-ios-checkmark"
+                                        styleName="icon-checked"
+                                    />
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some flood in Bangladesh</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some conflict in Syria</p>
+                                </div>
+                                <div>
+                                    <span
+                                        className="ion-document-text"
+                                        styleName="icon"
+                                    />
+                                    <p>Some flood in Bangladesh</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div styleName="upload-container">
+                            <div>
+                                <img src={googleDrive} alt="DEEP" />
+                                <p>Google Drive</p>
+                            </div>
+                            <div>
+                                <img src={dropbox} alt="DEEP" />
+                                <p>Dropbox</p>
+                            </div>
+                            <div>
+                                <img src={uploadIcon} alt="DEEP" />
+                                <p>Manual Upload</p>
+                            </div>
+                        </div>
                     </div>
                     <div styleName="leads-details-container">
                         <AddLeadForm
@@ -99,6 +216,9 @@ export default class AddLead extends React.PureComponent {
                             pending={false}
                             values={this.state.editRow}
                         />
+                        <div styleName="preview-container">
+                            <h2> Preview Container goes here</h2>
+                        </div>
                     </div>
                 </div>
             </div>
