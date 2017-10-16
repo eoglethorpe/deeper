@@ -4,17 +4,27 @@
 .leads {
     display: flex;
     flex-direction: column;
-    padding: $spacing-large;
-    height: calc(100vh - #{$height-navbar});
+    padding: $spacing-medium-alt $spacing-medium-alt 0;
+    height: calc(100vh - #{$height-navbar} - #{$spacing-medium * 2});
 
     .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: $spacing-medium;
+        padding: $spacing-medium 0;
+
+        h1 {
+            font-size: $font-size-large;
+        }
+
+        .add-lead-button {
+            padding: $spacing-small $spacing-medium;
+            font-size: $font-size-medium;
+        }
     }
 
     .filters {
+        border-bottom: $width-separator-medium solid $color-separator;
         background-color: $color-foreground;
         padding: $spacing-large;
     }
@@ -27,7 +37,9 @@
             :global .header {
                 position: sticky;
                 top: 0;
-                background-color: $color-background-header;
+                border-bottom: $width-separator-medium solid $color-separator;
+                background-color: $color-foreground;
+                padding: $spacing-medium $spacing-medium-alt;
                 text-align: left;
             }
 
@@ -36,10 +48,26 @@
             }
         }
     }
+}
 
-    .footer {
-        background-color: $color-accent;
-        padding: $spacing-large;
-        color: $color-text-on-accent;
+:global .actions {
+    $width-action-button: 32px;
+
+    .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        padding: 0;
+        width: $width-action-button;
+        height: $width-action-button;
+
+        &:hover {
+            background-color: $color-background-hover;
+        }
+
+        &:active {
+            transform: none;
+        }
     }
 }

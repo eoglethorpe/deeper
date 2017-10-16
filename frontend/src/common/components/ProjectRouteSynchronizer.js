@@ -17,7 +17,12 @@ const propTypes = {
     }).isRequired,
     setActiveProject: PropTypes.func.isRequired,
     redirectUrl: PropTypes.func.isRequired,
-    children: PropTypes.element.isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(
+            PropTypes.node,
+        ),
+        PropTypes.node,
+    ]).isRequired,
 };
 
 const defaultProps = {

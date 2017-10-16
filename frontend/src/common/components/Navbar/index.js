@@ -86,7 +86,6 @@ export default class Navbar extends React.PureComponent {
     static defaultProps = defaultProps;
 
     onSelectChangeHandler = (key) => {
-        console.log('fjdslafjslakjfslkajfsla');
         this.props.setActiveProject({ activeProject: key });
     }
 
@@ -216,65 +215,56 @@ export default class Navbar extends React.PureComponent {
         ];
         return (
             <div styleName="navbar">
-                <div styleName="menu-header">
-                    <Link
-                        to="/"
-                        styleName="menu-item"
-                    >
-                        <img src={logo} alt="DEEP" />
-                        <h3>Deep</h3>
-                    </Link>
-                </div>
-                <div styleName="project-select-container">
-                    <SelectInput
-                        styleName="project-select-input"
-                        placeholder="Select Event"
-                        keySelector={this.labelSelectorForSelectInput}
-                        labelSelector={this.keySelectorForSelectInput}
-                        options={this.props.userProjects}
-                        selectedOptionKey={activeProject}
-                        onChange={this.onSelectChangeHandler}
-                    />
-                </div>
+                <Link
+                    to="/"
+                    styleName="brand"
+                >
+                    <img styleName="icon" src={logo} alt="DEEP" />
+                    <span styleName="title">Deep</span>
+                </Link>
+
+                <SelectInput
+                    styleName="project-select-input"
+                    placeholder="Select Event"
+                    keySelector={this.labelSelectorForSelectInput}
+                    labelSelector={this.keySelectorForSelectInput}
+                    options={this.props.userProjects}
+                    selectedOptionKey={activeProject}
+                    onChange={this.onSelectChangeHandler}
+                />
+
                 <div styleName="menu-items">
                     { navBarItems.map(this.renderNavbarItem) }
                 </div>
-                <div styleName="dropdown-title">
-                    <DropdownMenu
-                        className="dropdown-title"
-                        iconLeft="ion-android-person"
-                        title={activeUser.displayName}
-                    >
-                        {
-                            dropdownItems.map(group => (
-                                <Group key={group.key} >
-                                    {
-                                        group.label &&
+
+                <DropdownMenu
+                    styleName="dropdown-menu"
+                    className="dropdown-title"
+                    iconLeft="ion-android-person"
+                    title={activeUser.displayName}
+                >
+                    {
+                        dropdownItems.map(group => (
+                            <Group key={group.key} >
+                                {
+                                    group.label &&
                                         <GroupTitle title={group.label} />
-                                    }
-                                    <LinkOutsideRouter
-                                        key="User 1"
-                                        styleName="dropdown-item"
-                                        to={`/users/${1}/`}
-                                    >
-                                        Test
-                                    </LinkOutsideRouter>
-                                    { group.items.map(this.renderDropdownItem) }
-                                </Group>
-                            ))
-                        }
-                        <button
-                            styleName="dropdown-item"
-                            onClick={this.handleLogoutButtonClick}
-                        >
-                            <span
-                                className="ion-log-out"
-                                styleName="icon"
-                            />
-                            Logout
-                        </button>
-                    </DropdownMenu>
-                </div>
+                                }
+                                { group.items.map(this.renderDropdownItem) }
+                            </Group>
+                        ))
+                    }
+                    <button
+                        styleName="dropdown-item"
+                        onClick={this.handleLogoutButtonClick}
+                    >
+                        <span
+                            className="ion-log-out"
+                            styleName="icon"
+                        />
+                        Logout
+                    </button>
+                </DropdownMenu>
             </div>
         );
     }

@@ -6,7 +6,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: $color-navbar;
-    padding: 0 $spacing-large;
+    padding: 0 $spacing-medium-alt;
     height: $height-navbar;
     color: $color-text-on-navbar;
 
@@ -14,67 +14,64 @@
         align-self: stretch;
     }
 
-    .menu-header {
-        display: inline-flex;
-        flex-basis: 10%;
-        // align-items: center;
-        // justify-content: center;
+    .brand {
+        display: flex;
+        align-items: center;
+        align-self: stretch;
         color: $color-text-on-navbar;
         font-size: $font-size-super-large;
 
-        img {
-            align-self: flex-start;
-            margin-right: $spacing-medium;
-            width: 36px;
-            height: 36px;
+        .icon {
+            margin-right: $spacing-small;
+            width: 24px;
+            height: 24px;
         }
 
-
+        .title {
+            text-transform: uppercase;
+            font-size: $font-size-extra-large;
+        }
     }
 
-    .project-select-container {
-        flex-basis: 20%;
-        margin-right: $spacing-extra-large;
-        margin-left: $spacing-extra-large;
-        background-color: transparent;
-        font-size: $font-size-small;
+    .project-select-input {
+        flex-basis: 240px;
+        flex-shrink: 0;
+        margin: 0 5%;
+        color: $color-text;
 
-        .project-select-input {
-            color: $color-text;
-
-            input::-webkit-input-placeholder {
-                color: $color-label;
-            }
-        }
-
-    }
-
-    .menu-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: .2s all ease-in-out;
-        border-top: $width-separator-thick solid transparent;
-        border-bottom: $width-separator-thick solid transparent;
-        padding: 0 $spacing-extra-large;
-
-        &:hover {
-            color: $color-accent;
-        }
-
-        &.active {
-            border-bottom-color: $color-accent;
-            color: $color-text-on-navbar;
+        input::-webkit-input-placeholder {
+            color: $color-label;
         }
     }
 
     .menu-items {
         display: flex;
-        flex-basis: 60%;
-        align-items: stretch;
-        margin-right: $spacing-extra-large;
-        margin-left: $spacing-extra-large;
-        height: 100%;
+        flex-grow: 1;
+        align-self: stretch;
+        justify-content: center;
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: .2s all ease-in-out;
+            border-top: $width-separator-thick solid transparent;
+            border-bottom: $width-separator-thick solid transparent;
+            padding: 0 $spacing-large;
+
+            &:hover {
+                color: $color-accent;
+            }
+
+            &.active {
+                border-bottom-color: $color-accent;
+                color: $color-text-on-navbar;
+            }
+        }
+    }
+
+    .dropdown-menu {
+        width: auto;
     }
 }
 
