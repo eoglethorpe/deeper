@@ -5,7 +5,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { pageTitles } from '../../../common/utils/labels';
-import { ImageInput } from '../../../public/components/FileInput';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
@@ -50,12 +49,9 @@ export default class HomeScreen extends React.PureComponent {
                 <Helmet>
                     <title>{ pageTitles.dashboard }</title>
                 </Helmet>
-                <div>
-                    <ImageInput
-                        styleName="image-input"
-                        showPreview
-                    />
-                </div>
+                <p>
+                    Homescreen
+                </p>
             </div>
         );
     }

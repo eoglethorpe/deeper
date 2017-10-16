@@ -244,6 +244,7 @@ export default class Leads extends React.PureComponent {
                     </h1>
                     <PrimaryButton
                         styleName="add-lead-button"
+                        onClick={() => this.handleAddLeadClick()}
                     >
                         Add lead
                     </PrimaryButton>
