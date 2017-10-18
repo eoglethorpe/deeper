@@ -171,15 +171,15 @@ export default class ApiDocs extends React.PureComponent {
         let content;
         if (this.state.pending) {
             content = (
-                <p>
-                    Loading
+                <p styleName="message">
+                    Loading ...
                 </p>
             );
         } else if (this.state.successfullyFetched) {
             content = this.renderDocs(this.state.docs);
         } else {
             content = (
-                <p>
+                <p styleName="message">
                     You have got a problem. See a therapy?
                 </p>
             );

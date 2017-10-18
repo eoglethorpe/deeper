@@ -1,5 +1,13 @@
 @import '../../../stylesheets/base';
 
+.message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
 .docs {
     padding: 16px 48px;
 
