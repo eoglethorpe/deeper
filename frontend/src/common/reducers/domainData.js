@@ -5,6 +5,9 @@ import {
     SET_LEADS,
     DUMMY_ACTION,
 } from '../action-types/domainData';
+import {
+    activeProjectSelector,
+} from '../selectors/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
 import update from '../../public/utils/immutable-update';
@@ -24,6 +27,14 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {
+            let activeProject = activeProjectSelector({ domainData: state });
+            if (action.projects && action.projects.length > 0) {
+                const key = action.projects.findIndex(project => project.id === activeProject);
+                if (key < 0) {
+                    activeProject = action.projects[0].id;
+                }
+            }
+
             const settings = {
                 users: {
                     [action.userId]: { $auto: {
@@ -31,6 +42,9 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                             $set: action.projects,
                         },
                     } },
+                },
+                activeProject: {
+                    $set: activeProject,
                 },
             };
             return update(state, settings);
