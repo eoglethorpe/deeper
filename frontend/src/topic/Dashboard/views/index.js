@@ -21,7 +21,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class HomeScreen extends React.PureComponent {
+export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
 
     componentWillMount() {
@@ -45,12 +45,12 @@ export default class HomeScreen extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="home-screen">
+            <div styleName="dashboard">
                 <Helmet>
-                    <title>{ pageTitles.homeScreen }</title>
+                    <title>{ pageTitles.dashboard }</title>
                 </Helmet>
                 <p>
-                    Home Screen
+                    Dashboard
                 </p>
             </div>
         );

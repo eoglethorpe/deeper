@@ -67,9 +67,9 @@ const defaultProps = {
 
 
 const mapStateToProps = (state, props) => ({
-    userProjects: userProjectsSelector(state, props),
     token: tokenSelector(state),
     userInformation: userInformationSelector(state, props), // uses props.match
+    userProjects: userProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -127,12 +127,60 @@ export default class UserProfile extends React.PureComponent {
                 order: 6,
             },
         ];
+    }
 
-        const { match } = this.props;
-        const userId = match.params.userId;
+    componentWillMount() {
+        console.log('Mounting UserProfile');
+        this.props.setNavbarState({
+            visible: true,
+            activeLink: undefined,
+            validLinks: [
+                pageTitles.leads,
+                pageTitles.entries,
+                pageTitles.ary,
+                pageTitles.weeklySnapshot,
+                pageTitles.export,
 
+                pageTitles.userProfile,
+                pageTitles.adminPanel,
+                pageTitles.countryPanel,
+                pageTitles.projectPanel,
+            ],
+        });
+
+        const { userId } = this.props.match.params;
+        this.userRequest = this.createRequestForUser(userId);
+        this.userRequest.start();
+        this.projectsRequest = this.createRequestForProject(userId);
+        this.projectsRequest.start();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { userId } = nextProps.match.params;
+        if (this.props.match.params.userId !== userId) {
+            this.userRequest.stop();
+            this.projectsRequest.stop();
+
+            this.userRequest = this.createRequestForUser(userId);
+            this.userRequest.start();
+            this.projectsRequest = this.createRequestForProject(userId);
+            this.projectsRequest.start();
+        }
+    }
+
+    componentWillUnmount() {
+        console.log('Unmounting UserProfile');
+
+        this.userRequest.stop();
+        this.projectsRequest.stop();
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+    }
+
+    createRequestForUser = (userId) => {
         const urlForUser = createUrlForUser(userId);
-        this.userRequest = new RestBuilder()
+        const userRequest = new RestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
@@ -162,10 +210,11 @@ export default class UserProfile extends React.PureComponent {
                 // TODO: user couldn't be verfied screen
             })
             .build();
+        return userRequest;
+    }
 
-
-        // TODO: fix this, get project for X user
-        this.projectsRequest = new RestBuilder()
+    createRequestForProject = (userId) => {
+        const projectsRequest = new RestBuilder()
             .url(urlForProjects)
             .params(() => {
                 const { token } = this.props;
@@ -195,56 +244,12 @@ export default class UserProfile extends React.PureComponent {
                 // TODO: user couldn't be verfied screen
             })
             .build();
+        return projectsRequest;
     }
 
-    componentWillMount() {
-        console.log('Mounting UserProfile');
-
-        this.userRequest.start();
-        this.projectsRequest.start();
-
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-    }
-
-    componentWillUnmount() {
-        this.userRequest.stop();
-        this.projectsRequest.stop();
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-    }
-
-    handleUserProfileEditSubmit = (data) => {
-        const {
-            firstName,
-            lastName,
-            organization,
-        } = data;
-
-        const { match } = this.props;
-        const userId = match.params.userId;
-
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-
+    createRequestForUserPatch = (userId, { firstName, lastName, organization }) => {
         const urlForUser = createUrlForUserPatch(userId);
-        this.userPatchRequest = new RestBuilder()
+        const userPatchRequest = new RestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
@@ -277,8 +282,19 @@ export default class UserProfile extends React.PureComponent {
                 // TODO: user couldn't be verfied screen
             })
             .build();
+        return userPatchRequest;
+    }
 
+    handleUserProfileEditSubmit = (data) => {
         this.setState({ pending: true });
+        // Stop old patch request
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+        // Create new patch request and start it
+        const { match } = this.props;
+        const userId = match.params.userId;
+        this.userPatchRequest = this.createRequestForUserPatch(userId, data);
         this.userPatchRequest.start();
     }
 
@@ -291,6 +307,7 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering UserProfile');
         const { userInformation } = this.props;
 
         return (

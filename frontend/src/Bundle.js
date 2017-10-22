@@ -1,45 +1,38 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
+const propTypes = {
+    load: PropTypes.func.isRequired,
+};
 
-class Bundle extends Component {
+class Bundle extends React.PureComponent {
+    static propTypes = propTypes;
+
     constructor(props) {
         super(props);
-        this.state = {
-            mod: null,
-        };
+        this.state = { Component: null };
     }
 
     componentWillMount() {
-        this.load(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.load !== this.props.load) {
-            this.load(nextProps);
-        }
-    }
-
-    load(props) {
         this.setState({
-            mod: null,
+            Component: null,
         });
 
-        props.load().then((mod) => {
-            this.setState({
-                mod: withRouter(mod.default ? mod.default : mod),
+        this.props.load()
+            .then((Component) => {
+                this.setState({
+                    Component: withRouter(
+                        Component.default ? Component.default : Component,
+                    ),
+                });
             });
-        });
     }
 
     render() {
-        return this.state.mod ? <this.state.mod {...this.props} /> : null;
+        const { Component } = this.state;
+        return Component ? <Component {...this.props} /> : null;
     }
 }
-
-Bundle.propTypes = {
-    load: PropTypes.func.isRequired,
-};
 
 export default Bundle;

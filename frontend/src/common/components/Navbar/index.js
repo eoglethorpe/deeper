@@ -251,6 +251,18 @@ export default class Navbar extends React.PureComponent {
                                         <GroupTitle title={group.label} />
                                 }
                                 { group.items.map(this.renderDropdownItem) }
+                                <LinkOutsideRouter
+                                    key="test"
+                                    styleName="dropdown-item"
+                                    to="/users/1/"
+                                >
+                                    <span
+                                        className="ion-android-person"
+                                        styleName="icon"
+                                    />
+                                    Test
+                                </LinkOutsideRouter>
+
                             </Group>
                         ))
                     }

@@ -95,6 +95,8 @@ export default class App extends React.PureComponent {
                     const { access } = response;
                     this.props.setAccessToken(access);
                     this.props.startTokenRefresh();
+
+                    // start getProjectList (blocking or non-blocking)
                     this.setState({ pending: false });
                 } catch (er) {
                     console.error(er);
