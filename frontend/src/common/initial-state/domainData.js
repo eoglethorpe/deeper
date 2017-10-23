@@ -424,6 +424,33 @@ const initialDomainDataState = {
                 parentPcodeProperty: 'NAME_PPCODE',
                 pcodeProperty: 'NAME_PCODE',
             },
+            {
+                adminLevelId: 5,
+                level: 5,
+                name: 'HABUSA',
+                nameProperty: 'NAME_ENGL',
+                parentNameProperty: 'NAME_ENFG',
+                parentPcodeProperty: 'NAME_PPCODE',
+                pcodeProperty: 'NAME_PCODE',
+            },
+            {
+                adminLevelId: 6,
+                level: 6,
+                name: 'ABUSA',
+                nameProperty: 'NAME_ENGL',
+                parentNameProperty: 'NAME_ENFG',
+                parentPcodeProperty: 'NAME_PPCODE',
+                pcodeProperty: 'NAME_PCODE',
+            },
+            {
+                adminLevelId: 7,
+                level: 7,
+                name: 'HABUSA',
+                nameProperty: 'NAME_ENGL',
+                parentNameProperty: 'NAME_ENFG',
+                parentPcodeProperty: 'NAME_PPCODE',
+                pcodeProperty: 'NAME_PCODE',
+            },
         ],
         NPL: [
             {
