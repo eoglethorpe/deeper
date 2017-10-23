@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import browserHistory from '../../../common/browserHistory';
 import CountryDetail from '../components/CountryDetail';
+import ListView, { ListItem } from '../../../public/components/ListView';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
@@ -77,9 +78,18 @@ export default class CountryPanel extends React.PureComponent {
         });
     }
 
-    goToAddCountry = () => {
-        browserHistory.push('/countrypanel/');
-    };
+    getStyleName = (countryId) => {
+        const { pathname } = this.props.location;
+
+        const styleNames = [];
+        styleNames.push('list-item');
+
+        if (pathname === `/countrypanel/${countryId}/`) {
+            styleNames.push('active');
+        }
+
+        return styleNames.join(' ');
+    }
 
     search = (value) => {
         const caseInsensitiveSubmatch = country => (
@@ -93,9 +103,14 @@ export default class CountryPanel extends React.PureComponent {
         });
     };
 
-    render() {
-        const { pathname } = this.props.location;
+    keySelector = data => (data.countryId)
 
+
+    goToAddCountry = () => {
+        browserHistory.push('/countrypanel/');
+    };
+
+    render() {
         return (
             <div styleName="country-panel">
                 <Helmet>
@@ -104,7 +119,7 @@ export default class CountryPanel extends React.PureComponent {
                 <div styleName="country-list">
                     <div styleName="list-header">
                         <div styleName="header-text">
-                            Countires
+                            Countries
                         </div>
                         <PrimaryButton onClick={this.goToAddCountry}>
                             + Add country
@@ -115,19 +130,24 @@ export default class CountryPanel extends React.PureComponent {
                             type="search"
                         />
                     </div>
-                    <div styleName="list">
+
+                    <ListView styleName="list">
                         {
-                            this.state.displayCountryList.map(item => (
-                                <Link
-                                    key={item.countryId}
-                                    styleName={pathname === `/countrypanel/${item.countryId}/` ? 'list-item active' : 'list-item'}
-                                    to={`/countrypanel/${item.countryId}/`}
+                            this.state.displayCountryList.map(country => (
+                                <ListItem
+                                    key={country.countryId}
+                                    styleName={this.getStyleName(country.countryId)}
                                 >
-                                    {item.fullName}
-                                </Link>
+                                    <Link
+                                        styleName="link"
+                                        to={`/countrypanel/${country.countryId}/`}
+                                    >
+                                        {country.fullName}
+                                    </Link>
+                                </ListItem>
                             ))
                         }
-                    </div>
+                    </ListView>
                 </div>
                 <div styleName="country-details">
                     <Switch>

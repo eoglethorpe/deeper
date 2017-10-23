@@ -2,17 +2,21 @@
 @import '../../../../stylesheets/modal';
 
 .country-general {
+    height: 100%;
+
     .form-map-container {
         display: flex;
         justify-content: space-between;
+        height: 50%;
 
         .details-form {
             flex-basis: 36%;
             padding: $spacing-large;
+            height: 100%;
+            overflow: auto;
 
             .text-input {
                 padding: $spacing-small 0;
-
             }
         }
 
@@ -33,6 +37,7 @@
 
     .admin-levels {
         border-top: $width-separator-thin solid $color-separator;
+        height: 50%;
 
         .header {
             display: flex;
@@ -41,11 +46,14 @@
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-medium $spacing-large;
             width: 100%;
+            height: $height-header;
             text-transform: uppercase;
             font-size: 1.6em;
         }
 
         .admin-levels-list {
+            height: calc(100% - #{$height-header});
+            overflow: auto;
             font-size: 1.2em;
         }
     }

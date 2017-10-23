@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Button from '../../../../public/components/Button';
+import Button, { TransparentButton } from '../../../../public/components/Button';
 import EditAdminLevelForm from '../EditAdminLevelForm';
 import Modal, { Header, Body } from '../../../../public/components/Modal';
 import Table from '../../../../public/components/Table';
@@ -191,9 +191,9 @@ export default class CountryGeneral extends React.PureComponent {
                 <div styleName="admin-levels">
                     <div styleName="header">
                         Admin Levels
-                        <Button onClick={this.addAdminLevel}>
+                        <TransparentButton onClick={this.addAdminLevel}>
                             Add admin level
-                        </Button>
+                        </TransparentButton>
                         <Modal
                             closeOnEscape
                             onClose={this.handleModalClose}

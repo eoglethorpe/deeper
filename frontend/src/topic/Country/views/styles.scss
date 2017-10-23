@@ -4,11 +4,11 @@
     display: flex;
     padding: $spacing-large;
     $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+    $height-header: 124px;
 
     .country-list {
         @include shadow-medium;
         flex-basis: 25%;
-        $height-header: 124px;
         background-color: $color-foreground;
 
         .list-header {
@@ -25,21 +25,27 @@
                 font-size: 1.6em;
             }
         }
+    }
 
-        .list {
-            height: calc(#{$height-full-page} - #{$height-header});
-            overflow: auto;
+    .list {
+        height: calc(#{$height-full-page} - #{$height-header});
+        overflow: auto;
 
-            .list-item {
+        .list-item {
+            display: block;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-medium $spacing-large;
+
+            .link {
                 display: block;
-                border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-medium $spacing-large;
+                width: 100%;
             }
+        }
 
-            .active {
-                background-color: $color-accent;
-                color: $color-text-on-accent;
-            }
+
+        .active {
+            background-color: $color-accent;
+            color: $color-text-on-accent;
         }
     }
 
@@ -50,3 +56,4 @@
         height: $height-full-page;
     }
 }
+
