@@ -4,8 +4,17 @@ import { RestRequest } from '../public/utils/rest';
 const p = RestRequest.prepareUrlParams;
 
 let wsEndpoint;
+
 if (process.env.REACT_APP_API_END) {
-    wsEndpoint = `${process.env.REACT_APP_API_HTTPS}://${process.env.REACT_APP_API_END}/api/v1`;
+    let reactAppApiHttps;
+
+    if (location.protocol === 'https:') {
+        reactAppApiHttps = 'https';
+    } else {
+        reactAppApiHttps = process.env.REACT_APP_API_HTTPS;
+    }
+
+    wsEndpoint = `${reactAppApiHttps}://${process.env.REACT_APP_API_END}/api/v1`;
 } else {
     wsEndpoint = '/api/v1';
 }
