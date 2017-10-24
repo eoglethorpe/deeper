@@ -20,8 +20,9 @@ import {
 export const START_TOKEN_REFRESH = 'refresh-access-token/START';
 export const STOP_TOKEN_REFRESH = 'refresh-access-token/STOP';
 
-export const startTokenRefreshAction = () => ({
+export const startTokenRefreshAction = loadCallback => ({
     type: START_TOKEN_REFRESH,
+    loadCallback,
 });
 
 export const stopTokenRefreshAction = () => ({
@@ -86,6 +87,10 @@ class Refresher {
                         userId,
                         projects: response.results,
                     }));
+
+                    if (this.loadCallback) {
+                        this.loadCallback();
+                    }
                 } catch (er) {
                     console.error(er);
                 }
@@ -102,7 +107,8 @@ class Refresher {
         return projectsRequest;
     }
 
-    load = () => {
+    load = (loadCallback) => {
+        this.loadCallback = loadCallback;
         this.projectsRequest.start();
     }
 
@@ -130,7 +136,7 @@ const createRefreshAccessToken = (refreshTime = 150000) => {
             // store, next, action
             switch (action.type) {
                 case START_TOKEN_REFRESH:
-                    refresher.load();
+                    refresher.load(action.loadCallback);
                     refresher.schedule();
                     break;
                 case STOP_TOKEN_REFRESH:

@@ -4,5 +4,7 @@ const initialNavbarState = {
     activeLink: undefined,
 
     validLinks: undefined,
+
+    blockUI: true,
 };
 export default initialNavbarState;

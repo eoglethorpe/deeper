@@ -13,7 +13,10 @@ import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
 import { LoginForm } from '../../components/Forms';
-import { loginAction } from '../../../../common/action-creators/auth';
+import {
+    loginAction,
+    authenticateAction,
+} from '../../../../common/action-creators/auth';
 import { pageTitles } from '../../../../common/utils/labels';
 import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
 import {
@@ -28,8 +31,13 @@ import {
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
+import {
+    currentUserProjectsSelector,
+} from '../../../../common/selectors/domainData';
 
 const propTypes = {
+    authenticate: PropTypes.func.isRequired,
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
@@ -39,13 +47,18 @@ const propTypes = {
 const defaultProps = {
 };
 
-const mapDispatchToProps = dispatch => ({
-    login: params => dispatch(loginAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
+const mapStateToProps = state => ({
+    currentUserProjects: currentUserProjectsSelector(state),
 });
 
-@connect(null, mapDispatchToProps)
+const mapDispatchToProps = dispatch => ({
+    authenticate: () => dispatch(authenticateAction()),
+    login: params => dispatch(loginAction(params)),
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -124,8 +137,18 @@ export default class Login extends React.PureComponent {
                     schema.validate(response, 'tokenGetResponse');
                     const { refresh, access } = response;
                     this.props.login({ refresh, access });
-                    // TODO: make login start token refresh
-                    this.props.startTokenRefresh();
+
+                    // after setAccessToken, current user is verified
+                    if (this.props.currentUserProjects.length <= 0) {
+                        console.warn('No projects in cache');
+                        // if there is no projects, block and get from api
+                        this.props.startTokenRefresh(() => {
+                            this.props.authenticate();
+                        });
+                    } else {
+                        this.props.startTokenRefresh();
+                        this.props.authenticate();
+                    }
                 } catch (err) {
                     console.error(err);
                 }

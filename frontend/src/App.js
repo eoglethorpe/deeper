@@ -10,29 +10,34 @@ import styles from './styles.scss';
 import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
 import {
-    setAccessTokenAction,
-} from './common/action-creators/auth';
-import {
-    startTokenRefreshAction,
-} from './common/middlewares/refreshAccessToken';
-import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
 } from './common/rest';
 import {
+    startTokenRefreshAction,
+} from './common/middlewares/refreshAccessToken';
+import {
+    setAccessTokenAction,
+} from './common/action-creators/auth';
+import {
     tokenSelector,
 } from './common/selectors/auth';
+import {
+    currentUserProjectsSelector,
+} from './common/selectors/domainData';
 
 const mapStateToProps = state => ({
+    currentUserProjects: currentUserProjectsSelector(state),
     token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setAccessToken: access => dispatch(setAccessTokenAction(access)),
-    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
+    startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
 });
 
 const propTypes = {
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     setAccessToken: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
@@ -54,10 +59,7 @@ export default class App extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        // Initially the app is in pending state
-        this.state = {
-            pending: true,
-        };
+        this.state = { pending: true };
 
         // Get a random message from the loading message list
         this.randomMessage = getRandomFromList(App.loadingMessages);
@@ -69,24 +71,22 @@ export default class App extends React.PureComponent {
             height: '100vh',
             justifyContent: 'center',
         };
+    }
+
+    componentWillMount() {
+        console.log('Mounting App');
 
         // If there is no refresh token, no need to get a new access token
         const { refresh: refreshToken } = this.props.token;
         if (!refreshToken) {
-            this.state.pending = false;
             console.warn('There is no previous session');
+            this.setState({ pending: false });
             return;
         }
 
         // Create rest request to get a new access token from refresh token
         this.refreshRequest = this.createRequestForRefresh();
-    }
-
-    componentWillMount() {
-        console.log('Mounting App');
-        if (this.refreshRequest) {
-            this.refreshRequest.start();
-        }
+        this.refreshRequest.start();
     }
 
     componentWillUnmount() {
@@ -111,10 +111,18 @@ export default class App extends React.PureComponent {
                     schema.validate(response, 'tokenRefreshResponse');
                     const { access } = response;
                     this.props.setAccessToken(access);
-                    this.props.startTokenRefresh();
 
-                    // start getProjectList (blocking or non-blocking)
-                    this.setState({ pending: false });
+                    // after setAccessToken, current user is verified
+                    if (this.props.currentUserProjects.length <= 0) {
+                        console.warn('No projects in cache');
+                        // if there is no projects, block and get from api
+                        this.props.startTokenRefresh(() => {
+                            this.setState({ pending: false });
+                        });
+                    } else {
+                        this.props.startTokenRefresh();
+                        this.setState({ pending: false });
+                    }
                 } catch (er) {
                     console.error(er);
                 }

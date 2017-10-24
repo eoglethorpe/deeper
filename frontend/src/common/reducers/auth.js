@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
+    AUTHENTICATE_ACTION,
     SET_ACCESS_TOKEN_ACTION,
 } from '../action-types/auth';
 import initialAuthState from '../initial-state/auth';
@@ -30,12 +31,17 @@ const authReducer = (state = initialAuthState, action) => {
         case LOGIN_ACTION: {
             const decodedToken = decodeAccessToken(action.access);
             const settings = {
-                authenticated: { $set: true },
                 token: { $set: {
                     access: action.access,
                     refresh: action.refresh,
                 } },
                 activeUser: { $set: decodedToken },
+            };
+            return update(state, settings);
+        }
+        case AUTHENTICATE_ACTION: {
+            const settings = {
+                authenticated: { $set: true },
             };
             return update(state, settings);
         }
