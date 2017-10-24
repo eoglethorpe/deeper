@@ -14,7 +14,7 @@ docker-compose build
 
 ## Running
 
-Usefull commands for:
+Useful commands for:
 
 - Starting docker containers
     ```bash
@@ -97,3 +97,15 @@ Usefull commands for:
     yarn test o                 # test only changes files
     yarn test --coverage        # Also generate coverage
     ```
+
+## Loading dummy data
+
+Dummy data are available in the form of csv files and can be loaded/updated with `load_dummy_data`
+management command.
+
+First get into web container, activate virtual env and then enter the backend directory
+as shown in [running tests locally](#running-tests-locally) section.
+
+```bash
+python manage.py load_dummy_data
+```

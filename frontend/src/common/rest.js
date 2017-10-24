@@ -26,7 +26,7 @@ export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/`;
-export const urlForApiDocs = `${wsEndpoint}/docs.json`;
+export const urlForApiDocs = `${wsEndpoint}/docs/`;
 
 export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`
