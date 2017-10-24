@@ -65,6 +65,25 @@ export default class Login extends React.PureComponent {
             validLinks: undefined,
         });
 
+        this.checkParamsFromHid();
+    }
+
+    onHidLoginClick = () => {
+        // Just set it to pending
+        // The anchor will redirect user to next page
+        this.setState({ pending: true });
+    }
+
+    onSubmit = ({ email, password }) => {
+        const url = urlForTokenCreate;
+        const params = createParamsForTokenCreate({ username: email, password });
+        this.login({
+            url,
+            params,
+        });
+    }
+
+    checkParamsFromHid = () => {
         const { location } = this.props;
         // Get params from the current url
         // NOTE: hid provides query as hash
@@ -72,31 +91,29 @@ export default class Login extends React.PureComponent {
         // Login User with HID access_token
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);
-            this.loginUser({
+            this.login({
                 url: urlForTokenCreateHid,
                 params,
-                // NOTE: we have no email info from hid
             });
+        } else {
+            console.warn('No access_token found');
         }
     }
 
-    onSubmit = ({ email, password }) => {
-        const url = urlForTokenCreate;
-        const params = createParamsForTokenCreate({ username: email, password });
-        this.loginUser({
-            url,
-            params,
-            email,
-        });
-    }
+    login = ({ url, params }) => {
+        this.setState({ pending: true });
 
-    loginUser = ({ url, params, email }) => {
         // Stop any retry action
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
         }
+        this.userLoginRequest = this.createRequestLogin(url, params);
 
-        this.userLoginRequest = new RestBuilder()
+        this.userLoginRequest.start();
+    };
+
+    createRequestLogin = (url, params) => {
+        const userLoginRequest = new RestBuilder()
             .url(url)
             .params(params)
             .decay(0.3)
@@ -106,7 +123,7 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'tokenGetResponse');
                     const { refresh, access } = response;
-                    this.props.login({ email, refresh, access });
+                    this.props.login({ refresh, access });
                     // TODO: make login start token refresh
                     this.props.startTokenRefresh();
                 } catch (err) {
@@ -136,13 +153,7 @@ export default class Login extends React.PureComponent {
                 this.setState({ pending: false });
             })
             .build();
-
-        this.setState({ pending: true });
-        this.userLoginRequest.start();
-    };
-
-    handleHidLoginClick = () => {
-        this.setState({ pending: true });
+        return userLoginRequest;
     }
 
     render() {
@@ -182,7 +193,7 @@ export default class Login extends React.PureComponent {
                     </Link>
                 </div>
                 <a
-                    onClick={this.handleHidLoginClick}
+                    onClick={this.onHidLoginClick}
                     href={hidUrl}
                     styleName="register-link"
                 >

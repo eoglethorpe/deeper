@@ -145,29 +145,6 @@ export default class Leads extends React.PureComponent {
             editRow: {},
             showEditLeadModal: false,
         };
-
-        const { token, activeProject } = this.props;
-
-        const urlForProjectLeads = createUrlForLeadsOfProject({ project: activeProject });
-        this.leadRequest = new RestBuilder()
-            .url(urlForProjectLeads)
-            .params(() => {
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'leadsGetResponse');
-                    this.props.setLeads({
-                        projectId: activeProject,
-                        leads: response.results,
-                    });
-                    console.log(response);
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
     }
 
     componentWillMount() {
@@ -189,11 +166,50 @@ export default class Leads extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
+
+
+        const { activeProject } = this.props;
+        this.leadRequest = this.createRequestForProjectLeads(activeProject);
         this.leadRequest.start();
     }
 
-    componentWillUnMount() {
+    componentWillReceiveProps(nextProps) {
+        const { activeProject } = nextProps;
+        if (this.props.activeProject !== activeProject) {
+            this.leadRequest.stop();
+
+            this.leadRequest = this.createRequestForProjectLeads(activeProject);
+            this.leadRequest.start();
+        }
+    }
+
+    componentWillUnmount() {
         this.leadRequest.stop();
+    }
+
+    createRequestForProjectLeads = (activeProject) => {
+        const urlForProjectLeads = createUrlForLeadsOfProject({ project: activeProject });
+        const leadRequest = new RestBuilder()
+            .url(urlForProjectLeads)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'leadsGetResponse');
+                    this.props.setLeads({
+                        projectId: activeProject,
+                        leads: response.results,
+                    });
+                    console.log(response);
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return leadRequest;
     }
 
     handleEditLeadClick = (row) => {

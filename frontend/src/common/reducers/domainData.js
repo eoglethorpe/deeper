@@ -57,7 +57,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
-            console.log(settings);
             return update(state, settings);
         }
         case SET_ACTIVE_PROJECT: {

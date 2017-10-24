@@ -10,6 +10,10 @@ import {
     urlForTokenRefresh,
 } from '../rest';
 import {
+    tokenSelector,
+    activeUserSelector,
+} from '../../common/selectors/auth';
+import {
     setUserProjectsAction,
 } from '../../common/action-creators/domainData';
 
@@ -28,11 +32,16 @@ class Refresher {
     constructor(store, refreshTime) {
         this.refreshTime = refreshTime;
         this.refreshId = undefined;
-        this.refreshRequest = new RestBuilder()
+
+        this.refreshRequest = this.createRefreshRequest(store);
+        this.projectsRequest = this.createProjectsRequest(store);
+    }
+
+    createRefreshRequest = (store) => {
+        const refreshRequest = new RestBuilder()
             .url(urlForTokenRefresh)
             .params(() => {
-                const { auth } = store.getState();
-                const { refresh, access } = auth.token;
+                const { refresh, access } = tokenSelector(store.getState());
                 return createParamsForTokenRefresh({ refresh, access });
             })
             .decay(0.3)
@@ -56,12 +65,14 @@ class Refresher {
                 console.info('FATAL:', response);
             })
             .build();
+        return refreshRequest;
+    }
 
-        this.projectsRequest = new RestBuilder()
+    createProjectsRequest = (store) => {
+        const projectsRequest = new RestBuilder()
             .url(urlForProjects)
             .params(() => {
-                const { auth } = store.getState();
-                const { access } = auth.token;
+                const { access } = tokenSelector(store.getState());
                 return createParamsForProjects({ access });
             })
             .decay(0.3)
@@ -70,8 +81,7 @@ class Refresher {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');
-                    const { auth } = store.getState();
-                    const { userId } = auth.activeUser;
+                    const { userId } = activeUserSelector(store.getState());
                     store.dispatch(setUserProjectsAction({
                         userId,
                         projects: response.results,
@@ -89,6 +99,7 @@ class Refresher {
                 // TODO: user couldn't be verfied screen
             })
             .build();
+        return projectsRequest;
     }
 
     load = () => {
@@ -98,6 +109,7 @@ class Refresher {
     schedule = () => {
         if (this.refreshId) {
             console.warn('Refresh is already scheduled');
+            return;
         }
         this.refreshId = setTimeout(() => {
             this.refreshRequest.start();

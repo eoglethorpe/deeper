@@ -59,7 +59,18 @@ export default class Login extends React.PureComponent {
         }
     }
 
-    onRegister = ({ firstname, lastname, organization, country, email, password }) => {
+    onRegister = (data) => {
+        this.setState({ pending: true });
+
+        // Stop previous retry
+        if (this.userCreateRequest) {
+            this.userCreateRequest.stop();
+        }
+        this.userCreateRequest = this.createRequestRegister(data);
+        this.userCreateRequest.start();
+    }
+
+    createRequestRegister = ({ firstname, lastname, organization, country, email, password }) => {
         const url = urlForUserCreate;
         const params = createParamsForUserCreate({
             firstName: firstname,
@@ -69,13 +80,7 @@ export default class Login extends React.PureComponent {
             email,
             password,
         });
-
-        // Stop any retry action
-        if (this.userCreateRequest) {
-            this.userCreateRequest.stop();
-        }
-
-        this.userCreateRequest = new RestBuilder()
+        const userCreateRequest = new RestBuilder()
             .url(url)
             .params(params)
             .decay(0.3)
@@ -111,9 +116,7 @@ export default class Login extends React.PureComponent {
                 this.setState({ pending: false });
             })
             .build();
-
-        this.setState({ pending: true });
-        this.userCreateRequest.start();
+        return userCreateRequest;
     }
 
     render() {

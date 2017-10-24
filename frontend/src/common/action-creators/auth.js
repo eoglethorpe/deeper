@@ -4,9 +4,8 @@ import {
     SET_ACCESS_TOKEN_ACTION,
 } from '../action-types/auth';
 
-export const loginAction = ({ email, access, refresh }) => ({
+export const loginAction = ({ access, refresh }) => ({
     type: LOGIN_ACTION,
-    email,
     access,
     refresh,
 });

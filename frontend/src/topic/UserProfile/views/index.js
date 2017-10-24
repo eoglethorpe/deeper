@@ -151,7 +151,8 @@ export default class UserProfile extends React.PureComponent {
         const { userId } = this.props.match.params;
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();
-        this.projectsRequest = this.createRequestForProject(userId);
+
+        this.projectsRequest = this.createRequestForProjects(userId);
         this.projectsRequest.start();
     }
 
@@ -163,7 +164,7 @@ export default class UserProfile extends React.PureComponent {
 
             this.userRequest = this.createRequestForUser(userId);
             this.userRequest.start();
-            this.projectsRequest = this.createRequestForProject(userId);
+            this.projectsRequest = this.createRequestForProjects(userId);
             this.projectsRequest.start();
         }
     }
@@ -213,7 +214,7 @@ export default class UserProfile extends React.PureComponent {
         return userRequest;
     }
 
-    createRequestForProject = (userId) => {
+    createRequestForProjects = (userId) => {
         const projectsRequest = new RestBuilder()
             .url(urlForProjects)
             .params(() => {

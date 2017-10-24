@@ -78,9 +78,26 @@ export default class App extends React.PureComponent {
             return;
         }
 
-
         // Create rest request to get a new access token from refresh token
-        this.refreshRequest = new RestBuilder()
+        this.refreshRequest = this.createRequestForRefresh();
+    }
+
+    componentWillMount() {
+        console.log('Mounting App');
+        if (this.refreshRequest) {
+            this.refreshRequest.start();
+        }
+    }
+
+    componentWillUnmount() {
+        console.log('Unmounting App');
+        if (this.refreshRequest) {
+            this.refreshRequest.stop();
+        }
+    }
+
+    createRequestForRefresh = () => {
+        const refreshRequest = new RestBuilder()
             .url(urlForTokenRefresh)
             .params(() => {
                 const { refresh, access } = this.props.token;
@@ -111,20 +128,7 @@ export default class App extends React.PureComponent {
                 // TODO: user couldn't be verfied screen
             })
             .build();
-    }
-
-    componentWillMount() {
-        console.log('Mounting App');
-        if (this.refreshRequest) {
-            this.refreshRequest.start();
-        }
-    }
-
-    componentWillUnmount() {
-        console.log('Unmounting App');
-        if (this.refreshRequest) {
-            this.refreshRequest.stop();
-        }
+        return refreshRequest;
     }
 
     render() {
