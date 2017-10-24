@@ -3,29 +3,24 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
-    activeProjectSelector,
-    currentUserProjectsSelector,
+    currentUserActiveProjectSelector,
 } from '../../../common/selectors/domainData';
 
 import styles from './styles.scss';
 
 const propTypes = {
+    currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
-    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
-    location: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    currentUserProjects: currentUserProjectsSelector(state),
+    currentUserActiveProject: currentUserActiveProjectSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -34,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class HomeScreen extends React.PureComponent {
+export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
 
     componentWillMount() {
@@ -57,29 +52,17 @@ export default class HomeScreen extends React.PureComponent {
     }
 
     render() {
-        const {
-            currentUserProjects,
-            activeProject,
-            location,
-        } = this.props;
-        if (currentUserProjects.length > 0) {
-            return (
-                <Redirect
-                    to={{
-                        pathname: `/${activeProject}/dashboard/`,
-                        from: location,
-                    }}
-                />
-            );
-        }
-
+        const { currentUserActiveProject } = this.props;
+        const projectName = currentUserActiveProject.title;
         return (
-            <div styleName="home-screen">
+            <div styleName="dashboard">
                 <Helmet>
-                    <title>{ pageTitles.homeScreen }</title>
+                    <title>
+                        { pageTitles.dashboard } | { projectName}
+                    </title>
                 </Helmet>
                 <p>
-                    Home Screen
+                    Dashboard
                 </p>
             </div>
         );

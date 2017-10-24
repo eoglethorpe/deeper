@@ -56,18 +56,27 @@ class ProjectRouteSynchronizer extends React.PureComponent {
         }
     }
 
+    componentWillMount() {
+        console.log('Mounting ProjectRouteSynchronizer');
+    }
+
     componentWillReceiveProps(nextProps) {
         console.log('RECEIVING PROPS');
         const { match, activeProject } = nextProps;
         const projectId = parseInt(match.params.projectId, 10);
 
         if (isTruthy(activeProject) && projectId !== activeProject) {
-            console.log('Redirecting to:', this.props.redirectUrl(activeProject));
+            console.info('Redirecting to:', this.props.redirectUrl(activeProject));
             browserHistory.push(this.props.redirectUrl(activeProject));
         }
     }
 
+    componentWillUnmount() {
+        console.log('Unmounting ProjectRouteSynchronizer');
+    }
+
     render() {
+        console.log('Rendering ProjectRouteSynchronizer');
         return this.props.children;
     }
 }

@@ -13,7 +13,10 @@ import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
 import { LoginForm } from '../../components/Forms';
-import { loginAction } from '../../../../common/action-creators/auth';
+import {
+    loginAction,
+    authenticateAction,
+} from '../../../../common/action-creators/auth';
 import { pageTitles } from '../../../../common/utils/labels';
 import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
 import {
@@ -28,8 +31,13 @@ import {
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
+import {
+    currentUserProjectsSelector,
+} from '../../../../common/selectors/domainData';
 
 const propTypes = {
+    authenticate: PropTypes.func.isRequired,
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
@@ -39,13 +47,18 @@ const propTypes = {
 const defaultProps = {
 };
 
-const mapDispatchToProps = dispatch => ({
-    login: params => dispatch(loginAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-    startTokenRefresh: () => dispatch(startTokenRefreshAction()),
+const mapStateToProps = state => ({
+    currentUserProjects: currentUserProjectsSelector(state),
 });
 
-@connect(null, mapDispatchToProps)
+const mapDispatchToProps = dispatch => ({
+    authenticate: () => dispatch(authenticateAction()),
+    login: params => dispatch(loginAction(params)),
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -65,6 +78,25 @@ export default class Login extends React.PureComponent {
             validLinks: undefined,
         });
 
+        this.checkParamsFromHid();
+    }
+
+    onHidLoginClick = () => {
+        // Just set it to pending
+        // The anchor will redirect user to next page
+        this.setState({ pending: true });
+    }
+
+    onSubmit = ({ email, password }) => {
+        const url = urlForTokenCreate;
+        const params = createParamsForTokenCreate({ username: email, password });
+        this.login({
+            url,
+            params,
+        });
+    }
+
+    checkParamsFromHid = () => {
         const { location } = this.props;
         // Get params from the current url
         // NOTE: hid provides query as hash
@@ -72,31 +104,29 @@ export default class Login extends React.PureComponent {
         // Login User with HID access_token
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);
-            this.loginUser({
+            this.login({
                 url: urlForTokenCreateHid,
                 params,
-                // NOTE: we have no email info from hid
             });
+        } else {
+            console.warn('No access_token found');
         }
     }
 
-    onSubmit = ({ email, password }) => {
-        const url = urlForTokenCreate;
-        const params = createParamsForTokenCreate({ username: email, password });
-        this.loginUser({
-            url,
-            params,
-            email,
-        });
-    }
+    login = ({ url, params }) => {
+        this.setState({ pending: true });
 
-    loginUser = ({ url, params, email }) => {
         // Stop any retry action
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
         }
+        this.userLoginRequest = this.createRequestLogin(url, params);
 
-        this.userLoginRequest = new RestBuilder()
+        this.userLoginRequest.start();
+    };
+
+    createRequestLogin = (url, params) => {
+        const userLoginRequest = new RestBuilder()
             .url(url)
             .params(params)
             .decay(0.3)
@@ -106,9 +136,19 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'tokenGetResponse');
                     const { refresh, access } = response;
-                    this.props.login({ email, refresh, access });
-                    // TODO: make login start token refresh
-                    this.props.startTokenRefresh();
+                    this.props.login({ refresh, access });
+
+                    // after setAccessToken, current user is verified
+                    if (this.props.currentUserProjects.length <= 0) {
+                        console.warn('No projects in cache');
+                        // if there is no projects, block and get from api
+                        this.props.startTokenRefresh(() => {
+                            this.props.authenticate();
+                        });
+                    } else {
+                        this.props.startTokenRefresh();
+                        this.props.authenticate();
+                    }
                 } catch (err) {
                     console.error(err);
                 }
@@ -136,13 +176,7 @@ export default class Login extends React.PureComponent {
                 this.setState({ pending: false });
             })
             .build();
-
-        this.setState({ pending: true });
-        this.userLoginRequest.start();
-    };
-
-    handleHidLoginClick = () => {
-        this.setState({ pending: true });
+        return userLoginRequest;
     }
 
     render() {
@@ -182,7 +216,7 @@ export default class Login extends React.PureComponent {
                     </Link>
                 </div>
                 <a
-                    onClick={this.handleHidLoginClick}
+                    onClick={this.onHidLoginClick}
                     href={hidUrl}
                     styleName="register-link"
                 >

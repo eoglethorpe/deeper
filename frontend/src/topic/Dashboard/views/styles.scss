@@ -1,0 +1,27 @@
+@import '../../../stylesheets/base';
+
+.dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(100vh - #{$height-navbar});
+
+    p {
+        flex-basis: 100%;
+        text-align: center;
+    }
+
+    >div {
+        flex-basis: 50%;
+        padding: $spacing-extra-large;
+    }
+
+    .image-input {
+        :global .image-input-preview {
+            height: 500px;
+        }
+    }
+}

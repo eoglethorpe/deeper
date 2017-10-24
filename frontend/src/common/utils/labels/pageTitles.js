@@ -2,6 +2,7 @@ const pageTitles = {
     login: 'Login',
     register: 'Register',
 
+    homeScreen: 'Home',
     dashboard: 'Dashboard',
 
     leads: 'Leads',

@@ -38,9 +38,16 @@ const Export = () => (
     </ProjectRouteSynchronizer>
 );
 
+const Dashboard = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/dashboard/`} >
+        <Bundle load={() => import('./topic/Dashboard/views')} />
+    </ProjectRouteSynchronizer>
+);
+
 const HomeScreen = () => (
     <Bundle load={() => import('./topic/HomeScreen/views')} />
 );
+
 const Login = () => (
     <Bundle load={() => import('./topic/Authentication/views/Login')} />
 );
@@ -159,10 +166,17 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
 
+        {
+            path: '/:projectId/dashboard/',
+            name: pageTitles.dashboard,
+            component: Dashboard,
+            private: true,
+        },
+
         // NOTE: never add new link below this comment
         {
             path: '/',
-            name: pageTitles.dashboard,
+            name: pageTitles.homeScreen,
             component: HomeScreen,
             private: true,
         },
@@ -185,22 +199,22 @@ export default class Multiplexer extends React.PureComponent {
         if (page.private) {
             return (
                 <PrivateRoute
-                    authenticated={this.props.authenticated}
                     component={page.component}
                     exact
                     key={page.name}
                     path={page.path}
+                    authenticated={this.props.authenticated}
                     redirectLink={page.redirectLink}
                 />
             );
         } else if (page.public) {
             return (
                 <ExclusivelyPublicRoute
-                    authenticated={this.props.authenticated}
                     component={page.component}
                     exact
                     key={page.name}
                     path={page.path}
+                    authenticated={this.props.authenticated}
                     redirectLink={page.redirectLink}
                 />
             );
