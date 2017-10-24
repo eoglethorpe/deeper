@@ -8,18 +8,26 @@ import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
+import {
+    currentUserActiveProjectSelector,
+} from '../../../common/selectors/domainData';
 
 import styles from './styles.scss';
 
 const propTypes = {
+    currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     setNavbarState: PropTypes.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+    currentUserActiveProject: currentUserActiveProjectSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
@@ -44,10 +52,14 @@ export default class Dashboard extends React.PureComponent {
     }
 
     render() {
+        const { currentUserActiveProject } = this.props;
+        const projectName = currentUserActiveProject.title;
         return (
             <div styleName="dashboard">
                 <Helmet>
-                    <title>{ pageTitles.dashboard }</title>
+                    <title>
+                        { pageTitles.dashboard } | { projectName}
+                    </title>
                 </Helmet>
                 <p>
                     Dashboard

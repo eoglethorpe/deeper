@@ -18,7 +18,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.object.isRequired, // eslint-disable-line
+    activeProject: PropTypes.number.isRequired, // eslint-disable-line
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
 };

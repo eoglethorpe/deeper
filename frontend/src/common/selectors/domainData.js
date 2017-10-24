@@ -52,6 +52,14 @@ export const currentUserProjectsSelector = createSelector(
     user => (user.projects || emptyList),
 );
 
+export const currentUserActiveProjectSelector = createSelector(
+    currentUserProjectsSelector,
+    activeProjectSelector,
+    (currentUserProjects, activeProject) => (
+        currentUserProjects.find(project => project.id === activeProject) || emptyObject
+    ),
+);
+
 
 // Selector depending on project id from state (active project)
 

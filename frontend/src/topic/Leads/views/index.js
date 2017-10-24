@@ -26,8 +26,9 @@ import {
     tokenSelector,
 } from '../../../common/selectors/auth';
 import {
-    leadsForProjectSelector,
     activeProjectSelector,
+    currentUserActiveProjectSelector,
+    leadsForProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
@@ -40,6 +41,7 @@ import schema from '../../../common/schema';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
+    currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
     setLeads: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
@@ -52,6 +54,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
+    currentUserActiveProject: currentUserActiveProjectSelector(state),
     leads: leadsForProjectSelector(state),
     token: tokenSelector(state),
 });
@@ -246,11 +249,13 @@ export default class Leads extends React.PureComponent {
     render() {
         console.log('Rendering Leads');
 
+        const { currentUserActiveProject } = this.props;
+        const projectName = currentUserActiveProject.title;
         return (
             <div styleName="leads">
                 <Helmet>
                     <title>
-                        { pageTitles.leads }
+                        { pageTitles.leads } | { projectName}
                     </title>
                 </Helmet>
 
