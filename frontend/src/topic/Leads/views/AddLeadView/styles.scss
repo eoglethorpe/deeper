@@ -74,21 +74,29 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background-color: darken($color-foreground, 5%);
-                padding: $spacing-large;
+                background-color: darken($color-foreground, 10%);
+                padding: $spacing-small;
                 height: $height-upload;
                 text-align: center;
 
 
-                >* {
-                    flex-basis: 30%;
-                    cursor: pointer;
+                >div {
+                    flex-basis: 20%;
 
-
-                    img {
-                        width: 48px;
-                        height: 48px;
+                    &:hover {
+                        cursor: pointer;
+                        color: darken($color-accent, 5%);
                     }
+
+                    span {
+                        font-size: $font-size-super-large;
+                    }
+
+                    p {
+                        margin: 0 $spacing-small;
+                    }
+
+
                 }
             }
         }
@@ -109,6 +117,7 @@
                 padding: $spacing-large;
                 height: 100%;
                 text-align: center;
+                overflow-y: auto;
             }
         }
 

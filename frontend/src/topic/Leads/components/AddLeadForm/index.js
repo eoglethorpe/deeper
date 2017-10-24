@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { PrimaryButton, DangerButton, SuccessButton } from '../../../../public/components/Button';
 import styles from './styles.scss';
 import TextInput from '../../../../public/components/TextInput';
-import RadioInput from '../../../../public/components/RadioInput';
 import Form, {
     requiredCondition,
     urlCondition,
@@ -38,6 +37,7 @@ export default class AddLeadForm extends React.PureComponent {
             'date',
             'url',
             'website',
+            'manualEntry',
         ];
         const validations = {
             title: [requiredCondition],
@@ -50,22 +50,9 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
+            manualEntry: [requiredCondition],
         };
 
-        this.radioOptions = [
-            {
-                key: '1',
-                label: 'WEBSITE',
-            },
-            {
-                key: '2',
-                label: 'ATTACHMENT',
-            },
-            {
-                key: '3',
-                label: 'MANUAL ENTRY',
-            },
-        ];
 
         const updateValues = (data) => {
             this.setState({
@@ -133,7 +120,7 @@ export default class AddLeadForm extends React.PureComponent {
                     onSubmit={this.handleSubmit}
                 >
                     <header styleName="header-title">
-                        <h1>Add New Lead</h1>
+                        <h1>Lead Form</h1>
                         <div styleName="action-buttons">
                             <DangerButton>
                                 Cancel
@@ -222,13 +209,6 @@ export default class AddLeadForm extends React.PureComponent {
                             onChange={this.onChange}
                         />
                     </div>
-                    <RadioInput
-                        styleName="radio-input"
-                        name="lead-type"
-                        options={this.radioOptions}
-                        selected="1"
-                    />
-
                     <div styleName="url-box-container">
                         <TextInput
                             label="URL"
@@ -254,6 +234,17 @@ export default class AddLeadForm extends React.PureComponent {
                             onFocus={this.onFocus}
                             onChange={this.onChange}
                         />
+                    </div>
+                    <div>
+                        <label htmlFor="manual-entry-box">Manual Entry </label>
+                        <textarea
+                            styleName="manual-entry-box"
+                            cols="40"
+                            rows="5"
+                        />
+                    </div>
+                    <div>
+                        File Upload
                     </div>
                 </form>
             </div>

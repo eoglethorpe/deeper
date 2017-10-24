@@ -6,11 +6,7 @@ import { connect } from 'react-redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import { pageTitles } from '../../../../common/utils/labels';
-import { PrimaryButton } from '../../../../public/components/Button';
 import styles from './styles.scss';
-import dropbox from '../../../../img/dropbox.png';
-import googleDrive from '../../../../img/google-drive.png';
-import uploadIcon from '../../../../img/upload-icon.png';
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
@@ -35,10 +31,11 @@ export default class AddLead extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
         this.state = {
             formErrors: { },
             formValues: { },
+            leads: [],
+            counter: 1,
         };
     }
     componentWillMount() {
@@ -58,6 +55,35 @@ export default class AddLead extends React.PureComponent {
             ],
         });
     }
+    onWebsiteClickHandler = () => {
+        console.log('Website');
+        this.setState({
+            leads: [
+                ...this.state.leads,
+                {
+                    key: 4,
+                    type: 'Website',
+                    title: `Leads #${this.state.counter}`,
+                },
+            ],
+            counter: this.state.counter + 1,
+        });
+    };
+
+    onManualEntryClickHandler = () => {
+        console.log('Manual Entry');
+        this.setState({
+            leads: [
+                ...this.state.leads,
+                {
+                    key: 4,
+                    type: 'manualEntry',
+                    title: `Leads #${this.state.counter}`,
+                },
+            ],
+            counter: this.state.counter + 1,
+        });
+    };
 
     onFocus = (overrideName) => {
         this.form.onFocus(overrideName);
@@ -94,119 +120,68 @@ export default class AddLead extends React.PureComponent {
                     <div styleName="leads-list-container">
                         <header styleName="header-title">
                             <h1>Leads Overview</h1>
-                            <PrimaryButton>
-                                Add New
-                            </PrimaryButton>
                         </header>
                         <div styleName="list">
                             <div styleName="list-item">
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>How long until everyone is vampire?</p>
-                                    <span
-                                        className="ion-ios-checkmark"
-                                        styleName="icon-checked"
-                                    />
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Voluntary return home and coming back to the EU</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some conflict in Syria</p>
-                                    <span
-                                        className="ion-ios-checkmark"
-                                        styleName="icon-checked"
-                                    />
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some flood in Bangladesh</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some conflict in Syria</p>
-                                    <span
-                                        className="ion-ios-checkmark"
-                                        styleName="icon-checked"
-                                    />
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Malnutrition in Somalia</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Voluntary return home and coming back to the EU</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Malnutrition in Somalia</p>
-                                    <span
-                                        className="ion-ios-checkmark"
-                                        styleName="icon-checked"
-                                    />
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some flood in Bangladesh</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some conflict in Syria</p>
-                                </div>
-                                <div>
-                                    <span
-                                        className="ion-document-text"
-                                        styleName="icon"
-                                    />
-                                    <p>Some flood in Bangladesh</p>
-                                </div>
+                                {
+                                    this.state.leads.map(lead => (
+                                        <div key={lead.key}>
+                                            <span
+                                                className="ion-document-text"
+                                                styleName="icon"
+                                            />
+                                            <p>{lead.title}</p>
+                                        </div>
+                                    ))
+                                }
                             </div>
                         </div>
                         <div styleName="upload-container">
-                            <div>
-                                <img src={googleDrive} alt="DEEP" />
+                            <div
+                                onClick={this.onClickHandler}
+                                role="presentation"
+                            >
+                                <span
+                                    className="ion-social-google"
+                                />
                                 <p>Google Drive</p>
                             </div>
-                            <div>
-                                <img src={dropbox} alt="DEEP" />
+                            <div
+                                onClick={this.onClickHandler}
+                                role="presentation"
+                            >
+                                <span
+                                    className="ion-social-dropbox"
+                                />
                                 <p>Dropbox</p>
                             </div>
-                            <div>
-                                <img src={uploadIcon} alt="DEEP" />
-                                <p>Manual Upload</p>
+                            <div
+                                onClick={this.onClickHandler}
+                                role="presentation"
+                            >
+                                <span
+                                    className="ion-android-upload"
+
+                                />
+                                <p>Upload</p>
+                            </div>
+                            <div
+                                onClick={this.onWebsiteClickHandler}
+                                role="presentation"
+                            >
+                                <span
+                                    className="ion-earth"
+                                />
+                                <p>Website</p>
+                            </div>
+                            <div
+                                onClick={this.onManualEntryClickHandler}
+                                role="presentation"
+                            >
+                                <span
+                                    className="ion-clipboard"
+                                />
+                                <p>Manual Entry</p>
                             </div>
                         </div>
                     </div>
