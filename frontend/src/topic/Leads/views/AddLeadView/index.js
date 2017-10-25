@@ -36,6 +36,7 @@ export default class AddLead extends React.PureComponent {
             formValues: { },
             leads: [],
             counter: 1,
+            activeLeadKey: undefined,
         };
     }
     componentWillMount() {
@@ -61,11 +62,12 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: 4,
+                    key: this.state.counter,
                     type: 'Website',
                     title: `Leads #${this.state.counter}`,
                 },
             ],
+            activeLeadKey: this.state.counter,
             counter: this.state.counter + 1,
         });
     };
@@ -76,11 +78,12 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: 4,
+                    key: this.state.counter,
                     type: 'manualEntry',
                     title: `Leads #${this.state.counter}`,
                 },
             ],
+            activeLeadKey: this.state.counter,
             counter: this.state.counter + 1,
         });
     };
@@ -97,6 +100,11 @@ export default class AddLead extends React.PureComponent {
         this.form.onSubmit();
     }
 
+    leadsClickHandler = (key) => {
+        this.setState({ activeLeadKey: key });
+        console.log(key);
+    }
+
     handleSubmit = (e) => {
         e.preventDefault();
         this.onSubmit();
@@ -107,7 +115,6 @@ export default class AddLead extends React.PureComponent {
     handleOptionChange = (changeEvent) => {
         this.setState({ selectedValue: changeEvent.target.value });
     };
-
     render() {
         return (
             <div styleName="add-lead">
@@ -125,7 +132,14 @@ export default class AddLead extends React.PureComponent {
                             <div styleName="list-item">
                                 {
                                     this.state.leads.map(lead => (
-                                        <div key={lead.key}>
+                                        <div
+                                            key={lead.key}
+                                            styleName={
+                                                lead.key === this.state.activeLeadKey ? 'selected' : ''
+                                            }
+                                            onClick={() => this.leadsClickHandler(lead.key)}
+                                            role="presentation"
+                                        >
                                             <span
                                                 className="ion-document-text"
                                                 styleName="icon"

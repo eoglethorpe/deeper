@@ -37,7 +37,7 @@ export default class AddLeadForm extends React.PureComponent {
             'date',
             'url',
             'website',
-            'manualEntry',
+            // 'manualEntry',
         ];
         const validations = {
             title: [requiredCondition],
@@ -50,7 +50,7 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
-            manualEntry: [requiredCondition],
+            // manualEntry: [requiredCondition],
         };
 
 

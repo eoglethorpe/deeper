@@ -41,14 +41,10 @@
                         padding-top: $spacing-medium;
                         height: 64px;
 
-                        &:hover {
-                            background-color: lighten($color-accent, 5%);
-                            color: $color-text-on-primary;
-
-                            .icon-checked {
-                                color: $color-foreground;
-                            }
-                        }
+                    }
+                    .selected {
+                        background-color: lighten($color-accent, 5%);
+                        color: $color-text-on-primary;
                     }
 
                     .icon {
