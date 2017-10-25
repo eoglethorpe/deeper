@@ -22,13 +22,31 @@ attachValidator(dict);
             description: 'Defines all the attributes common to db entities',
         },
         fields: {
-            id: { type: 'uint', required: true },
             createdAt: { type: 'string', required: true }, // date
-            modifiedAt: { type: 'string', required: true }, // date
             createdBy: { type: 'uint', required: true },
-            modifiedBy: { type: 'uint', required: true },
             createdByName: { type: 'string' },
+            id: { type: 'uint', required: true },
+            modifiedAt: { type: 'string', required: true }, // date
+            modifiedBy: { type: 'uint', required: true },
             modifiedByName: { type: 'string' },
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'membership';
+    const schema = {
+        doc: {
+            name: 'Membership',
+            description: 'Defines all mapping between Project and User',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            joinedAt: { type: 'string' }, // date
+            member: { type: 'uint', required: true },
+            memberName: { type: 'string' },
+            project: { type: 'uint', required: true },
+            role: { type: 'string' }, // enum: normal, admin
         },
     };
     dict.put(name, schema);
@@ -42,13 +60,11 @@ attachValidator(dict);
         },
         extends: 'dbentity',
         fields: {
-            analysisFramework: { type: 'object', required: false },
             data: { type: 'object' },
-            members: { type: 'array.uint', required: true },
-            memberships: { type: 'array.uint', required: true },
-            regions: { type: 'array.uint', required: true },
+            memberships: { type: 'array.membership' },
+            regions: { type: 'array.uint' },
             title: { type: 'string', required: true },
-            userGroups: { type: 'array.uint', required: true },
+            userGroups: { type: 'array.uint' },
         },
     };
     dict.put(name, schema);
