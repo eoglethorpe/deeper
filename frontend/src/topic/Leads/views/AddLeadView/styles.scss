@@ -106,15 +106,26 @@
             $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
             overflow-y: auto;
 
-            .preview-container {
-                @include shadow-small;
-                flex-basis: 50%;
-                background-color: $color-foreground;
-                padding: $spacing-large;
-                height: 100%;
-                text-align: center;
-                overflow-y: auto;
+
+            .tabs-content {
+
+                .tab {
+                    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+                    height: $height-full-page;
+
+                    .preview-container {
+                        @include shadow-small;
+                        flex-basis: 50%;
+                        background-color: $color-foreground;
+                        padding: $spacing-large;
+                        height: 100%;
+                        text-align: center;
+                        overflow-y: auto;
+                    }
+                }
             }
+
+
         }
 
     }

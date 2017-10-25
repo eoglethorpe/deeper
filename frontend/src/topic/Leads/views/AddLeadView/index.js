@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import { pageTitles } from '../../../../common/utils/labels';
@@ -62,12 +63,12 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: this.state.counter,
+                    key: `lead-${this.state.counter}`,
                     type: 'Website',
                     title: `Leads #${this.state.counter}`,
                 },
             ],
-            activeLeadKey: this.state.counter,
+            activeLeadKey: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
         });
     };
@@ -78,12 +79,12 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: this.state.counter,
+                    key: `lead-${this.state.counter}`,
                     type: 'manualEntry',
                     title: `Leads #${this.state.counter}`,
                 },
             ],
-            activeLeadKey: this.state.counter,
+            activeLeadKey: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
         });
     };
@@ -123,7 +124,11 @@ export default class AddLead extends React.PureComponent {
                         { pageTitles.addLeads }
                     </title>
                 </Helmet>
-                <div styleName="container">
+                <Tabs
+                    selectedTab={this.state.activeLeadKey}
+                    activeLinkStyle={{ none: 'none' }}
+                    styleName="container"
+                >
                     <div styleName="leads-list-container">
                         <header styleName="header-title">
                             <h1>Leads Overview</h1>
@@ -133,6 +138,7 @@ export default class AddLead extends React.PureComponent {
                                 {
                                     this.state.leads.map(lead => (
                                         <div
+                                            to={lead.key}
                                             key={lead.key}
                                             styleName={
                                                 lead.key === this.state.activeLeadKey ? 'selected' : ''
@@ -200,16 +206,36 @@ export default class AddLead extends React.PureComponent {
                         </div>
                     </div>
                     <div styleName="leads-details-container">
-                        <AddLeadForm
+                        {/* <AddLeadForm
                             onSubmit={() => {}}
                             pending={false}
                             values={this.state.editRow}
                         />
-                        <div styleName="preview-container">
-                            <h2> Preview Container goes here</h2>
+                    */}
+                        <div styleName="tabs-content">
+                            {
+                                this.state.leads.map(lead => (
+                                    <TabContent
+                                        for={lead.key}
+                                        styleName="tab"
+                                    >
+                                        <AddLeadForm
+                                            onSubmit={() => {}}
+                                            pending={false}
+                                            values={lead}
+                                        />
+                                        <div styleName="preview-container">
+                                            <h2>Preview Container</h2>
+                                        </div>
+                                    </TabContent>
+                                ))
+                            }
                         </div>
+                        {/* <div styleName="preview-container">
+                            <h2> Preview Container goes here</h2>
+                        </div> */}
                     </div>
-                </div>
+                </Tabs>
             </div>
         );
     }

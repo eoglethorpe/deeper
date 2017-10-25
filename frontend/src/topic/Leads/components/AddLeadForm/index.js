@@ -120,7 +120,7 @@ export default class AddLeadForm extends React.PureComponent {
                     onSubmit={this.handleSubmit}
                 >
                     <header styleName="header-title">
-                        <h1>Lead Form</h1>
+                        <h1>{this.props.values.title}</h1>
                         <div styleName="action-buttons">
                             <DangerButton>
                                 Cancel
