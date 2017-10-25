@@ -1,9 +1,11 @@
+from drf_dynamic_fields import DynamicFieldsMixin
 from rest_framework import serializers
 from user_resource.serializers import UserResourceSerializer
 from project.models import Project, ProjectMembership
 
 
-class ProjectMembershipSerializer(serializers.ModelSerializer):
+class ProjectMembershipSerializer(DynamicFieldsMixin,
+                                  serializers.ModelSerializer):
     member_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -21,7 +23,7 @@ class ProjectMembershipSerializer(serializers.ModelSerializer):
         return project
 
 
-class ProjectSerializer(UserResourceSerializer):
+class ProjectSerializer(DynamicFieldsMixin, UserResourceSerializer):
     memberships = ProjectMembershipSerializer(
         source='projectmembership_set',
         many=True, read_only=True
@@ -58,3 +60,9 @@ class ProjectSerializer(UserResourceSerializer):
                 raise serializers.ValidationError(
                     'Invalid region: {}'.format(region.id))
         return regions
+
+    def validate_analysis_framework(self, analysis_framework):
+        if not analysis_framework.can_modify(self.context['request'].user):
+            raise serializers.ValidationError(
+                'Invalid analysis framework: {}'.format(analysis_framework.id))
+        return analysis_framework

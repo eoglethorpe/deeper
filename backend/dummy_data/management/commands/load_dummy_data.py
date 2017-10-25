@@ -35,19 +35,23 @@ class Command(BaseCommand):
         self.load('project', 'Project')
         self.load('project', 'ProjectMembership')
 
-        self.stdout.write('Loading user groups')
+        self.stdout.write('Loading user groups and members')
         self.load('user_group', 'UserGroup')
+        self.load('user_group', 'GroupMembership')
 
         self.stdout.write('Loading leads')
         self.load('lead', 'Lead')
+        self.load_manytomany('lead', 'user', 'Lead_User',
+                             'assignee')
 
         self.stdout.write('Adding user groups to projects')
-        self.load_manytomany('project', 'Project_UserGroup',
+        self.load_manytomany('project', 'user_group', 'Project_UserGroup',
                              'user_groups')
 
         self.stdout.write('Done')
 
-    def load_manytomany(self, app_name1, filename, field, model1=None):
+    def load_manytomany(self, app_name1, app_name2,
+                        filename, field, model1=None):
         """
         Load manytomany items
 
@@ -73,9 +77,7 @@ class Command(BaseCommand):
         # to use with DummyData
         if not model1:
             model1 = apps.get_model(app_name1, model_names[0])
-
         model2 = model1._meta.get_field(field).related_model
-        app_name2 = model2._meta.app_label
 
         model_name1 = '{}.{}'.format(app_name1, model_names[0])
         model_name2 = '{}.{}'.format(app_name2, model_names[1])

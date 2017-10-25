@@ -24,14 +24,25 @@ class AnalysisFramework(UserResource):
         ).distinct()
 
     def can_get(self, user):
-        # TODO: update required logic for permission
-        return True
-        return self.project.can_get(user)
+        return self in AnalysisFramework.get_for(user)
 
     def can_modify(self, user):
-        # TODO: update required logic for permission
-        return True
-        return self.project.can_modify(user)
+        """
+        Analysis framework can be modified by a user if:
+        * user created the framework, or
+        * user is super user, or
+        * the framework belongs to a project where the user is admin
+        """
+        import project
+        return (
+            self.created_by == user or
+            user.is_superuser or
+            project.models.ProjectMembership.objects.filter(
+                project__in=self.project_set.all(),
+                member=user,
+                role='admin',
+            ).exists()
+        )
 
 
 class Widget(models.Model):
@@ -69,10 +80,20 @@ class Filter(models.Model):
     """
     A filter for a widget in an analysis framework
     """
+    NUMBER = 'number'
+    LIST = 'list'
+
+    FILTER_TYPES = (
+        (NUMBER, 'Number'),
+        (LIST, 'List'),
+    )
+
     analysis_framework = models.ForeignKey(AnalysisFramework)
     schema_id = models.CharField(max_length=100, db_index=True)
     title = models.CharField(max_length=255)
     properties = JSONField(default=None, blank=True, null=True)
+    filter_type = models.CharField(max_length=20, choices=FILTER_TYPES,
+                                   default=LIST)
 
     def __str__(self):
         return '{} ({})'.format(self.title, self.schema_id)

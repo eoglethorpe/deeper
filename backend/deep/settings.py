@@ -41,11 +41,12 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
     'djangorestframework_camel_case',
-    'redis_store',
+    'drf_dynamic_fields',
     'rest_framework',
     'reversion',
     'storages',
 
+    'redis_store',
     'analysis_framework',
     'docs',
     'dummy_data',
