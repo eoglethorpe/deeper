@@ -103,7 +103,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             console.log(settings);
             return update(state, settings);
         }
-
         case SET_COUNTRIES: {
             const settings = {
                 countries: { $autoArray: {
@@ -112,7 +111,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
-
         case SET_ACTIVE_PROJECT: {
             const settings = {
                 activeProject: {
