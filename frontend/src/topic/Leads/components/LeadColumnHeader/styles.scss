@@ -1,0 +1,41 @@
+@import '../../../../stylesheets/base';
+
+.lead-column-header {
+    &.sortable {
+        cursor: pointer;
+
+        &:hover {
+            background-color: $color-background-header-alt;
+        }
+
+        &::before {
+            display: inline-block;
+            transform: rotate(90deg);
+            margin-right: $spacing-small;
+            // width: $width-icon-medium;
+            font-family: 'Ionicons';
+            content: '\f268';
+        }
+
+        &.active {
+            color: $color-accent;
+
+            &::before {
+                transform: rotate(0);
+            }
+
+            &.asc {
+                &::before {
+                    content: '\f35d';
+                }
+            }
+
+            &.dsc {
+                &::before {
+                    content: '\f366';
+                }
+            }
+
+        }
+    }
+}

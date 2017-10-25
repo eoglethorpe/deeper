@@ -41,6 +41,15 @@
                 background-color: $color-foreground;
                 padding: $spacing-medium $spacing-medium-alt;
                 text-align: left;
+                user-select: none;
+
+                &:not(.actions) {
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: $color-background-hover;
+                    }
+                }
             }
 
             :global .title {

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
 import FilterLeadsForm from '../components/FilterLeadsForm';
+import LeadColumnHeader from '../components/LeadColumnHeader';
 import FormattedDate from '../../../public/components/FormattedDate';
 import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
@@ -74,82 +75,83 @@ export default class Leads extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.headers = [
-            {
-                key: 'createdAt',
-                label: 'Created at',
-                order: 1,
-                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
-            },
-            {
-                key: 'createdBy',
-                label: 'Created by',
-                order: 2,
-                modifier: row => (
-                    <Link
-                        key={row.createdBy}
-                        to={`/users/${row.createdBy}/`}
-                    >
-                        {row.createdByName}
-                    </Link>
-                ),
-            },
-            {
-                key: 'title',
-                label: 'Title',
-                order: 3,
-            },
-            {
-                key: 'publishedOn',
-                label: 'Published',
-                order: 4,
-                modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
-            },
-            {
-                key: 'confidentiality',
-                label: 'Confidentiality',
-                order: 5,
-            },
-            {
-                key: 'source',
-                label: 'Source',
-                order: 6,
-            },
-            {
-                key: 'noOfEntries',
-                label: 'No. of entries',
-                order: 7,
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                order: 8,
-            },
-            {
-                key: 'actions',
-                label: 'Actions',
-                order: 9,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentButton
-                            tooltip="Edit lead"
-                            onClick={() => this.handleEditLeadClick(row)}
-                        >
-                            <i className="ion-edit" />
-                        </TransparentButton>
-                        <TransparentAccentButton >
-                            <i className="ion-forward" />
-                        </TransparentAccentButton>
-                    </div>
-                ),
-            },
-        ];
 
         this.filters = [];
 
         this.state = {
             editRow: {},
             showEditLeadModal: false,
+            activeSort: '-created_at',
+            headers: [
+                {
+                    key: 'created_at',
+                    label: 'Created at',
+                    order: 1,
+                    modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+                },
+                {
+                    key: 'created_by',
+                    label: 'Created by',
+                    order: 2,
+                    modifier: row => (
+                        <Link
+                            key={row.createdBy}
+                            to={`/users/${row.createdBy}/`}
+                        >
+                            {row.createdByName}
+                        </Link>
+                    ),
+                },
+                {
+                    key: 'title',
+                    label: 'Title',
+                    order: 3,
+                },
+                {
+                    key: 'published_on',
+                    label: 'Published',
+                    order: 4,
+                    modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
+                },
+                {
+                    key: 'confidentiality',
+                    label: 'Confidentiality',
+                    order: 5,
+                },
+                {
+                    key: 'source',
+                    label: 'Source',
+                    order: 6,
+                },
+                {
+                    key: 'no_of_entries',
+                    label: 'No. of entries',
+                    order: 7,
+                },
+                {
+                    key: 'status',
+                    label: 'Status',
+                    order: 8,
+                },
+                {
+                    key: 'actions',
+                    label: 'Actions',
+                    order: 9,
+                    modifier: row => (
+                        <div className="actions">
+                            <TransparentButton
+                                tooltip="Edit lead"
+                                onClick={() => this.handleEditLeadClick(row)}
+                            >
+                                <i className="ion-edit" />
+                            </TransparentButton>
+                            <TransparentAccentButton >
+                                <i className="ion-forward" />
+                            </TransparentAccentButton>
+                        </div>
+                    ),
+                },
+            ],
         };
     }
 
@@ -175,17 +177,14 @@ export default class Leads extends React.PureComponent {
 
 
         const { activeProject } = this.props;
-        this.leadRequest = this.createRequestForProjectLeads(activeProject);
-        this.leadRequest.start();
+        this.requestProjectLeads(activeProject);
     }
 
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
-        if (this.props.activeProject !== activeProject) {
-            this.leadRequest.stop();
 
-            this.leadRequest = this.createRequestForProjectLeads(activeProject);
-            this.leadRequest.start();
+        if (this.props.activeProject !== activeProject) {
+            this.requestProjectLeads(activeProject);
         }
     }
 
@@ -204,8 +203,12 @@ export default class Leads extends React.PureComponent {
 
             switch (key) {
                 case 'created_at':
-                    requestFilters.created_on__lte = (new Date('2015 November')).getTime();
-                    requestFilters.created_on__gte = (new Date('2015 December')).getTime();
+                    requestFilters.created_at__gte = '2010-10-12';
+                    requestFilters.created_at__lte = '2019-12-01';
+                    break;
+                case 'published_on':
+                    requestFilters.published_on__gte = '2010-09-01';
+                    requestFilters.published_on__lte = '2019-12-01';
                     break;
                 default:
                     requestFilters[key] = filter;
@@ -216,10 +219,20 @@ export default class Leads extends React.PureComponent {
         return requestFilters;
     }
 
+    requestProjectLeads = (activeProject) => {
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
+
+        this.leadRequest = this.createRequestForProjectLeads(activeProject);
+        this.leadRequest.start();
+    }
+
     createRequestForProjectLeads = (activeProject) => {
         const filters = this.getFiltersForRequest();
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
+            ordering: this.state.activeSort,
             ...filters,
         });
         const leadRequest = new RestBuilder()
@@ -238,7 +251,6 @@ export default class Leads extends React.PureComponent {
                         projectId: activeProject,
                         leads: response.results,
                     });
-                    console.log(response);
                 } catch (er) {
                     console.error(er);
                 }
@@ -264,7 +276,7 @@ export default class Leads extends React.PureComponent {
     leadKeyExtractor = lead => (lead.id.toString())
 
     leadModifier = (lead, columnKey) => {
-        const header = this.headers.find(d => d.key === columnKey);
+        const header = this.state.headers.find(d => d.key === columnKey);
 
         if (header.modifier) {
             return header.modifier(lead);
@@ -273,19 +285,65 @@ export default class Leads extends React.PureComponent {
         return lead[columnKey];
     }
 
+    headerModifier = (headerData) => {
+        const { activeSort } = this.state;
+        let sortOrder;
+
+        if (activeSort === headerData.key) {
+            sortOrder = 'asc';
+        } else if (activeSort === `-${headerData.key}`) {
+            sortOrder = 'dsc';
+        }
+
+        return (
+            <LeadColumnHeader
+                label={headerData.label}
+                sortOrder={sortOrder}
+                sortable={this.isColumnClickable(headerData.key)}
+            />
+        );
+    }
+
     handleAddLeadClick = () => {
         browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
+
 
     handleApplyFilters = (filters) => {
         const { activeProject } = this.props;
 
         this.filters = filters;
-
-        this.leadRequest = this.createRequestForProjectLeads(activeProject);
-        this.leadRequest.start();
+        this.requestProjectLeads(activeProject);
     }
 
+    handleTableHeaderClick = (key) => {
+        // prevent click on 'actions' column
+        if (!this.isColumnClickable(key)) {
+            return;
+        }
+
+        const { activeProject } = this.props;
+        let { activeSort } = this.state;
+
+        if (activeSort === key) {
+            activeSort = `-${key}`;
+        } else {
+            activeSort = key;
+        }
+
+        // force redraw of headers (so that header modifiers are called)
+        const headers = [...this.state.headers];
+        this.setState({
+            headers,
+            activeSort,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
+    }
+
+    isColumnClickable = key => (
+        ['actions'].indexOf(key) === -1
+    )
 
     render() {
         console.log('Rendering Leads');
@@ -321,7 +379,9 @@ export default class Leads extends React.PureComponent {
                     <RawTable
                         data={this.props.leads}
                         dataModifier={this.leadModifier}
-                        headers={this.headers}
+                        headerModifier={this.headerModifier}
+                        headers={this.state.headers}
+                        onHeaderClick={this.handleTableHeaderClick}
                         keyExtractor={this.leadKeyExtractor}
                         styleName="leads-table"
                     />
