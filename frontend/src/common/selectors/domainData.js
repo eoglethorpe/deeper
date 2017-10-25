@@ -30,6 +30,10 @@ export const projectDetailsSelector = createSelector(
     (projects, activeProject) => projects[activeProject] || emptyObject,
 );
 
+export const countryDetailSelector = ({ domainData }, { countryId }) => (
+    domainData.countries.find(country => country.id === countryId) || emptyObject
+);
+
 // Selector depending on user id from route (url)
 
 export const userSelector = createSelector(

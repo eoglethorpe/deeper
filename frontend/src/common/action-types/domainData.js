@@ -7,7 +7,10 @@ export const SET_USER_GROUPS = 'domain-data/SET_USER_GROUPS';
 
 
 export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
+export const SET_ACTIVE_COUNTRY = 'domain-data/SET_ACTIVE_COUNTRY';
 
 
 export const SET_LEADS = 'domain-data/SET_LEADS';
 export const SET_LEAD_FILTER_OPTIONS = 'domain-data/SET_LEAD_FILTER_OPTIONS';
+
+export const SET_COUNTRIES = 'domain-data/SET_COUNTRIES';

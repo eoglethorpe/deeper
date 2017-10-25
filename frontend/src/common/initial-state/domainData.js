@@ -71,10 +71,12 @@ const initialDomainDataState = {
         },
     },
     countries: [
-        { fullName: 'Afghanistan', iso: 'AFG', countryId: 'AFG' },
-        { fullName: 'Aland Islands', iso: 'ALA', countryId: 'ALA' },
-        { fullName: 'Albania', iso: 'ALB', countryId: 'ALB' },
-        { fullName: 'Algeria', iso: 'DZA', countryId: 'DZA' },
+        { id: 1, title: 'Afghanistan', code: 'AFG' },
+        { id: 2, title: 'Aland Islands', code: 'ALA' },
+        { id: 3, title: 'Albania', code: 'ALB' },
+        { id: 4, title: 'Algeria', code: 'DZA' },
+        { id: 5, title: 'Nepal', code: 'NLP' },
+        /*
         { fullName: 'American Samoa', iso: 'ASM', countryId: 'ASM' },
         { fullName: 'Andorra', iso: 'AND', countryId: 'AND' },
         { fullName: 'Angola', iso: 'AGO', countryId: 'AGO' },
@@ -318,6 +320,7 @@ const initialDomainDataState = {
         { fullName: 'Yemen', iso: 'YEM', countryId: 'YEM' },
         { fullName: 'Zambia', iso: 'ZMB', countryId: 'ZMB' },
         { fullName: 'Zimbabwe', iso: 'ZWE', countryId: 'ZWE' },
+        */
     ],
 
     adminLevels: {

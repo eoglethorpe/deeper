@@ -70,6 +70,23 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 {
+    const name = 'country';
+    const schema = {
+        doc: {
+            name: 'Country',
+            description: 'One of the main entities',
+        },
+        extends: 'dbentity',
+        fields: {
+            code: { type: 'string', required: true },
+            title: { type: 'string', required: true },
+            data: { type: 'object', required: false },
+            public: { type: 'boolean', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'project';
     const schema = {
         doc: {
@@ -229,6 +246,24 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 
+// Country request related
+
+{
+    const name = 'countriesGetResponse';
+    const schema = {
+        doc: {
+            name: 'Countries Get Response',
+            description: 'Response for GET /regions/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.country', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
 
 // Project request related
 

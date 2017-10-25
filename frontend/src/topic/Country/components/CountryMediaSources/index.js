@@ -5,7 +5,7 @@ import React from 'react';
 import styles from './styles.scss';
 
 const propTypes = {
-    countryId: PropTypes.string.isRequired,
+    countryId: PropTypes.number.isRequired,
 };
 
 @CSSModules(styles, { allowMultiple: true })

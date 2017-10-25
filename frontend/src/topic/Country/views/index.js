@@ -11,21 +11,35 @@ import ListView, { ListItem } from '../../../public/components/ListView';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
+import { RestBuilder } from '../../../public/utils/rest';
 import { PrimaryButton } from '../../../public/components/Button';
+import {
+    tokenSelector,
+} from '../../../common/selectors/auth';
 import {
     countriesSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
+import {
+    setCountriesAction,
+} from '../../../common/action-creators/domainData';
+import {
+    createParamsForUser,
+    urlForCountries,
+} from '../../../common/rest';
+import schema from '../../../common/schema';
 
-    // NOTE: is Required removed by @frozenhelium
+// NOTE: is Required removed by @frozenhelium
 const propTypes = {
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
     }),
     countries: PropTypes.array, // eslint-disable-line
+    setCountries: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -38,9 +52,11 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     countries: countriesSelector(state),
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
+    setCountries: params => dispatch(setCountriesAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
@@ -57,6 +73,25 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList: this.props.countries,
             searchInputValue: '',
         };
+
+        const { token } = this.props;
+        this.countriesRequest = new RestBuilder()
+            .url(urlForCountries)
+            .params(() => {
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'countriesGetResponse');
+                    this.props.setCountries({
+                        countries: response.results,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
     }
 
     componentWillMount() {
@@ -76,6 +111,7 @@ export default class CountryPanel extends React.PureComponent {
                 pageTitles.countryPanel,
             ],
         });
+        this.countriesRequest.start();
     }
 
     getStyleName = (countryId) => {
@@ -91,9 +127,13 @@ export default class CountryPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
+    componentWillUnMount() {
+        this.countriesRequest.stop();
+    }
+
     search = (value) => {
         const caseInsensitiveSubmatch = country => (
-            country.fullName.toLowerCase().includes(value.toLowerCase())
+            country.title.toLowerCase().includes(value.toLowerCase())
         );
         const displayCountryList = this.props.countries.filter(caseInsensitiveSubmatch);
 
@@ -135,14 +175,14 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             this.state.displayCountryList.map(country => (
                                 <ListItem
-                                    key={country.countryId}
-                                    styleName={this.getStyleName(country.countryId)}
+                                    key={country.id}
+                                    styleName={this.getStyleName(country.id)}
                                 >
                                     <Link
                                         styleName="link"
-                                        to={`/countrypanel/${country.countryId}/`}
+                                        to={`/countrypanel/${country.id}/`}
                                     >
-                                        {country.fullName}
+                                        {country.title}
                                     </Link>
                                 </ListItem>
                             ))
@@ -156,12 +196,12 @@ export default class CountryPanel extends React.PureComponent {
                                 <Route
                                     component={() => (
                                         <CountryDetail
-                                            fullName={item.fullName}
-                                            countryId={item.countryId}
+                                            fullName={item.title}
+                                            countryId={item.id}
                                         />
                                     )}
-                                    key={item.countryId}
-                                    path={`/countrypanel/${item.countryId}/`}
+                                    key={item.id}
+                                    path={`/countrypanel/${item.id}/`}
                                 />
                             ))
                         }

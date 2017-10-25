@@ -55,6 +55,7 @@ export const createUrlForLeadsOfProject = params => (
 );
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
+export const urlForCountries = `${wsEndpoint}/regions/`;
 
 export const createUrlForLeadFilterOptions = projectId => `${wsEndpoint}/lead-filter-options/?project=${projectId}`;
 
