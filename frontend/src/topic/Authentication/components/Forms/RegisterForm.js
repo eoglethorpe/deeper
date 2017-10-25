@@ -12,6 +12,7 @@ import Form, {
 } from '../../../../public/utils/Form';
 
 const propTypes = {
+    formError: PropTypes.array, // eslint-disable-line
     formErrors: PropTypes.object.isRequired, // eslint-disable-line
     formValues: PropTypes.object.isRequired, // eslint-disable-line
     onSubmit: PropTypes.func.isRequired,
@@ -19,6 +20,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    formError: [],
     formErrors: {},
     formValues: {},
 };
@@ -30,6 +32,25 @@ export default class RegisterForm extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
+        const changeCallback = (values, { error, errors }) => {
+            this.setState({
+                formValues: { ...this.state.formValues, ...values },
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const failureCallback = ({ error, errors }) => {
+            this.setState({
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const successCallback = (values) => {
+            this.props.onSubmit(values);
+        };
 
         const form = new Form();
         const elements = ['firstname', 'lastname', 'organization', 'email', 'password'];
@@ -52,49 +73,27 @@ export default class RegisterForm extends React.PureComponent {
                 lengthGreaterThanCondition(4),
             ],
         };
-
-        const updateValues = (data) => {
-            this.setState({
-                formValues: { ...this.state.formValues, ...data },
-            });
-        };
-
-        const updateErrors = (data) => {
-            this.setState({
-                formErrors: data,
-            });
-        };
-
-        const okay = (data) => {
-            this.props.onSubmit(data);
-        };
-
         form.setElements(elements);
         form.setValidations(validations);
-
-        // calls with new errors
-        form.setCallbackForFocus(updateErrors);
-        // new state
-        form.setCallbackForChange(updateValues);
-        // calls with success and error
-        form.setCallbackForSuccessAndFailure(okay, updateErrors);
-
+        form.setCallbacks({
+            changeCallback,
+            successCallback,
+            failureCallback,
+        });
         this.form = form;
 
         this.state = {
-            formValues: this.props.formValues,
+            formError: this.props.formError,
             formErrors: this.props.formErrors,
+            formValues: this.props.formValues,
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.formErrors !== nextProps.formErrors) {
-            this.setState({ formErrors: nextProps.formErrors });
-        }
-    }
-
-    onFocus = (overrideName) => {
-        this.form.onFocus(overrideName);
+        this.setState({
+            formErrors: nextProps.formErrors,
+            formError: nextProps.formError,
+        });
     }
 
     onChange = (value) => {
@@ -123,13 +122,24 @@ export default class RegisterForm extends React.PureComponent {
                         </div>
                     )
                 }
+                <div styleName="non-field-errors">
+                    {
+                        (this.state.formError || []).map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                </div>
                 <TextInput
                     label="First name"
                     placeholder="John"
                     ref={this.form.updateRef('firstname')}
                     initialValue={this.state.formValues.firstname}
                     error={this.state.formErrors.firstname}
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -138,7 +148,6 @@ export default class RegisterForm extends React.PureComponent {
                     ref={this.form.updateRef('lastname')}
                     initialValue={this.state.formValues.lastname}
                     error={this.state.formErrors.lastname}
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -147,7 +156,6 @@ export default class RegisterForm extends React.PureComponent {
                     ref={this.form.updateRef('organization')}
                     initialValue={this.state.formValues.organization}
                     error={this.state.formErrors.organization}
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -156,7 +164,6 @@ export default class RegisterForm extends React.PureComponent {
                     ref={this.form.updateRef('email')}
                     initialValue={this.state.formValues.email}
                     error={this.state.formErrors.email}
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -169,7 +176,6 @@ export default class RegisterForm extends React.PureComponent {
                     initialValue={this.state.formValues.password}
                     error={this.state.formErrors.password}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <div styleName="action-buttons">

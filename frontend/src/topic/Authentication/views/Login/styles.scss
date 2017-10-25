@@ -9,22 +9,6 @@
     width: 100%;
     height: 100vh;
 
-    .non-field-errors {
-        flex-basis: 100%;
-        text-align: center;
-
-        .error {
-            padding: $spacing-medium $spacing-large;
-            color: $color-danger;
-
-            &:not(:last-child) {
-                &::after {
-                    content: ', ';
-                }
-            }
-        }
-    }
-
     .login-form-wrapper {
         width: $width-login-form;
     }

@@ -11,15 +11,46 @@ import Form, {
     lengthGreaterThanCondition,
 } from '../../../../public/utils/Form';
 
+const propTypes = {
+    formError: PropTypes.array, // eslint-disable-line
+    formErrors: PropTypes.object.isRequired, // eslint-disable-line
+    formValues: PropTypes.object.isRequired, // eslint-disable-line
+    onSubmit: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
+};
+
+const defaultProps = {
+    formError: [],
+    formErrors: {},
+    formValues: {},
+};
+
 @CSSModules(styles)
 export default class LoginForm extends React.PureComponent {
-    static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
-        pending: PropTypes.bool.isRequired,
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
+
+        const changeCallback = (values, { error, errors }) => {
+            this.setState({
+                formValues: { ...this.state.formValues, ...values },
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const failureCallback = ({ error, errors }) => {
+            this.setState({
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const successCallback = (values) => {
+            this.props.onSubmit(values);
+        };
 
         const form = new Form();
         const elements = ['email', 'password'];
@@ -34,42 +65,40 @@ export default class LoginForm extends React.PureComponent {
             ],
         };
 
-        const updateValues = (data) => {
-            this.setState({
-                formValues: { ...this.state.formValues, ...data },
-            });
-        };
-
-        const updateErrors = (data) => {
-            this.setState({
-                formErrors: data,
-            });
-        };
-
-        const okay = (data) => {
-            this.props.onSubmit(data);
-        };
-
         form.setElements(elements);
         form.setValidations(validations);
-
-        // calls with new errors
-        form.setCallbackForFocus(updateErrors);
-        // new state
-        form.setCallbackForChange(updateValues);
-        // calls with success and error
-        form.setCallbackForSuccessAndFailure(okay, updateErrors);
+        /*
+        // This is an example
+        form.setValidation('email', 'password', (email, password) => {
+            if (email.length < password.length) {
+                return {
+                    ok: false,
+                    message: ['Email must be longer than password'],
+                };
+            }
+            return { ok: true };
+        });
+        */
+        form.setCallbacks({
+            changeCallback,
+            successCallback,
+            failureCallback,
+        });
 
         this.form = form;
 
         this.state = {
-            formErrors: { },
-            formValues: { },
+            formError: this.props.formError,
+            formErrors: this.props.formErrors,
+            formValues: this.props.formValues,
         };
     }
 
-    onFocus = (overrideName) => {
-        this.form.onFocus(overrideName);
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            formErrors: nextProps.formErrors,
+            formError: nextProps.formError,
+        });
     }
 
     onChange = (value) => {
@@ -98,6 +127,18 @@ export default class LoginForm extends React.PureComponent {
                         </div>
                     )
                 }
+                <div styleName="non-field-errors">
+                    {
+                        (this.state.formError || []).map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                </div>
                 <TextInput
                     label="Email"
                     placeholder="john.doe@mail.com"
@@ -106,7 +147,6 @@ export default class LoginForm extends React.PureComponent {
                     initialValue={this.state.formValues.email}
                     error={this.state.formErrors.email}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -118,7 +158,6 @@ export default class LoginForm extends React.PureComponent {
                     initialValue={this.state.formValues.password}
                     error={this.state.formErrors.password}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <div styleName="action-buttons">

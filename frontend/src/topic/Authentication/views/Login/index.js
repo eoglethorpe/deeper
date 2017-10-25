@@ -180,26 +180,16 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        const { nonFieldErrors, pending } = this.state;
+        const { pending } = this.state;
         return (
             <div styleName="login">
                 <Helmet>
                     <title>{ pageTitles.login }</title>
                 </Helmet>
-                <div styleName="non-field-errors">
-                    {
-                        (nonFieldErrors || []).map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                </div>
                 <div styleName="login-form-wrapper">
                     <LoginForm
+                        formErrors={this.state.formErrors}
+                        formError={this.state.nonFieldErrors}
                         onSubmit={this.onSubmit}
                         pending={pending}
                     />

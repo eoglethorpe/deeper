@@ -109,7 +109,11 @@ export default class Login extends React.PureComponent {
                 });
                 formErrors.email = formErrors.username;
 
-                this.setState({ pending: false, formErrors, nonFieldErrors });
+                this.setState({
+                    formErrors,
+                    nonFieldErrors,
+                    pending: false,
+                });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -126,27 +130,15 @@ export default class Login extends React.PureComponent {
             );
         }
 
-        const { nonFieldErrors } = this.state;
         return (
             <div styleName="register">
                 <Helmet>
                     <title>{ pageTitles.register }</title>
                 </Helmet>
-                <div styleName="non-field-errors">
-                    {
-                        (nonFieldErrors || []).map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                </div>
                 <div styleName="register-form-wrapper">
                     <RegisterForm
                         formErrors={this.state.formErrors}
+                        formError={this.state.nonFieldErrors}
                         onSubmit={this.onRegister}
                         pending={this.state.pending}
                     />
