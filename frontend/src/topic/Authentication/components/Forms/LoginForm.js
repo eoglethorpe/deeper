@@ -16,13 +16,14 @@ const propTypes = {
     formErrors: PropTypes.object.isRequired, // eslint-disable-line
     formValues: PropTypes.object.isRequired, // eslint-disable-line
     onSubmit: PropTypes.func.isRequired,
-    pending: PropTypes.bool.isRequired,
+    pending: PropTypes.bool,
 };
 
 const defaultProps = {
     formError: [],
     formErrors: {},
     formValues: {},
+    pending: false,
 };
 
 @CSSModules(styles)

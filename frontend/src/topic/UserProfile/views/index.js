@@ -37,7 +37,7 @@ import {
     createUrlForUserPatch,
     createParamsForUserPatch,
 
-    urlForProjects,
+    createUrlForProjectsOfUser,
     createParamsForProjects,
 } from '../../../common/rest';
 
@@ -102,6 +102,11 @@ export default class UserProfile extends React.PureComponent {
                 key: 'rights',
                 label: 'Rights',
                 order: 2,
+                modifier: (row) => {
+                    const { userId } = this.props.match.params;
+                    const membership = row.memberships.find(d => d.member === +userId);
+                    return (membership || { role: '-' }).role;
+                },
             },
             {
                 key: 'createdAt',
@@ -122,9 +127,15 @@ export default class UserProfile extends React.PureComponent {
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
+                key: 'members',
+                label: 'Members',
+                order: 6,
+                modifier: d => (d.memberships || []).length, // NOTE: Show 'Active' for now
+            },
+            {
                 key: 'actions',
                 label: 'Actions',
-                order: 6,
+                order: 7,
             },
         ];
     }
@@ -216,7 +227,7 @@ export default class UserProfile extends React.PureComponent {
 
     createRequestForProjects = (userId) => {
         const projectsRequest = new RestBuilder()
-            .url(urlForProjects)
+            .url(createUrlForProjectsOfUser(userId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
@@ -261,7 +272,10 @@ export default class UserProfile extends React.PureComponent {
             .maxRetryTime(3000)
             .maxRetryAttempts(10)
             .success((response) => {
-                this.setState({ pending: false });
+                this.setState({
+                    pending: false,
+                    editProfile: false,
+                });
                 try {
                     schema.validate(response, 'userPatchResponse');
                     this.props.setUserInformation({
@@ -273,14 +287,28 @@ export default class UserProfile extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                this.setState({ pending: false });
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
+
+                this.setState({ pending: false });
+                const { errors } = response;
+                const formErrors = {};
+                const { nonFieldErrors } = errors;
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formErrors[key] = errors[key].join(' ');
+                    }
+                });
+
+                this.setState({
+                    formErrors,
+                    nonFieldErrors,
+                    pending: false,
+                });
             })
             .fatal((response) => {
-                this.setState({ pending: false });
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
+                this.setState({ pending: false });
             })
             .build();
         return userPatchRequest;
@@ -304,6 +332,10 @@ export default class UserProfile extends React.PureComponent {
     }
 
     handleEditProfileClose = () => {
+        this.setState({ editProfile: false });
+    }
+
+    handleEditProfileCancel = () => {
         this.setState({ editProfile: false });
     }
 
@@ -332,8 +364,11 @@ export default class UserProfile extends React.PureComponent {
                         <Body>
                             <UserProfileEditForm
                                 onSubmit={this.handleUserProfileEditSubmit}
-                                initialValue={userInformation}
+                                formErrors={this.state.formErrors}
+                                formError={this.state.nonFieldErrors}
+                                formValues={userInformation}
                                 pending={this.state.pending}
+                                onCancel={this.handleEditProfileCancel}
                             />
                         </Body>
                     </Modal>
