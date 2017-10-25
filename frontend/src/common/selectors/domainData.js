@@ -19,6 +19,9 @@ export const adminLevelSelector = ({ domainData }, { countryId }) => (
     domainData.adminLevels[countryId] || emptyList
 );
 
+export const countryDetailSelector = ({ domainData }, { countryId }) => (
+    domainData.countries.find(country => country.id === countryId) || emptyObject
+);
 
 // Selector depending on user id from route (url)
 

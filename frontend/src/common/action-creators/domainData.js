@@ -2,9 +2,10 @@ import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_GROUPS,
-    SET_ACTIVE_PROJECT,
-    SET_LEADS,
     DUMMY_ACTION,
+    SET_ACTIVE_PROJECT,
+    SET_COUNTRIES,
+    SET_LEADS,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -35,6 +36,11 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     projectId,
     leads,
     totalLeadsCount,
+});
+
+export const setCountriesAction = ({ countries }) => ({
+    type: SET_COUNTRIES,
+    countries,
 });
 
 export const dummyAction = () => ({

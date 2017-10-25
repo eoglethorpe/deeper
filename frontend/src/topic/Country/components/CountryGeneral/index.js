@@ -11,6 +11,7 @@ import TextInput from '../../../../public/components/TextInput';
 import styles from './styles.scss';
 import {
     adminLevelSelector,
+    countryDetailSelector,
 } from '../../../../common/selectors/domainData';
 
 const propTypes = {
@@ -25,7 +26,11 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
-    countryId: PropTypes.string.isRequired,
+    countryId: PropTypes.number.isRequired,  // eslint-disable-line
+    countryDetail: PropTypes.shape({
+        code: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 const defaultProps = {
@@ -34,6 +39,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     adminLevelList: adminLevelSelector(state, props),
+    countryDetail: countryDetailSelector(state, props),
     state,
 });
 
@@ -122,9 +128,9 @@ export default class CountryGeneral extends React.PureComponent {
     };
 
     render() {
-        const { countryId } = this.props;
+        const { countryDetail } = this.props;
         const { displayAdminLevelList } = this.state;
-        const iso = countryId;
+        const iso = countryDetail.code;
 
         return (
             <div styleName="country-general">

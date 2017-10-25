@@ -2,9 +2,10 @@ import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_GROUPS,
-    SET_ACTIVE_PROJECT,
-    SET_LEADS,
     DUMMY_ACTION,
+    SET_ACTIVE_PROJECT,
+    SET_COUNTRIES,
+    SET_LEADS,
 } from '../action-types/domainData';
 import {
     activeProjectSelector,
@@ -76,6 +77,15 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 },
             };
 
+            return update(state, settings);
+        }
+        case SET_COUNTRIES: {
+            const settings = {
+                countries: { $autoArray: {
+                    $set: action.countries,
+                } },
+            };
+            console.log(settings);
             return update(state, settings);
         }
         case SET_ACTIVE_PROJECT: {

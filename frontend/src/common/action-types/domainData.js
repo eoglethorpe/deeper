@@ -9,3 +9,5 @@ export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
 
 
 export const SET_LEADS = 'domain-data/SET_LEADS';
+
+export const SET_COUNTRIES = 'domain-data/SET_COUNTRIES';

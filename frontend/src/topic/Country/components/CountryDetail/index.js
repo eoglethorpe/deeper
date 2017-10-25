@@ -12,12 +12,12 @@ import styles from './styles.scss';
 import { DangerButton, SuccessButton } from '../../../../public/components/Button';
 
 const propTypes = {
-    countryId: PropTypes.string,
+    countryId: PropTypes.number,
     fullName: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    countryId: '',
+    countryId: 0,
 };
 
 @CSSModules(styles, { allowMultiple: true })

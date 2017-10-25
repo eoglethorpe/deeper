@@ -49,6 +49,7 @@ export const createUrlForLeadsOfProject = params => (
 );
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
+export const urlForCountries = `${wsEndpoint}/regions/`;
 
 // PROJECTS RELATED
 
