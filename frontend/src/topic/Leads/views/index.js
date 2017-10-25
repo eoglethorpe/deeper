@@ -193,8 +193,31 @@ export default class Leads extends React.PureComponent {
         this.leadRequest.stop();
     }
 
-    createRequestForProjectLeads = (activeProject) => {
+    getFiltersForRequest = () => {
         const { filters } = this;
+        const requestFilters = {};
+
+        const filterKeys = Object.keys(filters);
+
+        filterKeys.forEach((key) => {
+            const filter = filters[key];
+
+            switch (key) {
+                case 'created_at':
+                    requestFilters.created_on__lte = (new Date('2015 November')).getTime();
+                    requestFilters.created_on__gte = (new Date('2015 December')).getTime();
+                    break;
+                default:
+                    requestFilters[key] = filter;
+                    break;
+            }
+        });
+
+        return requestFilters;
+    }
+
+    createRequestForProjectLeads = (activeProject) => {
+        const filters = this.getFiltersForRequest();
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             ...filters,

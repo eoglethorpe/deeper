@@ -26,9 +26,9 @@ export default class FilterLeadsForm extends React.PureComponent {
 
         const form = new Form();
         const elements = [
-            'assignedTo',
-            'createdOn',
-            'publishedOn',
+            'assigned_to',
+            'created_at',
+            'published_on',
             'confidentiality',
             'status',
         ];
@@ -96,19 +96,19 @@ export default class FilterLeadsForm extends React.PureComponent {
                 className={this.props.className}
             >
                 <SelectInput
-                    ref={this.form.updateRef('assignedTo')}
+                    ref={this.form.updateRef('assigned_to')}
                     options={this.options}
                     placeholder="Assigned to"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('createdOn')}
+                    ref={this.form.updateRef('created_at')}
                     options={this.options}
                     placeholder="Created on"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('publishedOn')}
+                    ref={this.form.updateRef('published_on')}
                     options={this.options}
                     placeholder="Published on"
                     styleName="filter"
