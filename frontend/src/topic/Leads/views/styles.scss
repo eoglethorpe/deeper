@@ -9,9 +9,10 @@
 
     .header {
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        padding: $spacing-medium 0;
+        // padding: $spacing-medium 0;
 
         h1 {
             font-size: $font-size-large;
@@ -24,9 +25,8 @@
     }
 
     .filters {
-        border-bottom: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground;
-        padding: $spacing-large;
+        flex-shrink: 0;
+        padding: $spacing-large 0;
     }
 
     .table-container {

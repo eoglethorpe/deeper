@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
+import FilterLeadsForm from '../components/FilterLeadsForm';
 import FormattedDate from '../../../public/components/FormattedDate';
 import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
@@ -144,6 +145,8 @@ export default class Leads extends React.PureComponent {
             },
         ];
 
+        this.filters = [];
+
         this.state = {
             editRow: {},
             showEditLeadModal: false,
@@ -191,13 +194,19 @@ export default class Leads extends React.PureComponent {
     }
 
     createRequestForProjectLeads = (activeProject) => {
-        const urlForProjectLeads = createUrlForLeadsOfProject({ project: activeProject });
+        const { filters } = this;
+        const urlForProjectLeads = createUrlForLeadsOfProject({
+            project: activeProject,
+            ...filters,
+        });
         const leadRequest = new RestBuilder()
             .url(urlForProjectLeads)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForUser({ access });
+                return createParamsForUser({
+                    access,
+                });
             })
             .success((response) => {
                 try {
@@ -245,6 +254,15 @@ export default class Leads extends React.PureComponent {
         browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
 
+    handleApplyFilters = (filters) => {
+        const { activeProject } = this.props;
+
+        this.filters = filters;
+
+        this.leadRequest = this.createRequestForProjectLeads(activeProject);
+        this.leadRequest.start();
+    }
+
 
     render() {
         console.log('Rendering Leads');
@@ -271,9 +289,10 @@ export default class Leads extends React.PureComponent {
                     </PrimaryButton>
                 </header>
 
-                <div styleName="filters">
-                    <p>Filters</p>
-                </div>
+                <FilterLeadsForm
+                    styleName="filters"
+                    onSubmit={this.handleApplyFilters}
+                />
 
                 <div styleName="table-container">
                     <RawTable
