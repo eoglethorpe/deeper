@@ -22,6 +22,8 @@ const pageTitles = {
 
     weeklySnapshot: 'Weekly Snapshot',
 
+    apiDocs: 'Api Documentation',
+
     fourHundredFour: '404',
 };
 

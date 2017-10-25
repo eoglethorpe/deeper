@@ -2,7 +2,7 @@
 
 > Author: *Bibek Dahal*
 
-A thorough api documentation can be browsed at */api/v1/docs/*.
+A thorough api documentation can be browsed at */api-docs/*.
 
 ## Authentication
 

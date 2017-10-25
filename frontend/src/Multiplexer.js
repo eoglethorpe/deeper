@@ -73,6 +73,11 @@ const FourHundredFour = () => (
 const AddLead = () => (
     <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
 );
+
+const ApiDocs = () => (
+    <Bundle load={() => import('./topic/ApiDocs/views')} />
+);
+
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
@@ -164,6 +169,12 @@ export default class Multiplexer extends React.PureComponent {
             name: pageTitles.weeklySnapshot,
             component: WeeklySnapshot,
             private: true,
+        },
+        {
+            path: '/api-docs/',
+            name: pageTitles.apiDocs,
+            component: ApiDocs,
+            private: false,
         },
 
         {
