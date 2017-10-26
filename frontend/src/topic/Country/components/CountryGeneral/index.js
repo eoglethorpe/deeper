@@ -26,7 +26,6 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
-    countryId: PropTypes.number.isRequired,  // eslint-disable-line
     countryDetail: PropTypes.shape({
         code: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
@@ -130,24 +129,23 @@ export default class CountryGeneral extends React.PureComponent {
     render() {
         const { countryDetail } = this.props;
         const { displayAdminLevelList } = this.state;
-        const iso = countryDetail.code;
 
         return (
             <div styleName="country-general">
                 <div styleName="form-map-container">
                     <form styleName="details-form">
                         {
-                            iso &&
+                            countryDetail.code &&
                             <TextInput
                                 disabled
-                                initialValue={iso}
+                                initialValue={countryDetail.code}
                                 label="Country code"
                                 placeholder="NPL"
                                 styleName="text-input"
                             />
                         }
                         {
-                            !iso &&
+                            !countryDetail.code &&
                             <TextInput
                                 label="Country code"
                                 placeholder="NPL"
@@ -155,6 +153,7 @@ export default class CountryGeneral extends React.PureComponent {
                             />
                         }
                         <TextInput
+                            initialValue={countryDetail.title}
                             label="Name"
                             placeholder="Nepal"
                             styleName="text-input"
