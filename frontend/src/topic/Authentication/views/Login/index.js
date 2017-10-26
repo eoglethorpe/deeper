@@ -83,7 +83,7 @@ export default class Login extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: undefined,
+            formErrors: [],
             formFieldErrors: {},
             formValues: {},
             pending: false,
@@ -255,7 +255,7 @@ export default class Login extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
@@ -301,7 +301,7 @@ export default class Login extends React.PureComponent {
                     <TextInput
                         disabled={pending}
                         error={formFieldErrors.email}
-                        formName="email"
+                        formname="email"
                         initialValue={formValues.email}
                         label="Email"
                         placeholder="john.doe@mail.com"
@@ -309,7 +309,7 @@ export default class Login extends React.PureComponent {
                     <TextInput
                         disabled={pending}
                         error={formFieldErrors.password}
-                        formName="password"
+                        formname="password"
                         initialValue={formValues.password}
                         label="Password"
                         placeholder="**********"
