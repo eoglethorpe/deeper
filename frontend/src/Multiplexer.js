@@ -70,8 +70,11 @@ const CountryPanel = () => (
 const FourHundredFour = () => (
     <Bundle load={() => import('./topic/FourHundredFour/views')} />
 );
+
 const AddLead = () => (
-    <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/new`} >
+        <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
+    </ProjectRouteSynchronizer>
 );
 
 const ApiDocs = () => (

@@ -242,7 +242,7 @@ export default class Leads extends React.PureComponent {
     }
 
     handleAddLeadClick = () => {
-        browserHistory.push('/:projectId/leads/new/');
+        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
 
 
