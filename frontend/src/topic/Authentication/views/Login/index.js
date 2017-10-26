@@ -3,28 +3,39 @@
  */
 
 import CSSModules from 'react-css-modules';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import Helmet from 'react-helmet';
+import BaseForm from '../../components/Forms/BaseForm';
+import FileInput from '../../../../public/components/FileInput';
+import FileUpload from '../../../../public/components/FileUpload';
+import TextInput from '../../../../public/components/TextInput';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
-import { LoginForm } from '../../components/Forms';
-import {
-    loginAction,
-    authenticateAction,
-} from '../../../../common/action-creators/auth';
 import { pageTitles } from '../../../../common/utils/labels';
-import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
+import { PrimaryButton } from '../../../../public/components/Button';
+import {
+    createValidation,
+    emailCondition,
+    lengthGreaterThanCondition,
+    requiredCondition,
+} from '../../../../public/utils/Form';
+
+import {
+    RestBuilder,
+    RestRequest,
+} from '../../../../public/utils/rest';
 import {
     createParamsForTokenCreate,
-    createParamsForTokenCreateHid,
     urlForTokenCreate,
+    createParamsForTokenCreateHid,
     urlForTokenCreateHid,
 } from '../../../../common/rest';
+
 import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
@@ -34,6 +45,11 @@ import {
 import {
     currentUserProjectsSelector,
 } from '../../../../common/selectors/domainData';
+import {
+    loginAction,
+    authenticateAction,
+} from '../../../../common/action-creators/auth';
+
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
@@ -66,7 +82,38 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = { pending: false };
+        this.state = {
+            formError: undefined,
+            formErrors: {},
+            formValues: {},
+            pending: false,
+            stale: false,
+
+            uploadedFiles: [],
+        };
+
+        // Data for form elements
+        this.elements = ['email', 'password'];
+        this.validations = {
+            email: [
+                requiredCondition,
+                emailCondition,
+            ],
+            password: [
+                requiredCondition,
+                lengthGreaterThanCondition(4),
+            ],
+        };
+        // TODO: remove this validation later, just for example
+        this.validation = createValidation('email', 'password', (email, password) => {
+            if (password.length > email.length) {
+                return {
+                    ok: false,
+                    message: ['Email must be longer than password'],
+                };
+            }
+            return { ok: true };
+        });
     }
 
     componentWillMount() {
@@ -81,19 +128,17 @@ export default class Login extends React.PureComponent {
         this.checkParamsFromHid();
     }
 
+    // HID
+
     onHidLoginClick = () => {
         // Just set it to pending
         // The anchor will redirect user to next page
         this.setState({ pending: true });
     }
 
-    onSubmit = ({ email, password }) => {
-        const url = urlForTokenCreate;
-        const params = createParamsForTokenCreate({ username: email, password });
-        this.login({
-            url,
-            params,
-        });
+    onUpload = (files) => {
+        const { uploadedFiles } = this.state;
+        this.setState({ uploadedFiles: [...uploadedFiles, ...files] });
     }
 
     checkParamsFromHid = () => {
@@ -104,17 +149,40 @@ export default class Login extends React.PureComponent {
         // Login User with HID access_token
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);
-            this.login({
-                url: urlForTokenCreateHid,
-                params,
-            });
+            this.login({ url: urlForTokenCreateHid, params });
         } else {
             console.warn('No access_token found');
         }
     }
 
+    // FORM RELATED
+
+    changeCallback = (values, { error, errors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formErrors: { ...this.state.formErrors, ...errors },
+            formError: error,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ error, errors }) => {
+        this.setState({
+            formErrors: { ...this.state.formErrors, ...errors },
+            formError: error,
+        });
+    };
+
+    successCallback = ({ email, password }) => {
+        const url = urlForTokenCreate;
+        const params = createParamsForTokenCreate({ username: email, password });
+        this.login({ url, params });
+    };
+
+    // LOGIN ACTION
+
     login = ({ url, params }) => {
-        this.setState({ pending: true });
+        this.setState({ pending: true, stale: false });
 
         // Stop any retry action
         if (this.userLoginRequest) {
@@ -124,6 +192,8 @@ export default class Login extends React.PureComponent {
 
         this.userLoginRequest.start();
     };
+
+    // LOGIN REST API
 
     createRequestLogin = (url, params) => {
         const userLoginRequest = new RestBuilder()
@@ -167,7 +237,7 @@ export default class Login extends React.PureComponent {
 
                 this.setState({
                     formErrors,
-                    nonFieldErrors,
+                    formError: nonFieldErrors,
                     pending: false,
                 });
             })
@@ -180,38 +250,118 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        const { pending } = this.state;
+        const {
+            formError = [],
+            formErrors,
+            formValues,
+            pending,
+            stale,
+        } = this.state;
         return (
             <div styleName="login">
                 <Helmet>
                     <title>{ pageTitles.login }</title>
                 </Helmet>
                 <div styleName="login-form-wrapper">
-                    <LoginForm
-                        formErrors={this.state.formErrors}
-                        formError={this.state.nonFieldErrors}
-                        onSubmit={this.onSubmit}
-                        pending={pending}
-                    />
+                    <BaseForm
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.successCallback}
+                        validation={this.validation}
+                        validations={this.validations}
+                    >
+                        {
+                            pending &&
+                            <div styleName="pending-overlay">
+                                <i className="ion-load-c" styleName="loading-icon" />
+                            </div>
+                        }
+                        <TextInput
+                            disabled={pending}
+                            error={formErrors.email}
+                            formName="email"
+                            initialValue={formValues.email}
+                            label="Email"
+                            placeholder="john.doe@mail.com"
+                        />
+                        <TextInput
+                            disabled={pending}
+                            error={formErrors.password}
+                            formName="password"
+                            initialValue={formValues.password}
+                            label="Password"
+                            placeholder="**********"
+                            required
+                            type="password"
+                        />
+                        <div styleName="action-buttons">
+                            <PrimaryButton
+                                disabled={pending}
+                            >
+                                { stale ? 'Login*' : 'Login' }
+                            </PrimaryButton>
+                        </div>
+                        <div styleName="non-field-errors">
+                            {
+                                formError.map(err => (
+                                    <div
+                                        key={err}
+                                        styleName="error"
+                                    >
+                                        {err}
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </BaseForm>
                 </div>
                 <div styleName="register-link-container">
                     <p>
-                        Don&apos;t have an account yet?
+                        Do not have an account yet?
                     </p>
                     <Link
-                        to="/register/"
                         styleName="register-link"
+                        to="/register/"
                     >
                         Register
                     </Link>
                 </div>
-                <a
-                    onClick={this.onHidLoginClick}
-                    href={hidUrl}
-                    styleName="register-link"
-                >
-                    Login With HID
-                </a>
+                <div styleName="register-link-container">
+                    <a
+                        href={hidUrl}
+                        onClick={this.onHidLoginClick}
+                        styleName="register-link"
+                    >
+                        Login With HID
+                    </a>
+                </div>
+
+                <div>
+                    <FileInput
+                        showPreview={false}
+                        showStatus={false}
+                        onChange={this.onUpload}
+                    >
+                        Open File
+                    </FileInput>
+                    <ul>
+                        {
+                            this.state.uploadedFiles.map(file => (
+                                <li
+                                    key={file.name}
+                                >
+                                    <FileUpload
+                                        key={file.name}
+                                        file={file}
+                                        autoStart={false}
+                                    />
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+
             </div>
         );
     }
