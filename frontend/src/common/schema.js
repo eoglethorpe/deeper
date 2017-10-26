@@ -34,10 +34,10 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 {
-    const name = 'membership';
+    const name = 'projectMembership';
     const schema = {
         doc: {
-            name: 'Membership',
+            name: 'Project Membership',
             description: 'Defines all mapping between Project and User',
         },
         fields: {
@@ -52,6 +52,24 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 {
+    const name = 'userGroupMembership';
+    const schema = {
+        doc: {
+            name: 'User Group Membership',
+            description: 'Defines all mapping between User Group and User',
+        },
+        fields: {
+            member: { type: 'uint', required: true },
+            group: { type: 'uint', required: true },
+            id: { type: 'uint', required: true },
+            memberName: { type: 'string' },
+            role: { type: 'string' }, // enum: normal, admin
+            joinedAt: { type: 'string' }, // date
+        },
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'project';
     const schema = {
         doc: {
@@ -61,10 +79,27 @@ attachValidator(dict);
         extends: 'dbentity',
         fields: {
             data: { type: 'object' },
-            memberships: { type: 'array.membership', required: true },
+            memberships: { type: 'array.projectMembership' },
             regions: { type: 'array.uint' },
             title: { type: 'string', required: true },
             userGroups: { type: 'array.uint' },
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'userGroup';
+    const schema = {
+        doc: {
+            name: 'User Group',
+            description: 'One of the main entities',
+        },
+        fields: {
+            displayPicture: { type: 'string', required: false },
+            globalCrisisMonitoring: { type: 'boolean', required: true },
+            id: { type: 'uint', required: true },
+            title: { type: 'string', required: true },
+            memberships: { type: 'array.userGroupMembership' },
         },
     };
     dict.put(name, schema);
@@ -199,7 +234,22 @@ attachValidator(dict);
     };
     dict.put(name, schema);
 }
-
+{
+    const name = 'userGroupsGetResponse';
+    const schema = {
+        doc: {
+            name: 'User Groups Get Response',
+            description: 'Response for GET /user-groups/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.userGroup', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
 
 // Lead request related
 

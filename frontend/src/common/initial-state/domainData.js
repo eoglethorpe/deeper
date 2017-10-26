@@ -77,7 +77,7 @@ const initialDomainDataState = {
     },
 
     users: {
-        14: {
+        1: {
             information: {
                 id: 14,
                 username: 'hari@hari.com',
@@ -90,9 +90,24 @@ const initialDomainDataState = {
             },
             projects: [
             ],
+            userGroups: [
+                {
+                    id: 1,
+                    title: 'Togglecorp',
+                    rights: 'Admin',
+                    createdAt: '2017-10-26T04:47:12.381611Z',
+                    joinedAt: '2017-10-26T04:47:12.381611Z',
+                },
+                {
+                    id: 2,
+                    title: 'ACAPS',
+                    rights: 'Admin',
+                    createdAt: '2016-12-26T04:47:12.381611Z',
+                    joinedAt: '2017-10-26T04:47:12.381611Z',
+                },
+            ],
         },
     },
-
     countries: [
         { fullName: 'Afghanistan', iso: 'AFG', countryId: 'AFG' },
         { fullName: 'Aland Islands', iso: 'ALA', countryId: 'ALA' },

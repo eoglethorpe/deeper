@@ -35,10 +35,14 @@ export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/`;
+export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 export const urlForApiDocs = `${wsEndpoint}/docs/`;
 
 export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`
+);
+export const createUrlForUserGroupsOfUser = userId => (
+    `${wsEndpoint}/user-groups/?${p({ user: userId })}`
 );
 export const createUrlForLeadsOfProject = params => (
     `${wsEndpoint}/leads/?${p(params)}`
@@ -49,6 +53,13 @@ export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
 // PROJECTS RELATED
 
 export const createParamsForProjects = ({ access }) => ({
+    method: GET,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});
+export const createParamsForUserGroups = ({ access }) => ({
     method: GET,
     headers: {
         Authorization: `Bearer ${access}`,
@@ -134,4 +145,3 @@ export const createParamsForTokenCreateHid = ({ access_token, expires_in, state,
         tokenType: token_type,
     }),
 });
-

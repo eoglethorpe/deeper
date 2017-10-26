@@ -29,10 +29,12 @@ import {
 import {
     userInformationSelector,
     userProjectsSelector,
+    userGroupsSelector,
 } from '../../../common/selectors/domainData';
 import {
     setUserInformationAction,
     setUserProjectsAction,
+    setUserGroupsAction,
 } from '../../../common/action-creators/domainData';
 import {
     setNavbarStateAction,
@@ -43,6 +45,9 @@ import {
 
     createUrlForUserPatch,
     createParamsForUserPatch,
+
+    createUrlForUserGroupsOfUser,
+    createParamsForUserGroups,
 
     createUrlForProjectsOfUser,
     createParamsForProjects,
@@ -59,10 +64,12 @@ const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     setUserProjects: PropTypes.func.isRequired,
+    setUserGroups: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.array, // eslint-disable-line
+    userGroups: PropTypes.array, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -70,6 +77,8 @@ const defaultProps = {
         params: {},
     },
     user: { },
+    userProjects: [],
+    userGroups: [],
 };
 
 
@@ -77,12 +86,14 @@ const mapStateToProps = (state, props) => ({
     token: tokenSelector(state),
     userInformation: userInformationSelector(state, props), // uses props.match
     userProjects: userProjectsSelector(state, props),
+    userGroups: userGroupsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
     setUserProjects: params => dispatch(setUserProjectsAction(params)),
+    setUserGroups: params => dispatch(setUserGroupsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -160,6 +171,30 @@ export default class UserProfile extends React.PureComponent {
                 order: 7,
             },
         ];
+        this.userGroupsHeaders = [
+            {
+                key: 'title',
+                label: 'Name',
+                order: 1,
+            },
+            {
+                key: 'rights',
+                label: 'Rights',
+                order: 2,
+            },
+            {
+                key: 'createdAt',
+                label: 'Created at',
+                order: 3,
+                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+            },
+            {
+                key: 'joinedAt',
+                label: 'Joined At',
+                order: 4,
+                modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
+            },
+        ];
     }
 
     componentWillMount() {
@@ -187,18 +222,24 @@ export default class UserProfile extends React.PureComponent {
 
         this.projectsRequest = this.createRequestForProjects(userId);
         this.projectsRequest.start();
+        this.userGroupsRequest = this.createRequestForUserGroups(userId);
+        this.userGroupsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
         const { userId } = nextProps.match.params;
         if (this.props.match.params.userId !== userId) {
             this.userRequest.stop();
-            this.projectsRequest.stop();
-
             this.userRequest = this.createRequestForUser(userId);
             this.userRequest.start();
+
+            this.projectsRequest.stop();
             this.projectsRequest = this.createRequestForProjects(userId);
             this.projectsRequest.start();
+
+            this.userGroupsRequest.stop();
+            this.userGroupsRequest = this.createRequestForUserGroups(userId);
+            this.userGroupsRequest.start();
         }
     }
 
@@ -281,6 +322,39 @@ export default class UserProfile extends React.PureComponent {
         return projectsRequest;
     }
 
+    createRequestForUserGroups = (userId) => {
+        const projectsRequest = new RestBuilder()
+            .url(createUrlForUserGroupsOfUser(userId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUserGroups({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'userGroupsGetResponse');
+                    this.props.setUserGroups({
+                        userId,
+                        userGroups: response.results,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                // TODO: logout and send to login screen
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                // TODO: user couldn't be verfied screen
+            })
+            .build();
+        return projectsRequest;
+    }
     createRequestForUserPatch = (userId, { firstName, lastName, organization }) => {
         const urlForUser = createUrlForUserPatch(userId);
         const userPatchRequest = new RestBuilder()
@@ -532,6 +606,11 @@ export default class UserProfile extends React.PureComponent {
                     <h2>
                         Groups
                     </h2>
+                    <Table
+                        data={this.props.userGroups}
+                        headers={this.userGroupsHeaders}
+                        keyExtractor={rowData => rowData.id}
+                    />
                 </div>
             </div>
         );
