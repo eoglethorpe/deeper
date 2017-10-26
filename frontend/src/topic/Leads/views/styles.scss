@@ -30,7 +30,9 @@
     }
 
     .table-container {
+        position: relative;
         flex-grow: 1;
+        background-color: $color-foreground;
         overflow-y: auto;
 
         .leads-table {
@@ -38,7 +40,6 @@
                 position: sticky;
                 top: 0;
                 border-bottom: $width-separator-medium solid $color-separator;
-                background-color: $color-foreground;
                 padding: $spacing-medium $spacing-medium-alt;
                 text-align: left;
                 user-select: none;
@@ -55,6 +56,39 @@
             :global .title {
                 width: 20%;
             }
+        }
+
+        .loading-animation {
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            align-items: center;
+            justify-content: center;
+            background-color: $color-background-overlay;
+            width: 100%;
+            height: 100%;
+
+            .icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: spin 1s linear infinite;
+                width: $width-loading-icon;
+                height: $height-loading-icon;
+                font-size: $font-size-loading-icon;
+            }
+        }
+    }
+
+    .footer {
+        flex-shrink: 0;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .pager {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
     }
 }

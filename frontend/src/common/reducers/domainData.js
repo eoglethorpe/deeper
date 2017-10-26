@@ -56,7 +56,13 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                         $set: action.leads,
                     } },
                 },
+                totalLeadsCount: {
+                    [action.projectId]: { $auto: {
+                        $set: action.totalLeadsCount,
+                    } },
+                },
             };
+
             return update(state, settings);
         }
         case SET_ACTIVE_PROJECT: {

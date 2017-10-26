@@ -55,6 +55,8 @@ const initialDomainDataState = {
             },
         ],
     },
+    totalLeadsCount: {
+    },
 
     // index is project id
     entries: {

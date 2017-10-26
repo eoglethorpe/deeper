@@ -9,6 +9,9 @@ export const userIdFromRoute = (state, { match }) => match.params.userId;
 
 export const activeProjectSelector = ({ domainData }) => (domainData.activeProject);
 export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList);
+export const totalLeadsCountSelector = ({ domainData }) => (
+    domainData.totalLeadsCount || emptyList
+);
 export const countriesSelector = ({ domainData }) => (domainData.countries || emptyList);
 export const usersSelector = ({ domainData }) => (domainData.users || emptyObject);
 
@@ -67,4 +70,10 @@ export const leadsForProjectSelector = createSelector(
     activeProjectSelector,
     leadsSelector,
     (activeProject, leads) => (leads[activeProject] || emptyList),
+);
+
+export const totalLeadsCountForProjectSelector = createSelector(
+    activeProjectSelector,
+    totalLeadsCountSelector,
+    (activeProject, totalLeadsCount) => (totalLeadsCount[activeProject] || 0),
 );

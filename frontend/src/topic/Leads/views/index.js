@@ -20,6 +20,7 @@ import {
     TransparentAccentButton,
     TransparentButton,
 } from '../../../public/components/Button';
+import Pager from '../../../public/components/Pager';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -31,6 +32,7 @@ import {
     activeProjectSelector,
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
+    totalLeadsCountForProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
@@ -48,16 +50,19 @@ const propTypes = {
     setLeads: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
+    totalLeadsCount: PropTypes.number,
 };
 
 const defaultProps = {
     leads: [],
+    totalLeadsCount: 0,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     currentUserActiveProject: currentUserActiveProjectSelector(state),
     leads: leadsForProjectSelector(state),
+    totalLeadsCount: totalLeadsCountForProjectSelector(state),
     token: tokenSelector(state),
 });
 
@@ -65,6 +70,8 @@ const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
+
+const MAX_LEADS_PER_REQUEST = 10;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -75,13 +82,14 @@ export default class Leads extends React.PureComponent {
     constructor(props) {
         super(props);
 
-
         this.filters = [];
 
         this.state = {
             editRow: {},
             showEditLeadModal: false,
             activeSort: '-created_at',
+            activePage: 1,
+            loadingLeads: false,
             headers: [
                 {
                     key: 'created_at',
@@ -226,15 +234,28 @@ export default class Leads extends React.PureComponent {
 
         this.leadRequest = this.createRequestForProjectLeads(activeProject);
         this.leadRequest.start();
+        this.setState({
+            loadingLeads: true,
+        });
     }
 
     createRequestForProjectLeads = (activeProject) => {
+        const {
+            activePage,
+        } = this.state;
         const filters = this.getFiltersForRequest();
+
+        const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
+        const leadRequestLimit = MAX_LEADS_PER_REQUEST;
+
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             ordering: this.state.activeSort,
             ...filters,
+            offset: leadRequestOffset,
+            limit: leadRequestLimit,
         });
+
         const leadRequest = new RestBuilder()
             .url(urlForProjectLeads)
             .params(() => {
@@ -250,10 +271,14 @@ export default class Leads extends React.PureComponent {
                     this.props.setLeads({
                         projectId: activeProject,
                         leads: response.results,
+                        totalLeadsCount: response.count,
                     });
                 } catch (er) {
                     console.error(er);
                 }
+                this.setState({
+                    loadingLeads: false,
+                });
             })
             .build();
         return leadRequest;
@@ -313,7 +338,11 @@ export default class Leads extends React.PureComponent {
         const { activeProject } = this.props;
 
         this.filters = filters;
-        this.requestProjectLeads(activeProject);
+        this.setState({
+            activePage: 1,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
     }
 
     handleTableHeaderClick = (key) => {
@@ -336,6 +365,16 @@ export default class Leads extends React.PureComponent {
         this.setState({
             headers,
             activeSort,
+            activePage: 1,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
+    }
+
+    handlePageClick = (page) => {
+        const { activeProject } = this.props;
+        this.setState({
+            activePage: page,
         }, () => {
             this.requestProjectLeads(activeProject);
         });
@@ -348,8 +387,17 @@ export default class Leads extends React.PureComponent {
     render() {
         console.log('Rendering Leads');
 
-        const { currentUserActiveProject } = this.props;
+        const {
+            currentUserActiveProject,
+            totalLeadsCount,
+        } = this.props;
+
+        const {
+            activePage,
+        } = this.state;
+
         const projectName = currentUserActiveProject.title;
+
         return (
             <div styleName="leads">
                 <Helmet>
@@ -385,7 +433,25 @@ export default class Leads extends React.PureComponent {
                         keyExtractor={this.leadKeyExtractor}
                         styleName="leads-table"
                     />
+                    {
+                        this.state.loadingLeads && (
+                            <div styleName="loading-animation">
+                                <span className="ion-load-c" styleName="icon" />
+                            </div>
+                        )
+                    }
                 </div>
+
+                <footer styleName="footer">
+                    <Pager
+                        activePage={activePage}
+                        styleName="pager"
+                        itemsCount={totalLeadsCount}
+                        maxItemsPerPage={MAX_LEADS_PER_REQUEST}
+                        onPageClick={this.handlePageClick}
+                    />
+                </footer>
+
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}

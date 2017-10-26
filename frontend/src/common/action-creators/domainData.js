@@ -24,10 +24,11 @@ export const setActiveProjectAction = ({ activeProject }) => ({
     activeProject,
 });
 
-export const setLeadsAction = ({ projectId, leads }) => ({
+export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     type: SET_LEADS,
     projectId,
     leads,
+    totalLeadsCount,
 });
 
 export const dummyAction = () => ({
