@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import EditLeadForm from '../components/EditLeadForm';
+import FilterLeadsForm from '../components/FilterLeadsForm';
+import LeadColumnHeader from '../components/LeadColumnHeader';
 import FormattedDate from '../../../public/components/FormattedDate';
 import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
@@ -18,6 +20,7 @@ import {
     TransparentAccentButton,
     TransparentButton,
 } from '../../../public/components/Button';
+import Pager from '../../../public/components/Pager';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -29,6 +32,7 @@ import {
     activeProjectSelector,
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
+    totalLeadsCountForProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
@@ -46,16 +50,19 @@ const propTypes = {
     setLeads: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
+    totalLeadsCount: PropTypes.number,
 };
 
 const defaultProps = {
     leads: [],
+    totalLeadsCount: 0,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     currentUserActiveProject: currentUserActiveProjectSelector(state),
     leads: leadsForProjectSelector(state),
+    totalLeadsCount: totalLeadsCountForProjectSelector(state),
     token: tokenSelector(state),
 });
 
@@ -63,6 +70,8 @@ const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
+
+const MAX_LEADS_PER_REQUEST = 10;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -73,80 +82,84 @@ export default class Leads extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.headers = [
-            {
-                key: 'createdAt',
-                label: 'Created at',
-                order: 1,
-                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
-            },
-            {
-                key: 'createdBy',
-                label: 'Created by',
-                order: 2,
-                modifier: row => (
-                    <Link
-                        key={row.createdBy}
-                        to={`/users/${row.createdBy}/`}
-                    >
-                        {row.createdByName}
-                    </Link>
-                ),
-            },
-            {
-                key: 'title',
-                label: 'Title',
-                order: 3,
-            },
-            {
-                key: 'publishedOn',
-                label: 'Published',
-                order: 4,
-                modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
-            },
-            {
-                key: 'confidentiality',
-                label: 'Confidentiality',
-                order: 5,
-            },
-            {
-                key: 'source',
-                label: 'Source',
-                order: 6,
-            },
-            {
-                key: 'noOfEntries',
-                label: 'No. of entries',
-                order: 7,
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                order: 8,
-            },
-            {
-                key: 'actions',
-                label: 'Actions',
-                order: 9,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentButton
-                            tooltip="Edit lead"
-                            onClick={() => this.handleEditLeadClick(row)}
-                        >
-                            <i className="ion-edit" />
-                        </TransparentButton>
-                        <TransparentAccentButton >
-                            <i className="ion-forward" />
-                        </TransparentAccentButton>
-                    </div>
-                ),
-            },
-        ];
+        this.filters = [];
 
         this.state = {
             editRow: {},
             showEditLeadModal: false,
+            activeSort: '-created_at',
+            activePage: 1,
+            loadingLeads: false,
+            headers: [
+                {
+                    key: 'created_at',
+                    label: 'Created at',
+                    order: 1,
+                    modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+                },
+                {
+                    key: 'created_by',
+                    label: 'Created by',
+                    order: 2,
+                    modifier: row => (
+                        <Link
+                            key={row.createdBy}
+                            to={`/users/${row.createdBy}/`}
+                        >
+                            {row.createdByName}
+                        </Link>
+                    ),
+                },
+                {
+                    key: 'title',
+                    label: 'Title',
+                    order: 3,
+                },
+                {
+                    key: 'published_on',
+                    label: 'Published',
+                    order: 4,
+                    modifier: row => <FormattedDate date={row.publishedOn} mode="dd-MM-yyyy" />,
+                },
+                {
+                    key: 'confidentiality',
+                    label: 'Confidentiality',
+                    order: 5,
+                },
+                {
+                    key: 'source',
+                    label: 'Source',
+                    order: 6,
+                },
+                {
+                    key: 'no_of_entries',
+                    label: 'No. of entries',
+                    order: 7,
+                },
+                {
+                    key: 'status',
+                    label: 'Status',
+                    order: 8,
+                },
+                {
+                    key: 'actions',
+                    label: 'Actions',
+                    order: 9,
+                    modifier: row => (
+                        <div className="actions">
+                            <TransparentButton
+                                tooltip="Edit lead"
+                                onClick={() => this.handleEditLeadClick(row)}
+                            >
+                                <i className="ion-edit" />
+                            </TransparentButton>
+                            <TransparentAccentButton >
+                                <i className="ion-forward" />
+                            </TransparentAccentButton>
+                        </div>
+                    ),
+                },
+            ],
         };
     }
 
@@ -172,17 +185,14 @@ export default class Leads extends React.PureComponent {
 
 
         const { activeProject } = this.props;
-        this.leadRequest = this.createRequestForProjectLeads(activeProject);
-        this.leadRequest.start();
+        this.requestProjectLeads(activeProject);
     }
 
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
-        if (this.props.activeProject !== activeProject) {
-            this.leadRequest.stop();
 
-            this.leadRequest = this.createRequestForProjectLeads(activeProject);
-            this.leadRequest.start();
+        if (this.props.activeProject !== activeProject) {
+            this.requestProjectLeads(activeProject);
         }
     }
 
@@ -190,14 +200,70 @@ export default class Leads extends React.PureComponent {
         this.leadRequest.stop();
     }
 
+    getFiltersForRequest = () => {
+        const { filters } = this;
+        const requestFilters = {};
+
+        const filterKeys = Object.keys(filters);
+
+        filterKeys.forEach((key) => {
+            const filter = filters[key];
+
+            switch (key) {
+                case 'created_at':
+                    requestFilters.created_at__gte = '2010-10-12';
+                    requestFilters.created_at__lte = '2019-12-01';
+                    break;
+                case 'published_on':
+                    requestFilters.published_on__gte = '2010-09-01';
+                    requestFilters.published_on__lte = '2019-12-01';
+                    break;
+                default:
+                    requestFilters[key] = filter;
+                    break;
+            }
+        });
+
+        return requestFilters;
+    }
+
+    requestProjectLeads = (activeProject) => {
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
+
+        this.leadRequest = this.createRequestForProjectLeads(activeProject);
+        this.leadRequest.start();
+        this.setState({
+            loadingLeads: true,
+        });
+    }
+
     createRequestForProjectLeads = (activeProject) => {
-        const urlForProjectLeads = createUrlForLeadsOfProject({ project: activeProject });
+        const {
+            activePage,
+        } = this.state;
+        const filters = this.getFiltersForRequest();
+
+        const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
+        const leadRequestLimit = MAX_LEADS_PER_REQUEST;
+
+        const urlForProjectLeads = createUrlForLeadsOfProject({
+            project: activeProject,
+            ordering: this.state.activeSort,
+            ...filters,
+            offset: leadRequestOffset,
+            limit: leadRequestLimit,
+        });
+
         const leadRequest = new RestBuilder()
             .url(urlForProjectLeads)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForUser({ access });
+                return createParamsForUser({
+                    access,
+                });
             })
             .success((response) => {
                 try {
@@ -205,11 +271,14 @@ export default class Leads extends React.PureComponent {
                     this.props.setLeads({
                         projectId: activeProject,
                         leads: response.results,
+                        totalLeadsCount: response.count,
                     });
-                    console.log(response);
                 } catch (er) {
                     console.error(er);
                 }
+                this.setState({
+                    loadingLeads: false,
+                });
             })
             .build();
         return leadRequest;
@@ -232,7 +301,7 @@ export default class Leads extends React.PureComponent {
     leadKeyExtractor = lead => (lead.id.toString())
 
     leadModifier = (lead, columnKey) => {
-        const header = this.headers.find(d => d.key === columnKey);
+        const header = this.state.headers.find(d => d.key === columnKey);
 
         if (header.modifier) {
             return header.modifier(lead);
@@ -241,16 +310,94 @@ export default class Leads extends React.PureComponent {
         return lead[columnKey];
     }
 
+    headerModifier = (headerData) => {
+        const { activeSort } = this.state;
+        let sortOrder;
+
+        if (activeSort === headerData.key) {
+            sortOrder = 'asc';
+        } else if (activeSort === `-${headerData.key}`) {
+            sortOrder = 'dsc';
+        }
+
+        return (
+            <LeadColumnHeader
+                label={headerData.label}
+                sortOrder={sortOrder}
+                sortable={this.isColumnClickable(headerData.key)}
+            />
+        );
+    }
+
     handleAddLeadClick = () => {
         browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
 
 
+    handleApplyFilters = (filters) => {
+        const { activeProject } = this.props;
+
+        this.filters = filters;
+        this.setState({
+            activePage: 1,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
+    }
+
+    handleTableHeaderClick = (key) => {
+        // prevent click on 'actions' column
+        if (!this.isColumnClickable(key)) {
+            return;
+        }
+
+        const { activeProject } = this.props;
+        let { activeSort } = this.state;
+
+        if (activeSort === key) {
+            activeSort = `-${key}`;
+        } else {
+            activeSort = key;
+        }
+
+        // force redraw of headers (so that header modifiers are called)
+        const headers = [...this.state.headers];
+        this.setState({
+            headers,
+            activeSort,
+            activePage: 1,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
+    }
+
+    handlePageClick = (page) => {
+        const { activeProject } = this.props;
+        this.setState({
+            activePage: page,
+        }, () => {
+            this.requestProjectLeads(activeProject);
+        });
+    }
+
+    isColumnClickable = key => (
+        ['actions'].indexOf(key) === -1
+    )
+
     render() {
         console.log('Rendering Leads');
 
-        const { currentUserActiveProject } = this.props;
+        const {
+            currentUserActiveProject,
+            totalLeadsCount,
+        } = this.props;
+
+        const {
+            activePage,
+        } = this.state;
+
         const projectName = currentUserActiveProject.title;
+
         return (
             <div styleName="leads">
                 <Helmet>
@@ -271,19 +418,40 @@ export default class Leads extends React.PureComponent {
                     </PrimaryButton>
                 </header>
 
-                <div styleName="filters">
-                    <p>Filters</p>
-                </div>
+                <FilterLeadsForm
+                    styleName="filters"
+                    onSubmit={this.handleApplyFilters}
+                />
 
                 <div styleName="table-container">
                     <RawTable
                         data={this.props.leads}
                         dataModifier={this.leadModifier}
-                        headers={this.headers}
+                        headerModifier={this.headerModifier}
+                        headers={this.state.headers}
+                        onHeaderClick={this.handleTableHeaderClick}
                         keyExtractor={this.leadKeyExtractor}
                         styleName="leads-table"
                     />
+                    {
+                        this.state.loadingLeads && (
+                            <div styleName="loading-animation">
+                                <span className="ion-load-c" styleName="icon" />
+                            </div>
+                        )
+                    }
                 </div>
+
+                <footer styleName="footer">
+                    <Pager
+                        activePage={activePage}
+                        styleName="pager"
+                        itemsCount={totalLeadsCount}
+                        maxItemsPerPage={MAX_LEADS_PER_REQUEST}
+                        onPageClick={this.handlePageClick}
+                    />
+                </footer>
+
                 <Modal
                     closeOnEscape
                     onClose={this.handleEditLeadModalClose}

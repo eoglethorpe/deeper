@@ -1,0 +1,15 @@
+@import '../../../../stylesheets/base';
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .filter {
+        margin: 0 $spacing-small;
+    }
+
+    .apply-filter-btn {
+        padding: $spacing-small $spacing-medium;
+    }
+}
