@@ -114,6 +114,17 @@ export default class CountryPanel extends React.PureComponent {
         this.countriesRequest.start();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const caseInsensitiveSubmatch = country => (
+            country.title.toLowerCase().includes(this.state.searchInputValue.toLowerCase())
+        );
+        const displayCountryList = nextProps.countries.filter(caseInsensitiveSubmatch);
+
+        this.setState({
+            displayCountryList,
+        });
+    }
+
     getStyleName = (countryId) => {
         const { pathname } = this.props.location;
 
