@@ -17,7 +17,6 @@ import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
 import { pageTitles } from '../../../../common/utils/labels';
 import { PrimaryButton } from '../../../../public/components/Button';
-
 import Form, {
     createValidation,
     emailCondition,
@@ -255,7 +254,7 @@ export default class Login extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
+            formErrors = [],
             formFieldErrors,
             formValues,
             pending,

@@ -1,23 +1,35 @@
+/**
+ * @author frozenhelium <fren.ankit@gmail.com>
+ */
+
 import CSSModules from 'react-css-modules';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import Helmet from 'react-helmet';
+import browserHistory from '../../../../common/browserHistory';
+import TextInput from '../../../../public/components/TextInput';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
-import { RegisterForm } from '../../components/Forms';
 import { pageTitles } from '../../../../common/utils/labels';
+import { PrimaryButton } from '../../../../public/components/Button';
+import Form, {
+    emailCondition,
+    requiredCondition,
+    lengthGreaterThanCondition,
+} from '../../../../public/components/Form';
+
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
+
 import {
     setNavbarStateAction,
 } from '../../../../common/action-creators/navbar';
-
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
@@ -31,7 +43,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(null, mapDispatchToProps)
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -39,8 +51,32 @@ export default class Login extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {},
             pending: false,
-            registrationSuccessful: false,
+            stale: false,
+        };
+
+        this.elements = ['firstname', 'lastname', 'organization', 'email', 'password'];
+        this.validations = {
+            firstname: [
+                requiredCondition,
+            ],
+            lastname: [
+                requiredCondition,
+            ],
+            organization: [
+                requiredCondition,
+            ],
+            email: [
+                requiredCondition,
+                emailCondition,
+            ],
+            password: [
+                requiredCondition,
+                lengthGreaterThanCondition(4),
+            ],
         };
     }
 
@@ -59,8 +95,32 @@ export default class Login extends React.PureComponent {
         }
     }
 
-    onRegister = (data) => {
-        this.setState({ pending: true });
+    // FORM RELATED
+
+    changeCallback = (values, { error, errors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
+            formErrors: error,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ error, errors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
+            formErrors: error,
+        });
+    };
+
+    successCallback = (data) => {
+        this.register(data);
+    };
+
+    // REGISTER ACTION
+
+    register = (data) => {
+        this.setState({ pending: true, stale: false });
 
         // Stop previous retry
         if (this.userCreateRequest) {
@@ -69,6 +129,8 @@ export default class Login extends React.PureComponent {
         this.userCreateRequest = this.createRequestRegister(data);
         this.userCreateRequest.start();
     }
+
+    // REGISTER REST API
 
     createRequestRegister = ({ firstname, lastname, organization, country, email, password }) => {
         const url = urlForUserCreate;
@@ -91,8 +153,9 @@ export default class Login extends React.PureComponent {
                     schema.validate(response, 'userCreateResponse');
                     this.setState({
                         pending: false,
-                        registrationSuccessful: true,
                     });
+                    // go to login
+                    browserHistory.push('/login/');
                 } catch (er) {
                     console.error(er);
                 }
@@ -101,17 +164,17 @@ export default class Login extends React.PureComponent {
                 console.info('FAILURE:', response);
                 const { errors } = response;
                 const { nonFieldErrors } = errors;
-                const formErrors = {};
+                const formFieldErrors = {};
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
-                        formErrors[key] = errors[key].join(' ');
+                        formFieldErrors[key] = errors[key].join(' ');
                     }
                 });
-                formErrors.email = formErrors.username;
+                formFieldErrors.email = formFieldErrors.username;
 
                 this.setState({
-                    formErrors,
-                    nonFieldErrors,
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
                     pending: false,
                 });
             })
@@ -124,25 +187,96 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        if (this.state.registrationSuccessful) {
-            return (
-                <Redirect to="/login" />
-            );
-        }
+        const {
+            formErrors = [],
+            formFieldErrors,
+            formValues,
+            pending,
+            stale,
+        } = this.state;
 
         return (
             <div styleName="register">
                 <Helmet>
                     <title>{ pageTitles.register }</title>
                 </Helmet>
-                <div styleName="register-form-wrapper">
-                    <RegisterForm
-                        formErrors={this.state.formErrors}
-                        formError={this.state.nonFieldErrors}
-                        onSubmit={this.onRegister}
-                        pending={this.state.pending}
+                <Form
+                    styleName="register-form"
+                    changeCallback={this.changeCallback}
+                    elements={this.elements}
+                    failureCallback={this.failureCallback}
+                    successCallback={this.successCallback}
+                    validation={this.validation}
+                    validations={this.validations}
+                >
+                    {
+                        pending &&
+                        <div styleName="pending-overlay">
+                            <i className="ion-load-c" styleName="loading-icon" />
+                        </div>
+                    }
+                    <div styleName="non-field-errors">
+                        {
+                            formErrors.map(err => (
+                                <div
+                                    key={err}
+                                    styleName="error"
+                                >
+                                    {err}
+                                </div>
+                            ))
+                        }
+                        { formErrors.length <= 0 &&
+                            <div styleName="error empty">
+                                -
+                            </div>
+                        }
+                    </div>
+                    <TextInput
+                        error={formFieldErrors.firstname}
+                        formname="firstname"
+                        initialValue={formValues.firstname}
+                        label="First name"
+                        placeholder="John"
                     />
-                </div>
+                    <TextInput
+                        error={formFieldErrors.lastname}
+                        formname="lastname"
+                        initialValue={formValues.lastname}
+                        label="Last name"
+                        placeholder="Doe"
+                    />
+                    <TextInput
+                        error={formFieldErrors.organization}
+                        formname="organization"
+                        initialValue={formValues.organization}
+                        label="Organization"
+                        placeholder="Togglecorp"
+                    />
+                    <TextInput
+                        error={formFieldErrors.email}
+                        formname="email"
+                        initialValue={formValues.email}
+                        label="Email"
+                        placeholder="john.doe@mail.com"
+                    />
+                    <TextInput
+                        error={formFieldErrors.password}
+                        formname="password"
+                        hint="Password should be more than four characters long."
+                        initialValue={formValues.password}
+                        label="Password"
+                        required
+                        type="password"
+                    />
+                    <div styleName="action-buttons">
+                        <PrimaryButton
+                            disabled={pending}
+                        >
+                            { stale ? 'Register*' : 'Register' }
+                        </PrimaryButton>
+                    </div>
+                </Form>
                 <div styleName="login-link-container">
                     <p>
                         Already have an account yet?
