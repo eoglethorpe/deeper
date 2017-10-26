@@ -43,8 +43,7 @@
 
                     }
                     .selected {
-                        background-color: lighten($color-accent, 5%);
-                        color: $color-text-on-primary;
+                        border-left: $width-separator-thick solid lighten($color-accent, 5%);
                     }
 
                     .icon {

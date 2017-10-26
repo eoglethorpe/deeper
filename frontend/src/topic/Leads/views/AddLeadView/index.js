@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+import { Tabs, TabContent } from 'react-tabs-redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import { pageTitles } from '../../../../common/utils/labels';
@@ -66,6 +66,7 @@ export default class AddLead extends React.PureComponent {
                     key: `lead-${this.state.counter}`,
                     type: 'Website',
                     title: `Leads #${this.state.counter}`,
+                    iconName: 'ion-earth',
                 },
             ],
             activeLeadKey: `lead-${this.state.counter}`,
@@ -82,6 +83,7 @@ export default class AddLead extends React.PureComponent {
                     key: `lead-${this.state.counter}`,
                     type: 'manualEntry',
                     title: `Leads #${this.state.counter}`,
+                    iconName: 'ion-clipboard',
                 },
             ],
             activeLeadKey: `lead-${this.state.counter}`,
@@ -147,7 +149,7 @@ export default class AddLead extends React.PureComponent {
                                             role="presentation"
                                         >
                                             <span
-                                                className="ion-document-text"
+                                                className={lead.iconName}
                                                 styleName="icon"
                                             />
                                             <p>{lead.title}</p>
