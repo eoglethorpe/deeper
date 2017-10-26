@@ -9,8 +9,12 @@
     width: 100%;
     height: 100vh;
 
-    .login-form-wrapper {
-        width: $width-login-form;
+    .login-form {
+        max-width: $width-login-form;
+        width: 100%;
+        position: relative;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-large $spacing-large;
 
         .non-field-errors {
             flex-basis: 100%;
@@ -19,6 +23,11 @@
             .error {
                 padding: $spacing-medium $spacing-large;
                 color: $color-danger;
+
+                &.empty {
+                    color: transparent;
+                    user-select: none;
+                }
 
                 &:not(:last-child) {
                     &::after {

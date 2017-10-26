@@ -9,7 +9,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import BaseForm from '../../components/Forms/BaseForm';
 import FileInput from '../../../../public/components/FileInput';
 import FileUpload from '../../../../public/components/FileUpload';
 import TextInput from '../../../../public/components/TextInput';
@@ -18,12 +17,13 @@ import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
 import { pageTitles } from '../../../../common/utils/labels';
 import { PrimaryButton } from '../../../../public/components/Button';
-import {
+
+import Form, {
     createValidation,
     emailCondition,
     lengthGreaterThanCondition,
     requiredCondition,
-} from '../../../../public/utils/Form';
+} from '../../../../public/components/Form';
 
 import {
     RestBuilder,
@@ -75,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -83,8 +83,8 @@ export default class Login extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formError: undefined,
-            formErrors: {},
+            formErrors: undefined,
+            formFieldErrors: {},
             formValues: {},
             pending: false,
             stale: false,
@@ -109,7 +109,11 @@ export default class Login extends React.PureComponent {
             if (password.length > email.length) {
                 return {
                     ok: false,
-                    message: ['Email must be longer than password'],
+                    formErrors: ['Form has combined validation error.'],
+                    formFieldErrors: {
+                        email: 'Email must be longer than password',
+                        password: 'Password must be shorter than email',
+                    },
                 };
             }
             return { ok: true };
@@ -160,16 +164,16 @@ export default class Login extends React.PureComponent {
     changeCallback = (values, { error, errors }) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
-            formErrors: { ...this.state.formErrors, ...errors },
-            formError: error,
+            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
+            formErrors: error,
             stale: true,
         });
     };
 
     failureCallback = ({ error, errors }) => {
         this.setState({
-            formErrors: { ...this.state.formErrors, ...errors },
-            formError: error,
+            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
+            formErrors: error,
         });
     };
 
@@ -226,18 +230,18 @@ export default class Login extends React.PureComponent {
             .failure((response) => {
                 console.info('FAILURE:', response);
                 const { errors } = response;
-                const formErrors = {};
+                const formFieldErrors = {};
                 const { nonFieldErrors } = errors;
 
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
-                        formErrors[key] = errors[key].join(' ');
+                        formFieldErrors[key] = errors[key].join(' ');
                     }
                 });
 
                 this.setState({
-                    formErrors,
-                    formError: nonFieldErrors,
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
                     pending: false,
                 });
             })
@@ -251,8 +255,8 @@ export default class Login extends React.PureComponent {
 
     render() {
         const {
-            formError = [],
-            formErrors,
+            formErrors = [],
+            formFieldErrors,
             formValues,
             pending,
             stale,
@@ -262,60 +266,64 @@ export default class Login extends React.PureComponent {
                 <Helmet>
                     <title>{ pageTitles.login }</title>
                 </Helmet>
-                <div styleName="login-form-wrapper">
-                    <BaseForm
-                        changeCallback={this.changeCallback}
-                        elements={this.elements}
-                        failureCallback={this.failureCallback}
-                        successCallback={this.successCallback}
-                        validation={this.validation}
-                        validations={this.validations}
-                    >
+                <Form
+                    styleName="login-form"
+                    changeCallback={this.changeCallback}
+                    elements={this.elements}
+                    failureCallback={this.failureCallback}
+                    successCallback={this.successCallback}
+                    validation={this.validation}
+                    validations={this.validations}
+                >
+                    {
+                        pending &&
+                        <div styleName="pending-overlay">
+                            <i className="ion-load-c" styleName="loading-icon" />
+                        </div>
+                    }
+                    <div styleName="non-field-errors">
                         {
-                            pending &&
-                            <div styleName="pending-overlay">
-                                <i className="ion-load-c" styleName="loading-icon" />
+                            formErrors.map(err => (
+                                <div
+                                    key={err}
+                                    styleName="error"
+                                >
+                                    {err}
+                                </div>
+                            ))
+                        }
+                        { formErrors.length <= 0 &&
+                            <div styleName="error empty">
+                                -
                             </div>
                         }
-                        <TextInput
+                    </div>
+                    <TextInput
+                        disabled={pending}
+                        error={formFieldErrors.email}
+                        formName="email"
+                        initialValue={formValues.email}
+                        label="Email"
+                        placeholder="john.doe@mail.com"
+                    />
+                    <TextInput
+                        disabled={pending}
+                        error={formFieldErrors.password}
+                        formName="password"
+                        initialValue={formValues.password}
+                        label="Password"
+                        placeholder="**********"
+                        required
+                        type="password"
+                    />
+                    <div styleName="action-buttons">
+                        <PrimaryButton
                             disabled={pending}
-                            error={formErrors.email}
-                            formName="email"
-                            initialValue={formValues.email}
-                            label="Email"
-                            placeholder="john.doe@mail.com"
-                        />
-                        <TextInput
-                            disabled={pending}
-                            error={formErrors.password}
-                            formName="password"
-                            initialValue={formValues.password}
-                            label="Password"
-                            placeholder="**********"
-                            required
-                            type="password"
-                        />
-                        <div styleName="action-buttons">
-                            <PrimaryButton
-                                disabled={pending}
-                            >
-                                { stale ? 'Login*' : 'Login' }
-                            </PrimaryButton>
-                        </div>
-                        <div styleName="non-field-errors">
-                            {
-                                formError.map(err => (
-                                    <div
-                                        key={err}
-                                        styleName="error"
-                                    >
-                                        {err}
-                                    </div>
-                                ))
-                            }
-                        </div>
-                    </BaseForm>
-                </div>
+                        >
+                            { stale ? 'Login*' : 'Login' }
+                        </PrimaryButton>
+                    </div>
+                </Form>
                 <div styleName="register-link-container">
                     <p>
                         Do not have an account yet?
