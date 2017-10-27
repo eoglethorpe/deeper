@@ -56,5 +56,14 @@
             overflow: auto;
             font-size: 1.2em;
         }
+
+        :global .edit {
+            color: $color-primary;
+        }
+
+        :global .delete {
+            color: $color-danger;
+            font-size: $font-size-large;
+        }
     }
 }

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Helmet from 'react-helmet';
 import browserHistory from '../../../common/browserHistory';
 import CountryDetail from '../components/CountryDetail';
+import Modal, { Header, Body } from '../../../public/components/Modal';
 import ListView, { ListItem } from '../../../public/components/ListView';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
@@ -70,6 +71,7 @@ export default class CountryPanel extends React.PureComponent {
         super(props);
 
         this.state = {
+            addCountryModal: false,
             displayCountryList: this.props.countries,
             searchInputValue: '',
         };
@@ -125,6 +127,12 @@ export default class CountryPanel extends React.PureComponent {
         });
     }
 
+    onAddCountry = () => {
+        this.setState({
+            addCountryModal: true,
+        });
+    };
+
     getStyleName = (countryId) => {
         const { pathname } = this.props.location;
 
@@ -156,9 +164,10 @@ export default class CountryPanel extends React.PureComponent {
 
     keySelector = data => (data.countryId)
 
-
-    goToAddCountry = () => {
-        browserHistory.push('/countrypanel/');
+    handleModalClose = () => {
+        this.setState({
+            addCountryModal: false,
+        });
     };
 
     render() {
@@ -172,8 +181,11 @@ export default class CountryPanel extends React.PureComponent {
                         <div styleName="header-text">
                             Countries
                         </div>
-                        <PrimaryButton onClick={this.goToAddCountry}>
-                            + Add country
+                        <PrimaryButton
+                            iconName="ion-plus"
+                            onClick={this.onAddCountry}
+                        >
+                            Add country
                         </PrimaryButton>
                         <TextInput
                             onChange={this.search}
@@ -199,6 +211,17 @@ export default class CountryPanel extends React.PureComponent {
                             ))
                         }
                     </ListView>
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleModalClose}
+                        show={this.state.addCountryModal}
+                        closeOnBlur
+                    >
+                        <Header title="Add new country" />
+                        <Body>
+                            Adasdasd
+                        </Body>
+                    </Modal>
                 </div>
                 <div styleName="country-details">
                     <Switch>

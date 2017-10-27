@@ -35,7 +35,7 @@ export default class CountryDetail extends React.PureComponent {
                         {fullName}
                     </div>
                     <div styleName="button-container">
-                        <SuccessButton>
+                        <SuccessButton className="save-btn">
                             Save Changes
                         </SuccessButton>
                         <DangerButton>

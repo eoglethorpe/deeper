@@ -364,7 +364,7 @@ const initialDomainDataState = {
     ],
 
     adminLevels: {
-        AFG: [
+        1: [
             {
                 adminLevelId: 1,
                 level: 1,
@@ -429,7 +429,7 @@ const initialDomainDataState = {
                 pcodeProperty: 'NAME_PCODE',
             },
         ],
-        NPL: [
+        2: [
             {
                 adminLevelId: 1,
                 level: 1,

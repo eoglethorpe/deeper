@@ -92,9 +92,16 @@ export default class CountryGeneral extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <Button onClick={() => this.editAdminLevel(row)}>
-                            <i className="ion-edit" />
-                        </Button>
+                        <TransparentButton onClick={() => this.editAdminLevel(row)}>
+                            <i
+                                className="ion-edit edit"
+                            />
+                        </TransparentButton>
+                        <TransparentButton onClick={() => this.deleteAdminLevel(row)}>
+                            <i
+                                className="ion-ios-trash delete"
+                            />
+                        </TransparentButton>
                     </div>
                 ),
             },
