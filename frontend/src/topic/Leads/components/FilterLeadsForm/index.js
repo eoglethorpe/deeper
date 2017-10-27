@@ -62,11 +62,11 @@ export default class FilterLeadsForm extends React.PureComponent {
         });
     }
 
-    handleSubmit = (values, { error, errors }) => {
+    handleSubmit = (values) => {
         this.setState({
             stale: false,
         });
-        this.props.onSubmit(values, { error, errors });
+        this.props.onSubmit(values);
     }
 
     render() {

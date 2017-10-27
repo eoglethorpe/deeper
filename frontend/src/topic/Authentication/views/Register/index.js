@@ -97,19 +97,19 @@ export default class Login extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { error, errors }) => {
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
-            formErrors: error,
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
             stale: true,
         });
     };
 
-    failureCallback = ({ error, errors }) => {
+    failureCallback = ({ formErrors, formFieldErrors }) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...errors },
-            formErrors: error,
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
         });
     };
 
