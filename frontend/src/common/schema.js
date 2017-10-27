@@ -99,7 +99,7 @@ attachValidator(dict);
             globalCrisisMonitoring: { type: 'boolean', required: true },
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
-            memberships: { type: 'array.userGroupMembership' },
+            memberships: { type: 'array.userGroupMembership', required: true },
         },
     };
     dict.put(name, schema);

@@ -181,18 +181,23 @@ export default class UserProfile extends React.PureComponent {
                 key: 'rights',
                 label: 'Rights',
                 order: 2,
-            },
-            {
-                key: 'createdAt',
-                label: 'Created at',
-                order: 3,
-                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+                modifier: (row) => {
+                    const { userId } = this.props.match.params;
+                    console.log(row);
+                    const membership = row.memberships.find(d => d.member === +userId);
+                    return (membership || { role: '-' }).role;
+                },
             },
             {
                 key: 'joinedAt',
                 label: 'Joined At',
-                order: 4,
-                modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
+                order: 3,
+                modifier: (row) => {
+                    const { userId } = this.props.match.params;
+                    const membership = row.memberships.find(d => d.member === +userId);
+                    const { joinedAt } = membership || {};
+                    return <FormattedDate date={joinedAt} mode="dd-MM-yyyy hh:mm" />;
+                },
             },
         ];
     }

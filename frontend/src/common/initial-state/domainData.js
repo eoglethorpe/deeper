@@ -97,6 +97,7 @@ const initialDomainDataState = {
                     rights: 'Admin',
                     createdAt: '2017-10-26T04:47:12.381611Z',
                     joinedAt: '2017-10-26T04:47:12.381611Z',
+                    memberships: [],
                 },
                 {
                     id: 2,
@@ -104,6 +105,7 @@ const initialDomainDataState = {
                     rights: 'Admin',
                     createdAt: '2016-12-26T04:47:12.381611Z',
                     joinedAt: '2017-10-26T04:47:12.381611Z',
+                    memberships: [],
                 },
             ],
         },
