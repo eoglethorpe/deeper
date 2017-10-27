@@ -8,13 +8,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import Form, {
+    requiredCondition,
+} from '../../../public/components/Form';
+import TextInput from '../../../public/components/TextInput';
+import {
+    PrimaryButton,
+    DangerButton,
+} from '../../../public/components/Button';
+
 import FormattedDate from '../../../public/components/FormattedDate';
 import Table from '../../../public/components/Table';
-import UserProfileEditForm from '../components/UserProfileEditForm';
 import styles from './styles.scss';
 import Modal, { Header, Body } from '../../../public/components/Modal';
 import { RestBuilder } from '../../../public/utils/rest';
-import { PrimaryButton } from '../../../public/components/Button';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     tokenSelector,
@@ -89,7 +96,22 @@ export default class UserProfile extends React.PureComponent {
 
         this.state = {
             editProfile: false,
+
+            formErrors: [],
+            formFieldErrors: {},
+            stale: false,
             pending: false,
+        };
+
+        this.elements = [
+            'firstName',
+            'lastName',
+            'organization',
+        ];
+        this.validations = {
+            firstName: [requiredCondition],
+            lastName: [requiredCondition],
+            organization: [requiredCondition],
         };
 
         this.projectHeaders = [
@@ -314,7 +336,25 @@ export default class UserProfile extends React.PureComponent {
         return userPatchRequest;
     }
 
-    handleUserProfileEditSubmit = (data) => {
+    // FORM RELATED
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (values) => {
         this.setState({ pending: true });
         // Stop old patch request
         if (this.userPatchRequest) {
@@ -323,9 +363,16 @@ export default class UserProfile extends React.PureComponent {
         // Create new patch request and start it
         const { match } = this.props;
         const userId = match.params.userId;
-        this.userPatchRequest = this.createRequestForUserPatch(userId, data);
+        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
         this.userPatchRequest.start();
-    }
+    };
+
+    // BUTTONS
+
+    handleFormCancel = (e) => {
+        e.preventDefault();
+        this.setState({ editProfile: false });
+    };
 
     handleEditProfileClick = () => {
         this.setState({ editProfile: true });
@@ -335,13 +382,17 @@ export default class UserProfile extends React.PureComponent {
         this.setState({ editProfile: false });
     }
 
-    handleEditProfileCancel = () => {
-        this.setState({ editProfile: false });
-    }
-
     render() {
         console.log('Rendering UserProfile');
         const { userInformation } = this.props;
+        const {
+            formErrors = [],
+            formFieldErrors,
+            stale,
+            pending,
+        } = this.state;
+
+        const formValues = userInformation;
 
         return (
             <div styleName="user-profile">
@@ -362,14 +413,81 @@ export default class UserProfile extends React.PureComponent {
                     >
                         <Header title="Edit profile" />
                         <Body>
-                            <UserProfileEditForm
-                                onSubmit={this.handleUserProfileEditSubmit}
-                                formErrors={this.state.formErrors}
-                                formError={this.state.nonFieldErrors}
-                                formValues={userInformation}
-                                pending={this.state.pending}
-                                onCancel={this.handleEditProfileCancel}
-                            />
+                            <Form
+                                styleName="user-profile-edit-form"
+                                changeCallback={this.changeCallback}
+                                elements={this.elements}
+                                failureCallback={this.failureCallback}
+                                successCallback={this.successCallback}
+                                validation={this.validation}
+                                validations={this.validations}
+                            >
+                                {
+                                    pending &&
+                                    <div styleName="pending-overlay">
+                                        <i
+                                            className="ion-load-c"
+                                            styleName="loading-icon"
+                                        />
+                                    </div>
+                                }
+                                <div styleName="non-field-errors">
+                                    {
+                                        formErrors.map(err => (
+                                            <div
+                                                key={err}
+                                                styleName="error"
+                                            >
+                                                {err}
+                                            </div>
+                                        ))
+                                    }
+                                    { formErrors.length <= 0 &&
+                                        <div styleName="error empty">
+                                            -
+                                        </div>
+                                    }
+                                </div>
+                                {/*
+                                <ImageInput
+                                    showPreview
+                                    styleName="display-picture"
+                                />
+                                */}
+                                <TextInput
+                                    label="First name"
+                                    formname="firstName"
+                                    placeholder="Enter a descriptive name"
+                                    initialValue={formValues.firstName}
+                                    error={formFieldErrors.firstName}
+                                />
+                                <TextInput
+                                    label="Last name"
+                                    formname="lastName"
+                                    placeholder="Enter a descriptive name"
+                                    initialValue={formValues.lastName}
+                                    error={formFieldErrors.lastName}
+                                />
+                                <TextInput
+                                    label="Organization"
+                                    formname="organization"
+                                    placeholder="Enter a descriptive name"
+                                    initialValue={formValues.organization}
+                                    error={formFieldErrors.organization}
+                                />
+                                <div styleName="action-buttons">
+                                    <DangerButton
+                                        onClick={this.handleFormCancel}
+                                        disabled={pending}
+                                    >
+                                        Cancel
+                                    </DangerButton>
+                                    <PrimaryButton disabled={pending || !stale} >
+                                        Save changes
+                                    </PrimaryButton>
+                                </div>
+                            </Form>
+
                         </Body>
                     </Modal>
                 </header>
