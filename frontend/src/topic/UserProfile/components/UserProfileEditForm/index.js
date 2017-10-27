@@ -11,25 +11,19 @@ import {
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
-} from '../../../../public/utils/Form';
+} from '../../../../public/components/Form';
 
 const propTypes = {
-    formError: PropTypes.array, // eslint-disable-line
-    formErrors: PropTypes.object.isRequired, // eslint-disable-line
-    formValues: PropTypes.object, //eslint-disable-line
-    onSubmit: PropTypes.func.isRequired,
-    pending: PropTypes.bool,
     onCancel: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    formValues: PropTypes.object.isRequired, // eslint-disable-line
 };
+
 const defaultProps = {
-    formError: [],
-    formErrors: {},
-    formValues: {},
-    pending: false,
 };
 
-
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class UserProfileEditForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -37,77 +31,68 @@ export default class UserProfileEditForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const changeCallback = (values, { error, errors }) => {
-            this.setState({
-                formValues: { ...this.state.formValues, ...values },
-                formErrors: { ...this.state.formErrors, ...errors },
-                formError: error,
-            });
+        this.state = {
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: this.props.formValues,
+            stale: false,
         };
-
-        const failureCallback = ({ error, errors }) => {
-            this.setState({
-                formErrors: { ...this.state.formErrors, ...errors },
-                formError: error,
-            });
-        };
-
-        const successCallback = (values) => {
-            this.props.onSubmit(values);
-        };
-
-        const form = new Form();
-        const elements = ['firstName', 'lastName', 'organization'];
-        const validations = {
+        this.elements = [
+            'firstName',
+            'lastName',
+            'organization',
+        ];
+        this.validations = {
             firstName: [requiredCondition],
             lastName: [requiredCondition],
             organization: [requiredCondition],
         };
+    }
 
-        form.setElements(elements);
-        form.setValidations(validations);
-        form.setCallbacks({
-            changeCallback,
-            successCallback,
-            failureCallback,
+    // FORM RELATED
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
         });
+    };
 
-        this.form = form;
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
 
-        this.state = {
-            formError: this.props.formError,
-            formErrors: this.props.formErrors,
-            formValues: this.props.formValues,
-        };
-    }
-
-    onChange = (value) => {
-        this.form.onChange(value);
-    }
-
-    onSubmit = () => {
-        this.form.onSubmit();
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.onSubmit();
-        return false;
-    }
+    successCallback = (values) => {
+        this.props.onSubmit(values);
+    };
 
     handleFormCancel = (e) => {
         e.preventDefault();
         this.props.onCancel();
-    }
+    };
 
     render() {
         const {
-            pending,
-        } = this.props;
-
+            formErrors = [],
+            formFieldErrors,
+            formValues,
+            stale,
+        } = this.state;
+        const { pending } = this.props;
         return (
-            <form
+            <Form
                 styleName="user-profile-edit-form"
+                changeCallback={this.changeCallback}
+                elements={this.elements}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                validation={this.validation}
+                validations={this.validations}
                 onSubmit={this.handleSubmit}
             >
                 {
@@ -119,6 +104,23 @@ export default class UserProfileEditForm extends React.PureComponent {
                         />
                     </div>
                 }
+                <div styleName="non-field-errors">
+                    {
+                        formErrors.map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                    { formErrors.length <= 0 &&
+                        <div styleName="error empty">
+                            -
+                        </div>
+                    }
+                </div>
                 {/*
                 <ImageInput
                     showPreview
@@ -127,44 +129,37 @@ export default class UserProfileEditForm extends React.PureComponent {
                 */}
                 <TextInput
                     label="First name"
-                    placeholder="John"
-
-                    ref={this.form.updateRef('firstName')}
-                    initialValue={this.state.formValues.firstName}
-                    error={this.state.formErrors.firstName}
-
-                    onChange={this.onChange}
+                    formname="firstName"
+                    placeholder="Enter a descriptive name"
+                    initialValue={formValues.firstName}
+                    error={formFieldErrors.firstName}
                 />
                 <TextInput
                     label="Last name"
-                    placeholder="Doe"
-
-                    ref={this.form.updateRef('lastName')}
-                    initialValue={this.state.formValues.lastName}
-                    error={this.state.formErrors.lastName}
-
-                    onChange={this.onChange}
+                    formname="lastName"
+                    placeholder="Enter a descriptive name"
+                    initialValue={formValues.lastName}
+                    error={formFieldErrors.lastName}
                 />
                 <TextInput
                     label="Organization"
-                    placeholder="Togglecorp"
-
-                    ref={this.form.updateRef('organization')}
-                    initialValue={this.state.formValues.organization}
-                    error={this.state.formErrors.organization}
-
-                    onChange={this.onChange}
+                    formname="organization"
+                    placeholder="Enter a descriptive name"
+                    initialValue={formValues.organization}
+                    error={formFieldErrors.organization}
                 />
-
                 <div styleName="action-buttons">
-                    <DangerButton onClick={this.handleFormCancel}>
+                    <DangerButton
+                        onClick={this.handleFormCancel}
+                        disabled={pending}
+                    >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton>
+                    <PrimaryButton disabled={pending || !stale} >
                         Save changes
                     </PrimaryButton>
                 </div>
-            </form>
+            </Form>
         );
     }
 }
