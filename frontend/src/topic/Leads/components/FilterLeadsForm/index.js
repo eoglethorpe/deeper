@@ -5,7 +5,8 @@ import styles from './styles.scss';
 
 import Button from '../../../../public/components/Button';
 import SelectInput from '../../../../public/components/SelectInput';
-import Form from '../../../../public/utils/Form';
+
+import Form from '../../../../public/components/Form';
 
 const propTypes = {
     className: PropTypes.string,
@@ -24,47 +25,9 @@ export default class FilterLeadsForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const form = new Form();
-        const elements = [
-            'assigned_to',
-            'created_at',
-            'published_on',
-            'confidentiality',
-            'status',
-        ];
-
-        const updateValues = (data) => {
-            this.setState({
-                formValues: {
-                    ...this.state.formValues,
-                    ...data,
-                },
-            });
-        };
-
-        const updateErrors = (data) => {
-            this.setState({
-                formErrors: data,
-            });
-        };
-
-        const okay = (data) => {
-            this.props.onSubmit(data);
-        };
-
-        form.setElements(elements);
-
-        // new state
-        form.setCallbackForChange(updateValues);
-
-        // calls with success and error
-        form.setCallbackForSuccessAndFailure(okay, updateErrors);
-
-        this.form = form;
-
         this.state = {
-            formErrors: {},
             formValues: {},
+            stale: false,
         };
 
         this.options = [
@@ -83,55 +46,75 @@ export default class FilterLeadsForm extends React.PureComponent {
             { key: 'pending', label: 'Pending' },
             { key: 'processed', label: 'Processed' },
         ];
+
+        this.formElements = [
+            'assigned_to',
+            'created_at',
+            'published_on',
+            'confidentiality',
+            'status',
+        ];
     }
 
-    handleApplyFilter = () => {
-        this.form.onSubmit();
+    handleChange = () => {
+        this.setState({
+            stale: true,
+        });
+    }
+
+    handleSubmit = (values, { error, errors }) => {
+        this.setState({
+            stale: false,
+        });
+        this.props.onSubmit(values, { error, errors });
     }
 
     render() {
         return (
-            <div
+            <Form
                 styleName="filters"
                 className={this.props.className}
+                successCallback={this.handleSubmit}
+                changeCallback={this.handleChange}
+                elements={this.formElements}
             >
                 <SelectInput
-                    ref={this.form.updateRef('assigned_to')}
+                    formname="assigned_to"
                     options={this.options}
                     placeholder="Assigned to"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('created_at')}
+                    formname="created_at"
                     options={this.options}
                     placeholder="Created on"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('published_on')}
+                    formname="published_on"
                     options={this.options}
                     placeholder="Published on"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('confidentiality')}
+                    formname="confidentiality"
                     options={this.confidentialityOptions}
                     placeholder="Confidentiality"
                     styleName="filter"
                 />
                 <SelectInput
-                    ref={this.form.updateRef('status')}
+                    formname="status"
                     options={this.statusOptions}
                     placeholder="Status"
                     styleName="filter"
                 />
                 <Button
                     styleName="apply-filter-btn"
-                    onClick={this.handleApplyFilter}
+                    disabled={!this.state.stale}
                 >
-                    Apply filter
+                    Apply Filter
                 </Button>
-            </div>
+            </Form>
         );
     }
 }
