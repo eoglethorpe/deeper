@@ -61,7 +61,7 @@ attachValidator(dict);
         extends: 'dbentity',
         fields: {
             data: { type: 'object' },
-            memberships: { type: 'array.membership' },
+            memberships: { type: 'array.membership', required: true },
             regions: { type: 'array.uint' },
             title: { type: 'string', required: true },
             userGroups: { type: 'array.uint' },

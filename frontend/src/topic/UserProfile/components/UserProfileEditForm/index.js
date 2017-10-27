@@ -3,20 +3,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import { PrimaryButton } from '../../../../public/components/Button';
-import { ImageInput } from '../../../../public/components/FileInput';
+import {
+    PrimaryButton,
+    DangerButton,
+} from '../../../../public/components/Button';
+// import { ImageInput } from '../../../../public/components/FileInput';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
 } from '../../../../public/utils/Form';
 
 const propTypes = {
+    formError: PropTypes.array, // eslint-disable-line
+    formErrors: PropTypes.object.isRequired, // eslint-disable-line
+    formValues: PropTypes.object, //eslint-disable-line
     onSubmit: PropTypes.func.isRequired,
     pending: PropTypes.bool,
-    initialValue: PropTypes.object, //eslint-disable-line
+    onCancel: PropTypes.func.isRequired,
 };
 const defaultProps = {
-    initialValue: {},
+    formError: [],
+    formErrors: {},
+    formValues: {},
     pending: false,
 };
 
@@ -29,6 +37,25 @@ export default class UserProfileEditForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const changeCallback = (values, { error, errors }) => {
+            this.setState({
+                formValues: { ...this.state.formValues, ...values },
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const failureCallback = ({ error, errors }) => {
+            this.setState({
+                formErrors: { ...this.state.formErrors, ...errors },
+                formError: error,
+            });
+        };
+
+        const successCallback = (values) => {
+            this.props.onSubmit(values);
+        };
+
         const form = new Form();
         const elements = ['firstName', 'lastName', 'organization'];
         const validations = {
@@ -37,44 +64,21 @@ export default class UserProfileEditForm extends React.PureComponent {
             organization: [requiredCondition],
         };
 
-        const updateValues = (data) => {
-            this.setState({
-                formValues: { ...this.state.formValues, ...data },
-            });
-        };
-
-        const updateErrors = (data) => {
-            this.setState({
-                formErrors: data,
-            });
-        };
-
-        const okay = (data) => {
-            this.props.onSubmit(data);
-        };
-
         form.setElements(elements);
         form.setValidations(validations);
-
-        // calls with new errors
-        form.setCallbackForFocus(updateErrors);
-        // new state
-        form.setCallbackForChange(updateValues);
-        // calls with success and error
-        form.setCallbackForSuccessAndFailure(okay, updateErrors);
+        form.setCallbacks({
+            changeCallback,
+            successCallback,
+            failureCallback,
+        });
 
         this.form = form;
 
         this.state = {
-            formErrors: { },
-            formValues: {
-                ...this.props.initialValue,
-            },
+            formError: this.props.formError,
+            formErrors: this.props.formErrors,
+            formValues: this.props.formValues,
         };
-    }
-
-    onFocus = (overrideName) => {
-        this.form.onFocus(overrideName);
     }
 
     onChange = (value) => {
@@ -91,8 +95,15 @@ export default class UserProfileEditForm extends React.PureComponent {
         return false;
     }
 
+    handleFormCancel = (e) => {
+        e.preventDefault();
+        this.props.onCancel();
+    }
+
     render() {
-        const { pending } = this.props;
+        const {
+            pending,
+        } = this.props;
 
         return (
             <form
@@ -108,10 +119,12 @@ export default class UserProfileEditForm extends React.PureComponent {
                         />
                     </div>
                 }
+                {/*
                 <ImageInput
                     showPreview
                     styleName="display-picture"
                 />
+                */}
                 <TextInput
                     label="First name"
                     placeholder="John"
@@ -120,7 +133,6 @@ export default class UserProfileEditForm extends React.PureComponent {
                     initialValue={this.state.formValues.firstName}
                     error={this.state.formErrors.firstName}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -131,7 +143,6 @@ export default class UserProfileEditForm extends React.PureComponent {
                     initialValue={this.state.formValues.lastName}
                     error={this.state.formErrors.lastName}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
                 <TextInput
@@ -142,11 +153,13 @@ export default class UserProfileEditForm extends React.PureComponent {
                     initialValue={this.state.formValues.organization}
                     error={this.state.formErrors.organization}
 
-                    onFocus={this.onFocus}
                     onChange={this.onChange}
                 />
 
                 <div styleName="action-buttons">
+                    <DangerButton onClick={this.handleFormCancel}>
+                        Cancel
+                    </DangerButton>
                     <PrimaryButton>
                         Save changes
                     </PrimaryButton>

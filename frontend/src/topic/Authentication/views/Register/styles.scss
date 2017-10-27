@@ -9,24 +9,62 @@
     width: 100%;
     height: 100vh;
 
-    .non-field-errors {
-        flex-basis: 100%;
-        text-align: center;
+    .register-form {
+        max-width: $width-register-form;
+        width: 100%;
+        position: relative;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-large $spacing-large;
 
-        .error {
-            padding: $spacing-medium $spacing-large;
-            color: $color-danger;
+        .non-field-errors {
+            flex-basis: 100%;
+            text-align: center;
 
-            &:not(:last-child) {
-                &::after {
-                    content: ', ';
+            .error {
+                padding: $spacing-medium $spacing-large;
+                color: $color-danger;
+
+                &.empty {
+                    color: transparent;
+                    user-select: none;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ', ';
+                    }
                 }
             }
         }
-    }
 
-    .register-form-wrapper {
-        width: $width-register-form;
+        .action-buttons {
+            margin-top: $spacing-medium;
+        }
+
+
+        .pending-overlay {
+            display: flex;
+            position: absolute;
+            top: 0;
+            left: 0;
+            align-items: center;
+            justify-content: center;
+            background-color: $color-background-overlay;
+            width: 100%;
+            height: 100%;
+
+            .loading-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                animation: spin 1s linear infinite;
+                width: $width-icon-super-large;
+                height: $width-icon-super-large;
+                color: $color-accent;
+                font-size: $width-icon-super-large;
+            }
+        }
+
     }
 
     .login-link-container {
@@ -42,5 +80,5 @@
             font-weight: $font-weight-medium;
         }
     }
-}
 
+}

@@ -80,6 +80,7 @@ export const createParamsForUserCreate = ({
         email,
         password,
         username: email,
+        displayPicture: null,
     }),
 });
 

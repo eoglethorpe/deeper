@@ -61,7 +61,7 @@ class ProjectRouteSynchronizer extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('RECEIVING PROPS');
+        // console.log('RECEIVING PROPS');
         const { match, activeProject } = nextProps;
         const projectId = parseInt(match.params.projectId, 10);
 

@@ -3,28 +3,38 @@
  */
 
 import CSSModules from 'react-css-modules';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import Helmet from 'react-helmet';
+import FileInput from '../../../../public/components/FileInput';
+import FileUpload from '../../../../public/components/FileUpload';
+import TextInput from '../../../../public/components/TextInput';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 import { hidUrl } from '../../../../common/config/hid';
-import { LoginForm } from '../../components/Forms';
-import {
-    loginAction,
-    authenticateAction,
-} from '../../../../common/action-creators/auth';
 import { pageTitles } from '../../../../common/utils/labels';
-import { RestRequest, RestBuilder } from '../../../../public/utils/rest';
+import { PrimaryButton } from '../../../../public/components/Button';
+import Form, {
+    createValidation,
+    emailCondition,
+    lengthGreaterThanCondition,
+    requiredCondition,
+} from '../../../../public/components/Form';
+
+import {
+    RestBuilder,
+    RestRequest,
+} from '../../../../public/utils/rest';
 import {
     createParamsForTokenCreate,
-    createParamsForTokenCreateHid,
     urlForTokenCreate,
+    createParamsForTokenCreateHid,
     urlForTokenCreateHid,
 } from '../../../../common/rest';
+
 import {
     startTokenRefreshAction,
 } from '../../../../common/middlewares/refreshAccessToken';
@@ -34,6 +44,11 @@ import {
 import {
     currentUserProjectsSelector,
 } from '../../../../common/selectors/domainData';
+import {
+    loginAction,
+    authenticateAction,
+} from '../../../../common/action-creators/auth';
+
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
@@ -59,14 +74,49 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
-        this.state = { pending: false };
+        this.state = {
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {},
+            pending: false,
+            stale: false,
+
+            uploadedFiles: [],
+        };
+
+        // Data for form elements
+        this.elements = ['email', 'password'];
+        this.validations = {
+            email: [
+                requiredCondition,
+                emailCondition,
+            ],
+            password: [
+                requiredCondition,
+                lengthGreaterThanCondition(4),
+            ],
+        };
+        // TODO: remove this validation later, just for example
+        this.validation = createValidation('email', 'password', (email, password) => {
+            if (password.length > email.length) {
+                return {
+                    ok: false,
+                    formErrors: ['Form has combined validation error.'],
+                    formFieldErrors: {
+                        email: 'Email must be longer than password',
+                        password: 'Password must be shorter than email',
+                    },
+                };
+            }
+            return { ok: true };
+        });
     }
 
     componentWillMount() {
@@ -81,19 +131,17 @@ export default class Login extends React.PureComponent {
         this.checkParamsFromHid();
     }
 
+    // HID
+
     onHidLoginClick = () => {
         // Just set it to pending
         // The anchor will redirect user to next page
         this.setState({ pending: true });
     }
 
-    onSubmit = ({ email, password }) => {
-        const url = urlForTokenCreate;
-        const params = createParamsForTokenCreate({ username: email, password });
-        this.login({
-            url,
-            params,
-        });
+    onUpload = (files) => {
+        const { uploadedFiles } = this.state;
+        this.setState({ uploadedFiles: [...uploadedFiles, ...files] });
     }
 
     checkParamsFromHid = () => {
@@ -104,17 +152,40 @@ export default class Login extends React.PureComponent {
         // Login User with HID access_token
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);
-            this.login({
-                url: urlForTokenCreateHid,
-                params,
-            });
+            this.login({ url: urlForTokenCreateHid, params });
         } else {
             console.warn('No access_token found');
         }
     }
 
+    // FORM RELATED
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = ({ email, password }) => {
+        const url = urlForTokenCreate;
+        const params = createParamsForTokenCreate({ username: email, password });
+        this.login({ url, params });
+    };
+
+    // LOGIN ACTION
+
     login = ({ url, params }) => {
-        this.setState({ pending: true });
+        this.setState({ pending: true, stale: false });
 
         // Stop any retry action
         if (this.userLoginRequest) {
@@ -124,6 +195,8 @@ export default class Login extends React.PureComponent {
 
         this.userLoginRequest.start();
     };
+
+    // LOGIN REST API
 
     createRequestLogin = (url, params) => {
         const userLoginRequest = new RestBuilder()
@@ -156,18 +229,18 @@ export default class Login extends React.PureComponent {
             .failure((response) => {
                 console.info('FAILURE:', response);
                 const { errors } = response;
-                const formErrors = {};
+                const formFieldErrors = {};
                 const { nonFieldErrors } = errors;
 
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
-                        formErrors[key] = errors[key].join(' ');
+                        formFieldErrors[key] = errors[key].join(' ');
                     }
                 });
 
                 this.setState({
-                    formErrors,
-                    nonFieldErrors,
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
                     pending: false,
                 });
             })
@@ -180,48 +253,122 @@ export default class Login extends React.PureComponent {
     }
 
     render() {
-        const { nonFieldErrors, pending } = this.state;
+        const {
+            formErrors = [],
+            formFieldErrors,
+            formValues,
+            pending,
+            stale,
+        } = this.state;
         return (
             <div styleName="login">
                 <Helmet>
                     <title>{ pageTitles.login }</title>
                 </Helmet>
-                <div styleName="non-field-errors">
+                <Form
+                    styleName="login-form"
+                    changeCallback={this.changeCallback}
+                    elements={this.elements}
+                    failureCallback={this.failureCallback}
+                    successCallback={this.successCallback}
+                    validation={this.validation}
+                    validations={this.validations}
+                >
                     {
-                        (nonFieldErrors || []).map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
+                        pending &&
+                        <div styleName="pending-overlay">
+                            <i className="ion-load-c" styleName="loading-icon" />
+                        </div>
                     }
-                </div>
-                <div styleName="login-form-wrapper">
-                    <LoginForm
-                        onSubmit={this.onSubmit}
-                        pending={pending}
+                    <div styleName="non-field-errors">
+                        {
+                            formErrors.map(err => (
+                                <div
+                                    key={err}
+                                    styleName="error"
+                                >
+                                    {err}
+                                </div>
+                            ))
+                        }
+                        { formErrors.length <= 0 &&
+                            <div styleName="error empty">
+                                -
+                            </div>
+                        }
+                    </div>
+                    <TextInput
+                        disabled={pending}
+                        error={formFieldErrors.email}
+                        formname="email"
+                        initialValue={formValues.email}
+                        label="Email"
+                        placeholder="john.doe@mail.com"
                     />
-                </div>
+                    <TextInput
+                        disabled={pending}
+                        error={formFieldErrors.password}
+                        formname="password"
+                        initialValue={formValues.password}
+                        label="Password"
+                        placeholder="**********"
+                        required
+                        type="password"
+                    />
+                    <div styleName="action-buttons">
+                        <PrimaryButton
+                            disabled={pending}
+                        >
+                            { stale ? 'Login*' : 'Login' }
+                        </PrimaryButton>
+                    </div>
+                </Form>
                 <div styleName="register-link-container">
                     <p>
-                        Don&apos;t have an account yet?
+                        Do not have an account yet?
                     </p>
                     <Link
-                        to="/register/"
                         styleName="register-link"
+                        to="/register/"
                     >
                         Register
                     </Link>
                 </div>
-                <a
-                    onClick={this.onHidLoginClick}
-                    href={hidUrl}
-                    styleName="register-link"
-                >
-                    Login With HID
-                </a>
+                <div styleName="register-link-container">
+                    <a
+                        href={hidUrl}
+                        onClick={this.onHidLoginClick}
+                        styleName="register-link"
+                    >
+                        Login With HID
+                    </a>
+                </div>
+
+                <div>
+                    <FileInput
+                        showPreview={false}
+                        showStatus={false}
+                        onChange={this.onUpload}
+                    >
+                        Open File
+                    </FileInput>
+                    <ul>
+                        {
+                            this.state.uploadedFiles.map(file => (
+                                <li
+                                    key={file.name}
+                                >
+                                    <FileUpload
+                                        key={file.name}
+                                        file={file}
+                                        autoStart={false}
+                                    />
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </div>
+
             </div>
         );
     }
