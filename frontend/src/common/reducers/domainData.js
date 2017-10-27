@@ -1,6 +1,7 @@
 import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
+    SET_USER_GROUPS,
     SET_ACTIVE_PROJECT,
     SET_LEADS,
     DUMMY_ACTION,
@@ -45,6 +46,18 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 },
                 activeProject: {
                     $set: activeProject,
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_USER_GROUPS: {
+            const settings = {
+                users: {
+                    [action.userId]: { $auto: {
+                        userGroups: {
+                            $set: action.userGroups,
+                        },
+                    } },
                 },
             };
             return update(state, settings);
