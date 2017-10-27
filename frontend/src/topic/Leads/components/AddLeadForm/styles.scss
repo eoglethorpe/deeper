@@ -32,6 +32,27 @@
             }
         }
 
+        .non-field-errors {
+            flex-basis: 100%;
+            text-align: center;
+
+            .error {
+                padding: $spacing-medium $spacing-large;
+                color: $color-danger;
+
+                &.empty {
+                    color: transparent;
+                    user-select: none;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ', ';
+                    }
+                }
+            }
+        }
+
         .title-and-source-box,
         .other-container-box,
         .url-box-container {
