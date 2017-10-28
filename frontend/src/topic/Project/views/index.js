@@ -6,26 +6,45 @@ import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import Helmet from 'react-helmet';
 import styles from './styles.scss';
+import ProjectDetails from '../components/ProjectDetails';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
+import {
+    currentUserProjectsSelector,
+} from '../../../common/selectors/domainData';
 import {
     TransparentPrimaryButton,
 } from '../../../public/components/Button';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
+    userProjects: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            title: PropTypes.string,
+        }),
+    ),
 };
+
+const defaultProps = {
+    userProjects: {},
+};
+
+const mapStateToProps = (state, props) => ({
+    userProjects: currentUserProjectsSelector(state, props),
+});
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectPanel extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -67,6 +86,7 @@ export default class ProjectPanel extends React.PureComponent {
 
     render() {
         const { sideBarVisibility } = this.state;
+        console.log(this.props.userProjects);
 
         return (
             <div styleName="project-panel">
@@ -86,53 +106,7 @@ export default class ProjectPanel extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     </header>
-                    <Tabs
-                        activeLinkStyle={{ none: 'none' }}
-                        styleName="tabs-container"
-                    >
-                        <div styleName="tabs-header-container">
-                            <TabLink
-                                styleName="tab-header"
-                                to="project-details"
-                            >
-                                Details
-                            </TabLink>
-                            <TabLink
-                                styleName="tab-header"
-                                to="geo-areas"
-                            >
-                                Geo Areas
-                            </TabLink>
-                            <TabLink
-                                styleName="tab-header"
-                                to="analysis-framework"
-                            >
-                                Analysis Framework
-                            </TabLink>
-                            {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                            <div styleName="empty-tab" />
-                        </div>
-                        <div styleName="tabs-content">
-                            <TabContent
-                                for="project-details"
-                                styleName="tab"
-                            >
-                                Details
-                            </TabContent>
-                            <TabContent
-                                for="geo-areas"
-                                styleName="tab"
-                            >
-                                Geo Areas
-                            </TabContent>
-                            <TabContent
-                                for="analysis-framework"
-                                styleName="tab"
-                            >
-                                Analysis Framework
-                            </TabContent>
-                        </div>
-                    </Tabs>
+                    <ProjectDetails />
                 </div>
                 <div
                     styleName={sideBarVisibility ? 'side-bar show' : 'side-bar'}
@@ -145,6 +119,11 @@ export default class ProjectPanel extends React.PureComponent {
                             <span className="ion-android-close" />
                         </TransparentPrimaryButton>
                     </header>
+                    {
+                        this.props.userProjects.map(item => (
+                            <div>{item.title}</div>
+                        ))
+                    }
                 </div>
             </div>
         );
