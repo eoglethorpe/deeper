@@ -1,57 +1,50 @@
 @import '../../../../stylesheets/base';
 
 .add-lead {
-
-    .container {
+    .tab-container {
         display: flex;
-        padding: $spacing-large;
-        $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+        padding: $spacing-medium-alt;
         overflow-y: auto;
 
-        .leads-list-container {
-            @include shadow-medium;
+        .lead-list-container {
+            display: flex;
             flex-basis: 25%;
-            $height-header: 72px;
-            $height-upload: 100px;
-            margin-right: $spacing-large;
+            flex-direction: column;
             background-color: $color-foreground;
+            height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
+            overflow-y: hidden;
 
-            .header-title {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
+            > .heading {
+                flex-shrink: 0;
                 border-bottom: $width-separator-normal solid $color-separator;
-                padding: $spacing-large;
-                height: $height-header;
-
+                padding: $spacing-medium $spacing-large;
+                font-size: $font-size-large;
             }
 
             .list {
-                height: calc(#{$height-full-page} - #{$height-header} - #{$height-upload});
-                overflow: auto;
-                font-size: $font-size-normal;
+                flex-grow: 1;
+                overflow-y: auto;
 
                 .list-item {
-
+                    display: flex;
+                    align-items: center;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    border-left: $width-separator-thick solid transparent;
                     cursor: pointer;
+                    padding-top: $spacing-small $spacing-medium;
+                    user-select: none;
 
-                    >div {
-                        display: flex;
-                        border-bottom: $width-separator-normal solid $color-separator;
-                        padding-top: $spacing-medium;
-                        height: 64px;
-
-                    }
-                    .selected {
-                        border-left: $width-separator-thick solid lighten($color-accent, 5%);
+                    &.active {
+                        border-left: $width-separator-thick solid $color-accent;
+                        background-color: $color-hover;
                     }
 
                     .icon {
-                        display: inline-block;
+                        display: inline-flex;
                         flex-basis: $width-icon-large;
                         flex-shrink: 0;
                         padding: $spacing-small $spacing-large;
-                        font-size: $font-size-super-large;
+                        font-size: $font-size-large;
                     }
 
                     .icon-checked {
@@ -64,58 +57,58 @@
                 }
             }
 
-            .upload-container {
-                @include shadow-medium;
+            .add-lead-container {
                 display: flex;
+                flex-shrink: 0;
+                flex-wrap: wrap;
                 align-items: center;
-                justify-content: center;
-                background-color: darken($color-foreground, 10%);
-                padding: $spacing-small;
-                height: $height-upload;
-                text-align: center;
+                justify-content: space-around;
 
+                .heading {
+                    flex-basis: 100%;
+                    margin: 0;
+                    border-top: $width-separator-normal solid $color-separator;
+                    // border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium $spacing-large;
+                    color: $color-label;
+                    font-size: $font-size-small;
+                    font-weight: $font-weight-medium;
+                }
 
-                >div {
+                .add-lead-btn {
                     flex-basis: 20%;
-
-                    &:hover {
-                        cursor: pointer;
-                        color: darken($color-accent, 5%);
-                    }
+                    color: $color-text;
+                    font-family: inherit;
+                    font-size: inherit;
 
                     span {
-                        font-size: $font-size-super-large;
+                        font-size: $font-size-extra-large;
                     }
 
                     p {
-                        margin: 0 $spacing-small;
+                        margin: $spacing-medium 0 0;
+                        font-size: $font-size-extra-small;
                     }
 
-
+                    &:hover {
+                        cursor: pointer;
+                        color: $color-accent;
+                    }
                 }
             }
         }
 
         .leads-details-container {
-            @include shadow-medium;
             flex-basis: 75%;
             flex-wrap: wrap;
-            background-color: darken($color-foreground, 5%);
-            height: $height-full-page;
-            $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
             overflow-y: auto;
 
-
             .tabs-content {
+                background-color: $color-foreground-alt;
+                height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
 
                 .tab {
-                    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-                    height: $height-full-page;
-
                     .preview-container {
-                        @include shadow-small;
-                        flex-basis: 50%;
-                        background-color: $color-foreground;
                         padding: $spacing-large;
                         height: 100%;
                         text-align: center;
@@ -123,8 +116,6 @@
                     }
                 }
             }
-
-
         }
 
     }

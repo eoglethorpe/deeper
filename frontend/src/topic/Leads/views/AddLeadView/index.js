@@ -5,14 +5,22 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Tabs, TabContent } from 'react-tabs-redux';
 
-import AddLeadForm from '../../components/AddLeadForm';
+import { TransparentButton } from '../../../../public/components/Button';
+import AddLeadListItem from '../../components/AddLeadListItem';
+import FileInput from '../../../../public/components/FileInput';
 import { pageTitles } from '../../../../common/utils/labels';
 import styles from './styles.scss';
+import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
+import { tokenSelector } from '../../../../common/selectors/auth';
+import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
+import update from '../../../../public/utils/immutable-update';
 import {
-    setNavbarStateAction,
-} from '../../../../common/action-creators/navbar';
+    urlForUpload,
+    createHeaderForFileUpload,
+} from '../../../../common/rest';
 
 const mapStateToProps = state => ({
+    token: tokenSelector(state),
     state,
 });
 
@@ -23,6 +31,9 @@ const mapDispatchToProps = dispatch => ({
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
+    token: PropTypes.shape({
+        access: PropTypes.string,
+    }).isRequired,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -39,6 +50,8 @@ export default class AddLead extends React.PureComponent {
             counter: 1,
             activeLeadKey: undefined,
         };
+
+        this.uploadCoordinator = new UploadCoordinator();
     }
     componentWillMount() {
         this.props.setNavbarState({
@@ -57,39 +70,6 @@ export default class AddLead extends React.PureComponent {
             ],
         });
     }
-    onWebsiteClickHandler = () => {
-        console.log('Website');
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    key: `lead-${this.state.counter}`,
-                    type: 'Website',
-                    title: `Leads #${this.state.counter}`,
-                    iconName: 'ion-earth',
-                },
-            ],
-            activeLeadKey: `lead-${this.state.counter}`,
-            counter: this.state.counter + 1,
-        });
-    };
-
-    onManualEntryClickHandler = () => {
-        console.log('Manual Entry');
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    key: `lead-${this.state.counter}`,
-                    type: 'manualEntry',
-                    title: `Leads #${this.state.counter}`,
-                    iconName: 'ion-clipboard',
-                },
-            ],
-            activeLeadKey: `lead-${this.state.counter}`,
-            counter: this.state.counter + 1,
-        });
-    };
 
     onFocus = (overrideName) => {
         this.form.onFocus(overrideName);
@@ -114,10 +94,124 @@ export default class AddLead extends React.PureComponent {
         return false;
     }
 
+    handleAddLeadFromDrive = () => {
+    }
+
+    handleAddLeadFromDropbox = () => {
+    }
+
+    handleUploadComplete = (uploaderId, leadId, status) => {
+        console.log(uploaderId, leadId, status);
+    }
+
+    handleLeadUploadProgress = (leadId, progress) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.id === leadId);
+        const settings = {
+            [leadIndex]: {
+                upload: {
+                    progress: {
+                        $set: progress,
+                    },
+                },
+            },
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    }
+
+    handleAddLeadFromDisk = (e) => {
+        const newLeads = [];
+
+        const files = Object.values(e);
+
+        for (let i = 0; i < files.length; i += 1) {
+            const leadId = `lead-${this.state.counter + i}`;
+
+            const lead = {
+                key: leadId,
+                id: leadId,
+                type: 'file',
+                upload: {
+                    progress: 0,
+                },
+                formData: {
+                    title: files[i].name,
+                },
+            };
+
+            newLeads.push(lead);
+
+            const uploader = new Uploader(
+                files[i],
+                urlForUpload,
+                createHeaderForFileUpload(this.props.token),
+            );
+
+            uploader.onLoad = (status, response) => {
+                this.handleUploadComplete(leadId, leadId, status, response);
+            };
+
+            uploader.onProgress = (progress) => {
+                this.handleLeadUploadProgress(leadId, progress);
+            };
+
+            this.uploadCoordinator.add(leadId, uploader);
+        }
+
+        this.uploadCoordinator.queueAll();
+
+        this.setState({
+            leads: [
+                ...this.state.leads,
+                ...newLeads,
+            ],
+            activeLeadKey: `lead-${this.state.counter}`,
+            counter: this.state.counter + files.length,
+        });
+    }
+
+    handleAddLeadFromWebsite = () => {
+        this.setState({
+            leads: [
+                ...this.state.leads,
+                {
+                    key: `lead-${this.state.counter}`,
+                    type: 'website',
+                    formData: {
+                        title: `Lead #${this.state.counter}`,
+                    },
+                },
+            ],
+            activeLeadKey: `lead-${this.state.counter}`,
+            counter: this.state.counter + 1,
+        });
+    }
+
+    handleAddLeadFromText = () => {
+        this.setState({
+            leads: [
+                ...this.state.leads,
+                {
+                    key: `lead-${this.state.counter}`,
+                    type: 'text',
+                    iconName: 'ion-clipboard',
+                    formData: {
+                        title: `Lead #${this.state.counter}`,
+                    },
+                },
+            ],
+            activeLeadKey: `lead-${this.state.counter}`,
+            counter: this.state.counter + 1,
+        });
+    }
 
     handleOptionChange = (changeEvent) => {
         this.setState({ selectedValue: changeEvent.target.value });
     };
+
     render() {
         return (
             <div styleName="add-lead">
@@ -129,82 +223,67 @@ export default class AddLead extends React.PureComponent {
                 <Tabs
                     selectedTab={this.state.activeLeadKey}
                     activeLinkStyle={{ none: 'none' }}
-                    styleName="container"
+                    styleName="tab-container"
                 >
-                    <div styleName="leads-list-container">
-                        <header styleName="header-title">
-                            <h1>Leads Overview</h1>
-                        </header>
+                    <div styleName="lead-list-container">
+                        <h2 styleName="heading">
+                            Leads
+                        </h2>
                         <div styleName="list">
-                            <div styleName="list-item">
-                                {
-                                    this.state.leads.map(lead => (
-                                        <div
-                                            to={lead.key}
-                                            key={lead.key}
-                                            styleName={
-                                                lead.key === this.state.activeLeadKey ? 'selected' : ''
-                                            }
-                                            onClick={() => this.leadsClickHandler(lead.key)}
-                                            role="presentation"
-                                        >
-                                            <span
-                                                className={lead.iconName}
-                                                styleName="icon"
-                                            />
-                                            <p>{lead.title}</p>
-                                        </div>
-                                    ))
-                                }
-                            </div>
+                            {
+                                this.state.leads.map(lead => (
+                                    <AddLeadListItem
+                                        key={lead.key}
+                                        active={this.state.activeLeadKey === lead.key}
+                                        onClick={() => this.leadsClickHandler(lead.key)}
+                                        title={lead.formData.title}
+                                        type={lead.type}
+                                        upload={lead.upload}
+                                    />
+                                ))
+                            }
                         </div>
-                        <div styleName="upload-container">
-                            <div
-                                onClick={this.onClickHandler}
-                                role="presentation"
+                        <div styleName="add-lead-container">
+                            <h3 styleName="heading">
+                                Add new lead from:
+                            </h3>
+                            <TransparentButton
+                                styleName="add-lead-btn"
+                                onClick={this.handleAddLeadFromDrive}
                             >
-                                <span
-                                    className="ion-social-google"
-                                />
-                                <p>Google Drive</p>
-                            </div>
-                            <div
-                                onClick={this.onClickHandler}
-                                role="presentation"
+                                <span className="ion-social-google" />
+                                <p>Drive</p>
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="add-lead-btn"
+                                onClick={this.handleAddLeadFromDropbox}
                             >
-                                <span
-                                    className="ion-social-dropbox"
-                                />
+                                <span className="ion-social-dropbox" />
                                 <p>Dropbox</p>
-                            </div>
-                            <div
-                                onClick={this.onClickHandler}
-                                role="presentation"
+                            </TransparentButton>
+                            <FileInput
+                                styleName="add-lead-btn"
+                                onChange={this.handleAddLeadFromDisk}
+                                showStatus={false}
+                                multiple
                             >
-                                <span
-                                    className="ion-android-upload"
-
-                                />
-                                <p>Upload</p>
-                            </div>
-                            <div
-                                onClick={this.onWebsiteClickHandler}
-                                role="presentation"
+                                <span className="ion-android-upload" />
+                                <p>Local disk</p>
+                            </FileInput>
+                            <TransparentButton
+                                styleName="add-lead-btn"
+                                onClick={this.handleAddLeadFromWebsite}
                             >
-                                <span
-                                    className="ion-earth"
-                                />
+                                <span className="ion-earth" />
                                 <p>Website</p>
-                            </div>
-                            <div
-                                onClick={this.onManualEntryClickHandler}
-                                role="presentation"
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="add-lead-btn"
+                                onClick={this.handleAddLeadFromText}
                             >
-                                <span
-                                    className="ion-clipboard"
-                                />
-                                <p>Manual Entry</p>
-                            </div>
+                                <span className="ion-clipboard" />
+                                <p>Text</p>
+                            </TransparentButton>
                         </div>
                     </div>
                     <div styleName="leads-details-container">
@@ -221,11 +300,13 @@ export default class AddLead extends React.PureComponent {
                                         for={lead.key}
                                         styleName="tab"
                                     >
+                                        {/*
                                         <AddLeadForm
                                             onSubmit={() => {}}
                                             pending={false}
                                             values={lead}
                                         />
+                                        */}
                                         <div styleName="preview-container">
                                             <h2>Preview Container</h2>
                                         </div>

@@ -29,7 +29,6 @@ const commonHeaderForPost = {
     'Content-Type': 'application/json',
 };
 
-
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
@@ -37,6 +36,12 @@ export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/`;
 export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 export const urlForApiDocs = `${wsEndpoint}/docs/`;
+
+export const urlForUpload = `${wsEndpoint}/files/`;
+
+export const createHeaderForFileUpload = ({ access }) => ({
+    Authorization: `Bearer ${access}`,
+});
 
 export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`
