@@ -1,30 +1,45 @@
 import CSSModules from 'react-css-modules';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 
-import { PrimaryButton, DangerButton, SuccessButton } from '../../../../public/components/Button';
 import styles from './styles.scss';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
     urlCondition,
 } from '../../../../public/components/Form';
+import {
+    PrimaryButton,
+    SuccessButton,
+} from '../../../../public/components/Button';
+
+
+// uploadStates -> birth, uploading, success, fail
+// formStates -> stale, error, pending
+const propTypes = {
+    data: PropTypes.object.isRequired, // eslint-disable-line
+    leadId: PropTypes.string.isRequired,
+    leadType: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onFailure: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
+    ready: PropTypes.bool.isRequired,
+    stale: PropTypes.bool.isRequired,
+};
+const defaultProps = {
+};
 
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
-    static propTypes = {
-    };
-    static defaultProps = {
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues: {},
-            pending: false,
-            stale: false,
         };
         this.elements = [
             'title',
@@ -58,8 +73,8 @@ export default class AddLeadForm extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
         });
+        this.props.onChange(this.props.leadId, values);
     };
 
     failureCallback = ({ formErrors, formFieldErrors }) => {
@@ -67,22 +82,29 @@ export default class AddLeadForm extends React.PureComponent {
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
         });
+        this.props.onFailure(this.props.leadId);
     };
 
-    successCallback = (data) => {
-        console.log(data);
-
+    successCallback = (values) => {
+        console.log(values);
         // Rest Request goes here
+        this.props.onSuccess(this.props.leadId, values);
     };
 
     render() {
         const {
             formErrors = [],
             formFieldErrors,
-            formValues,
+        } = this.state;
+
+        const {
+            data,
             pending,
             stale,
-        } = this.state;
+            ready,
+            leadType,
+        } = this.props;
+        const formValues = data;
 
         return (
             <div styleName="leads-details">
@@ -106,19 +128,19 @@ export default class AddLeadForm extends React.PureComponent {
                         </div>
                     }
                     <header styleName="header-title">
-                        <h1>Lead</h1>
+                        <h1>{data.title}</h1>
                         <div styleName="action-buttons">
                             {/* <DangerButton>
                                 Cancel
                                 </DangerButton>
                             */}
                             <SuccessButton
-                                disabled={pending || !stale}
+                                disabled={pending || !stale || !ready}
                             >
                                 Save
                             </SuccessButton>
                             <PrimaryButton
-                                disabled={pending || !stale}
+                                disabled={pending || !stale || !ready}
                             >
                                 Save & Next
                             </PrimaryButton>
@@ -186,37 +208,50 @@ export default class AddLeadForm extends React.PureComponent {
                             error={formFieldErrors.date}
                         />
                     </div>
-                    <div styleName="url-box-container">
-                        <TextInput
-                            label="URL"
-                            formname="url"
-                            placeholder="Enter a descriptive name"
-                            styleName="url-box"
-                            initialValue={formValues.url}
-                            error={formFieldErrors.url}
-                        />
-                        <TextInput
-                            label="Website"
-                            formname="website"
-                            placeholder="Enter a descriptive name"
-                            styleName="website-box"
-                            initialValue={formValues.website}
-                            error={formFieldErrors.website}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="manual-entry-box">
-                            Manual Entry
-                        </label>
-                        <textarea
-                            styleName="manual-entry-box"
-                            cols="40"
-                            rows="5"
-                        />
-                    </div>
-                    <div>
-                        File Upload
-                    </div>
+
+                    {
+                        leadType === 'website' &&
+                        <div styleName="url-box-container">
+                            <TextInput
+                                label="URL"
+                                formname="url"
+                                placeholder="Enter a descriptive name"
+                                styleName="url-box"
+                                initialValue={formValues.url}
+                                error={formFieldErrors.url}
+                            />
+                            <TextInput
+                                label="Website"
+                                formname="website"
+                                placeholder="Enter a descriptive name"
+                                styleName="website-box"
+                                initialValue={formValues.website}
+                                error={formFieldErrors.website}
+                            />
+                        </div>
+                    }
+
+                    {
+                        leadType === 'text' &&
+                        <div>
+                            <label htmlFor="manual-entry-box">
+                                Manual Entry
+                            </label>
+                            <textarea
+                                id="manual-entry-box"
+                                styleName="manual-entry-box"
+                                cols="40"
+                                rows="5"
+                            />
+                        </div>
+                    }
+
+                    { leadType === 'file' &&
+                        <div>
+                            File Upload
+                        </div>
+                    }
+
                 </Form>
             </div>
         );

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Tabs, TabContent } from 'react-tabs-redux';
 
 import { TransparentButton } from '../../../../public/components/Button';
+import AddLeadForm from '../../components/AddLeadForm';
 import AddLeadListItem from '../../components/AddLeadListItem';
 import FileInput from '../../../../public/components/FileInput';
 import { pageTitles } from '../../../../common/utils/labels';
@@ -48,7 +49,7 @@ export default class AddLead extends React.PureComponent {
             formValues: { },
             leads: [],
             counter: 1,
-            activeLeadKey: undefined,
+            activeLeadId: undefined,
         };
 
         this.uploadCoordinator = new UploadCoordinator();
@@ -83,9 +84,9 @@ export default class AddLead extends React.PureComponent {
         this.form.onSubmit();
     }
 
-    leadsClickHandler = (key) => {
-        this.setState({ activeLeadKey: key });
-        console.log(key);
+    leadsClickHandler = (id) => {
+        this.setState({ activeLeadId: id });
+        console.log(id);
     }
 
     handleSubmit = (e) => {
@@ -131,9 +132,12 @@ export default class AddLead extends React.PureComponent {
             const leadId = `lead-${this.state.counter + i}`;
 
             const lead = {
-                key: leadId,
                 id: leadId,
                 type: 'file',
+                form: {
+                    pending: false,
+                    stale: false,
+                },
                 upload: {
                     progress: 0,
                 },
@@ -168,7 +172,7 @@ export default class AddLead extends React.PureComponent {
                 ...this.state.leads,
                 ...newLeads,
             ],
-            activeLeadKey: `lead-${this.state.counter}`,
+            activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + files.length,
         });
     }
@@ -178,14 +182,18 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: `lead-${this.state.counter}`,
+                    id: `lead-${this.state.counter}`,
                     type: 'website',
+                    form: {
+                        pending: false,
+                        stale: false,
+                    },
                     formData: {
                         title: `Lead #${this.state.counter}`,
                     },
                 },
             ],
-            activeLeadKey: `lead-${this.state.counter}`,
+            activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
         });
     }
@@ -195,22 +203,88 @@ export default class AddLead extends React.PureComponent {
             leads: [
                 ...this.state.leads,
                 {
-                    key: `lead-${this.state.counter}`,
+                    id: `lead-${this.state.counter}`,
                     type: 'text',
-                    iconName: 'ion-clipboard',
+                    form: {
+                        pending: false,
+                        stale: false,
+                    },
                     formData: {
                         title: `Lead #${this.state.counter}`,
                     },
                 },
             ],
-            activeLeadKey: `lead-${this.state.counter}`,
+            activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
         });
     }
 
     handleOptionChange = (changeEvent) => {
-        this.setState({ selectedValue: changeEvent.target.value });
+        this.setState({
+            selectedValue: changeEvent.target.value,
+        });
     };
+
+    isLeadReady = (lead) => {
+        if (lead.type === 'file') {
+            return lead.upload.progress >= 100;
+        }
+        return true;
+    }
+
+    handleLeadChange = (leadId, values) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.id === leadId);
+        const settings = {
+            [leadIndex]: {
+                form: {
+                    stale: { $set: true },
+                    error: { $set: false },
+                },
+                formData: { $merge: values },
+            },
+        };
+        console.log(settings);
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    }
+
+    handleLeadSuccess = (leadId, values) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.id === leadId);
+        const settings = {
+            [leadIndex]: {
+                form: {
+                    stale: { $set: false },
+                    pending: { $set: true },
+                },
+                formData: { $set: values },
+            },
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    }
+
+    handleLeadFailure = (leadId) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.id === leadId);
+        const settings = {
+            [leadIndex]: {
+                form: {
+                    stale: { $set: false },
+                    error: { $set: true },
+                },
+            },
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    }
 
     render() {
         return (
@@ -221,7 +295,7 @@ export default class AddLead extends React.PureComponent {
                     </title>
                 </Helmet>
                 <Tabs
-                    selectedTab={this.state.activeLeadKey}
+                    selectedTab={this.state.activeLeadId}
                     activeLinkStyle={{ none: 'none' }}
                     styleName="tab-container"
                 >
@@ -233,9 +307,9 @@ export default class AddLead extends React.PureComponent {
                             {
                                 this.state.leads.map(lead => (
                                     <AddLeadListItem
-                                        key={lead.key}
-                                        active={this.state.activeLeadKey === lead.key}
-                                        onClick={() => this.leadsClickHandler(lead.key)}
+                                        key={lead.id}
+                                        active={this.state.activeLeadId === lead.id}
+                                        onClick={() => this.leadsClickHandler(lead.id)}
                                         title={lead.formData.title}
                                         type={lead.type}
                                         upload={lead.upload}
@@ -287,29 +361,30 @@ export default class AddLead extends React.PureComponent {
                         </div>
                     </div>
                     <div styleName="leads-details-container">
-                        {/* <AddLeadForm
-                            onSubmit={() => {}}
-                            pending={false}
-                            values={this.state.editRow}
-                        />
-                    */}
                         <div styleName="tabs-content">
                             {
                                 this.state.leads.map(lead => (
                                     <TabContent
-                                        for={lead.key}
+                                        for={lead.id}
+                                        key={lead.id}
                                         styleName="tab"
                                     >
-                                        {/*
                                         <AddLeadForm
-                                            onSubmit={() => {}}
-                                            pending={false}
-                                            values={lead}
+                                            leadId={lead.id}
+                                            leadType={lead.type}
+                                            ready={this.isLeadReady(lead)}
+                                            pending={lead.form.pending}
+                                            stale={lead.form.stale}
+                                            data={lead.formData}
+                                            onChange={this.handleLeadChange}
+                                            onSuccess={this.handleLeadSuccess}
+                                            onFailure={this.handleLeadFailure}
                                         />
+                                        {/*
+                                            <div styleName="preview-container">
+                                                <h2>Preview Container</h2>
+                                            </div>
                                         */}
-                                        <div styleName="preview-container">
-                                            <h2>Preview Container</h2>
-                                        </div>
                                     </TabContent>
                                 ))
                             }
