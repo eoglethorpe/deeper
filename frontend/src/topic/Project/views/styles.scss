@@ -27,14 +27,6 @@
     .content {
         flex-basis: 100%;
 
-        .tabs-container {
-            height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
-        }
-
-        .tab {
-            font-size: .9em;
-        }
-
         &.side-bar-shown {
             flex-basis: 75%;
         }
@@ -54,6 +46,26 @@
         .header {
             border-bottom: $width-separator-thin solid $color-accent;
         }
+
+        .list {
+            height: calc(100% - #{$height-header});
+
+            .list-item {
+                display: block;
+                border-bottom: $width-separator-thin solid $color-separator;
+
+                .link {
+                    display: block;
+                    padding: $spacing-medium $spacing-large;
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+
+            .active {
+                background-color: $color-accent;
+                color: $color-text-on-accent;
+            }
+        }
     }
 }
-

@@ -219,6 +219,17 @@ attachValidator(dict);
 // Project request related
 
 {
+    const name = 'projectGetResponse';
+    const schema = {
+        doc: {
+            name: 'Project Get Response',
+            description: 'Response for GET /projects/{id}',
+        },
+        extends: 'project',
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'projectsGetResponse';
     const schema = {
         doc: {

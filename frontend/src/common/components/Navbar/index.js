@@ -201,7 +201,7 @@ export default class Navbar extends React.PureComponent {
                         iconName: 'ion-android-globe',
                     },
                     {
-                        linkTo: '/projectpanel/',
+                        linkTo: `/${activeProject}/projectpanel/`,
                         name: pageTitles.projectPanel,
                         iconName: 'ion-wrench',
                     },

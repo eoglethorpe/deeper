@@ -1,6 +1,7 @@
 import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
+    SET_USER_PROJECT,
     SET_USER_GROUPS,
     SET_ACTIVE_PROJECT,
     SET_LEADS,
@@ -17,6 +18,12 @@ export const setUserProjectsAction = ({ userId, projects }) => ({
     type: SET_USER_PROJECTS,
     userId,
     projects,
+});
+
+export const setProjectAction = ({ userId, project }) => ({
+    type: SET_USER_PROJECT,
+    userId,
+    project,
 });
 
 export const setUserGroupsAction = ({ userId, userGroups }) => ({

@@ -49,6 +49,7 @@ export const createUrlForProjectsOfUser = userId => (
 export const createUrlForUserGroupsOfUser = userId => (
     `${wsEndpoint}/user-groups/?${p({ user: userId })}`
 );
+export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}`;
 export const createUrlForLeadsOfProject = params => (
     `${wsEndpoint}/leads/?${p(params)}`
 );
