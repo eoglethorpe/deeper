@@ -137,7 +137,7 @@ export default class UserProfile extends React.PureComponent {
                 order: 2,
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
-                    const membership = row.memberships.find(d => d.member === +userId);
+                    const membership = (row.memberships || []).find(d => d.member === +userId);
                     return (membership || { role: '-' }).role;
                 },
             },

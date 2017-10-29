@@ -30,14 +30,13 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
         }
         case SET_USER_PROJECT: {
             const settings = {
-                users: {
-                    [action.userId]: { $auto: {
-                        projects: {
-                            $set: action.project,
-                        },
+                projects: {
+                    [action.projectId]: { $auto: {
+                        $set: action.project,
                     } },
                 },
             };
+            console.log(settings.projects);
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {

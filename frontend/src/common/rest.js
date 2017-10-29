@@ -33,7 +33,7 @@ export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
 export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
-export const urlForProjects = `${wsEndpoint}/projects/`;
+export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title`;
 export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 export const urlForApiDocs = `${wsEndpoint}/docs/`;
 
@@ -49,7 +49,7 @@ export const createUrlForProjectsOfUser = userId => (
 export const createUrlForUserGroupsOfUser = userId => (
     `${wsEndpoint}/user-groups/?${p({ user: userId })}`
 );
-export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}`;
+export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
 export const createUrlForLeadsOfProject = params => (
     `${wsEndpoint}/leads/?${p(params)}`
 );

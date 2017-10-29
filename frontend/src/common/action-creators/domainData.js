@@ -20,9 +20,9 @@ export const setUserProjectsAction = ({ userId, projects }) => ({
     projects,
 });
 
-export const setProjectAction = ({ userId, project }) => ({
+export const setProjectAction = ({ projectId, project }) => ({
     type: SET_USER_PROJECT,
-    userId,
+    projectId,
     project,
 });
 

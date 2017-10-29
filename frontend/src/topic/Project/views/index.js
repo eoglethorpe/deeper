@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
-import styles from './styles.scss';
 import ListView, { ListItem } from '../../../public/components/ListView';
 import ProjectDetails from '../components/ProjectDetails';
+import TextInput from '../../../public/components/TextInput';
+import styles from './styles.scss';
 import { RestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/utils/labels';
 import {
@@ -22,12 +23,12 @@ import {
     createUrlForProject,
 } from '../../../common/rest';
 import {
-    currentUserProjectsSelector,
     activeProjectSelector,
+    currentUserProjectsSelector,
+    projectDetailsSelector,
 } from '../../../common/selectors/domainData';
 import {
     tokenSelector,
-    activeUserSelector,
 } from '../../../common/selectors/auth';
 import {
     TransparentPrimaryButton,
@@ -35,15 +36,13 @@ import {
 import schema from '../../../common/schema';
 
 const propTypes = {
+    activeProject: PropTypes.number,
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
     }),
-    activeProject: PropTypes.number,
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setNavbarState: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
-    activeUser: PropTypes.shape({
-        userId: PropTypes.number,
-    }),
     setActiveProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.arrayOf(
@@ -62,16 +61,16 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeUser: activeUserSelector(state),
     activeProject: activeProjectSelector(state),
-    userProjects: currentUserProjectsSelector(state, props),
+    projectDetails: projectDetailsSelector(state, props),
     token: tokenSelector(state),
+    userProjects: currentUserProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setProject: params => dispatch(setProjectAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    setProject: params => dispatch(setProjectAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -84,10 +83,12 @@ export default class ProjectPanel extends React.PureComponent {
         super(props);
 
         this.state = {
+            displayUserProjects: this.props.userProjects,
             sideBarVisibility: false,
+            searchInputValue: '',
         };
 
-        this.projectRequest = this.createProjectRequest();
+        this.projectRequest = this.createProjectRequest(this.props.activeProject);
     }
 
     componentWillMount() {
@@ -113,9 +114,21 @@ export default class ProjectPanel extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
 
+
         if (this.props.activeProject !== activeProject) {
-            console.log('asd0');
+            this.projectRequest.stop();
+            this.projectRequest = this.createProjectRequest(activeProject);
+            this.projectRequest.start();
         }
+
+        const caseInsensitiveSubmatch = project => (
+            project.title.toLowerCase().includes(this.state.searchInputValue.toLowerCase())
+        );
+        const displayUserProjects = nextProps.userProjects.filter(caseInsensitiveSubmatch);
+
+        this.setState({
+            displayUserProjects,
+        });
     }
 
     componentWillUnmount() {
@@ -139,9 +152,9 @@ export default class ProjectPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    createProjectRequest = () => {
+    createProjectRequest = (activeProject) => {
         const projectRequest = new RestBuilder()
-            .url(createUrlForProject(this.props.activeProject))
+            .url(createUrlForProject(activeProject))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
@@ -154,7 +167,6 @@ export default class ProjectPanel extends React.PureComponent {
                     schema.validate(response, 'projectGetResponse');
                     this.props.setProject({
                         projectId: this.props.activeProject,
-                        userId: this.props.activeUser.userId,
                         project: response,
                     });
                 } catch (er) {
@@ -180,11 +192,20 @@ export default class ProjectPanel extends React.PureComponent {
         });
     };
 
+    search = (value) => {
+        const caseInsensitiveSubmatch = project => (
+            project.title.toLowerCase().includes(value.toLowerCase())
+        );
+        const displayUserProjects = this.props.userProjects.filter(caseInsensitiveSubmatch);
+
+        this.setState({
+            displayUserProjects,
+            searchInputValue: value,
+        });
+    };
     render() {
-        const { sideBarVisibility } = this.state;
-        const { activeProject, userProjects } = this.props;
-        console.log(userProjects);
-        console.log(activeProject);
+        const { sideBarVisibility, displayUserProjects } = this.state;
+        const { projectDetails } = this.props;
 
         return (
             <div
@@ -198,11 +219,11 @@ export default class ProjectPanel extends React.PureComponent {
                 >
                     <header styleName="header">
                         <h1 styleName="heading">
-                            { activeProject }
+                            { projectDetails.title }
                         </h1>
                         {!sideBarVisibility &&
                             <TransparentPrimaryButton onClick={this.showProjectList}>
-                                Show all projects
+                                <span className="ion-eye" />
                             </TransparentPrimaryButton>
                         }
                     </header>
@@ -218,10 +239,15 @@ export default class ProjectPanel extends React.PureComponent {
                         <TransparentPrimaryButton onClick={this.closeProjectList}>
                             <span className="ion-android-close" />
                         </TransparentPrimaryButton>
+                        <TextInput
+                            onChange={this.search}
+                            placeholder="Search Project"
+                            type="search"
+                        />
                     </header>
                     <ListView styleName="list">
                         {
-                            userProjects.map(project => (
+                            displayUserProjects.map(project => (
                                 <ListItem
                                     key={`project-${project.id}`}
                                     styleName={this.getStyleName(project.id)}
