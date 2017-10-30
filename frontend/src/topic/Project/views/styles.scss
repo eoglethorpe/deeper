@@ -7,7 +7,7 @@
     margin: $spacing-large;
     $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
     $height-header: 56px;
-    background-color: $color-background-alt-row;
+    background-color: $color-foreground;
     height: $height-full-page;
 
     .header {
