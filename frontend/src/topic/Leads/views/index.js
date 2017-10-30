@@ -333,7 +333,6 @@ export default class Leads extends React.PureComponent {
         browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
 
-
     handleApplyFilters = (filters) => {
         const { activeProject } = this.props;
 
@@ -463,6 +462,7 @@ export default class Leads extends React.PureComponent {
                     <Body>
                         <EditLeadForm
                             onSubmit={() => {}}
+                            onCancel={this.handleEditLeadModalClose}
                             pending={false}
                             values={this.state.editRow}
                         />
