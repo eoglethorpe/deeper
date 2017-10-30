@@ -7,7 +7,7 @@ import { PrimaryButton, DangerButton } from '../../../../public/components/Butto
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
-    emailCondition,
+    urlCondition,
 } from '../../../../public/components/Form';
 
 const propTypes = {
@@ -38,22 +38,45 @@ export default class EditLeadForm extends React.PureComponent {
             pending: false,
         };
         this.elements = [
-            'email',
-            'password'];
+            'title',
+            'source',
+            'confidentiality',
+            'assignTo',
+            'publicationDate',
+            'url',
+            'website',
+        ];
 
         this.validations = {
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-
-            firstName: [
+            title: [
                 requiredCondition,
             ],
 
-            lastName: [
+            source: [
                 requiredCondition,
             ],
+
+            confidentiality: [
+                requiredCondition,
+            ],
+
+            assignTo: [
+                requiredCondition,
+            ],
+
+            publicationDate: [
+                requiredCondition,
+            ],
+
+            url: [
+                requiredCondition,
+                urlCondition,
+            ],
+
+            website: [
+                requiredCondition,
+            ],
+
         };
     }
 
@@ -87,15 +110,7 @@ export default class EditLeadForm extends React.PureComponent {
 
     successCallback = (values) => {
         this.setState({ pending: true });
-        // Stop old patch request
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-        // Create new patch request and start it
-        const { match } = this.props;
-        const userId = match.params.userId;
-        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
-        this.userPatchRequest.start();
+        console.log(values);
     };
 
     handleFormCancel = (e) => {
@@ -173,21 +188,21 @@ export default class EditLeadForm extends React.PureComponent {
                     />
                     <TextInput
                         label="Assign To"
-                        formname="user"
+                        formname="assignTo"
                         placeholder="Enter a descriptive name"
                         styleName="user-box"
-                        initialValue={formValues.user}
-                        error={formFieldErrors.user}
+                        initialValue={formValues.assignTo}
+                        error={formFieldErrors.assignTo}
 
                     />
                 </div>
                 <TextInput
                     label="Publication Date"
-                    formname="date"
+                    formname="publicationDate"
                     placeholder="Enter a descriptive name"
                     styleName="date-box"
-                    initialValue={formValues.date}
-                    error={formFieldErrors.date}
+                    initialValue={formValues.publicationDate}
+                    error={formFieldErrors.publicationDate}
                 />
                 <div styleName="url-box-container">
                     <TextInput
