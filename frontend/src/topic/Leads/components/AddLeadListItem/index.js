@@ -6,10 +6,11 @@ import styles from './styles.scss';
 const propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,
+    error: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
     stale: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
     upload: PropTypes.shape({
         progress: PropTypes.number,
     }),
