@@ -5,15 +5,17 @@ import { Switch, Link, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
-import browserHistory from '../../../common/browserHistory';
 import CountryDetail from '../components/CountryDetail';
-import Modal, { Header, Body } from '../../../public/components/Modal';
+import Form, {
+    requiredCondition,
+} from '../../../public/components/Form';
+import Modal, { Header } from '../../../public/components/Modal';
 import ListView, { ListItem } from '../../../public/components/ListView';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
 import { RestBuilder } from '../../../public/utils/rest';
-import { PrimaryButton } from '../../../public/components/Button';
+import { PrimaryButton, DangerButton } from '../../../public/components/Button';
 import {
     tokenSelector,
 } from '../../../common/selectors/auth';
@@ -74,8 +76,22 @@ export default class CountryPanel extends React.PureComponent {
             addCountryModal: false,
             displayCountryList: this.props.countries,
             searchInputValue: '',
+
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {},
+            pending: false,
+            stale: false,
         };
 
+        this.elements = [
+            'name',
+            'code',
+        ];
+        this.validations = {
+            name: [requiredCondition],
+            code: [requiredCondition],
+        };
         const { token } = this.props;
         this.countriesRequest = new RestBuilder()
             .url(urlForCountries)
@@ -130,6 +146,11 @@ export default class CountryPanel extends React.PureComponent {
     onAddCountry = () => {
         this.setState({
             addCountryModal: true,
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {},
+            pending: false,
+            stale: false,
         });
     };
 
@@ -170,7 +191,38 @@ export default class CountryPanel extends React.PureComponent {
         });
     };
 
+    // FORM RELATED
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (data) => {
+        console.log(data);
+
+        // Rest Request goes here
+    };
     render() {
+        const {
+            formErrors = [],
+            formFieldErrors,
+            formValues,
+            pending,
+            stale,
+        } = this.state;
+
         return (
             <div styleName="country-panel">
                 <Helmet>
@@ -218,9 +270,68 @@ export default class CountryPanel extends React.PureComponent {
                         closeOnBlur
                     >
                         <Header title="Add new country" />
-                        <Body>
-                            Adasdasd
-                        </Body>
+                        <Form
+                            styleName="add-country-form"
+                            changeCallback={this.changeCallback}
+                            elements={this.elements}
+                            failureCallback={this.failureCallback}
+                            successCallback={this.successCallback}
+                            validation={this.validation}
+                            validations={this.validations}
+                            onSubmit={this.handleSubmit}
+                        >
+                            {
+                                pending &&
+                                <div styleName="pending-overlay">
+                                    <i
+                                        className="ion-load-c"
+                                        styleName="loading-icon"
+                                    />
+                                </div>
+                            }
+                            <div styleName="non-field-errors">
+                                {
+                                    formErrors.map(err => (
+                                        <div
+                                            key={err}
+                                            styleName="error"
+                                        >
+                                            {err}
+                                        </div>
+                                    ))
+                                }
+                                { formErrors.length <= 0 &&
+                                    <div styleName="error empty">
+                                        -
+                                    </div>
+                                }
+                            </div>
+                            <TextInput
+                                label="Country Name"
+                                formname="name"
+                                placeholder="Enter county name"
+                                initialValue={formValues.name}
+                                error={formFieldErrors.name}
+                            />
+                            <TextInput
+                                label="Code"
+                                formname="code"
+                                placeholder="Enter country code"
+                                initialValue={formValues.code}
+                                error={formFieldErrors.code}
+                            />
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    onClick={this.handleModalClose}
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <PrimaryButton disabled={pending || !stale} >
+                                    Save changes
+                                </PrimaryButton>
+                            </div>
+                        </Form>
                     </Modal>
                 </div>
                 <div styleName="country-details">
