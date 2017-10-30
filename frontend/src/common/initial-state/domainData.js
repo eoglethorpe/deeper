@@ -1,6 +1,14 @@
 const initialDomainDataState = {
 
     // index is project id
+    projects: {
+        4: {
+            id: 4,
+            title: 'asdasd',
+        },
+    },
+
+    // index is project id
     leads: {
         1: [
             {

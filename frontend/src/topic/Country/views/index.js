@@ -19,8 +19,8 @@ import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 
-const propTypes = {
     // NOTE: is Required removed by @frozenhelium
+const propTypes = {
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
     }),

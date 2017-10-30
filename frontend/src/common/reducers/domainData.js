@@ -1,6 +1,7 @@
 import {
     SET_USER_INFORMATION,
     SET_USER_PROJECTS,
+    SET_USER_PROJECT,
     SET_USER_GROUPS,
     SET_ACTIVE_PROJECT,
     SET_LEADS,
@@ -25,6 +26,17 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
+            return update(state, settings);
+        }
+        case SET_USER_PROJECT: {
+            const settings = {
+                projects: {
+                    [action.projectId]: { $auto: {
+                        $set: action.project,
+                    } },
+                },
+            };
+            console.log(settings.projects);
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {

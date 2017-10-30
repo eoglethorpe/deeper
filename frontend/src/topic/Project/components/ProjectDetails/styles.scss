@@ -1,0 +1,11 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+
+.tabs-container {
+    height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
+}
+
+.tab {
+    height: 100%;
+    font-size: 1em;
+}

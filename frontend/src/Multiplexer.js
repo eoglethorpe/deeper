@@ -44,6 +44,12 @@ const Dashboard = () => (
     </ProjectRouteSynchronizer>
 );
 
+const ProjectPanel = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/projectpanel/`} >
+        <Bundle load={() => import('./topic/Project/views')} />
+    </ProjectRouteSynchronizer>
+);
+
 const HomeScreen = () => (
     <Bundle load={() => import('./topic/HomeScreen/views')} />
 );
@@ -61,9 +67,7 @@ const UserProfile = () => (
 const WeeklySnapshot = () => (
     <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
 );
-const ProjectPanel = () => (
-    <Bundle load={() => import('./topic/Project/views')} />
-);
+
 const CountryPanel = () => (
     <Bundle load={() => import('./topic/Country/views')} />
 );
@@ -162,7 +166,7 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/projectpanel/*',
+            path: '/:projectId/projectpanel/',
             name: pageTitles.projectPanel,
             component: ProjectPanel,
             private: true,

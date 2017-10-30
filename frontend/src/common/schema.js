@@ -88,6 +88,20 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 {
+    const name = 'projectList';
+    const schema = {
+        doc: {
+            name: 'Project',
+            description: 'One of the main entities',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            title: { type: 'string', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'userGroup';
     const schema = {
         doc: {
@@ -219,6 +233,17 @@ attachValidator(dict);
 // Project request related
 
 {
+    const name = 'projectGetResponse';
+    const schema = {
+        doc: {
+            name: 'Project Get Response',
+            description: 'Response for GET /projects/{id}',
+        },
+        extends: 'project',
+    };
+    dict.put(name, schema);
+}
+{
     const name = 'projectsGetResponse';
     const schema = {
         doc: {
@@ -229,7 +254,7 @@ attachValidator(dict);
             count: { type: 'uint', required: true },
             next: { type: 'string' },
             previous: { type: 'string' },
-            results: { type: 'array.project', required: true },
+            results: { type: 'array.projectList', required: true },
         },
     };
     dict.put(name, schema);
