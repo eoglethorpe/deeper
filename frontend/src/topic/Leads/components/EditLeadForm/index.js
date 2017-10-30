@@ -3,89 +3,84 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import { PrimaryButton } from '../../../../public/components/Button';
+import { PrimaryButton, DangerButton } from '../../../../public/components/Button';
 import TextInput from '../../../../public/components/TextInput';
 import Form, {
     requiredCondition,
-    emailCondition,
-} from '../../../../public/utils/Form';
+    urlCondition,
+} from '../../../../public/components/Form';
 
+const propTypes = {
+    onSubmit: PropTypes.func.isRequired, //eslint-disable-line
+    pending: PropTypes.bool.isRequired, //eslint-disable-line
+    onCancel: PropTypes.func.isRequired, //eslint-disable-line
+};
 
-@CSSModules(styles)
+const defaultProps = {
+    values: {},
+};
+
+@CSSModules(styles, { allowMultiple: true })
 export default class EditLeadForm extends React.PureComponent {
-    static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
-        pending: PropTypes.bool.isRequired,
-        values: PropTypes.shape({
-            title: PropTypes.string,
-        }),
-    };
-
-    static defaultProps = {
-        values: {},
-    };
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
 
-        const form = new Form();
-        const elements = ['email', 'password'];
-        const validations = {
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-
-            firstName: [
-                requiredCondition,
-            ],
-
-            lastName: [
-                requiredCondition,
-            ],
-        };
-
-        const updateValues = (data) => {
-            this.setState({
-                formValues: { ...this.state.formValues, ...data },
-            });
-        };
-
-        const updateErrors = (data) => {
-            this.setState({
-                formErrors: data,
-            });
-        };
-
-        const okay = (data) => {
-            this.props.onSubmit(data);
-        };
-
-        form.setElements(elements);
-        form.setValidations(validations);
-
-        // calls with new errors
-        form.setCallbackForFocus(updateErrors);
-        // new state
-        form.setCallbackForChange(updateValues);
-        // calls with success and error
-        form.setCallbackForSuccessAndFailure(okay, updateErrors);
-
-        this.form = form;
-
         this.state = {
-            formErrors: { },
-            formValues: props.values,
+            editLead: false,
+
+            formValues: {},
+            formErrors: [],
+            formFieldErrors: {},
+            stale: false,
+            pending: false,
+        };
+        this.elements = [
+            'title',
+            'source',
+            'confidentiality',
+            'assignTo',
+            'publicationDate',
+            'url',
+            'website',
+        ];
+
+        this.validations = {
+            title: [
+                requiredCondition,
+            ],
+
+            source: [
+                requiredCondition,
+            ],
+
+            confidentiality: [
+                requiredCondition,
+            ],
+
+            assignTo: [
+                requiredCondition,
+            ],
+
+            publicationDate: [
+                requiredCondition,
+            ],
+
+            url: [
+                requiredCondition,
+                urlCondition,
+            ],
+
+            website: [
+                requiredCondition,
+            ],
+
         };
     }
 
-    onFocus = (overrideName) => {
-        this.form.onFocus(overrideName);
-    }
-
-    onChange = (value) => {
-        this.form.onChange(value);
-    }
+    // FORM RELATED
 
     onSubmit = () => {
         this.form.onSubmit();
@@ -97,35 +92,161 @@ export default class EditLeadForm extends React.PureComponent {
         return false;
     }
 
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (values) => {
+        this.setState({ pending: true });
+        console.log(values);
+    };
+
+    handleFormCancel = (e) => {
+        e.preventDefault();
+        this.props.onCancel();
+    };
+
     render() {
-        const { pending } = this.props;
+        const {
+            formErrors = [],
+            formFieldErrors,
+            stale,
+            pending,
+            formValues,
+        } = this.state;
 
         return (
-            <form styleName="edit-lead-form" onSubmit={this.handleSubmit}>
+            <Form
+                styleName="edit-lead-form"
+                changeCallback={this.changeCallback}
+                elements={this.elements}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                validation={this.validation}
+                validations={this.validations}
+            >
                 {
-                    pending && (
-                        <div styleName="pending-overlay">
-                            <i className="ion-load-c" styleName="loading-icon" />
-                        </div>
-                    )
+                    pending &&
+                    <div styleName="pending-overlay">
+                        <i
+                            className="ion-load-c"
+                            styleName="loading-icon"
+                        />
+                    </div>
                 }
+                <div styleName="non-field-errors">
+                    {
+                        formErrors.map(err => (
+                            <div
+                                key={err}
+                                styleName="error"
+                            >
+                                {err}
+                            </div>
+                        ))
+                    }
+                    { formErrors.length <= 0 &&
+                        <div styleName="error empty">
+                            -
+                        </div>
+                    }
+                </div>
                 <TextInput
                     label="Title"
-                    placeholder="Lead title"
-
-                    ref={this.form.updateRef('lead-title')}
-                    initialValue={this.state.formValues.title}
-                    error={this.state.formErrors.title}
-
-                    onFocus={this.onFocus}
-                    onChange={this.onChange}
+                    formname="title"
+                    placeholder="Enter a descriptive name"
+                    initialValue={formValues.title}
+                    error={formFieldErrors.title}
                 />
+                <TextInput
+                    label="Source"
+                    formname="source"
+                    placeholder="Enter a descriptive name"
+                    initialValue={formValues.source}
+                    error={formFieldErrors.source}
+                />
+                <div styleName="other-container-box">
+                    <TextInput
+                        label="Confidentiality"
+                        formname="confidentiality"
+                        placeholder="Enter a descriptive name"
+                        styleName="confidentiality-box"
+                        initialValue={formValues.confidentiality}
+                        error={formFieldErrors.confidentiality}
+                    />
+                    <TextInput
+                        label="Assign To"
+                        formname="assignTo"
+                        placeholder="Enter a descriptive name"
+                        styleName="user-box"
+                        initialValue={formValues.assignTo}
+                        error={formFieldErrors.assignTo}
+
+                    />
+                </div>
+                <TextInput
+                    label="Publication Date"
+                    formname="publicationDate"
+                    placeholder="Enter a descriptive name"
+                    styleName="date-box"
+                    initialValue={formValues.publicationDate}
+                    error={formFieldErrors.publicationDate}
+                />
+                <div styleName="url-box-container">
+                    <TextInput
+                        label="URL"
+                        formname="url"
+                        placeholder="Enter a descriptive name"
+                        styleName="url-box"
+                        initialValue={formValues.url}
+                        error={formFieldErrors.url}
+                    />
+                    <TextInput
+                        label="Website"
+                        formname="website"
+                        placeholder="Enter a descriptive name"
+                        styleName="website-box"
+                        initialValue={formValues.website}
+                        error={formFieldErrors.website}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="manual-entry-box">
+                        Manual Entry
+                    </label>
+                    <textarea
+                        styleName="manual-entry-box"
+                        cols="10"
+                        rows="3"
+                    />
+                </div>
+                <div>
+                    File Upload
+                </div>
                 <div styleName="action-buttons">
-                    <PrimaryButton>
+                    <DangerButton
+                        onClick={this.handleFormCancel}
+                        disabled={pending}
+                    >
+                        Cancel
+                    </DangerButton>
+                    <PrimaryButton disabled={pending || !stale} >
                         Save changes
                     </PrimaryButton>
                 </div>
-            </form>
+            </Form>
         );
     }
 }

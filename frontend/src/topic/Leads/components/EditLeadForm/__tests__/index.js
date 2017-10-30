@@ -7,6 +7,7 @@ describe('<EditLeadForm />', () => {
         <EditLeadForm
             pending={false}
             onSubmit={() => {}}
+            onCancel={() => {}}
         />,
     );
 
