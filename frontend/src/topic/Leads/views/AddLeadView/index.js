@@ -27,7 +27,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
-
 });
 
 const propTypes = {
@@ -307,9 +306,11 @@ export default class AddLead extends React.PureComponent {
                             {
                                 this.state.leads.map(lead => (
                                     <AddLeadListItem
-                                        key={lead.id}
                                         active={this.state.activeLeadId === lead.id}
+                                        key={lead.id}
                                         onClick={() => this.leadsClickHandler(lead.id)}
+                                        stale={lead.form.stale}
+                                        error={lead.form.error}
                                         title={lead.formData.title}
                                         type={lead.type}
                                         upload={lead.upload}
@@ -360,38 +361,32 @@ export default class AddLead extends React.PureComponent {
                             </TransparentButton>
                         </div>
                     </div>
-                    <div styleName="leads-details-container">
-                        <div styleName="tabs-content">
-                            {
-                                this.state.leads.map(lead => (
-                                    <TabContent
-                                        for={lead.id}
-                                        key={lead.id}
-                                        styleName="tab"
-                                    >
-                                        <AddLeadForm
-                                            leadId={lead.id}
-                                            leadType={lead.type}
-                                            ready={this.isLeadReady(lead)}
-                                            pending={lead.form.pending}
-                                            stale={lead.form.stale}
-                                            data={lead.formData}
-                                            onChange={this.handleLeadChange}
-                                            onSuccess={this.handleLeadSuccess}
-                                            onFailure={this.handleLeadFailure}
-                                        />
-                                        {/*
-                                            <div styleName="preview-container">
-                                                <h2>Preview Container</h2>
-                                            </div>
-                                        */}
-                                    </TabContent>
-                                ))
-                            }
-                        </div>
-                        {/* <div styleName="preview-container">
-                            <h2> Preview Container goes here</h2>
-                        </div> */}
+                    <div styleName="lead-detail-container">
+                        {
+                            this.state.leads.map(lead => (
+                                <TabContent
+                                    for={lead.id}
+                                    key={lead.id}
+                                    styleName="tab"
+                                >
+                                    <AddLeadForm
+                                        leadId={lead.id}
+                                        leadType={lead.type}
+                                        ready={this.isLeadReady(lead)}
+                                        pending={lead.form.pending}
+                                        stale={lead.form.stale}
+                                        data={lead.formData}
+                                        onChange={this.handleLeadChange}
+                                        onSuccess={this.handleLeadSuccess}
+                                        onFailure={this.handleLeadFailure}
+                                        styleName="add-lead-form"
+                                    />
+                                    <div styleName="lead-preview">
+                                        Lead preview
+                                    </div>
+                                </TabContent>
+                            ))
+                        }
                     </div>
                 </Tabs>
             </div>

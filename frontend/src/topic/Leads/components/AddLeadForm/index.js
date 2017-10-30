@@ -17,6 +17,7 @@ import {
 // uploadStates -> birth, uploading, success, fail
 // formStates -> stale, error, pending
 const propTypes = {
+    className: PropTypes.string,
     data: PropTypes.object.isRequired, // eslint-disable-line
     leadId: PropTypes.string.isRequired,
     leadType: PropTypes.string.isRequired,
@@ -28,6 +29,7 @@ const propTypes = {
     stale: PropTypes.bool.isRequired,
 };
 const defaultProps = {
+    className: '',
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -98,6 +100,7 @@ export default class AddLeadForm extends React.PureComponent {
         } = this.state;
 
         const {
+            className,
             data,
             pending,
             stale,
@@ -107,45 +110,27 @@ export default class AddLeadForm extends React.PureComponent {
         const formValues = data;
 
         return (
-            <div styleName="leads-details">
-                <Form
-                    styleName="user-profile-edit-form"
-                    changeCallback={this.changeCallback}
-                    elements={this.elements}
-                    failureCallback={this.failureCallback}
-                    successCallback={this.successCallback}
-                    validation={this.validation}
-                    validations={this.validations}
-                    onSubmit={this.handleSubmit}
-                >
-                    {
-                        pending &&
+            <Form
+                changeCallback={this.changeCallback}
+                className={className}
+                elements={this.elements}
+                failureCallback={this.failureCallback}
+                onSubmit={this.handleSubmit}
+                styleName="add-lead-form"
+                successCallback={this.successCallback}
+                validation={this.validation}
+                validations={this.validations}
+            >
+                {
+                    pending &&
                         <div styleName="pending-overlay">
                             <i
                                 className="ion-load-c"
                                 styleName="loading-icon"
                             />
                         </div>
-                    }
-                    <header styleName="header-title">
-                        <h1>{data.title}</h1>
-                        <div styleName="action-buttons">
-                            {/* <DangerButton>
-                                Cancel
-                                </DangerButton>
-                            */}
-                            <SuccessButton
-                                disabled={pending || !stale || !ready}
-                            >
-                                Save
-                            </SuccessButton>
-                            <PrimaryButton
-                                disabled={pending || !stale || !ready}
-                            >
-                                Save & Next
-                            </PrimaryButton>
-                        </div>
-                    </header>
+                }
+                <header styleName="header">
                     <div styleName="non-field-errors">
                         {
                             formErrors.map(err => (
@@ -157,103 +142,112 @@ export default class AddLeadForm extends React.PureComponent {
                                 </div>
                             ))
                         }
-                        { formErrors.length <= 0 &&
-                            <div styleName="error empty">
-                                -
-                            </div>
+                        {
+                            formErrors.length <= 0 &&
+                                <div styleName="error empty">
+                                    -
+                                </div>
                         }
                     </div>
-                    <div styleName="title-and-source-box">
-                        <TextInput
-                            label="Title"
-                            formname="title"
-                            placeholder="Enter a descriptive name"
-                            styleName="title-box"
-                            initialValue={formValues.title}
-                            error={formFieldErrors.title}
-                        />
-                        <TextInput
-                            label="Source"
-                            formname="source"
-                            placeholder="Enter a descriptive name"
-                            styleName="source-box"
-                            initialValue={formValues.source}
-                            error={formFieldErrors.source}
-                        />
+                    <div styleName="action-buttons">
+                        <SuccessButton
+                            disabled={pending || !stale || !ready}
+                        >
+                            Save
+                        </SuccessButton>
+                        <PrimaryButton
+                            disabled={pending || !stale || !ready}
+                        >
+                            Save &amp; next
+                        </PrimaryButton>
                     </div>
-                    <div styleName="other-container-box">
-                        <TextInput
-                            label="Confidentiality"
-                            formname="confidentiality"
-                            placeholder="Enter a descriptive name"
-                            styleName="confidentiality-box"
-                            initialValue={formValues.confidentiality}
-                            error={formFieldErrors.confidentiality}
-                        />
-                        <TextInput
-                            label="Assign To"
-                            formname="user"
-                            placeholder="Enter a descriptive name"
-                            styleName="user-box"
-                            initialValue={formValues.user}
-                            error={formFieldErrors.user}
+                </header>
+                <TextInput
+                    label="Title"
+                    formname="title"
+                    placeholder="Enter a descriptive name"
+                    styleName="title"
+                    initialValue={formValues.title}
+                    error={formFieldErrors.title}
+                />
+                <TextInput
+                    label="Source"
+                    formname="source"
+                    placeholder="Enter a descriptive name"
+                    styleName="source"
+                    initialValue={formValues.source}
+                    error={formFieldErrors.source}
+                />
+                <TextInput
+                    label="Confidentiality"
+                    formname="confidentiality"
+                    placeholder="Enter a descriptive name"
+                    styleName="confidentiality"
+                    initialValue={formValues.confidentiality}
+                    error={formFieldErrors.confidentiality}
+                />
+                <TextInput
+                    label="Assign To"
+                    formname="user"
+                    placeholder="Enter a descriptive name"
+                    styleName="user"
+                    initialValue={formValues.user}
+                    error={formFieldErrors.user}
 
-                        />
+                />
+                <TextInput
+                    label="Publication Date"
+                    formname="date"
+                    placeholder="Enter a descriptive name"
+                    styleName="date"
+                    initialValue={formValues.date}
+                    error={formFieldErrors.date}
+                />
+                {
+                    leadType === 'website' && [
                         <TextInput
-                            label="Publication Date"
-                            formname="date"
+                            key="url"
+                            label="URL"
+                            formname="url"
                             placeholder="Enter a descriptive name"
-                            styleName="date-box"
-                            initialValue={formValues.date}
-                            error={formFieldErrors.date}
-                        />
-                    </div>
-
-                    {
-                        leadType === 'website' &&
-                        <div styleName="url-box-container">
-                            <TextInput
-                                label="URL"
-                                formname="url"
-                                placeholder="Enter a descriptive name"
-                                styleName="url-box"
-                                initialValue={formValues.url}
-                                error={formFieldErrors.url}
-                            />
-                            <TextInput
-                                label="Website"
-                                formname="website"
-                                placeholder="Enter a descriptive name"
-                                styleName="website-box"
-                                initialValue={formValues.website}
-                                error={formFieldErrors.website}
-                            />
-                        </div>
-                    }
-
-                    {
-                        leadType === 'text' &&
-                        <div>
-                            <label htmlFor="manual-entry-box">
+                            styleName="url"
+                            initialValue={formValues.url}
+                            error={formFieldErrors.url}
+                        />,
+                        <TextInput
+                            key="website"
+                            label="Website"
+                            formname="website"
+                            placeholder="Enter a descriptive name"
+                            styleName="website"
+                            initialValue={formValues.website}
+                            error={formFieldErrors.website}
+                        />,
+                    ]
+                }
+                {
+                    leadType === 'text' &&
+                        <div styleName="manual-entry">
+                            <label
+                                styleName="label"
+                                htmlFor="manual-entry-input"
+                            >
                                 Manual Entry
                             </label>
                             <textarea
-                                id="manual-entry-box"
-                                styleName="manual-entry-box"
-                                cols="40"
-                                rows="5"
+                                id="manual-entry-input"
+                                rows="3"
+                                styleName="textarea"
                             />
                         </div>
-                    }
-
-                    { leadType === 'file' &&
-                        <div>
-                            File Upload
-                        </div>
-                    }
-
-                </Form>
-            </div>
+                }
+                {
+                    leadType === 'file' &&
+                    <div>
+                        File Upload
+                    </div>
+                }
+            </Form>
         );
     }
 }

@@ -6,20 +6,13 @@ import styles from './styles.scss';
 const propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,
+    stale: PropTypes.bool.isRequired,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     onClick: PropTypes.func.isRequired,
     upload: PropTypes.shape({
         progress: PropTypes.number,
     }),
-    /*
-    children: PropTypes.oneOfType([
-        PropTypes.node,
-        PropTypes.arrayOf(
-            PropTypes.node,
-        ),
-    ]).isRequired,
-    */
 };
 
 const defaultProps = {
@@ -45,30 +38,22 @@ export default class AddLeadListItem extends React.PureComponent {
         };
     }
 
-    /*
-    componentDidMount() {
-        if (this.props.active && this.container) {
-            this.container.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'nearest',
-            });
-        }
-    }
-
-    componentDidUpdate() {
-        if (this.props.active && this.container) {
-            this.container.scrollIntoView({
-                behavior: 'smooth',
-                block: 'nearest',
-                inline: 'nearest',
-            });
-        }
-    }
-    */
-
     getIconClassName(type) {
         return this.leadTypeToIconClassMap[type];
+    }
+
+    getStatusIconClassName = (props) => {
+        const {
+            stale,
+        } = props;
+
+        let iconClassName = '';
+
+        if (stale) {
+            iconClassName = 'ion-android-alert';
+        }
+
+        return iconClassName;
     }
 
     render() {
@@ -76,6 +61,8 @@ export default class AddLeadListItem extends React.PureComponent {
             active,
             className,
             onClick,
+            error,
+            stale,
             type,
             title,
             upload,
@@ -97,6 +84,22 @@ export default class AddLeadListItem extends React.PureComponent {
                 >
                     { title }
                 </span>
+                {
+                    error && (
+                        <span
+                            styleName="error"
+                            className="ion-android-alert"
+                        />
+                    )
+                }
+                {
+                    !error && stale && (
+                        <span
+                            styleName="stale"
+                            className="ion-code-working"
+                        />
+                    )
+                }
                 {
                     upload &&
                     <span
