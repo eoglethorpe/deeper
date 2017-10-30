@@ -70,7 +70,6 @@ export default class AddLeadListItem extends React.PureComponent {
 
         return (
             <button
-                ref={(el) => { this.container = el; }}
                 styleName={`add-lead-list-item ${active ? 'active' : ''}`}
                 className={className}
                 onClick={onClick}

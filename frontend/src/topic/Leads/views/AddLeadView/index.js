@@ -85,7 +85,6 @@ export default class AddLead extends React.PureComponent {
 
     leadsClickHandler = (id) => {
         this.setState({ activeLeadId: id });
-        console.log(id);
     }
 
     handleSubmit = (e) => {
@@ -101,7 +100,8 @@ export default class AddLead extends React.PureComponent {
     }
 
     handleUploadComplete = (uploaderId, leadId, status) => {
-        console.log(uploaderId, leadId, status);
+        // TODO: update leads with fileId
+        console.log('Complete', uploaderId, leadId, status);
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
@@ -243,7 +243,6 @@ export default class AddLead extends React.PureComponent {
                 formData: { $merge: values },
             },
         };
-        console.log(settings);
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
