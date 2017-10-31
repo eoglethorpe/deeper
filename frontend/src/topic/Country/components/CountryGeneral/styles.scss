@@ -7,9 +7,9 @@
     .form-map-container {
         display: flex;
         justify-content: space-between;
-        height: 50%;
+        height: 60%;
 
-        .details-form {
+        .country-general-form {
             flex-basis: 36%;
             padding: $spacing-large;
             height: 100%;
@@ -19,6 +19,39 @@
                 padding: $spacing-small 0;
             }
         }
+
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: $spacing-medium;
+
+            .action-buttons {
+                margin-top: $spacing-medium;
+                text-align: right;
+
+                button {
+                    margin-right: $spacing-large;
+                }
+            }
+
+            .non-field-errors {
+                .error {
+                    color: $color-danger;
+
+                    &.empty {
+                        color: transparent;
+                        user-select: none;
+                    }
+
+                    &:not(:last-child) {
+                        &::after {
+                            content: ', ';
+                        }
+                    }
+                }
+            }
+        }
+
 
         .map-container {
             display: flex;
@@ -37,7 +70,7 @@
 
     .admin-levels {
         border-top: $width-separator-thin solid $color-separator;
-        height: 50%;
+        height: 40%;
 
         .header {
             display: flex;
