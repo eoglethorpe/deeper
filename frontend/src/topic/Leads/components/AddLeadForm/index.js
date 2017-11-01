@@ -4,6 +4,9 @@ import React from 'react';
 
 import styles from './styles.scss';
 import TextInput from '../../../../public/components/TextInput';
+import DateInput from '../../../../public/components/DateInput';
+import HiddenInput from '../../../../public/components/HiddenInput';
+import TextArea from '../../../../public/components/TextArea';
 import Form, {
     requiredCondition,
     urlCondition,
@@ -27,9 +30,11 @@ const propTypes = {
     pending: PropTypes.bool.isRequired,
     ready: PropTypes.bool.isRequired,
     stale: PropTypes.bool.isRequired,
+    uploadData: PropTypes.object, // eslint-disable-line
 };
 const defaultProps = {
     className: '',
+    uploadData: {},
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -106,8 +111,11 @@ export default class AddLeadForm extends React.PureComponent {
             stale,
             ready,
             leadType,
+            uploadData,
         } = this.props;
         const formValues = data;
+
+        console.log(uploadData);
 
         return (
             <Form
@@ -193,9 +201,8 @@ export default class AddLeadForm extends React.PureComponent {
                     styleName="user"
                     initialValue={formValues.user}
                     error={formFieldErrors.user}
-
                 />
-                <TextInput
+                <DateInput
                     label="Publication Date"
                     formname="date"
                     placeholder="Enter a descriptive name"
@@ -227,25 +234,29 @@ export default class AddLeadForm extends React.PureComponent {
                 }
                 {
                     leadType === 'text' &&
-                        <div styleName="manual-entry">
-                            <label
-                                styleName="label"
-                                htmlFor="manual-entry-input"
-                            >
-                                Manual Entry
-                            </label>
-                            <textarea
-                                id="manual-entry-input"
-                                rows="3"
-                                styleName="textarea"
-                            />
-                        </div>
+                        <TextArea
+                            formname="text"
+                            label="Text"
+                            placeholder="Enter text"
+                            initialValue={formValues.text}
+                            rows="3"
+                            styleName="text"
+                        />
                 }
                 {
-                    leadType === 'file' &&
-                    <div>
-                        File Upload
-                    </div>
+                    leadType === 'file' && ([
+                        <p
+                            key="title"
+                            styleName="file-title"
+                        >
+                            { uploadData.title }
+                        </p>,
+                        <HiddenInput
+                            key="input"
+                            formName="serverId"
+                            initialValue={formValues.serverId}
+                        />,
+                    ])
                 }
             </Form>
         );

@@ -102,19 +102,20 @@ export default class AddLead extends React.PureComponent {
     handleUploadComplete = (uploaderId, leadId, status, response) => {
         const { leads } = this.state;
         const leadIndex = leads.findIndex(d => d.id === leadId);
+        const r = JSON.parse(response);
 
         const settings = {
             [leadIndex]: {
                 upload: {
-                    progress: {
-                        $set: 100,
-                    },
-                    serverId: {
-                        $set: response.id,
+                    $merge: {
+                        progress: 100,
+                        serverId: r.id,
+                        title: r.title,
                     },
                 },
             },
         };
+        console.log(settings);
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
@@ -392,6 +393,7 @@ export default class AddLead extends React.PureComponent {
                                         pending={lead.form.pending}
                                         stale={lead.form.stale}
                                         data={lead.formData}
+                                        uploadData={lead.upload}
                                         onChange={this.handleLeadChange}
                                         onSuccess={this.handleLeadSuccess}
                                         onFailure={this.handleLeadFailure}
