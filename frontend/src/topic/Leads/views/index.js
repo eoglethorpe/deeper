@@ -71,7 +71,7 @@ const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-const MAX_LEADS_PER_REQUEST = 10;
+const MAX_LEADS_PER_REQUEST = 18;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -182,7 +182,6 @@ export default class Leads extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
-
 
         const { activeProject } = this.props;
         this.requestProjectLeads(activeProject);

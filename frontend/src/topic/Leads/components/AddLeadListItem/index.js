@@ -6,9 +6,9 @@ import styles from './styles.scss';
 const propTypes = {
     active: PropTypes.bool,
     className: PropTypes.string,
-    error: PropTypes.bool.isRequired,
+    error: PropTypes.bool,
     onClick: PropTypes.func.isRequired,
-    stale: PropTypes.bool.isRequired,
+    stale: PropTypes.bool,
     title: PropTypes.string.isRequired,
     type: PropTypes.string.isRequired,
     upload: PropTypes.shape({
@@ -19,6 +19,8 @@ const propTypes = {
 const defaultProps = {
     active: false,
     className: '',
+    error: false,
+    stale: false,
     upload: undefined,
 };
 

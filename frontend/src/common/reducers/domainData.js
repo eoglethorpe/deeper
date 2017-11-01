@@ -5,6 +5,7 @@ import {
     SET_USER_GROUPS,
     SET_ACTIVE_PROJECT,
     SET_LEADS,
+    SET_LEAD_FILTER_OPTIONS,
     DUMMY_ACTION,
 } from '../action-types/domainData';
 import {
@@ -87,6 +88,18 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
+
+            return update(state, settings);
+        }
+        case SET_LEAD_FILTER_OPTIONS: {
+            const settings = {
+                leadFilterOptions: {
+                    [action.projectId]: { $autoArray: {
+                        $set: action.leadFilterOptions,
+                    } },
+                },
+            };
+            console.log('SET_LEAD_FILTER_OPTIONS', action.leadFilterOptions);
 
             return update(state, settings);
         }

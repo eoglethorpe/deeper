@@ -99,9 +99,26 @@ export default class AddLead extends React.PureComponent {
     handleAddLeadFromDropbox = () => {
     }
 
-    handleUploadComplete = (uploaderId, leadId, status) => {
-        // TODO: update leads with fileId
-        console.log('Complete', uploaderId, leadId, status);
+    handleUploadComplete = (uploaderId, leadId, status, response) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.id === leadId);
+
+        const settings = {
+            [leadIndex]: {
+                upload: {
+                    progress: {
+                        $set: 100,
+                    },
+                    serverId: {
+                        $set: response.id,
+                    },
+                },
+            },
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
