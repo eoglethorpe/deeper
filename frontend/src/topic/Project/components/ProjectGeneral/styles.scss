@@ -1,0 +1,83 @@
+@import '../../../../stylesheets/base';
+
+.project-general-form {
+    display: flex;
+    position: relative;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: $width-separator-medium solid $color-separator;
+    padding: $spacing-large;
+    width: 60%;
+    margin: auto;
+
+    .header {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: $spacing-medium;
+
+        .non-field-errors {
+            .error {
+                padding: $spacing-medium $spacing-large;
+                color: $color-danger;
+
+                &.empty {
+                    color: transparent;
+                    user-select: none;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ', ';
+                    }
+                }
+            }
+        }
+    }
+
+    .action-buttons {
+        button {
+            margin-left: $spacing-medium;
+            padding: $spacing-small $spacing-medium-alt;
+        }
+    }
+
+    .start-date,
+    .end-date {
+        flex-basis: calc(50% - #{$spacing-large});
+    }
+
+    .name,
+    .description,
+    .countries,
+    .user-groups,
+    .other-members,
+    .admins {
+        flex-basis: 100%;
+    }
+
+
+    .pending-overlay {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-background-overlay;
+        width: 100%;
+        height: 100%;
+
+        .loading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 1s linear infinite;
+            width: $width-icon-super-large;
+            height: $width-icon-super-large;
+            color: $color-accent;
+            font-size: $width-icon-super-large;
+        }
+    }
+}

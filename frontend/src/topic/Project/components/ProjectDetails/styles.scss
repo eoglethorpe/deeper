@@ -3,9 +3,12 @@
 
 .tabs-container {
     height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
+    background-color: $color-foreground;
+    
 }
 
 .tab {
     height: 100%;
     font-size: 1em;
+    background-color: $color-foreground;
 }
