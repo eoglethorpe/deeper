@@ -10,3 +10,4 @@ export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
 
 
 export const SET_LEADS = 'domain-data/SET_LEADS';
+export const SET_LEAD_FILTER_OPTIONS = 'domain-data/SET_LEAD_FILTER_OPTIONS';

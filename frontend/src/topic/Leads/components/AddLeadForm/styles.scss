@@ -6,14 +6,14 @@
     flex-wrap: wrap;
     justify-content: space-between;
     border-bottom: $width-separator-medium solid $color-separator;
-    padding: $spacing-large;
+    padding: 0 $spacing-large;
 
     .header {
         display: flex;
         flex-basis: 100%;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: $spacing-medium;
+        padding: $spacing-medium 0;
 
         .non-field-errors {
             .error {
@@ -57,31 +57,13 @@
         flex-basis: calc(50% - #{$spacing-medium});
     }
 
-    .manual-entry {
+    .text {
         flex-basis: 100%;
-        padding: $spacing-medium 0;
+    }
 
-        .label {
-            padding: $spacing-small 0;
-            text-transform: uppercase;
-            color: $color-label;
-            font-size: $font-size-extra-small;
-        }
-
-        .textarea {
-            outline: none;
-            border: 0;
-            border-bottom: $width-separator-medium solid $color-separator-alt;
-            background-color: transparent;
-            width: 100%;
-            font-family: inherit;
-            font-size: inherit;
-            resize: vertical;
-
-            &:focus {
-                border-bottom: $width-separator-medium solid $color-accent;
-            }
-        }
+    .file-title {
+        flex-basis: 100%;
+        color: $color-text;
     }
 
     .pending-overlay {

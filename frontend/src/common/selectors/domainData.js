@@ -12,6 +12,9 @@ export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList)
 export const totalLeadsCountSelector = ({ domainData }) => (
     domainData.totalLeadsCount || emptyList
 );
+export const leadFilterOptionsSelector = ({ domainData }) => (
+    domainData.leadFilterOptions || emptyObject
+);
 export const countriesSelector = ({ domainData }) => (domainData.countries || emptyList);
 export const usersSelector = ({ domainData }) => (domainData.users || emptyObject);
 
@@ -88,4 +91,10 @@ export const totalLeadsCountForProjectSelector = createSelector(
     activeProjectSelector,
     totalLeadsCountSelector,
     (activeProject, totalLeadsCount) => (totalLeadsCount[activeProject] || 0),
+);
+
+export const leadFilterOptionsForProjectSelector = createSelector(
+    activeProjectSelector,
+    leadFilterOptionsSelector,
+    (activeProject, leadFilterOptions) => (leadFilterOptions[activeProject] || emptyObject),
 );

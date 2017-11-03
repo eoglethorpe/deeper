@@ -5,6 +5,7 @@ import {
     SET_USER_GROUPS,
     SET_ACTIVE_PROJECT,
     SET_LEADS,
+    SET_LEAD_FILTER_OPTIONS,
     DUMMY_ACTION,
 } from '../action-types/domainData';
 
@@ -42,6 +43,12 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     projectId,
     leads,
     totalLeadsCount,
+});
+
+export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => ({
+    type: SET_LEAD_FILTER_OPTIONS,
+    projectId,
+    leadFilterOptions,
 });
 
 export const dummyAction = () => ({

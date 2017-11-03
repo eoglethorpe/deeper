@@ -2,66 +2,18 @@ const initialDomainDataState = {
 
     // index is project id
     projects: {
-        4: {
-            id: 4,
-            title: 'asdasd',
+        1: {
         },
     },
 
     // index is project id
     leads: {
         1: [
-            {
-                id: 1,
-                createdOn: 17263871623,
-                createdBy: 'Frozen Helium',
-                title: 'If someone bit by a vampire turns into one when they die, how long until everyone is vampires?',
-                published: 1230129312,
-                confidentiality: 'Confidential',
-                source: 'https://facebook.com',
-                numberOfEntries: 12,
-                status: 'Pending',
-                actions: 'GG WP',
-            },
-            {
-                id: 2,
-                createdOn: 78923230239,
-                createdBy: 'Aditya Khatri',
-                title: 'Voluntary return home and coming back to the EU',
-                published: 981274203420,
-                confidentiality: 'Public',
-                source: 'News that moves',
-                numberOfEntries: 6,
-                status: 'Processed',
-                actions: 'GG WP',
-            },
         ],
-        2: [
-            {
-                id: 3,
-                createdOn: 17263871623,
-                createdBy: 'Navin Ayer',
-                title: 'I want to build my own pyramid tomb, and I want it to be big. Instead of the slope being 45°, the slope can be 89.995°. How big can this be?',
-                published: 1230129312,
-                confidentiality: 'Confidential',
-                source: 'https://facebook.com',
-                numberOfEntries: 12,
-                status: 'Pending',
-                actions: 'GG WP',
-            },
-            {
-                id: 4,
-                createdOn: 78923230239,
-                createdBy: 'Sharon Van Etten',
-                title: 'Voluntary return home and coming back to the EU',
-                published: 981274203420,
-                confidentiality: 'Public',
-                source: 'News that moves',
-                numberOfEntries: 6,
-                status: 'Processed',
-                actions: 'GG WP',
-            },
-        ],
+    },
+    leadFilterOptions: {
+        1: {
+        },
     },
     totalLeadsCount: {
     },

@@ -56,8 +56,11 @@ export const createUrlForLeadsOfProject = params => (
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
 
-// PROJECTS RELATED
+export const createUrlForLeadFilterOptions = projectId => `${wsEndpoint}/lead-filter-options/?project=${projectId}`;
 
+// ----------------------------------------------------------------------------- 
+// PROJECTS RELATED
+// ----------------------------------------------------------------------------- 
 export const createParamsForProjects = ({ access }) => ({
     method: GET,
     headers: {
@@ -72,10 +75,12 @@ export const createParamsForUserGroups = ({ access }) => ({
         ...commonHeaderForPost,
     },
 });
+// ----------------------------------------------------------------------------- 
 
 
+// ----------------------------------------------------------------------------- 
 // USER RELATED
-
+// ----------------------------------------------------------------------------- 
 export const createParamsForUser = ({ access }) => ({
     method: GET,
     headers: {
@@ -117,10 +122,12 @@ export const createParamsForUserPatch = ({ access }, {
         organization,
     }),
 });
+// ----------------------------------------------------------------------------- 
 
 
+// ----------------------------------------------------------------------------- 
 // TOKEN RELATED
-
+// ----------------------------------------------------------------------------- 
 export const createParamsForTokenCreate = ({ username, password }) => ({
     method: POST,
     headers: commonHeaderForPost,
@@ -151,3 +158,4 @@ export const createParamsForTokenCreateHid = ({ access_token, expires_in, state,
         tokenType: token_type,
     }),
 });
+// ----------------------------------------------------------------------------- 
