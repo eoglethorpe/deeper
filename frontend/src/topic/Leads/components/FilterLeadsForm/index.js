@@ -56,18 +56,14 @@ export default class FilterLeadsForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static optionLabelSelector = (d = {}) => d.value;
+    static optionKeySelector = (d = {}) => d.key;
+
     constructor(props) {
         super(props);
-
-        const { confidentiality, status, assignedTo } = props.leadFilterOptions;
-
         this.state = {
             formValues: {},
             stale: false,
-
-            confidentiality,
-            status,
-            assignedTo,
         };
 
         this.dateFilterOptions = [
@@ -91,16 +87,6 @@ export default class FilterLeadsForm extends React.PureComponent {
     componentDidMount() {
         const { activeProject } = this.props;
         this.requestProjectLeadFilterOptions(activeProject);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { confidentiality, status, assignedTo } = nextProps.leadFilterOptions;
-
-        this.setState({
-            confidentiality,
-            status,
-            assignedTo,
-        });
     }
 
     requestProjectLeadFilterOptions = (activeProject) => {
@@ -130,6 +116,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             })
             .success((response) => {
                 try {
+                    // TODO:
                     // schema.validate(response, 'leadFilterOptionsGetResponse');
                     this.props.setLeadFilterOptions({
                         projectId: activeProject,
@@ -163,28 +150,38 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     render() {
-        const optionLabelSelector = d => (d || {}).value;
-        const optionKeySelector = d => (d || {}).key;
+        const {
+            className,
+            leadFilterOptions,
+        } = this.props;
 
         const {
             formValues,
+            stale,
         } = this.state;
 
+        const {
+            confidentiality,
+            status,
+            assignedTo,
+        } = leadFilterOptions;
+
+        console.log(leadFilterOptions);
         return (
             <Form
                 styleName="filters"
-                className={this.props.className}
+                className={className}
                 successCallback={this.handleSubmit}
                 changeCallback={this.handleChange}
                 elements={this.formElements}
             >
                 <SelectInput
                     formname="assigned_to"
-                    options={this.state.assignedTo}
+                    options={assignedTo}
                     placeholder="Assigned to"
                     styleName="filter"
-                    labelSelector={optionLabelSelector}
-                    keySelector={optionKeySelector}
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
+                    keySelector={FilterLeadsForm.optionKeySelector}
                     selectedOptionKeys={formValues.assigned_to}
                     multiple
                 />
@@ -203,25 +200,25 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <SelectInput
                     formname="confidentiality"
-                    options={this.state.confidentiality}
+                    options={confidentiality}
                     placeholder="Confidentiality"
                     styleName="filter"
-                    labelSelector={optionLabelSelector}
-                    keySelector={optionKeySelector}
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
+                    keySelector={FilterLeadsForm.optionKeySelector}
                     selectedOptionKey={formValues.confidentiality}
                 />
                 <SelectInput
                     formname="status"
-                    options={this.state.status}
+                    options={status}
                     placeholder="Status"
                     styleName="filter"
-                    labelSelector={optionLabelSelector}
-                    keySelector={optionKeySelector}
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
+                    keySelector={FilterLeadsForm.optionKeySelector}
                     selectedOptionKey={formValues.status}
                 />
                 <Button
                     styleName="apply-filter-btn"
-                    disabled={!this.state.stale}
+                    disabled={!stale}
                 >
                     Apply Filter
                 </Button>
