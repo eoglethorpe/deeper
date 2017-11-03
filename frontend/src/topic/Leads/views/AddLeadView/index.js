@@ -7,10 +7,13 @@ import { Tabs, TabContent } from 'react-tabs-redux';
 
 import {
     TransparentButton,
+    PrimaryButton,
 } from '../../../../public/components/Action';
 import {
     FileInput,
+    TextInput,
 } from '../../../../public/components/Input';
+
 import update from '../../../../public/utils/immutable-update';
 import {
     RestBuilder,
@@ -48,18 +51,26 @@ const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
+    leads: PropTypes.Object, // eslint-disable-line
+};
+
+const defaultProps = {
+    leads: [],
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
         this.state = {
             leads: [],
+            displayLeads: [],
             counter: 1,
+            searchInputValue: '',
             activeLeadId: undefined,
         };
 
@@ -95,6 +106,20 @@ export default class AddLead extends React.PureComponent {
     onSubmit = () => {
         this.form.onSubmit();
     }
+
+    getDisplayLeads = (leads, searchInputValue) => {
+        if (!searchInputValue || searchInputValue === '') {
+            return leads;
+        }
+
+        const caseInsensitiveSubmatch = lead => (
+            (lead.formData.title || '').toLowerCase().includes(searchInputValue.toLowerCase())
+        );
+
+        const displayLeads = leads.filter(caseInsensitiveSubmatch);
+
+        return displayLeads;
+    };
 
     leadsClickHandler = (id) => {
         this.setState({ activeLeadId: id });
@@ -175,12 +200,12 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads),
         });
     }
 
     handleAddLeadFromDisk = (e) => {
         const newLeads = [];
-
         const files = Object.values(e);
 
         for (let i = 0; i < files.length; i += 1) {
@@ -223,57 +248,67 @@ export default class AddLead extends React.PureComponent {
 
         this.uploadCoordinator.queueAll();
 
+        const allLeads = [
+            ...this.state.leads,
+            ...newLeads,
+        ];
+
         this.setState({
-            leads: [
-                ...this.state.leads,
-                ...newLeads,
-            ],
+            leads: allLeads,
+            displayLeads: this.getDisplayLeads(allLeads, ''),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + files.length,
+            searchInputValue: '',
         });
     }
 
     handleAddLeadFromWebsite = () => {
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    id: `lead-${this.state.counter}`,
-                    type: 'website',
-                    form: {
-                        pending: false,
-                        stale: false,
-                    },
-                    formData: {
-                        title: `Lead #${this.state.counter}`,
-                        project: this.props.activeProject,
-                    },
+        const newLeads = [
+            ...this.state.leads,
+            {
+                id: `lead-${this.state.counter}`,
+                type: 'website',
+                form: {
+                    pending: false,
+                    stale: false,
                 },
-            ],
+                formData: {
+                    title: `Lead #${this.state.counter}`,
+                    project: this.props.activeProject,
+                },
+            },
+        ];
+        this.setState({
+            leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads, ''),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
+            searchInputValue: '',
         });
     }
 
     handleAddLeadFromText = () => {
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    id: `lead-${this.state.counter}`,
-                    type: 'text',
-                    form: {
-                        pending: false,
-                        stale: false,
-                    },
-                    formData: {
-                        title: `Lead #${this.state.counter}`,
-                        project: this.props.activeProject,
-                    },
+        const newLeads = [
+            ...this.state.leads,
+            {
+                id: `lead-${this.state.counter}`,
+                type: 'text',
+                form: {
+                    pending: false,
+                    stale: false,
                 },
-            ],
+                formData: {
+                    title: `Lead #${this.state.counter}`,
+                    project: this.props.activeProject,
+                },
+            },
+        ];
+        this.setState({
+            leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads, ''),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
+            searchInputValue: '',
         });
     }
 
@@ -305,6 +340,7 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads),
         });
     }
 
@@ -323,6 +359,7 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads),
         });
 
 
@@ -392,6 +429,14 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
+            displayLeads: this.getDisplayLeads(newLeads),
+        });
+    }
+
+    handleSearchChange = (value) => {
+        this.setState({
+            searchInputValue: value,
+            displayLeads: this.getDisplayLeads(this.state.leads, value),
         });
     }
 
@@ -400,7 +445,7 @@ export default class AddLead extends React.PureComponent {
             <div styleName="add-lead">
                 <Helmet>
                     <title>
-                        { pageTitles.addLeads }
+                        { pageTitles.addLeads }search
                     </title>
                 </Helmet>
                 <Tabs
@@ -409,12 +454,24 @@ export default class AddLead extends React.PureComponent {
                     styleName="tab-container"
                 >
                     <div styleName="lead-list-container">
-                        <h2 styleName="heading">
-                            Leads
-                        </h2>
+                        <div styleName="list-header">
+                            <h2 styleName="header-text">
+                                Leads
+                            </h2>
+                            <PrimaryButton>
+                                Submit All
+                            </PrimaryButton>
+                            <TextInput
+                                styleName="search-box"
+                                onChange={this.handleSearchChange}
+                                initialValue={this.state.searchInputValue}
+                                placeholder="Search leads"
+                                type="search"
+                            />
+                        </div>
                         <div styleName="list">
                             {
-                                this.state.leads.map(lead => (
+                                this.state.displayLeads.map(lead => (
                                     <AddLeadListItem
                                         active={this.state.activeLeadId === lead.id}
                                         key={lead.id}
@@ -473,7 +530,7 @@ export default class AddLead extends React.PureComponent {
                     </div>
                     <div styleName="lead-detail-container">
                         {
-                            this.state.leads.map(lead => (
+                            this.state.displayLeads.map(lead => (
                                 <TabContent
                                     for={lead.id}
                                     key={lead.id}

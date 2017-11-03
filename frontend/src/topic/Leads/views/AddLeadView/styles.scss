@@ -14,11 +14,23 @@
             height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
             overflow-y: hidden;
 
-            > .heading {
-                flex-shrink: 0;
-                border-bottom: $width-separator-normal solid $color-separator;
-                padding: $spacing-medium $spacing-large;
-                font-size: $font-size-large;
+            .list-header {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                padding: $spacing-large;
+                padding-bottom: 0;
+
+                .header-text {
+                    text-transform: uppercase;
+                    font-size: 1.6em;
+                }
+
+                .search-box {
+                    background-color: $color-foreground-alt;
+                    padding-top: $spacing-small;
+                }
             }
 
             .list {
