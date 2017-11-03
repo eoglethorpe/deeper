@@ -37,7 +37,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
-            console.log(settings.projects);
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {
@@ -99,8 +98,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
-            console.log('SET_LEAD_FILTER_OPTIONS', action.leadFilterOptions);
-
             return update(state, settings);
         }
         case SET_ACTIVE_PROJECT: {

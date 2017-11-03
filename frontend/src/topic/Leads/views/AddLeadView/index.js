@@ -115,7 +115,6 @@ export default class AddLead extends React.PureComponent {
                 },
             },
         };
-        console.log(settings);
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,

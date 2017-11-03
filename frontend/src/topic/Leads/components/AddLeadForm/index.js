@@ -56,7 +56,7 @@ export default class AddLeadForm extends React.PureComponent {
             'date',
             'url',
             'website',
-            // 'manualEntry',
+            'server_id',
         ];
         this.validations = {
             title: [requiredCondition],
@@ -69,7 +69,7 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
-            // manualEntry: [requiredCondition],
+            // TODO: add validation for server_id
         };
     }
 
@@ -93,7 +93,6 @@ export default class AddLeadForm extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        console.log(values);
         // Rest Request goes here
         this.props.onSuccess(this.props.leadId, values);
     };
@@ -114,8 +113,6 @@ export default class AddLeadForm extends React.PureComponent {
             uploadData,
         } = this.props;
         const formValues = data;
-
-        console.log(uploadData);
 
         return (
             <Form
@@ -217,7 +214,7 @@ export default class AddLeadForm extends React.PureComponent {
                             label="URL"
                             formname="url"
                             placeholder="Enter a descriptive name"
-                            styleName="url"
+                            stylename="url"
                             initialValue={formValues.url}
                             error={formFieldErrors.url}
                         />,
@@ -253,8 +250,8 @@ export default class AddLeadForm extends React.PureComponent {
                         </p>,
                         <HiddenInput
                             key="input"
-                            formName="serverId"
-                            initialValue={formValues.serverId}
+                            formname="server_id"
+                            initialValue={formValues.server_id}
                         />,
                     ])
                 }
