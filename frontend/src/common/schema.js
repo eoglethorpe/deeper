@@ -23,11 +23,11 @@ attachValidator(dict);
         },
         fields: {
             createdAt: { type: 'string', required: true }, // date
-            createdBy: { type: 'uint', required: true },
+            createdBy: { type: 'uint' },
             createdByName: { type: 'string' },
             id: { type: 'uint', required: true },
             modifiedAt: { type: 'string', required: true }, // date
-            modifiedBy: { type: 'uint', required: true },
+            modifiedBy: { type: 'uint' },
             modifiedByName: { type: 'string' },
         },
     };

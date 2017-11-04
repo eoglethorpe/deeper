@@ -8,6 +8,9 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 
 export const activeProjectSelector = ({ domainData }) => (domainData.activeProject);
+
+export const activeCountrySelector = ({ domainData }) => (domainData.activeCountry);
+
 export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList);
 export const totalLeadsCountSelector = ({ domainData }) => (
     domainData.totalLeadsCount || emptyList

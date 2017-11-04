@@ -1,10 +1,27 @@
 @import '../../../stylesheets/base';
 
+$height-header: 124px;
+$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+
+.country-panel-empty {
+    @include shadow-medium;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: $spacing-large;
+    background-color: $color-foreground;
+    padding: $spacing-large;
+    height: $height-full-page;
+
+    h1 {
+        margin-bottom: $spacing-large;
+    }
+}
+
 .country-panel {
     display: flex;
     padding: $spacing-large;
-    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-    $height-header: 124px;
 
     .country-list {
         @include shadow-medium;

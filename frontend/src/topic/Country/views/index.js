@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch, Link, Route } from 'react-router-dom';
+import { Switch, Link, Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
@@ -20,12 +20,14 @@ import {
     tokenSelector,
 } from '../../../common/selectors/auth';
 import {
+    activeCountrySelector,
     countriesSelector,
 } from '../../../common/selectors/domainData';
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
+    setActiveCountryAction,
     setCountriesAction,
 } from '../../../common/action-creators/domainData';
 import {
@@ -36,16 +38,24 @@ import schema from '../../../common/schema';
 
 // NOTE: is Required removed by @frozenhelium
 const propTypes = {
+    activeCountry: PropTypes.number,
+    countries: PropTypes.array, // eslint-disable-line
     location: PropTypes.shape({
         pathname: PropTypes.string.isReqired,
     }),
-    countries: PropTypes.array, // eslint-disable-line
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            countryId: PropTypes.number.isRequired,
+        }).isRequired,
+    }).isRequired,
     setCountries: PropTypes.func.isRequired,
+    setActiveCountry: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
+    activeCountry: undefined,
     location: {},
     countries: [],
 };
@@ -54,12 +64,14 @@ const defaultProps = {
 // Scroll to selected country
 
 const mapStateToProps = state => ({
+    activeCountry: activeCountrySelector(state),
     countries: countriesSelector(state),
     token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setCountries: params => dispatch(setCountriesAction(params)),
+    setActiveProject: params => dispatch(setActiveCountryAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
@@ -143,6 +155,10 @@ export default class CountryPanel extends React.PureComponent {
         });
     }
 
+    onSelectCountry = (countryId) => {
+        this.props.setActiveCountry({ activeCountry: countryId });
+    }
+
     onAddCountry = () => {
         this.setState({
             addCountryModal: true,
@@ -155,12 +171,12 @@ export default class CountryPanel extends React.PureComponent {
     };
 
     getStyleName = (countryId) => {
-        const { pathname } = this.props.location;
+        const linkId = this.props.match.params.countryId;
 
         const styleNames = [];
         styleNames.push('list-item');
 
-        if (pathname === `/countrypanel/${countryId}/`) {
+        if (linkId === `${countryId}`) {
             styleNames.push('active');
         }
 
@@ -214,6 +230,7 @@ export default class CountryPanel extends React.PureComponent {
 
         // Rest Request goes here
     };
+
     render() {
         const {
             formErrors = [],
@@ -222,6 +239,114 @@ export default class CountryPanel extends React.PureComponent {
             pending,
             stale,
         } = this.state;
+
+        const { pathname } = this.props.location;
+        const { activeCountry } = this.props;
+
+        if (this.props.countries.length === 0) {
+            return (
+                <div styleName="country-panel-empty">
+                    <Helmet>
+                        <title>{ pageTitles.countryPanel }</title>
+                    </Helmet>
+                    <h1>No added countries yet. Mark your terretories.</h1>
+                    <h1>Arey country nahi hai re jadau</h1>
+                    <PrimaryButton
+                        iconName="ion-plus"
+                        onClick={this.onAddCountry}
+                    >
+                        Add country
+                    </PrimaryButton>
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleModalClose}
+                        show={this.state.addCountryModal}
+                        closeOnBlur
+                    >
+                        <Header title="Add new country" />
+                        <Form
+                            styleName="add-country-form"
+                            changeCallback={this.changeCallback}
+                            elements={this.elements}
+                            failureCallback={this.failureCallback}
+                            successCallback={this.successCallback}
+                            validation={this.validation}
+                            validations={this.validations}
+                            onSubmit={this.handleSubmit}
+                        >
+                            {
+                                pending &&
+                                    <div styleName="pending-overlay">
+                                        <i
+                                            className="ion-load-c"
+                                            styleName="loading-icon"
+                                        />
+                                    </div>
+                            }
+                            <div styleName="non-field-errors">
+                                {
+                                    formErrors.map(err => (
+                                        <div
+                                            key={err}
+                                            styleName="error"
+                                        >
+                                            {err}
+                                        </div>
+                                    ))
+                                }
+                                { formErrors.length <= 0 &&
+                                    <div styleName="error empty">
+                                        -
+                                    </div>
+                                }
+                            </div>
+                            <TextInput
+                                label="Country Name"
+                                formname="name"
+                                placeholder="Enter county name"
+                                initialValue={formValues.name}
+                                error={formFieldErrors.name}
+                            />
+                            <TextInput
+                                label="Code"
+                                formname="code"
+                                placeholder="Enter country code"
+                                initialValue={formValues.code}
+                                error={formFieldErrors.code}
+                            />
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    onClick={this.handleModalClose}
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <PrimaryButton disabled={pending || !stale} >
+                                    Save changes
+                                </PrimaryButton>
+                            </div>
+                        </Form>
+                    </Modal>
+                </div>
+            );
+        }
+
+        if (this.props.countries.length > 0 && this.props.match.params.countryId === undefined) {
+            let redirectTo = activeCountry;
+
+            if (activeCountry === undefined) {
+                setActiveCountryAction(this.props.countries[0].id);
+                redirectTo = this.props.countries[0].id;
+            }
+            return (
+                <Redirect
+                    to={{
+                        pathname: `/countrypanel/${redirectTo}/`,
+                        from: location,
+                    }}
+                />
+            );
+        }
 
         return (
             <div styleName="country-panel">
@@ -350,12 +475,6 @@ export default class CountryPanel extends React.PureComponent {
                                 />
                             ))
                         }
-                        <Route
-                            component={() => (
-                                <CountryDetail fullName="Add new country" />
-                            )}
-                            path="/countrypanel/"
-                        />
                     </Switch>
                 </div>
             </div>
