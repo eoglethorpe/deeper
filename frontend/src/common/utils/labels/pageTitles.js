@@ -21,6 +21,8 @@ const pageTitles = {
     countryPanel: 'Country Panel',
     projectPanel: 'Project Panel',
 
+    analysisFramework: 'Analysis Framework',
+
     weeklySnapshot: 'Weekly Snapshot',
 
     apiDocs: 'Api Doc',

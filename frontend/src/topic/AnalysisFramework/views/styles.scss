@@ -1,0 +1,20 @@
+@import '../../../stylesheets/base';
+
+.analysis-framework {
+    width: 100%;
+    height: calc(100vh - #{$height-navbar});
+
+    .grid-layout {
+        border: 1px solid pink;
+        width: 100%;
+        height: 100%;
+
+        .a,
+        .b,
+        .c {
+            display: inline-flex;
+            background-color: blue;
+            color: white;
+        }
+    }
+}
