@@ -12,12 +12,12 @@ import styles from './styles.scss';
 import { DangerButton, SuccessButton } from '../../../../public/components/Button';
 
 const propTypes = {
-    countryId: PropTypes.number,
-    fullName: PropTypes.string.isRequired,
+    countryId: PropTypes.number.isRequired,
+    fullName: PropTypes.string,
 };
 
 const defaultProps = {
-    countryId: 0,
+    fullName: '',
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -32,7 +32,7 @@ export default class CountryDetail extends React.PureComponent {
             <div styleName="country-detail">
                 <div styleName="header">
                     <div styleName="header-title">
-                        {fullName}
+                        {countryId}
                     </div>
                     <div styleName="button-container">
                         <SuccessButton className="save-btn">

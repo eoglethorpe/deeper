@@ -29,10 +29,9 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
-    countryId: PropTypes.string.isRequired, //eslint-disable-line
-    pending: PropTypes.bool.isRequired,
+    countryId: PropTypes.number.isRequired, //eslint-disable-line
+    pending: PropTypes.bool,
     stale: PropTypes.bool.isRequired,
-    data: PropTypes.object.isRequired, // eslint-disable-line
     countryDetail: PropTypes.shape({
         code: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
@@ -41,6 +40,8 @@ const propTypes = {
 
 const defaultProps = {
     adminLevelList: [],
+    pending: false,
+    stale: false,
 };
 
 const mapStateToProps = (state, props) => ({

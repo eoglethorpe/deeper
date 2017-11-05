@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch, Link, Redirect, Route } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
@@ -40,22 +40,21 @@ import schema from '../../../common/schema';
 const propTypes = {
     activeCountry: PropTypes.number,
     countries: PropTypes.array, // eslint-disable-line
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isReqired,
-    }),
     match: PropTypes.shape({
         params: PropTypes.shape({
-            countryId: PropTypes.number.isRequired,
-        }).isRequired,
-    }).isRequired,
+            countryId: PropTypes.string,
+        }),
+    }),
     setCountries: PropTypes.func.isRequired,
     setActiveCountry: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
+    location: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
     activeCountry: undefined,
+    match: undefined,
     location: {},
     countries: [],
 };
@@ -71,7 +70,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setCountries: params => dispatch(setCountriesAction(params)),
-    setActiveProject: params => dispatch(setActiveCountryAction(params)),
+    setActiveCountry: params => dispatch(setActiveCountryAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
@@ -144,7 +143,12 @@ export default class CountryPanel extends React.PureComponent {
         this.countriesRequest.start();
     }
 
+    componentDidMount() {
+        console.error('asdasdasdasd');
+    }
+
     componentWillReceiveProps(nextProps) {
+        console.log('country panel received props', nextProps);
         const caseInsensitiveSubmatch = country => (
             country.title.toLowerCase().includes(this.state.searchInputValue.toLowerCase())
         );
@@ -155,9 +159,14 @@ export default class CountryPanel extends React.PureComponent {
         });
     }
 
+    componentWillUnmount() {
+        this.countriesRequest.stop();
+    }
+
     onSelectCountry = (countryId) => {
         this.props.setActiveCountry({ activeCountry: countryId });
     }
+
 
     onAddCountry = () => {
         this.setState({
@@ -183,9 +192,6 @@ export default class CountryPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    componentWillUnMount() {
-        this.countriesRequest.stop();
-    }
 
     search = (value) => {
         const caseInsensitiveSubmatch = country => (
@@ -238,12 +244,13 @@ export default class CountryPanel extends React.PureComponent {
             formValues,
             pending,
             stale,
+            location,
         } = this.state;
 
-        const { pathname } = this.props.location;
-        const { activeCountry } = this.props;
+        const { activeCountry, countries } = this.props;
+        const { countryId } = this.props.match.params;
 
-        if (this.props.countries.length === 0) {
+        if (countries.length === 0) {
             return (
                 <div styleName="country-panel-empty">
                     <Helmet>
@@ -331,12 +338,12 @@ export default class CountryPanel extends React.PureComponent {
             );
         }
 
-        if (this.props.countries.length > 0 && this.props.match.params.countryId === undefined) {
+        if (countries.length > 0 && (countryId === undefined || countryId === 'undefined')) {
             let redirectTo = activeCountry;
 
             if (activeCountry === undefined) {
-                setActiveCountryAction(this.props.countries[0].id);
-                redirectTo = this.props.countries[0].id;
+                this.props.setActiveCountry({ activeCountry: countries[0].id });
+                redirectTo = countries[0].id;
             }
             return (
                 <Redirect
@@ -347,6 +354,16 @@ export default class CountryPanel extends React.PureComponent {
                 />
             );
         }
+
+        const index = countries.findIndex(country => `${country.id}` === countryId);
+        if (index === -1) {
+            return (
+                <div>Country not found</div>
+            );
+        } else if (index >= 0 && countryId !== `${activeCountry}`) {
+            this.props.setActiveCountry({ activeCountry: Number(countryId) });
+        }
+
 
         return (
             <div styleName="country-panel">
@@ -374,17 +391,40 @@ export default class CountryPanel extends React.PureComponent {
                     <ListView styleName="list">
                         {
                             this.state.displayCountryList.map(country => (
-                                <ListItem
-                                    key={country.id}
-                                    styleName={this.getStyleName(country.id)}
-                                >
-                                    <Link
-                                        styleName="link"
-                                        to={`/countrypanel/${country.id}/`}
+                                `${country.id}` === countryId ? (
+                                    <ListItem
+                                        ref={(container) => { this.selectedLead = container; }}
+                                        key={country.id}
+                                        styleName="list-item active"
                                     >
-                                        {country.title}
-                                    </Link>
-                                </ListItem>
+                                        <Link
+                                            styleName="link"
+                                            onClick={
+                                                () => this.props.setActiveCountry({
+                                                    activeCountry: country.id,
+                                                })}
+                                            to={`/countrypanel/${country.id}/`}
+                                        >
+                                            {country.title}
+                                        </Link>
+                                    </ListItem>
+                                ) : (
+                                    <ListItem
+                                        key={country.id}
+                                        styleName="list-item"
+                                    >
+                                        <Link
+                                            styleName="link"
+                                            onClick={
+                                                () => this.props.setActiveCountry({
+                                                    activeCountry: country.id,
+                                                })}
+                                            to={`/countrypanel/${country.id}/`}
+                                        >
+                                            {country.title}
+                                        </Link>
+                                    </ListItem>
+                                )
                             ))
                         }
                     </ListView>
@@ -460,22 +500,9 @@ export default class CountryPanel extends React.PureComponent {
                     </Modal>
                 </div>
                 <div styleName="country-details">
-                    <Switch>
-                        {
-                            this.props.countries.map(item => (
-                                <Route
-                                    component={() => (
-                                        <CountryDetail
-                                            fullName={item.title}
-                                            countryId={item.id}
-                                        />
-                                    )}
-                                    key={item.id}
-                                    path={`/countrypanel/${item.id}/`}
-                                />
-                            ))
-                        }
-                    </Switch>
+                    <CountryDetail
+                        countryId={Number(countryId)}
+                    />
                 </div>
             </div>
         );

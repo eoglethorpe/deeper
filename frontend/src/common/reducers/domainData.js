@@ -5,6 +5,7 @@ import {
     SET_USER_GROUPS,
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
+    SET_ACTIVE_COUNTRY,
     SET_COUNTRIES,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
@@ -115,6 +116,14 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             const settings = {
                 activeProject: {
                     $set: action.activeProject,
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_ACTIVE_COUNTRY: {
+            const settings = {
+                activeCountry: {
+                    $set: action.activeCountry,
                 },
             };
             return update(state, settings);
