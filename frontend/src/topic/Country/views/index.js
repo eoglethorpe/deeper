@@ -13,6 +13,7 @@ import Modal, { Header } from '../../../public/components/Modal';
 import ListView, { ListItem } from '../../../public/components/ListView';
 import TextInput from '../../../public/components/TextInput';
 import styles from './styles.scss';
+import browserHistory from '../../../common/browserHistory';
 import { pageTitles } from '../../../common/utils/labels';
 import { RestBuilder } from '../../../public/utils/rest';
 import { PrimaryButton, DangerButton } from '../../../public/components/Button';
@@ -167,6 +168,10 @@ export default class CountryPanel extends React.PureComponent {
         this.props.setActiveCountry({ activeCountry: countryId });
     }
 
+    onBrowseCountriesClick = () => {
+        this.props.setActiveCountry({ activeCountry: undefined });
+        browserHistory.push('/countrypanel/undefined/');
+    }
 
     onAddCountry = () => {
         this.setState({
@@ -358,7 +363,15 @@ export default class CountryPanel extends React.PureComponent {
         const index = countries.findIndex(country => `${country.id}` === countryId);
         if (index === -1) {
             return (
-                <div>Country not found</div>
+                <div styleName="country-panel-not-found">
+                    <h1>
+                        The country you previously selected is either deleted,
+                        or does not exist.
+                    </h1>
+                    <PrimaryButton onClick={this.onBrowseCountriesClick}>
+                        Browse other countries
+                    </PrimaryButton>
+                </div>
             );
         } else if (index >= 0 && countryId !== `${activeCountry}`) {
             this.props.setActiveCountry({ activeCountry: Number(countryId) });
