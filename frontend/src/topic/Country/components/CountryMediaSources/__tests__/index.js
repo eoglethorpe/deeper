@@ -5,7 +5,7 @@ import CountryMediaSources from '../';
 describe('<CountryMediaSources />', () => {
     const wrapper = shallow(
         <CountryMediaSources
-            countryId=""
+            countryId={12}
         />,
     );
 

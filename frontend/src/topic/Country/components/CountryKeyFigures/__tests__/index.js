@@ -5,7 +5,7 @@ import CountryGeneral from '../';
 describe('<CountryGeneral />', () => {
     const wrapper = shallow(
         <CountryGeneral
-            countryId=""
+            countryId={12}
         />,
     );
 
