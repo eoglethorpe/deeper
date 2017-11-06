@@ -144,4 +144,6 @@ Following are all in the form:
         * projectId
     * onEdited
         * leadId
+    * onPreviewExtracted
+        * leadId
 ```
