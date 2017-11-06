@@ -36,6 +36,7 @@ export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
 export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title`;
 export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 export const urlForApiDocs = `${wsEndpoint}/docs/`;
+export const urlForCountries = `${wsEndpoint}/regions/`;
 
 export const urlForUpload = `${wsEndpoint}/files/`;
 
@@ -55,7 +56,6 @@ export const createUrlForLeadsOfProject = params => (
 );
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
-export const urlForCountries = `${wsEndpoint}/regions/`;
 
 export const createUrlForLeadFilterOptions = projectId => `${wsEndpoint}/lead-filter-options/?project=${projectId}`;
 

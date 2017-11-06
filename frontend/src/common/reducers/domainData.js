@@ -101,14 +101,13 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
-            console.log(settings);
             return update(state, settings);
         }
         case SET_COUNTRIES: {
             const settings = {
-                countries: { $autoArray: {
+                countries: {
                     $set: action.countries,
-                } },
+                },
             };
             return update(state, settings);
         }

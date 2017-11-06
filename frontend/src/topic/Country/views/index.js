@@ -4,6 +4,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+
+// User can go to /countrypanel
+// User can go to /countrypanel/id
+
+// get country list, blocking if there is none
+// If there is no id, get activeCountry or first country in countryList
+// If id/activeCountry is not in country list,
+// show "Country not found"
+// If there is no country
+// show "There are no countries"
+
+// If activeCountry is not in country list after being updated,
+// show "Country was removed"
+// If there is no country
+// show "There are no countries"
+
 import Helmet from 'react-helmet';
 import CountryDetail from '../components/CountryDetail';
 import Form, {

@@ -5,27 +5,59 @@ import { activeUserSelector } from './auth';
 const emptyList = [];
 const emptyObject = {};
 
+
+// Using props
+
 export const userIdFromRoute = (state, { match }) => match.params.userId;
+export const countryIdFromProps = (state, { countryId }) => countryId;
 
-export const activeProjectSelector = ({ domainData }) => (domainData.activeProject);
+// Using state
 
-export const activeCountrySelector = ({ domainData }) => (domainData.activeCountry);
-
-export const leadsSelector = ({ domainData }) => (domainData.leads || emptyList);
+export const activeProjectSelector = ({ domainData }) => (
+    domainData.activeProject
+);
+export const activeCountrySelector = ({ domainData }) => (
+    domainData.activeCountry
+);
+export const leadsSelector = ({ domainData }) => (
+    domainData.leads || emptyObject
+);
+export const countriesSelector = ({ domainData }) => (
+    domainData.countries || emptyList
+);
+export const adminLevelsSelector = ({ domainData }) => (
+    domainData.adminLevels || emptyObject
+);
+export const usersSelector = ({ domainData }) => (
+    domainData.users || emptyObject
+);
+export const projectsSelector = ({ domainData }) => (
+    domainData.projects || emptyObject
+);
 export const totalLeadsCountSelector = ({ domainData }) => (
-    domainData.totalLeadsCount || emptyList
+    domainData.totalLeadsCount || emptyObject
 );
 export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
 );
-export const countriesSelector = ({ domainData }) => (domainData.countries || emptyList);
-export const usersSelector = ({ domainData }) => (domainData.users || emptyObject);
 
-export const adminLevelSelector = ({ domainData }, { countryId }) => (
-    domainData.adminLevels[countryId] || emptyList
+// FIXME: rename to adminLevelForCountrySelector
+export const adminLevelSelector = createSelector(
+    adminLevelsSelector,
+    countryIdFromProps,
+    (adminLevels, countryId) => (
+        adminLevels[countryId] || emptyList
+    ),
 );
 
-export const projectsSelector = ({ domainData }) => (domainData.projects || emptyObject);
+// FIXME: rename to countryDetailForCountrySelector
+export const countryDetailSelector = createSelector(
+    countriesSelector,
+    countryIdFromProps,
+    (countries, countryId) => (
+        countries.find(country => country.id === countryId) || emptyObject
+    ),
+);
 
 export const projectDetailsSelector = createSelector(
     projectsSelector,
@@ -33,9 +65,6 @@ export const projectDetailsSelector = createSelector(
     (projects, activeProject) => projects[activeProject] || emptyObject,
 );
 
-export const countryDetailSelector = ({ domainData }, { countryId }) => (
-    domainData.countries.find(country => country.id === countryId) || emptyObject
-);
 
 // Selector depending on user id from route (url)
 
@@ -59,6 +88,8 @@ export const userGroupsSelector = createSelector(
     userSelector,
     user => (user.userGroups || emptyList),
 );
+
+
 // Selector depending on user id from state (logged-in user)
 
 export const currentUserSelector = createSelector(
@@ -76,15 +107,6 @@ export const currentUserProjectsSelector = createSelector(
     currentUserSelector,
     user => (user.projects || emptyList),
 );
-
-export const currentUserActiveProjectSelector = createSelector(
-    currentUserProjectsSelector,
-    activeProjectSelector,
-    (currentUserProjects, activeProject) => (
-        currentUserProjects.find(project => project.id === activeProject) || emptyObject
-    ),
-);
-
 
 // Selector depending on project id from state (active project)
 
@@ -104,4 +126,15 @@ export const leadFilterOptionsForProjectSelector = createSelector(
     activeProjectSelector,
     leadFilterOptionsSelector,
     (activeProject, leadFilterOptions) => (leadFilterOptions[activeProject] || emptyObject),
+);
+
+// Selector depending on user id from state (logged-in user)
+// and on project id from state (active project)
+
+export const currentUserActiveProjectSelector = createSelector(
+    currentUserProjectsSelector,
+    activeProjectSelector,
+    (currentUserProjects, activeProject) => (
+        currentUserProjects.find(project => project.id === activeProject) || emptyObject
+    ),
 );
