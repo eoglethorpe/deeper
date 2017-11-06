@@ -3,8 +3,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import { DangerButton, SuccessButton } from '../../../../public/components/Button';
-import TextInput from '../../../../public/components/TextInput';
+import {
+    DangerButton,
+    SuccessButton,
+} from '../../../../public/components/Action';
+
+import {
+    TextInput,
+} from '../../../../public/components/Input';
 
 const propTypes = {
     adminLevelDetail: PropTypes.shape({
