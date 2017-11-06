@@ -29,7 +29,6 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
-    countryId: PropTypes.number.isRequired, //eslint-disable-line
     pending: PropTypes.bool,
     stale: PropTypes.bool.isRequired,
     countryDetail: PropTypes.shape({

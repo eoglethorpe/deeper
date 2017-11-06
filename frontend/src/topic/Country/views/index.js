@@ -90,10 +90,21 @@ export default class CountryPanel extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        const { countryId } = props.match.params;
+        const { countries, activeCountry } = props;
 
         let renderPages = pages.loading;
-        if (this.props.countries > 0) {
+        if (countries.length > 0) {
             renderPages = pages.normal;
+            if (countryId === undefined || countryId === 'undefined') {
+                let redirectTo = activeCountry;
+
+                if (activeCountry === undefined) {
+                    props.setActiveCountry({ activeCountry: countries[0].id });
+                    redirectTo = countries[0].id;
+                }
+                browserHistory.push(`/countrypanel/${redirectTo}/`);
+            }
         }
 
         this.state = {
@@ -184,7 +195,6 @@ export default class CountryPanel extends React.PureComponent {
                 this.props.setActiveCountry({ activeCountry: countries[0].id });
                 redirectTo = countries[0].id;
             }
-            this.setState({ renderPages: pages.normal });
             browserHistory.push(`/countrypanel/${redirectTo}/`);
         }
 
