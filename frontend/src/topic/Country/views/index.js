@@ -79,6 +79,7 @@ const pages = Object.freeze({
     noCountries: 0,
     countryDoesNotExist: 1,
     normal: 2,
+    loading: 3,
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -90,11 +91,16 @@ export default class CountryPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        let renderPages = pages.loading;
+        if (this.props.countries > 0) {
+            renderPages = pages.normal;
+        }
+
         this.state = {
             addCountryModal: false,
             displayCountryList: this.props.countries,
+            renderPages,
             searchInputValue: '',
-            renderPages: pages.noCountries,
 
             formErrors: [],
             formFieldErrors: {},
@@ -283,6 +289,15 @@ export default class CountryPanel extends React.PureComponent {
         const { countryId } = this.props.match.params;
 
         switch (pageContent) {
+            case pages.loading:
+                return (
+                    <div styleName="loading-countries">
+                        <span
+                            className="ion-load-c"
+                            styleName="loading"
+                        />
+                    </div>
+                );
             case pages.noCountries:
                 return (
                     <div styleName="country-panel-empty">
