@@ -1,5 +1,6 @@
 /**
  * @author frozenhelium <fren.ankit@gmail.com>
+ * @co-author tnagorra <weathermist@gmail.com>
  */
 
 import CSSModules from 'react-css-modules';
@@ -8,52 +9,54 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Form, {
+import {
+    Form,
+    TextInput,
     requiredCondition,
-} from '../../../public/components/Form';
-import TextInput from '../../../public/components/TextInput';
+} from '../../../public/components/Input';
 import {
-    PrimaryButton,
     DangerButton,
-} from '../../../public/components/Button';
-
-import FormattedDate from '../../../public/components/FormattedDate';
-import Table from '../../../public/components/Table';
-import styles from './styles.scss';
-import Modal, { Header, Body } from '../../../public/components/Modal';
+    PrimaryButton,
+} from '../../../public/components/Action';
+import {
+    FormattedDate,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    Table,
+} from '../../../public/components/View';
 import { RestBuilder } from '../../../public/utils/rest';
+
+import schema from '../../../common/schema';
 import { pageTitles } from '../../../common/utils/labels';
-import {
-    tokenSelector,
-} from '../../../common/selectors/auth';
-import {
-    userInformationSelector,
-    userProjectsSelector,
-    userGroupsSelector,
-} from '../../../common/selectors/domainData';
-import {
-    setUserInformationAction,
-    setUserProjectsAction,
-    setUserGroupsAction,
-} from '../../../common/action-creators/domainData';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
 import {
     createUrlForUser,
     createParamsForUser,
-
     createUrlForUserPatch,
     createParamsForUserPatch,
-
     createUrlForUserGroupsOfUser,
     createParamsForUserGroups,
-
     createUrlForProjectsOfUser,
     createParamsForProjects,
 } from '../../../common/rest';
 
-import schema from '../../../common/schema';
+import { tokenSelector } from '../../../common/selectors/auth';
+import {
+    userGroupsSelector,
+    userInformationSelector,
+    userProjectsSelector,
+} from '../../../common/selectors/domainData';
+import {
+    setUserGroupsAction,
+    setUserInformationAction,
+    setUserProjectsAction,
+} from '../../../common/action-creators/domainData';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
+
+
+import styles from './styles.scss';
 
 const propTypes = {
     match: PropTypes.shape({
@@ -62,38 +65,38 @@ const propTypes = {
         }),
     }),
     setNavbarState: PropTypes.func.isRequired,
+    setUserGroups: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     setUserProjects: PropTypes.func.isRequired,
-    setUserGroups: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
+    userGroups: PropTypes.array, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.array, // eslint-disable-line
-    userGroups: PropTypes.array, // eslint-disable-line
 };
 
 const defaultProps = {
     match: {
         params: {},
     },
-    user: { },
-    userProjects: [],
+    user: {},
     userGroups: [],
+    userProjects: [],
 };
 
 
 const mapStateToProps = (state, props) => ({
     token: tokenSelector(state),
+    userGroups: userGroupsSelector(state, props),
     userInformation: userInformationSelector(state, props), // uses props.match
     userProjects: userProjectsSelector(state, props),
-    userGroups: userGroupsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    setUserGroups: params => dispatch(setUserGroupsAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
     setUserProjects: params => dispatch(setUserProjectsAction(params)),
-    setUserGroups: params => dispatch(setUserGroupsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -110,8 +113,9 @@ export default class UserProfile extends React.PureComponent {
 
             formErrors: [],
             formFieldErrors: {},
-            stale: false,
+            formValues: {},
             pending: false,
+            stale: false,
         };
 
         this.elements = [
@@ -137,21 +141,32 @@ export default class UserProfile extends React.PureComponent {
                 order: 2,
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
-                    const membership = (row.memberships || []).find(d => d.member === +userId);
-                    return (membership || { role: '-' }).role;
+                    const { memberships = [] } = row;
+                    const membership = memberships.find(d => d.member === +userId);
+                    return membership && membership.role ? membership.role : '-';
                 },
             },
             {
                 key: 'createdAt',
                 label: 'Created at',
                 order: 3,
-                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+                modifier: row => (
+                    <FormattedDate
+                        date={row.createdAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
             },
             {
                 key: 'modifiedAt',
                 label: 'Last Modified at',
                 order: 4,
-                modifier: row => <FormattedDate date={row.modifiedAt} mode="dd-MM-yyyy hh:mm" />,
+                modifier: row => (
+                    <FormattedDate
+                        date={row.modifiedAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
             },
             {
                 key: 'status',
@@ -183,9 +198,9 @@ export default class UserProfile extends React.PureComponent {
                 order: 2,
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
-                    console.log(row);
-                    const membership = row.memberships.find(d => d.member === +userId);
-                    return (membership || { role: '-' }).role;
+                    const { memberships = [] } = row;
+                    const membership = memberships.find(d => d.member === +userId);
+                    return membership && membership.role ? membership.role : '-';
                 },
             },
             {
@@ -194,16 +209,22 @@ export default class UserProfile extends React.PureComponent {
                 order: 3,
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
-                    const membership = row.memberships.find(d => d.member === +userId);
+                    const { memberships = [] } = row;
+                    const membership = memberships.find(d => d.member === +userId);
                     const { joinedAt } = membership || {};
-                    return <FormattedDate date={joinedAt} mode="dd-MM-yyyy hh:mm" />;
+                    return (
+                        <FormattedDate
+                            date={joinedAt}
+                            mode="dd-MM-yyyy hh:mm"
+                        />
+                    );
                 },
             },
         ];
     }
 
     componentWillMount() {
-        console.log('Mounting UserProfile');
+        // console.log('Mounting UserProfile');
         this.props.setNavbarState({
             visible: true,
             activeLink: undefined,
@@ -222,11 +243,13 @@ export default class UserProfile extends React.PureComponent {
         });
 
         const { userId } = this.props.match.params;
+
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();
 
         this.projectsRequest = this.createRequestForProjects(userId);
         this.projectsRequest.start();
+
         this.userGroupsRequest = this.createRequestForUserGroups(userId);
         this.userGroupsRequest.start();
     }
@@ -249,10 +272,10 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        console.log('Unmounting UserProfile');
-
+        // console.log('Unmounting UserProfile');
         this.userRequest.stop();
         this.projectsRequest.stop();
+        this.userGroupsRequest.stop();
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
         }
@@ -392,18 +415,18 @@ export default class UserProfile extends React.PureComponent {
 
                 this.setState({ pending: false });
                 const { errors } = response;
-                const formErrors = {};
+                const formFieldErrors = {};
                 const { nonFieldErrors } = errors;
 
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
-                        formErrors[key] = errors[key].join(' ');
+                        formFieldErrors[key] = errors[key].join(' ');
                     }
                 });
 
                 this.setState({
-                    formErrors,
-                    nonFieldErrors,
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
                     pending: false,
                 });
             })
@@ -454,7 +477,12 @@ export default class UserProfile extends React.PureComponent {
     };
 
     handleEditProfileClick = () => {
-        this.setState({ editProfile: true });
+        this.setState({
+            editProfile: true,
+            formValues: this.props.userInformation,
+            formFieldErrors: {},
+            formErrors: [],
+        });
     }
 
     handleEditProfileClose = () => {
@@ -462,21 +490,22 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering UserProfile');
+        // console.log('Rendering UserProfile');
         const { userInformation } = this.props;
         const {
+            formValues,
             formErrors = [],
             formFieldErrors,
-            stale,
             pending,
+            stale,
         } = this.state;
-
-        const formValues = userInformation;
 
         return (
             <div styleName="user-profile">
                 <Helmet>
-                    <title>{ pageTitles.userProfile }</title>
+                    <title>
+                        { pageTitles.userProfile }
+                    </title>
                 </Helmet>
                 <header styleName="header">
                     <h1>
@@ -490,8 +519,8 @@ export default class UserProfile extends React.PureComponent {
                         onClose={this.handleEditProfileClose}
                         show={this.state.editProfile}
                     >
-                        <Header title="Edit profile" />
-                        <Body>
+                        <ModalHeader title="Edit profile" />
+                        <ModalBody>
                             <Form
                                 styleName="user-profile-edit-form"
                                 changeCallback={this.changeCallback}
@@ -567,7 +596,7 @@ export default class UserProfile extends React.PureComponent {
                                 </div>
                             </Form>
 
-                        </Body>
+                        </ModalBody>
                     </Modal>
                 </header>
                 <div styleName="info">
