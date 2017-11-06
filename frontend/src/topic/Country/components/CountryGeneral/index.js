@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Button, { TransparentButton } from '../../../../public/components/Button';
+import { TransparentButton, SuccessButton, DangerButton } from '../../../../public/components/Button';
 import EditAdminLevelForm from '../EditAdminLevelForm';
 import Modal, { Header, Body } from '../../../../public/components/Modal';
 import Table from '../../../../public/components/Table';
 import TextInput from '../../../../public/components/TextInput';
 import styles from './styles.scss';
+import Form, {
+    requiredCondition,
+} from '../../../../public/components/Form';
 import {
     adminLevelSelector,
+    countryDetailSelector,
 } from '../../../../common/selectors/domainData';
 
 const propTypes = {
@@ -25,15 +29,23 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
-    countryId: PropTypes.string.isRequired,
+    pending: PropTypes.bool,
+    stale: PropTypes.bool.isRequired,
+    countryDetail: PropTypes.shape({
+        code: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
 };
 
 const defaultProps = {
     adminLevelList: [],
+    pending: false,
+    stale: false,
 };
 
 const mapStateToProps = (state, props) => ({
     adminLevelList: adminLevelSelector(state, props),
+    countryDetail: countryDetailSelector(state, props),
     state,
 });
 
@@ -87,9 +99,16 @@ export default class CountryGeneral extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <Button onClick={() => this.editAdminLevel(row)}>
-                            <i className="ion-edit" />
-                        </Button>
+                        <TransparentButton onClick={() => this.editAdminLevel(row)}>
+                            <i
+                                className="ion-edit edit"
+                            />
+                        </TransparentButton>
+                        <TransparentButton onClick={() => this.deleteAdminLevel(row)}>
+                            <i
+                                className="ion-ios-trash delete"
+                            />
+                        </TransparentButton>
                     </div>
                 ),
             },
@@ -100,8 +119,53 @@ export default class CountryGeneral extends React.PureComponent {
             clickedAdminLevel: {},
             displayAdminLevelList: this.props.adminLevelList,
             editAdminLevel: false,
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {},
+        };
+        this.elements = [
+            'countryCode',
+            'countryName',
+            'wbRegion',
+            'wbIncomeRegion',
+            'ochaRegion',
+            'echoRegion',
+            'unGeoRegion',
+            'unGeoSubregion',
+        ];
+        this.validations = {
+            countryCode: [requiredCondition],
+            countryName: [requiredCondition],
+            wbRegion: [requiredCondition],
+            wbIncomeRegion: [requiredCondition],
+            ochaRegion: [requiredCondition],
+            echoRegion: [requiredCondition],
+            unGeoRegion: [requiredCondition],
+            unGeoSubregion: [requiredCondition],
         };
     }
+
+    // FORM RELATED
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (values) => {
+        console.log(values);
+        // Rest Request goes here
+    };
 
     addAdminLevel = () => {
         this.setState({ addAdminLevel: true });
@@ -122,26 +186,83 @@ export default class CountryGeneral extends React.PureComponent {
     };
 
     render() {
-        const { countryId } = this.props;
-        const { displayAdminLevelList } = this.state;
-        const iso = countryId;
+        const {
+            countryDetail,
+            pending,
+            stale,
+        } = this.props;
+        const {
+            displayAdminLevelList,
+            formErrors,
+            formFieldErrors,
+            formValues,
+        } = this.state;
 
         return (
             <div styleName="country-general">
                 <div styleName="form-map-container">
-                    <form styleName="details-form">
+                    <Form
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        onSubmit={this.handleSubmit}
+                        successCallback={this.successCallback}
+                        validation={this.validation}
+                        validations={this.validations}
+                        styleName="country-general-form"
+                    >
                         {
-                            iso &&
+                            pending &&
+                                <div styleName="pending-overlay">
+                                    <i
+                                        className="ion-load-c"
+                                        styleName="loading-icon"
+                                    />
+                                </div>
+                        }
+                        <header styleName="header-title">
+                            <div styleName="non-field-errors">
+                                {
+                                    formErrors.map(err => (
+                                        <div
+                                            key={err}
+                                            styleName="error"
+                                        >
+                                            {err}
+                                        </div>
+                                    ))
+                                }
+                                { formErrors.length <= 0 &&
+                                    <div styleName="error empty">
+                                        -
+                                    </div>
+                                }
+                            </div>
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <SuccessButton
+                                    disabled={pending || !stale}
+                                >
+                                    Save
+                                </SuccessButton>
+                            </div>
+                        </header>
+                        {
+                            countryDetail.code &&
                             <TextInput
                                 disabled
-                                initialValue={iso}
+                                initialValue={countryDetail.code}
                                 label="Country code"
                                 placeholder="NPL"
                                 styleName="text-input"
                             />
                         }
                         {
-                            !iso &&
+                            !countryDetail.code &&
                             <TextInput
                                 label="Country code"
                                 placeholder="NPL"
@@ -150,40 +271,54 @@ export default class CountryGeneral extends React.PureComponent {
                         }
                         <TextInput
                             label="Name"
+                            formname="countryName"
                             placeholder="Nepal"
-                            styleName="text-input"
+                            initialValue={countryDetail.title}
+                            error={formFieldErrors.countryName}
                         />
                         <TextInput
                             label="WB Region"
+                            formname="wbRegion"
                             placeholder="Enter WB Region"
-                            styleName="text-input"
+                            initialValue={formValues.wbRegion}
+                            error={formFieldErrors.wbRegion}
                         />
                         <TextInput
                             label="WB Income Region"
+                            formname="wbIncomeRegion"
                             placeholder="Enter WB Income Region"
-                            styleName="text-input"
+                            initialValue={formValues.wbIncomeRegion}
+                            error={formFieldErrors.wbIncomeRegion}
                         />
                         <TextInput
                             label="OCHA Region"
+                            formname="ochaRegion"
                             placeholder="Enter OCHA Region"
-                            styleName="text-input"
+                            initialValue={formValues.ochaRegion}
+                            error={formFieldErrors.ochaRegion}
                         />
                         <TextInput
                             label="ECHO Region"
+                            formname="echoRegion"
                             placeholder="Enter ECHO Region"
-                            styleName="text-input"
+                            initialValue={formValues.echoRegion}
+                            error={formFieldErrors.echoRegion}
                         />
                         <TextInput
                             label="UN Geographical Region"
+                            formname="unGeoRegion"
                             placeholder="Enter UN Geographical Region"
-                            styleName="text-input"
+                            initialValue={formValues.unGeoRegion}
+                            error={formFieldErrors.unGeoRegion}
                         />
                         <TextInput
                             label="UN Geographical Sub Region"
+                            formname="unGeoSubregion"
                             placeholder="Enter UN Geographical Sub Region"
-                            styleName="text-input"
+                            initialValue={formValues.unGeoSubregion}
+                            error={formFieldErrors.unGeoSubregion}
                         />
-                    </form>
+                    </Form>
                     <div styleName="map-container">
                         The map
                     </div>

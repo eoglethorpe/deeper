@@ -15,7 +15,7 @@ describe('<CountryGeneral />', () => {
     const wrapper = shallow(
         <Provider store={store}>
             <CountryGeneral
-                countryId="NPL"
+                countryId={12}
             />
         </Provider>,
     );

@@ -23,11 +23,11 @@ attachValidator(dict);
         },
         fields: {
             createdAt: { type: 'string', required: true }, // date
-            createdBy: { type: 'uint', required: true },
+            createdBy: { type: 'uint' },
             createdByName: { type: 'string' },
             id: { type: 'uint', required: true },
             modifiedAt: { type: 'string', required: true }, // date
-            modifiedBy: { type: 'uint', required: true },
+            modifiedBy: { type: 'uint' },
             modifiedByName: { type: 'string' },
         },
     };
@@ -65,6 +65,23 @@ attachValidator(dict);
             memberName: { type: 'string' },
             role: { type: 'string' }, // enum: normal, admin
             joinedAt: { type: 'string' }, // date
+        },
+    };
+    dict.put(name, schema);
+}
+{
+    const name = 'country';
+    const schema = {
+        doc: {
+            name: 'Country',
+            description: 'One of the main entities',
+        },
+        extends: 'dbentity',
+        fields: {
+            code: { type: 'string', required: true },
+            title: { type: 'string', required: true },
+            data: { type: 'object', required: false },
+            public: { type: 'boolean', required: true },
         },
     };
     dict.put(name, schema);
@@ -229,6 +246,24 @@ attachValidator(dict);
     dict.put(name, schema);
 }
 
+// Country request related
+
+{
+    const name = 'countriesGetResponse';
+    const schema = {
+        doc: {
+            name: 'Countries Get Response',
+            description: 'Response for GET /regions/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.country', required: true },
+        },
+    };
+    dict.put(name, schema);
+}
 
 // Project request related
 

@@ -1,10 +1,39 @@
 @import '../../../stylesheets/base';
 
+$height-header: 124px;
+$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+
+.loading-countries,
+.country-panel-empty,
+.country-panel-not-found {
+    @include shadow-medium;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: $spacing-large;
+    background-color: $color-foreground;
+    padding: $spacing-large;
+    height: $height-full-page;
+
+    .loading {
+        animation: spin 1s linear infinite;
+        font-size: $font-size-super-large;
+    }
+
+    @keyframes spin {
+        100% { transform: rotate(360deg); }
+    }
+
+    h1 {
+        margin-bottom: $spacing-large;
+        text-transform: none;
+    }
+}
+
 .country-panel {
     display: flex;
     padding: $spacing-large;
-    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-    $height-header: 124px;
 
     .country-list {
         @include shadow-medium;
@@ -33,20 +62,28 @@
 
         .list-item {
             display: block;
+            transition: .2s all ease-in-out;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-medium $spacing-large;
+            border-left: $width-separator-thick solid transparent;
 
             .link {
                 display: block;
+                padding: $spacing-medium $spacing-large;
                 width: 100%;
+                height: 100%;
+            }
+
+            &:hover {
+                background-color: $color-hover;
             }
         }
 
         .active {
-            background-color: $color-accent;
-            color: $color-text-on-accent;
+            border-left: $width-separator-thick solid $color-accent;
+            background-color: $color-hover;
         }
     }
+
 
     .country-details {
         @include shadow-medium;
@@ -56,3 +93,57 @@
     }
 }
 
+.add-country-form {
+    position: relative;
+    padding: $spacing-large;
+
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: $spacing-medium;
+    }
+
+    .pending-overlay {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-background-overlay;
+        width: 100%;
+        height: 100%;
+
+        .loading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 1s linear infinite;
+            width: $width-icon-super-large;
+            height: $width-icon-super-large;
+            color: $color-accent;
+            font-size: $width-icon-super-large;
+        }
+
+    }
+
+    .non-field-errors {
+        flex-basis: 100%;
+        text-align: center;
+
+        .error {
+            color: $color-danger;
+
+            &.empty {
+                color: transparent;
+                user-select: none;
+            }
+
+            &:not(:last-child) {
+                &::after {
+                    content: ', ';
+                }
+            }
+        }
+    }
+}

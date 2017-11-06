@@ -16,6 +16,7 @@ const initialDomainDataState = {
         },
     },
     totalLeadsCount: {
+        // ???
     },
 
     // index is project id
@@ -71,10 +72,12 @@ const initialDomainDataState = {
         },
     },
     countries: [
-        { fullName: 'Afghanistan', iso: 'AFG', countryId: 'AFG' },
-        { fullName: 'Aland Islands', iso: 'ALA', countryId: 'ALA' },
-        { fullName: 'Albania', iso: 'ALB', countryId: 'ALB' },
-        { fullName: 'Algeria', iso: 'DZA', countryId: 'DZA' },
+        /*
+        { id: 1, title: 'Afghanistan', code: 'AFG' },
+        { id: 2, title: 'Aland Islands', code: 'ALA' },
+        { id: 3, title: 'Albania', code: 'ALB' },
+        { id: 4, title: 'Algeria', code: 'DZA' },
+        { id: 5, title: 'Nepal', code: 'NLP' },
         { fullName: 'American Samoa', iso: 'ASM', countryId: 'ASM' },
         { fullName: 'Andorra', iso: 'AND', countryId: 'AND' },
         { fullName: 'Angola', iso: 'AGO', countryId: 'AGO' },
@@ -157,8 +160,8 @@ const initialDomainDataState = {
         { fullName: 'Germany', iso: 'DEU', countryId: 'DEU' },
         { fullName: 'Ghana', iso: 'GHA', countryId: 'GHA' },
         { fullName: 'Gibraltar', iso: 'GIB', countryId: 'GIB' },
-        { fullName: 'Greece', iso: 'GRC', countryId: 'GRC' },
         { fullName: 'Greenland', iso: 'GRL', countryId: 'GRL' },
+        { fullName: 'Greece', iso: 'GRC', countryId: 'GRC' },
         { fullName: 'Grenada', iso: 'GRD', countryId: 'GRD' },
         { fullName: 'Guadeloupe', iso: 'GLP', countryId: 'GLP' },
         { fullName: 'Guam', iso: 'GUM', countryId: 'GUM' },
@@ -318,10 +321,11 @@ const initialDomainDataState = {
         { fullName: 'Yemen', iso: 'YEM', countryId: 'YEM' },
         { fullName: 'Zambia', iso: 'ZMB', countryId: 'ZMB' },
         { fullName: 'Zimbabwe', iso: 'ZWE', countryId: 'ZWE' },
+        */
     ],
 
     adminLevels: {
-        AFG: [
+        1: [
             {
                 adminLevelId: 1,
                 level: 1,
@@ -386,7 +390,7 @@ const initialDomainDataState = {
                 pcodeProperty: 'NAME_PCODE',
             },
         ],
-        NPL: [
+        2: [
             {
                 adminLevelId: 1,
                 level: 1,
@@ -427,5 +431,7 @@ const initialDomainDataState = {
     },
 
     activeProject: 1,
+
+    activeCountry: undefined,
 };
 export default initialDomainDataState;

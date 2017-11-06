@@ -24,6 +24,7 @@ import {
 } from '../../../common/selectors/auth';
 import {
     currentUserProjectsSelector,
+    activeCountrySelector,
     activeProjectSelector,
 } from '../../../common/selectors/domainData';
 import {
@@ -35,6 +36,7 @@ import {
 
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
+    activeCountry: activeCountrySelector(state),
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
@@ -49,6 +51,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
     // eslint-disable-next-line
@@ -72,6 +75,7 @@ const propTypes = {
 const defaultProps = {
     navbarActiveLink: undefined,
     activeProject: undefined,
+    activeCountry: undefined,
     navbarValidLinks: [],
     navbarVisible: false,
     activeUser: {},
@@ -146,9 +150,10 @@ export default class Navbar extends React.PureComponent {
 
     render() {
         const {
-            navbarVisible,
-            activeUser,
+            activeCountry,
             activeProject,
+            activeUser,
+            navbarVisible,
         } = this.props;
 
         console.log('Rendering Navbar');
@@ -196,7 +201,7 @@ export default class Navbar extends React.PureComponent {
                         iconName: 'ion-android-person',
                     },
                     {
-                        linkTo: '/countrypanel/',
+                        linkTo: `/countrypanel/${activeCountry}/`,
                         name: pageTitles.countryPanel,
                         iconName: 'ion-android-globe',
                     },

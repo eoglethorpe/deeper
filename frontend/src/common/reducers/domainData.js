@@ -3,10 +3,12 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     SET_USER_GROUPS,
+    DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
+    SET_ACTIVE_COUNTRY,
+    SET_COUNTRIES,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
-    DUMMY_ACTION,
 } from '../action-types/domainData';
 import {
     activeProjectSelector,
@@ -90,6 +92,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
             return update(state, settings);
         }
+
         case SET_LEAD_FILTER_OPTIONS: {
             const settings = {
                 leadFilterOptions: {
@@ -100,10 +103,26 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
+        case SET_COUNTRIES: {
+            const settings = {
+                countries: {
+                    $set: action.countries,
+                },
+            };
+            return update(state, settings);
+        }
         case SET_ACTIVE_PROJECT: {
             const settings = {
                 activeProject: {
                     $set: action.activeProject,
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_ACTIVE_COUNTRY: {
+            const settings = {
+                activeCountry: {
+                    $set: action.activeCountry,
                 },
             };
             return update(state, settings);
