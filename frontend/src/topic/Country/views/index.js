@@ -329,7 +329,6 @@ export default class CountryPanel extends React.PureComponent {
                             <title>{ pageTitles.countryPanel }</title>
                         </Helmet>
                         <h1>No added countries yet. Mark your terretories.</h1>
-                        <h1>Arey country nahi hai re jadau</h1>
                         <PrimaryButton
                             iconName="ion-plus"
                             onClick={this.onAddCountry}

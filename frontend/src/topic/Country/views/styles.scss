@@ -3,7 +3,9 @@
 $height-header: 124px;
 $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
-.loading-countries {
+.loading-countries,
+.country-panel-empty,
+.country-panel-not-found {
     @include shadow-medium;
     display: flex;
     flex-direction: column;
@@ -22,41 +24,12 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
     @keyframes spin {
         100% { transform: rotate(360deg); }
     }
-}
-
-.country-panel-empty {
-    @include shadow-medium;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: $spacing-large;
-    background-color: $color-foreground;
-    padding: $spacing-large;
-    height: $height-full-page;
-
-    h1 {
-        margin-bottom: $spacing-large;
-    }
-}
-
-.country-panel-not-found {
-    @include shadow-medium;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: $spacing-large;
-    background-color: $color-foreground;
-    padding: $spacing-large;
-    height: $height-full-page;
 
     h1 {
         margin-bottom: $spacing-large;
         text-transform: none;
     }
 }
-
 
 .country-panel {
     display: flex;
@@ -89,7 +62,9 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
         .list-item {
             display: block;
+            transition: .2s all ease-in-out;
             border-bottom: $width-separator-thin solid $color-separator;
+            border-left: $width-separator-thick solid transparent;
 
             .link {
                 display: block;
@@ -97,11 +72,15 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
                 width: 100%;
                 height: 100%;
             }
+
+            &:hover {
+                background-color: $color-hover;
+            }
         }
 
         .active {
-            background-color: $color-accent;
-            color: $color-text-on-accent;
+            border-left: $width-separator-thick solid $color-accent;
+            background-color: $color-hover;
         }
     }
 
