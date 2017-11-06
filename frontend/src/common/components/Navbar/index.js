@@ -4,24 +4,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
-import DropdownMenu, { Group, GroupTitle } from '../../../public/components/DropdownMenu';
+import {
+    DropdownMenu,
+    DropdownGroup,
+    DropdownGroupTitle,
+} from '../../../public/components/Action';
+import { SelectInput } from '../../../public/components/Input';
+
+
 import LinkOutsideRouter from '../LinkOutsideRouter';
-import logo from '../../../img/black-logo.png';
-import SelectInput from '../../../public/components/SelectInput';
-import styles from './styles.scss';
 import { pageTitles } from '../../utils/labels';
-import {
-    logoutAction,
-} from '../../../common/action-creators/auth';
-import {
-    setActiveProjectAction,
-} from '../../../common/action-creators/domainData';
-import {
-    stopTokenRefreshAction,
-} from '../../../common/middlewares/refreshAccessToken';
-import {
-    activeUserSelector,
-} from '../../../common/selectors/auth';
+import logo from '../../../img/black-logo.png';
+import styles from './styles.scss';
+
+import { stopTokenRefreshAction } from '../../../common/middlewares/refreshAccessToken';
+
+import { logoutAction } from '../../../common/action-creators/auth';
+import { setActiveProjectAction } from '../../../common/action-creators/domainData';
+
+import { activeUserSelector } from '../../../common/selectors/auth';
 import {
     currentUserProjectsSelector,
     activeCountrySelector,
@@ -32,7 +33,6 @@ import {
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
 } from '../../../common/selectors/navbar';
-
 
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
@@ -254,13 +254,13 @@ export default class Navbar extends React.PureComponent {
                 >
                     {
                         dropdownItems.map(group => (
-                            <Group key={group.key} >
+                            <DropdownGroup key={group.key} >
                                 {
                                     group.label &&
-                                        <GroupTitle title={group.label} />
+                                        <DropdownGroupTitle title={group.label} />
                                 }
                                 { group.items.map(this.renderDropdownItem) }
-                            </Group>
+                            </DropdownGroup>
                         ))
                     }
                     <button

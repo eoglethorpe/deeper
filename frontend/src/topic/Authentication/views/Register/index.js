@@ -9,27 +9,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import browserHistory from '../../../../common/browserHistory';
-import TextInput from '../../../../public/components/TextInput';
-import schema from '../../../../common/schema';
-import styles from './styles.scss';
-import { pageTitles } from '../../../../common/utils/labels';
-import { PrimaryButton } from '../../../../public/components/Button';
-import Form, {
+import {
+    Form,
+    TextInput,
     emailCondition,
-    requiredCondition,
     lengthGreaterThanCondition,
-} from '../../../../public/components/Form';
-
+    requiredCondition,
+} from '../../../../public/components/Input';
+import { PrimaryButton } from '../../../../public/components/Action';
 import { RestBuilder } from '../../../../public/utils/rest';
+
+import browserHistory from '../../../../common/browserHistory';
+import schema from '../../../../common/schema';
+import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
 
-import {
-    setNavbarStateAction,
-} from '../../../../common/action-creators/navbar';
+import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
+
+import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
