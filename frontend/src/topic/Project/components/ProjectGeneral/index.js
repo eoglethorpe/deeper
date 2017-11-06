@@ -3,16 +3,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from './styles.scss';
-import TextInput from '../../../../public/components/TextInput';
-import DateInput from '../../../../public/components/DateInput';
-import Form, {
+
+import {
+    Form,
+    TextInput,
+    DateInput,
     requiredCondition,
-} from '../../../../public/components/Form';
+} from '../../../../public/components/Input';
+
 import {
     PrimaryButton,
     SuccessButton,
     DangerButton,
-} from '../../../../public/components/Button';
+} from '../../../../public/components/Action';
 
 const propTypes = {
     onChange: PropTypes.func.isRequired, //eslint-disable-line
