@@ -4,11 +4,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styles from './styles.scss';
 
-import Button from '../../../../public/components/Button';
-import SelectInput from '../../../../public/components/SelectInput';
+import {
+    Button,
+} from '../../../../public/components/Action';
 
-import Form from '../../../../public/components/Form';
-import { RestBuilder } from '../../../../public/utils/rest';
+import {
+    Form,
+    SelectInput,
+} from '../../../../public/components/Input';
+
+import {
+    RestBuilder,
+} from '../../../../public/utils/rest';
 
 import {
     createParamsForUser,

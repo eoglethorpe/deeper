@@ -8,19 +8,26 @@ import { connect } from 'react-redux';
 import EditLeadForm from '../components/EditLeadForm';
 import FilterLeadsForm from '../components/FilterLeadsForm';
 import LeadColumnHeader from '../components/LeadColumnHeader';
-import FormattedDate from '../../../public/components/FormattedDate';
-import RawTable from '../../../public/components/RawTable';
 import browserHistory from '../../../common/browserHistory';
 import styles from './styles.scss';
-import Modal, { Header, Body } from '../../../public/components/Modal';
 import { RestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/utils/labels';
+
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    Pager,
+    RawTable,
+    FormattedDate,
+} from '../../../public/components/View';
+
 import {
     PrimaryButton,
     TransparentAccentButton,
     TransparentButton,
-} from '../../../public/components/Button';
-import Pager from '../../../public/components/Pager';
+} from '../../../public/components/Action';
+
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -455,17 +462,17 @@ export default class Leads extends React.PureComponent {
                     onClose={this.handleEditLeadModalClose}
                     show={this.state.showEditLeadModal}
                 >
-                    <Header
+                    <ModalHeader
                         title="Edit lead"
                     />
-                    <Body>
+                    <ModalBody>
                         <EditLeadForm
                             onSubmit={() => {}}
                             onCancel={this.handleEditLeadModalClose}
                             pending={false}
                             values={this.state.editRow}
                         />
-                    </Body>
+                    </ModalBody>
                 </Modal>
             </div>
         );
