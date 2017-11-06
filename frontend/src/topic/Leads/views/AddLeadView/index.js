@@ -465,9 +465,10 @@ export default class AddLead extends React.PureComponent {
                                 styleName="search-box"
                                 onChange={this.handleSearchChange}
                                 initialValue={this.state.searchInputValue}
-                                placeholder="Search leads"
+                                placeholder="Search description"
                                 type="search"
                             />
+                            <AddLeadFilters />
                         </div>
                         <div styleName="list">
                             {

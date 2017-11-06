@@ -45,6 +45,7 @@
                     cursor: pointer;
                     padding-top: $spacing-small $spacing-medium;
                     user-select: none;
+                    overflow-y: auto;
 
                     &.active {
                         border-left: $width-separator-thick solid $color-accent;
