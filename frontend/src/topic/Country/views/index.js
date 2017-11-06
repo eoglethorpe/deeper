@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Helmet from 'react-helmet';
@@ -75,6 +75,12 @@ const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
+const pages = Object.freeze({
+    noCountries: 0,
+    countryDoesNotExist: 1,
+    normal: 2,
+});
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPanel extends React.PureComponent {
@@ -88,6 +94,7 @@ export default class CountryPanel extends React.PureComponent {
             addCountryModal: false,
             displayCountryList: this.props.countries,
             searchInputValue: '',
+            renderPages: pages.noCountries,
 
             formErrors: [],
             formFieldErrors: {},
@@ -141,23 +148,46 @@ export default class CountryPanel extends React.PureComponent {
                 pageTitles.countryPanel,
             ],
         });
+
         this.countriesRequest.start();
     }
 
-    componentDidMount() {
-        console.error('asdasdasdasd');
-    }
-
     componentWillReceiveProps(nextProps) {
-        console.log('country panel received props', nextProps);
+        this.setState({ renderPages: pages.normal });
         const caseInsensitiveSubmatch = country => (
             country.title.toLowerCase().includes(this.state.searchInputValue.toLowerCase())
         );
+
         const displayCountryList = nextProps.countries.filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayCountryList,
         });
+
+        const { activeCountry, countries } = nextProps;
+        const { countryId } = nextProps.match.params;
+
+        if (countries.length === 0) {
+            this.setState({ renderPages: pages.noCountries });
+        }
+
+        if (countries.length > 0 && (countryId === undefined || countryId === 'undefined')) {
+            let redirectTo = activeCountry;
+
+            if (activeCountry === undefined) {
+                this.props.setActiveCountry({ activeCountry: countries[0].id });
+                redirectTo = countries[0].id;
+            }
+            this.setState({ renderPages: pages.normal });
+            browserHistory.push(`/countrypanel/${redirectTo}/`);
+        }
+
+        const index = countries.findIndex(country => `${country.id}` === countryId);
+        if (index === -1) {
+            this.setState({ renderPages: pages.countryDoesNotExist });
+        } else if (index >= 0 && countryId !== `${activeCountry}`) {
+            this.props.setActiveCountry({ activeCountry: Number(countryId) });
+        }
     }
 
     componentWillUnmount() {
@@ -196,7 +226,6 @@ export default class CountryPanel extends React.PureComponent {
 
         return styleNames.join(' ');
     }
-
 
     search = (value) => {
         const caseInsensitiveSubmatch = country => (
@@ -242,282 +271,257 @@ export default class CountryPanel extends React.PureComponent {
         // Rest Request goes here
     };
 
-    render() {
+    renderPageContent = (pageContent) => {
         const {
             formErrors = [],
             formFieldErrors,
             formValues,
             pending,
             stale,
-            location,
         } = this.state;
 
-        const { activeCountry, countries } = this.props;
         const { countryId } = this.props.match.params;
 
-        if (countries.length === 0) {
-            return (
-                <div styleName="country-panel-empty">
-                    <Helmet>
-                        <title>{ pageTitles.countryPanel }</title>
-                    </Helmet>
-                    <h1>No added countries yet. Mark your terretories.</h1>
-                    <h1>Arey country nahi hai re jadau</h1>
-                    <PrimaryButton
-                        iconName="ion-plus"
-                        onClick={this.onAddCountry}
-                    >
-                        Add country
-                    </PrimaryButton>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleModalClose}
-                        show={this.state.addCountryModal}
-                        closeOnBlur
-                    >
-                        <Header title="Add new country" />
-                        <Form
-                            styleName="add-country-form"
-                            changeCallback={this.changeCallback}
-                            elements={this.elements}
-                            failureCallback={this.failureCallback}
-                            successCallback={this.successCallback}
-                            validation={this.validation}
-                            validations={this.validations}
-                            onSubmit={this.handleSubmit}
-                        >
-                            {
-                                pending &&
-                                    <div styleName="pending-overlay">
-                                        <i
-                                            className="ion-load-c"
-                                            styleName="loading-icon"
-                                        />
-                                    </div>
-                            }
-                            <div styleName="non-field-errors">
-                                {
-                                    formErrors.map(err => (
-                                        <div
-                                            key={err}
-                                            styleName="error"
-                                        >
-                                            {err}
-                                        </div>
-                                    ))
-                                }
-                                { formErrors.length <= 0 &&
-                                    <div styleName="error empty">
-                                        -
-                                    </div>
-                                }
-                            </div>
-                            <TextInput
-                                label="Country Name"
-                                formname="name"
-                                placeholder="Enter county name"
-                                initialValue={formValues.name}
-                                error={formFieldErrors.name}
-                            />
-                            <TextInput
-                                label="Code"
-                                formname="code"
-                                placeholder="Enter country code"
-                                initialValue={formValues.code}
-                                error={formFieldErrors.code}
-                            />
-                            <div styleName="action-buttons">
-                                <DangerButton
-                                    onClick={this.handleModalClose}
-                                    disabled={pending}
-                                >
-                                    Cancel
-                                </DangerButton>
-                                <PrimaryButton disabled={pending || !stale} >
-                                    Save changes
-                                </PrimaryButton>
-                            </div>
-                        </Form>
-                    </Modal>
-                </div>
-            );
-        }
-
-        if (countries.length > 0 && (countryId === undefined || countryId === 'undefined')) {
-            let redirectTo = activeCountry;
-
-            if (activeCountry === undefined) {
-                this.props.setActiveCountry({ activeCountry: countries[0].id });
-                redirectTo = countries[0].id;
-            }
-            return (
-                <Redirect
-                    to={{
-                        pathname: `/countrypanel/${redirectTo}/`,
-                        from: location,
-                    }}
-                />
-            );
-        }
-
-        const index = countries.findIndex(country => `${country.id}` === countryId);
-        if (index === -1) {
-            return (
-                <div styleName="country-panel-not-found">
-                    <h1>
-                        The country you previously selected is either deleted,
-                        or does not exist.
-                    </h1>
-                    <PrimaryButton onClick={this.onBrowseCountriesClick}>
-                        Browse other countries
-                    </PrimaryButton>
-                </div>
-            );
-        } else if (index >= 0 && countryId !== `${activeCountry}`) {
-            this.props.setActiveCountry({ activeCountry: Number(countryId) });
-        }
-
-
-        return (
-            <div styleName="country-panel">
-                <Helmet>
-                    <title>{ pageTitles.countryPanel }</title>
-                </Helmet>
-                <div styleName="country-list">
-                    <div styleName="list-header">
-                        <div styleName="header-text">
-                            Countries
-                        </div>
+        switch (pageContent) {
+            case pages.noCountries:
+                return (
+                    <div styleName="country-panel-empty">
+                        <Helmet>
+                            <title>{ pageTitles.countryPanel }</title>
+                        </Helmet>
+                        <h1>No added countries yet. Mark your terretories.</h1>
+                        <h1>Arey country nahi hai re jadau</h1>
                         <PrimaryButton
                             iconName="ion-plus"
                             onClick={this.onAddCountry}
                         >
                             Add country
                         </PrimaryButton>
-                        <TextInput
-                            onChange={this.search}
-                            placeholder="Search Country"
-                            type="search"
-                        />
-                    </div>
-
-                    <ListView styleName="list">
-                        {
-                            this.state.displayCountryList.map(country => (
-                                `${country.id}` === countryId ? (
-                                    <ListItem
-                                        ref={(container) => { this.selectedLead = container; }}
-                                        key={country.id}
-                                        styleName="list-item active"
-                                    >
-                                        <Link
-                                            styleName="link"
-                                            onClick={
-                                                () => this.props.setActiveCountry({
-                                                    activeCountry: country.id,
-                                                })}
-                                            to={`/countrypanel/${country.id}/`}
-                                        >
-                                            {country.title}
-                                        </Link>
-                                    </ListItem>
-                                ) : (
-                                    <ListItem
-                                        key={country.id}
-                                        styleName="list-item"
-                                    >
-                                        <Link
-                                            styleName="link"
-                                            onClick={
-                                                () => this.props.setActiveCountry({
-                                                    activeCountry: country.id,
-                                                })}
-                                            to={`/countrypanel/${country.id}/`}
-                                        >
-                                            {country.title}
-                                        </Link>
-                                    </ListItem>
-                                )
-                            ))
-                        }
-                    </ListView>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleModalClose}
-                        show={this.state.addCountryModal}
-                        closeOnBlur
-                    >
-                        <Header title="Add new country" />
-                        <Form
-                            styleName="add-country-form"
-                            changeCallback={this.changeCallback}
-                            elements={this.elements}
-                            failureCallback={this.failureCallback}
-                            successCallback={this.successCallback}
-                            validation={this.validation}
-                            validations={this.validations}
-                            onSubmit={this.handleSubmit}
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            show={this.state.addCountryModal}
+                            closeOnBlur
                         >
-                            {
-                                pending &&
-                                <div styleName="pending-overlay">
-                                    <i
-                                        className="ion-load-c"
-                                        styleName="loading-icon"
-                                    />
-                                </div>
-                            }
-                            <div styleName="non-field-errors">
+                            <Header title="Add new country" />
+                            <Form
+                                styleName="add-country-form"
+                                changeCallback={this.changeCallback}
+                                elements={this.elements}
+                                failureCallback={this.failureCallback}
+                                successCallback={this.successCallback}
+                                validation={this.validation}
+                                validations={this.validations}
+                                onSubmit={this.handleSubmit}
+                            >
                                 {
-                                    formErrors.map(err => (
-                                        <div
-                                            key={err}
-                                            styleName="error"
-                                        >
-                                            {err}
+                                    pending &&
+                                        <div styleName="pending-overlay">
+                                            <i
+                                                className="ion-load-c"
+                                                styleName="loading-icon"
+                                            />
                                         </div>
+                                }
+                                <div styleName="non-field-errors">
+                                    {
+                                        formErrors.map(err => (
+                                            <div
+                                                key={err}
+                                                styleName="error"
+                                            >
+                                                {err}
+                                            </div>
+                                        ))
+                                    }
+                                    { formErrors.length <= 0 &&
+                                        <div styleName="error empty">
+                                            -
+                                        </div>
+                                    }
+                                </div>
+                                <TextInput
+                                    label="Country Name"
+                                    formname="name"
+                                    placeholder="Enter county name"
+                                    initialValue={formValues.name}
+                                    error={formFieldErrors.name}
+                                />
+                                <TextInput
+                                    label="Code"
+                                    formname="code"
+                                    placeholder="Enter country code"
+                                    initialValue={formValues.code}
+                                    error={formFieldErrors.code}
+                                />
+                                <div styleName="action-buttons">
+                                    <DangerButton
+                                        onClick={this.handleModalClose}
+                                        disabled={pending}
+                                    >
+                                        Cancel
+                                    </DangerButton>
+                                    <PrimaryButton disabled={pending || !stale} >
+                                        Save changes
+                                    </PrimaryButton>
+                                </div>
+                            </Form>
+                        </Modal>
+                    </div>
+                );
+            case pages.countryDoesNotExist:
+                return (
+                    <div styleName="country-panel-not-found">
+                        <h1>
+                            The country you previously selected is either deleted,
+                            or does not exist.
+                        </h1>
+                        <PrimaryButton onClick={this.onBrowseCountriesClick}>
+                            Browse other countries
+                        </PrimaryButton>
+                    </div>
+                );
+            default:
+                return (
+                    <div styleName="country-panel">
+                        <Helmet>
+                            <title>{ pageTitles.countryPanel }</title>
+                        </Helmet>
+                        <div styleName="country-list">
+                            <div styleName="list-header">
+                                <div styleName="header-text">
+                                    Countries
+                                </div>
+                                <PrimaryButton
+                                    iconName="ion-plus"
+                                    onClick={this.onAddCountry}
+                                >
+                                    Add country
+                                </PrimaryButton>
+                                <TextInput
+                                    onChange={this.search}
+                                    placeholder="Search Country"
+                                    type="search"
+                                />
+                            </div>
+
+                            <ListView styleName="list">
+                                {
+                                    this.state.displayCountryList.map(country => (
+                                        `${country.id}` === countryId ? (
+                                            <ListItem
+                                                key={country.id}
+                                                styleName="list-item active"
+                                            >
+                                                <Link
+                                                    styleName="link"
+                                                    onClick={
+                                                        () => this.props.setActiveCountry({
+                                                            activeCountry: country.id,
+                                                        })}
+                                                    to={`/countrypanel/${country.id}/`}
+                                                >
+                                                    {country.title}
+                                                </Link>
+                                            </ListItem>
+                                        ) : (
+                                            <ListItem
+                                                key={country.id}
+                                                styleName="list-item"
+                                            >
+                                                <Link
+                                                    styleName="link"
+                                                    to={`/countrypanel/${country.id}/`}
+                                                >
+                                                    {country.title}
+                                                </Link>
+                                            </ListItem>
+                                        )
                                     ))
                                 }
-                                { formErrors.length <= 0 &&
-                                    <div styleName="error empty">
-                                        -
-                                    </div>
-                                }
-                            </div>
-                            <TextInput
-                                label="Country Name"
-                                formname="name"
-                                placeholder="Enter county name"
-                                initialValue={formValues.name}
-                                error={formFieldErrors.name}
-                            />
-                            <TextInput
-                                label="Code"
-                                formname="code"
-                                placeholder="Enter country code"
-                                initialValue={formValues.code}
-                                error={formFieldErrors.code}
-                            />
-                            <div styleName="action-buttons">
-                                <DangerButton
-                                    onClick={this.handleModalClose}
-                                    disabled={pending}
+                            </ListView>
+                            <Modal
+                                closeOnEscape
+                                onClose={this.handleModalClose}
+                                show={this.state.addCountryModal}
+                                closeOnBlur
+                            >
+                                <Header title="Add new country" />
+                                <Form
+                                    styleName="add-country-form"
+                                    changeCallback={this.changeCallback}
+                                    elements={this.elements}
+                                    failureCallback={this.failureCallback}
+                                    successCallback={this.successCallback}
+                                    validation={this.validation}
+                                    validations={this.validations}
+                                    onSubmit={this.handleSubmit}
                                 >
-                                    Cancel
-                                </DangerButton>
-                                <PrimaryButton disabled={pending || !stale} >
-                                    Save changes
-                                </PrimaryButton>
-                            </div>
-                        </Form>
-                    </Modal>
-                </div>
-                <div styleName="country-details">
-                    <CountryDetail
-                        countryId={Number(countryId)}
-                    />
-                </div>
-            </div>
-        );
+                                    {
+                                        pending &&
+                                            <div styleName="pending-overlay">
+                                                <i
+                                                    className="ion-load-c"
+                                                    styleName="loading-icon"
+                                                />
+                                            </div>
+                                    }
+                                    <div styleName="non-field-errors">
+                                        {
+                                            formErrors.map(err => (
+                                                <div
+                                                    key={err}
+                                                    styleName="error"
+                                                >
+                                                    {err}
+                                                </div>
+                                            ))
+                                        }
+                                        { formErrors.length <= 0 &&
+                                            <div styleName="error empty">
+                                                -
+                                            </div>
+                                        }
+                                    </div>
+                                    <TextInput
+                                        label="Country Name"
+                                        formname="name"
+                                        placeholder="Enter county name"
+                                        initialValue={formValues.name}
+                                        error={formFieldErrors.name}
+                                    />
+                                    <TextInput
+                                        label="Code"
+                                        formname="code"
+                                        placeholder="Enter country code"
+                                        initialValue={formValues.code}
+                                        error={formFieldErrors.code}
+                                    />
+                                    <div styleName="action-buttons">
+                                        <DangerButton
+                                            onClick={this.handleModalClose}
+                                            disabled={pending}
+                                        >
+                                            Cancel
+                                        </DangerButton>
+                                        <PrimaryButton disabled={pending || !stale} >
+                                            Save changes
+                                        </PrimaryButton>
+                                    </div>
+                                </Form>
+                            </Modal>
+                        </div>
+                        <div styleName="country-details">
+                            <CountryDetail
+                                countryId={Number(countryId)}
+                            />
+                        </div>
+                    </div>
+                );
+        }
+    }
+
+    render() {
+        return (this.renderPageContent(this.state.renderPages));
     }
 }
