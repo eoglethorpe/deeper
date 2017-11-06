@@ -32,7 +32,7 @@ export default class CountryDetail extends React.PureComponent {
             <div styleName="country-detail">
                 <div styleName="header">
                     <div styleName="header-title">
-                        {`${countryId}${fullName}`}
+                        {fullName}
                     </div>
                     <div styleName="button-container">
                         <SuccessButton className="save-btn">

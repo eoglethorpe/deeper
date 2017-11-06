@@ -92,6 +92,7 @@ export default class CountryPanel extends React.PureComponent {
         super(props);
         const { countryId } = props.match.params;
         const { countries, activeCountry } = props;
+        let activeCountryName = '';
 
         let renderPages = pages.loading;
         if (countries.length > 0) {
@@ -105,6 +106,15 @@ export default class CountryPanel extends React.PureComponent {
                 }
                 browserHistory.push(`/countrypanel/${redirectTo}/`);
             }
+            const index = countries.findIndex(country => `${country.id}` === countryId);
+            if (index === -1) {
+                renderPages = pages.countryDoesNotExist;
+            } else if (index >= 0 && countryId !== `${activeCountry}`) {
+                props.setActiveCountry({ activeCountry: Number(countryId) });
+                activeCountryName = countries[index].title;
+            } else {
+                activeCountryName = countries[index].title;
+            }
         }
 
         this.state = {
@@ -112,6 +122,7 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList: this.props.countries,
             renderPages,
             searchInputValue: '',
+            activeCountryName,
 
             formErrors: [],
             formFieldErrors: {},
@@ -203,6 +214,9 @@ export default class CountryPanel extends React.PureComponent {
             this.setState({ renderPages: pages.countryDoesNotExist });
         } else if (index >= 0 && countryId !== `${activeCountry}`) {
             this.props.setActiveCountry({ activeCountry: Number(countryId) });
+            this.setState({ activeCountryName: countries[index].title });
+        } else {
+            this.setState({ activeCountryName: countries[index].title });
         }
     }
 
@@ -539,6 +553,7 @@ export default class CountryPanel extends React.PureComponent {
                         <div styleName="country-details">
                             <CountryDetail
                                 countryId={Number(countryId)}
+                                fullName={this.state.activeCountryName}
                             />
                         </div>
                     </div>

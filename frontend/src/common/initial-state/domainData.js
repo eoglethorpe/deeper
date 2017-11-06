@@ -71,12 +71,12 @@ const initialDomainDataState = {
         },
     },
     countries: [
-        /*
         { id: 1, title: 'Afghanistan', code: 'AFG' },
         { id: 2, title: 'Aland Islands', code: 'ALA' },
         { id: 3, title: 'Albania', code: 'ALB' },
         { id: 4, title: 'Algeria', code: 'DZA' },
         { id: 5, title: 'Nepal', code: 'NLP' },
+        /*
         { fullName: 'American Samoa', iso: 'ASM', countryId: 'ASM' },
         { fullName: 'Andorra', iso: 'AND', countryId: 'AND' },
         { fullName: 'Angola', iso: 'AGO', countryId: 'AGO' },
@@ -431,6 +431,6 @@ const initialDomainDataState = {
 
     activeProject: 1,
 
-    activeCountry: undefined,
+    activeCountry: 6,
 };
 export default initialDomainDataState;
