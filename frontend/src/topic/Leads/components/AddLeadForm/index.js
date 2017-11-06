@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from './styles.scss';
-import TextInput from '../../../../public/components/TextInput';
-import DateInput from '../../../../public/components/DateInput';
-import HiddenInput from '../../../../public/components/HiddenInput';
-import TextArea from '../../../../public/components/TextArea';
-import Form, {
+
+import {
+    DateInput,
+    Form,
+    HiddenInput,
+    TextArea,
+    TextInput,
     requiredCondition,
     urlCondition,
-} from '../../../../public/components/Form';
+} from '../../../../public/components/Input';
+
 import {
     PrimaryButton,
     SuccessButton,
-} from '../../../../public/components/Button';
+} from '../../../../public/components/Action';
 
 
 // uploadStates -> birth, uploading, success, fail
