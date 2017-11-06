@@ -9,25 +9,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import FileInput from '../../../../public/components/FileInput';
-import FileUpload from '../../../../public/components/FileUpload';
-import TextInput from '../../../../public/components/TextInput';
-import schema from '../../../../common/schema';
-import styles from './styles.scss';
-import { hidUrl } from '../../../../common/config/hid';
-import { pageTitles } from '../../../../common/utils/labels';
-import { PrimaryButton } from '../../../../public/components/Button';
-import Form, {
+import {
+    FileInput,
+    FileUpload,
+    Form,
+    TextInput,
     createValidation,
     emailCondition,
     lengthGreaterThanCondition,
     requiredCondition,
-} from '../../../../public/components/Form';
-
+} from '../../../../public/components/Input';
+import { PrimaryButton } from '../../../../public/components/Action';
 import {
     RestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
+
+import schema from '../../../../common/schema';
+import { hidUrl } from '../../../../common/config/hid';
+import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForTokenCreate,
     urlForTokenCreate,
@@ -35,20 +35,15 @@ import {
     urlForTokenCreateHid,
 } from '../../../../common/rest';
 
-import {
-    startTokenRefreshAction,
-} from '../../../../common/middlewares/refreshAccessToken';
-import {
-    setNavbarStateAction,
-} from '../../../../common/action-creators/navbar';
-import {
-    currentUserProjectsSelector,
-} from '../../../../common/selectors/domainData';
+import { startTokenRefreshAction } from '../../../../common/middlewares/refreshAccessToken';
+import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
 import {
     loginAction,
     authenticateAction,
 } from '../../../../common/action-creators/auth';
+import { currentUserProjectsSelector } from '../../../../common/selectors/domainData';
 
+import styles from './styles.scss';
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
