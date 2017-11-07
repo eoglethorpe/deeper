@@ -222,6 +222,61 @@ export default class Navbar extends React.PureComponent {
                 ],
             },
         ];
+
+        if (this.props.userProjects.length > 0) {
+            return (
+                <div styleName="navbar">
+                    <Link
+                        to="/"
+                        styleName="brand"
+                    >
+                        <img styleName="icon" src={logo} alt="DEEP" />
+                        <span styleName="title">Deep</span>
+                    </Link>
+                    <SelectInput
+                        styleName="project-select-input"
+                        placeholder="Select Event"
+                        keySelector={this.labelSelectorForSelectInput}
+                        labelSelector={this.keySelectorForSelectInput}
+                        options={this.props.userProjects}
+                        selectedOptionKey={activeProject}
+                        onChange={this.onSelectChangeHandler}
+                    />
+
+                    <div styleName="menu-items">
+                        { navBarItems.map(this.renderNavbarItem) }
+                    </div>
+                    <DropdownMenu
+                        styleName="dropdown-menu"
+                        className="dropdown-title"
+                        iconLeft="ion-android-person"
+                        title={activeUser.displayName}
+                    >
+                        {
+                            dropdownItems.map(group => (
+                                <Group key={group.key} >
+                                    {
+                                        group.label &&
+                                            <GroupTitle title={group.label} />
+                                    }
+                                    { group.items.map(this.renderDropdownItem) }
+                                </Group>
+                            ))
+                        }
+                        <button
+                            styleName="dropdown-item"
+                            onClick={this.handleLogoutButtonClick}
+                        >
+                            <span
+                                className="ion-log-out"
+                                styleName="icon"
+                            />
+                            Logout
+                        </button>
+                    </DropdownMenu>
+                </div>
+            );
+        }
         return (
             <div styleName="navbar">
                 <Link
@@ -231,21 +286,6 @@ export default class Navbar extends React.PureComponent {
                     <img styleName="icon" src={logo} alt="DEEP" />
                     <span styleName="title">Deep</span>
                 </Link>
-
-                <SelectInput
-                    styleName="project-select-input"
-                    placeholder="Select Event"
-                    keySelector={this.labelSelectorForSelectInput}
-                    labelSelector={this.keySelectorForSelectInput}
-                    options={this.props.userProjects}
-                    selectedOptionKey={activeProject}
-                    onChange={this.onSelectChangeHandler}
-                />
-
-                <div styleName="menu-items">
-                    { navBarItems.map(this.renderNavbarItem) }
-                </div>
-
                 <DropdownMenu
                     styleName="dropdown-menu"
                     className="dropdown-title"

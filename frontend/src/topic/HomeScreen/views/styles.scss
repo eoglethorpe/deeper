@@ -11,7 +11,32 @@
 
     p {
         flex-basis: 100%;
+        margin-bottom: $spacing-extra-large;
         text-align: center;
+        text-transform: uppercase;
+        font-size: 36px;
+    }
+
+    h2 {
+        flex-basis: 100%;
+        margin-bottom: $spacing-extra-large;
+        text-align: center;
+    }
+
+    img {
+        margin-bottom: $spacing-extra-large;
+        width: 400px;
+        height: 400px;
+    }
+
+    a {
+        &:hover {
+            font-weight: $font-weight-normal;
+        }
+    }
+
+    .icon {
+        margin-left: $spacing-medium;
     }
 
     >div {
