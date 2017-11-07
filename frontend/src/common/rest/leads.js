@@ -1,4 +1,4 @@
-import { wsEndpoint, POST, commonHeaderForPost, p } from './index';
+import { wsEndpoint, POST, commonHeaderForPost, p } from '../config/rest';
 
 export const urlForLeadCreate = `${wsEndpoint}/leads/`;
 export const createParamsForLeadCreate = ({ access }, data) => ({

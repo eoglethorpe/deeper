@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, POST, PATCH, commonHeaderForPost } from './index';
+import { wsEndpoint, GET, POST, PATCH, commonHeaderForPost } from '../config/rest';
 
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const createParamsForUserCreate = ({

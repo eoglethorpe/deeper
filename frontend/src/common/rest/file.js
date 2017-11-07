@@ -1,4 +1,4 @@
-import { wsEndpoint } from './index';
+import { wsEndpoint } from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
 export const createHeaderForFileUpload = ({ access }) => ({

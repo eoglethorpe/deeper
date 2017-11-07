@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, commonHeaderForPost, p } from './index';
+import { wsEndpoint, GET, commonHeaderForPost, p } from '../config/rest';
 
 export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
 

@@ -1,4 +1,4 @@
-import { wsEndpoint, POST, commonHeaderForPost } from './index';
+import { wsEndpoint, POST, commonHeaderForPost } from '../config/rest';
 
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const createParamsForTokenCreate = ({ username, password }) => ({
