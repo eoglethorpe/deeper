@@ -252,7 +252,7 @@ export default class CountryPanel extends React.PureComponent {
 
     onBrowseCountriesClick = () => {
         this.props.setActiveCountry({ activeCountry: undefined });
-        browserHistory.push('/countrypanel/undefined/');
+        browserHistory.push('/countrypanel/');
     }
 
     onAddCountry = () => {

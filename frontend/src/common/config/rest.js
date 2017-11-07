@@ -5,7 +5,7 @@ export const p = RestRequest.prepareUrlParams;
 
 export const wsEndpoint = (() => {
     if (!process.env.REACT_APP_API_END) {
-        return '/api/v1';
+        return 'http://localhost:8000/api/v1';
     }
     const reactAppApiHttps = location.protocol === 'https:'
         ? 'https'

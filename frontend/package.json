@@ -2,7 +2,6 @@
   "name": "deep",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8000",
   "dependencies": {
     "autoprefixer": "7.1.2",
     "babel-core": "6.25.0",

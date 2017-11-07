@@ -1,5 +1,8 @@
 #!/bin/bash -x
 
+# django or react
+PROG_TYPE=$1
+
 # /code/scripts/
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # /code/
@@ -7,13 +10,18 @@ ROOT_DIR=$(dirname "$BASE_DIR")
 
 cd $ROOT_DIR
 
-. /venv/bin/activate
-cd backend
-python manage.py migrate --no-input
-python manage.py createinitialrevisions
-python manage.py runserver 0.0.0.0:8000 &
-celery -A deep worker -l info &
+if [ "${PROG_TYPE}" == "django" ]; then
+    . /venv/bin/activate
+    cd backend
+    pip3 install -r requirements.txt
+    python manage.py migrate --no-input
+    python manage.py createinitialrevisions
+    python manage.py runserver 0.0.0.0:8000 &
+    celery -A deep worker -l info
+fi
 
-cd ../frontend
-yarn add --force node-sass
-yarn start
+if [ "${PROG_TYPE}" == "react" ]; then
+    cd frontend
+    yarn add --force node-sass
+    yarn start
+fi
