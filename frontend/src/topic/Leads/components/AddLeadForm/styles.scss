@@ -67,6 +67,10 @@
         padding: $spacing-medium 0;
     }
 
+    .line-break {
+        flex-basis: calc(200% / 3 - #{$spacing-medium});
+    }
+
     .text {
         flex-basis: 100%;
     }

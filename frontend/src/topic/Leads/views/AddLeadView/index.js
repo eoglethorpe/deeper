@@ -5,10 +5,16 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Tabs, TabContent } from 'react-tabs-redux';
 
-import { TransparentButton } from '../../../../public/components/Button';
+import {
+    TransparentButton,
+} from '../../../../public/components/Action';
+
+import {
+    FileInput,
+} from '../../../../public/components/Input';
+
 import AddLeadForm from '../../components/AddLeadForm';
 import AddLeadListItem from '../../components/AddLeadListItem';
-import FileInput from '../../../../public/components/FileInput';
 import { pageTitles } from '../../../../common/utils/labels';
 import styles from './styles.scss';
 import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
@@ -306,7 +312,6 @@ export default class AddLead extends React.PureComponent {
     }
 
     handleLeadSuccess = (leadId, values) => {
-
         const { leads } = this.state;
         const leadIndex = leads.findIndex(d => d.id === leadId);
         const settings = {

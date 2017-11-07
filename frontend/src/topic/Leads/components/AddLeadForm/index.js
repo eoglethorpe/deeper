@@ -4,22 +4,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import styles from './styles.scss';
-import TextInput from '../../../../public/components/TextInput';
-import DateInput from '../../../../public/components/DateInput';
-import HiddenInput from '../../../../public/components/HiddenInput';
-import SelectInput from '../../../../public/components/SelectInput';
-import TextArea from '../../../../public/components/TextArea';
-import Form, {
+
+import {
+    TextInput,
+    DateInput,
+    HiddenInput,
+    SelectInput,
+    TextArea,
+    Form,
     requiredCondition,
     urlCondition,
-} from '../../../../public/components/Form';
-import { RestBuilder } from '../../../../public/utils/rest';
+} from '../../../../public/components/Input';
 
 import {
     PrimaryButton,
     SuccessButton,
-} from '../../../../public/components/Button';
+} from '../../../../public/components/Action';
 
+import { RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
@@ -326,6 +328,9 @@ export default class AddLeadForm extends React.PureComponent {
                     showLabel
                     showHintAndError
                 />
+                <div
+                    styleName="line-break"
+                />
                 {
                     leadType === 'website' && [
                         <TextInput
@@ -333,7 +338,7 @@ export default class AddLeadForm extends React.PureComponent {
                             label="URL"
                             formname="url"
                             placeholder="Enter a descriptive name"
-                            stylename="url"
+                            styleName="url"
                             initialValue={formValues.url}
                             error={formFieldErrors.url}
                         />,
