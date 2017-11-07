@@ -1,0 +1,85 @@
+@import '../../../../stylesheets/base';
+
+.key-figures {
+
+    display: flex;
+    flex-wrap: wrap;
+    padding: $spacing-large;
+
+    h3 {
+        flex-basis: 100%;
+    }
+
+    .hdi {
+        display: flex;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        padding: $spacing-medium;
+
+
+        .index,
+        .geo-rank,
+        .geo-score {
+            flex-basis: 30%;
+            margin-right: $spacing-super-large;
+        }
+
+        .rank {
+            flex-basis: 30%;
+        }
+    }
+
+    .under-five-mortality-rate {
+        display: flex;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        padding: $spacing-medium;
+
+        .u5m,
+        .geo-score-u5m {
+            flex-basis: 30%;
+            margin-right: $spacing-super-large;
+        }
+
+    }
+
+    .uprooted-people {
+        display: flex;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        padding: $spacing-medium;
+
+        .number-of-refugees,
+        .percentage-uprooted-people,
+        .number-idp,
+        .number-returned-refugees,
+        .geo-score-uprooted, {
+            flex-basis: 30%;
+            margin-right: $spacing-super-large;
+        }
+
+
+    }
+
+    .inform-score {
+        display: flex;
+        flex-basis: 100%;
+        flex-wrap: wrap;
+        padding: $spacing-medium;
+
+        .risk-class,
+        .inform-risk-index,
+        .hazard-and-exposure,
+        .vulnerability,
+        .lack-of-coping-capacity, {
+            flex-basis: 30%;
+            margin-right: $spacing-super-large;
+        }
+
+    }
+
+    .icon {
+        margin-left: $spacing-large;
+        font-size: $font-size-extra-large;
+    }
+}
