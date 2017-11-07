@@ -26,9 +26,11 @@ import {
 import {
     activeProjectSelector,
     leadFilterOptionsForProjectSelector,
-} from '../../../../common/selectors/domainData';
-import { tokenSelector } from '../../../../common/selectors/auth';
-import { setLeadFilterOptionsAction } from '../../../../common/action-creators/domainData';
+
+    tokenSelector,
+
+    setLeadFilterOptionsAction,
+} from '../../../../common/redux';
 
 import styles from './styles.scss';
 

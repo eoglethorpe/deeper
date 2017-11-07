@@ -1,23 +1,17 @@
 import CSSModules from 'react-css-modules';
-import React from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Helmet from 'react-helmet';
-import ListView, { ListItem } from '../../../public/components/ListView';
-import ProjectDetails from '../components/ProjectDetails';
-import TextInput from '../../../public/components/TextInput';
-import styles from './styles.scss';
+import { ListView, ListItem } from '../../../public/components/View';
+import { TextInput } from '../../../public/components/Input';
+import { TransparentPrimaryButton } from '../../../public/components/Action';
 import { RestBuilder } from '../../../public/utils/rest';
+
 import { pageTitles } from '../../../common/utils/labels';
-import {
-    setActiveProjectAction,
-    setProjectAction,
-} from '../../../common/action-creators/domainData';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
+import schema from '../../../common/schema';
 import {
     createParamsForUser,
     createUrlForProject,
@@ -26,14 +20,17 @@ import {
     activeProjectSelector,
     currentUserProjectsSelector,
     projectDetailsSelector,
-} from '../../../common/selectors/domainData';
-import {
+
     tokenSelector,
-} from '../../../common/selectors/auth';
-import {
-    TransparentPrimaryButton,
-} from '../../../public/components/Button';
-import schema from '../../../common/schema';
+
+    setNavbarStateAction,
+
+    setActiveProjectAction,
+    setProjectAction,
+} from '../../../common/redux';
+
+import ProjectDetails from '../components/ProjectDetails';
+import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number,

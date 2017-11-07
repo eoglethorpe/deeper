@@ -2,20 +2,19 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './styles.scss';
-
 import {
+    DateInput,
     Form,
     TextInput,
-    DateInput,
     requiredCondition,
 } from '../../../../public/components/Input';
-
 import {
+    DangerButton,
     PrimaryButton,
     SuccessButton,
-    DangerButton,
 } from '../../../../public/components/Action';
+
+import styles from './styles.scss';
 
 const propTypes = {
     onChange: PropTypes.func.isRequired, //eslint-disable-line

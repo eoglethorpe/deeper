@@ -2,20 +2,14 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import styles from './styles.scss';
 
-import {
-    Button,
-} from '../../../../public/components/Action';
-
+import { Button } from '../../../../public/components/Action';
 import {
     Form,
     SelectInput,
 } from '../../../../public/components/Input';
 
-import {
-    RestBuilder,
-} from '../../../../public/utils/rest';
+import { RestBuilder } from '../../../../public/utils/rest';
 
 import {
     createParamsForUser,
@@ -24,13 +18,13 @@ import {
 import {
     activeProjectSelector,
     leadFilterOptionsForProjectSelector,
-} from '../../../../common/selectors/domainData';
-import {
+
     tokenSelector,
-} from '../../../../common/selectors/auth';
-import {
+
     setLeadFilterOptionsAction,
-} from '../../../../common/action-creators/domainData';
+} from '../../../../common/redux';
+
+import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,

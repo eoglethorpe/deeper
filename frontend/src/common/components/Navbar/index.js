@@ -19,20 +19,19 @@ import styles from './styles.scss';
 
 import { stopTokenRefreshAction } from '../../../common/middlewares/refreshAccessToken';
 
-import { logoutAction } from '../../../common/action-creators/auth';
-import { setActiveProjectAction } from '../../../common/action-creators/domainData';
-
-import { activeUserSelector } from '../../../common/selectors/auth';
 import {
-    currentUserProjectsSelector,
+    logoutAction,
+    setActiveProjectAction,
+
     activeCountrySelector,
     activeProjectSelector,
-} from '../../../common/selectors/domainData';
-import {
-    navbarVisibleSelector,
+    activeUserSelector,
+    currentUserProjectsSelector,
+
     navbarActiveLinkSelector,
     navbarValidLinksSelector,
-} from '../../../common/selectors/navbar';
+    navbarVisibleSelector,
+} from '../../../common/redux';
 
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),

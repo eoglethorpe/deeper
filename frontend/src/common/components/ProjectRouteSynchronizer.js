@@ -3,10 +3,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import browserHistory from '../browserHistory';
 import { isTruthy } from '../../public/utils/common';
-import { activeProjectSelector } from '../selectors/domainData';
-import { setActiveProjectAction } from '../action-creators/domainData';
+
+import browserHistory from '../browserHistory';
+import {
+    activeProjectSelector,
+    setActiveProjectAction,
+} from '../redux';
 
 const propTypes = {
     activeProject: PropTypes.number,

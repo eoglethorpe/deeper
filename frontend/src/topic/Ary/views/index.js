@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
+import { setNavbarStateAction } from '../../../common/redux';
+
+import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,

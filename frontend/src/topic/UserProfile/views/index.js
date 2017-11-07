@@ -39,22 +39,19 @@ import {
     createUrlForProjectsOfUser,
     createParamsForProjects,
 } from '../../../common/rest';
-
-import { tokenSelector } from '../../../common/selectors/auth';
 import {
+    tokenSelector,
+
     userGroupsSelector,
     userInformationSelector,
     userProjectsSelector,
-} from '../../../common/selectors/domainData';
-import {
+
     setUserGroupsAction,
     setUserInformationAction,
     setUserProjectsAction,
-} from '../../../common/action-creators/domainData';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
 
+    setNavbarStateAction,
+} from '../../../common/redux';
 
 import styles from './styles.scss';
 

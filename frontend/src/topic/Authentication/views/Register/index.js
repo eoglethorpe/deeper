@@ -26,8 +26,7 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
-
-import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
+import { setNavbarStateAction } from '../../../../common/redux';
 
 import styles from './styles.scss';
 

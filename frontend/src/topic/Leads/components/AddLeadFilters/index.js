@@ -1,11 +1,10 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './styles.scss';
 
-import {
-    SelectInput,
-} from '../../../../public/components/Input';
+import { SelectInput } from '../../../../public/components/Input';
+
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

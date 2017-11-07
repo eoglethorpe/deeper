@@ -8,7 +8,7 @@ import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
+} from '../../../common/redux';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,

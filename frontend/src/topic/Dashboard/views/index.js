@@ -7,10 +7,8 @@ import { connect } from 'react-redux';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
     currentUserActiveProjectSelector,
-} from '../../../common/selectors/domainData';
+} from '../../../common/redux';
 
 import styles from './styles.scss';
 

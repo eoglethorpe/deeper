@@ -34,14 +34,15 @@ import {
     createParamsForTokenCreateHid,
     urlForTokenCreateHid,
 } from '../../../../common/rest';
-
 import { startTokenRefreshAction } from '../../../../common/middlewares/refreshAccessToken';
-import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
 import {
+    setNavbarStateAction,
+
     loginAction,
     authenticateAction,
-} from '../../../../common/action-creators/auth';
-import { currentUserProjectsSelector } from '../../../../common/selectors/domainData';
+
+    currentUserProjectsSelector,
+} from '../../../../common/redux';
 
 import styles from './styles.scss';
 

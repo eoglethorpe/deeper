@@ -1,13 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+
 import styles from './styles.scss';
 
 import {
-    PrimaryButton,
     DangerButton,
+    PrimaryButton,
 } from '../../../../public/components/Action';
-
 import {
     Form,
     TextInput,

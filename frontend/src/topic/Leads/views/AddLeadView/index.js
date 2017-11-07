@@ -1,23 +1,18 @@
 import CSSModules from 'react-css-modules';
-import React from 'react';
-import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, TabContent } from 'react-tabs-redux';
 
-import {
-    TransparentButton,
-} from '../../../../public/components/Action';
+import { TransparentButton } from '../../../../public/components/Action';
 import {
     FileInput,
-    TextInput,
     SelectInput,
+    TextInput,
 } from '../../../../public/components/Input';
-
 import update from '../../../../public/utils/immutable-update';
-import {
-    RestBuilder,
-} from '../../../../public/utils/rest';
+import { RestBuilder } from '../../../../public/utils/rest';
 import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
 
 import { pageTitles } from '../../../../common/utils/labels';
@@ -27,9 +22,11 @@ import {
     urlForLeadCreate,
     createParamsForLeadCreate,
 } from '../../../../common/rest';
-import { tokenSelector } from '../../../../common/selectors/auth';
-import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
-import { activeProjectSelector } from '../../../../common/selectors/domainData';
+import {
+    setNavbarStateAction,
+    tokenSelector,
+    activeProjectSelector,
+} from '../../../../common/redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import AddLeadListItem from '../../components/AddLeadListItem';

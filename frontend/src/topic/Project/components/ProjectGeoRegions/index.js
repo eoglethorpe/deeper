@@ -7,23 +7,18 @@ import {
     Button,
     TransparentButton,
 } from '../../../../public/components/Action';
-
 import {
     Modal,
-    ModalHeader,
     ModalBody,
+    ModalHeader,
     Table,
 } from '../../../../public/components/View';
+import { TextInput } from '../../../../public/components/Input';
 
-import {
-    TextInput,
-} from '../../../../public/components/Input';
+import { adminLevelSelector } from '../../../../common/redux';
 
-import styles from './styles.scss';
 import EditAdminLevelForm from '../../../Country/components/EditAdminLevelForm';
-import {
-    adminLevelSelector,
-} from '../../../../common/selectors/domainData';
+import styles from './styles.scss';
 
 const propTypes = {
     adminLevelList: PropTypes.arrayOf(
