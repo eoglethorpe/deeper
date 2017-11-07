@@ -190,6 +190,10 @@ export default class Navbar extends React.PureComponent {
             },
         ];
 
+        const getValidLinkOrEmpty = value => (
+            value ? `${value}/` : ''
+        );
+
         const dropdownItems = [
             {
                 key: 'first-group',
@@ -201,7 +205,7 @@ export default class Navbar extends React.PureComponent {
                         iconName: 'ion-android-person',
                     },
                     {
-                        linkTo: `/countrypanel/${activeCountry}/`,
+                        linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
                         name: pageTitles.countryPanel,
                         iconName: 'ion-android-globe',
                     },
