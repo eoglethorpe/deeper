@@ -97,7 +97,7 @@ export default class CountryPanel extends React.PureComponent {
         let renderPages = pages.loading;
         if (countries.length > 0) {
             renderPages = pages.normal;
-            if (countryId === undefined || countryId === 'undefined') {
+            if (countryId === undefined) {
                 let redirectTo = activeCountry;
 
                 if (activeCountry === undefined) {
@@ -199,24 +199,26 @@ export default class CountryPanel extends React.PureComponent {
             this.setState({ renderPages: pages.noCountries });
         }
 
-        if (countries.length > 0 && (countryId === undefined || countryId === 'undefined')) {
-            let redirectTo = activeCountry;
+        if (countries.length > 0) {
+            if (countryId === undefined) {
+                let redirectTo = activeCountry;
 
-            if (activeCountry === undefined) {
-                this.props.setActiveCountry({ activeCountry: countries[0].id });
-                redirectTo = countries[0].id;
+                if (activeCountry === undefined) {
+                    this.props.setActiveCountry({ activeCountry: countries[0].id });
+                    redirectTo = countries[0].id;
+                }
+                browserHistory.push(`/countrypanel/${redirectTo}/`);
             }
-            browserHistory.push(`/countrypanel/${redirectTo}/`);
-        }
 
-        const index = countries.findIndex(country => `${country.id}` === countryId);
-        if (index === -1) {
-            this.setState({ renderPages: pages.countryDoesNotExist });
-        } else if (index >= 0 && countryId !== `${activeCountry}`) {
-            this.props.setActiveCountry({ activeCountry: Number(countryId) });
-            this.setState({ activeCountryName: countries[index].title });
-        } else {
-            this.setState({ activeCountryName: countries[index].title });
+            const index = countries.findIndex(country => `${country.id}` === countryId);
+            if (index === -1) {
+                this.setState({ renderPages: pages.countryDoesNotExist });
+            } else if (index >= 0 && countryId !== `${activeCountry}`) {
+                this.props.setActiveCountry({ activeCountry: Number(countryId) });
+                this.setState({ activeCountryName: countries[index].title });
+            } else {
+                this.setState({ activeCountryName: countries[index].title });
+            }
         }
     }
 
