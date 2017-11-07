@@ -29,6 +29,11 @@ const commonHeaderForPost = {
     'Content-Type': 'application/json',
 };
 
+export const urlForUpload = `${wsEndpoint}/files/`;
+export const createHeaderForFileUpload = ({ access }) => ({
+    Authorization: `Bearer ${access}`,
+});
+
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const urlForTokenCreate = `${wsEndpoint}/token/`;
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
@@ -38,11 +43,7 @@ export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 export const urlForApiDocs = `${wsEndpoint}/docs/`;
 export const urlForCountries = `${wsEndpoint}/regions/`;
 
-export const urlForUpload = `${wsEndpoint}/files/`;
-
-export const createHeaderForFileUpload = ({ access }) => ({
-    Authorization: `Bearer ${access}`,
-});
+export const urlForLeadCreate = `${wsEndpoint}/leads/`;
 
 export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`
@@ -58,6 +59,15 @@ export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
 
 export const createUrlForLeadFilterOptions = projectId => `${wsEndpoint}/lead-filter-options/?project=${projectId}`;
+
+export const createParamsForLeadCreate = ({ access }, data) => ({
+    method: POST,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify(data),
+});
 
 // ----------------------------------------------------------------------------- 
 // PROJECTS RELATED

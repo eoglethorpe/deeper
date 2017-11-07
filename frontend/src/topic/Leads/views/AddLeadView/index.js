@@ -5,10 +5,16 @@ import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { Tabs, TabContent } from 'react-tabs-redux';
 
-import { TransparentButton } from '../../../../public/components/Button';
+import {
+    TransparentButton,
+} from '../../../../public/components/Action';
+
+import {
+    FileInput,
+} from '../../../../public/components/Input';
+
 import AddLeadForm from '../../components/AddLeadForm';
 import AddLeadListItem from '../../components/AddLeadListItem';
-import FileInput from '../../../../public/components/FileInput';
 import { pageTitles } from '../../../../common/utils/labels';
 import styles from './styles.scss';
 import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
@@ -16,11 +22,21 @@ import { tokenSelector } from '../../../../common/selectors/auth';
 import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
 import update from '../../../../public/utils/immutable-update';
 import {
+    RestBuilder,
+} from '../../../../public/utils/rest';
+import {
     urlForUpload,
     createHeaderForFileUpload,
+    urlForLeadCreate,
+    createParamsForLeadCreate,
 } from '../../../../common/rest';
 
+import {
+    activeProjectSelector,
+} from '../../../../common/selectors/domainData';
+
 const mapStateToProps = state => ({
+    activeProject: activeProjectSelector(state),
     token: tokenSelector(state),
     state,
 });
@@ -30,6 +46,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    activeProject: PropTypes.number.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.shape({
         access: PropTypes.string,
@@ -44,8 +61,6 @@ export default class AddLead extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: { },
-            formValues: { },
             leads: [],
             counter: 1,
             activeLeadId: undefined,
@@ -53,6 +68,7 @@ export default class AddLead extends React.PureComponent {
 
         this.uploadCoordinator = new UploadCoordinator();
     }
+
     componentWillMount() {
         this.props.setNavbarState({
             visible: true,
@@ -104,21 +120,47 @@ export default class AddLead extends React.PureComponent {
         const leadIndex = leads.findIndex(d => d.id === leadId);
         const r = JSON.parse(response);
 
-        const settings = {
-            [leadIndex]: {
-                upload: {
-                    $merge: {
-                        progress: 100,
-                        serverId: r.id,
-                        title: r.title,
+        if (parseInt(status / 100, 10) === 2) {
+            // success (eg: 200, 201)
+            const settings = {
+                [leadIndex]: {
+                    upload: {
+                        $merge: {
+                            progress: 100,
+                            serverId: r.id,
+                            title: r.title,
+                            error: undefined,
+                        },
+                    },
+                    form: {
+                        error: { $set: false },
                     },
                 },
-            },
-        };
-        const newLeads = update(leads, settings);
-        this.setState({
-            leads: newLeads,
-        });
+            };
+            const newLeads = update(leads, settings);
+            this.setState({
+                leads: newLeads,
+            });
+        } else {
+            const settings = {
+                [leadIndex]: {
+                    upload: {
+                        $merge: {
+                            progress: 0,
+                            error: `Failed to upload file (${status})`,
+                        },
+                    },
+                    form: {
+                        error: { $set: true },
+                    },
+                },
+            };
+
+            const newLeads = update(leads, settings);
+            this.setState({
+                leads: newLeads,
+            });
+        }
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
@@ -159,6 +201,7 @@ export default class AddLead extends React.PureComponent {
                 },
                 formData: {
                     title: files[i].name,
+                    project: this.props.activeProject,
                 },
             };
 
@@ -206,6 +249,7 @@ export default class AddLead extends React.PureComponent {
                     },
                     formData: {
                         title: `Lead #${this.state.counter}`,
+                        project: this.props.activeProject,
                     },
                 },
             ],
@@ -227,6 +271,7 @@ export default class AddLead extends React.PureComponent {
                     },
                     formData: {
                         title: `Lead #${this.state.counter}`,
+                        project: this.props.activeProject,
                     },
                 },
             ],
@@ -282,6 +327,58 @@ export default class AddLead extends React.PureComponent {
         this.setState({
             leads: newLeads,
         });
+
+
+        if (this.leadCreateRequest) {
+            this.leadCreateRequest.stop();
+        }
+
+        this.leadCreateRequest = this.createLeadCreateRequest(urlForLeadCreate, () => {
+            const { access } = this.props.token;
+            return createParamsForLeadCreate({ access }, values);
+        });
+
+        this.leadCreateRequest.start();
+    }
+
+    createLeadCreateRequest = (url, params) => {
+        const leadCreateRequest = new RestBuilder()
+            .url(url)
+            .params(params)
+            .decay(0.3)
+            .maxRetryTime(2000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                try {
+                    console.log(response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+                const { errors } = response;
+                const formFieldErrors = {};
+                const { nonFieldErrors } = errors;
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formFieldErrors[key] = errors[key].join(' ');
+                    }
+                });
+
+                this.setState({
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
+                    pending: false,
+                });
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+                this.setState({ pending: false });
+            })
+            .build();
+        return leadCreateRequest;
     }
 
     handleLeadFailure = (leadId) => {
@@ -391,7 +488,7 @@ export default class AddLead extends React.PureComponent {
                                         ready={this.isLeadReady(lead)}
                                         pending={lead.form.pending}
                                         stale={lead.form.stale}
-                                        data={lead.formData}
+                                        formValues={lead.formData}
                                         uploadData={lead.upload}
                                         onChange={this.handleLeadChange}
                                         onSuccess={this.handleLeadSuccess}
