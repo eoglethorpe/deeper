@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
+import {
+    DangerButton,
+    SuccessButton,
+} from '../../../../public/components/Action';
+
 import CountryGeneral from '../CountryGeneral';
 import CountryKeyFigures from '../CountryKeyFigures';
 import CountryMediaSources from '../CountryMediaSources';
 import CountryPopulationData from '../CountryPopulationData';
 import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
 import styles from './styles.scss';
-import { DangerButton, SuccessButton } from '../../../../public/components/Button';
 
 const propTypes = {
     countryId: PropTypes.number.isRequired,
