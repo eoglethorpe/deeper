@@ -58,6 +58,7 @@ const defaultProps = {
     leads: [],
 };
 
+// TODO: move this function to common
 const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase()));
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -70,7 +71,6 @@ export default class AddLead extends React.PureComponent {
         super(props);
         this.state = {
             leads: [],
-            displayLeads: [],
             counter: 1,
             searchInputValue: '',
             leadTypeFilterValue: [],
@@ -442,7 +442,6 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
-            displayLeads: this.getDisplayLeads(newLeads),
         });
     }
 
@@ -461,7 +460,6 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
-            displayLeads: this.getDisplayLeads(newLeads),
         });
 
 
@@ -531,7 +529,6 @@ export default class AddLead extends React.PureComponent {
         const newLeads = update(leads, settings);
         this.setState({
             leads: newLeads,
-            displayLeads: this.getDisplayLeads(newLeads),
         });
     }
 
