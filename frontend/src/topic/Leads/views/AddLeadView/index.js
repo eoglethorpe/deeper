@@ -10,7 +10,10 @@ import {
 } from '../../../../public/components/Action';
 import {
     FileInput,
+    TextInput,
+    SelectInput,
 } from '../../../../public/components/Input';
+
 import update from '../../../../public/utils/immutable-update';
 import {
     RestBuilder,
@@ -48,22 +51,53 @@ const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
+    leads: PropTypes.Object, // eslint-disable-line
 };
+
+const defaultProps = {
+    leads: [],
+};
+
+// TODO: move this function to common
+const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase()));
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
         this.state = {
             leads: [],
             counter: 1,
+            searchInputValue: '',
+            leadTypeFilterValue: [],
+            leadSourceFilterValue: '',
+            leadStatusFilterValue: [],
             activeLeadId: undefined,
         };
 
         this.uploadCoordinator = new UploadCoordinator();
+
+        this.statusFilterOptions = [
+            { key: 'invalid', label: 'Invalid' },
+            { key: 'saved', label: 'Saved' },
+            { key: 'unsaved', label: 'Unsaved' },
+        ];
+
+        this.sourceFilterOptions = [
+            { key: 'dropbox', label: 'Dropbox' },
+            { key: 'googleDrive', label: 'Google Drive' },
+            { key: 'other', label: 'Other' },
+        ];
+
+        this.leadTypeOptions = [
+            { key: 'file', label: 'File' },
+            { key: 'text', label: 'Text' },
+            { key: 'website', label: 'Website' },
+        ];
     }
 
     componentWillMount() {
@@ -95,6 +129,56 @@ export default class AddLead extends React.PureComponent {
     onSubmit = () => {
         this.form.onSubmit();
     }
+
+
+    getDefaultFilterValues = () => ({
+        searchInputValue: '',
+        leadTypeFilterValue: [],
+        leadSourceFilterValue: '',
+        leadStatusFilterValue: [],
+    })
+
+    applyFilters = (leads, search, type, source, status) => {
+        console.log(status);
+
+        const newLeads = leads.map((lead) => {
+            const newLead = {
+                ...lead,
+                show: false,
+            };
+
+            if (search.length === 0 || strMatchesSub(lead.formData.title, search)) {
+                if (type.length === 0 || type.indexOf(lead.type) > -1) {
+                    if (source.length === 0 || strMatchesSub(lead.formData.source, source)) {
+                        newLead.show = true;
+                    }
+                }
+            }
+
+            return newLead;
+        });
+
+        console.log(search, newLeads);
+        return newLeads;
+    }
+
+    applyFiltersFromState = (leads) => {
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = this.state;
+
+        return this.applyFilters(
+            leads,
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        );
+    }
+
 
     leadsClickHandler = (id) => {
         this.setState({ activeLeadId: id });
@@ -155,7 +239,7 @@ export default class AddLead extends React.PureComponent {
 
             const newLeads = update(leads, settings);
             this.setState({
-                leads: newLeads,
+                leads: this.applyFiltersFromState(newLeads),
             });
         }
     }
@@ -180,7 +264,6 @@ export default class AddLead extends React.PureComponent {
 
     handleAddLeadFromDisk = (e) => {
         const newLeads = [];
-
         const files = Object.values(e);
 
         for (let i = 0; i < files.length; i += 1) {
@@ -200,6 +283,7 @@ export default class AddLead extends React.PureComponent {
                     title: files[i].name,
                     project: this.props.activeProject,
                 },
+                show: true,
             };
 
             newLeads.push(lead);
@@ -223,57 +307,110 @@ export default class AddLead extends React.PureComponent {
 
         this.uploadCoordinator.queueAll();
 
+        const allLeads = [
+            ...this.state.leads,
+            ...newLeads,
+        ];
+
+        const defaultFilterValues = this.getDefaultFilterValues();
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = defaultFilterValues;
+
         this.setState({
-            leads: [
-                ...this.state.leads,
-                ...newLeads,
-            ],
+            leads: this.applyFilters(
+                allLeads,
+                searchInputValue,
+                leadTypeFilterValue,
+                leadSourceFilterValue,
+                leadStatusFilterValue,
+            ),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + files.length,
+            ...defaultFilterValues,
         });
     }
 
     handleAddLeadFromWebsite = () => {
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    id: `lead-${this.state.counter}`,
-                    type: 'website',
-                    form: {
-                        pending: false,
-                        stale: false,
-                    },
-                    formData: {
-                        title: `Lead #${this.state.counter}`,
-                        project: this.props.activeProject,
-                    },
+        const newLeads = [
+            ...this.state.leads,
+            {
+                id: `lead-${this.state.counter}`,
+                type: 'website',
+                form: {
+                    pending: false,
+                    stale: false,
                 },
-            ],
+                formData: {
+                    title: `Lead #${this.state.counter}`,
+                    project: this.props.activeProject,
+                },
+                show: true,
+            },
+        ];
+
+        const defaultFilterValues = this.getDefaultFilterValues();
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = defaultFilterValues;
+
+        this.setState({
+            leads: this.applyFilters(
+                newLeads,
+                searchInputValue,
+                leadTypeFilterValue,
+                leadSourceFilterValue,
+                leadStatusFilterValue,
+            ),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
+            ...defaultFilterValues,
         });
     }
 
     handleAddLeadFromText = () => {
-        this.setState({
-            leads: [
-                ...this.state.leads,
-                {
-                    id: `lead-${this.state.counter}`,
-                    type: 'text',
-                    form: {
-                        pending: false,
-                        stale: false,
-                    },
-                    formData: {
-                        title: `Lead #${this.state.counter}`,
-                        project: this.props.activeProject,
-                    },
+        const newLeads = [
+            ...this.state.leads,
+            {
+                id: `lead-${this.state.counter}`,
+                type: 'text',
+                form: {
+                    pending: false,
+                    stale: false,
                 },
-            ],
+                formData: {
+                    title: `Lead #${this.state.counter}`,
+                    project: this.props.activeProject,
+                },
+                show: true,
+            },
+        ];
+
+        const defaultFilterValues = this.getDefaultFilterValues();
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = defaultFilterValues;
+
+        this.setState({
+            leads: this.applyFilters(
+                newLeads,
+                searchInputValue,
+                leadTypeFilterValue,
+                leadSourceFilterValue,
+                leadStatusFilterValue,
+            ),
             activeLeadId: `lead-${this.state.counter}`,
             counter: this.state.counter + 1,
+            ...defaultFilterValues,
         });
     }
 
@@ -395,12 +532,88 @@ export default class AddLead extends React.PureComponent {
         });
     }
 
+    handleSearchChange = (value) => {
+        const {
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = this.state;
+
+        this.setState({
+            searchInputValue: value,
+            leads: this.applyFilters(
+                this.state.leads,
+                value,
+                leadTypeFilterValue,
+                leadSourceFilterValue,
+                leadStatusFilterValue,
+            ),
+        });
+    }
+
+    handleLeadTypeFilterChange = (value) => {
+        const {
+            searchInputValue,
+            leadSourceFilterValue,
+            leadStatusFilterValue,
+        } = this.state;
+
+        this.setState({
+            leadTypeFilterValue: value,
+            leads: this.applyFilters(
+                this.state.leads,
+                searchInputValue,
+                value,
+                leadSourceFilterValue,
+                leadStatusFilterValue,
+            ),
+        });
+    }
+
+    handleLeadSourceFilterChange = (value) => {
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadStatusFilterValue,
+        } = this.state;
+
+        this.setState({
+            leadSourceFilterValue: value,
+            leads: this.applyFilters(
+                this.state.leads,
+                searchInputValue,
+                leadTypeFilterValue,
+                value,
+                leadStatusFilterValue,
+            ),
+        });
+    }
+
+    handleLeadStatusFilterChange = (value) => {
+        const {
+            searchInputValue,
+            leadTypeFilterValue,
+            leadSourceFilterValue,
+        } = this.state;
+
+        this.setState({
+            leadStatusFilterValue: value,
+            leads: this.applyFilters(
+                this.state.leads,
+                searchInputValue,
+                leadTypeFilterValue,
+                leadSourceFilterValue,
+                value,
+            ),
+        });
+    }
+
     render() {
         return (
             <div styleName="add-lead">
                 <Helmet>
                     <title>
-                        { pageTitles.addLeads }
+                        { pageTitles.addLeads }search
                     </title>
                 </Helmet>
                 <Tabs
@@ -409,22 +622,58 @@ export default class AddLead extends React.PureComponent {
                     styleName="tab-container"
                 >
                     <div styleName="lead-list-container">
-                        <h2 styleName="heading">
-                            Leads
-                        </h2>
+                        <div styleName="header">
+                            <h2 styleName="title">
+                                Leads
+                            </h2>
+                            <TextInput
+                                styleName="search"
+                                onChange={this.handleSearchChange}
+                                initialValue={this.state.searchInputValue}
+                                placeholder="Search description"
+                                type="search"
+                            />
+                            <SelectInput
+                                options={this.leadTypeOptions}
+                                placeholder="Lead Type"
+                                styleName="filter"
+                                multiple
+                                selectedOptionKeys={this.state.leadTypeFilterValue}
+                                optionsIdentifier="lead-list-filter-options"
+                                onChange={this.handleLeadTypeFilterChange}
+                            />
+                            <TextInput
+                                placeholder="Source"
+                                styleName="filter source-filter"
+                                initialValue={this.state.leadSourceFilterValue}
+                                onChange={this.handleLeadSourceFilterChange}
+                            />
+                            <SelectInput
+                                options={this.statusFilterOptions}
+                                placeholder="Status"
+                                styleName="filter"
+                                selectedOptionKeys={this.state.leadStatusFilterValue}
+                                optionsIdentifier="lead-list-filter-options"
+                                onChange={this.handleLeadStatusFilterChange}
+                            />
+                        </div>
                         <div styleName="list">
                             {
                                 this.state.leads.map(lead => (
-                                    <AddLeadListItem
-                                        active={this.state.activeLeadId === lead.id}
-                                        key={lead.id}
-                                        onClick={() => this.leadsClickHandler(lead.id)}
-                                        stale={lead.form.stale}
-                                        error={lead.form.error}
-                                        title={lead.formData.title}
-                                        type={lead.type}
-                                        upload={lead.upload}
-                                    />
+                                    lead.show ? (
+                                        <AddLeadListItem
+                                            active={this.state.activeLeadId === lead.id}
+                                            key={lead.id}
+                                            onClick={() => this.leadsClickHandler(lead.id)}
+                                            stale={lead.form.stale}
+                                            error={lead.form.error}
+                                            title={lead.formData.title}
+                                            type={lead.type}
+                                            upload={lead.upload}
+                                        />
+                                    ) : (
+                                        null
+                                    )
                                 ))
                             }
                         </div>
@@ -474,28 +723,32 @@ export default class AddLead extends React.PureComponent {
                     <div styleName="lead-detail-container">
                         {
                             this.state.leads.map(lead => (
-                                <TabContent
-                                    for={lead.id}
-                                    key={lead.id}
-                                    styleName="tab"
-                                >
-                                    <AddLeadForm
-                                        leadId={lead.id}
-                                        leadType={lead.type}
-                                        ready={this.isLeadReady(lead)}
-                                        pending={lead.form.pending}
-                                        stale={lead.form.stale}
-                                        formValues={lead.formData}
-                                        uploadData={lead.upload}
-                                        onChange={this.handleLeadChange}
-                                        onSuccess={this.handleLeadSuccess}
-                                        onFailure={this.handleLeadFailure}
-                                        styleName="add-lead-form"
-                                    />
-                                    <div styleName="lead-preview">
-                                        Lead preview
-                                    </div>
-                                </TabContent>
+                                lead.show ? (
+                                    <TabContent
+                                        for={lead.id}
+                                        key={lead.id}
+                                        styleName="tab"
+                                    >
+                                        <AddLeadForm
+                                            leadId={lead.id}
+                                            leadType={lead.type}
+                                            ready={this.isLeadReady(lead)}
+                                            pending={lead.form.pending}
+                                            stale={lead.form.stale}
+                                            formValues={lead.formData}
+                                            uploadData={lead.upload}
+                                            onChange={this.handleLeadChange}
+                                            onSuccess={this.handleLeadSuccess}
+                                            onFailure={this.handleLeadFailure}
+                                            styleName="add-lead-form"
+                                        />
+                                        <div styleName="lead-preview">
+                                            Lead preview
+                                        </div>
+                                    </TabContent>
+                                ) : (
+                                    null
+                                )
                             ))
                         }
                     </div>
