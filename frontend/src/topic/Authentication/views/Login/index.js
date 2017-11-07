@@ -296,7 +296,7 @@ export default class Login extends React.PureComponent {
                         disabled={pending}
                         error={formFieldErrors.email}
                         formname="email"
-                        initialValue={formValues.email}
+                        value={formValues.email}
                         label="Email"
                         placeholder="john.doe@mail.com"
                     />
@@ -304,7 +304,7 @@ export default class Login extends React.PureComponent {
                         disabled={pending}
                         error={formFieldErrors.password}
                         formname="password"
-                        initialValue={formValues.password}
+                        value={formValues.password}
                         label="Password"
                         placeholder="**********"
                         required

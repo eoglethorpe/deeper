@@ -265,7 +265,7 @@ export default class CountryGeneral extends React.PureComponent {
                             countryDetail.code &&
                             <TextInput
                                 disabled
-                                initialValue={countryDetail.code}
+                                value={countryDetail.code}
                                 label="Country code"
                                 placeholder="NPL"
                                 styleName="text-input"
@@ -283,49 +283,49 @@ export default class CountryGeneral extends React.PureComponent {
                             label="Name"
                             formname="countryName"
                             placeholder="Nepal"
-                            initialValue={countryDetail.title}
+                            value={countryDetail.title}
                             error={formFieldErrors.countryName}
                         />
                         <TextInput
                             label="WB Region"
                             formname="wbRegion"
                             placeholder="Enter WB Region"
-                            initialValue={formValues.wbRegion}
+                            value={formValues.wbRegion}
                             error={formFieldErrors.wbRegion}
                         />
                         <TextInput
                             label="WB Income Region"
                             formname="wbIncomeRegion"
                             placeholder="Enter WB Income Region"
-                            initialValue={formValues.wbIncomeRegion}
+                            value={formValues.wbIncomeRegion}
                             error={formFieldErrors.wbIncomeRegion}
                         />
                         <TextInput
                             label="OCHA Region"
                             formname="ochaRegion"
                             placeholder="Enter OCHA Region"
-                            initialValue={formValues.ochaRegion}
+                            value={formValues.ochaRegion}
                             error={formFieldErrors.ochaRegion}
                         />
                         <TextInput
                             label="ECHO Region"
                             formname="echoRegion"
                             placeholder="Enter ECHO Region"
-                            initialValue={formValues.echoRegion}
+                            value={formValues.echoRegion}
                             error={formFieldErrors.echoRegion}
                         />
                         <TextInput
                             label="UN Geographical Region"
                             formname="unGeoRegion"
                             placeholder="Enter UN Geographical Region"
-                            initialValue={formValues.unGeoRegion}
+                            value={formValues.unGeoRegion}
                             error={formFieldErrors.unGeoRegion}
                         />
                         <TextInput
                             label="UN Geographical Sub Region"
                             formname="unGeoSubregion"
                             placeholder="Enter UN Geographical Sub Region"
-                            initialValue={formValues.unGeoSubregion}
+                            value={formValues.unGeoSubregion}
                             error={formFieldErrors.unGeoSubregion}
                         />
                     </Form>

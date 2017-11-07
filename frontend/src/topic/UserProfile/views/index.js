@@ -566,21 +566,21 @@ export default class UserProfile extends React.PureComponent {
                                     label="First name"
                                     formname="firstName"
                                     placeholder="Enter a descriptive name"
-                                    initialValue={formValues.firstName}
+                                    value={formValues.firstName}
                                     error={formFieldErrors.firstName}
                                 />
                                 <TextInput
                                     label="Last name"
                                     formname="lastName"
                                     placeholder="Enter a descriptive name"
-                                    initialValue={formValues.lastName}
+                                    value={formValues.lastName}
                                     error={formFieldErrors.lastName}
                                 />
                                 <TextInput
                                     label="Organization"
                                     formname="organization"
                                     placeholder="Enter a descriptive name"
-                                    initialValue={formValues.organization}
+                                    value={formValues.organization}
                                     error={formFieldErrors.organization}
                                 />
                                 <div styleName="action-buttons">

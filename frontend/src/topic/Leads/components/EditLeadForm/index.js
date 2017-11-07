@@ -172,14 +172,14 @@ export default class EditLeadForm extends React.PureComponent {
                     label="Title"
                     formname="title"
                     placeholder="Enter a descriptive name"
-                    initialValue={formValues.title}
+                    value={formValues.title}
                     error={formFieldErrors.title}
                 />
                 <TextInput
                     label="Source"
                     formname="source"
                     placeholder="Enter a descriptive name"
-                    initialValue={formValues.source}
+                    value={formValues.source}
                     error={formFieldErrors.source}
                 />
                 <div styleName="other-container-box">
@@ -188,7 +188,7 @@ export default class EditLeadForm extends React.PureComponent {
                         formname="confidentiality"
                         placeholder="Enter a descriptive name"
                         styleName="confidentiality-box"
-                        initialValue={formValues.confidentiality}
+                        value={formValues.confidentiality}
                         error={formFieldErrors.confidentiality}
                     />
                     <TextInput
@@ -196,7 +196,7 @@ export default class EditLeadForm extends React.PureComponent {
                         formname="assignTo"
                         placeholder="Enter a descriptive name"
                         styleName="user-box"
-                        initialValue={formValues.assignTo}
+                        value={formValues.assignTo}
                         error={formFieldErrors.assignTo}
 
                     />
@@ -206,7 +206,7 @@ export default class EditLeadForm extends React.PureComponent {
                     formname="publicationDate"
                     placeholder="Enter a descriptive name"
                     styleName="date-box"
-                    initialValue={formValues.publicationDate}
+                    value={formValues.publicationDate}
                     error={formFieldErrors.publicationDate}
                 />
                 <div styleName="url-box-container">
@@ -215,7 +215,7 @@ export default class EditLeadForm extends React.PureComponent {
                         formname="url"
                         placeholder="Enter a descriptive name"
                         styleName="url-box"
-                        initialValue={formValues.url}
+                        value={formValues.url}
                         error={formFieldErrors.url}
                     />
                     <TextInput
@@ -223,7 +223,7 @@ export default class EditLeadForm extends React.PureComponent {
                         formname="website"
                         placeholder="Enter a descriptive name"
                         styleName="website-box"
-                        initialValue={formValues.website}
+                        value={formValues.website}
                         error={formFieldErrors.website}
                     />
                 </div>

@@ -244,7 +244,7 @@ export default class Navbar extends React.PureComponent {
                         keySelector={this.labelSelectorForSelectInput}
                         labelSelector={this.keySelectorForSelectInput}
                         options={this.props.userProjects}
-                        selectedOptionKey={activeProject}
+                        value={activeProject}
                         onChange={this.onSelectChangeHandler}
                     />
 

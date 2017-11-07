@@ -629,7 +629,7 @@ export default class AddLead extends React.PureComponent {
                             <TextInput
                                 styleName="search"
                                 onChange={this.handleSearchChange}
-                                initialValue={this.state.searchInputValue}
+                                value={this.state.searchInputValue}
                                 placeholder="Search description"
                                 type="search"
                             />
@@ -638,21 +638,21 @@ export default class AddLead extends React.PureComponent {
                                 placeholder="Lead Type"
                                 styleName="filter"
                                 multiple
-                                selectedOptionKeys={this.state.leadTypeFilterValue}
+                                value={this.state.leadTypeFilterValue}
                                 optionsIdentifier="lead-list-filter-options"
                                 onChange={this.handleLeadTypeFilterChange}
                             />
                             <TextInput
                                 placeholder="Source"
                                 styleName="filter source-filter"
-                                initialValue={this.state.leadSourceFilterValue}
+                                value={this.state.leadSourceFilterValue}
                                 onChange={this.handleLeadSourceFilterChange}
                             />
                             <SelectInput
                                 options={this.statusFilterOptions}
                                 placeholder="Status"
                                 styleName="filter"
-                                selectedOptionKeys={this.state.leadStatusFilterValue}
+                                value={this.state.leadStatusFilterValue}
                                 optionsIdentifier="lead-list-filter-options"
                                 onChange={this.handleLeadStatusFilterChange}
                             />

@@ -264,7 +264,7 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="title"
                     placeholder="Enter a descriptive name"
                     styleName="title"
-                    initialValue={formValues.title}
+                    value={formValues.title}
                     error={formFieldErrors.title}
                 />
                 <TextInput
@@ -272,7 +272,7 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="source"
                     placeholder="Enter a descriptive name"
                     styleName="source"
-                    initialValue={formValues.source}
+                    value={formValues.source}
                     error={formFieldErrors.source}
                 />
                 <SelectInput
@@ -280,7 +280,7 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="confidentiality"
                     placeholder="Select a confidentiality"
                     options={leadFilterOptions.confidentiality}
-                    selectedOptionKey={formValues.confidentiality}
+                    value={formValues.confidentiality}
                     styleName="confidentiality"
                     keySelector={d => (d || {}).key}
                     labelSelector={d => (d || {}).value}
@@ -293,9 +293,9 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="user"
                     placeholder="Select a user"
                     options={leadFilterOptions.assignedTo}
-                    selectedOptionKey={formValues.user}
+                    value={formValues.user}
                     styleName="user"
-                    initialValue={formValues.user}
+                    value={formValues.user}
                     error={formFieldErrors.user}
                     keySelector={d => (d || {}).key}
                     labelSelector={d => (d || {}).value}
@@ -307,7 +307,7 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="date"
                     placeholder="Enter a descriptive name"
                     styleName="date"
-                    initialValue={formValues.date}
+                    value={formValues.date}
                     error={formFieldErrors.date}
                 />
                 <SelectInput
@@ -315,7 +315,7 @@ export default class AddLeadForm extends React.PureComponent {
                     formname="project"
                     placeholder="Select a project"
                     options={leadFilterOptions.project}
-                    selectedOptionKey={formValues.project}
+                    value={formValues.project}
                     styleName="project"
                     keySelector={d => (d || {}).key}
                     labelSelector={d => (d || {}).value}
@@ -334,7 +334,7 @@ export default class AddLeadForm extends React.PureComponent {
                             formname="url"
                             placeholder="Enter a descriptive name"
                             styleName="url"
-                            initialValue={formValues.url}
+                            value={formValues.url}
                             error={formFieldErrors.url}
                         />,
                         <TextInput
@@ -343,7 +343,7 @@ export default class AddLeadForm extends React.PureComponent {
                             formname="website"
                             placeholder="Enter a descriptive name"
                             styleName="website"
-                            initialValue={formValues.website}
+                            value={formValues.website}
                             error={formFieldErrors.website}
                         />,
                     ]
@@ -354,7 +354,7 @@ export default class AddLeadForm extends React.PureComponent {
                             formname="text"
                             label="Text"
                             placeholder="Enter text"
-                            initialValue={formValues.text}
+                            value={formValues.text}
                             rows="3"
                             styleName="text"
                         />
@@ -370,7 +370,7 @@ export default class AddLeadForm extends React.PureComponent {
                         <HiddenInput
                             key="input"
                             formname="server_id"
-                            initialValue={formValues.server_id}
+                            value={formValues.server_id}
                         />,
                     ])
                 }
