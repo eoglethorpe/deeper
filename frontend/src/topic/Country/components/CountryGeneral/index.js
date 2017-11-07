@@ -3,19 +3,29 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { TransparentButton, SuccessButton, DangerButton } from '../../../../public/components/Button';
-import EditAdminLevelForm from '../EditAdminLevelForm';
-import Modal, { Header, Body } from '../../../../public/components/Modal';
-import Table from '../../../../public/components/Table';
-import TextInput from '../../../../public/components/TextInput';
-import styles from './styles.scss';
-import Form, {
+import {
+    DangerButton,
+    SuccessButton,
+    TransparentButton,
+} from '../../../../public/components/Action';
+import {
+    Form,
+    TextInput,
     requiredCondition,
-} from '../../../../public/components/Form';
+} from '../../../../public/components/Input';
+import {
+    Modal,
+    ModalBody,
+    ModalHeader,
+    Table,
+} from '../../../../public/components/View';
+import EditAdminLevelForm from '../EditAdminLevelForm';
 import {
     adminLevelSelector,
     countryDetailSelector,
 } from '../../../../common/selectors/domainData';
+
+import styles from './styles.scss';
 
 const propTypes = {
     adminLevelList: PropTypes.arrayOf(
@@ -334,10 +344,10 @@ export default class CountryGeneral extends React.PureComponent {
                             onClose={this.handleModalClose}
                             show={this.state.addAdminLevel}
                         >
-                            <Header title="Add admin level" />
-                            <Body>
+                            <ModalHeader title="Add admin level" />
+                            <ModalBody>
                                 <EditAdminLevelForm onClose={this.handleModalClose} />
-                            </Body>
+                            </ModalBody>
                         </Modal>
                     </div>
                     <div styleName="admin-levels-list">
@@ -353,13 +363,13 @@ export default class CountryGeneral extends React.PureComponent {
                             show={this.state.editAdminLevel}
                             closeOnBlur
                         >
-                            <Header title="Edit admin level" />
-                            <Body>
+                            <ModalHeader title="Edit admin level" />
+                            <ModalBody>
                                 <EditAdminLevelForm
                                     adminLevelDetail={this.state.clickedAdminLevel}
                                     onClose={this.handleModalClose}
                                 />
-                            </Body>
+                            </ModalBody>
                         </Modal>
                     </div>
                 </div>
