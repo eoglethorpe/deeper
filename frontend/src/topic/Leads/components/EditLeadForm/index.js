@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import { PrimaryButton, DangerButton } from '../../../../public/components/Button';
-import TextInput from '../../../../public/components/TextInput';
-import Form, {
+import {
+    PrimaryButton,
+    DangerButton,
+} from '../../../../public/components/Action';
+
+import {
+    Form,
+    TextInput,
     requiredCondition,
     urlCondition,
-} from '../../../../public/components/Form';
+} from '../../../../public/components/Input';
 
 const propTypes = {
     onSubmit: PropTypes.func.isRequired, //eslint-disable-line

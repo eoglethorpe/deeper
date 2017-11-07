@@ -1,9 +1,9 @@
 import CSSModules from 'react-css-modules';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 
 // User can go to /countrypanel
 // User can go to /countrypanel/id
@@ -20,29 +20,30 @@ import { connect } from 'react-redux';
 // If there is no country
 // show "There are no countries"
 
-import Helmet from 'react-helmet';
-import CountryDetail from '../components/CountryDetail';
-import Form, {
-    requiredCondition,
-} from '../../../public/components/Form';
-import Modal, { Header } from '../../../public/components/Modal';
-import ListView, { ListItem } from '../../../public/components/ListView';
-import TextInput from '../../../public/components/TextInput';
-import styles from './styles.scss';
-import browserHistory from '../../../common/browserHistory';
-import { pageTitles } from '../../../common/utils/labels';
-import { RestBuilder } from '../../../public/utils/rest';
-import { PrimaryButton, DangerButton } from '../../../public/components/Button';
 import {
-    tokenSelector,
-} from '../../../common/selectors/auth';
+    Form,
+    TextInput,
+    requiredCondition,
+} from '../../../public/components/Input';
+import {
+    DangerButton,
+    PrimaryButton,
+} from '../../../public/components/Action';
+import {
+    ListItem,
+    ListView,
+    Modal,
+    ModalHeader,
+} from '../../../public/components/View';
+import browserHistory from '../../../common/browserHistory';
+import { RestBuilder } from '../../../public/utils/rest';
+import { pageTitles } from '../../../common/utils/labels';
+import { tokenSelector } from '../../../common/selectors/auth';
 import {
     activeCountrySelector,
     countriesSelector,
 } from '../../../common/selectors/domainData';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
+import { setNavbarStateAction } from '../../../common/action-creators/navbar';
 import {
     setActiveCountryAction,
     setCountriesAction,
@@ -52,6 +53,9 @@ import {
     urlForCountries,
 } from '../../../common/rest';
 import schema from '../../../common/schema';
+
+import CountryDetail from '../components/CountryDetail';
+import styles from './styles.scss';
 
 // NOTE: is Required removed by @frozenhelium
 const propTypes = {
@@ -359,7 +363,7 @@ export default class CountryPanel extends React.PureComponent {
                             show={this.state.addCountryModal}
                             closeOnBlur
                         >
-                            <Header title="Add new country" />
+                            <ModalHeader title="Add new country" />
                             <Form
                                 styleName="add-country-form"
                                 changeCallback={this.changeCallback}
@@ -502,7 +506,7 @@ export default class CountryPanel extends React.PureComponent {
                                 show={this.state.addCountryModal}
                                 closeOnBlur
                             >
-                                <Header title="Add new country" />
+                                <ModalHeader title="Add new country" />
                                 <Form
                                     styleName="add-country-form"
                                     changeCallback={this.changeCallback}

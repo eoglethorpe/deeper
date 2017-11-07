@@ -8,32 +8,29 @@ import { Tabs, TabContent } from 'react-tabs-redux';
 import {
     TransparentButton,
 } from '../../../../public/components/Action';
-
 import {
     FileInput,
 } from '../../../../public/components/Input';
-
-import AddLeadForm from '../../components/AddLeadForm';
-import AddLeadListItem from '../../components/AddLeadListItem';
-import { pageTitles } from '../../../../common/utils/labels';
-import styles from './styles.scss';
-import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
-import { tokenSelector } from '../../../../common/selectors/auth';
-import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
 import update from '../../../../public/utils/immutable-update';
 import {
     RestBuilder,
 } from '../../../../public/utils/rest';
+import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
+
+import { pageTitles } from '../../../../common/utils/labels';
 import {
     urlForUpload,
     createHeaderForFileUpload,
     urlForLeadCreate,
     createParamsForLeadCreate,
 } from '../../../../common/rest';
+import { tokenSelector } from '../../../../common/selectors/auth';
+import { setNavbarStateAction } from '../../../../common/action-creators/navbar';
+import { activeProjectSelector } from '../../../../common/selectors/domainData';
 
-import {
-    activeProjectSelector,
-} from '../../../../common/selectors/domainData';
+import AddLeadForm from '../../components/AddLeadForm';
+import AddLeadListItem from '../../components/AddLeadListItem';
+import styles from './styles.scss';
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),

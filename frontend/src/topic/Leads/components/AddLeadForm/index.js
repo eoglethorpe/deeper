@@ -3,25 +3,22 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-
 import {
-    TextInput,
     DateInput,
+    Form,
     HiddenInput,
     SelectInput,
     TextArea,
-    Form,
+    TextInput,
     requiredCondition,
     urlCondition,
 } from '../../../../public/components/Input';
-
 import {
     PrimaryButton,
     SuccessButton,
 } from '../../../../public/components/Action';
-
 import { RestBuilder } from '../../../../public/utils/rest';
+
 import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
@@ -30,12 +27,10 @@ import {
     activeProjectSelector,
     leadFilterOptionsForProjectSelector,
 } from '../../../../common/selectors/domainData';
-import {
-    tokenSelector,
-} from '../../../../common/selectors/auth';
-import {
-    setLeadFilterOptionsAction,
-} from '../../../../common/action-creators/domainData';
+import { tokenSelector } from '../../../../common/selectors/auth';
+import { setLeadFilterOptionsAction } from '../../../../common/action-creators/domainData';
+
+import styles from './styles.scss';
 
 // uploadStates -> birth, uploading, success, fail
 // formStates -> stale, error, pending

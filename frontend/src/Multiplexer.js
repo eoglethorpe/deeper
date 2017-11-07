@@ -3,16 +3,15 @@ import React from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Bundle from './Bundle';
+import {
+    Bundle,
+    ExclusivelyPublicRoute,
+    PrivateRoute,
+} from './public/components/General';
 import Navbar from './common/components/Navbar';
 import ProjectRouteSynchronizer from './common/components/ProjectRouteSynchronizer';
 import { pageTitles } from './common/utils/labels';
-import PrivateRoute, {
-    ExclusivelyPublicRoute,
-} from './public/components/PrivateRoute';
-import {
-    authenticatedSelector,
-} from './common/selectors/auth';
+import { authenticatedSelector } from './common/selectors/auth';
 
 const Leads = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/`} >
