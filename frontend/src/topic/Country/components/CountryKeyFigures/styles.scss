@@ -6,10 +6,45 @@
     flex-wrap: wrap;
     padding: $spacing-large;
 
+    .action-buttons {
+        display: flex;
+        flex-basis: 100%;
+        justify-content: flex-end;
+        margin-top: $spacing-medium;
+
+        button {
+            margin-right: $spacing-large;
+        }
+    }
+
     h3 {
         flex-basis: 100%;
     }
 
+
+    .pending-overlay {
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-background-overlay;
+        width: 100%;
+        height: 100%;
+
+        .loading-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spin 1s linear infinite;
+            width: $width-icon-super-large;
+            height: $width-icon-super-large;
+            color: $color-accent;
+            font-size: $width-icon-super-large;
+        }
+
+    }
     .hdi {
         display: flex;
         flex-basis: 100%;
