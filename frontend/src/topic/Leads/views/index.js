@@ -5,14 +5,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import EditLeadForm from '../components/EditLeadForm';
-import FilterLeadsForm from '../components/FilterLeadsForm';
-import LeadColumnHeader from '../components/LeadColumnHeader';
-import browserHistory from '../../../common/browserHistory';
-import styles from './styles.scss';
 import { RestBuilder } from '../../../public/utils/rest';
-import { pageTitles } from '../../../common/utils/labels';
-
 import {
     Modal,
     ModalHeader,
@@ -21,7 +14,6 @@ import {
     RawTable,
     FormattedDate,
 } from '../../../public/components/View';
-
 import {
     PrimaryButton,
     TransparentAccentButton,
@@ -34,21 +26,25 @@ import {
 } from '../../../common/rest';
 import {
     tokenSelector,
-} from '../../../common/selectors/auth';
-import {
+
     activeProjectSelector,
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
-} from '../../../common/selectors/domainData';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
-    setLeadsAction,
-} from '../../../common/action-creators/domainData';
 
+    setNavbarStateAction,
+
+    setLeadsAction,
+} from '../../../common/redux';
+
+import browserHistory from '../../../common/browserHistory';
 import schema from '../../../common/schema';
+import { pageTitles } from '../../../common/utils/labels';
+
+import EditLeadForm from '../components/EditLeadForm';
+import FilterLeadsForm from '../components/FilterLeadsForm';
+import LeadColumnHeader from '../components/LeadColumnHeader';
+import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,

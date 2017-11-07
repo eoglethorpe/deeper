@@ -4,19 +4,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-import { pageTitles } from '../../../common/utils/labels';
 import { RestBuilder } from '../../../public/utils/rest';
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
-    urlForApiDocs,
-} from '../../../common/rest';
-import {
-    isObjectEmpty,
-} from '../../../public/utils/common';
+import { isObjectEmpty } from '../../../public/utils/common';
 
+import { pageTitles } from '../../../common/utils/labels';
+import { urlForApiDocs } from '../../../common/rest';
+import { setNavbarStateAction } from '../../../common/redux';
+
+import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,

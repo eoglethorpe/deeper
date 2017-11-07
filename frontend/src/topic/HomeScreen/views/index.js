@@ -9,14 +9,11 @@ import logo from '../../../img/deep-logo-grey.png';
 import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
-    activeUserSelector,
-} from '../../../common/selectors/auth';
-import {
+
     activeProjectSelector,
+    activeUserSelector,
     currentUserProjectsSelector,
-} from '../../../common/selectors/domainData';
+} from '../../../common/redux';
 
 import styles from './styles.scss';
 
