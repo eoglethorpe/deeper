@@ -5,21 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-// User can go to /countrypanel
-// User can go to /countrypanel/id
-
-// get country list, blocking if there is none
-// If there is no id, get activeCountry or first country in countryList
-// If id/activeCountry is not in country list,
-// show "Country not found"
-// If there is no country
-// show "There are no countries"
-
-// If activeCountry is not in country list after being updated,
-// show "Country was removed"
-// If there is no country
-// show "There are no countries"
-
+import { RestBuilder } from '../../../public/utils/rest';
 import {
     Form,
     TextInput,
@@ -35,29 +21,45 @@ import {
     Modal,
     ModalHeader,
 } from '../../../public/components/View';
+
 import browserHistory from '../../../common/browserHistory';
-import { RestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/utils/labels';
-import { tokenSelector } from '../../../common/selectors/auth';
-import {
-    activeCountrySelector,
-    countriesSelector,
-} from '../../../common/selectors/domainData';
-import { setNavbarStateAction } from '../../../common/action-creators/navbar';
-import {
-    setActiveCountryAction,
-    setCountriesAction,
-} from '../../../common/action-creators/domainData';
+import schema from '../../../common/schema';
 import {
     createParamsForUser,
     urlForCountries,
 } from '../../../common/rest';
-import schema from '../../../common/schema';
+import {
+    tokenSelector,
+
+    activeCountrySelector,
+    countriesSelector,
+
+    setNavbarStateAction,
+
+    setActiveCountryAction,
+    setCountriesAction,
+} from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
 import styles from './styles.scss';
 
-// NOTE: is Required removed by @frozenhelium
+// NOTE:
+// User can go to /countrypanel
+// User can go to /countrypanel/id
+
+// get country list, blocking if there is none
+// If there is no id, get activeCountry or first country in countryList
+// If id/activeCountry is not in country list,
+// show "Country not found"
+// If there is no country
+// show "There are no countries"
+
+// If activeCountry is not in country list after being updated,
+// show "Country was removed"
+// If there is no country
+// show "There are no countries"
+
 const propTypes = {
     activeCountry: PropTypes.number,
     countries: PropTypes.array, // eslint-disable-line

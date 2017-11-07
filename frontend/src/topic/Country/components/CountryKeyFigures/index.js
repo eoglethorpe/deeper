@@ -1,15 +1,17 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
-import styles from './styles.scss';
+
 import {
-    TextInput,
     Form,
+    TextInput,
 } from '../../../../public/components/Input';
 import {
-    PrimaryButton,
     DangerButton,
+    PrimaryButton,
 } from '../../../../public/components/Action';
+
+import styles from './styles.scss';
 
 const propTypes = {
     onSubmit: PropTypes.func.isRequired, //eslint-disable-line

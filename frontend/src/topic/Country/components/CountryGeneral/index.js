@@ -19,12 +19,13 @@ import {
     ModalHeader,
     Table,
 } from '../../../../public/components/View';
-import EditAdminLevelForm from '../EditAdminLevelForm';
+
 import {
     adminLevelSelector,
     countryDetailSelector,
-} from '../../../../common/selectors/domainData';
+} from '../../../../common/redux';
 
+import EditAdminLevelForm from '../EditAdminLevelForm';
 import styles from './styles.scss';
 
 const propTypes = {
