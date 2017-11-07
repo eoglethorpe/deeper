@@ -230,7 +230,12 @@ export default class Navbar extends React.PureComponent {
                         to="/"
                         styleName="brand"
                     >
-                        <img styleName="icon" src={logo} alt="DEEP" />
+                        <img
+                            styleName="icon"
+                            src={logo}
+                            alt="DEEP"
+                            draggable="false"
+                        />
                         <span styleName="title">Deep</span>
                     </Link>
                     <SelectInput
@@ -254,13 +259,13 @@ export default class Navbar extends React.PureComponent {
                     >
                         {
                             dropdownItems.map(group => (
-                                <Group key={group.key} >
+                                <DropdownGroup key={group.key} >
                                     {
                                         group.label &&
-                                            <GroupTitle title={group.label} />
+                                            <DropdownGroupTitle title={group.label} />
                                     }
                                     { group.items.map(this.renderDropdownItem) }
-                                </Group>
+                                </DropdownGroup>
                             ))
                         }
                         <button

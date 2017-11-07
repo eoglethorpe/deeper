@@ -11,10 +11,10 @@
 
     p {
         flex-basis: 100%;
-        margin-bottom: $spacing-extra-large;
+        margin: $spacing-extra-large 0;
         text-align: center;
         text-transform: uppercase;
-        font-size: 36px;
+        font-size: 42px;
     }
 
     h2 {
@@ -24,7 +24,7 @@
     }
 
     img {
-        margin-bottom: $spacing-extra-large;
+        margin: $spacing-super-large 0;
         width: 400px;
         height: 400px;
     }

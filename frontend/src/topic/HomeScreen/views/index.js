@@ -93,16 +93,16 @@ export default class HomeScreen extends React.PureComponent {
                 <Helmet>
                     <title>{ pageTitles.homeScreen }</title>
                 </Helmet>
+                <p>
+                    Welcome to the DEEP
+                </p>
                 <img
                     src={logo}
                     alt="DEEP"
                     draggable="false"
                 />
-                <p>
-                    Welcome to the DEEP
-                </p>
                 <h2>
-                    You have no projects
+                    WhOops!! You have no  active projects
                 </h2>
                 <h2>
                     <Link
