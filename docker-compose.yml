@@ -13,12 +13,24 @@ services:
         build: .
         env_file:
             - .env
-        command: ['/code/scripts/wait-for-it.sh', 'db:5432', '--', '/code/scripts/run_develop.sh']
+        command: ['/code/scripts/wait-for-it.sh', 'db:5432', '--', '/code/scripts/run_develop.sh', 'django']
         volumes:
             - .:/code
             - ./media:/media
         ports:
             - '8000:8000'
+        depends_on:
+            - db
+            - redis
+    react:
+        build: .
+        env_file:
+            - .env
+        command: ['/code/scripts/run_develop.sh', 'react']
+        volumes:
+            - .:/code
+            - ./media:/media
+        ports:
             - '3000:3000'
         depends_on:
             - db
