@@ -295,7 +295,6 @@ export default class AddLeadForm extends React.PureComponent {
                     options={leadFilterOptions.assignedTo}
                     value={formValues.user}
                     styleName="user"
-                    value={formValues.user}
                     error={formFieldErrors.user}
                     keySelector={d => (d || {}).key}
                     labelSelector={d => (d || {}).value}
