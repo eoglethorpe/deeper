@@ -103,9 +103,34 @@ Useful commands for:
 Dummy data are available in the form of csv files and can be loaded/updated with `load_dummy_data`
 management command.
 
-First get into web container, activate virtual env and then enter the backend directory
-as shown in [running tests locally](#running-tests-locally) section.
+> Load Dummy Data.
 
 ```bash
-python manage.py load_dummy_data
+cd project-root-folder
+
+# Start Docker containers, you can start without -d just open another terminal at project-root-folder
+docker-compose up -d
+
+# ssh to web container
+docker-compose exec web bash
+
+# cd to django root folder
+cd backend
+
+# activate python virtualenv
+. /venv/bin/activate
+
+# load dummy data
+python3 manage.py load_dummy_data
+
+# exit from container
+exit
 ```
+
+> Add Dummy Data.
+
+- csv filename should be same as Model name  [`backend/*/models.py`].
+- The csv file of required model should be stored in it's respective django app. [`backend/*/dummy_data/`].
+- `id` column maintains relation between models and it's instance in database.
+- Look into already added dummy_data for reference. [`backend/geo/dummy_data/Region.csv`]
+    - Here model is region, it's class name is `Region` and it's in app `geo`
