@@ -159,7 +159,13 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/countrypanel/*',
+            path: '/countrypanel/:countryId/',
+            name: pageTitles.countryPanel,
+            component: CountryPanel,
+            private: true,
+        },
+        {
+            path: '/countrypanel/',
             name: pageTitles.countryPanel,
             component: CountryPanel,
             private: true,

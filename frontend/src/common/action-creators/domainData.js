@@ -3,10 +3,12 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     SET_USER_GROUPS,
+    DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
+    SET_ACTIVE_COUNTRY,
+    SET_COUNTRIES,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
-    DUMMY_ACTION,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -38,6 +40,11 @@ export const setActiveProjectAction = ({ activeProject }) => ({
     activeProject,
 });
 
+export const setActiveCountryAction = ({ activeCountry }) => ({
+    type: SET_ACTIVE_COUNTRY,
+    activeCountry,
+});
+
 export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     type: SET_LEADS,
     projectId,
@@ -49,6 +56,11 @@ export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => 
     type: SET_LEAD_FILTER_OPTIONS,
     projectId,
     leadFilterOptions,
+});
+
+export const setCountriesAction = ({ countries }) => ({
+    type: SET_COUNTRIES,
+    countries,
 });
 
 export const dummyAction = () => ({

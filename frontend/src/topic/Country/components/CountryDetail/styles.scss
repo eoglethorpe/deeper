@@ -17,6 +17,10 @@
 
         .button-container {
             font-size: inherit;
+
+            :global .save-btn {
+                margin-right: $spacing-medium;
+            }
         }
     }
 

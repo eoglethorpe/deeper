@@ -6,6 +6,7 @@ describe('<CountryDetail />', () => {
     const wrapper = shallow(
         <CountryDetail
             fullName="Country name"
+            countryId={12}
         />,
     );
 

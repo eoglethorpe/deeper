@@ -3,21 +3,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
+import {
+    DangerButton,
+    SuccessButton,
+} from '../../../../public/components/Action';
+
 import CountryGeneral from '../CountryGeneral';
 import CountryKeyFigures from '../CountryKeyFigures';
 import CountryMediaSources from '../CountryMediaSources';
 import CountryPopulationData from '../CountryPopulationData';
 import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
 import styles from './styles.scss';
-import { DangerButton, SuccessButton } from '../../../../public/components/Button';
 
 const propTypes = {
-    countryId: PropTypes.string,
-    fullName: PropTypes.string.isRequired,
+    countryId: PropTypes.number.isRequired,
+    fullName: PropTypes.string,
 };
 
 const defaultProps = {
-    countryId: '',
+    fullName: '',
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -35,7 +39,7 @@ export default class CountryDetail extends React.PureComponent {
                         {fullName}
                     </div>
                     <div styleName="button-container">
-                        <SuccessButton>
+                        <SuccessButton className="save-btn">
                             Save Changes
                         </SuccessButton>
                         <DangerButton>
