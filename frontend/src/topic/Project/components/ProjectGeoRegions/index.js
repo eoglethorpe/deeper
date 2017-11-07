@@ -146,7 +146,7 @@ export default class CountryGeneral extends React.PureComponent {
                             iso &&
                             <TextInput
                                 disabled
-                                initialValue={iso}
+                                value={iso}
                                 label="Country code"
                                 placeholder="NPL"
                                 styleName="text-input"

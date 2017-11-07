@@ -165,7 +165,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="name"
                     placeholder="Enter Project Name"
                     styleName="name"
-                    initialValue={formValues.name}
+                    value={formValues.name}
                     error={formFieldErrors.name}
                 />
                 <DateInput
@@ -173,7 +173,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="startDate"
                     placeholder="Enter Project Start Date"
                     styleName="start-date"
-                    initialValue={formValues.startDate}
+                    value={formValues.startDate}
                     error={formFieldErrors.startDate}
                 />
                 <DateInput
@@ -181,7 +181,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="endDate"
                     placeholder="Enter Project End Date"
                     styleName="end-date"
-                    initialValue={formValues.endDate}
+                    value={formValues.endDate}
                     error={formFieldErrors.endDate}
                 />
                 <TextInput
@@ -189,7 +189,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="description"
                     placeholder="Enter Project Description"
                     styleName="description"
-                    initialValue={formValues.description}
+                    value={formValues.description}
                     error={formFieldErrors.description}
 
                 />
@@ -198,7 +198,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="countries"
                     placeholder="Select countries"
                     styleName="countries"
-                    initialValue={formValues.countries}
+                    value={formValues.countries}
                     error={formFieldErrors.countries}
                 />
                 <TextInput
@@ -206,7 +206,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="userGroups"
                     placeholder="Select User Group"
                     styleName="user-groups"
-                    initialValue={formValues.userGroups}
+                    value={formValues.userGroups}
                     error={formFieldErrors.userGroups}
                 />
                 <TextInput
@@ -214,7 +214,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="otherMembers"
                     placeholder="Select Project Members"
                     styleName="other-members"
-                    initialValue={formValues.otherMembers}
+                    value={formValues.otherMembers}
                     error={formFieldErrors.otherMembers}
                 />
                 <TextInput
@@ -222,7 +222,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="admins"
                     placeholder="Select Project Admins"
                     styleName="admins"
-                    initialValue={formValues.admins}
+                    value={formValues.admins}
                     error={formFieldErrors.admins}
                 />
             </Form>

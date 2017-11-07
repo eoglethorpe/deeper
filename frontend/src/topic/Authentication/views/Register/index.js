@@ -235,28 +235,28 @@ export default class Login extends React.PureComponent {
                     <TextInput
                         error={formFieldErrors.firstname}
                         formname="firstname"
-                        initialValue={formValues.firstname}
+                        value={formValues.firstname}
                         label="First name"
                         placeholder="John"
                     />
                     <TextInput
                         error={formFieldErrors.lastname}
                         formname="lastname"
-                        initialValue={formValues.lastname}
+                        value={formValues.lastname}
                         label="Last name"
                         placeholder="Doe"
                     />
                     <TextInput
                         error={formFieldErrors.organization}
                         formname="organization"
-                        initialValue={formValues.organization}
+                        value={formValues.organization}
                         label="Organization"
                         placeholder="Togglecorp"
                     />
                     <TextInput
                         error={formFieldErrors.email}
                         formname="email"
-                        initialValue={formValues.email}
+                        value={formValues.email}
                         label="Email"
                         placeholder="john.doe@mail.com"
                     />
@@ -264,7 +264,7 @@ export default class Login extends React.PureComponent {
                         error={formFieldErrors.password}
                         formname="password"
                         hint="Password should be more than four characters long."
-                        initialValue={formValues.password}
+                        value={formValues.password}
                         label="Password"
                         required
                         type="password"

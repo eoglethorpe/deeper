@@ -58,37 +58,37 @@ export default class EditAdminLevelForm extends React.PureComponent {
                         styleName="admin-level-details"
                     >
                         <TextInput
-                            initialValue={adminLevelDetail.level}
+                            value={adminLevelDetail.level}
                             label="Admin level"
                             placeholder="Admin level"
                             styleName="text-input"
                         />
                         <TextInput
-                            initialValue={adminLevelDetail.name}
+                            value={adminLevelDetail.name}
                             label="Admin level name"
                             placeholder="Country"
                             styleName="text-input"
                         />
                         <TextInput
-                            initialValue={adminLevelDetail.nameProperty}
+                            value={adminLevelDetail.nameProperty}
                             label="Name property"
                             placeholder="NAME_ENGL"
                             styleName="text-input"
                         />
                         <TextInput
-                            initialValue={adminLevelDetail.pcodeProperty}
+                            value={adminLevelDetail.pcodeProperty}
                             label="Pcode property"
                             placeholder="NAME_PCODE"
                             styleName="text-input"
                         />
                         <TextInput
-                            initialValue={adminLevelDetail.parentNameProperty}
+                            value={adminLevelDetail.parentNameProperty}
                             label="Parent name property"
                             placeholder="NAME_ENFG"
                             styleName="text-input"
                         />
                         <TextInput
-                            initialValue={adminLevelDetail.parentPcodeProperty}
+                            value={adminLevelDetail.parentPcodeProperty}
                             label="Parent pcode property"
                             placeholder="NAME_PPCODE"
                             styleName="text-input"

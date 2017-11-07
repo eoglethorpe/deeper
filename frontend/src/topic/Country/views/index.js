@@ -404,14 +404,14 @@ export default class CountryPanel extends React.PureComponent {
                                     label="Country Name"
                                     formname="name"
                                     placeholder="Enter county name"
-                                    initialValue={formValues.name}
+                                    value={formValues.name}
                                     error={formFieldErrors.name}
                                 />
                                 <TextInput
                                     label="Code"
                                     formname="code"
                                     placeholder="Enter country code"
-                                    initialValue={formValues.code}
+                                    value={formValues.code}
                                     error={formFieldErrors.code}
                                 />
                                 <div styleName="action-buttons">
@@ -547,14 +547,14 @@ export default class CountryPanel extends React.PureComponent {
                                         label="Country Name"
                                         formname="name"
                                         placeholder="Enter county name"
-                                        initialValue={formValues.name}
+                                        value={formValues.name}
                                         error={formFieldErrors.name}
                                     />
                                     <TextInput
                                         label="Code"
                                         formname="code"
                                         placeholder="Enter country code"
-                                        initialValue={formValues.code}
+                                        value={formValues.code}
                                         error={formFieldErrors.code}
                                     />
                                     <div styleName="action-buttons">

@@ -189,7 +189,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    selectedOptionKeys={formValues.assigned_to}
+                    value={formValues.assigned_to}
                     multiple
                 />
                 <SelectInput
@@ -197,7 +197,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     options={this.dateFilterOptions}
                     placeholder="Created at"
                     styleName="filter"
-                    selectedOptionKey={formValues.created_at}
+                    value={formValues.created_at}
                 />
                 <SelectInput
                     formname="published_on"
@@ -212,7 +212,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    selectedOptionKey={formValues.confidentiality}
+                    value={formValues.confidentiality}
                 />
                 <SelectInput
                     formname="status"
@@ -221,7 +221,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    selectedOptionKey={formValues.status}
+                    value={formValues.status}
                 />
                 <Button
                     styleName="apply-filter-btn"
