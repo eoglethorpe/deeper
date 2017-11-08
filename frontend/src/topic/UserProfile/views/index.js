@@ -32,11 +32,9 @@ import {
     createParamsForProjects,
     createParamsForUser,
     createParamsForUserGroups,
-    createParamsForUserPatch,
     createUrlForProjectsOfUser,
     createUrlForUser,
     createUrlForUserGroupsOfUser,
-    createUrlForUserPatch,
 } from '../../../common/rest';
 import {
     tokenSelector,
@@ -104,10 +102,7 @@ export default class UserProfile extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            editProfile: false,
-        };
-
+        this.state = { editProfile: false };
 
         this.projectHeaders = [
             {
@@ -254,9 +249,6 @@ export default class UserProfile extends React.PureComponent {
         this.userRequest.stop();
         this.projectsRequest.stop();
         this.userGroupsRequest.stop();
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
     }
 
     createRequestForUser = (userId) => {
@@ -284,11 +276,9 @@ export default class UserProfile extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
             })
             .build();
         return userRequest;
@@ -318,11 +308,9 @@ export default class UserProfile extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
             })
             .build();
         return projectsRequest;
@@ -354,109 +342,10 @@ export default class UserProfile extends React.PureComponent {
         return projectsRequest;
     }
 
-    createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
-        const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new RestBuilder()
-            .url(urlForUser)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserPatch(
-                    { access },
-                    { firstName, lastName, organization, displayPicture });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userPatchResponse');
-                    this.props.setUserInformation({
-                        userId,
-                        information: response,
-                    });
-                    this.setState({ editProfile: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
-                this.setState({
-                    formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
-                });
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return userPatchRequest;
-    }
-
-    // FORM RELATED
-
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
-        this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-            stale: true,
-        });
-    };
-
-    failureCallback = ({ formErrors, formFieldErrors }) => {
-        this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-        });
-    };
-
-    successCallback = (values) => {
-        // Stop old patch request
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-
-        // Create new patch request and start it
-        const { match } = this.props;
-        const userId = match.params.userId;
-        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
-        this.userPatchRequest.start();
-    };
-
     // BUTTONS
 
-    handleFormCancel = (e) => {
-        e.preventDefault();
-        this.setState({ editProfile: false });
-    };
-
     handleEditProfileClick = () => {
-        this.setState({
-            editProfile: true,
-            formValues: this.props.userInformation,
-            formFieldErrors: {},
-            formErrors: [],
-        });
+        this.setState({ editProfile: true });
     }
 
     handleEditProfileClose = () => {
