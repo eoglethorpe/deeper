@@ -31,7 +31,7 @@ const defaultProps = {
     title: '',
 };
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
     state,
 });
@@ -103,31 +103,31 @@ export default class CountryDetail extends React.PureComponent {
                             for="general"
                             styleName="tab"
                         >
-                            <CountryGeneral countryId={countryDetail.title} />
+                            <CountryGeneral countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="key-figures"
                             styleName="tab"
                         >
-                            <CountryKeyFigures countryId={countryDetail.title} />
+                            <CountryKeyFigures countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="population-data"
                             styleName="tab"
                         >
-                            <CountryPopulationData countryId={countryDetail.title} />
+                            <CountryPopulationData countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
                             styleName="tab"
                         >
-                            <CountrySeasonalCalendar countryId={countryDetail.title} />
+                            <CountrySeasonalCalendar countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="media-sources"
                             styleName="tab"
                         >
-                            <CountryMediaSources countryId={countryDetail.title} />
+                            <CountryMediaSources countryId={countryDetail.id} />
                         </TabContent>
                     </div>
                 </Tabs>

@@ -1,13 +1,20 @@
 import React from 'react';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
 import CountryDetail from '../';
 
+const initialState = {
+};
+
 describe('<CountryDetail />', () => {
+    const mockStore = configureStore();
+    const store = mockStore(initialState);
+
     const wrapper = shallow(
-        <CountryDetail
-            fullName="Country name"
-            countryId={12}
-        />,
+        <Provider store={store}>
+            <CountryDetail />
+        </Provider>,
     );
 
     it('renders properly', () => {

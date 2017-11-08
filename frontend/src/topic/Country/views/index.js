@@ -25,7 +25,7 @@ import { pageTitles } from '../../../common/utils/labels';
 import schema from '../../../common/schema';
 import {
     createParamsForUser,
-    urlForCountries,
+    urlForRegions,
 } from '../../../common/rest';
 import {
     tokenSelector,
@@ -111,7 +111,7 @@ export default class CountryPanel extends React.PureComponent {
         };
         const { token } = this.props;
         this.countriesRequest = new RestBuilder()
-            .url(urlForCountries)
+            .url(urlForRegions)
             .params(() => {
                 const { access } = token;
                 return createParamsForUser({ access });

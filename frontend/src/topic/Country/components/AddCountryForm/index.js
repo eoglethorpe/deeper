@@ -1,16 +1,11 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import {
     Form,
     TextInput,
-    createValidation,
-    emailCondition,
-    lengthGreaterThanCondition,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -30,10 +25,7 @@ const mapStateToProps = state => ({
     token: tokenSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddCountry extends React.PureComponent {
     static propTypes = propTypes;
