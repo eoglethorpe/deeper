@@ -56,7 +56,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     adminLevelList: adminLevelSelector(state, props),
-    countryDetail: countryDetailSelector(state, props),
+    countryDetail: countryDetailSelector(state),
     state,
 });
 

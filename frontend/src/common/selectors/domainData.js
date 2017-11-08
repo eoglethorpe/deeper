@@ -53,9 +53,9 @@ export const adminLevelSelector = createSelector(
 // FIXME: rename to countryDetailForCountrySelector
 export const countryDetailSelector = createSelector(
     countriesSelector,
-    countryIdFromProps,
-    (countries, countryId) => (
-        countries.find(country => country.id === countryId) || emptyObject
+    activeCountrySelector,
+    (countries, activeCountry) => (
+        countries.find(country => country.id === activeCountry) || emptyObject
     ),
 );
 

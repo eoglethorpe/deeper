@@ -1,12 +1,17 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import {
     DangerButton,
     SuccessButton,
 } from '../../../../public/components/Action';
+
+import {
+    countryDetailSelector,
+} from '../../../../common/redux';
 
 import CountryGeneral from '../CountryGeneral';
 import CountryKeyFigures from '../CountryKeyFigures';
@@ -16,27 +21,35 @@ import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
 import styles from './styles.scss';
 
 const propTypes = {
-    countryId: PropTypes.number.isRequired,
-    fullName: PropTypes.string,
+    countryDetail: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string,
+    }).isRequired,
 };
 
 const defaultProps = {
-    fullName: '',
+    title: '',
 };
 
+const mapStateToProps = (state, props) => ({
+    countryDetail: countryDetailSelector(state),
+    state,
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryDetail extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     render() {
-        const { fullName, countryId } = this.props;
+        const { countryDetail } = this.props;
 
         return (
             <div styleName="country-detail">
                 <div styleName="header">
                     <div styleName="header-title">
-                        {fullName}
+                        {countryDetail.title}
                     </div>
                     <div styleName="button-container">
                         <SuccessButton className="save-btn">
@@ -90,31 +103,31 @@ export default class CountryDetail extends React.PureComponent {
                             for="general"
                             styleName="tab"
                         >
-                            <CountryGeneral countryId={countryId} />
+                            <CountryGeneral countryId={countryDetail.title} />
                         </TabContent>
                         <TabContent
                             for="key-figures"
                             styleName="tab"
                         >
-                            <CountryKeyFigures countryId={countryId} />
+                            <CountryKeyFigures countryId={countryDetail.title} />
                         </TabContent>
                         <TabContent
                             for="population-data"
                             styleName="tab"
                         >
-                            <CountryPopulationData countryId={countryId} />
+                            <CountryPopulationData countryId={countryDetail.title} />
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
                             styleName="tab"
                         >
-                            <CountrySeasonalCalendar countryId={countryId} />
+                            <CountrySeasonalCalendar countryId={countryDetail.title} />
                         </TabContent>
                         <TabContent
                             for="media-sources"
                             styleName="tab"
                         >
-                            <CountryMediaSources countryId={countryId} />
+                            <CountryMediaSources countryId={countryDetail.title} />
                         </TabContent>
                     </div>
                 </Tabs>

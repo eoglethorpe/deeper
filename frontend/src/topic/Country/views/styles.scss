@@ -3,27 +3,16 @@
 $height-header: 124px;
 $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
-.loading-countries,
-.country-panel-empty,
-.country-panel-not-found {
+.country-details-alt {
     @include shadow-medium;
     display: flex;
+    flex-basis: 75%;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: $spacing-large;
     background-color: $color-foreground;
     padding: $spacing-large;
     height: $height-full-page;
-
-    .loading {
-        animation: spin 1s linear infinite;
-        font-size: $font-size-super-large;
-    }
-
-    @keyframes spin {
-        100% { transform: rotate(360deg); }
-    }
 
     h1 {
         margin-bottom: $spacing-large;
