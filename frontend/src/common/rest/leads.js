@@ -1,5 +1,6 @@
 import {
     wsEndpoint,
+    GET,
     POST,
     PUT,
     commonHeaderForPost,
@@ -7,7 +8,6 @@ import {
 } from '../config/rest';
 
 // do no use this, use urlForLead instead
-export const urlForLeadCreate = `${wsEndpoint}/leads/`;
 export const urlForLead = `${wsEndpoint}/leads/`;
 export const urlForWebsiteFetch = `${wsEndpoint}/lead-webiste-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
@@ -24,6 +24,11 @@ export const createParamsForLeadEdit = data => ({
     body: JSON.stringify(data),
 });
 
+export const createParamsForGenericGet = () => ({
+    method: GET,
+    headers: commonHeaderForPost,
+});
+
 export const createUrlForLeadsOfProject = params => (
     `${wsEndpoint}/leads/?${p(params)}`
 );
@@ -37,3 +42,11 @@ export const createParamsForWebsiteFetch = url => ({
     headers: commonHeaderForPost,
     body: JSON.stringify({ url }),
 });
+
+export const createUrlForLeadPreview = leadId => (
+    `${wsEndpoint}/lead-previews/${leadId}/`
+);
+
+export const createUrlForLeadExtractionTrigger = leadId => (
+    `${wsEndpoint}/lead-extraction-trigger/${leadId}/`
+);
