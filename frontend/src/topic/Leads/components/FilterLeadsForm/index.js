@@ -77,7 +77,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         ];
 
         this.formElements = [
-            'assigned_to',
+            'assignee',
             'created_at',
             'published_on',
             'confidentiality',
@@ -164,7 +164,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         const {
             confidentiality,
             status,
-            assignedTo,
+            assignee,
         } = leadFilterOptions;
 
         console.log(leadFilterOptions);
@@ -177,13 +177,13 @@ export default class FilterLeadsForm extends React.PureComponent {
                 elements={this.formElements}
             >
                 <SelectInput
-                    formname="assigned_to"
-                    options={assignedTo}
+                    formname="assignee"
+                    options={assignee}
                     placeholder="Assigned to"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    value={formValues.assigned_to}
+                    value={formValues.assignee}
                     multiple
                 />
                 <SelectInput
