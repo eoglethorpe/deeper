@@ -7,6 +7,9 @@ import { Tabs, TabContent } from 'react-tabs-redux';
 
 import { TransparentButton } from '../../../../public/components/Action';
 import {
+    List,
+} from '../../../../public/components/View';
+import {
     FileInput,
     SelectInput,
     TextInput,
@@ -48,11 +51,9 @@ const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
-    leads: PropTypes.Object, // eslint-disable-line
 };
 
 const defaultProps = {
-    leads: [],
 };
 
 // TODO: move this function to common
@@ -656,26 +657,24 @@ export default class AddLead extends React.PureComponent {
                                 onChange={this.handleLeadStatusFilterChange}
                             />
                         </div>
-                        <div styleName="list">
-                            {
-                                this.state.leads.map(lead => (
-                                    lead.show ? (
-                                        <AddLeadListItem
-                                            active={this.state.activeLeadId === lead.id}
-                                            key={lead.id}
-                                            onClick={() => this.leadsClickHandler(lead.id)}
-                                            stale={lead.form.stale}
-                                            error={lead.form.error}
-                                            title={lead.formData.title}
-                                            type={lead.type}
-                                            upload={lead.upload}
-                                        />
-                                    ) : (
-                                        null
-                                    )
-                                ))
-                            }
-                        </div>
+                        <List
+                            styleName="list"
+                            data={this.state.leads}
+                            keyExtractor={lead => lead.id}
+                            modifier={lead => (
+                                lead.show ? (
+                                    <AddLeadListItem
+                                        active={this.state.activeLeadId === lead.id}
+                                        onClick={() => this.leadsClickHandler(lead.id)}
+                                        stale={lead.form.stale}
+                                        error={lead.form.error}
+                                        title={lead.formData.title}
+                                        type={lead.type}
+                                        upload={lead.upload}
+                                    />
+                                ) : null
+                            )}
+                        />
                         <div styleName="add-lead-container">
                             <h3 styleName="heading">
                                 Add new lead from:
