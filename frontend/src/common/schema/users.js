@@ -9,7 +9,7 @@ const userSchema = [];
         },
         fields: {
             displayName: { type: 'string', required: true },
-            displayPicture: { type: 'string' }, // url
+            displayPicture: { type: 'uint' }, // id
             email: { type: 'email', required: true },
             firstName: { type: 'string', required: true },
             id: { type: 'uint', required: true },

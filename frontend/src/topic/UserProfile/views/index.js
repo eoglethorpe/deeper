@@ -10,12 +10,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    Form,
-    TextInput,
-    requiredCondition,
-} from '../../../public/components/Input';
-import {
-    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
@@ -25,19 +19,24 @@ import {
     ModalHeader,
     Table,
 } from '../../../public/components/View';
+
+import {
+    UserEdit,
+} from '../components/';
+
 import { RestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
 import { pageTitles } from '../../../common/utils/labels';
 import {
-    createUrlForUser,
-    createParamsForUser,
-    createUrlForUserPatch,
-    createParamsForUserPatch,
-    createUrlForUserGroupsOfUser,
-    createParamsForUserGroups,
-    createUrlForProjectsOfUser,
     createParamsForProjects,
+    createParamsForUser,
+    createParamsForUserGroups,
+    createParamsForUserPatch,
+    createUrlForProjectsOfUser,
+    createUrlForUser,
+    createUrlForUserGroupsOfUser,
+    createUrlForUserPatch,
 } from '../../../common/rest';
 import {
     tokenSelector,
@@ -107,24 +106,8 @@ export default class UserProfile extends React.PureComponent {
 
         this.state = {
             editProfile: false,
-
-            formErrors: [],
-            formFieldErrors: {},
-            formValues: {},
-            pending: false,
-            stale: false,
         };
 
-        this.elements = [
-            'firstName',
-            'lastName',
-            'organization',
-        ];
-        this.validations = {
-            firstName: [requiredCondition],
-            lastName: [requiredCondition],
-            organization: [requiredCondition],
-        };
 
         this.projectHeaders = [
             {
@@ -221,7 +204,6 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillMount() {
-        // console.log('Mounting UserProfile');
         this.props.setNavbarState({
             visible: true,
             activeLink: undefined,
@@ -269,7 +251,6 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        // console.log('Unmounting UserProfile');
         this.userRequest.stop();
         this.projectsRequest.stop();
         this.userGroupsRequest.stop();
@@ -373,14 +354,16 @@ export default class UserProfile extends React.PureComponent {
         return projectsRequest;
     }
 
-    createRequestForUserPatch = (userId, { firstName, lastName, organization }) => {
+    createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
         const urlForUser = createUrlForUserPatch(userId);
         const userPatchRequest = new RestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForUserPatch({ access }, { firstName, lastName, organization });
+                return createParamsForUserPatch(
+                    { access },
+                    { firstName, lastName, organization, displayPicture });
             })
             .decay(0.3)
             .maxRetryTime(3000)
@@ -452,6 +435,7 @@ export default class UserProfile extends React.PureComponent {
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
         }
+
         // Create new patch request and start it
         const { match } = this.props;
         const userId = match.params.userId;
@@ -480,15 +464,9 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
-        // console.log('Rendering UserProfile');
-        const { userInformation } = this.props;
-        const {
-            formValues,
-            formErrors = [],
-            formFieldErrors,
-            pending,
-            stale,
-        } = this.state;
+        const { userInformation, match } = this.props;
+
+        const { userId } = match.params;
 
         return (
             <div styleName="user-profile">
@@ -511,81 +489,11 @@ export default class UserProfile extends React.PureComponent {
                     >
                         <ModalHeader title="Edit profile" />
                         <ModalBody>
-                            <Form
-                                styleName="user-profile-edit-form"
-                                changeCallback={this.changeCallback}
-                                elements={this.elements}
-                                failureCallback={this.failureCallback}
-                                successCallback={this.successCallback}
-                                validation={this.validation}
-                                validations={this.validations}
-                            >
-                                {
-                                    pending &&
-                                    <div styleName="pending-overlay">
-                                        <i
-                                            className="ion-load-c"
-                                            styleName="loading-icon"
-                                        />
-                                    </div>
-                                }
-                                <div styleName="non-field-errors">
-                                    {
-                                        formErrors.map(err => (
-                                            <div
-                                                key={err}
-                                                styleName="error"
-                                            >
-                                                {err}
-                                            </div>
-                                        ))
-                                    }
-                                    { formErrors.length <= 0 &&
-                                        <div styleName="error empty">
-                                            -
-                                        </div>
-                                    }
-                                </div>
-                                {/*
-                                <ImageInput
-                                    showPreview
-                                    styleName="display-picture"
-                                />
-                                */}
-                                <TextInput
-                                    label="First name"
-                                    formname="firstName"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.firstName}
-                                    error={formFieldErrors.firstName}
-                                />
-                                <TextInput
-                                    label="Last name"
-                                    formname="lastName"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.lastName}
-                                    error={formFieldErrors.lastName}
-                                />
-                                <TextInput
-                                    label="Organization"
-                                    formname="organization"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.organization}
-                                    error={formFieldErrors.organization}
-                                />
-                                <div styleName="action-buttons">
-                                    <DangerButton
-                                        onClick={this.handleFormCancel}
-                                        disabled={pending}
-                                    >
-                                        Cancel
-                                    </DangerButton>
-                                    <PrimaryButton disabled={pending || !stale} >
-                                        Save changes
-                                    </PrimaryButton>
-                                </div>
-                            </Form>
-
+                            <UserEdit
+                                userId={userId}
+                                userInformation={userInformation}
+                                handleModalClose={this.handleEditProfileClose}
+                            />
                         </ModalBody>
                     </Modal>
                 </header>
