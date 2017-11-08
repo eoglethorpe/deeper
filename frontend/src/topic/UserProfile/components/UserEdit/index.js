@@ -13,7 +13,7 @@ import {
     Form,
     ImageInput,
     TextInput,
-    // HiddenInput,
+    HiddenInput,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -90,6 +90,19 @@ export default class UserEdit extends React.PureComponent {
             organization: [requiredCondition],
             displayPicture: [],
         };
+    }
+
+    componentWillMount() {
+        console.warn('Mounting UserEdit');
+    }
+
+    componentWillUnmount() {
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+        if (this.uploader) {
+            this.uploader.abort();
+        }
     }
 
     createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
@@ -169,13 +182,14 @@ export default class UserEdit extends React.PureComponent {
     };
 
     successCallback = (values) => {
+        console.log(values);
         // Stop old patch request
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
         }
 
-        // Create new patch request and start it
         const userId = this.props.userId;
+        // Create new patch request and start it
         this.userPatchRequest = this.createRequestForUserPatch(userId, values);
         this.userPatchRequest.start();
     };
@@ -199,15 +213,17 @@ export default class UserEdit extends React.PureComponent {
             this.setState({
                 formValues: { ...this.state.formValues, displayPicture: r.id },
                 stale: true,
-            });
+            }, () => console.log(this.state));
         };
 
         uploader.onProgress = (progress) => {
             // TODO: Add progress component
             console.warn(`Upload Progress: ${progress}`);
         };
+        this.uploader = uploader;
 
-        uploader.start();
+
+        this.uploader.start();
     }
 
     render() {
@@ -270,10 +286,7 @@ export default class UserEdit extends React.PureComponent {
                     value={formValues.firstName}
                     error={formFieldErrors.firstName}
                 />
-                {/*
-                    TODO: use HiddenInput after it is fixed
-                */}
-                <TextInput
+                <HiddenInput
                     formname="displayPicture"
                     value={formValues.displayPicture}
                     error={formFieldErrors.displayPicture}
