@@ -98,9 +98,6 @@ export default class FilterLeadsForm extends React.PureComponent {
         // eslint-disable-next-line
         this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(activeProject);
         this.leadFilterOptionsRequest.start();
-        this.setState({
-            loadingLeadFilters: true,
-        });
     }
 
     createRequestForProjectLeadFilterOptions = (activeProject) => {
@@ -115,6 +112,12 @@ export default class FilterLeadsForm extends React.PureComponent {
                     access,
                 });
             })
+            .preload(() => {
+                this.setState({ loadingLeadFilters: true });
+            })
+            .postLoad(() => {
+                this.setState({ loadingLeadFilters: false });
+            })
             .success((response) => {
                 try {
                     // TODO:
@@ -126,9 +129,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-                this.setState({
-                    loadingLeadFilters: false,
-                });
             })
             .retryTime(1000)
             .build();

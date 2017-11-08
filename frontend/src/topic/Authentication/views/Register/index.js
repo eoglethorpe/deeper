@@ -119,8 +119,6 @@ export default class Login extends React.PureComponent {
     // REGISTER ACTION
 
     register = (data) => {
-        this.setState({ pending: true, stale: false });
-
         // Stop previous retry
         if (this.userCreateRequest) {
             this.userCreateRequest.stop();
@@ -147,12 +145,15 @@ export default class Login extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
+            .preload(() => {
+                this.setState({ pending: true, stale: false });
+            })
+            .postload(() => {
+                this.setState({ pending: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'userCreateResponse');
-                    this.setState({
-                        pending: false,
-                    });
                     // go to login
                     browserHistory.push('/login/');
                 } catch (er) {
@@ -174,12 +175,10 @@ export default class Login extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors: nonFieldErrors,
-                    pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                this.setState({ pending: false });
             })
             .build();
         return userCreateRequest;

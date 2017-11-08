@@ -181,8 +181,6 @@ export default class Login extends React.PureComponent {
     // LOGIN ACTION
 
     login = ({ url, params }) => {
-        this.setState({ pending: true, stale: false });
-
         // Stop any retry action
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
@@ -201,6 +199,12 @@ export default class Login extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
+            .preLoad(() => {
+                this.setState({ pending: true, stale: false });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenGetResponse');
@@ -237,12 +241,10 @@ export default class Login extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors: nonFieldErrors,
-                    pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                this.setState({ pending: false });
             })
             .build();
         return userLoginRequest;
