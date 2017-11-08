@@ -3,21 +3,122 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from './styles.scss';
+import {
+    Form,
+    TextInput,
+} from '../../../../public/components/Input';
+import {
+    DangerButton,
+    PrimaryButton,
+} from '../../../../public/components/Action';
 
 const propTypes = {
-    countryId: PropTypes.number.isRequired,
+    onSubmit: PropTypes.func.isRequired, //eslint-disable-line
+    pending: PropTypes.bool.isRequired, //eslint-disable-line
+    onCancel: PropTypes.func.isRequired, //eslint-disable-line
 };
 
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
     static propTypes = propTypes;
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            stale: false,
+            pending: false,
+        };
+        this.elements = [
+            'population',
+            'population-source',
+
+        ];
+    }
+    // FORM RELATED
+
+    onSubmit = () => {
+        this.form.onSubmit();
+    }
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.onSubmit();
+        return false;
+    }
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (values) => {
+        this.setState({ pending: true });
+        console.log(values);
+    };
+
+    handleFormCancel = (e) => {
+        e.preventDefault();
+        this.props.onCancel();
+    };
     render() {
-        const { countryId } = this.props;
+        const {
+            stale,
+            pending,
+        } = this.state;
         return (
-            <div>
-                Population data {countryId}
-            </div>
+            <Form
+                styleName="country-population"
+                changeCallback={this.changeCallback}
+                elements={this.elements}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+            >
+                {
+                    pending &&
+                    <div styleName="pending-overlay">
+                        <i
+                            className="ion-load-c"
+                            styleName="loading-icon"
+                        />
+                    </div>
+                }
+                <div styleName="action-buttons">
+                    <DangerButton
+                        onClick={this.handleFormCancel}
+                        disabled={pending}
+                    >
+                        Cancel
+                    </DangerButton>
+                    <PrimaryButton disabled={pending || !stale} >
+                        Save changes
+                    </PrimaryButton>
+                </div>
+                <div styleName="population-container">
+                    <TextInput
+                        label="Total Population of Country"
+                        styleName="population"
+                        placeholder="Total Population"
+                        formname="population"
+                    />
+                    <TextInput
+                        label="Source"
+                        styleName="source"
+                        formname="source"
+                        placeholder="Enter Source"
+                    />
+                </div>
+            </Form>
         );
     }
 }
