@@ -82,6 +82,8 @@ const defaultProps = {
     userProjects: {},
 };
 
+const getValidLinkOrEmpty = value => (value ? `${value}/` : '');
+
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -89,17 +91,106 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    componentWillMount() {
+        const {
+            activeCountry,
+            activeProject,
+            activeUser,
+        } = this.props;
+        const navbarItems = this.createNavbarItems(activeProject);
+        const dropdownItems = this.createDropdownItems(
+            activeProject,
+            activeUser,
+            activeCountry,
+        );
+        this.setState({ navbarItems, dropdownItems });
+    }
+
+    componentWillReceiveProps() {
+        const {
+            activeCountry,
+            activeProject,
+            activeUser,
+        } = this.props;
+        const navbarItems = this.createNavbarItems(activeProject);
+        const dropdownItems = this.createDropdownItems(
+            activeProject,
+            activeUser,
+            activeCountry,
+        );
+        this.setState({ navbarItems, dropdownItems });
+    }
+
     onSelectChangeHandler = (key) => {
         this.props.setActiveProject({ activeProject: key });
     }
-
-    labelSelectorForSelectInput = (option = {}) => (option.id)
-    keySelectorForSelectInput = (option = {}) => (option.title)
 
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
         this.props.logout();
     }
+
+    labelSelectorForSelectInput = (option = {}) => (option.id)
+
+    keySelectorForSelectInput = (option = {}) => (option.title)
+
+    createNavbarItems = activeProject => [
+        {
+            linkTo: `/${activeProject}/leads/`,
+            name: pageTitles.leads,
+            needsProject: true,
+        },
+        {
+            linkTo: `/${activeProject}/entries/`,
+            name: pageTitles.entries,
+            needsProject: true,
+        },
+        {
+            linkTo: `/${activeProject}/ary/`,
+            name: pageTitles.ary,
+            needsProject: true,
+        },
+        {
+            linkTo: '/weekly-snapshot/',
+            name: pageTitles.weeklySnapshot,
+            needsProject: true,
+        },
+        {
+            linkTo: `/${activeProject}/export/`,
+            name: pageTitles.export,
+            needsProject: true,
+        },
+    ]
+
+    createDropdownItems = (activeProject, activeUser, activeCountry) => [
+        {
+            key: 'first-group',
+            label: undefined,
+            items: [
+                {
+                    linkTo: `/users/${activeUser.userId}/`,
+                    name: pageTitles.userProfile,
+                    iconName: 'ion-android-person',
+                },
+                {
+                    linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
+                    name: pageTitles.countryPanel,
+                    iconName: 'ion-android-globe',
+                },
+                {
+                    linkTo: `/${activeProject}/projectpanel/`,
+                    name: pageTitles.projectPanel,
+                    iconName: 'ion-wrench',
+                    needsProject: true,
+                },
+                {
+                    linkTo: '/admin/',
+                    name: pageTitles.adminPanel,
+                    iconName: 'ion-locked',
+                },
+            ],
+        },
+    ]
 
     calcNavbarKey = item => item.name
 
@@ -178,80 +269,20 @@ export default class Navbar extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering Navbar');
         const {
-            activeCountry,
             activeProject,
             activeUser,
             navbarVisible,
         } = this.props;
-
-        console.log('Rendering Navbar');
+        const {
+            navbarItems,
+            dropdownItems,
+        } = this.state;
 
         if (!navbarVisible) {
             return null;
         }
-
-        const navBarItems = [
-            {
-                linkTo: `/${activeProject}/leads/`,
-                name: pageTitles.leads,
-                needsProject: true,
-            },
-            {
-                linkTo: `/${activeProject}/entries/`,
-                name: pageTitles.entries,
-                needsProject: true,
-            },
-            {
-                linkTo: `/${activeProject}/ary/`,
-                name: pageTitles.ary,
-                needsProject: true,
-            },
-            {
-                linkTo: '/weekly-snapshot/',
-                name: pageTitles.weeklySnapshot,
-                needsProject: true,
-            },
-            {
-                linkTo: `/${activeProject}/export/`,
-                name: pageTitles.export,
-                needsProject: true,
-            },
-        ];
-
-        const getValidLinkOrEmpty = value => (
-            value ? `${value}/` : ''
-        );
-
-        const dropdownItems = [
-            {
-                key: 'first-group',
-                label: undefined,
-                items: [
-                    {
-                        linkTo: `/users/${activeUser.userId}/`,
-                        name: pageTitles.userProfile,
-                        iconName: 'ion-android-person',
-                    },
-                    {
-                        linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
-                        name: pageTitles.countryPanel,
-                        iconName: 'ion-android-globe',
-                    },
-                    {
-                        linkTo: `/${activeProject}/projectpanel/`,
-                        name: pageTitles.projectPanel,
-                        iconName: 'ion-wrench',
-                        needsProject: true,
-                    },
-                    {
-                        linkTo: '/admin/',
-                        name: pageTitles.adminPanel,
-                        iconName: 'ion-locked',
-                    },
-                ],
-            },
-        ];
 
         return (
             <div styleName="navbar">
@@ -277,7 +308,7 @@ export default class Navbar extends React.PureComponent {
                     onChange={this.onSelectChangeHandler}
                 />
                 <ListView
-                    data={navBarItems}
+                    data={navbarItems}
                     styleName="menu-items"
                     keyExtractor={this.calcNavbarKey}
                     modifier={this.renderNavbarItem}
