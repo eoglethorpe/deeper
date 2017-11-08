@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
+import { List, ListView } from '../../../public/components/View';
 import {
     DropdownMenu,
     DropdownGroup,
@@ -100,16 +101,28 @@ export default class Navbar extends React.PureComponent {
         this.props.logout();
     }
 
-    // TODO: AdityaKhatri: Why Link here?
-    renderNavbarItem = (item) => {
-        const { navbarActiveLink, navbarValidLinks } = this.props;
-        if (navbarValidLinks.indexOf(item.name) === -1) {
+    calcNavbarKey = item => item.name
+
+    calcDropdownGroupKey = group => group.key
+
+    calcDropdownItemKey = item => item.name
+
+    renderNavbarItem = (key, item) => {
+        const {
+            navbarActiveLink,
+            navbarValidLinks,
+            userProjects,
+        } = this.props;
+        if (navbarValidLinks.indexOf(item.name) <= -1) {
+            return null;
+        }
+        if (item.needsProject && userProjects.length <= 0) {
             return null;
         }
         return (
             <Link
-                key={item.name}
-                styleName={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
+                className={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
+                key={key}
                 to={item.linkTo}
             >
                 {item.name}
@@ -117,35 +130,52 @@ export default class Navbar extends React.PureComponent {
         );
     }
 
-    // TODO: AdityaKhatri: Why LinkOusideRouter here?
-    renderDropdownItem = (item) => {
-        const { navbarValidLinks } = this.props;
+    renderDropdownGroup = (key, group) => (
+        <DropdownGroup key={key} >
+            {
+                group.label &&
+                <DropdownGroupTitle title={group.label} />
+            }
+            <List
+                data={group.items}
+                keyExtractor={this.calcDropdownItemKey}
+                modifier={this.renderDropdownItem}
+            />
+        </DropdownGroup>
+    )
+
+    renderDropdownItem = (key, item) => {
+        const {
+            navbarValidLinks,
+            userProjects,
+        } = this.props;
         if (navbarValidLinks.indexOf(item.name) === -1) {
+            return null;
+        }
+        if (item.needsProject && userProjects.length <= 0) {
             return null;
         }
 
         return (
             <LinkOutsideRouter
-                key={item.name}
-                styleName="dropdown-item"
+                key={key}
+                className={styles['dropdown-item']}
                 to={item.linkTo}
             >
                 {
                     item.iconName &&
                     <span
-                        className={item.iconName}
-                        styleName="icon"
+                        className={`${item.iconName} ${styles.icon}`}
                     />
                 }
                 {
                     (!item.iconName) &&
-                    <span styleName="icon" />
+                    <span className={styles.icon} />
                 }
                 {item.name}
             </LinkOutsideRouter>
         );
     }
-
 
     render() {
         const {
@@ -165,27 +195,27 @@ export default class Navbar extends React.PureComponent {
             {
                 linkTo: `/${activeProject}/leads/`,
                 name: pageTitles.leads,
-                private: true,
+                needsProject: true,
             },
             {
                 linkTo: `/${activeProject}/entries/`,
                 name: pageTitles.entries,
-                private: true,
+                needsProject: true,
             },
             {
                 linkTo: `/${activeProject}/ary/`,
                 name: pageTitles.ary,
-                private: true,
+                needsProject: true,
             },
             {
                 linkTo: '/weekly-snapshot/',
                 name: pageTitles.weeklySnapshot,
-                private: true,
+                needsProject: true,
             },
             {
                 linkTo: `/${activeProject}/export/`,
                 name: pageTitles.export,
-                private: true,
+                needsProject: true,
             },
         ];
 
@@ -212,6 +242,7 @@ export default class Navbar extends React.PureComponent {
                         linkTo: `/${activeProject}/projectpanel/`,
                         name: pageTitles.projectPanel,
                         iconName: 'ion-wrench',
+                        needsProject: true,
                     },
                     {
                         linkTo: '/admin/',
@@ -222,91 +253,46 @@ export default class Navbar extends React.PureComponent {
             },
         ];
 
-        if (this.props.userProjects.length > 0) {
-            return (
-                <div styleName="navbar">
-                    <Link
-                        to="/"
-                        styleName="brand"
-                    >
-                        <img
-                            styleName="icon"
-                            src={logo}
-                            alt="DEEP"
-                            draggable="false"
-                        />
-                        <span styleName="title">Deep</span>
-                    </Link>
-                    <SelectInput
-                        styleName="project-select-input"
-                        placeholder="Select Event"
-                        keySelector={this.labelSelectorForSelectInput}
-                        labelSelector={this.keySelectorForSelectInput}
-                        options={this.props.userProjects}
-                        value={activeProject}
-                        onChange={this.onSelectChangeHandler}
-                    />
-
-                    <div styleName="menu-items">
-                        { navBarItems.map(this.renderNavbarItem) }
-                    </div>
-                    <DropdownMenu
-                        styleName="dropdown-menu"
-                        className="dropdown-title"
-                        iconLeft="ion-android-person"
-                        title={activeUser.displayName}
-                    >
-                        {
-                            dropdownItems.map(group => (
-                                <DropdownGroup key={group.key} >
-                                    {
-                                        group.label &&
-                                            <DropdownGroupTitle title={group.label} />
-                                    }
-                                    { group.items.map(this.renderDropdownItem) }
-                                </DropdownGroup>
-                            ))
-                        }
-                        <button
-                            styleName="dropdown-item"
-                            onClick={this.handleLogoutButtonClick}
-                        >
-                            <span
-                                className="ion-log-out"
-                                styleName="icon"
-                            />
-                            Logout
-                        </button>
-                    </DropdownMenu>
-                </div>
-            );
-        }
         return (
             <div styleName="navbar">
                 <Link
                     to="/"
                     styleName="brand"
                 >
-                    <img styleName="icon" src={logo} alt="DEEP" />
+                    <img
+                        styleName="icon"
+                        src={logo}
+                        alt="DEEP"
+                        draggable="false"
+                    />
                     <span styleName="title">Deep</span>
                 </Link>
+                <SelectInput
+                    styleName="project-select-input"
+                    placeholder="Select Event"
+                    keySelector={this.labelSelectorForSelectInput}
+                    labelSelector={this.keySelectorForSelectInput}
+                    options={this.props.userProjects}
+                    value={activeProject}
+                    onChange={this.onSelectChangeHandler}
+                />
+                <ListView
+                    data={navBarItems}
+                    styleName="menu-items"
+                    keyExtractor={this.calcNavbarKey}
+                    modifier={this.renderNavbarItem}
+                />
                 <DropdownMenu
                     styleName="dropdown-menu"
                     className="dropdown-title"
                     iconLeft="ion-android-person"
                     title={activeUser.displayName}
                 >
-                    {
-                        dropdownItems.map(group => (
-                            <DropdownGroup key={group.key} >
-                                {
-                                    group.label &&
-                                        <DropdownGroupTitle title={group.label} />
-                                }
-                                { group.items.map(this.renderDropdownItem) }
-                            </DropdownGroup>
-                        ))
-                    }
+                    <List
+                        data={dropdownItems}
+                        keyExtractor={this.calcDropdownGroupKey}
+                        modifier={this.renderDropdownGroup}
+                    />
                     <button
                         styleName="dropdown-item"
                         onClick={this.handleLogoutButtonClick}

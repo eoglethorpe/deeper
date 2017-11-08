@@ -7,7 +7,7 @@ import { Tabs, TabContent } from 'react-tabs-redux';
 
 import { TransparentButton } from '../../../../public/components/Action';
 import {
-    List,
+    ListView,
 } from '../../../../public/components/View';
 import {
     FileInput,
@@ -136,9 +136,8 @@ export default class AddLead extends React.PureComponent {
         leadStatusFilterValue: [],
     })
 
+    // eslint-disable-next-line no-unused-vars
     applyFilters = (leads, search, type, source, status) => {
-        console.log(status);
-
         const newLeads = leads.map((lead) => {
             const newLead = {
                 ...lead,
@@ -177,8 +176,8 @@ export default class AddLead extends React.PureComponent {
         );
     }
 
-
     leadsClickHandler = (id) => {
+        console.log('what');
         this.setState({ activeLeadId: id });
     }
 
@@ -608,6 +607,23 @@ export default class AddLead extends React.PureComponent {
         });
     }
 
+    calcLeadKey = lead => lead.id
+
+    renderLeadItem = (key, lead) => (
+        lead.show ? (
+            <AddLeadListItem
+                key={key}
+                active={this.state.activeLeadId === lead.id}
+                onClick={() => this.leadsClickHandler(lead.id)}
+                stale={lead.form.stale}
+                error={lead.form.error}
+                title={lead.formData.title}
+                type={lead.type}
+                upload={lead.upload}
+            />
+        ) : null
+    )
+
     render() {
         return (
             <div styleName="add-lead">
@@ -657,23 +673,11 @@ export default class AddLead extends React.PureComponent {
                                 onChange={this.handleLeadStatusFilterChange}
                             />
                         </div>
-                        <List
+                        <ListView
                             styleName="list"
                             data={this.state.leads}
-                            keyExtractor={lead => lead.id}
-                            modifier={lead => (
-                                lead.show ? (
-                                    <AddLeadListItem
-                                        active={this.state.activeLeadId === lead.id}
-                                        onClick={() => this.leadsClickHandler(lead.id)}
-                                        stale={lead.form.stale}
-                                        error={lead.form.error}
-                                        title={lead.formData.title}
-                                        type={lead.type}
-                                        upload={lead.upload}
-                                    />
-                                ) : null
-                            )}
+                            keyExtractor={this.calcLeadKey}
+                            modifier={this.renderLeadItem}
                         />
                         <div styleName="add-lead-container">
                             <h3 styleName="heading">

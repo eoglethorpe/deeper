@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {
+    List,
+    ListView,
+} from '../../../public/components/View';
 import { RestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
 
@@ -121,36 +125,41 @@ export default class ApiDocs extends React.PureComponent {
         }
     };
 
-    renderDocs = (docs) => {
-        if (!docs.apis) {
-            return (
-                <p styleName="message">
-                    You have got a problem. See a therapy?
-                </p>
-            );
-        }
-        return (
-            <div styleName="docs">
-                <h1>{docs.title}</h1>
-                {docs.apis.map(api => (
-                    <div
-                        key={api.title}
-                        styleName="api"
-                    >
-                        <h2>api-{api.title}</h2>
-                        {api.endpoints.map(endpoint => this.renderEndpoint(endpoint))}
-                    </div>
-                ))}
-            </div>
-        );
-    }
+    calcApiKey = api => api.title
+    calcEndpointKey = method => method.title
+    calcMethodKey = method => method.title
 
-    renderEndpoint = endpoint => (
+    renderDocs = docs => (
+        <div styleName="docs">
+            <h1>{docs.title}</h1>
+            <List
+                data={docs.api}
+                keyExtractor={this.calcApiKey}
+                modifier={this.renderApi}
+            />
+        </div>
+    )
+
+    renderApi = (key, api) => (
         <div
-            key={endpoint.title}
-            styleName={`
-                endpoint
-                ${this.state.expanded.indexOf(endpoint.title) === -1 ? '' : 'expanded'}
+            key={key}
+            className={styles.api}
+        >
+            <h2>api-{api.title}</h2>
+            <List
+                data={api.endpoints}
+                keyExtractor={this.calcEndpointKey}
+                modifier={this.renderEndpoint}
+            />
+        </div>
+    )
+
+    renderEndpoint = (key, endpoint) => (
+        <div
+            key={key}
+            className={`
+                ${styles.endpoint}
+                ${this.state.expanded.indexOf(endpoint.title) === -1 ? '' : styles.expanded}
             `}
         >
             <h3>
@@ -158,31 +167,41 @@ export default class ApiDocs extends React.PureComponent {
                     {endpoint.title}
                 </button>
             </h3>
-            <div styleName="methods-container">
-                {endpoint.methods.map(method => this.renderMethod(endpoint, method))}
-            </div>
+            <ListView
+                className={styles['methods-container']}
+                data={endpoint.methods}
+                modifier={this.renderMethod}
+                keyExtractor={this.calcMethodKey}
+            />
         </div>
     )
 
-    renderMethod = (endpoint, method) => (
+    renderMethod = (key, method) => (
         <div
-            key={`${endpoint.title}${method.title}`}
-            styleName="method"
+            key={key}
+            className={styles.method}
         >
-            <h4>{this.mapMethod(method.title)}</h4>
-
-            <p styleName="path">{method.path}</p>
+            <h4>
+                {this.mapMethod(method.title)}
+            </h4>
+            <p className={styles.path}>
+                {method.path}
+            </p>
 
             {!isObjectEmpty(method.requestSchema) && (
-                <div styleName="schema">
-                    <h5>Request Schema</h5>
+                <div className={styles.schema}>
+                    <h5>
+                        Request Schema
+                    </h5>
                     {this.renderSchema(method.requestSchema)}
                 </div>
             )}
 
             {!isObjectEmpty(method.responseSchema) && (
-                <div styleName="schema">
-                    <h5>Response Schema</h5>
+                <div className={styles.schema}>
+                    <h5>
+                        Response Schema
+                    </h5>
                     {this.renderSchema(method.responseSchema)}
                 </div>
             )}

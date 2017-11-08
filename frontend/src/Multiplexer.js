@@ -8,6 +8,7 @@ import {
     ExclusivelyPublicRoute,
     PrivateRoute,
 } from './public/components/General';
+
 import Navbar from './common/components/Navbar';
 import ProjectRouteSynchronizer from './common/components/ProjectRouteSynchronizer';
 import { pageTitles } from './common/utils/labels';
@@ -219,12 +220,14 @@ export default class Multiplexer extends React.PureComponent {
     }
 
     renderRoute = (page) => {
+        // path is not defined for 404 page
+        const key = page.path || '404';
         if (page.private) {
             return (
                 <PrivateRoute
                     component={page.component}
                     exact
-                    key={page.name}
+                    key={key}
                     path={page.path}
                     authenticated={this.props.authenticated}
                     redirectLink={page.redirectLink}
@@ -235,7 +238,7 @@ export default class Multiplexer extends React.PureComponent {
                 <ExclusivelyPublicRoute
                     component={page.component}
                     exact
-                    key={page.name}
+                    key={key}
                     path={page.path}
                     authenticated={this.props.authenticated}
                     redirectLink={page.redirectLink}
@@ -246,7 +249,7 @@ export default class Multiplexer extends React.PureComponent {
             <Route
                 component={page.component}
                 exact
-                key={page.name}
+                key={key}
                 path={page.path}
             />
         );
@@ -255,6 +258,7 @@ export default class Multiplexer extends React.PureComponent {
     render() {
         console.log('Rendering Multiplexer');
 
+        // NOTE: List component cannot be used here instead of map
         return ([
             <NavbarWithProps key="navbar" />,
             <Switch key="switch">
