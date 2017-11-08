@@ -490,7 +490,7 @@ export default class AddLead extends React.PureComponent {
                 console.info('FAILURE:', response);
                 const { errors } = response;
                 const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
+                // const { nonFieldErrors } = errors;
 
                 Object.keys(errors).forEach((key) => {
                     if (key !== 'nonFieldErrors') {
@@ -498,15 +498,17 @@ export default class AddLead extends React.PureComponent {
                     }
                 });
 
+                /*
                 this.setState({
                     formFieldErrors,
                     formErrors: nonFieldErrors,
                     pending: false,
                 });
+                */
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                this.setState({ pending: false });
+                // this.setState({ pending: false });
             })
             .build();
         return leadCreateRequest;

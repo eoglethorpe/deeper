@@ -37,6 +37,7 @@ export default class ApiDocs extends React.PureComponent {
         this.state = {
             docs: {},
             expanded: [],
+            pending: true,
         };
     }
 
@@ -46,6 +47,7 @@ export default class ApiDocs extends React.PureComponent {
             validLinks: undefined,
             visible: false,
         });
+
         this.fetchApiDocs(urlForApiDocs);
     }
 
@@ -60,24 +62,23 @@ export default class ApiDocs extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
             .success((response) => {
-                this.setState({
-                    successfullyFetched: true,
-                    docs: this.preprocessDocs(response),
-                    pending: false,
-                });
+                this.setState({ docs: this.preprocessDocs(response) });
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
-
-                this.setState({
-                    successfullyFetched: false,
-                    pending: false,
-                });
+                console.error('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.error('FATAL:', response);
             })
             .build();
 
-        this.setState({ pending: true });
         this.apiDocsRequest.start();
     }
 
@@ -120,20 +121,29 @@ export default class ApiDocs extends React.PureComponent {
         }
     };
 
-    renderDocs = docs => (
-        <div styleName="docs">
-            <h1>{docs.title}</h1>
-            {docs.apis.map(api => (
-                <div
-                    key={api.title}
-                    styleName="api"
-                >
-                    <h2>api-{api.title}</h2>
-                    {api.endpoints.map(endpoint => this.renderEndpoint(endpoint))}
-                </div>
-            ))}
-        </div>
-    )
+    renderDocs = (docs) => {
+        if (!docs.apis) {
+            return (
+                <p styleName="message">
+                    You have got a problem. See a therapy?
+                </p>
+            );
+        }
+        return (
+            <div styleName="docs">
+                <h1>{docs.title}</h1>
+                {docs.apis.map(api => (
+                    <div
+                        key={api.title}
+                        styleName="api"
+                    >
+                        <h2>api-{api.title}</h2>
+                        {api.endpoints.map(endpoint => this.renderEndpoint(endpoint))}
+                    </div>
+                ))}
+            </div>
+        );
+    }
 
     renderEndpoint = endpoint => (
         <div
@@ -186,21 +196,19 @@ export default class ApiDocs extends React.PureComponent {
     )
 
     render() {
+        const {
+            pending,
+            docs,
+        } = this.state;
         let content;
-        if (this.state.pending) {
+        if (pending) {
             content = (
                 <p styleName="message">
                     Loading ...
                 </p>
             );
-        } else if (this.state.successfullyFetched) {
-            content = this.renderDocs(this.state.docs);
         } else {
-            content = (
-                <p styleName="message">
-                    You have got a problem. See a therapy?
-                </p>
-            );
+            content = this.renderDocs(docs);
         }
 
         return (

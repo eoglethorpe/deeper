@@ -4,27 +4,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import Multiplexer from './Multiplexer';
-import schema from './common/schema';
-import styles from './styles.scss';
 import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
+
+import schema from './common/schema';
 import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
 } from './common/rest';
-import {
-    startTokenRefreshAction,
-} from './common/middlewares/refreshAccessToken';
+import { startTokenRefreshAction } from './common/middlewares/refreshAccessToken';
 import {
     setAccessTokenAction,
-} from './common/action-creators/auth';
-import {
+
     tokenSelector,
-} from './common/selectors/auth';
-import {
     currentUserProjectsSelector,
-} from './common/selectors/domainData';
+} from './common/redux';
+
+import Multiplexer from './Multiplexer';
+import styles from './styles.scss';
 
 const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
@@ -79,7 +76,7 @@ export default class App extends React.PureComponent {
         // If there is no refresh token, no need to get a new access token
         const { refresh: refreshToken } = this.props.token;
         if (!refreshToken) {
-            console.warn('There is no previous session');
+            console.info('There is no previous session');
             this.setState({ pending: false });
             return;
         }
@@ -112,14 +109,16 @@ export default class App extends React.PureComponent {
                     const { access } = response;
                     this.props.setAccessToken(access);
 
-                    // after setAccessToken, current user is verified
+                    // NOTE: after setAccessToken, current user is verified
+                    // If there is no projects, block the user until it is retrieved
                     if (this.props.currentUserProjects.length <= 0) {
-                        console.warn('No projects in cache');
-                        // if there is no projects, block and get from api
+                        console.info('No projects in cache');
+                        // set pending to false after api call is complete
                         this.props.startTokenRefresh(() => {
                             this.setState({ pending: false });
                         });
                     } else {
+                        // set pending to false irrespective of api call
                         this.props.startTokenRefresh();
                         this.setState({ pending: false });
                     }

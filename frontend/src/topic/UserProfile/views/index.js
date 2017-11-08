@@ -369,17 +369,10 @@ export default class UserProfile extends React.PureComponent {
                     console.error(er);
                 }
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
-            })
             .build();
         return projectsRequest;
     }
+
     createRequestForUserPatch = (userId, { firstName, lastName, organization }) => {
         const urlForUser = createUrlForUserPatch(userId);
         const userPatchRequest = new RestBuilder()
@@ -392,17 +385,20 @@ export default class UserProfile extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(10)
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
             .success((response) => {
-                this.setState({
-                    pending: false,
-                    editProfile: false,
-                });
                 try {
                     schema.validate(response, 'userPatchResponse');
                     this.props.setUserInformation({
                         userId,
                         information: response,
                     });
+                    this.setState({ editProfile: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -410,7 +406,6 @@ export default class UserProfile extends React.PureComponent {
             .failure((response) => {
                 console.info('FAILURE:', response);
 
-                this.setState({ pending: false });
                 const { errors } = response;
                 const formFieldErrors = {};
                 const { nonFieldErrors } = errors;
@@ -429,7 +424,6 @@ export default class UserProfile extends React.PureComponent {
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                this.setState({ pending: false });
             })
             .build();
         return userPatchRequest;
@@ -454,7 +448,6 @@ export default class UserProfile extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        this.setState({ pending: true });
         // Stop old patch request
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();

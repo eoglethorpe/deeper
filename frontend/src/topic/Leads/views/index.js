@@ -236,9 +236,6 @@ export default class Leads extends React.PureComponent {
 
         this.leadRequest = this.createRequestForProjectLeads(activeProject);
         this.leadRequest.start();
-        this.setState({
-            loadingLeads: true,
-        });
     }
 
     createRequestForProjectLeads = (activeProject) => {
@@ -267,6 +264,12 @@ export default class Leads extends React.PureComponent {
                     access,
                 });
             })
+            .preLoad(() => {
+                this.setState({ loadingLeads: true });
+            })
+            .postLoad(() => {
+                this.setState({ loadingLeads: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'leadsGetResponse');
@@ -278,9 +281,6 @@ export default class Leads extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-                this.setState({
-                    loadingLeads: false,
-                });
             })
             .build();
         return leadRequest;
@@ -395,6 +395,7 @@ export default class Leads extends React.PureComponent {
 
         const {
             activePage,
+            loadingLeads,
         } = this.state;
 
         const projectName = currentUserActiveProject.title;
@@ -435,7 +436,7 @@ export default class Leads extends React.PureComponent {
                         styleName="leads-table"
                     />
                     {
-                        this.state.loadingLeads && (
+                        loadingLeads && (
                             <div styleName="loading-animation">
                                 <span className="ion-load-c" styleName="icon" />
                             </div>
