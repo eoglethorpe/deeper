@@ -294,7 +294,7 @@ export default class AddLeadForm extends React.PureComponent {
                     label="Assign To"
                     formname="user"
                     placeholder="Select a user"
-                    options={leadFilterOptions.assignedTo}
+                    options={leadFilterOptions.assignee}
                     value={formValues.user}
                     styleName="user"
                     error={formFieldErrors.user}
