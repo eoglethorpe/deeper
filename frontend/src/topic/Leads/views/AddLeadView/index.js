@@ -177,7 +177,6 @@ export default class AddLead extends React.PureComponent {
     }
 
     leadsClickHandler = (id) => {
-        console.log('what');
         this.setState({ activeLeadId: id });
     }
 
