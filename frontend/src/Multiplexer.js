@@ -63,7 +63,9 @@ const Register = () => (
 const UserProfile = () => (
     <Bundle load={() => import('./topic/UserProfile/views/')} />
 );
-
+const UserGroup = () => (
+    <Bundle load={() => import('./topic/UserGroup/views/')} />
+);
 const WeeklySnapshot = () => (
     <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
 );
@@ -157,6 +159,12 @@ export default class Multiplexer extends React.PureComponent {
             path: '/users/:userId/',
             name: pageTitles.userProfile,
             component: UserProfile,
+            private: true,
+        },
+        {
+            path: '/usergroup/*',
+            name: pageTitles.userGroup,
+            component: UserGroup,
             private: true,
         },
         {
