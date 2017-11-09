@@ -3,6 +3,7 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     SET_USER_GROUPS,
+    SET_USER_GROUP,
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
@@ -77,6 +78,19 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
+        case SET_USER_GROUP: {
+            const settings = {
+                users: {
+                    [action.userId]: { $auto: {
+                        userGroups: { $autoArray: {
+                            $push: [action.userGroup],
+                        } },
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
+
         case SET_LEADS: {
             const settings = {
                 leads: {

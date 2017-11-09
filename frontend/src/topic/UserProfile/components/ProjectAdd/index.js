@@ -1,7 +1,5 @@
 /**
- * @author frozenhelium <fren.ankit@gmail.com>
- * @co-author tnagorra <weathermist@gmail.com>
- * @co-author thenav56 <navinayer56@gmail.com>
+ * @author thenav56 <navinayer56@gmail.com>
  */
 
 import CSSModules from 'react-css-modules';
@@ -11,9 +9,7 @@ import { connect } from 'react-redux';
 
 import {
     Form,
-    ImageInput,
     TextInput,
-    HiddenInput,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -22,31 +18,23 @@ import {
 } from '../../../../public/components/Action';
 
 import { RestBuilder } from '../../../../public/utils/rest';
-import Uploader from '../../../../public/utils/Uploader';
 
 import schema from '../../../../common/schema';
 import {
-    createHeaderForFileUpload,
-    createParamsForUserPatch,
-    createUrlForUserPatch,
-    urlForUpload,
+    createParamsForProjectCreate,
+    urlForProjectCreate,
 } from '../../../../common/rest';
 import {
     tokenSelector,
-    setUserInformationAction,
+    setProjectAction,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    userId: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-    ]).isRequired,
     handleModalClose: PropTypes.func.isRequired,
-    setUserInformation: PropTypes.func.isRequired,
+    setProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
-    userInformation: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -57,12 +45,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setUserInformation: params => dispatch(setUserInformationAction(params)),
+    setProject: params => dispatch(setProjectAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class UserEdit extends React.PureComponent {
+export default class ProjectAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -72,49 +60,39 @@ export default class UserEdit extends React.PureComponent {
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues: this.props.userInformation,
+            formValues: {},
             pending: false,
             stale: false,
         };
 
         this.elements = [
-            'firstName',
-            'lastName',
-            'organization',
-            'displayPicture',
+            'title',
         ];
 
         this.validations = {
-            firstName: [requiredCondition],
-            lastName: [requiredCondition],
-            organization: [requiredCondition],
-            displayPicture: [],
+            title: [requiredCondition],
         };
     }
 
     componentWillMount() {
-        console.warn('Mounting UserEdit');
+        console.warn('Mounting Project Add');
     }
 
     componentWillUnmount() {
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-        if (this.uploader) {
-            this.uploader.abort();
+        if (this.projectCreateRequest) {
+            this.projectCreateRequest.stop();
         }
     }
 
-    createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
-        const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new RestBuilder()
-            .url(urlForUser)
+    createRequestForProjectCreate = ({ title }) => {
+        const projectCreateRequest = new RestBuilder()
+            .url(urlForProjectCreate)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForUserPatch(
+                return createParamsForProjectCreate(
                     { access },
-                    { firstName, lastName, organization, displayPicture });
+                    { title });
             })
             .decay(0.3)
             .maxRetryTime(3000)
@@ -127,10 +105,11 @@ export default class UserEdit extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    schema.validate(response, 'userPatchResponse');
-                    this.props.setUserInformation({
-                        userId,
-                        information: response,
+                    schema.validate(response, 'projectCreateResponse');
+                    // TODO: also set the users project
+                    this.props.setProject({
+                        projectId: response.id,
+                        project: response,
                     });
                     this.props.handleModalClose();
                 } catch (er) {
@@ -160,7 +139,7 @@ export default class UserEdit extends React.PureComponent {
                 console.info('FATAL:', response);
             })
             .build();
-        return userPatchRequest;
+        return projectCreateRequest;
     }
 
     // FORM RELATED
@@ -184,46 +163,18 @@ export default class UserEdit extends React.PureComponent {
     successCallback = (values) => {
         console.log(values);
         // Stop old patch request
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
+        if (this.projectCreateRequest) {
+            this.projectCreateRequest.stop();
         }
 
-        const userId = this.props.userId;
-        // Create new patch request and start it
-        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
-        this.userPatchRequest.start();
+        this.projectCreateRequest = this.createRequestForProjectCreate(values);
+        this.projectCreateRequest.start();
     };
 
     // BUTTONS
     handleFormClose = (e) => {
         e.preventDefault();
         this.props.handleModalClose();
-    }
-
-    // Image Input Change
-    handleImageInputChange = (files) => {
-        const uploader = new Uploader(
-            files[0],
-            urlForUpload,
-            createHeaderForFileUpload(this.props.token),
-        );
-
-        uploader.onLoad = (status, response) => {
-            const r = JSON.parse(response);
-            this.setState({
-                formValues: { ...this.state.formValues, displayPicture: r.id },
-                stale: true,
-            }, () => console.log(this.state));
-        };
-
-        uploader.onProgress = (progress) => {
-            // TODO: Add progress component
-            console.warn(`Upload Progress: ${progress}`);
-        };
-        this.uploader = uploader;
-
-
-        this.uploader.start();
     }
 
     render() {
@@ -237,7 +188,7 @@ export default class UserEdit extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-profile-edit-form"
+                styleName="user-project-add-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}
@@ -270,39 +221,12 @@ export default class UserEdit extends React.PureComponent {
                         </div>
                     }
                 </div>
-                {/*
-                    TODO: Pass image src to ImageInput using advanced File Component
-                */}
-                <ImageInput
-                    showPreview
-                    styleName="display-picture"
-                    onChange={this.handleImageInputChange}
-                />
                 <TextInput
-                    label="First name"
-                    formname="firstName"
-                    placeholder="Enter a descriptive name"
-                    value={formValues.firstName}
-                    error={formFieldErrors.firstName}
-                />
-                <HiddenInput
-                    formname="displayPicture"
-                    value={formValues.displayPicture}
-                    error={formFieldErrors.displayPicture}
-                />
-                <TextInput
-                    label="Last name"
-                    formname="lastName"
-                    placeholder="Enter a descriptive name"
-                    value={formValues.lastName}
-                    error={formFieldErrors.lastName}
-                />
-                <TextInput
-                    label="Organization"
-                    formname="organization"
-                    placeholder="Enter a descriptive name"
-                    value={formValues.organization}
-                    error={formFieldErrors.organization}
+                    label="Project Title"
+                    formname="title"
+                    placeholder="Enter project name"
+                    value={formValues.title}
+                    error={formFieldErrors.title}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
@@ -312,7 +236,7 @@ export default class UserEdit extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Save changes
+                        Create
                     </PrimaryButton>
                 </div>
             </Form>

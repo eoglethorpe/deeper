@@ -80,4 +80,16 @@ const projectSchema = [];
     };
     projectSchema.push({ name, schema });
 }
+{
+    const name = 'projectCreateResponse';
+    const schema = {
+        doc: {
+            name: 'Projects Create Response',
+            description: 'Response for POST /projects/',
+        },
+        extends: 'project',
+    };
+    projectSchema.push({ name, schema });
+}
+
 export default projectSchema;
