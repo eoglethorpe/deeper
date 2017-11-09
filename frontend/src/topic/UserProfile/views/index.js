@@ -10,6 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
@@ -107,6 +108,8 @@ export default class UserProfile extends React.PureComponent {
         this.state = {
             addProject: false,
             addUserGroup: false,
+            deleteUserGroup: false,
+            deleteUserProject: false,
             editProfile: false,
         };
 
@@ -165,6 +168,19 @@ export default class UserProfile extends React.PureComponent {
                 key: 'actions',
                 label: 'Actions',
                 order: 7,
+                modifier: d => (
+                    <div>
+                        {/*
+                            TODO: @adityakhatri47 look into this
+                        */}
+                        <PrimaryButton onClick={() => { this.handleEditProjectClick(d.id); }} >
+                            <i className="ion-edit" />
+                        </PrimaryButton>
+                        <DangerButton onClick={() => { this.handleDeleteProjectClick(d.id); }} >
+                            <i className="ion-android-delete" />
+                        </DangerButton>
+                    </div>
+                ),
             },
         ];
         this.userGroupsHeaders = [
@@ -200,6 +216,24 @@ export default class UserProfile extends React.PureComponent {
                         />
                     );
                 },
+            },
+            {
+                key: 'actions',
+                label: 'Actions',
+                order: 4,
+                modifier: d => (
+                    <div>
+                        {/*
+                            TODO: @adityakhatri47 look into this
+                        */}
+                        <PrimaryButton onClick={() => { this.handleEditUserGroupClick(d.id); }}>
+                            <i className="ion-edit" />
+                        </PrimaryButton>
+                        <DangerButton onClick={() => { this.handleDeleteUserGroupClick(d.id); }} >
+                            <i className="ion-android-delete" />
+                        </DangerButton>
+                    </div>
+                ),
             },
         ];
     }
@@ -374,6 +408,38 @@ export default class UserProfile extends React.PureComponent {
         this.setState({ addUserGroup: false });
     }
 
+    // Project Table Actions
+    handleEditProjectClick = (id) => {
+        // TODO: @adityakhatri47 route to selected project panel
+        console.log(id);
+    }
+
+    handleDeleteProjectClick = (id) => {
+        this.setState({
+            deleteUserProject: true,
+        });
+        console.log(id);
+    }
+
+    handleDeleteProjectClose = () => {
+        this.setState({
+            deleteUserProject: false,
+        });
+    }
+
+    // UserGroup Table Actions
+    handleEditUserGroupClick = (id) => {
+        // TODO: @adityakhatri47 route to selected user group panel
+        console.log(id);
+    }
+
+    handleDeleteUserGroupClick = (id) => {
+        this.setState({
+            deleteUserGroup: true,
+        });
+        console.log(id);
+    }
+
     render() {
         const { userInformation, match } = this.props;
 
@@ -405,6 +471,16 @@ export default class UserProfile extends React.PureComponent {
                                 userInformation={userInformation}
                                 handleModalClose={this.handleEditProfileClose}
                             />
+                        </ModalBody>
+                    </Modal>
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleDeleteProjectClose}
+                        show={this.state.deleteUserProject}
+                    >
+                        <ModalHeader title="Delete Project" />
+                        <ModalBody>
+                            Are you sure ? yes/No
                         </ModalBody>
                     </Modal>
                 </header>
