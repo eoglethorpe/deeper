@@ -49,7 +49,7 @@ export default class ApiDocs extends React.PureComponent {
         this.props.setNavbarState({
             activeLink: undefined,
             validLinks: undefined,
-            visible: false,
+            visible: true,
         });
 
         this.fetchApiDocs(urlForApiDocs);

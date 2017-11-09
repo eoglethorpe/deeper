@@ -139,26 +139,31 @@ export default class Navbar extends React.PureComponent {
             linkTo: `/${activeProject}/leads/`,
             name: pageTitles.leads,
             needsProject: true,
+            private: true,
         },
         {
             linkTo: `/${activeProject}/entries/`,
             name: pageTitles.entries,
             needsProject: true,
+            private: true,
         },
         {
             linkTo: `/${activeProject}/ary/`,
             name: pageTitles.ary,
             needsProject: true,
+            private: true,
         },
         {
             linkTo: '/weekly-snapshot/',
             name: pageTitles.weeklySnapshot,
             needsProject: true,
+            private: true,
         },
         {
             linkTo: `/${activeProject}/export/`,
             name: pageTitles.export,
             needsProject: true,
+            private: true,
         },
     ]
 
@@ -171,22 +176,26 @@ export default class Navbar extends React.PureComponent {
                     linkTo: `/users/${activeUser.userId}/`,
                     name: pageTitles.userProfile,
                     iconName: 'ion-android-person',
+                    private: true,
                 },
                 {
                     linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
                     name: pageTitles.countryPanel,
                     iconName: 'ion-android-globe',
+                    private: true,
                 },
                 {
                     linkTo: `/${activeProject}/projectpanel/`,
                     name: pageTitles.projectPanel,
                     iconName: 'ion-wrench',
                     needsProject: true,
+                    private: true,
                 },
                 {
                     linkTo: '/admin/',
                     name: pageTitles.adminPanel,
                     iconName: 'ion-locked',
+                    private: true,
                 },
             ],
         },
@@ -203,6 +212,7 @@ export default class Navbar extends React.PureComponent {
             navbarActiveLink,
             navbarValidLinks,
             userProjects,
+            activeUser,
         } = this.props;
         if (navbarValidLinks.indexOf(item.name) <= -1) {
             return null;
@@ -210,6 +220,11 @@ export default class Navbar extends React.PureComponent {
         if (item.needsProject && userProjects.length <= 0) {
             return null;
         }
+        if (item.private && !activeUser.userId) {
+            console.warn('here');
+            return null;
+        }
+
         return (
             <Link
                 className={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
@@ -239,11 +254,16 @@ export default class Navbar extends React.PureComponent {
         const {
             navbarValidLinks,
             userProjects,
+            activeUser,
         } = this.props;
         if (navbarValidLinks.indexOf(item.name) === -1) {
             return null;
         }
         if (item.needsProject && userProjects.length <= 0) {
+            return null;
+        }
+        if (item.private && !activeUser.userId) {
+            console.warn('here');
             return null;
         }
 
@@ -274,6 +294,7 @@ export default class Navbar extends React.PureComponent {
             activeProject,
             activeUser,
             navbarVisible,
+            userProjects,
         } = this.props;
         const {
             navbarItems,
@@ -298,15 +319,18 @@ export default class Navbar extends React.PureComponent {
                     />
                     <span styleName="title">Deep</span>
                 </Link>
-                <SelectInput
-                    styleName="project-select-input"
-                    placeholder="Select Event"
-                    keySelector={this.labelSelectorForSelectInput}
-                    labelSelector={this.keySelectorForSelectInput}
-                    options={this.props.userProjects}
-                    value={activeProject}
-                    onChange={this.onSelectChangeHandler}
-                />
+                {
+                    userProjects.length > 0 && activeUser.userId &&
+                    <SelectInput
+                        styleName="project-select-input"
+                        placeholder="Select Event"
+                        keySelector={this.labelSelectorForSelectInput}
+                        labelSelector={this.keySelectorForSelectInput}
+                        options={this.props.userProjects}
+                        value={activeProject}
+                        onChange={this.onSelectChangeHandler}
+                    />
+                }
                 <ListView
                     data={navbarItems}
                     styleName="menu-items"
@@ -317,23 +341,26 @@ export default class Navbar extends React.PureComponent {
                     styleName="dropdown-menu"
                     className="dropdown-title"
                     iconLeft="ion-android-person"
-                    title={activeUser.displayName}
+                    title={activeUser.displayName || 'Anon'}
                 >
                     <List
                         data={dropdownItems}
                         keyExtractor={this.calcDropdownGroupKey}
                         modifier={this.renderDropdownGroup}
                     />
-                    <button
-                        styleName="dropdown-item"
-                        onClick={this.handleLogoutButtonClick}
-                    >
-                        <span
-                            className="ion-log-out"
-                            styleName="icon"
-                        />
-                        Logout
-                    </button>
+                    {
+                        activeUser.userId &&
+                        <button
+                            styleName="dropdown-item"
+                            onClick={this.handleLogoutButtonClick}
+                        >
+                            <span
+                                className="ion-log-out"
+                                styleName="icon"
+                            />
+                            Logout
+                        </button>
+                    }
                 </DropdownMenu>
             </div>
         );
