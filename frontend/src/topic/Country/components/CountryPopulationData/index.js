@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from './styles.scss';
@@ -12,15 +11,9 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 
-const propTypes = {
-    onSubmit: PropTypes.func.isRequired, //eslint-disable-line
-    pending: PropTypes.bool.isRequired, //eslint-disable-line
-    onCancel: PropTypes.func.isRequired, //eslint-disable-line
-};
 
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
-    static propTypes = propTypes;
     constructor(props) {
         super(props);
 
