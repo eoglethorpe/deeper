@@ -40,7 +40,7 @@ import {
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
-import AddCountry from '../components/AddCountryForm';
+import AddCountry from '../components/AddCountry';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -266,30 +266,20 @@ export default class CountryPanel extends React.PureComponent {
         });
     };
 
-    renderCountryListItem = (country) => {
+
+    calcCountryListItemKey = country => country.id;
+
+    renderCountryListItem = (key, country) => {
         const { activeCountry } = this.props;
-        if (country.id !== activeCountry) {
-            return (
-                <ListItem
-                    styleName="list-item"
-                    key={country.id}
-                >
-                    <Link
-                        styleName="link"
-                        to={`/countrypanel/${country.id}/`}
-                    >
-                        {country.title}
-                    </Link>
-                </ListItem>
-            );
-        }
+        const isActive = country.id === activeCountry;
         return (
             <ListItem
-                key={country.id}
-                styleName="list-item active"
+                active={isActive}
+                key={key}
+                scrollIntoView={isActive}
             >
                 <Link
-                    styleName="link"
+                    className="link"
                     to={`/countrypanel/${country.id}/`}
                 >
                     {country.title}
@@ -361,11 +351,15 @@ export default class CountryPanel extends React.PureComponent {
                             onChange={this.search}
                             placeholder="Search Country"
                             type="search"
+                            value={this.state.searchInputValue}
                         />
                     </div>
-                    <ListView styleName="list">
-                        { sortedCountries.map(this.renderCountryListItem) }
-                    </ListView>
+                    <ListView
+                        styleName="list"
+                        modifier={this.renderCountryListItem}
+                        data={sortedCountries}
+                        keyExtractor={this.calcCountryListItemKey}
+                    />
                     <Modal
                         closeOnEscape
                         onClose={this.handleModalClose}
@@ -374,7 +368,6 @@ export default class CountryPanel extends React.PureComponent {
                     >
                         <ModalHeader title="Add new country" />
                         <AddCountry
-                            styleName="add-country-form"
                             onModalClose={this.handleModalClose}
                         />
                     </Modal>

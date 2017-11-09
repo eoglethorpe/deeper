@@ -172,6 +172,7 @@ export default class AddCountry extends React.PureComponent {
 
         return (
             <Form
+                styleName="add-country-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}
@@ -182,16 +183,18 @@ export default class AddCountry extends React.PureComponent {
             >
                 {
                     pending &&
-                        <div>
+                        <div styleName="pending-overlay" >
                             <i
+                                styleName="loading-icon"
                                 className="ion-load-c"
                             />
                         </div>
                 }
-                <div>
+                <div styleName="non-field-errors">
                     {
                         formErrors.map(err => (
                             <div
+                                styleName="error"
                                 key={err}
                             >
                                 {err}
@@ -218,7 +221,7 @@ export default class AddCountry extends React.PureComponent {
                     value={formValues.code}
                     error={formFieldErrors.code}
                 />
-                <div>
+                <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.props.onModalClose}
                         disabled={pending}

@@ -49,11 +49,11 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
         height: calc(#{$height-full-page} - #{$height-header});
         overflow: auto;
 
-        .list-item {
-            display: block;
+        :global .list-item {
             transition: .2s all ease-in-out;
             border-bottom: $width-separator-thin solid $color-separator;
             border-left: $width-separator-thick solid transparent;
+            padding: 0;
 
             .link {
                 display: block;
@@ -65,12 +65,13 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
             &:hover {
                 background-color: $color-hover;
             }
+
+            &.active {
+                border-left: $width-separator-thick solid $color-accent;
+                background-color: $color-hover;
+            }
         }
 
-        .active {
-            border-left: $width-separator-thick solid $color-accent;
-            background-color: $color-hover;
-        }
     }
 
 
@@ -79,60 +80,5 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
         flex-basis: 75%;
         background-color: darken($color-foreground, 1%);
         height: $height-full-page;
-    }
-}
-
-.add-country-form {
-    position: relative;
-    padding: $spacing-large;
-
-    .action-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: $spacing-medium;
-    }
-
-    .pending-overlay {
-        display: flex;
-        position: absolute;
-        top: 0;
-        left: 0;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-background-overlay;
-        width: 100%;
-        height: 100%;
-
-        .loading-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: spin 1s linear infinite;
-            width: $width-icon-super-large;
-            height: $width-icon-super-large;
-            color: $color-accent;
-            font-size: $width-icon-super-large;
-        }
-
-    }
-
-    .non-field-errors {
-        flex-basis: 100%;
-        text-align: center;
-
-        .error {
-            color: $color-danger;
-
-            &.empty {
-                color: transparent;
-                user-select: none;
-            }
-
-            &:not(:last-child) {
-                &::after {
-                    content: ', ';
-                }
-            }
-        }
     }
 }
