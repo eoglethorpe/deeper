@@ -50,7 +50,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class ProjectAdd extends React.PureComponent {
+export default class UserProjectAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 

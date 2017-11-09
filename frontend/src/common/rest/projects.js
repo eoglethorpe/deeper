@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, POST, commonHeaderForPost, p } from '../config/rest';
+import { wsEndpoint, GET, POST, DELETE, commonHeaderForPost, p } from '../config/rest';
 
 export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
 
@@ -27,4 +27,12 @@ export const createParamsForProjectCreate = ({ access }, { title }) => ({
     body: JSON.stringify({
         title,
     }),
+});
+
+export const createParamsForProjectDelete = ({ access }) => ({
+    method: DELETE,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
 });

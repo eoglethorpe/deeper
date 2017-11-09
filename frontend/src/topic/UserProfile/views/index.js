@@ -10,21 +10,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
-    FormattedDate,
     Modal,
     ModalBody,
     ModalHeader,
-    Table,
 } from '../../../public/components/View';
 
 import {
-    ProjectAdd,
+    UserProject,
+    UserGroup,
     UserEdit,
-    UserGroupAdd,
 } from '../components/';
 
 import { RestBuilder } from '../../../public/utils/rest';
@@ -32,25 +29,15 @@ import { RestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 import { pageTitles } from '../../../common/utils/labels';
 import {
-    createParamsForProjects,
     createParamsForUser,
-    createParamsForUserGroups,
-    createUrlForProjectsOfUser,
     createUrlForUser,
-    createUrlForUserGroupsOfUser,
 } from '../../../common/rest';
 import {
     tokenSelector,
-
-    userGroupsSelector,
     userInformationSelector,
-    userProjectsSelector,
-
-    setUserGroupsAction,
     setUserInformationAction,
-    setUserProjectsAction,
-
     setNavbarStateAction,
+    activeUserSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -62,14 +49,11 @@ const propTypes = {
         }),
     }),
     setNavbarState: PropTypes.func.isRequired,
-    setUserGroups: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
-    setUserProjects: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
-    userGroups: PropTypes.array, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
-    userProjects: PropTypes.array, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -77,23 +61,18 @@ const defaultProps = {
         params: {},
     },
     user: {},
-    userGroups: [],
-    userProjects: [],
 };
 
 
 const mapStateToProps = (state, props) => ({
     token: tokenSelector(state),
-    userGroups: userGroupsSelector(state, props),
     userInformation: userInformationSelector(state, props), // uses props.match
-    userProjects: userProjectsSelector(state, props),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
-    setUserGroups: params => dispatch(setUserGroupsAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
-    setUserProjects: params => dispatch(setUserProjectsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -105,137 +84,7 @@ export default class UserProfile extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            addProject: false,
-            addUserGroup: false,
-            deleteUserGroup: false,
-            deleteUserProject: false,
-            editProfile: false,
-        };
-
-        this.projectHeaders = [
-            {
-                key: 'title',
-                label: 'Title',
-                order: 1,
-            },
-            {
-                key: 'rights',
-                label: 'Rights',
-                order: 2,
-                modifier: (row) => {
-                    const { userId } = this.props.match.params;
-                    const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
-                    return membership && membership.role ? membership.role : '-';
-                },
-            },
-            {
-                key: 'createdAt',
-                label: 'Created at',
-                order: 3,
-                modifier: row => (
-                    <FormattedDate
-                        date={row.createdAt}
-                        mode="dd-MM-yyyy hh:mm"
-                    />
-                ),
-            },
-            {
-                key: 'modifiedAt',
-                label: 'Last Modified at',
-                order: 4,
-                modifier: row => (
-                    <FormattedDate
-                        date={row.modifiedAt}
-                        mode="dd-MM-yyyy hh:mm"
-                    />
-                ),
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                order: 5,
-                modifier: () => 'Active', // NOTE: Show 'Active' for now
-            },
-            {
-                key: 'members',
-                label: 'Members',
-                order: 6,
-                modifier: d => (d.memberships || []).length, // NOTE: Show 'Active' for now
-            },
-            {
-                key: 'actions',
-                label: 'Actions',
-                order: 7,
-                modifier: d => (
-                    <div>
-                        {/*
-                            TODO: @adityakhatri47 look into this
-                        */}
-                        <PrimaryButton onClick={() => { this.handleEditProjectClick(d.id); }} >
-                            <i className="ion-edit" />
-                        </PrimaryButton>
-                        <DangerButton onClick={() => { this.handleDeleteProjectClick(d.id); }} >
-                            <i className="ion-android-delete" />
-                        </DangerButton>
-                    </div>
-                ),
-            },
-        ];
-        this.userGroupsHeaders = [
-            {
-                key: 'title',
-                label: 'Title',
-                order: 1,
-            },
-            {
-                key: 'rights',
-                label: 'Rights',
-                order: 2,
-                modifier: (row) => {
-                    const { userId } = this.props.match.params;
-                    const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
-                    return membership && membership.role ? membership.role : '-';
-                },
-            },
-            {
-                key: 'joinedAt',
-                label: 'Joined At',
-                order: 3,
-                modifier: (row) => {
-                    const { userId } = this.props.match.params;
-                    const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
-                    const { joinedAt } = membership || {};
-                    return (
-                        <FormattedDate
-                            date={joinedAt}
-                            mode="dd-MM-yyyy hh:mm"
-                        />
-                    );
-                },
-            },
-            {
-                key: 'actions',
-                label: 'Actions',
-                order: 4,
-                modifier: d => (
-                    <div>
-                        {/*
-                            TODO: @adityakhatri47 look into this
-                        */}
-                        <PrimaryButton onClick={() => { this.handleEditUserGroupClick(d.id); }}>
-                            <i className="ion-edit" />
-                        </PrimaryButton>
-                        <DangerButton onClick={() => { this.handleDeleteUserGroupClick(d.id); }} >
-                            <i className="ion-android-delete" />
-                        </DangerButton>
-                    </div>
-                ),
-            },
-        ];
+        this.state = { editProfile: false };
     }
 
     componentWillMount() {
@@ -260,12 +109,6 @@ export default class UserProfile extends React.PureComponent {
 
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();
-
-        this.projectsRequest = this.createRequestForProjects(userId);
-        this.projectsRequest.start();
-
-        this.userGroupsRequest = this.createRequestForUserGroups(userId);
-        this.userGroupsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -274,21 +117,11 @@ export default class UserProfile extends React.PureComponent {
             this.userRequest.stop();
             this.userRequest = this.createRequestForUser(userId);
             this.userRequest.start();
-
-            this.projectsRequest.stop();
-            this.projectsRequest = this.createRequestForProjects(userId);
-            this.projectsRequest.start();
-
-            this.userGroupsRequest.stop();
-            this.userGroupsRequest = this.createRequestForUserGroups(userId);
-            this.userGroupsRequest.start();
         }
     }
 
     componentWillUnmount() {
         this.userRequest.stop();
-        this.projectsRequest.stop();
-        this.userGroupsRequest.stop();
     }
 
     createRequestForUser = (userId) => {
@@ -324,120 +157,13 @@ export default class UserProfile extends React.PureComponent {
         return userRequest;
     }
 
-    createRequestForProjects = (userId) => {
-        const projectsRequest = new RestBuilder()
-            .url(createUrlForProjectsOfUser(userId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjects({ access });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectsGetResponse');
-                    this.props.setUserProjects({
-                        userId,
-                        projects: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return projectsRequest;
-    }
-
-    createRequestForUserGroups = (userId) => {
-        const projectsRequest = new RestBuilder()
-            .url(createUrlForUserGroupsOfUser(userId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserGroups({ access });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupsGetResponse');
-                    this.props.setUserGroups({
-                        userId,
-                        userGroups: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return projectsRequest;
-    }
-
     // BUTTONS
-
     handleEditProfileClick = () => {
         this.setState({ editProfile: true });
     }
 
-    handleAddProjectClick = () => {
-        this.setState({ addProject: true });
-    }
-
-    handleAddUserGroupClick = () => {
-        this.setState({ addUserGroup: true });
-    }
-
     handleEditProfileClose = () => {
         this.setState({ editProfile: false });
-    }
-
-    handleAddProjectClose = () => {
-        this.setState({ addProject: false });
-    }
-
-    handleAddUserGroupClose = () => {
-        this.setState({ addUserGroup: false });
-    }
-
-    // Project Table Actions
-    handleEditProjectClick = (id) => {
-        // TODO: @adityakhatri47 route to selected project panel
-        console.log(id);
-    }
-
-    handleDeleteProjectClick = (id) => {
-        this.setState({
-            deleteUserProject: true,
-        });
-        console.log(id);
-    }
-
-    handleDeleteProjectClose = () => {
-        this.setState({
-            deleteUserProject: false,
-        });
-    }
-
-    // UserGroup Table Actions
-    handleEditUserGroupClick = (id) => {
-        // TODO: @adityakhatri47 route to selected user group panel
-        console.log(id);
-    }
-
-    handleDeleteUserGroupClick = (id) => {
-        this.setState({
-            deleteUserGroup: true,
-        });
-        console.log(id);
     }
 
     render() {
@@ -473,16 +199,6 @@ export default class UserProfile extends React.PureComponent {
                             />
                         </ModalBody>
                     </Modal>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleDeleteProjectClose}
-                        show={this.state.deleteUserProject}
-                    >
-                        <ModalHeader title="Delete Project" />
-                        <ModalBody>
-                            Are you sure ? yes/No
-                        </ModalBody>
-                    </Modal>
                 </header>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
@@ -511,62 +227,12 @@ export default class UserProfile extends React.PureComponent {
                 <div styleName="stats">
                     <h2>Stats</h2>
                 </div>
-                <div styleName="projects">
-                    <h2>
-                        Projects
-                    </h2>
-                    {/*
-                        TODO: @adityakhatri47 add style
-                    */}
-                    <PrimaryButton onClick={this.handleAddProjectClick} >
-                        Add Project
-                    </PrimaryButton>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleAddProjectClose}
-                        show={this.state.addProject}
-                    >
-                        <ModalHeader title="Add Project" />
-                        <ModalBody>
-                            <ProjectAdd
-                                handleModalClose={this.handleAddProjectClose}
-                            />
-                        </ModalBody>
-                    </Modal>
-                    <Table
-                        data={this.props.userProjects}
-                        headers={this.projectHeaders}
-                        keyExtractor={rowData => rowData.id}
-                    />
-                </div>
-                <div styleName="groups">
-                    <h2>
-                        Groups
-                    </h2>
-                    {/*
-                        TODO: @adityakhatri47 add style
-                    */}
-                    <PrimaryButton onClick={this.handleAddUserGroupClick} >
-                        Add User Group
-                    </PrimaryButton>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleAddUserGroupClose}
-                        show={this.state.addUserGroup}
-                    >
-                        <ModalHeader title="Add User Group" />
-                        <ModalBody>
-                            <UserGroupAdd
-                                handleModalClose={this.handleAddUserGroupClose}
-                            />
-                        </ModalBody>
-                    </Modal>
-                    <Table
-                        data={this.props.userGroups}
-                        headers={this.userGroupsHeaders}
-                        keyExtractor={rowData => rowData.id}
-                    />
-                </div>
+                <UserProject
+                    match={match}
+                />
+                <UserGroup
+                    match={match}
+                />
             </div>
         );
     }
