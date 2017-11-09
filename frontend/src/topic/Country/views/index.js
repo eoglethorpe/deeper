@@ -336,6 +336,9 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList,
         } = this.state;
 
+        const sortedCountries = [...displayCountryList];
+        sortedCountries.sort((a, b) => (a.title.localeCompare(b.title)));
+
         return (
             <div styleName="country-panel">
                 <Helmet>
@@ -361,7 +364,7 @@ export default class CountryPanel extends React.PureComponent {
                         />
                     </div>
                     <ListView styleName="list">
-                        { displayCountryList.map(this.renderCountryListItem) }
+                        { sortedCountries.map(this.renderCountryListItem) }
                     </ListView>
                     <Modal
                         closeOnEscape
@@ -372,14 +375,7 @@ export default class CountryPanel extends React.PureComponent {
                         <ModalHeader title="Add new country" />
                         <AddCountry
                             styleName="add-country-form"
-                            changeCallback={this.changeCallback}
-                            elements={this.elements}
-                            failureCallback={this.failureCallback}
-                            successCallback={this.successCallback}
-                            validation={this.validation}
-                            validations={this.validations}
-                            onSubmit={this.handleSubmit}
-                            onCancel={this.handleModalClose}
+                            onModalClose={this.handleModalClose}
                         />
                     </Modal>
                 </div>
