@@ -6,6 +6,7 @@ import {
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
+    ADD_NEW_COUNTRY,
     SET_COUNTRIES,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
@@ -124,6 +125,14 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 activeCountry: {
                     $set: action.activeCountry,
                 },
+            };
+            return update(state, settings);
+        }
+        case ADD_NEW_COUNTRY: {
+            const settings = {
+                countries: { $autoArray: {
+                    $push: [action.countryDetail],
+                } },
             };
             return update(state, settings);
         }

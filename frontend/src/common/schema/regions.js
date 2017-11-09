@@ -35,4 +35,16 @@ const regionSchema = [];
     regionSchema.push({ name, schema });
 }
 
+{
+    const name = 'regionCreateResponse';
+    const schema = {
+        doc: {
+            name: 'Country Post Response',
+            description: 'Response for Post',
+        },
+        extends: 'country',
+    };
+    regionSchema.push({ name, schema });
+}
+
 export default regionSchema;

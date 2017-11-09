@@ -8,12 +8,12 @@ const pageTitles = {
     leads: 'Leads',
     addLeads: 'Add Lead',
     entries: 'Entries',
-    ary: 'Assessment Registry',
+    ary: 'Ary',
     export: 'Export',
 
     editLeads: 'Edit Leads',
     editEntries: 'Edit Entries',
-    editAry: 'Edit Assessment Registry',
+    editAry: 'Edit Ary',
 
     userProfile: 'User Profile',
     adminPanel: 'Admin Panel',
@@ -22,7 +22,7 @@ const pageTitles = {
 
     weeklySnapshot: 'Weekly Snapshot',
 
-    apiDocs: 'Api Documentation',
+    apiDocs: 'Api Doc',
 
     fourHundredFour: '404',
 };

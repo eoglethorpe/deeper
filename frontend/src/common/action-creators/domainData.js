@@ -7,6 +7,7 @@ import {
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
     SET_COUNTRIES,
+    ADD_NEW_COUNTRY,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 } from '../action-types/domainData';
@@ -61,6 +62,11 @@ export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => 
 export const setCountriesAction = ({ countries }) => ({
     type: SET_COUNTRIES,
     countries,
+});
+
+export const addNewCountryAction = ({ countryDetail }) => ({
+    type: ADD_NEW_COUNTRY,
+    countryDetail,
 });
 
 export const dummyAction = () => ({
