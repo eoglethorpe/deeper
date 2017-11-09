@@ -105,6 +105,7 @@ management command.
 
 > Load Dummy Data.
 
+Start containers
 ```bash
 cd project-root-folder
 
@@ -113,7 +114,15 @@ docker-compose up -d
 
 # ssh to web container
 docker-compose exec web bash
+```
 
+From outside container
+```bash
+docker-compose exec web bash -c "./scripts/load_dummy_data.sh"
+```
+
+From inside container [Optional]
+```
 # cd to django root folder
 cd backend
 
