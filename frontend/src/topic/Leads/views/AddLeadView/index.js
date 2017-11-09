@@ -607,9 +607,13 @@ export default class AddLead extends React.PureComponent {
     }
 
     calcLeadKey = lead => lead.id
+    calcLeadDetailKey = lead => lead.id
 
-    renderLeadItem = (key, lead) => (
-        lead.show ? (
+    renderLeadItem = (key, lead) => {
+        if (!lead.show) {
+            return null;
+        }
+        return (
             <AddLeadListItem
                 key={key}
                 active={this.state.activeLeadId === lead.id}
@@ -620,8 +624,38 @@ export default class AddLead extends React.PureComponent {
                 type={lead.type}
                 upload={lead.upload}
             />
-        ) : null
-    )
+        );
+    }
+
+    renderLeadDetailItem = (key, lead) => {
+        if (!lead.show) {
+            return null;
+        }
+        return (
+            <TabContent
+                for={lead.id}
+                key={key}
+                className={styles.tab}
+            >
+                <AddLeadForm
+                    leadId={lead.id}
+                    leadType={lead.type}
+                    ready={this.isLeadReady(lead)}
+                    pending={lead.form.pending}
+                    stale={lead.form.stale}
+                    formValues={lead.formData}
+                    uploadData={lead.upload}
+                    onChange={this.handleLeadChange}
+                    onSuccess={this.handleLeadSuccess}
+                    onFailure={this.handleLeadFailure}
+                    className={styles['add-lead-form']}
+                />
+                <div className={styles['lead-preview']}>
+                    Lead preview
+                </div>
+            </TabContent>
+        );
+    }
 
     render() {
         return (
@@ -721,38 +755,12 @@ export default class AddLead extends React.PureComponent {
                             </TransparentButton>
                         </div>
                     </div>
-                    <div styleName="lead-detail-container">
-                        {
-                            this.state.leads.map(lead => (
-                                lead.show ? (
-                                    <TabContent
-                                        for={lead.id}
-                                        key={lead.id}
-                                        styleName="tab"
-                                    >
-                                        <AddLeadForm
-                                            leadId={lead.id}
-                                            leadType={lead.type}
-                                            ready={this.isLeadReady(lead)}
-                                            pending={lead.form.pending}
-                                            stale={lead.form.stale}
-                                            formValues={lead.formData}
-                                            uploadData={lead.upload}
-                                            onChange={this.handleLeadChange}
-                                            onSuccess={this.handleLeadSuccess}
-                                            onFailure={this.handleLeadFailure}
-                                            styleName="add-lead-form"
-                                        />
-                                        <div styleName="lead-preview">
-                                            Lead preview
-                                        </div>
-                                    </TabContent>
-                                ) : (
-                                    null
-                                )
-                            ))
-                        }
-                    </div>
+                    <ListView
+                        styleName="lead-detail-container"
+                        data={this.state.leads}
+                        keyExtractor={this.calcLeadDetailKey}
+                        modifier={this.renderLeadDetailItem}
+                    />
                 </Tabs>
             </div>
         );

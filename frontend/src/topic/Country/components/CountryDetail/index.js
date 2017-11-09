@@ -4,10 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
-import {
-    DangerButton,
-    SuccessButton,
-} from '../../../../public/components/Action';
+import { DangerButton } from '../../../../public/components/Action';
 
 import {
     countryDetailSelector,

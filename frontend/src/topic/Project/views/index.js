@@ -34,8 +34,10 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number,
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isReqired,
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            countryId: PropTypes.string,
+        }),
     }),
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setNavbarState: PropTypes.func.isRequired,
@@ -52,8 +54,8 @@ const propTypes = {
 
 const defaultProps = {
     activeProject: undefined,
+    match: undefined,
     activeUser: {},
-    location: {},
     userProjects: {},
 };
 
@@ -137,15 +139,14 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     getStyleName = (projectId) => {
-        const { pathname } = this.props.location;
+        const { match } = this.props;
+        const { projectId: projectIdFromUrl } = match.params;
 
         const styleNames = [];
-        styleNames.push('list-item');
-
-        if (pathname === `/${projectId}/projectpanel/`) {
-            styleNames.push('active');
+        styleNames.push(styles['list-item']);
+        if (projectId === +projectIdFromUrl) {
+            styleNames.push(styles.active);
         }
-
         return styleNames.join(' ');
     }
 
@@ -239,27 +240,29 @@ export default class ProjectPanel extends React.PureComponent {
                         <TextInput
                             onChange={this.search}
                             placeholder="Search Project"
+                            value={this.state.searchInputValue}
                             type="search"
                         />
                     </header>
-                    <ListView styleName="list">
-                        {
-                            displayUserProjects.map(project => (
-                                <ListItem
-                                    key={`project-${project.id}`}
-                                    styleName={this.getStyleName(project.id)}
+                    <ListView
+                        styleName="list"
+                        data={displayUserProjects}
+                        keyExtractor={project => project.id}
+                        modifier={(key, project) => (
+                            <ListItem
+                                key={key}
+                                className={this.getStyleName(project.id)}
+                            >
+                                <Link
+                                    to={`/${project.id}/projectpanel/`}
+                                    className={styles.link}
+                                    onClick={() => this.onChangeProject(project.id)}
                                 >
-                                    <Link
-                                        to={`/${project.id}/projectpanel/`}
-                                        styleName="link"
-                                        onClick={() => this.onChangeProject(project.id)}
-                                    >
-                                        {project.title}
-                                    </Link>
-                                </ListItem>
-                            ))
-                        }
-                    </ListView>
+                                    {project.title}
+                                </Link>
+                            </ListItem>
+                        )}
+                    />
                 </div>
             </div>
         );
