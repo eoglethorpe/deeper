@@ -10,8 +10,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
-    FileInput,
-    FileUpload,
     Form,
     TextInput,
     createValidation,
@@ -341,32 +339,6 @@ export default class Login extends React.PureComponent {
                         Login With HID
                     </a>
                 </div>
-
-                <div>
-                    <FileInput
-                        showPreview={false}
-                        showStatus={false}
-                        onChange={this.onUpload}
-                    >
-                        Open File
-                    </FileInput>
-                    <ul>
-                        {
-                            this.state.uploadedFiles.map(file => (
-                                <li
-                                    key={file.name}
-                                >
-                                    <FileUpload
-                                        key={file.name}
-                                        file={file}
-                                        autoStart={false}
-                                    />
-                                </li>
-                            ))
-                        }
-                    </ul>
-                </div>
-
             </div>
         );
     }

@@ -50,7 +50,7 @@
         align-self: stretch;
         justify-content: center;
 
-        .menu-item {
+        :global .menu-item {
             display: flex;
             align-items: center;
             justify-content: center;

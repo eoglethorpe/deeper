@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 
+import { List, ListView } from '../../../public/components/View';
 import {
     DropdownMenu,
     DropdownGroup,
@@ -81,6 +82,8 @@ const defaultProps = {
     userProjects: {},
 };
 
+const getValidLinkOrEmpty = value => (value ? `${value}/` : '');
+
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -88,28 +91,144 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    componentWillMount() {
+        const {
+            activeCountry,
+            activeProject,
+            activeUser,
+        } = this.props;
+        const navbarItems = this.createNavbarItems(activeProject);
+        const dropdownItems = this.createDropdownItems(
+            activeProject,
+            activeUser,
+            activeCountry,
+        );
+        this.setState({ navbarItems, dropdownItems });
+    }
+
+    componentWillReceiveProps() {
+        const {
+            activeCountry,
+            activeProject,
+            activeUser,
+        } = this.props;
+        const navbarItems = this.createNavbarItems(activeProject);
+        const dropdownItems = this.createDropdownItems(
+            activeProject,
+            activeUser,
+            activeCountry,
+        );
+        this.setState({ navbarItems, dropdownItems });
+    }
+
     onSelectChangeHandler = (key) => {
         this.props.setActiveProject({ activeProject: key });
     }
-
-    labelSelectorForSelectInput = (option = {}) => (option.id)
-    keySelectorForSelectInput = (option = {}) => (option.title)
 
     handleLogoutButtonClick = () => {
         this.props.stopTokenRefresh();
         this.props.logout();
     }
 
-    // TODO: AdityaKhatri: Why Link here?
-    renderNavbarItem = (item) => {
-        const { navbarActiveLink, navbarValidLinks } = this.props;
-        if (navbarValidLinks.indexOf(item.name) === -1) {
+    labelSelectorForSelectInput = (option = {}) => (option.id)
+
+    keySelectorForSelectInput = (option = {}) => (option.title)
+
+    createNavbarItems = activeProject => [
+        {
+            linkTo: `/${activeProject}/leads/`,
+            name: pageTitles.leads,
+            needsProject: true,
+            private: true,
+        },
+        {
+            linkTo: `/${activeProject}/entries/`,
+            name: pageTitles.entries,
+            needsProject: true,
+            private: true,
+        },
+        {
+            linkTo: `/${activeProject}/ary/`,
+            name: pageTitles.ary,
+            needsProject: true,
+            private: true,
+        },
+        {
+            linkTo: '/weekly-snapshot/',
+            name: pageTitles.weeklySnapshot,
+            needsProject: true,
+            private: true,
+        },
+        {
+            linkTo: `/${activeProject}/export/`,
+            name: pageTitles.export,
+            needsProject: true,
+            private: true,
+        },
+    ]
+
+    createDropdownItems = (activeProject, activeUser, activeCountry) => [
+        {
+            key: 'first-group',
+            label: undefined,
+            items: [
+                {
+                    linkTo: `/users/${activeUser.userId}/`,
+                    name: pageTitles.userProfile,
+                    iconName: 'ion-android-person',
+                    private: true,
+                },
+                {
+                    linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
+                    name: pageTitles.countryPanel,
+                    iconName: 'ion-android-globe',
+                    private: true,
+                },
+                {
+                    linkTo: `/${activeProject}/projectpanel/`,
+                    name: pageTitles.projectPanel,
+                    iconName: 'ion-wrench',
+                    needsProject: true,
+                    private: true,
+                },
+                {
+                    linkTo: '/admin/',
+                    name: pageTitles.adminPanel,
+                    iconName: 'ion-locked',
+                    private: true,
+                },
+            ],
+        },
+    ]
+
+    calcNavbarKey = item => item.name
+
+    calcDropdownGroupKey = group => group.key
+
+    calcDropdownItemKey = item => item.name
+
+    renderNavbarItem = (key, item) => {
+        const {
+            navbarActiveLink,
+            navbarValidLinks,
+            userProjects,
+            activeUser,
+        } = this.props;
+        if (navbarValidLinks.indexOf(item.name) <= -1) {
             return null;
         }
+        if (item.needsProject && userProjects.length <= 0) {
+            return null;
+        }
+        if (item.private && !activeUser.userId) {
+            console.warn('here');
+            return null;
+        }
+
         return (
             <Link
-                key={item.name}
-                styleName={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
+                className={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
+                key={key}
                 to={item.linkTo}
             >
                 {item.name}
@@ -117,126 +236,91 @@ export default class Navbar extends React.PureComponent {
         );
     }
 
-    // TODO: AdityaKhatri: Why LinkOusideRouter here?
-    renderDropdownItem = (item) => {
-        const { navbarValidLinks } = this.props;
+    renderDropdownGroup = (key, group) => (
+        <DropdownGroup key={key} >
+            {
+                group.label &&
+                <DropdownGroupTitle title={group.label} />
+            }
+            <List
+                data={group.items}
+                keyExtractor={this.calcDropdownItemKey}
+                modifier={this.renderDropdownItem}
+            />
+        </DropdownGroup>
+    )
+
+    renderDropdownItem = (key, item) => {
+        const {
+            navbarValidLinks,
+            userProjects,
+            activeUser,
+        } = this.props;
         if (navbarValidLinks.indexOf(item.name) === -1) {
+            return null;
+        }
+        if (item.needsProject && userProjects.length <= 0) {
+            return null;
+        }
+        if (item.private && !activeUser.userId) {
+            console.warn('here');
             return null;
         }
 
         return (
             <LinkOutsideRouter
-                key={item.name}
-                styleName="dropdown-item"
+                key={key}
+                className={styles['dropdown-item']}
                 to={item.linkTo}
             >
                 {
                     item.iconName &&
                     <span
-                        className={item.iconName}
-                        styleName="icon"
+                        className={`${item.iconName} ${styles.icon}`}
                     />
                 }
                 {
                     (!item.iconName) &&
-                    <span styleName="icon" />
+                    <span className={styles.icon} />
                 }
                 {item.name}
             </LinkOutsideRouter>
         );
     }
 
-
     render() {
+        console.log('Rendering Navbar');
         const {
-            activeCountry,
             activeProject,
             activeUser,
             navbarVisible,
+            userProjects,
         } = this.props;
-
-        console.log('Rendering Navbar');
+        const {
+            navbarItems,
+            dropdownItems,
+        } = this.state;
 
         if (!navbarVisible) {
             return null;
         }
 
-        const navBarItems = [
-            {
-                linkTo: `/${activeProject}/leads/`,
-                name: pageTitles.leads,
-                private: true,
-            },
-            {
-                linkTo: `/${activeProject}/entries/`,
-                name: pageTitles.entries,
-                private: true,
-            },
-            {
-                linkTo: `/${activeProject}/ary/`,
-                name: pageTitles.ary,
-                private: true,
-            },
-            {
-                linkTo: '/weekly-snapshot/',
-                name: pageTitles.weeklySnapshot,
-                private: true,
-            },
-            {
-                linkTo: `/${activeProject}/export/`,
-                name: pageTitles.export,
-                private: true,
-            },
-        ];
-
-        const getValidLinkOrEmpty = value => (
-            value ? `${value}/` : ''
-        );
-
-        const dropdownItems = [
-            {
-                key: 'first-group',
-                label: undefined,
-                items: [
-                    {
-                        linkTo: `/users/${activeUser.userId}/`,
-                        name: pageTitles.userProfile,
-                        iconName: 'ion-android-person',
-                    },
-                    {
-                        linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
-                        name: pageTitles.countryPanel,
-                        iconName: 'ion-android-globe',
-                    },
-                    {
-                        linkTo: `/${activeProject}/projectpanel/`,
-                        name: pageTitles.projectPanel,
-                        iconName: 'ion-wrench',
-                    },
-                    {
-                        linkTo: '/admin/',
-                        name: pageTitles.adminPanel,
-                        iconName: 'ion-locked',
-                    },
-                ],
-            },
-        ];
-
-        if (this.props.userProjects.length > 0) {
-            return (
-                <div styleName="navbar">
-                    <Link
-                        to="/"
-                        styleName="brand"
-                    >
-                        <img
-                            styleName="icon"
-                            src={logo}
-                            alt="DEEP"
-                            draggable="false"
-                        />
-                        <span styleName="title">Deep</span>
-                    </Link>
+        return (
+            <div styleName="navbar">
+                <Link
+                    to="/"
+                    styleName="brand"
+                >
+                    <img
+                        styleName="icon"
+                        src={logo}
+                        alt="DEEP"
+                        draggable="false"
+                    />
+                    <span styleName="title">Deep</span>
+                </Link>
+                {
+                    userProjects.length > 0 && activeUser.userId &&
                     <SelectInput
                         styleName="project-select-input"
                         placeholder="Select Event"
@@ -246,27 +330,26 @@ export default class Navbar extends React.PureComponent {
                         value={activeProject}
                         onChange={this.onSelectChangeHandler}
                     />
-
-                    <div styleName="menu-items">
-                        { navBarItems.map(this.renderNavbarItem) }
-                    </div>
-                    <DropdownMenu
-                        styleName="dropdown-menu"
-                        className="dropdown-title"
-                        iconLeft="ion-android-person"
-                        title={activeUser.displayName}
-                    >
-                        {
-                            dropdownItems.map(group => (
-                                <DropdownGroup key={group.key} >
-                                    {
-                                        group.label &&
-                                            <DropdownGroupTitle title={group.label} />
-                                    }
-                                    { group.items.map(this.renderDropdownItem) }
-                                </DropdownGroup>
-                            ))
-                        }
+                }
+                <ListView
+                    data={navbarItems}
+                    styleName="menu-items"
+                    keyExtractor={this.calcNavbarKey}
+                    modifier={this.renderNavbarItem}
+                />
+                <DropdownMenu
+                    styleName="dropdown-menu"
+                    className="dropdown-title"
+                    iconLeft="ion-android-person"
+                    title={activeUser.displayName || 'Anon'}
+                >
+                    <List
+                        data={dropdownItems}
+                        keyExtractor={this.calcDropdownGroupKey}
+                        modifier={this.renderDropdownGroup}
+                    />
+                    {
+                        activeUser.userId &&
                         <button
                             styleName="dropdown-item"
                             onClick={this.handleLogoutButtonClick}
@@ -277,46 +360,7 @@ export default class Navbar extends React.PureComponent {
                             />
                             Logout
                         </button>
-                    </DropdownMenu>
-                </div>
-            );
-        }
-        return (
-            <div styleName="navbar">
-                <Link
-                    to="/"
-                    styleName="brand"
-                >
-                    <img styleName="icon" src={logo} alt="DEEP" />
-                    <span styleName="title">Deep</span>
-                </Link>
-                <DropdownMenu
-                    styleName="dropdown-menu"
-                    className="dropdown-title"
-                    iconLeft="ion-android-person"
-                    title={activeUser.displayName}
-                >
-                    {
-                        dropdownItems.map(group => (
-                            <DropdownGroup key={group.key} >
-                                {
-                                    group.label &&
-                                        <DropdownGroupTitle title={group.label} />
-                                }
-                                { group.items.map(this.renderDropdownItem) }
-                            </DropdownGroup>
-                        ))
                     }
-                    <button
-                        styleName="dropdown-item"
-                        onClick={this.handleLogoutButtonClick}
-                    >
-                        <span
-                            className="ion-log-out"
-                            styleName="icon"
-                        />
-                        Logout
-                    </button>
                 </DropdownMenu>
             </div>
         );
