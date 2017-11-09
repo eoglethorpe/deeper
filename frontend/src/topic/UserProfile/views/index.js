@@ -21,7 +21,9 @@ import {
 } from '../../../public/components/View';
 
 import {
+    ProjectAdd,
     UserEdit,
+    UserGroupAdd,
 } from '../components/';
 
 import { RestBuilder } from '../../../public/utils/rest';
@@ -102,7 +104,11 @@ export default class UserProfile extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = { editProfile: false };
+        this.state = {
+            addProject: false,
+            addUserGroup: false,
+            editProfile: false,
+        };
 
         this.projectHeaders = [
             {
@@ -164,7 +170,7 @@ export default class UserProfile extends React.PureComponent {
         this.userGroupsHeaders = [
             {
                 key: 'title',
-                label: 'Name',
+                label: 'Title',
                 order: 1,
             },
             {
@@ -348,8 +354,24 @@ export default class UserProfile extends React.PureComponent {
         this.setState({ editProfile: true });
     }
 
+    handleAddProjectClick = () => {
+        this.setState({ addProject: true });
+    }
+
+    handleAddUserGroupClick = () => {
+        this.setState({ addUserGroup: true });
+    }
+
     handleEditProfileClose = () => {
         this.setState({ editProfile: false });
+    }
+
+    handleAddProjectClose = () => {
+        this.setState({ addProject: false });
+    }
+
+    handleAddUserGroupClose = () => {
+        this.setState({ addUserGroup: false });
     }
 
     render() {
@@ -417,6 +439,24 @@ export default class UserProfile extends React.PureComponent {
                     <h2>
                         Projects
                     </h2>
+                    {/*
+                        TODO: @adityakhatri47 add style
+                    */}
+                    <PrimaryButton onClick={this.handleAddProjectClick} >
+                        Add Project
+                    </PrimaryButton>
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddProjectClose}
+                        show={this.state.addProject}
+                    >
+                        <ModalHeader title="Add Project" />
+                        <ModalBody>
+                            <ProjectAdd
+                                handleModalClose={this.handleAddProjectClose}
+                            />
+                        </ModalBody>
+                    </Modal>
                     <Table
                         data={this.props.userProjects}
                         headers={this.projectHeaders}
@@ -427,6 +467,24 @@ export default class UserProfile extends React.PureComponent {
                     <h2>
                         Groups
                     </h2>
+                    {/*
+                        TODO: @adityakhatri47 add style
+                    */}
+                    <PrimaryButton onClick={this.handleAddUserGroupClick} >
+                        Add User Group
+                    </PrimaryButton>
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddUserGroupClose}
+                        show={this.state.addUserGroup}
+                    >
+                        <ModalHeader title="Add User Group" />
+                        <ModalBody>
+                            <UserGroupAdd
+                                handleModalClose={this.handleAddUserGroupClose}
+                            />
+                        </ModalBody>
+                    </Modal>
                     <Table
                         data={this.props.userGroups}
                         headers={this.userGroupsHeaders}

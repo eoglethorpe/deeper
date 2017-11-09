@@ -3,6 +3,7 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     SET_USER_GROUPS,
+    SET_USER_GROUP,
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
@@ -34,6 +35,12 @@ export const setUserGroupsAction = ({ userId, userGroups }) => ({
     type: SET_USER_GROUPS,
     userId,
     userGroups,
+});
+
+export const setUserGroupAction = ({ userId, userGroup }) => ({
+    type: SET_USER_GROUP,
+    userId,
+    userGroup,
 });
 
 export const setActiveProjectAction = ({ activeProject }) => ({
