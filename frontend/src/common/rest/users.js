@@ -2,7 +2,7 @@ import { wsEndpoint, GET, POST, PATCH, commonHeaderForPost } from '../config/res
 
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const createParamsForUserCreate = ({
-    firstName, lastName, organization, country, email, password,
+    firstName, lastName, organization, country, email, password, displayPicture,
 }) => ({
     method: POST,
     headers: commonHeaderForPost,
@@ -14,7 +14,7 @@ export const createParamsForUserCreate = ({
         email,
         password,
         username: email,
-        displayPicture: null,
+        displayPicture,
     }),
 });
 
@@ -32,6 +32,7 @@ export const createParamsForUserPatch = ({ access }, {
     firstName,
     lastName,
     organization,
+    displayPicture,
 }) => ({
     method: PATCH,
     headers: {
@@ -42,5 +43,6 @@ export const createParamsForUserPatch = ({ access }, {
         firstName,
         lastName,
         organization,
+        displayPicture,
     }),
 });

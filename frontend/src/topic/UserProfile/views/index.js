@@ -10,12 +10,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    Form,
-    TextInput,
-    requiredCondition,
-} from '../../../public/components/Input';
-import {
-    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
@@ -25,19 +19,22 @@ import {
     ModalHeader,
     Table,
 } from '../../../public/components/View';
+
+import {
+    UserEdit,
+} from '../components/';
+
 import { RestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
 import { pageTitles } from '../../../common/utils/labels';
 import {
-    createUrlForUser,
+    createParamsForProjects,
     createParamsForUser,
-    createUrlForUserPatch,
-    createParamsForUserPatch,
-    createUrlForUserGroupsOfUser,
     createParamsForUserGroups,
     createUrlForProjectsOfUser,
-    createParamsForProjects,
+    createUrlForUser,
+    createUrlForUserGroupsOfUser,
 } from '../../../common/rest';
 import {
     tokenSelector,
@@ -105,26 +102,7 @@ export default class UserProfile extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            editProfile: false,
-
-            formErrors: [],
-            formFieldErrors: {},
-            formValues: {},
-            pending: false,
-            stale: false,
-        };
-
-        this.elements = [
-            'firstName',
-            'lastName',
-            'organization',
-        ];
-        this.validations = {
-            firstName: [requiredCondition],
-            lastName: [requiredCondition],
-            organization: [requiredCondition],
-        };
+        this.state = { editProfile: false };
 
         this.projectHeaders = [
             {
@@ -221,7 +199,6 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillMount() {
-        // console.log('Mounting UserProfile');
         this.props.setNavbarState({
             visible: true,
             activeLink: undefined,
@@ -269,13 +246,9 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        // console.log('Unmounting UserProfile');
         this.userRequest.stop();
         this.projectsRequest.stop();
         this.userGroupsRequest.stop();
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
     }
 
     createRequestForUser = (userId) => {
@@ -303,11 +276,9 @@ export default class UserProfile extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
             })
             .build();
         return userRequest;
@@ -337,11 +308,9 @@ export default class UserProfile extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
             })
             .build();
         return projectsRequest;
@@ -373,106 +342,10 @@ export default class UserProfile extends React.PureComponent {
         return projectsRequest;
     }
 
-    createRequestForUserPatch = (userId, { firstName, lastName, organization }) => {
-        const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new RestBuilder()
-            .url(urlForUser)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserPatch({ access }, { firstName, lastName, organization });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userPatchResponse');
-                    this.props.setUserInformation({
-                        userId,
-                        information: response,
-                    });
-                    this.setState({ editProfile: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
-                this.setState({
-                    formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
-                });
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return userPatchRequest;
-    }
-
-    // FORM RELATED
-
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
-        this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-            stale: true,
-        });
-    };
-
-    failureCallback = ({ formErrors, formFieldErrors }) => {
-        this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-        });
-    };
-
-    successCallback = (values) => {
-        // Stop old patch request
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-        // Create new patch request and start it
-        const { match } = this.props;
-        const userId = match.params.userId;
-        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
-        this.userPatchRequest.start();
-    };
-
     // BUTTONS
 
-    handleFormCancel = (e) => {
-        e.preventDefault();
-        this.setState({ editProfile: false });
-    };
-
     handleEditProfileClick = () => {
-        this.setState({
-            editProfile: true,
-            formValues: this.props.userInformation,
-            formFieldErrors: {},
-            formErrors: [],
-        });
+        this.setState({ editProfile: true });
     }
 
     handleEditProfileClose = () => {
@@ -480,15 +353,9 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
-        // console.log('Rendering UserProfile');
-        const { userInformation } = this.props;
-        const {
-            formValues,
-            formErrors = [],
-            formFieldErrors,
-            pending,
-            stale,
-        } = this.state;
+        const { userInformation, match } = this.props;
+
+        const { userId } = match.params;
 
         return (
             <div styleName="user-profile">
@@ -511,81 +378,11 @@ export default class UserProfile extends React.PureComponent {
                     >
                         <ModalHeader title="Edit profile" />
                         <ModalBody>
-                            <Form
-                                styleName="user-profile-edit-form"
-                                changeCallback={this.changeCallback}
-                                elements={this.elements}
-                                failureCallback={this.failureCallback}
-                                successCallback={this.successCallback}
-                                validation={this.validation}
-                                validations={this.validations}
-                            >
-                                {
-                                    pending &&
-                                    <div styleName="pending-overlay">
-                                        <i
-                                            className="ion-load-c"
-                                            styleName="loading-icon"
-                                        />
-                                    </div>
-                                }
-                                <div styleName="non-field-errors">
-                                    {
-                                        formErrors.map(err => (
-                                            <div
-                                                key={err}
-                                                styleName="error"
-                                            >
-                                                {err}
-                                            </div>
-                                        ))
-                                    }
-                                    { formErrors.length <= 0 &&
-                                        <div styleName="error empty">
-                                            -
-                                        </div>
-                                    }
-                                </div>
-                                {/*
-                                <ImageInput
-                                    showPreview
-                                    styleName="display-picture"
-                                />
-                                */}
-                                <TextInput
-                                    label="First name"
-                                    formname="firstName"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.firstName}
-                                    error={formFieldErrors.firstName}
-                                />
-                                <TextInput
-                                    label="Last name"
-                                    formname="lastName"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.lastName}
-                                    error={formFieldErrors.lastName}
-                                />
-                                <TextInput
-                                    label="Organization"
-                                    formname="organization"
-                                    placeholder="Enter a descriptive name"
-                                    value={formValues.organization}
-                                    error={formFieldErrors.organization}
-                                />
-                                <div styleName="action-buttons">
-                                    <DangerButton
-                                        onClick={this.handleFormCancel}
-                                        disabled={pending}
-                                    >
-                                        Cancel
-                                    </DangerButton>
-                                    <PrimaryButton disabled={pending || !stale} >
-                                        Save changes
-                                    </PrimaryButton>
-                                </div>
-                            </Form>
-
+                            <UserEdit
+                                userId={userId}
+                                userInformation={userInformation}
+                                handleModalClose={this.handleEditProfileClose}
+                            />
                         </ModalBody>
                     </Modal>
                 </header>

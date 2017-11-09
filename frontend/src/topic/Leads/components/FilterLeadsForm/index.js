@@ -112,7 +112,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     access,
                 });
             })
-            .preload(() => {
+            .preLoad(() => {
                 this.setState({ loadingLeadFilters: true });
             })
             .postLoad(() => {
