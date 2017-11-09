@@ -62,7 +62,8 @@ export default class CountryPopulationData extends React.PureComponent {
 
     handleFormCancel = (e) => {
         e.preventDefault();
-        this.props.onCancel();
+        // TODO: do something later
+        console.log('Form cancel');
     };
     render() {
         const {

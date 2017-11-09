@@ -17,14 +17,13 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
-    onChange: PropTypes.func.isRequired, //eslint-disable-line
-    onFailure: PropTypes.func.isRequired, //eslint-disable-line
-    onSuccess: PropTypes.func.isRequired, //eslint-disable-line
-    pending: PropTypes.bool.isRequired,
-    stale: PropTypes.bool.isRequired,
+    pending: PropTypes.bool,
+    stale: PropTypes.bool,
 };
 
 const defaultProps = {
+    pending: false,
+    stale: false,
     className: '',
 };
 
