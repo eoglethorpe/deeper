@@ -73,7 +73,10 @@ export default class ApiDocs extends React.PureComponent {
                 this.setState({ pending: false });
             })
             .success((response) => {
-                this.setState({ docs: this.preprocessDocs(response) });
+                this.setState(
+                    { docs: this.preprocessDocs(response) },
+                    () => console.log(this.state.docs),
+                );
             })
             .failure((response) => {
                 console.error('FAILURE:', response);
@@ -133,7 +136,7 @@ export default class ApiDocs extends React.PureComponent {
         <div styleName="docs">
             <h1>{docs.title}</h1>
             <List
-                data={docs.api}
+                data={docs.apis}
                 keyExtractor={this.calcApiKey}
                 modifier={this.renderApi}
             />
