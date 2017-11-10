@@ -91,7 +91,7 @@ export default class HomeScreen extends React.PureComponent {
                     <title>{ pageTitles.homeScreen }</title>
                 </Helmet>
                 <p>
-                    Welcome to the DEEP
+                    Welcome to DEEP
                 </p>
                 <img
                     src={logo}
@@ -99,34 +99,17 @@ export default class HomeScreen extends React.PureComponent {
                     draggable="false"
                 />
                 <h2>
-                    WhOops!! You have no  active projects
+                    Seems like you have no projects yet.
                 </h2>
                 <h2>
-                    <Link
-                        to={`/users/${activeUser.userId}/`}
-                    >
-                    Go to your profile to create a project
+                    <Link to={`/users/${activeUser.userId}/`} >
+                      To get started, go to your profile.
                         <span
                             className="ion-android-person"
                             styleName="icon"
                         />
                     </Link>
                 </h2>
-                {/*
-                    <h2>
-                        Download the Chrome Extension
-                        <a
-                            href="https://deeper.togglecorp.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            >
-                            <span
-                                className="ion-social-chrome"
-                                styleName="icon"
-                                />
-                        </a>
-                    </h2>
-                */}
             </div>
         );
     }
