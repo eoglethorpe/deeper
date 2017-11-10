@@ -1,26 +1,44 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import {
     Table,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
 } from '../../../../public/components/View';
 import {
     TextInput,
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
+    DangerButton,
     TransparentAccentButton,
-    TransparentButton,
+    TransparentDangerButton,
 } from '../../../../public/components/Action';
+import {
+    usersInformationListSelector,
+} from '../../../../common/redux';
 import styles from './styles.scss';
 
 const propTypes = {
-
+    memberData: PropTypes.array.isRequired, // eslint-disable-line
+    users: PropTypes.array.isRequired, // eslint-disable-line
 };
-
 const defaultProps = {
 };
 
+const mapStateToProps = (state, props) => ({
+    users: usersInformationListSelector(state, props),
+});
+
+const mapDispatchToProps = dispatch => ({
+    dispatch,
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class MembersTable extends React.PureComponent {
     static propTypes = propTypes;
@@ -29,26 +47,38 @@ export default class MembersTable extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showAddMemberModal: false,
+        };
+
         this.memberHeaders = [
             {
-                key: 'name',
+                key: 'memberName',
                 label: 'Name',
                 order: 1,
+                sortable: true,
+                comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
                 key: 'email',
                 label: 'Email',
                 order: 2,
+                sortable: true,
+                comparator: (a, b) => a.email.localeCompare(b.memberName),
             },
             {
-                key: 'rights',
+                key: 'role',
                 label: 'Rights',
                 order: 3,
+                sortable: true,
+                comparator: (a, b) => a.role.localeCompare(b.role),
             },
             {
                 key: 'joinedAt',
                 label: 'Joined At',
                 order: 4,
+                sortable: true,
+                comparator: (a, b) => a.joinedAt - b.joinedAt,
             },
             {
                 key: 'actions',
@@ -56,14 +86,14 @@ export default class MembersTable extends React.PureComponent {
                 order: 5,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentButton
+                        <TransparentDangerButton
                             onClick={() => this.handleRemoveMemberClick(row)}
                         >
                             <i className="ion-ios-trash" />
-                        </TransparentButton>
-                        <TransparentButton >
+                        </TransparentDangerButton>
+                        <TransparentAccentButton >
                             <i className="ion-ios-locked" />
-                        </TransparentButton>
+                        </TransparentAccentButton>
                         <TransparentAccentButton >
                             <i className="ion-forward" />
                         </TransparentAccentButton>
@@ -72,102 +102,41 @@ export default class MembersTable extends React.PureComponent {
             },
         ];
 
-        this.memberData = [
+        this.newMemberHeaders = [
             {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-                actions: 'Jacky',
+                key: 'displayName',
+                label: 'Name',
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => a.displayName.localeCompare(b.displayName),
             },
             {
-                name: 'Safar',
-                email: 'safar@safar.com',
-                rights: 'Noob',
-                joinedAt: '2010-2-1',
+                key: 'email',
+                label: 'Email',
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => a.email.localeCompare(b.email),
             },
             {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
+                key: 'actions',
+                label: 'Actions',
+                order: 5,
+                modifier: row => (
+                    <div className="actions">
+                        <TransparentAccentButton
+                            onClick={() => this.handleAddNewMemberClick(row)}
+                        >
+                            <i className="ion-plus" />
+                        </TransparentAccentButton>
+                        <TransparentAccentButton >
+                            <i className="ion-ios-locked" />
+                        </TransparentAccentButton>
+                        <TransparentAccentButton >
+                            <i className="ion-forward" />
+                        </TransparentAccentButton>
+                    </div>
+                ),
             },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-                actions: 'Jacky',
-            },
-            {
-                name: 'Safar',
-                email: 'safar@safar.com',
-                rights: 'Noob',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-                actions: 'Jacky',
-            },
-            {
-                name: 'Safar',
-                email: 'safar@safar.com',
-                rights: 'Noob',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-                actions: 'Jacky',
-            },
-            {
-                name: 'Safar',
-                email: 'safar@safar.com',
-                rights: 'Noob',
-                joinedAt: '2010-2-1',
-            },
-            {
-                name: 'Jacky',
-                email: 'jacky@jacky.com',
-                rights: 'Super Admin',
-                joinedAt: 'Jacky',
-            },
-
         ];
     }
 
@@ -175,7 +144,26 @@ export default class MembersTable extends React.PureComponent {
         console.log(row);
     };
 
+    handleAddNewMemberClick = (row) => {
+        console.log(row);
+    };
+
+    handleAddMemberClick = (row) => {
+        this.setState({
+            editRow: row,
+            showAddMemberModal: true,
+        });
+    }
+
+    handleAddMemberModalClose = () => {
+        this.setState({
+            // editRow: {},
+            showAddMemberModal: false,
+        });
+    }
     render() {
+        const { users, memberData } = this.props;
+
         return (
             <div styleName="members">
                 <div styleName="header">
@@ -188,18 +176,59 @@ export default class MembersTable extends React.PureComponent {
                     />
                     <div styleName="pusher" />
                     <div styleName="add-button">
-                        <PrimaryButton>
+                        <PrimaryButton
+                            onClick={this.handleAddMemberClick}
+                        >
                             Add New Member
                         </PrimaryButton>
                     </div>
                 </div>
                 <div styleName="content">
                     <Table
-                        data={this.memberData}
+                        data={memberData}
                         headers={this.memberHeaders}
                         keyExtractor={rowData => rowData.id}
                     />
                 </div>
+                <Modal
+                    closeOnEscape
+                    onClose={this.handleAddMemberModalClose}
+                    show={this.state.showAddMemberModal}
+                >
+                    <ModalHeader
+                        title="Add New Member"
+                    />
+                    <ModalBody
+                        styleName="add-member-modal"
+                    >
+                        <TextInput
+                            placeholder="Search Member"
+                            type="search"
+                            styleName="modal-search-input"
+                            showLabel={false}
+                            showHintAndError={false}
+                        />
+                        <div styleName="new-member-table">
+                            <Table
+                                data={users}
+                                headers={this.newMemberHeaders}
+                                keyExtractor={rowData => rowData.id}
+                            />
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div styleName="action-buttons">
+                            <DangerButton
+                                onClick={this.handleAddMemberModalClose}
+                            >
+                                Cancel
+                            </DangerButton>
+                            <PrimaryButton>
+                                Save changes
+                            </PrimaryButton>
+                        </div>
+                    </ModalFooter>
+                </Modal>
             </div>
         );
     }

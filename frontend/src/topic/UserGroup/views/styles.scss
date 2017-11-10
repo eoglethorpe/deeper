@@ -3,32 +3,43 @@
 
 .usergroup {
     display: flex;
-    flex-direction: column;
     padding: $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar});
 
-    .title {
-        flex-shrink: 0;
-        background-color: $color-foreground;
-        padding: $spacing-medium $spacing-large;
-    }
-
-    .tabs-container {
+    .left {
         display: flex;
-        flex-basis: 100%;
+        flex-basis: 70%;
         flex-direction: column;
-        flex-grow: 1;
-        background-color: $color-foreground;
 
-        .tabs-header-container {
+        .title {
             flex-shrink: 0;
+            background-color: $color-foreground;
+            padding: $spacing-medium $spacing-large;
         }
 
-        .tab {
+        .tabs-container {
             display: flex;
+            flex-basis: 100%;
             flex-direction: column;
             flex-grow: 1;
+            background-color: $color-foreground;
+
+            .tabs-header-container {
+                flex-shrink: 0;
+            }
+
+            .tab {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+            }
         }
     }
 
+    .right {
+        flex-basis: 30%;
+        border-left: $width-separator-medium solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small;
+    }
 }

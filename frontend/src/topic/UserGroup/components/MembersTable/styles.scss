@@ -1,11 +1,12 @@
 @import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
 
 .members {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 
-    .header {
+    >.header {
         display: flex;
         flex-shrink: 0;
         padding: $spacing-medium $spacing-large;
@@ -27,5 +28,65 @@
         flex-basis: 100%;
         flex-grow: 1;
         overflow-y: auto;
+
+        :global .header {
+            position: sticky;
+            top: 0;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+            text-align: left;
+            user-select: none;
+
+            &:not(.actions) {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+            }
+        }
     }
+}
+
+.add-member-modal {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-medium;
+
+    .modal-search-input {
+        flex-basis: 20%;
+        flex-shrink: 0;
+        margin-bottom: $spacing-small;
+        padding: $spacing-medium;
+    }
+
+    .new-member-table {
+        flex-grow: 1;
+        height: 100%;
+        overflow-y: auto;
+
+        :global .header {
+            position: sticky;
+            top: 0;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+            text-align: left;
+            user-select: none;
+
+            &:not(.actions) {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+            }
+        }
+    }
+}
+
+.action-buttons {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: row;
+    justify-content: space-between;
 }

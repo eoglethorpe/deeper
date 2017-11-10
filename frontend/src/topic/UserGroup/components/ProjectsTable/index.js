@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import PropTypes from 'prop-types';
 import React from 'react';
 import {
     Table,
@@ -8,9 +7,8 @@ import {
     TextInput,
 } from '../../../../public/components/Input';
 import {
-    PrimaryButton,
+    TransparentDangerButton,
     TransparentAccentButton,
-    TransparentButton,
 } from '../../../../public/components/Action';
 import styles from './styles.scss';
 
@@ -34,6 +32,8 @@ export default class ProjectsTable extends React.PureComponent {
                 key: 'title',
                 label: 'Title',
                 order: 1,
+                sortable: true,
+                comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'createdAt',
@@ -49,12 +49,16 @@ export default class ProjectsTable extends React.PureComponent {
                 key: 'countries',
                 label: 'Countries',
                 order: 4,
+                sortable: true,
+                comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'status',
                 label: 'Status',
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
+                sortable: true,
+                comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'modifiedAt',
@@ -65,6 +69,8 @@ export default class ProjectsTable extends React.PureComponent {
                 key: 'members',
                 label: 'Members',
                 order: 7,
+                sortable: true,
+                comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'actions',
@@ -72,16 +78,16 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 8,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentButton
+                        <TransparentDangerButton
                             title="Remove Member"
                             onClick={() => this.handleRemoveProjectClick(row)}
 
                         >
                             <i className="ion-ios-trash" />
-                        </TransparentButton>
-                        <TransparentButton >
+                        </TransparentDangerButton>
+                        <TransparentAccentButton >
                             <i className="ion-ios-locked" />
-                        </TransparentButton>
+                        </TransparentAccentButton>
                         <TransparentAccentButton >
                             <i className="ion-forward" />
                         </TransparentAccentButton>
@@ -108,7 +114,7 @@ export default class ProjectsTable extends React.PureComponent {
     render() {
         return (
             <div>
-                <div styleName="projects-table">
+                <div styleName="projects">
                     <div styleName="header">
                         <TextInput
                             placeholder="Search Projects"

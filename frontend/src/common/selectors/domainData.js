@@ -9,6 +9,8 @@ const emptyObject = {};
 // Using props
 
 export const userIdFromRoute = (state, { match }) => match.params.userId;
+export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
+
 export const countryIdFromProps = (state, { countryId }) => countryId;
 
 // Using state
@@ -34,6 +36,11 @@ export const usersSelector = ({ domainData }) => (
 export const projectsSelector = ({ domainData }) => (
     domainData.projects || emptyObject
 );
+
+export const groupsSelector = ({ domainData }) => (
+    domainData.userGroups || emptyList
+);
+
 export const totalLeadsCountSelector = ({ domainData }) => (
     domainData.totalLeadsCount || emptyObject
 );
@@ -65,6 +72,12 @@ export const projectDetailsSelector = createSelector(
     (projects, activeProject) => projects[activeProject] || emptyObject,
 );
 
+export const usersInformationListSelector = createSelector(
+    usersSelector,
+    users => Object.keys(users).map(id =>
+        users[id].information,
+    ) || emptyList,
+);
 
 // Selector depending on user id from route (url)
 
@@ -89,7 +102,11 @@ export const userGroupsSelector = createSelector(
     user => (user.userGroups || emptyList),
 );
 
-
+export const groupSelector = createSelector(
+    groupsSelector,
+    groupIdFromRoute,
+    (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
+);
 // Selector depending on user id from state (logged-in user)
 
 export const currentUserSelector = createSelector(

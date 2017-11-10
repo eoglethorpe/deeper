@@ -1,15 +1,15 @@
 @import '../../../../stylesheets/base';
 
-.projects-table {
+.projects {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 
-    .header {
+    >.header {
         display: flex;
         flex-shrink: 0;
         flex-wrap: wrap;
-        padding: $spacing-small;
+        padding: $spacing-medium $spacing-large;
 
         .search-input {
             flex-basis: 20%;
@@ -20,5 +20,22 @@
         flex-basis: 100%;
         flex-grow: 1;
         overflow-y: auto;
+
+        :global .header {
+            position: sticky;
+            top: 0;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+            text-align: left;
+            user-select: none;
+
+            &:not(.actions) {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+            }
+        }
     }
 }

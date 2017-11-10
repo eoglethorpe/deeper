@@ -162,7 +162,7 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/usergroup/*',
+            path: '/usergroup/:userGroupId/',
             name: pageTitles.userGroup,
             component: UserGroup,
             private: true,

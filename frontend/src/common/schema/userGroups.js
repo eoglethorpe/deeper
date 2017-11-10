@@ -62,5 +62,16 @@ const userGroupSchema = [];
     };
     userGroupSchema.push({ name, schema });
 }
+{
+    const name = 'userGroupGetResponse';
+    const schema = {
+        doc: {
+            name: 'User Group Get Response',
+            description: 'Response for GET /user-groups/:id',
+        },
+        extends: 'userGroup',
+    };
+    userGroupSchema.push({ name, schema });
+}
 
 export default userGroupSchema;

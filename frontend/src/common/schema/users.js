@@ -1,12 +1,28 @@
 const userSchema = [];
 
 {
+    const name = 'user-s';
+    const schema = {
+        doc: {
+            name: 'User Small',
+            description: 'Data for Small User Information',
+        },
+        fields: {
+            displayName: { type: 'string', required: true },
+            email: { type: 'email', required: true },
+            id: { type: 'uint', required: true },
+        },
+    };
+    userSchema.push({ name, schema });
+}
+{
     const name = 'user';
     const schema = {
         doc: {
             name: 'User',
             description: 'Data for user',
         },
+        extends: 'user-s',
         fields: {
             displayName: { type: 'string', required: true },
             displayPicture: { type: 'uint' }, // id
@@ -44,11 +60,27 @@ const userSchema = [];
     userSchema.push({ name, schema });
 }
 {
-    const name = 'userGetResponse';
+    const name = 'usersGetResponse';
     const schema = {
         doc: {
             name: 'User Get Response',
-            description: 'Response for GET /user/:id/',
+            description: 'Response for GET /users/:id/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.user-s', required: true },
+        },
+    };
+    userSchema.push({ name, schema });
+}
+{
+    const name = 'userGetResponse';
+    const schema = {
+        doc: {
+            name: 'Users Get Response',
+            description: 'Response for GET /users/',
         },
         extends: 'user',
     };
