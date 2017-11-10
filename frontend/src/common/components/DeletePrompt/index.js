@@ -31,42 +31,31 @@ export default class DeletePrompt extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        console.log(props);
-    }
-
-    handleCancel = () => {
-        this.props.handleCancel();
-    }
-
-    handleDelete = () => {
-        this.props.handleDelete();
-    }
-
-    renderMessage = () => {
-        const showDetail = this.props.getName && this.props.getType;
-        return (
-            <span>
-                {showDetail ?
-                    `Do you want to delete ${this.props.getType()}: ${this.props.getName()}` :
-                    'Are you sure'
-                }?
-            </span>
-        );
-    }
-
     render() {
+        const {
+            handleDelete,
+            handleCancel,
+
+            getType,
+            getName,
+        } = this.props;
+
+        const getTypeNameDefined = getType && getName;
         return (
             <div>
                 <div>
-                    {this.renderMessage()}
+                    <span>
+                        { getTypeNameDefined ?
+                            `Do you want to delete ${getType()} '${getName()}' ?` :
+                            'Are you sure you want to delete ?'
+                        }
+                    </span>
                 </div>
                 <div>
-                    <DangerButton onClick={() => { this.handleDelete(); }}>
+                    <DangerButton onClick={handleDelete}>
                         Delete
                     </DangerButton>
-                    <PrimaryButton onClick={() => { this.handleCancel(); }}>
+                    <PrimaryButton onClick={handleCancel}>
                         Cancel
                     </PrimaryButton>
                 </div>

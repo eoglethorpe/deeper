@@ -182,7 +182,6 @@ export default class UserEdit extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        console.log(values);
         // Stop old patch request
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
@@ -213,15 +212,14 @@ export default class UserEdit extends React.PureComponent {
             this.setState({
                 formValues: { ...this.state.formValues, displayPicture: r.id },
                 stale: true,
-            }, () => console.log(this.state));
+            });
         };
 
         uploader.onProgress = (progress) => {
             // TODO: Add progress component
-            console.warn(`Upload Progress: ${progress}`);
+            // console.warn(`Upload Progress: ${progress}`);
         };
         this.uploader = uploader;
-
 
         this.uploader.start();
     }
@@ -273,36 +271,40 @@ export default class UserEdit extends React.PureComponent {
                 {/*
                     TODO: Pass image src to ImageInput using advanced File Component
                 */}
-                <ImageInput
-                    showPreview
-                    styleName="display-picture"
-                    onChange={this.handleImageInputChange}
-                />
-                <TextInput
-                    label="First name"
-                    formname="firstName"
-                    placeholder="Enter a descriptive name"
-                    value={formValues.firstName}
-                    error={formFieldErrors.firstName}
-                />
                 <HiddenInput
                     formname="displayPicture"
                     value={formValues.displayPicture}
                     error={formFieldErrors.displayPicture}
                 />
+                <ImageInput
+                    showPreview
+                    styleName="display-picture"
+                    onChange={this.handleImageInputChange}
+                    disabled={pending}
+                />
                 <TextInput
-                    label="Last name"
+                    label="First Name"
+                    formname="firstName"
+                    placeholder="John"
+                    value={formValues.firstName}
+                    error={formFieldErrors.firstName}
+                    disabled={pending}
+                />
+                <TextInput
+                    label="Last Name"
                     formname="lastName"
-                    placeholder="Enter a descriptive name"
+                    placeholder="Doe"
                     value={formValues.lastName}
                     error={formFieldErrors.lastName}
+                    disabled={pending}
                 />
                 <TextInput
                     label="Organization"
                     formname="organization"
-                    placeholder="Enter a descriptive name"
+                    placeholder="Baroque Works"
                     value={formValues.organization}
                     error={formFieldErrors.organization}
+                    disabled={pending}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
@@ -312,7 +314,7 @@ export default class UserEdit extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Save changes
+                        Save
                     </PrimaryButton>
                 </div>
             </Form>

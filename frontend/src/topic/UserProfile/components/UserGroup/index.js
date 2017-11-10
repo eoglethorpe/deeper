@@ -93,7 +93,7 @@ export default class UserGroup extends React.PureComponent {
             activeUserGroupDelete: null,
         };
 
-        this.userGroupsHeaders = [
+        this.userGroupsTableHeaders = [
             {
                 key: 'title',
                 label: 'Title',
@@ -132,43 +132,34 @@ export default class UserGroup extends React.PureComponent {
                 label: 'Actions',
                 order: 4,
                 modifier: (d) => {
-                    const activeUserMembership = d.memberships.filter(e =>
-                        e.member === this.props.activeUser.userId,
-                    )[0];
-                    if (activeUserMembership && activeUserMembership.role === 'admin') {
-                        return (
-                            <div>
-                                {/*
-                                    TODO: @adityakhatri47 look into this
-                                */}
-                                <PrimaryButton
-                                    onClick={() => { this.handleEditUserGroupClick(d.id); }}
-                                >
-                                    <i className="ion-edit" />
-                                </PrimaryButton>
-                                <DangerButton
-                                    onClick={() => { this.handleDeleteUserGroupClick(d.id); }}
-                                >
-                                    <i className="ion-android-delete" />
-                                </DangerButton>
-                            </div>
-                        );
+                    const { activeUser } = this.props;
+                    const activeUserMembership = (d.memberships || [])
+                        .find(e => e.member === activeUser.userId);
+
+                    if (!activeUserMembership || activeUserMembership.role !== 'admin') {
+                        return <div />;
                     }
+
+                    const onEditClick = () => this.handleEditUserGroupClick(d.id);
+                    const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
                     return (
                         <div>
-                            {/*
-                                TODO: show view for normal user
-                            */}
+                            <PrimaryButton onClick={onEditClick} >
+                                <i className="ion-edit" />
+                            </PrimaryButton>
+                            <DangerButton onClick={onDeleteClick} >
+                                <i className="ion-android-delete" />
+                            </DangerButton>
                         </div>
                     );
                 },
             },
         ];
+        this.userGroupsTableKeyExtractor = rowData => rowData.id;
     }
 
     componentWillMount() {
         const { userId } = this.props.match.params;
-
         this.userGroupsRequest = this.createRequestForUserGroups(userId);
         this.userGroupsRequest.start();
     }
@@ -186,14 +177,14 @@ export default class UserGroup extends React.PureComponent {
         this.userGroupsRequest.stop();
     }
 
-    getActiveDeleteUserGroup = () => {
-        const userGroup = this.props.userGroups.filter(e => (
+    getActiveDeleteUserGroupType = () => 'User Group'
+
+    getActiveDeleteUserGroupName = () => {
+        const { userGroups } = this.props;
+        const userGroup = userGroups.find(e => (
             e.id === this.state.activeUserGroupDelete
-        ))[0];
-        if (userGroup) {
-            return userGroup.title;
-        }
-        return null;
+        ));
+        return userGroup ? userGroup.title : null;
     }
 
     deleteActiveUserGroup = () => {
@@ -295,27 +286,27 @@ export default class UserGroup extends React.PureComponent {
 
     // Delete Close
     handleDeleteUserGroupClose = () => {
-        this.setState({
-            deleteUserGroup: false,
-        });
+        this.setState({ deleteUserGroup: false });
     }
 
     render() {
+        const { userGroups } = this.props;
+        const {
+            addUserGroup,
+            deleteUserGroup,
+        } = this.state;
         return (
             <div styleName="groups">
                 <h2>
                     Groups
                 </h2>
-                {/*
-                    TODO: @adityakhatri47 add style
-                */}
                 <PrimaryButton onClick={this.handleAddUserGroupClick} >
                     Add User Group
                 </PrimaryButton>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddUserGroupClose}
-                    show={this.state.addUserGroup}
+                    show={addUserGroup}
                 >
                     <ModalHeader title="Add User Group" />
                     <ModalBody>
@@ -327,22 +318,22 @@ export default class UserGroup extends React.PureComponent {
                 <Modal
                     closeOnEscape
                     onClose={this.handleDeleteUserGroupClose}
-                    show={this.state.deleteUserGroup}
+                    show={deleteUserGroup}
                 >
                     <ModalHeader title="Delete User Group" />
                     <ModalBody>
                         <DeletePrompt
                             handleCancel={this.handleDeleteUserGroupClose}
                             handleDelete={this.deleteActiveUserGroup}
-                            getName={this.getActiveDeleteUserGroup}
-                            getType={() => ('User Group')}
+                            getName={this.getActiveDeleteUserGroupName}
+                            getType={this.getActiveDeleteUserGroupType}
                         />
                     </ModalBody>
                 </Modal>
                 <Table
-                    data={this.props.userGroups}
-                    headers={this.userGroupsHeaders}
-                    keyExtractor={rowData => rowData.id}
+                    data={userGroups}
+                    headers={this.userGroupsTableHeaders}
+                    keyExtractor={this.userGroupsTableKeyExtractor}
                 />
             </div>
         );

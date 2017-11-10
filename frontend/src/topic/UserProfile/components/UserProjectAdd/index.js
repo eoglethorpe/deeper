@@ -74,10 +74,6 @@ export default class UserProjectAdd extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        console.warn('Mounting Project Add');
-    }
-
     componentWillUnmount() {
         if (this.projectCreateRequest) {
             this.projectCreateRequest.stop();
@@ -161,8 +157,6 @@ export default class UserProjectAdd extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        console.log(values);
-        // Stop old patch request
         if (this.projectCreateRequest) {
             this.projectCreateRequest.stop();
         }
@@ -227,6 +221,7 @@ export default class UserProjectAdd extends React.PureComponent {
                     placeholder="Enter project name"
                     value={formValues.title}
                     error={formFieldErrors.title}
+                    disabled={pending}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

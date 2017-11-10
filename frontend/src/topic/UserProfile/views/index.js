@@ -106,7 +106,6 @@ export default class UserProfile extends React.PureComponent {
         });
 
         const { userId } = this.props.match.params;
-
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();
     }
@@ -167,7 +166,10 @@ export default class UserProfile extends React.PureComponent {
     }
 
     render() {
-        const { userInformation, match } = this.props;
+        const {
+            userInformation,
+            match,
+        } = this.props;
 
         const { userId } = match.params;
 
@@ -182,7 +184,7 @@ export default class UserProfile extends React.PureComponent {
                     <h1>
                         { pageTitles.userProfile }
                     </h1>
-                    <PrimaryButton onClick={this.handleEditProfileClick} >
+                    <PrimaryButton onClick={this.handleEditProfileClick}>
                         Edit profile
                     </PrimaryButton>
                     <Modal
@@ -227,12 +229,8 @@ export default class UserProfile extends React.PureComponent {
                 <div styleName="stats">
                     <h2>Stats</h2>
                 </div>
-                <UserProject
-                    match={match}
-                />
-                <UserGroup
-                    match={match}
-                />
+                <UserProject match={match} />
+                <UserGroup match={match} />
             </div>
         );
     }

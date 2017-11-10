@@ -163,8 +163,6 @@ export default class UserGroupAdd extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        console.log(values);
-        // Stop old patch request
         if (this.userGroupCreateRequest) {
             this.userGroupCreateRequest.stop();
         }
@@ -224,11 +222,12 @@ export default class UserGroupAdd extends React.PureComponent {
                     }
                 </div>
                 <TextInput
-                    label="User Group Title"
+                    label="Title"
                     formname="title"
-                    placeholder="Enter User group name"
+                    placeholder="ACAPS"
                     value={formValues.title}
                     error={formFieldErrors.title}
+                    disabled={pending}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

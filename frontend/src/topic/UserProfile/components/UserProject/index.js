@@ -90,13 +90,14 @@ export default class UserProject extends React.PureComponent {
             addProject: false,
 
             // Delete Modal state
-            deleteUserProject: false,
+            deleteProject: false,
 
             // Active Delete state
             activeProjectDelete: null,
         };
 
-        this.projectHeaders = [
+        // TABLE component
+        this.projectTableHeaders = [
             {
                 key: 'title',
                 label: 'Title',
@@ -145,50 +146,41 @@ export default class UserProject extends React.PureComponent {
                 key: 'members',
                 label: 'Members',
                 order: 6,
-                modifier: d => (d.memberships || []).length, // NOTE: Show 'Active' for now
+                modifier: d => (d.memberships || []).length,
             },
             {
                 key: 'actions',
                 label: 'Actions',
                 order: 7,
                 modifier: (d) => {
-                    const activeUserMembership = (d.memberships || []).filter(e =>
-                        e.member === this.props.activeUser.userId,
-                    )[0];
-                    if (activeUserMembership && activeUserMembership.role === 'admin') {
-                        return (
-                            <div>
-                                {/*
-                                    TODO: @adityakhatri47 look into this
-                                */}
-                                <PrimaryButton
-                                    onClick={() => { this.handleEditProjectClick(d.id); }}
-                                >
-                                    <i className="ion-edit" />
-                                </PrimaryButton>
-                                <DangerButton
-                                    onClick={() => { this.handleDeleteProjectClick(d.id); }}
-                                >
-                                    <i className="ion-android-delete" />
-                                </DangerButton>
-                            </div>
-                        );
+                    const { activeUser } = this.props;
+                    const activeUserMembership = (d.memberships || [])
+                        .find(e => e.member === activeUser.userId);
+
+                    if (!activeUserMembership || activeUserMembership.role !== 'admin') {
+                        return <div />;
                     }
+
+                    const onEditClick = () => this.handleEditProjectClick(d.id);
+                    const onDeleteClick = () => this.handleDeleteProjectClick(d.id);
                     return (
                         <div>
-                            {/*
-                                TODO: show view for normal user
-                            */}
+                            <PrimaryButton onClick={onEditClick} >
+                                <i className="ion-edit" />
+                            </PrimaryButton>
+                            <DangerButton onClick={onDeleteClick} >
+                                <i className="ion-android-delete" />
+                            </DangerButton>
                         </div>
                     );
                 },
             },
         ];
+        this.projectTableKeyExtractor = rowData => rowData.id;
     }
 
     componentWillMount() {
         const { userId } = this.props.match.params;
-
         this.projectsRequest = this.createRequestForProjects(userId);
         this.projectsRequest.start();
     }
@@ -206,22 +198,24 @@ export default class UserProject extends React.PureComponent {
         this.projectsRequest.stop();
     }
 
-    getActiveDeleteProject = () => {
-        const project = this.props.userProjects.filter(e => (
+    getActiveDeleteProjectType = () => 'Project'
+
+    getActiveDeleteProjectName = () => {
+        const { userProjects } = this.props;
+        const project = userProjects.find(e => (
             e.id === this.state.activeProjectDelete
-        ))[0];
-        if (project) {
-            return project.title;
-        }
-        return null;
+        ));
+        return project ? project.title : null;
     }
 
     deleteActiveProject = () => {
         if (this.projectDeleteRequest) {
             this.projectDeleteRequest.stop();
         }
+
+        const { activeProjectDelete } = this.state;
         this.projectDeleteRequest = this.createRequestForProjectDelete(
-            this.state.activeProjectDelete,
+            activeProjectDelete,
         );
         this.projectDeleteRequest.start();
     }
@@ -314,62 +308,59 @@ export default class UserProject extends React.PureComponent {
     // Delete Click
     handleDeleteProjectClick = (id) => {
         this.setState({
-            deleteUserProject: true,
+            deleteProject: true,
             activeProjectDelete: id,
         });
-        console.log(id);
     }
 
     // Delete Close
     handleDeleteProjectClose = () => {
-        this.setState({
-            deleteUserProject: false,
-        });
+        this.setState({ deleteProject: false });
     }
 
     render() {
+        const { userProjects } = this.props;
+        const {
+            addProject,
+            deleteProject,
+        } = this.state;
         return (
             <div styleName="projects">
                 <h2>
                     Projects
                 </h2>
-                {/*
-                    TODO: @adityakhatri47 add style
-                */}
                 <PrimaryButton onClick={this.handleAddProjectClick} >
                     Add Project
                 </PrimaryButton>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddProjectClose}
-                    show={this.state.addProject}
+                    show={addProject}
                 >
                     <ModalHeader title="Add Project" />
                     <ModalBody>
-                        <UserProjectAdd
-                            handleModalClose={this.handleAddProjectClose}
-                        />
+                        <UserProjectAdd handleModalClose={this.handleAddProjectClose} />
                     </ModalBody>
                 </Modal>
                 <Modal
                     closeOnEscape
                     onClose={this.handleDeleteProjectClose}
-                    show={this.state.deleteUserProject}
+                    show={deleteProject}
                 >
                     <ModalHeader title="Delete Project" />
                     <ModalBody>
                         <DeletePrompt
                             handleCancel={this.handleDeleteProjectClose}
                             handleDelete={this.deleteActiveProject}
-                            getName={this.getActiveDeleteProject}
-                            getType={() => ('User Project')}
+                            getName={this.getActiveDeleteProjectName}
+                            getType={this.getActiveDeleteProjectType}
                         />
                     </ModalBody>
                 </Modal>
                 <Table
-                    data={this.props.userProjects}
-                    headers={this.projectHeaders}
-                    keyExtractor={rowData => rowData.id}
+                    data={userProjects}
+                    headers={this.projectTableHeaders}
+                    keyExtractor={this.projectTableKeyExtractor}
                 />
             </div>
         );
