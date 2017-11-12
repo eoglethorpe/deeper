@@ -257,7 +257,7 @@ export default class UserProject extends React.PureComponent {
 
     createRequestForProjectDelete = (projectId) => {
         const urlForProject = createUrlForProject(projectId);
-        const userId = this.props.match.params.userId;
+        const userId = this.props.activeUser.userId;
 
         const projectDeleteRequest = new RestBuilder()
             .url(urlForProject)
@@ -355,13 +355,15 @@ export default class UserProject extends React.PureComponent {
     }
 
     render() {
-        const { userProjects } = this.props;
+        const { userProjects, match, activeUser } = this.props;
 
         const {
             addProject,
             deleteProject,
             deletePending,
         } = this.state;
+
+        const isCurrentUser = parseInt(match.params.userId, 10) === activeUser.userId;
 
         return (
             <div styleName="projects">
@@ -370,11 +372,15 @@ export default class UserProject extends React.PureComponent {
                         Projects
                     </h2>
                     <div styleName="pusher" />
-                    <div>
-                        <PrimaryButton onClick={this.handleAddProjectClick} >
-                            Add Project
-                        </PrimaryButton>
-                    </div>
+                    {
+
+                        isCurrentUser &&
+                        <div>
+                            <PrimaryButton onClick={this.handleAddProjectClick} >
+                                Add Project
+                            </PrimaryButton>
+                        </div>
+                    }
                 </div>
                 <Modal
                     closeOnEscape

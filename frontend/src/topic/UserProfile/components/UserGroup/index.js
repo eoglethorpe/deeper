@@ -229,7 +229,7 @@ export default class UserGroup extends React.PureComponent {
 
     createRequestForUserGroupDelete = (userGroupId) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
-        const userId = this.props.match.params.userId;
+        const userId = this.props.activeUser.userId;
 
         const userGroupDeletRequest = new RestBuilder()
             .url(urlForUserGroup)
@@ -321,12 +321,16 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroups } = this.props;
+        const { userGroups, match, activeUser } = this.props;
+
         const {
             addUserGroup,
             deleteUserGroup,
             deletePending,
         } = this.state;
+
+        const isCurrentUser = parseInt(match.params.userId, 10) === activeUser.userId;
+
         return (
             <div styleName="groups">
                 <div styleName="header">
@@ -334,13 +338,16 @@ export default class UserGroup extends React.PureComponent {
                         Groups
                     </h2>
                     <div styleName="pusher" />
-                    <div>
-                        <PrimaryButton
-                            onClick={this.handleAddUserGroupClick}
-                        >
-                            Add User Group
-                        </PrimaryButton>
-                    </div>
+                    {
+                        isCurrentUser &&
+                        <div>
+                            <PrimaryButton
+                                onClick={this.handleAddUserGroupClick}
+                            >
+                                Add User Group
+                            </PrimaryButton>
+                        </div>
+                    }
                 </div>
                 <Modal
                     closeOnEscape
