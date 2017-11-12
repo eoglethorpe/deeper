@@ -10,8 +10,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    DangerButton,
     PrimaryButton,
+    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     FormattedDate,
@@ -99,6 +99,8 @@ export default class UserGroup extends React.PureComponent {
                 key: 'title',
                 label: 'Title',
                 order: 1,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
@@ -139,27 +141,38 @@ export default class UserGroup extends React.PureComponent {
 
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
-                            <Link
-                                key={d.title}
-                                to={`/usergroup/${d.id}/`}
+                            <TransparentButton
+                                className="watch-btn"
                             >
-                                <i className="ion-eye" />
-                            </Link>
+                                <Link
+                                    key={d.title}
+                                    to={`/usergroup/${d.id}/`}
+                                >
+                                    <i className="ion-eye" />
+                                </Link>
+                            </TransparentButton>
                         );
                     }
 
                     const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
                     return (
                         <div>
-                            <Link
-                                key={d.title}
-                                to={`/usergroup/${d.id}/`}
+                            <TransparentButton
+                                className="edit-btn"
                             >
-                                <i className="ion-edit" />
-                            </Link>
-                            <DangerButton onClick={onDeleteClick} >
+                                <Link
+                                    key={d.title}
+                                    to={`/usergroup/${d.id}/`}
+                                >
+                                    <i className="ion-edit" />
+                                </Link>
+                            </TransparentButton>
+                            <TransparentButton
+                                onClick={onDeleteClick}
+                                className="delete-btn"
+                            >
                                 <i className="ion-android-delete" />
-                            </DangerButton>
+                            </TransparentButton>
                         </div>
                     );
                 },
@@ -301,12 +314,19 @@ export default class UserGroup extends React.PureComponent {
         } = this.state;
         return (
             <div styleName="groups">
-                <h2>
-                    Groups
-                </h2>
-                <PrimaryButton onClick={this.handleAddUserGroupClick} >
-                    Add User Group
-                </PrimaryButton>
+                <div styleName="header">
+                    <h2>
+                        Groups
+                    </h2>
+                    <div styleName="pusher" />
+                    <div styleName="add-user-group-btn">
+                        <PrimaryButton
+                            onClick={this.handleAddUserGroupClick}
+                        >
+                            Add User Group
+                        </PrimaryButton>
+                    </div>
+                </div>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddUserGroupClose}
@@ -334,11 +354,13 @@ export default class UserGroup extends React.PureComponent {
                         />
                     </ModalBody>
                 </Modal>
-                <Table
-                    data={userGroups}
-                    headers={this.userGroupsTableHeaders}
-                    keyExtractor={this.userGroupsTableKeyExtractor}
-                />
+                <div styleName="usergroup-table">
+                    <Table
+                        data={userGroups}
+                        headers={this.userGroupsTableHeaders}
+                        keyExtractor={this.userGroupsTableKeyExtractor}
+                    />
+                </div>
             </div>
         );
     }
