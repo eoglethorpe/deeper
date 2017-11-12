@@ -5,6 +5,7 @@ import React from 'react';
 import {
     DateInput,
     Form,
+    NonFieldErrors,
     TextInput,
     requiredCondition,
 } from '../../../../public/components/Input';
@@ -121,24 +122,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         </div>
                 }
                 <header styleName="header">
-                    <div styleName="non-field-errors">
-                        {
-                            formErrors.map(err => (
-                                <div
-                                    key={err}
-                                    styleName="error"
-                                >
-                                    {err}
-                                </div>
-                            ))
-                        }
-                        {
-                            formErrors.length <= 0 &&
-                                <div styleName="error empty">
-                                    -
-                                </div>
-                        }
-                    </div>
+                    <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">
                         <DangerButton
                             onClick={this.handleFormCancel}

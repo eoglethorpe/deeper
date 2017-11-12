@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import {
     Form,
+    NonFieldErrors,
     TextInput,
     requiredCondition,
 } from '../../../../public/components/Input';
@@ -198,23 +199,7 @@ export default class UserProjectAdd extends React.PureComponent {
                         />
                     </div>
                 }
-                <div styleName="non-field-errors">
-                    {
-                        formErrors.map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                    { formErrors.length <= 0 &&
-                        <div styleName="error empty">
-                            -
-                        </div>
-                    }
-                </div>
+                <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Project Title"
                     formname="title"

@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 
 import {
     Form,
+    NonFieldErrors,
     TextInput,
     emailCondition,
     lengthGreaterThanCondition,
@@ -213,23 +214,7 @@ export default class Login extends React.PureComponent {
                             <i className="ion-load-c" styleName="loading-icon" />
                         </div>
                     }
-                    <div styleName="non-field-errors">
-                        {
-                            formErrors.map(err => (
-                                <div
-                                    key={err}
-                                    styleName="error"
-                                >
-                                    {err}
-                                </div>
-                            ))
-                        }
-                        { formErrors.length <= 0 &&
-                            <div styleName="error empty">
-                                -
-                            </div>
-                        }
-                    </div>
+                    <NonFieldErrors errors={formErrors} />
                     <TextInput
                         error={formFieldErrors.firstname}
                         formname="firstname"

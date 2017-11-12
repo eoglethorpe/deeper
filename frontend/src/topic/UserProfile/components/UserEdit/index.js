@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 
 import {
     Form,
+    NonFieldErrors,
     ImageInput,
     TextInput,
     HiddenInput,
@@ -252,23 +253,7 @@ export default class UserEdit extends React.PureComponent {
                         />
                     </div>
                 }
-                <div styleName="non-field-errors">
-                    {
-                        formErrors.map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                    { formErrors.length <= 0 &&
-                        <div styleName="error empty">
-                            -
-                        </div>
-                    }
-                </div>
+                <NonFieldErrors errors={formErrors} />
                 {/*
                     TODO: Pass image src to ImageInput using advanced File Component
                 */}
