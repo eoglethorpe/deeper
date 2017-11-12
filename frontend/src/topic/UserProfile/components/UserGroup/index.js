@@ -6,6 +6,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
@@ -137,16 +138,25 @@ export default class UserGroup extends React.PureComponent {
                         .find(e => e.member === activeUser.userId);
 
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
-                        return <div />;
+                        return (
+                            <Link
+                                key={d.title}
+                                to={`/usergroup/${d.id}/`}
+                            >
+                                <i className="ion-eye" />
+                            </Link>
+                        );
                     }
 
-                    const onEditClick = () => this.handleEditUserGroupClick(d.id);
                     const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
                     return (
                         <div>
-                            <PrimaryButton onClick={onEditClick} >
+                            <Link
+                                key={d.title}
+                                to={`/usergroup/${d.id}/`}
+                            >
                                 <i className="ion-edit" />
-                            </PrimaryButton>
+                            </Link>
                             <DangerButton onClick={onDeleteClick} >
                                 <i className="ion-android-delete" />
                             </DangerButton>
@@ -269,12 +279,6 @@ export default class UserGroup extends React.PureComponent {
     }
 
     // Table Actions
-
-    // Edit Click
-    handleEditUserGroupClick = (id) => {
-        // TODO: @adityakhatri47 route to selected user group panel
-        console.log(id);
-    }
 
     // Delete Click
     handleDeleteUserGroupClick = (id) => {

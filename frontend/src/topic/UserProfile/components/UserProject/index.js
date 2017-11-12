@@ -7,6 +7,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
@@ -158,16 +159,25 @@ export default class UserProject extends React.PureComponent {
                         .find(e => e.member === activeUser.userId);
 
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
-                        return <div />;
+                        return (
+                            <Link
+                                key={d.title}
+                                to={`/${d.id}/projectpanel/`}
+                            >
+                                <i className="ion-eye" />
+                            </Link>
+                        );
                     }
 
-                    const onEditClick = () => this.handleEditProjectClick(d.id);
                     const onDeleteClick = () => this.handleDeleteProjectClick(d.id);
                     return (
                         <div>
-                            <PrimaryButton onClick={onEditClick} >
+                            <Link
+                                key={d.title}
+                                to={`/${d.id}/projectpanel/`}
+                            >
                                 <i className="ion-edit" />
-                            </PrimaryButton>
+                            </Link>
                             <DangerButton onClick={onDeleteClick} >
                                 <i className="ion-android-delete" />
                             </DangerButton>
@@ -298,12 +308,6 @@ export default class UserProject extends React.PureComponent {
     }
 
     // Table Actions
-
-    // Edit Click
-    handleEditProjectClick = (id) => {
-        // TODO: @adityakhatri47 route to selected project panel
-        console.log(id);
-    }
 
     // Delete Click
     handleDeleteProjectClick = (id) => {
