@@ -164,15 +164,14 @@ export default class ProjectPanel extends React.PureComponent {
                 try {
                     schema.validate(response, 'projectGetResponse');
                     this.props.setProject({
-                        projectId: this.props.activeProject,
                         project: response,
+                    });
+                    this.setState({
+                        loadingLeads: false,
                     });
                 } catch (er) {
                     console.error(er);
                 }
-                this.setState({
-                    loadingLeads: false,
-                });
             })
             .build();
         return projectRequest;

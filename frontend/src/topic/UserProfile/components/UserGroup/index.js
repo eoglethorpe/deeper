@@ -41,6 +41,7 @@ import {
     userGroupsSelector,
     setUserGroupsAction,
     activeUserSelector,
+    unSetUserGroupAction,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -55,6 +56,7 @@ const propTypes = {
     token: PropTypes.object.isRequired, // eslint-disable-line
     userGroups: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    unSetUserGroup: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -73,6 +75,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setUserGroups: params => dispatch(setUserGroupsAction(params)),
+    unSetUserGroup: params => dispatch(unSetUserGroupAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -90,6 +93,7 @@ export default class UserGroup extends React.PureComponent {
 
             // Delete Modal state
             deleteUserGroup: false,
+            deletePending: false,
 
             // Active Delete state
             activeUserGroupDelete: null,
@@ -225,6 +229,8 @@ export default class UserGroup extends React.PureComponent {
 
     createRequestForUserGroupDelete = (userGroupId) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
+        const userId = this.props.match.params.userId;
+
         const userGroupDeletRequest = new RestBuilder()
             .url(urlForUserGroup)
             .params(() => {
@@ -235,24 +241,29 @@ export default class UserGroup extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
-            .success((response) => {
-                try {
-                    console.log(response);
-                    /*
-                     * TODO: implement
-                    this.props.unSetUserGroup({
-                        userGroupId,
-                    });
-                    */
-                } catch (er) {
-                    console.error(er);
-                }
+            .success(() => {
+            })
+            .preLoad(() => {
+                this.setState({ deletePending: true });
+            })
+            .postLoad(() => {
+                this.setState({ deletePending: false });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                // TODO: move to success after Restbuilder fix
+                try {
+                    this.props.unSetUserGroup({
+                        userGroupId,
+                        userId,
+                    });
+                    this.setState({ deleteUserGroup: false });
+                } catch (er) {
+                    console.error(er);
+                }
             })
             .build();
         return userGroupDeletRequest;
@@ -314,6 +325,7 @@ export default class UserGroup extends React.PureComponent {
         const {
             addUserGroup,
             deleteUserGroup,
+            deletePending,
         } = this.state;
         return (
             <div styleName="groups">
@@ -354,6 +366,7 @@ export default class UserGroup extends React.PureComponent {
                             handleDelete={this.deleteActiveUserGroup}
                             getName={this.getActiveDeleteUserGroupName}
                             getType={this.getActiveDeleteUserGroupType}
+                            pending={deletePending}
                         />
                     </ModalBody>
                 </Modal>

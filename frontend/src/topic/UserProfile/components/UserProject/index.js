@@ -43,6 +43,7 @@ import {
     userProjectsSelector,
     setUserProjectsAction,
     activeUserSelector,
+    unSetProjectAction,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -54,6 +55,7 @@ const propTypes = {
         }),
     }),
     setUserProjects: PropTypes.func.isRequired,
+    unSetProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -75,6 +77,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setUserProjects: params => dispatch(setUserProjectsAction(params)),
+    unSetProject: params => dispatch(unSetProjectAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -92,6 +95,7 @@ export default class UserProject extends React.PureComponent {
 
             // Delete Modal state
             deleteProject: false,
+            deletePending: false,
 
             // Active Delete state
             activeProjectDelete: null,
@@ -253,6 +257,8 @@ export default class UserProject extends React.PureComponent {
 
     createRequestForProjectDelete = (projectId) => {
         const urlForProject = createUrlForProject(projectId);
+        const userId = this.props.match.params.userId;
+
         const projectDeleteRequest = new RestBuilder()
             .url(urlForProject)
             .params(() => {
@@ -263,24 +269,29 @@ export default class UserProject extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
-            .success((response) => {
-                try {
-                    console.log(response);
-                    /*
-                     * TODO: implement
-                    this.props.unSetProject({
-                        projectId,
-                    });
-                    */
-                } catch (er) {
-                    console.error(er);
-                }
+            .success(() => {
+            })
+            .preLoad(() => {
+                this.setState({ deletePending: true });
+            })
+            .postLoad(() => {
+                this.setState({ deletePending: false });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                // TODO: Move to success
+                try {
+                    this.props.unSetProject({
+                        userId,
+                        projectId,
+                    });
+                    this.setState({ deleteProject: false });
+                } catch (er) {
+                    console.error(er);
+                }
             })
             .build();
         return projectDeleteRequest;
@@ -345,10 +356,13 @@ export default class UserProject extends React.PureComponent {
 
     render() {
         const { userProjects } = this.props;
+
         const {
             addProject,
             deleteProject,
+            deletePending,
         } = this.state;
+
         return (
             <div styleName="projects">
                 <div styleName="header">
@@ -384,6 +398,7 @@ export default class UserProject extends React.PureComponent {
                             handleDelete={this.deleteActiveProject}
                             getName={this.getActiveDeleteProjectName}
                             getType={this.getActiveDeleteProjectType}
+                            pending={deletePending}
                         />
                     </ModalBody>
                 </Modal>

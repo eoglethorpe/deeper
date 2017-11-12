@@ -3,8 +3,10 @@ import {
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
+    UNSET_USER_PROJECT,
     SET_USER_GROUPS,
     SET_USER_GROUP,
+    UNSET_USER_GROUP,
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
@@ -57,11 +59,46 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
         case SET_USER_PROJECT: {
             const settings = {
                 projects: {
-                    [action.projectId]: { $auto: {
-                        $set: action.project,
+                    [action.project.id]: { $auto: {
+                        $merge: action.project,
                     } },
                 },
             };
+
+            if (action.userId) {
+                settings.users = {
+                    [action.userId]: { $auto: {
+                        projects: { $autoArray: {
+                            $push: [action.project.id],
+                        } },
+                    } },
+                };
+            }
+            return update(state, settings);
+        }
+        case UNSET_USER_PROJECT: {
+            const settings = {
+                projects: {
+                    [action.projectId]: { $auto: {
+                        $set: undefined,
+                    } },
+                },
+            };
+
+            if (action.userId) {
+                const userProjectArrayIndex = ((state.users[action.userId] || {}).projects
+                    || []).indexOf(action.projectId);
+
+                if (userProjectArrayIndex !== -1) {
+                    settings.users = {
+                        [action.userId]: { $auto: {
+                            projects: { $autoArray: {
+                                $splice: [[userProjectArrayIndex, 1]],
+                            } },
+                        } },
+                    };
+                }
+            }
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {
@@ -73,12 +110,22 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 }
             }
 
+            const projects = action.projects.reduce((acc, project) => (
+                {
+                    ...acc,
+                    [project.id]: { $auto: {
+                        $set: project,
+                    } },
+                }
+            ), {});
+
             const settings = {
+                projects,
                 users: {
                     [action.userId]: { $auto: {
-                        projects: {
-                            $set: action.projects,
-                        },
+                        projects: { $autoArray: {
+                            $set: action.projects.map(project => project.id),
+                        } },
                     } },
                 },
                 activeProject: {
@@ -88,15 +135,29 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
         case SET_USER_GROUPS: {
+            const userGroups = action.userGroups.reduce(
+                (acc, userGroup) => (
+                    {
+                        ...acc,
+                        [userGroup.id]: { $auto: {
+                            $merge: userGroup,
+                        } },
+                    }
+                ), {});
             const settings = {
-                users: {
-                    [action.userId]: { $auto: {
-                        userGroups: {
-                            $set: action.userGroups,
-                        },
-                    } },
-                },
+                userGroups,
             };
+            if (action.userId) {
+                settings.users = {
+                    [action.userId]: { $auto: {
+                        userGroups: { $autoArray: {
+                            $set: action.userGroups.map(userGroup => (
+                                userGroup.id
+                            )),
+                        } },
+                    } },
+                };
+            }
             return update(state, settings);
         }
         case SET_USER_GROUP: {
@@ -107,9 +168,43 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 },
             };
+
+            if (action.userId) {
+                settings.users = {
+                    [action.userId]: { $auto: {
+                        userGroups: { $autoArray: {
+                            $push: [action.userGroup.id],
+                        } },
+                    } },
+                };
+            }
             return update(state, settings);
         }
+        case UNSET_USER_GROUP: {
+            const settings = {
+                userGroups: {
+                    [action.userGroupId]: { $auto: {
+                        $set: undefined,
+                    } },
+                },
+            };
 
+            if (action.userId) {
+                const userGroupArrayIndex = ((state.users[action.userId] || {}).userGroups
+                    || []).indexOf(action.userGroupId);
+
+                if (userGroupArrayIndex !== -1) {
+                    settings.users = {
+                        [action.userId]: { $auto: {
+                            userGroups: { $autoArray: {
+                                $splice: [[userGroupArrayIndex, 1]],
+                            } },
+                        } },
+                    };
+                }
+            }
+            return update(state, settings);
+        }
         case SET_LEADS: {
             const settings = {
                 leads: {

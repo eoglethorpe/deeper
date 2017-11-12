@@ -27,6 +27,7 @@ import {
 import {
     tokenSelector,
     setProjectAction,
+    activeUserSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -35,6 +36,7 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -42,6 +44,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     token: tokenSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -102,9 +105,8 @@ export default class UserProjectAdd extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectCreateResponse');
-                    // TODO: also set the users project
                     this.props.setProject({
-                        projectId: response.id,
+                        userId: this.props.activeUser.userId,
                         project: response,
                     });
                     this.props.handleModalClose();

@@ -5,6 +5,7 @@ const initialDomainDataState = {
         1: {
         },
     },
+
     // index is userGroup id
     userGroups: {
         1: {
@@ -24,6 +25,7 @@ const initialDomainDataState = {
             memberships: [],
         },
     },
+
     // index is project id
     leads: {
         1: [
