@@ -11,8 +11,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    DangerButton,
     PrimaryButton,
+    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     FormattedDate,
@@ -103,6 +103,8 @@ export default class UserProject extends React.PureComponent {
                 key: 'title',
                 label: 'Title',
                 order: 1,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
@@ -119,6 +121,8 @@ export default class UserProject extends React.PureComponent {
                 key: 'createdAt',
                 label: 'Created at',
                 order: 3,
+                sortable: true,
+                comparator: (a, b) => a.createdAt - b.createdAt,
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}
@@ -130,6 +134,8 @@ export default class UserProject extends React.PureComponent {
                 key: 'modifiedAt',
                 label: 'Last Modified at',
                 order: 4,
+                sortable: true,
+                comparator: (a, b) => a.modifiedAt - b.modifiedAt,
                 modifier: row => (
                     <FormattedDate
                         date={row.modifiedAt}
@@ -141,12 +147,16 @@ export default class UserProject extends React.PureComponent {
                 key: 'status',
                 label: 'Status',
                 order: 5,
+                sortable: true,
+                comparator: (a, b) => a.status.localeCompare(b.status),
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
                 key: 'members',
                 label: 'Members',
                 order: 6,
+                sortable: true,
+                comparator: (a, b) => a.memberships.length || [] - b.memberships.length || [],
                 modifier: d => (d.memberships || []).length,
             },
             {
@@ -160,27 +170,38 @@ export default class UserProject extends React.PureComponent {
 
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
-                            <Link
-                                key={d.title}
-                                to={`/${d.id}/projectpanel/`}
+                            <TransparentButton
+                                className="watch-btn"
                             >
-                                <i className="ion-eye" />
-                            </Link>
+                                <Link
+                                    key={d.title}
+                                    to={`/${d.id}/projectpanel/`}
+                                >
+                                    <i className="ion-eye" />
+                                </Link>
+                            </TransparentButton>
                         );
                     }
 
                     const onDeleteClick = () => this.handleDeleteProjectClick(d.id);
                     return (
                         <div>
-                            <Link
-                                key={d.title}
-                                to={`/${d.id}/projectpanel/`}
+                            <TransparentButton
+                                className="edit-btn"
                             >
-                                <i className="ion-edit" />
-                            </Link>
-                            <DangerButton onClick={onDeleteClick} >
+                                <Link
+                                    key={d.title}
+                                    to={`/${d.id}/projectpanel/`}
+                                >
+                                    <i className="ion-edit" />
+                                </Link>
+                            </TransparentButton>
+                            <TransparentButton
+                                onClick={onDeleteClick}
+                                className="delete-btn"
+                            >
                                 <i className="ion-android-delete" />
-                            </DangerButton>
+                            </TransparentButton>
                         </div>
                     );
                 },
@@ -330,12 +351,17 @@ export default class UserProject extends React.PureComponent {
         } = this.state;
         return (
             <div styleName="projects">
-                <h2>
-                    Projects
-                </h2>
-                <PrimaryButton onClick={this.handleAddProjectClick} >
-                    Add Project
-                </PrimaryButton>
+                <div styleName="header">
+                    <h2>
+                        Projects
+                    </h2>
+                    <div styleName="pusher" />
+                    <div>
+                        <PrimaryButton onClick={this.handleAddProjectClick} >
+                            Add Project
+                        </PrimaryButton>
+                    </div>
+                </div>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddProjectClose}
@@ -361,11 +387,13 @@ export default class UserProject extends React.PureComponent {
                         />
                     </ModalBody>
                 </Modal>
-                <Table
-                    data={userProjects}
-                    headers={this.projectTableHeaders}
-                    keyExtractor={this.projectTableKeyExtractor}
-                />
+                <div styleName="projects-table">
+                    <Table
+                        data={userProjects}
+                        headers={this.projectTableHeaders}
+                        keyExtractor={this.projectTableKeyExtractor}
+                    />
+                </div>
             </div>
         );
     }

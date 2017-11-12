@@ -117,6 +117,8 @@ export default class UserGroup extends React.PureComponent {
                 key: 'joinedAt',
                 label: 'Joined At',
                 order: 3,
+                sortable: true,
+                comparator: (a, b) => a.joinedAt - b.joinedAt,
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
                     const { memberships = [] } = row;
@@ -319,7 +321,7 @@ export default class UserGroup extends React.PureComponent {
                         Groups
                     </h2>
                     <div styleName="pusher" />
-                    <div styleName="add-user-group-btn">
+                    <div>
                         <PrimaryButton
                             onClick={this.handleAddUserGroupClick}
                         >
