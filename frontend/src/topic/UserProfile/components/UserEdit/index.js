@@ -216,6 +216,7 @@ export default class UserEdit extends React.PureComponent {
         };
 
         uploader.onProgress = (progress) => {
+            console.log(progress);
             // TODO: Add progress component
             // console.warn(`Upload Progress: ${progress}`);
         };
