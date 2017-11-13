@@ -22,3 +22,22 @@
         font-size: $width-icon-super-large;
     }
 }
+
+.warning-text {
+    margin-bottom: $spacing-large;
+    text-align: center;
+
+    p {
+        margin-top: 0;
+        font-size: $font-size-large;
+    }
+}
+
+.action-buttons {
+    margin-top: $spacing-large;
+    text-align: right;
+
+    .delete-btn {
+        margin-left: $spacing-large;
+    }
+}
