@@ -94,11 +94,7 @@ export default class AddCountry extends React.PureComponent {
                 try {
                     schema.validate(response, 'regionCreateResponse');
                     this.props.addNewCountry({
-                        countryDetail: {
-                            code: response.code,
-                            id: response.id,
-                            title: response.title,
-                        },
+                        countryDetail: response,
                     });
                     this.props.onModalClose();
                     browserHistory.push(`/countrypanel/${response.id}`);

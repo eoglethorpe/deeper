@@ -308,7 +308,7 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-details-alt">
-                <h1>The country you previously selected does not exist.</h1>
+                <h1>The country you previously selected was deleted or does not exist.</h1>
             </div>
         );
     }
