@@ -1,7 +1,6 @@
 @import '../../../../stylesheets/base';
-@import '../../../../stylesheets/modal';
 
-.groups {
+.projects {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -9,20 +8,27 @@
     >.header {
         display: flex;
         flex-shrink: 0;
-        padding: $spacing-medium;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: $spacing-medium $spacing-large;
 
-        h2 {
+        .search-input {
             flex-basis: 20%;
         }
 
         .pusher {
             flex-grow: 1;
         }
+
+        .add-button {
+            // margin-right: $spacing-medium-alt;
+        }
     }
 
-    .usergroup-table {
+    .content {
+        flex-basis: 100%;
         flex-grow: 1;
-        height: 100%;
+        padding: 0 $spacing-large;
         overflow-y: auto;
 
         :global .header {
@@ -40,31 +46,15 @@
                     background-color: $color-background-hover;
                 }
             }
-                }
+        }
     }
 }
 
-:global .edit-btn {
+:global .forward-btn {
     padding: $spacing-small;
 
-    .ion-edit {
+    .ion-forward {
         margin: 0 $spacing-small;
-        color: $color-primary;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-}
-
-:global .watch-btn {
-    padding: $spacing-small;
-
-    .ion-eye {
-        margin: 0 $spacing-small;
-        color: $color-primary;
 
     }
 

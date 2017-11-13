@@ -1,4 +1,11 @@
-import { wsEndpoint, GET, POST, PATCH, commonHeaderForPost } from '../config/rest';
+import { wsEndpoint, GET, POST, PATCH, p, commonHeaderForPost } from '../config/rest';
+
+export const createUrlForUsers = (fields) => {
+    if (fields) {
+        return `${wsEndpoint}/users/?${p({ fields })}`;
+    }
+    return `${wsEndpoint}/users/`;
+};
 
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const createParamsForUserCreate = ({

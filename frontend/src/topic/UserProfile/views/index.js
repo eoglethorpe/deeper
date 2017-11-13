@@ -46,6 +46,7 @@ const propTypes = {
     match: PropTypes.shape({
         params: PropTypes.shape({
             userId: PropTypes.string,
+            userGroupId: PropTypes.string,
         }),
     }),
     setNavbarState: PropTypes.func.isRequired,

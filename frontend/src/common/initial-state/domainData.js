@@ -5,7 +5,25 @@ const initialDomainDataState = {
         1: {
         },
     },
-
+    // index is userGroup id
+    userGroups: {
+        1: {
+            id: 1,
+            title: 'Togglecorp',
+            rights: 'Admin',
+            createdAt: '2017-10-26T04:47:12.381611Z',
+            joinedAt: '2017-10-26T04:47:12.381611Z',
+            memberships: [],
+        },
+        2: {
+            id: 2,
+            title: 'ACAPS',
+            rights: 'Admin',
+            createdAt: '2016-12-26T04:47:12.381611Z',
+            joinedAt: '2017-10-26T04:47:12.381611Z',
+            memberships: [],
+        },
+    },
     // index is project id
     leads: {
         1: [
@@ -51,24 +69,7 @@ const initialDomainDataState = {
             },
             projects: [
             ],
-            userGroups: [
-                {
-                    id: 1,
-                    title: 'Togglecorp',
-                    rights: 'Admin',
-                    createdAt: '2017-10-26T04:47:12.381611Z',
-                    joinedAt: '2017-10-26T04:47:12.381611Z',
-                    memberships: [],
-                },
-                {
-                    id: 2,
-                    title: 'ACAPS',
-                    rights: 'Admin',
-                    createdAt: '2016-12-26T04:47:12.381611Z',
-                    joinedAt: '2017-10-26T04:47:12.381611Z',
-                    memberships: [],
-                },
-            ],
+            userGroups: [1, 2],
         },
     },
     countries: [

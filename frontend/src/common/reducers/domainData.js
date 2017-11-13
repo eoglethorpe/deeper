@@ -1,5 +1,6 @@
 import {
     SET_USER_INFORMATION,
+    SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     SET_USER_GROUPS,
@@ -26,13 +27,33 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 users: {
                     [action.userId]: { $auto: {
                         information: {
-                            $set: action.information,
+                            $merge: action.information,
                         },
                     } },
                 },
             };
             return update(state, settings);
         }
+        case SET_USERS_INFORMATION: {
+            const users = action.users.reduce(
+                (acc, user) => (
+                    {
+                        ...acc,
+                        [user.id]: { $auto: {
+                            information: { $auto: {
+                                $merge: user,
+                            } },
+                        } },
+                    }
+                ),
+                {},
+            );
+            const settings = {
+                users,
+            };
+            return update(state, settings);
+        }
+
         case SET_USER_PROJECT: {
             const settings = {
                 projects: {
@@ -80,11 +101,9 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
         }
         case SET_USER_GROUP: {
             const settings = {
-                users: {
-                    [action.userId]: { $auto: {
-                        userGroups: { $autoArray: {
-                            $push: [action.userGroup],
-                        } },
+                userGroups: {
+                    [action.userGroup.id]: { $auto: {
+                        $merge: action.userGroup,
                     } },
                 },
             };

@@ -16,6 +16,7 @@ const pageTitles = {
     editAry: 'Edit Ary',
 
     userProfile: 'User Profile',
+    userGroup: 'User Group',
     adminPanel: 'Admin Panel',
     countryPanel: 'Country Panel',
     projectPanel: 'Project Panel',

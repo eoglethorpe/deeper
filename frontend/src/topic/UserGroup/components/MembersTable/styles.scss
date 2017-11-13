@@ -1,7 +1,7 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/modal';
 
-.groups {
+.members {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -9,18 +9,59 @@
     >.header {
         display: flex;
         flex-shrink: 0;
-        padding: $spacing-medium;
+        align-items: center;
+        padding: $spacing-medium $spacing-large;
 
-        h2 {
+        .search-input {
             flex-basis: 20%;
         }
 
         .pusher {
             flex-grow: 1;
         }
+
+        .add-button {
+            // margin-right: $spacing-medium-alt;
+        }
     }
 
-    .usergroup-table {
+    .content {
+        flex-basis: 100%;
+        flex-grow: 1;
+        padding: 0 $spacing-large;
+        overflow-y: auto;
+
+        :global .header {
+            position: sticky;
+            top: 0;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+            user-select: none;
+
+            &:not(.actions) {
+                cursor: pointer;
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+            }
+        }
+    }
+}
+
+.add-member-modal {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-medium;
+
+    .modal-search-input {
+        flex-basis: 20%;
+        flex-shrink: 0;
+        margin-bottom: $spacing-small;
+        padding: $spacing-medium;
+    }
+
+    .new-member-table {
         flex-grow: 1;
         height: 100%;
         overflow-y: auto;
@@ -40,14 +81,21 @@
                     background-color: $color-background-hover;
                 }
             }
-                }
+        }
     }
 }
 
-:global .edit-btn {
+.action-buttons {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+:global .admin-btn {
     padding: $spacing-small;
 
-    .ion-edit {
+    .ion-ios-locked {
         margin: 0 $spacing-small;
         color: $color-primary;
 
@@ -59,12 +107,11 @@
 
 }
 
-:global .watch-btn {
+:global .member-add-btn {
     padding: $spacing-small;
 
-    .ion-eye {
+    .ion-plus {
         margin: 0 $spacing-small;
-        color: $color-primary;
 
     }
 
