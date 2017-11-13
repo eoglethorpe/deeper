@@ -31,7 +31,7 @@ import {
     tokenSelector,
 
     activeCountrySelector,
-    countriesSelector,
+    countriesListSelector,
 
     setNavbarStateAction,
 
@@ -70,7 +70,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeCountry: activeCountrySelector(state),
-    countries: countriesSelector(state),
+    countries: countriesListSelector(state),
     token: tokenSelector(state),
 });
 
@@ -93,12 +93,6 @@ export default class CountryPanel extends React.PureComponent {
             addCountryModal: false,
             displayCountryList: this.props.countries,
             searchInputValue: '',
-
-            formErrors: [],
-            formFieldErrors: {},
-            formValues: {},
-            pending: false,
-            stale: false,
         };
 
         this.elements = [
@@ -180,9 +174,12 @@ export default class CountryPanel extends React.PureComponent {
             // Re-sorting logic
             const { searchInputValue } = this.state;
             const caseInsensitiveSubmatch = (country) => {
-                const countryTitle = country.title.toLowerCase();
-                const searchTitle = searchInputValue.toLowerCase();
-                return countryTitle.includes(searchTitle);
+                if (country.title) {
+                    const countryTitle = country.title.toLowerCase();
+                    const searchTitle = searchInputValue.toLowerCase();
+                    return countryTitle.includes(searchTitle);
+                }
+                return null;
             };
 
             const displayCountryList = nextProps.countries.filter(caseInsensitiveSubmatch);
@@ -225,11 +222,6 @@ export default class CountryPanel extends React.PureComponent {
     onAddCountry = () => {
         this.setState({
             addCountryModal: true,
-            formErrors: [],
-            formFieldErrors: {},
-            formValues: {},
-            pending: false,
-            stale: false,
         });
     };
 

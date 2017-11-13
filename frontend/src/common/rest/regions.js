@@ -1,7 +1,9 @@
-import { wsEndpoint, POST, commonHeaderForPost } from '../config/rest';
+import { wsEndpoint, POST, DELETE, commonHeaderForPost } from '../config/rest';
 
 export const urlForRegions = `${wsEndpoint}/regions/`;
 export const urlForRegionCreate = `${wsEndpoint}/regions/`;
+export const createUrlForRegion = id => `${wsEndpoint}/regions/${id}/`;
+
 export const createParamsForRegionCreate = ({ access }, data) => ({
     method: POST,
     headers: {
@@ -11,3 +13,10 @@ export const createParamsForRegionCreate = ({ access }, data) => ({
     body: JSON.stringify(data),
 });
 
+export const createParamsForCountryDelete = ({ access }) => ({
+    method: DELETE,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});

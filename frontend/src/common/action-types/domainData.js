@@ -12,6 +12,7 @@ export const UNSET_USER_GROUP = 'domain-data/UNSET_USER_GROUP';
 
 export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
 export const SET_ACTIVE_COUNTRY = 'domain-data/SET_ACTIVE_COUNTRY';
+export const UNSET_REGION = 'domain-data/UNSET_REGION';
 
 export const ADD_NEW_COUNTRY = 'domain-data/ADD_NEW_COUNTRY';
 

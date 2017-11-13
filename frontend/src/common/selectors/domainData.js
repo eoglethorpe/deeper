@@ -25,7 +25,7 @@ export const leadsSelector = ({ domainData }) => (
     domainData.leads || emptyObject
 );
 export const countriesSelector = ({ domainData }) => (
-    domainData.countries || emptyList
+    domainData.countries || emptyObject
 );
 export const adminLevelsSelector = ({ domainData }) => (
     domainData.adminLevels || emptyObject
@@ -57,9 +57,21 @@ export const adminLevelSelector = createSelector(
     ),
 );
 
+export const countriesListSelector = createSelector(
+    countriesSelector,
+    countries => (
+        countries && Object.keys(countries).reduce((acc, countryId) => {
+            if (countries[countryId]) {
+                acc.push(countries[countryId]);
+            }
+            return acc;
+        }, [])
+    ) || emptyList,
+);
+
 // FIXME: rename to countryDetailForCountrySelector
 export const countryDetailSelector = createSelector(
-    countriesSelector,
+    countriesListSelector,
     activeCountrySelector,
     (countries, activeCountry) => (
         countries.find(country => country.id === activeCountry) || emptyObject

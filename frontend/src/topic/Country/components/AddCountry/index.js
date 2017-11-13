@@ -159,7 +159,6 @@ export default class AddCountry extends React.PureComponent {
         // Create new post request
         this.regionCreateRequest = this.createRequestForRegionCreate(data);
         this.regionCreateRequest.start();
-        this.props.onModalClose();
     };
 
     render() {
@@ -196,7 +195,7 @@ export default class AddCountry extends React.PureComponent {
                     label="Country Title"
                     formname="title"
                     placeholder="Nepal"
-                    value={formValues.name}
+                    value={formValues.title}
                     error={formFieldErrors.name}
                 />
                 <TextInput

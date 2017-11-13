@@ -74,13 +74,13 @@ const initialDomainDataState = {
             userGroups: [1, 2],
         },
     },
-    countries: [
+    countries: {
         /*
-        { id: 1, title: 'Afghanistan', code: 'AFG' },
-        { id: 2, title: 'Aland Islands', code: 'ALA' },
-        { id: 3, title: 'Albania', code: 'ALB' },
-        { id: 4, title: 'Algeria', code: 'DZA' },
-        { id: 5, title: 'Nepal', code: 'NLP' },
+        1: { id: 1, title: 'Afghanistan', code: 'AFG' },
+        2: { id: 2, title: 'Aland Islands', code: 'ALA' },
+        3: { id: 3, title: 'Albania', code: 'ALB' },
+        4: { id: 4, title: 'Algeria', code: 'DZA' },
+        5: { id: 5, title: 'Nepal', code: 'NLP' },
         { fullName: 'American Samoa', iso: 'ASM', countryId: 'ASM' },
         { fullName: 'Andorra', iso: 'AND', countryId: 'AND' },
         { fullName: 'Angola', iso: 'AGO', countryId: 'AGO' },
@@ -325,7 +325,7 @@ const initialDomainDataState = {
         { fullName: 'Zambia', iso: 'ZMB', countryId: 'ZMB' },
         { fullName: 'Zimbabwe', iso: 'ZWE', countryId: 'ZWE' },
         */
-    ],
+    },
 
     adminLevels: {
         1: [
