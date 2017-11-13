@@ -170,9 +170,12 @@ export default class UserProfile extends React.PureComponent {
         const {
             userInformation,
             match,
+            activeUser,
         } = this.props;
 
         const { userId } = match.params;
+
+        const isCurrentUser = parseInt(match.params.userId, 10) === activeUser.userId;
 
         return (
             <div styleName="user-profile">
@@ -185,9 +188,12 @@ export default class UserProfile extends React.PureComponent {
                     <h1>
                         { pageTitles.userProfile }
                     </h1>
-                    <PrimaryButton onClick={this.handleEditProfileClick}>
-                        Edit profile
-                    </PrimaryButton>
+                    {
+                        isCurrentUser &&
+                        <PrimaryButton onClick={this.handleEditProfileClick}>
+                            Edit profile
+                        </PrimaryButton>
+                    }
                     <Modal
                         closeOnEscape
                         onClose={this.handleEditProfileClose}

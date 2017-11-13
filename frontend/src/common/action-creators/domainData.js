@@ -3,8 +3,10 @@ import {
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
+    UNSET_USER_PROJECT,
     SET_USER_GROUPS,
     SET_USER_GROUP,
+    UNSET_USER_GROUP,
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
@@ -31,11 +33,17 @@ export const setUserProjectsAction = ({ userId, projects }) => ({
     projects,
 });
 
-export const setProjectAction = ({ projectId, project }) => ({
+export const setProjectAction = ({ userId, project }) => ({
     type: SET_USER_PROJECT,
-    projectId,
+    userId,
     project,
 });
+export const unSetProjectAction = ({ userId, projectId }) => ({
+    type: UNSET_USER_PROJECT,
+    userId,
+    projectId,
+});
+
 
 export const setUserGroupsAction = ({ userId, userGroups }) => ({
     type: SET_USER_GROUPS,
@@ -47,6 +55,12 @@ export const setUserGroupAction = ({ userId, userGroup }) => ({
     type: SET_USER_GROUP,
     userId,
     userGroup,
+});
+
+export const unSetUserGroupAction = ({ userId, userGroupId }) => ({
+    type: UNSET_USER_GROUP,
+    userId,
+    userGroupId,
 });
 
 export const setActiveProjectAction = ({ activeProject }) => ({

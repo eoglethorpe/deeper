@@ -38,7 +38,7 @@ export const projectsSelector = ({ domainData }) => (
 );
 
 export const groupsSelector = ({ domainData }) => (
-    domainData.userGroups || emptyList
+    domainData.userGroups || emptyObject
 );
 
 export const totalLeadsCountSelector = ({ domainData }) => (
@@ -93,13 +93,21 @@ export const userInformationSelector = createSelector(
 );
 
 export const userProjectsSelector = createSelector(
+    projectsSelector,
     userSelector,
-    user => (user.projects || emptyList),
+    (projects, user) => ((user.projects &&
+        user.projects.map(projectId => (
+            projects[projectId]
+        ))) || emptyList),
 );
 
 export const userGroupsSelector = createSelector(
+    groupsSelector,
     userSelector,
-    user => (user.userGroups || emptyList),
+    (userGroups, user) => ((user.userGroups &&
+        user.userGroups.map(userGroupId => (
+            userGroups[userGroupId]
+        ))) || emptyList),
 );
 
 export const groupSelector = createSelector(
@@ -122,7 +130,12 @@ export const currentUserInformationSelector = createSelector(
 
 export const currentUserProjectsSelector = createSelector(
     currentUserSelector,
-    user => (user.projects || emptyList),
+    projectsSelector,
+    (user, projects) => ((user.projects &&
+        user.projects.map(projectId => (
+            projects[projectId] || emptyObject
+        ))
+    ) || emptyList),
 );
 
 // Selector depending on project id from state (active project)

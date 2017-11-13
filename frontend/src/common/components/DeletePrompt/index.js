@@ -18,11 +18,13 @@ const propTypes = {
     handleDelete: PropTypes.func.isRequired,
     getName: PropTypes.func,
     getType: PropTypes.func,
+    pending: PropTypes.bool,
 };
 
 const defaultProps = {
     getName: null,
     getType: null,
+    pending: false,
 };
 
 
@@ -38,12 +40,22 @@ export default class DeletePrompt extends React.PureComponent {
 
             getType,
             getName,
+            pending,
         } = this.props;
 
         const getTypeNameDefined = getType && getName;
         return (
             <div>
                 <div>
+                    {
+                        pending &&
+                        <div styleName="pending-overlay">
+                            <i
+                                className="ion-load-c"
+                                styleName="loading-icon"
+                            />
+                        </div>
+                    }
                     <span>
                         { getTypeNameDefined ?
                             `Do you want to delete ${getType()} '${getName()}' ?` :
