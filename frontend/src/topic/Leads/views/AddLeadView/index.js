@@ -19,6 +19,9 @@ import { RestBuilder } from '../../../../public/utils/rest';
 import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
 
 import { pageTitles } from '../../../../common/utils/labels';
+import DropboxChooser from '../../../../common/components/DropboxChooser';
+import GooglePicker from '../../../../common/components/GooglePicker';
+
 import {
     urlForUpload,
     createHeaderForFileUpload,
@@ -30,6 +33,9 @@ import {
     tokenSelector,
     activeProjectSelector,
 } from '../../../../common/redux';
+
+import { dropboxAppKey } from '../../../../common/config/dropbox';
+import { googleDriveClientId, googleDriveDeveloperKey } from '../../../../common/config/google-drive';
 
 import AddLeadForm from '../../components/AddLeadForm';
 import AddLeadListItem from '../../components/AddLeadListItem';
@@ -75,9 +81,25 @@ export default class AddLead extends React.PureComponent {
             leadSourceFilterValue: '',
             leadStatusFilterValue: [],
             activeLeadId: undefined,
+            dropboxDisabled: false,
         };
 
         this.uploadCoordinator = new UploadCoordinator();
+
+        this.supportedDropboxExtension = ['.doc', '.docx', '.rtf', '.txt',
+            '.otf', '.pdf', '.ppt', '.pptx',
+            '.xls', '.xlsx', '.csv', '.png',
+            '.jpg', '.gif', '.json', '.xml'];
+
+        this.supportedGoogleDriveMimeTypes = [
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'application/rtf', 'text/plain', 'font/otf', 'application/pdf',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'application/vnd.ms-powerpoint', 'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'text/csv', 'image/png', 'image/jpeg', 'image/fig',
+            'application/json', 'application/xml', 'application/msword',
+        ];
 
         this.statusFilterOptions = [
             { key: 'invalid', label: 'Invalid' },
@@ -186,10 +208,13 @@ export default class AddLead extends React.PureComponent {
         return false;
     }
 
-    handleAddLeadFromDrive = () => {
+    handleAddLeadFromGoogleDrive = (response) => {
+        console.log('on change (GOOGLE DRIVE):', response);
     }
 
-    handleAddLeadFromDropbox = () => {
+    handleAddLeadFromDropboxSuccess = (response) => {
+        this.setState({ dropboxDisabled: false });
+        console.log('on change (Dropbox):', response);
     }
 
     handleUploadComplete = (uploaderId, leadId, status, response) => {
@@ -682,20 +707,31 @@ export default class AddLead extends React.PureComponent {
                             <h3 styleName="heading">
                                 Add new lead from:
                             </h3>
-                            <TransparentButton
+                            <GooglePicker
                                 styleName="add-lead-btn"
-                                onClick={this.handleAddLeadFromDrive}
+                                clientId={googleDriveClientId}
+                                developerKey={googleDriveDeveloperKey}
+                                onChange={this.handleAddLeadFromGoogleDrive}
+                                mimeTypes={this.supportedGoogleDriveMimeTypes}
+                                multiselect
+                                navHidden
                             >
                                 <span className="ion-social-google" />
                                 <p>Drive</p>
-                            </TransparentButton>
-                            <TransparentButton
+                            </GooglePicker>
+                            <DropboxChooser
                                 styleName="add-lead-btn"
-                                onClick={this.handleAddLeadFromDropbox}
+                                appKey={dropboxAppKey}
+                                multiselect
+                                extensions={this.supportedExtension}
+                                success={this.handleAddLeadFromDropboxSuccess}
+                                onClick={() => (this.setState({ dropboxDisabled: true }))}
+                                cancel={() => (this.setState({ dropboxDisabled: false }))}
+                                disabled={this.state.dropboxDisabled}
                             >
                                 <span className="ion-social-dropbox" />
                                 <p>Dropbox</p>
-                            </TransparentButton>
+                            </DropboxChooser>
                             <FileInput
                                 styleName="add-lead-btn"
                                 onChange={this.handleAddLeadFromDisk}

@@ -45,6 +45,7 @@
     "immutability-helper": "^2.4.0",
     "jest": "^21.0.1",
     "jwt-decode": "^2.2.0",
+    "load-script": "^1.0.0",
     "localforage": "^1.5.0",
     "node-sass": "^4.6.1",
     "object-assign": "4.1.1",
