@@ -74,9 +74,9 @@ export const projectDetailsSelector = createSelector(
 
 export const usersInformationListSelector = createSelector(
     usersSelector,
-    users => Object.keys(users).map(id =>
+    users => (Object.keys(users).map(id =>
         users[id].information,
-    ) || emptyList,
+    ) || emptyList).filter(d => d),
 );
 
 // Selector depending on user id from route (url)

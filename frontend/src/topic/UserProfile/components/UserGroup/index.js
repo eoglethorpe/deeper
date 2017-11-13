@@ -1,6 +1,7 @@
 /**
  * @author frozenhelium <fren.ankit@gmail.com>
  * @co-author tnagorra <weathermist@gmail.com>
+ * @co-author jacky <prabes.pathak@gmail.com>
  */
 
 import CSSModules from 'react-css-modules';

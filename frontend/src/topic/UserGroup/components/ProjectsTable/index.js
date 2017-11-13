@@ -108,12 +108,13 @@ export default class ProjectsTable extends React.PureComponent {
         ];
         this.projectData = [
             {
+                id: 1,
                 title: 'Nepal Monitoring',
-                createdAt: '2010-04-05',
+                createdAt: '12322344',
                 startDate: 'jacky@jacky.com',
                 countries: 'Nepal',
-                status: 'Jacky',
-                modifiedAt: 'Super Admin',
+                status: 'GG WP',
+                modifiedAt: '12442312',
                 members: 22,
             },
         ];
@@ -144,21 +145,24 @@ export default class ProjectsTable extends React.PureComponent {
                         placeholder="Search Projects"
                         type="search"
                         styleName="search-input"
+                        showLabel={false}
+                        showHintAndError={false}
                     />
                     <div styleName="pusher" />
-                    <div styleName="add-button">
-                        <PrimaryButton
-                            onClick={this.handleAddProjectClick}
-                        >
-                            Add New Project
-                        </PrimaryButton>
-                    </div>
+                    <PrimaryButton
+                        onClick={this.handleAddProjectClick}
+                    >
+                        Add New Project
+                    </PrimaryButton>
                 </div>
                 <div styleName="content">
                     <Table
                         data={this.projectData}
                         headers={this.projectHeaders}
-                        keyExtractor={rowData => rowData.id}
+                        keyExtractor={(rowData) => {
+                            console.log('rowdata', rowData);
+                            return rowData.id;
+                        }}
                     />
                 </div>
                 <Modal

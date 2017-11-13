@@ -27,6 +27,7 @@ const propTypes = {
     memberData: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
 };
+
 const defaultProps = {
 };
 
@@ -161,6 +162,7 @@ export default class MembersTable extends React.PureComponent {
             showAddMemberModal: false,
         });
     }
+
     render() {
         const { users, memberData } = this.props;
 
@@ -175,13 +177,11 @@ export default class MembersTable extends React.PureComponent {
                         showHintAndError={false}
                     />
                     <div styleName="pusher" />
-                    <div styleName="add-button">
-                        <PrimaryButton
-                            onClick={this.handleAddMemberClick}
-                        >
-                            Add New Member
-                        </PrimaryButton>
-                    </div>
+                    <PrimaryButton
+                        onClick={this.handleAddMemberClick}
+                    >
+                        Add New Member
+                    </PrimaryButton>
                 </div>
                 <div styleName="content">
                     <Table
