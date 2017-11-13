@@ -28,9 +28,9 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             const settings = {
                 users: {
                     [action.userId]: { $auto: {
-                        information: {
+                        information: { $auto: {
                             $merge: action.information,
-                        },
+                        } },
                     } },
                 },
             };
