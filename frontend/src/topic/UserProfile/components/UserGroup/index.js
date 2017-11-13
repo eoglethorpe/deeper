@@ -242,6 +242,15 @@ export default class UserGroup extends React.PureComponent {
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
             .success(() => {
+                try {
+                    this.props.unSetUserGroup({
+                        userGroupId,
+                        userId,
+                    });
+                    this.setState({ deleteUserGroup: false });
+                } catch (er) {
+                    console.error(er);
+                }
             })
             .preLoad(() => {
                 this.setState({ deletePending: true });
@@ -254,16 +263,6 @@ export default class UserGroup extends React.PureComponent {
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: move to success after Restbuilder fix
-                try {
-                    this.props.unSetUserGroup({
-                        userGroupId,
-                        userId,
-                    });
-                    this.setState({ deleteUserGroup: false });
-                } catch (er) {
-                    console.error(er);
-                }
             })
             .build();
         return userGroupDeletRequest;
