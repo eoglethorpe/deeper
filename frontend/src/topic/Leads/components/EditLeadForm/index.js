@@ -10,6 +10,7 @@ import {
 } from '../../../../public/components/Action';
 import {
     Form,
+    NonFieldErrors,
     TextInput,
     requiredCondition,
     urlCondition,
@@ -151,23 +152,7 @@ export default class EditLeadForm extends React.PureComponent {
                         />
                     </div>
                 }
-                <div styleName="non-field-errors">
-                    {
-                        formErrors.map(err => (
-                            <div
-                                key={err}
-                                styleName="error"
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                    { formErrors.length <= 0 &&
-                        <div styleName="error empty">
-                            -
-                        </div>
-                    }
-                </div>
+                <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Title"
                     formname="title"

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     Form,
+    NonFieldErrors,
     TextInput,
     requiredCondition,
 } from '../../../../public/components/Input';
@@ -190,23 +191,7 @@ export default class AddCountry extends React.PureComponent {
                             />
                         </div>
                 }
-                <div styleName="non-field-errors">
-                    {
-                        formErrors.map(err => (
-                            <div
-                                styleName="error"
-                                key={err}
-                            >
-                                {err}
-                            </div>
-                        ))
-                    }
-                    { formErrors.length <= 0 &&
-                        <div>
-                            -
-                        </div>
-                    }
-                </div>
+                <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Country Title"
                     formname="title"
