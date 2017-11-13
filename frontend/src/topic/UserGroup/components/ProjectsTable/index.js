@@ -2,14 +2,21 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import {
     Table,
+    Modal,
+    ModalHeader,
+    ModalBody,
 } from '../../../../public/components/View';
 import {
     TextInput,
 } from '../../../../public/components/Input';
 import {
-    TransparentDangerButton,
+    PrimaryButton,
+    TransparentButton,
     TransparentAccentButton,
 } from '../../../../public/components/Action';
+import {
+    UserProjectAdd,
+} from '../../../UserProfile/components';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -26,6 +33,10 @@ export default class ProjectsTable extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showAddProjectModal: false,
+        };
 
         this.projectHeaders = [
             {
@@ -78,17 +89,17 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 8,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentDangerButton
+                        <TransparentButton
+                            className="delete-btn"
                             title="Remove Member"
                             onClick={() => this.handleRemoveProjectClick(row)}
 
                         >
-                            <i className="ion-ios-trash" />
-                        </TransparentDangerButton>
-                        <TransparentAccentButton >
-                            <i className="ion-ios-locked" />
-                        </TransparentAccentButton>
-                        <TransparentAccentButton >
+                            <i className="ion-android-delete" />
+                        </TransparentButton>
+                        <TransparentAccentButton
+                            className="forward-btn"
+                        >
                             <i className="ion-forward" />
                         </TransparentAccentButton>
                     </div>
@@ -111,25 +122,57 @@ export default class ProjectsTable extends React.PureComponent {
     handleRemoveProjectClick = (row) => {
         console.log(row);
     };
+
+    handleAddProjectClick = (row) => {
+        this.setState({
+            editRow: row,
+            showAddProjectModal: true,
+        });
+    }
+
+    handleAddProjectModalClose = () => {
+        this.setState({
+            // editRow: {},
+            showAddProjectModal: false,
+        });
+    }
     render() {
         return (
-            <div>
-                <div styleName="projects">
-                    <div styleName="header">
-                        <TextInput
-                            placeholder="Search Projects"
-                            type="search"
-                            styleName="search-input"
-                        />
-                    </div>
-                    <div styleName="content">
-                        <Table
-                            data={this.projectData}
-                            headers={this.projectHeaders}
-                            keyExtractor={rowData => rowData.id}
-                        />
+            <div styleName="projects">
+                <div styleName="header">
+                    <TextInput
+                        placeholder="Search Projects"
+                        type="search"
+                        styleName="search-input"
+                    />
+                    <div styleName="pusher" />
+                    <div styleName="add-button">
+                        <PrimaryButton
+                            onClick={this.handleAddProjectClick}
+                        >
+                            Add New Project
+                        </PrimaryButton>
                     </div>
                 </div>
+                <div styleName="content">
+                    <Table
+                        data={this.projectData}
+                        headers={this.projectHeaders}
+                        keyExtractor={rowData => rowData.id}
+                    />
+                </div>
+                <Modal
+                    closeOnEscape
+                    onClose={this.handleAddProjectModalClose}
+                    show={this.state.showAddProjectModal}
+                >
+                    <ModalHeader
+                        title="Add New Project"
+                    />
+                    <ModalBody>
+                        <UserProjectAdd handleModalClose={this.handleAddProjectModalClose} />
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }

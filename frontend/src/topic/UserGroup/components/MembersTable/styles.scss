@@ -90,3 +90,47 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+:global .admin-btn {
+    padding: $spacing-small;
+
+    .ion-ios-locked {
+        margin: 0 $spacing-small;
+        color: $color-primary;
+
+    }
+
+    &:hover {
+        background-color: $color-background-hover;
+    }
+
+}
+
+:global .member-add-btn {
+    padding: $spacing-small;
+
+    .ion-plus {
+        margin: 0 $spacing-small;
+
+    }
+
+    &:hover {
+        background-color: $color-background-hover;
+    }
+
+}
+
+:global .delete-btn {
+    padding: $spacing-small;
+
+    .ion-android-delete {
+        margin: 0 $spacing-small;
+        color: $color-danger;
+
+    }
+
+    &:hover {
+        background-color: $color-background-hover;
+    }
+
+}

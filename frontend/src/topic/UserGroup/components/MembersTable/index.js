@@ -15,8 +15,8 @@ import {
 import {
     PrimaryButton,
     DangerButton,
+    TransparentButton,
     TransparentAccentButton,
-    TransparentDangerButton,
 } from '../../../../public/components/Action';
 import {
     usersInformationListSelector,
@@ -86,17 +86,17 @@ export default class MembersTable extends React.PureComponent {
                 order: 5,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentDangerButton
+                        <TransparentButton
+                            className="admin-btn"
+                        >
+                            <i className="ion-ios-locked" />
+                        </TransparentButton>
+                        <TransparentButton
+                            className="delete-btn"
                             onClick={() => this.handleRemoveMemberClick(row)}
                         >
-                            <i className="ion-ios-trash" />
-                        </TransparentDangerButton>
-                        <TransparentAccentButton >
-                            <i className="ion-ios-locked" />
-                        </TransparentAccentButton>
-                        <TransparentAccentButton >
-                            <i className="ion-forward" />
-                        </TransparentAccentButton>
+                            <i className="ion-android-delete" />
+                        </TransparentButton>
                     </div>
                 ),
             },
@@ -124,16 +124,16 @@ export default class MembersTable extends React.PureComponent {
                 modifier: row => (
                     <div className="actions">
                         <TransparentAccentButton
+                            className="member-add-btn"
                             onClick={() => this.handleAddNewMemberClick(row)}
                         >
                             <i className="ion-plus" />
                         </TransparentAccentButton>
-                        <TransparentAccentButton >
+                        <TransparentButton
+                            className="admin-btn"
+                        >
                             <i className="ion-ios-locked" />
-                        </TransparentAccentButton>
-                        <TransparentAccentButton >
-                            <i className="ion-forward" />
-                        </TransparentAccentButton>
+                        </TransparentButton>
                     </div>
                 ),
             },
