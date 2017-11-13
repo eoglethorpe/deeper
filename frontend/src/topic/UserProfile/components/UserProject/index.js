@@ -270,6 +270,15 @@ export default class UserProject extends React.PureComponent {
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
             .success(() => {
+                try {
+                    this.props.unSetProject({
+                        userId,
+                        projectId,
+                    });
+                    this.setState({ deleteProject: false });
+                } catch (er) {
+                    console.error(er);
+                }
             })
             .preLoad(() => {
                 this.setState({ deletePending: true });
@@ -282,16 +291,6 @@ export default class UserProject extends React.PureComponent {
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: Move to success
-                try {
-                    this.props.unSetProject({
-                        userId,
-                        projectId,
-                    });
-                    this.setState({ deleteProject: false });
-                } catch (er) {
-                    console.error(er);
-                }
             })
             .build();
         return projectDeleteRequest;
