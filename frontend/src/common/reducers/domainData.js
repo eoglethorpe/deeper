@@ -66,13 +66,18 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
 
             if (action.userId) {
-                settings.users = {
-                    [action.userId]: { $auto: {
-                        projects: { $autoArray: {
-                            $push: [action.project.id],
+                const userProjectArrayIndex = ((state.users[action.userId] || {}).projects
+                    || []).indexOf(action.project.id);
+
+                if (userProjectArrayIndex === -1) {
+                    settings.users = {
+                        [action.userId]: { $auto: {
+                            projects: { $autoArray: {
+                                $push: [action.project.id],
+                            } },
                         } },
-                    } },
-                };
+                    };
+                }
             }
             return update(state, settings);
         }
@@ -170,13 +175,18 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
 
             if (action.userId) {
-                settings.users = {
-                    [action.userId]: { $auto: {
-                        userGroups: { $autoArray: {
-                            $push: [action.userGroup.id],
+                const userGroupArrayIndex = ((state.users[action.userId] || {}).userGroups
+                    || []).indexOf(action.userGroup.id);
+
+                if (userGroupArrayIndex === -1) {
+                    settings.users = {
+                        [action.userId]: { $auto: {
+                            userGroups: { $autoArray: {
+                                $push: [action.userGroup.id],
+                            } },
                         } },
-                    } },
-                };
+                    };
+                }
             }
             return update(state, settings);
         }
