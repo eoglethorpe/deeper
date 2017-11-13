@@ -46,30 +46,35 @@ export default class DeletePrompt extends React.PureComponent {
         const getTypeNameDefined = getType && getName;
         return (
             <div>
-                <div>
-                    {
-                        pending &&
-                        <div styleName="pending-overlay">
-                            <i
-                                className="ion-load-c"
-                                styleName="loading-icon"
-                            />
-                        </div>
-                    }
-                    <span>
+                {
+                    pending &&
+                    <div styleName="pending-overlay">
+                        <i
+                            className="ion-load-c"
+                            styleName="loading-icon"
+                        />
+                    </div>
+                }
+                <div styleName="warning-text">
+                    <p>
                         { getTypeNameDefined ?
-                            `Do you want to delete ${getType()} '${getName()}' ?` :
+                            `Do you want to delete the ${getType()} '${getName()}' ?` :
                             'Are you sure you want to delete ?'
                         }
-                    </span>
+                    </p>
                 </div>
-                <div>
-                    <DangerButton onClick={handleDelete}>
-                        Delete
-                    </DangerButton>
-                    <PrimaryButton onClick={handleCancel}>
+                <div styleName="action-buttons">
+                    <PrimaryButton
+                        onClick={handleCancel}
+                    >
                         Cancel
                     </PrimaryButton>
+                    <DangerButton
+                        onClick={handleDelete}
+                        styleName="delete-btn"
+                    >
+                        Delete
+                    </DangerButton>
                 </div>
             </div>
         );
