@@ -1,147 +1,153 @@
 @import '../../../../stylesheets/base';
 
 .add-lead {
-    .tab-container {
+    display: flex;
+    padding: $spacing-medium-alt;
+
+    .left {
         display: flex;
-        padding: $spacing-medium-alt;
-        overflow-y: auto;
+        flex-basis: 30%;
+        flex-direction: column;
+        background-color: $color-foreground-alt;
+        height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
+        overflow-y: hidden;
 
-        .lead-list-container {
+        .header {
             display: flex;
-            flex-basis: 30%;
-            flex-direction: column;
-            background-color: $color-foreground-alt;
-            height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
-            overflow-y: hidden;
+            position: relative;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            background-color: $color-background-header;
+            padding: $spacing-medium $spacing-medium-alt;
 
-            .header {
-                display: flex;
-                flex-shrink: 0;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-between;
-                background-color: $color-background-header;
-                padding: $spacing-medium $spacing-medium-alt;
+            .title {
+                flex-basis: 50%;
+                text-transform: uppercase;
+            }
 
-                .title {
-                    text-transform: uppercase;
-                }
+            .search {
+                flex-basis: 50%;
+            }
 
-                .search,
-                .source-filter {
-                    background-color: transparent;
+            .search,
+            .source-filter {
+                background-color: transparent;
 
-                    :global .empty {
-                        display: none;
-                    }
-                }
-
-                .filter {
-                    flex-basis: calc(100% / 3 - #{$spacing-extra-small});
+                :global .empty {
+                    display: none;
                 }
             }
 
-            .list {
-                flex-grow: 1;
+            .filter {
+                flex-basis: calc(100% / 3 - #{$spacing-extra-small});
+            }
+        }
+
+        .lead-list {
+            flex-grow: 1;
+            overflow-y: auto;
+
+            .list-item {
+                display: flex;
+                align-items: center;
+                border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
+                cursor: pointer;
+                padding-top: $spacing-small $spacing-medium;
+                user-select: none;
                 overflow-y: auto;
 
-                .list-item {
-                    display: flex;
-                    align-items: center;
-                    border-bottom: $width-separator-thin solid $color-separator;
-                    border-left: $width-separator-thick solid transparent;
-                    cursor: pointer;
-                    padding-top: $spacing-small $spacing-medium;
-                    user-select: none;
-                    overflow-y: auto;
-
-                    &.active {
-                        border-left: $width-separator-thick solid $color-accent;
-                        background-color: $color-hover;
-                    }
-
-                    .icon {
-                        display: inline-flex;
-                        flex-basis: $width-icon-large;
-                        flex-shrink: 0;
-                        padding: $spacing-small $spacing-large;
-                        font-size: $font-size-large;
-                    }
-
-                    .icon-checked {
-                        display: inline-block;
-                        flex-shrink: 0;
-                        padding: $spacing-medium;
-                        color: $color-success;
-                        font-size: $font-size-large;
-                    }
-                }
-            }
-
-            .add-lead-container {
-                display: flex;
-                flex-shrink: 0;
-                flex-wrap: wrap;
-                align-items: center;
-                justify-content: space-around;
-
-                .heading {
-                    flex-basis: 100%;
-                    margin: 0;
-                    border-top: $width-separator-normal solid $color-separator;
-                    // border-bottom: $width-separator-thin solid $color-separator;
-                    padding: $spacing-medium $spacing-large;
-                    color: $color-label;
-                    font-size: $font-size-small;
-                    font-weight: $font-weight-medium;
+                &.active {
+                    border-left: $width-separator-thick solid $color-accent;
+                    background-color: $color-hover;
                 }
 
-                .add-lead-btn {
-                    flex-basis: 20%;
-                    color: $color-text;
-                    font-family: inherit;
-                    font-size: inherit;
+                .icon {
+                    display: inline-flex;
+                    flex-basis: $width-icon-large;
+                    flex-shrink: 0;
+                    padding: $spacing-small $spacing-large;
+                    font-size: $font-size-large;
+                }
 
-                    span {
-                        font-size: $font-size-extra-large;
-                    }
-
-                    p {
-                        margin: $spacing-medium 0 0;
-                        font-size: $font-size-extra-small;
-                    }
-
-                    &:hover {
-                        cursor: pointer;
-                        color: $color-accent;
-                    }
+                .icon-checked {
+                    display: inline-block;
+                    flex-shrink: 0;
+                    padding: $spacing-medium;
+                    color: $color-success;
+                    font-size: $font-size-large;
                 }
             }
         }
 
-        .lead-detail-container {
-            flex-basis: 70%;
-            background-color: $color-foreground;
-            height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
-            overflow-y: auto;
+        .add-lead-buttons {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-around;
 
-            .tab {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                height: 100%;
+            .heading {
+                flex-basis: 100%;
+                margin: 0;
+                border-top: $width-separator-normal solid $color-separator;
+                // border-bottom: $width-separator-thin solid $color-separator;
+                padding: $spacing-medium $spacing-large;
+                color: $color-label;
+                font-size: $font-size-small;
+                font-weight: $font-weight-medium;
+            }
 
-                .add-lead-form {
-                    flex-shrink: 0;
+            .add-lead-btn {
+                flex-basis: 20%;
+                color: $color-text;
+                font-family: inherit;
+                font-size: inherit;
+
+                span {
+                    font-size: $font-size-extra-large;
                 }
 
-                .lead-preview {
-                    display: flex;
-                    flex-grow: 1;
-                    align-items: center;
-                    justify-content: center;
+                p {
+                    margin: $spacing-medium 0 0;
+                    font-size: $font-size-extra-small;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    color: $color-accent;
                 }
             }
+        }
+    }
+
+    .right {
+        display: flex;
+        flex-basis: 70%;
+        flex-direction: column;
+        background-color: $color-foreground;
+        overflow-y: auto;
+
+        .add-lead-form {
+            flex-shrink: 0;
+        }
+
+        .empty-form {
+            display: flex;
+            flex-basis: 30%;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lead-preview {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            border-top: $width-separator-medium solid $color-separator;
         }
     }
 }

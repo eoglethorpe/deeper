@@ -1,77 +1,48 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import {
     DateInput,
     Form,
-    NonFieldErrors,
     HiddenInput,
+    LoadingAnimation,
+    NonFieldErrors,
     SelectInput,
     TextArea,
     TextInput,
     requiredCondition,
     urlCondition,
 } from '../../../../public/components/Input';
+
 import {
     PrimaryButton,
     SuccessButton,
 } from '../../../../public/components/Action';
-import { RestBuilder } from '../../../../public/utils/rest';
-
-import {
-    createParamsForUser,
-    createUrlForLeadFilterOptions,
-} from '../../../../common/rest';
-import {
-    activeProjectSelector,
-    leadFilterOptionsForProjectSelector,
-
-    tokenSelector,
-
-    setLeadFilterOptionsAction,
-} from '../../../../common/redux';
 
 import styles from './styles.scss';
 
-// uploadStates -> birth, uploading, success, fail
-// formStates -> stale, error, pending
 const propTypes = {
     className: PropTypes.string,
-    formValues: PropTypes.object.isRequired, // eslint-disable-line
-    leadId: PropTypes.string.isRequired,
-    leadType: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onFailure: PropTypes.func.isRequired,
-    onSuccess: PropTypes.func.isRequired,
-    pending: PropTypes.bool.isRequired,
-    ready: PropTypes.bool.isRequired,
-    stale: PropTypes.bool.isRequired,
-    uploadData: PropTypes.object, // eslint-disable-line
-    activeProject: PropTypes.number.isRequired,
-    setLeadFilterOptions: PropTypes.func.isRequired,
-    token: PropTypes.shape({
-        access: PropTypes.string,
+
+    formCallbacks: PropTypes.shape({
+        dummy: PropTypes.string,
     }).isRequired,
-    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line 
+
+    lead: PropTypes.shape({
+        dummy: PropTypes.string,
+    }).isRequired,
+
+    leadOptions: PropTypes.shape({
+        dummy: PropTypes.string,
+    }).isRequired,
 };
+
 const defaultProps = {
     className: '',
     uploadData: {},
 };
 
-const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    leadFilterOptions: leadFilterOptionsForProjectSelector(state),
-    token: tokenSelector(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-    setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -79,10 +50,7 @@ export default class AddLeadForm extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            formErrors: [],
-            formFieldErrors: {},
-        };
+
         this.elements = [
             'project',
             'title',
@@ -95,6 +63,7 @@ export default class AddLeadForm extends React.PureComponent {
             'server_id',
             'text',
         ];
+
         this.validations = {
             title: [requiredCondition],
             source: [requiredCondition],
@@ -110,128 +79,49 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
-    componentDidMount() {
-        const { activeProject } = this.props;
-        this.requestProjectLeadFilterOptions(activeProject);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.activeProject !== nextProps.activeProject) {
-            this.requestProjectLeadFilterOptions(nextProps.activeProject);
-        }
-    }
-
-    requestProjectLeadFilterOptions = (activeProject) => {
-        if (this.leadFilterOptionsRequest) {
-            this.leadFilterOptionsRequest.stop();
-        }
-
-        // eslint-disable-next-line
-        this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(activeProject);
-        this.leadFilterOptionsRequest.start();
-        this.setState({
-            loadingLeadFilters: true,
-        });
-    }
-
-    createRequestForProjectLeadFilterOptions = (activeProject) => {
-        const urlForProjectFilterOptions = createUrlForLeadFilterOptions(activeProject);
-
-        const leadFilterOptionsRequest = new RestBuilder()
-            .url(urlForProjectFilterOptions)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
-            .success((response) => {
-                try {
-                    // TODO:
-                    // schema.validate(response, 'leadFilterOptionsGetResponse');
-                    this.props.setLeadFilterOptions({
-                        projectId: activeProject,
-                        leadFilterOptions: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-                this.setState({
-                    loadingLeadFilters: false,
-                });
-            })
-            .retryTime(1000)
-            .build();
-
-        return leadFilterOptionsRequest;
-    }
-
-    // FORM RELATED
-
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
-        console.log(values);
-        this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-        });
-        this.props.onChange(this.props.leadId, values);
-    };
-
-    failureCallback = ({ formErrors, formFieldErrors }) => {
-        this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-        });
-        this.props.onFailure(this.props.leadId);
-    };
-
-    successCallback = (values) => {
-        console.log(values);
-        // Rest Request goes here
-        this.props.onSuccess(this.props.leadId, values);
-    };
-
     render() {
         const {
-            formErrors = [],
-            formFieldErrors,
-        } = this.state;
+            className,
+            formCallbacks,
+            lead,
+            leadOptions,
+        } = this.props;
 
         const {
-            className,
+            onChange,
+            onFailure,
+            onSuccess,
+        } = formCallbacks;
+
+        const {
             pending,
-            formValues,
             stale,
             ready,
-            leadType,
-            uploadData,
-            leadFilterOptions,
-        } = this.props;
+        } = lead.uiState;
+
+        const {
+            values,
+            errors,
+            fieldErrors,
+        } = lead.form;
 
         return (
             <Form
-                changeCallback={this.changeCallback}
+                changeCallback={onChange}
                 className={className}
                 elements={this.elements}
-                failureCallback={this.failureCallback}
-                onSubmit={this.handleSubmit}
+                failureCallback={onFailure}
                 styleName="add-lead-form"
-                successCallback={this.successCallback}
-                validation={this.validation}
+                successCallback={onSuccess}
                 validations={this.validations}
             >
                 {
-                    pending &&
-                        <div styleName="pending-overlay">
-                            <i
-                                className="ion-load-c"
-                                styleName="loading-icon"
-                            />
-                        </div>
+                    pending && <LoadingAnimation />
                 }
-                <header styleName="header">
-                    <NonFieldErrors errors={formErrors} />
+                <header
+                    styleName="header"
+                >
+                    <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
                         <SuccessButton
                             disabled={pending || !stale || !ready}
@@ -245,117 +135,123 @@ export default class AddLeadForm extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <TextInput
-                    label="Title"
-                    formname="title"
-                    placeholder="Enter a descriptive name"
-                    styleName="title"
-                    value={formValues.title}
-                    error={formFieldErrors.title}
-                />
-                <TextInput
-                    label="Source"
-                    formname="source"
-                    placeholder="Enter a descriptive name"
-                    styleName="source"
-                    value={formValues.source}
-                    error={formFieldErrors.source}
-                />
                 <SelectInput
-                    label="Confidentiality"
-                    formname="confidentiality"
-                    placeholder="Select a confidentiality"
-                    options={leadFilterOptions.confidentiality}
-                    value={formValues.confidentiality}
-                    styleName="confidentiality"
-                    keySelector={d => (d || {}).key}
-                    labelSelector={d => (d || {}).value}
-                    error={formFieldErrors.confidentiality}
-                    showLabel
-                    showHintAndError
-                />
-                <SelectInput
-                    label="Assign To"
-                    formname="user"
-                    placeholder="Select a user"
-                    options={leadFilterOptions.assignee}
-                    value={formValues.user}
-                    styleName="user"
-                    error={formFieldErrors.user}
-                    keySelector={d => (d || {}).key}
-                    labelSelector={d => (d || {}).value}
-                    showLabel
-                    showHintAndError
-                />
-                <DateInput
-                    label="Publication Date"
-                    formname="date"
-                    placeholder="Enter a descriptive name"
-                    styleName="date"
-                    value={formValues.date}
-                    error={formFieldErrors.date}
-                />
-                <SelectInput
-                    label="Project"
+                    error={fieldErrors.project}
                     formname="project"
-                    placeholder="Select a project"
-                    options={leadFilterOptions.project}
-                    value={formValues.project}
-                    styleName="project"
                     keySelector={d => (d || {}).key}
+                    label="Project"
                     labelSelector={d => (d || {}).value}
-                    error={formFieldErrors.project}
-                    showLabel
+                    options={leadOptions.project}
+                    placeholder="Select a project"
                     showHintAndError
+                    showLabel
+                    styleName="project"
+                    value={values.project}
                 />
                 <div
                     styleName="line-break"
                 />
+                <TextInput
+                    error={fieldErrors.title}
+                    formname="title"
+                    label="Title"
+                    placeholder="Title of lead"
+                    styleName="title"
+                    value={values.title}
+                />
+                <TextInput
+                    error={fieldErrors.source}
+                    formname="source"
+                    label="Source"
+                    placeholder="Source of lead (eg: Press)"
+                    styleName="source"
+                    value={values.source}
+                />
+                <SelectInput
+                    error={fieldErrors.confidentiality}
+                    formname="confidentiality"
+                    keySelector={d => (d || {}).key}
+                    label="Confidentiality"
+                    labelSelector={d => (d || {}).value}
+                    options={leadOptions.confidentiality}
+                    placeholder="Select a confidentiality"
+                    showHintAndError
+                    showLabel
+                    styleName="confidentiality"
+                    value={values.confidentiality}
+                />
+                <SelectInput
+                    error={fieldErrors.user}
+                    formname="user"
+                    keySelector={d => (d || {}).key}
+                    label="Assign To"
+                    labelSelector={d => (d || {}).value}
+                    options={leadOptions.assignee}
+                    placeholder="Select a user"
+                    showHintAndError
+                    showLabel
+                    styleName="user"
+                    value={values.user}
+                />
+                <DateInput
+                    error={fieldErrors.date}
+                    formname="date"
+                    label="Publication Date"
+                    placeholder="Enter a descriptive name"
+                    styleName="date"
+                    value={values.date}
+                />
                 {
-                    leadType === 'website' && [
+                    lead.data.type === 'website' && [
                         <TextInput
+                            error={fieldErrors.url}
+                            formname="url"
                             key="url"
                             label="URL"
-                            formname="url"
                             placeholder="Enter a descriptive name"
                             styleName="url"
-                            value={formValues.url}
-                            error={formFieldErrors.url}
+                            value={values.url}
                         />,
                         <TextInput
+                            error={fieldErrors.website}
+                            formname="website"
                             key="website"
                             label="Website"
-                            formname="website"
                             placeholder="Enter a descriptive name"
                             styleName="website"
-                            value={formValues.website}
-                            error={formFieldErrors.website}
+                            value={values.website}
                         />,
                     ]
                 }
                 {
-                    leadType === 'text' &&
+                    lead.data.type === 'text' &&
                         <TextArea
                             formname="text"
                             label="Text"
                             placeholder="Enter text"
-                            value={formValues.text}
                             rows="3"
                             styleName="text"
+                            value={values.text}
                         />
                 }
                 {
-                    leadType === 'file' && ([
+                    lead.data.type === 'file' && ([
                         <p
                             key="title"
                             styleName="file-title"
                         >
-                            { uploadData.error ? uploadData.error : uploadData.title }
+                            {
+                                lead.upload.error ? (
+                                    lead.upload.error
+                                ) : (
+                                    lead.upload.title
+                                )
+                            }
                         </p>,
                         <HiddenInput
-                            key="input"
                             formname="server_id"
-                            value={formValues.server_id}
+                            key="input"
+                            value={values.server_id}
                         />,
                     ])
                 }
