@@ -12,6 +12,7 @@ import {
     SET_ACTIVE_COUNTRY,
     SET_COUNTRIES,
     ADD_NEW_COUNTRY,
+    UNSET_REGION,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 } from '../action-types/domainData';
@@ -71,6 +72,11 @@ export const setActiveProjectAction = ({ activeProject }) => ({
 export const setActiveCountryAction = ({ activeCountry }) => ({
     type: SET_ACTIVE_COUNTRY,
     activeCountry,
+});
+
+export const unSetRegionAction = ({ regionId }) => ({
+    type: UNSET_REGION,
+    regionId,
 });
 
 export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({

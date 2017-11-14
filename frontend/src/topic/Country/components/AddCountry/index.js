@@ -94,11 +94,7 @@ export default class AddCountry extends React.PureComponent {
                 try {
                     schema.validate(response, 'regionCreateResponse');
                     this.props.addNewCountry({
-                        countryDetail: {
-                            code: response.code,
-                            id: response.id,
-                            title: response.title,
-                        },
+                        countryDetail: response,
                     });
                     this.props.onModalClose();
                     browserHistory.push(`/countrypanel/${response.id}`);
@@ -159,7 +155,6 @@ export default class AddCountry extends React.PureComponent {
         // Create new post request
         this.regionCreateRequest = this.createRequestForRegionCreate(data);
         this.regionCreateRequest.start();
-        this.props.onModalClose();
     };
 
     render() {
@@ -196,7 +191,7 @@ export default class AddCountry extends React.PureComponent {
                     label="Country Title"
                     formname="title"
                     placeholder="Nepal"
-                    value={formValues.name}
+                    value={formValues.title}
                     error={formFieldErrors.name}
                 />
                 <TextInput

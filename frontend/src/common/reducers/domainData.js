@@ -10,6 +10,7 @@ import {
     DUMMY_ACTION,
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
+    UNSET_REGION,
     ADD_NEW_COUNTRY,
     SET_COUNTRIES,
     SET_LEADS,
@@ -243,13 +244,32 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
         case SET_COUNTRIES: {
+            const countries = action.countries.reduce((acc, country) => (
+                {
+                    ...acc,
+                    [country.id]: { $auto: {
+                        $set: country,
+                    } },
+                }
+            ), {});
+
+            const settings = {
+                countries,
+            };
+            return update(state, settings);
+        }
+
+        case UNSET_REGION: {
             const settings = {
                 countries: {
-                    $set: action.countries,
+                    [action.regionId]: { $auto: {
+                        $set: undefined,
+                    } },
                 },
             };
             return update(state, settings);
         }
+
         case SET_ACTIVE_PROJECT: {
             const settings = {
                 activeProject: {
@@ -269,7 +289,9 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
         case ADD_NEW_COUNTRY: {
             const settings = {
                 countries: { $autoArray: {
-                    $push: [action.countryDetail],
+                    [action.countryDetail.id]: { $auto: {
+                        $merge: action.countryDetail,
+                    } },
                 } },
             };
             return update(state, settings);
