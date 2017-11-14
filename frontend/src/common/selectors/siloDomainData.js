@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import {
-    countriesSelector,
+    countriesListSelector,
     currentUserProjectsSelector,
     leadFilterOptionsSelector,
     leadsSelector,
@@ -25,7 +25,7 @@ export const activeCountrySelector = ({ siloDomainData }) => (
 
 // FIXME: rename to countryDetailForCountrySelector
 export const countryDetailSelector = createSelector(
-    countriesSelector,
+    countriesListSelector,
     activeCountrySelector,
     (countries, activeCountry) => (
         countries.find(country => country.id === activeCountry) || emptyObject
