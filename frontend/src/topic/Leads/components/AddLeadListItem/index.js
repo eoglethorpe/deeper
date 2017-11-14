@@ -6,23 +6,19 @@ import styles from './styles.scss';
 
 const propTypes = {
     active: PropTypes.bool,
+
     className: PropTypes.string,
-    error: PropTypes.bool,
+
     onClick: PropTypes.func.isRequired,
-    stale: PropTypes.bool,
-    title: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    upload: PropTypes.shape({
-        progress: PropTypes.number,
-    }),
+
+    lead: PropTypes.shape({
+        dummy: PropTypes.string,
+    }).isRequired,
 };
 
 const defaultProps = {
     active: false,
     className: '',
-    error: false,
-    stale: false,
-    upload: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -46,31 +42,30 @@ export default class AddLeadListItem extends React.PureComponent {
         return this.leadTypeToIconClassMap[type];
     }
 
-    getStatusIconClassName = (props) => {
-        const {
-            stale,
-        } = props;
-
-        let iconClassName = '';
-
-        if (stale) {
-            iconClassName = 'ion-android-alert';
-        }
-
-        return iconClassName;
-    }
-
     render() {
         const {
             active,
             className,
             onClick,
+            lead,
+        } = this.props;
+
+        const {
+            type,
+        } = lead.data;
+
+        const {
+            title,
+        } = lead.form.values;
+
+        const {
             error,
             stale,
-            type,
-            title,
+        } = lead.uiState;
+
+        const {
             upload,
-        } = this.props;
+        } = lead;
 
         return (
             <button
@@ -104,20 +99,21 @@ export default class AddLeadListItem extends React.PureComponent {
                     )
                 }
                 {
-                    upload &&
-                    <span
-                        styleName={`
-                            progress-bar
-                            ${upload.progress >= 100 ? 'completed' : ''}
-                        `}
-                    >
+                    upload && (
                         <span
-                            styleName="progress"
-                            style={{
-                                width: `${upload.progress}%`,
-                            }}
-                        />
-                    </span>
+                            styleName={`
+                                progress-bar
+                                ${upload.progress >= 100 ? 'completed' : ''}
+                            `}
+                        >
+                            <span
+                                styleName="progress"
+                                style={{
+                                    width: `${upload.progress}%`,
+                                }}
+                            />
+                        </span>
+                    )
                 }
             </button>
         );
