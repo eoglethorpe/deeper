@@ -17,6 +17,8 @@ import {
     setUserProjectsAction,
 } from '../../common/action-creators/domainData';
 
+import Locker from '../../public/utils/Locker';
+
 export const START_TOKEN_REFRESH = 'refresh-access-token/START';
 export const STOP_TOKEN_REFRESH = 'refresh-access-token/STOP';
 
@@ -34,8 +36,12 @@ class Refresher {
         this.refreshTime = refreshTime;
         this.refreshId = undefined;
 
-        this.refreshRequest = this.createRefreshRequest(store);
         this.projectsRequest = this.createProjectsRequest(store);
+
+        this.locker = new Locker('token-refresh-lock');
+        this.locker.acquire().then(() => {
+            this.refreshRequest = this.createRefreshRequest(store);
+        });
     }
 
     createRefreshRequest = (store) => {
@@ -117,9 +123,15 @@ class Refresher {
             console.warn('Refresh is already scheduled');
             return;
         }
+
         this.refreshId = setTimeout(() => {
-            this.refreshRequest.start();
-            this.refreshId = undefined;
+            if (this.refreshRequest) {
+                this.refreshRequest.start();
+                this.refreshId = undefined;
+            } else {
+                this.refreshId = undefined;
+                this.schedule();
+            }
         }, this.refreshTime);
     }
 
