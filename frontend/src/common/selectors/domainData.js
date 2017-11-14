@@ -21,6 +21,19 @@ export const leadsSelector = ({ domainData }) => (
 export const countriesSelector = ({ domainData }) => (
     domainData.countries || emptyObject
 );
+
+export const countriesListSelector = createSelector(
+    countriesSelector,
+    countries => (
+        countries && Object.keys(countries).reduce((acc, countryId) => {
+            if (countries[countryId]) {
+                acc.push(countries[countryId]);
+            }
+            return acc;
+        }, [])
+    ) || emptyList,
+);
+
 export const adminLevelsSelector = ({ domainData }) => (
     domainData.adminLevels || emptyObject
 );
