@@ -6,6 +6,7 @@ import {
     createParamsForLeadEdit,
     createParamsForLeadCreate,
     urlForLead,
+    createUrlForLeadEdit,
 } from '../../common/rest';
 
 import { RestBuilder } from '../../public/utils/rest';
@@ -39,7 +40,7 @@ export const saveLead = (lead, access) => {
         let leadRequest;
         if (lead.serverId) {
             leadRequest = createLeadRequest(
-                urlForLead,
+                createUrlForLeadEdit(lead.serverId),
                 () => createParamsForLeadEdit({ access }, lead.form.values),
                 resolve,
             );
