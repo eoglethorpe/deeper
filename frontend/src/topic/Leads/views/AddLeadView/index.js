@@ -167,9 +167,16 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     setLeadsWithDefaultFilters = (leads) => {
+        let activeLeadId;
+
+        if (leads.length > 0) {
+            activeLeadId = leads[0].data.id;
+        }
+
         this.setState({
             leads: this.applyFilters(leads, this.defaultFilters),
             filters: { ...this.defaultFilters },
+            activeLeadId,
         });
     }
 
@@ -407,23 +414,22 @@ export default class AddLeadView extends React.PureComponent {
         });
     }
 
-    handleFormSuccess = (values) => {
+    handleFormSuccess = () => {
         const { access } = this.props.token;
         const { leads, activeLeadId } = this.state;
         const activeLeadIndex = leads.findIndex(lead => lead.data.id === activeLeadId);
 
-        /*
         saveLead(
             leads[activeLeadIndex],
             access,
         ).then((response) => {
-            console.log(response);
-
             const settings = {
                 [activeLeadIndex]: {
                     uiState: {
                         pending: { $set: false },
+                        stale: { $set: false },
                     },
+                    serverId: { $set: response.id },
                 },
             };
 
@@ -432,7 +438,6 @@ export default class AddLeadView extends React.PureComponent {
                 leads: newLeads,
             });
         });
-        */
 
         const settings = {
             [activeLeadIndex]: {
@@ -446,8 +451,6 @@ export default class AddLeadView extends React.PureComponent {
         this.setState({
             leads: newLeads,
         });
-
-        console.log(values);
     }
 
     handleSearchChange = (value) => {

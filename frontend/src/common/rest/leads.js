@@ -19,7 +19,7 @@ export const createParamsForLeadCreate = ({ access }, data) => ({
     body: JSON.stringify(data),
 });
 
-export const createParamsFormLeadEdit = ({ access }, data) => ({
+export const createParamsForLeadEdit = ({ access }, data) => ({
     method: PUT,
     headers: {
         Authorization: `Bearer ${access}`,
@@ -30,4 +30,8 @@ export const createParamsFormLeadEdit = ({ access }, data) => ({
 
 export const createUrlForLeadsOfProject = params => (
     `${wsEndpoint}/leads/?${p(params)}`
+);
+
+export const createUrlForLeadEdit = leadId => (
+    `${wsEndpoint}/leads/${leadId}/`
 );
