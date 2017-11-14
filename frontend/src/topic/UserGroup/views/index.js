@@ -198,7 +198,7 @@ export default class UserGroup extends React.PureComponent {
                         >
                             <MembersTable
                                 memberData={userGroup.memberships || []}
-                                userGroupId={parseInt(match.params.userGroupId, 10)}
+                                userGroupId={+match.params.userGroupId}
                             />
                         </TabContent>
                         <TabContent

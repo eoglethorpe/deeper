@@ -191,6 +191,12 @@ export default class MembersTable extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
+            .preLoad(() => {
+                this.setState({ deletePending: true });
+            })
+            .postLoad(() => {
+                this.setState({ deletePending: false });
+            })
             .success(() => {
                 try {
                     this.props.unSetMembership({
@@ -201,12 +207,6 @@ export default class MembersTable extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-            })
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);

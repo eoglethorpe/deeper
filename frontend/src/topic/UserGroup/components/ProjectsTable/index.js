@@ -101,14 +101,14 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 modifier: d => ((d.regions || []).length),
-                comparator: (a, b) => a - b,
+                comparator: (a, b) => (a.regions || []).length - (b.regions || []).length,
             },
             {
                 key: 'status',
                 label: 'Status',
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
-                sortable: true,
+                // sortable: true,
                 // comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
@@ -122,7 +122,7 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 7,
                 sortable: true,
                 modifier: d => ((d.memberships || []).length),
-                comparator: (a, b) => a - b,
+                comparator: (a, b) => (a.memberships || []).length - (b.memberships || []).length,
             },
             {
                 key: 'actions',
@@ -215,6 +215,12 @@ export default class ProjectsTable extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
+            .preLoad(() => {
+                this.setState({ deletePending: true });
+            })
+            .postLoad(() => {
+                this.setState({ deletePending: false });
+            })
             .success(() => {
                 try {
                     this.props.unSetProject({
@@ -224,12 +230,6 @@ export default class ProjectsTable extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-            })
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
