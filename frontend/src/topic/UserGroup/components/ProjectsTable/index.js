@@ -166,10 +166,6 @@ export default class ProjectsTable extends React.PureComponent {
         }
     }
 
-    getDeleteProjectName = () => {
-        console.log(this.props.projects[this.state.activeProjectDeleteId].title);
-    }
-
     createRequestForUserGroupProjects = (id) => {
         const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
         const userGroupRequest = new RestBuilder()

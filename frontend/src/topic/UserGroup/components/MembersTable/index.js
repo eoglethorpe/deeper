@@ -28,6 +28,7 @@ import {
     createUrlForUserMembership,
     createParamsForUserMembershipDelete,
     createParamsForUserMembershipCreate,
+    urlForUserMembership,
 } from '../../../../common/rest';
 
 import { RestBuilder } from '../../../../public/utils/rest';
@@ -74,6 +75,7 @@ export default class MembersTable extends React.PureComponent {
             activeMemberDelete: {},
             nonMemberUsers: this.getNonMemberUsers(props.users, props.memberData),
             newMemberUsers: [],
+            saveChangeDisabled: true,
         };
 
         this.memberHeaders = [
@@ -220,38 +222,37 @@ export default class MembersTable extends React.PureComponent {
 
     createRequestForMembershipCreate = (memberList) => {
         const userGroupId = this.props.userGroupId;
-        const urlForMembership = createUrlForUserMembership(memberList);
 
         const membershipDeleteRequest = new RestBuilder()
-            .url(urlForMembership)
+            .url(urlForUserMembership)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUserMembershipCreate(
                     { access },
-                    { memberList, userGroupId },
+                    { memberList },
                 );
             })
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(1)
-            .success((response) => {
-                try {
-                    // TODO: write schema
-                    schema.validate(response, 'projectsGetResponse');
-                    this.props.setUsersMembership({
-                        usersMembership: response,
-                        userGroupId,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
             .preLoad(() => {
                 this.setState({ addPending: true });
             })
             .postLoad(() => {
                 this.setState({ addPending: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate({ results: response }, 'userMembershipCreateResponse');
+                    this.props.setUsersMembership({
+                        usersMembership: response,
+                        userGroupId,
+                    });
+                    this.setState({ showAddMemberModal: false });
+                } catch (er) {
+                    console.error(er);
+                }
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
@@ -279,6 +280,7 @@ export default class MembersTable extends React.PureComponent {
             // editRow: {},
             showAddMemberModal: false,
             newMemberUsers: [],
+            saveChangeDisabled: true,
         });
     }
 
@@ -293,6 +295,25 @@ export default class MembersTable extends React.PureComponent {
         this.setState({ showDeleteMemberModal: false });
     }
 
+    handleRoleChangeForNewMember = (memberId, newRole) => {
+        const { newMemberUsers } = this.state;
+        const newMemberArrayIndex = newMemberUsers.findIndex(
+            newMemberUser => (newMemberUser === memberId));
+
+        if (newMemberArrayIndex !== -1) {
+            const updatedNewMemberUsers = [...newMemberUsers];
+
+            updatedNewMemberUsers[newMemberArrayIndex] = {
+                ...newMemberUsers[newMemberArrayIndex],
+                role: newRole,
+            };
+
+            this.setState({
+                newMemberUsers: updatedNewMemberUsers,
+            });
+        }
+    }
+
     addNewMember = (newMember) => {
         const { newMemberUsers } = this.state;
         const newMemberArrayIndex = newMemberUsers.findIndex(
@@ -300,6 +321,7 @@ export default class MembersTable extends React.PureComponent {
 
         if (newMemberArrayIndex !== -1) {
             this.setState({
+                saveChangeDisabled: false,
                 newMemberUsers: [...this.state.newMemberUsers, newMember],
             });
         }
@@ -310,13 +332,28 @@ export default class MembersTable extends React.PureComponent {
             this.requestForMembershipCreate.stop();
         }
 
+        /* NOTE: For pprabesh needed field for rest, TODO: remove this
+        const newMemberUsers = [
+            {
+                id: 1,
+                role: 'normal',
+                ...other fields
+            },
+        ];
+        */
         const { newMemberUsers } = this.state;
-        const newMemberList = newMemberUsers.map(newMemberUser => (newMemberUser.id));
+        const { userGroupId } = this.props;
 
-        console.log(newMemberList);
-        // TODO: complete rest request
-        // this.requestForMembershipCreate = this.createRequestForMembershipCreate(newMemberList);
-        // this.requestForMembershipCreate.start();
+        const newMemberList = newMemberUsers.map(newMemberUser => (
+            {
+                group: userGroupId,
+                member: newMemberUser.id,
+                role: newMemberUser.role,
+            }
+        ));
+
+        this.requestForMembershipCreate = this.createRequestForMembershipCreate(newMemberList);
+        this.requestForMembershipCreate.start();
     }
 
     deleteActiveMember = () => {
@@ -339,6 +376,8 @@ export default class MembersTable extends React.PureComponent {
             deletePending,
             showDeleteMemberModal,
             newMemberUsers,
+            saveChangeDisabled,
+            showAddMemberModal,
         } = this.state;
 
         return (
@@ -368,7 +407,7 @@ export default class MembersTable extends React.PureComponent {
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddMemberModalClose}
-                    show={this.state.showAddMemberModal}
+                    show={showAddMemberModal}
                 >
                     <ModalHeader
                         title="Add New Member"
@@ -400,6 +439,7 @@ export default class MembersTable extends React.PureComponent {
                             </DangerButton>
                             <PrimaryButton
                                 onClick={this.saveNewMemberChanges}
+                                disabled={saveChangeDisabled}
                             >
                                 Save changes
                             </PrimaryButton>

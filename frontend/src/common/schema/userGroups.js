@@ -73,5 +73,17 @@ const userGroupSchema = [];
     };
     userGroupSchema.push({ name, schema });
 }
-
+{
+    const name = 'userMembershipCreateResponse';
+    const schema = {
+        doc: {
+            name: 'User Membership POST Response',
+            description: 'Response for POST /groups-memberships/',
+        },
+        fields: {
+            results: { type: 'array.userGroupMembership', required: true },
+        },
+    };
+    userGroupSchema.push({ name, schema });
+}
 export default userGroupSchema;
