@@ -8,17 +8,12 @@ import {
     SET_USER_GROUP,
     UNSET_USER_GROUP,
     DUMMY_ACTION,
-    SET_ACTIVE_PROJECT,
-    SET_ACTIVE_COUNTRY,
     UNSET_REGION,
     ADD_NEW_COUNTRY,
     SET_COUNTRIES,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 } from '../action-types/domainData';
-import {
-    activeProjectSelector,
-} from '../selectors/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
 import update from '../../public/utils/immutable-update';
@@ -108,14 +103,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
         case SET_USER_PROJECTS: {
-            let activeProject = activeProjectSelector({ domainData: state });
-            if (action.projects && action.projects.length > 0) {
-                const key = action.projects.findIndex(project => project.id === activeProject);
-                if (key < 0) {
-                    activeProject = action.projects[0].id;
-                }
-            }
-
             const projects = action.projects.reduce((acc, project) => (
                 {
                     ...acc,
@@ -133,9 +120,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                             $set: action.projects.map(project => project.id),
                         } },
                     } },
-                },
-                activeProject: {
-                    $set: activeProject,
                 },
             };
             return update(state, settings);
@@ -270,22 +254,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
 
-        case SET_ACTIVE_PROJECT: {
-            const settings = {
-                activeProject: {
-                    $set: action.activeProject,
-                },
-            };
-            return update(state, settings);
-        }
-        case SET_ACTIVE_COUNTRY: {
-            const settings = {
-                activeCountry: {
-                    $set: action.activeCountry,
-                },
-            };
-            return update(state, settings);
-        }
         case ADD_NEW_COUNTRY: {
             const settings = {
                 countries: { $autoArray: {

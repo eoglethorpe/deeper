@@ -15,12 +15,6 @@ export const countryIdFromProps = (state, { countryId }) => countryId;
 
 // Using state
 
-export const activeProjectSelector = ({ domainData }) => (
-    domainData.activeProject
-);
-export const activeCountrySelector = ({ domainData }) => (
-    domainData.activeCountry
-);
 export const leadsSelector = ({ domainData }) => (
     domainData.leads || emptyObject
 );
@@ -55,40 +49,6 @@ export const adminLevelSelector = createSelector(
     (adminLevels, countryId) => (
         adminLevels[countryId] || emptyList
     ),
-);
-
-export const countriesListSelector = createSelector(
-    countriesSelector,
-    countries => (
-        countries && Object.keys(countries).reduce((acc, countryId) => {
-            if (countries[countryId]) {
-                acc.push(countries[countryId]);
-            }
-            return acc;
-        }, [])
-    ) || emptyList,
-);
-
-// FIXME: rename to countryDetailForCountrySelector
-export const countryDetailSelector = createSelector(
-    countriesListSelector,
-    activeCountrySelector,
-    (countries, activeCountry) => (
-        countries.find(country => country.id === activeCountry) || emptyObject
-    ),
-);
-
-export const projectDetailsSelector = createSelector(
-    projectsSelector,
-    activeProjectSelector,
-    (projects, activeProject) => projects[activeProject] || emptyObject,
-);
-
-export const usersInformationListSelector = createSelector(
-    usersSelector,
-    users => (Object.keys(users).map(id =>
-        users[id].information,
-    ) || emptyList).filter(d => d),
 );
 
 // Selector depending on user id from route (url)
@@ -148,35 +108,4 @@ export const currentUserProjectsSelector = createSelector(
             projects[projectId] || emptyObject
         ))
     ) || emptyList),
-);
-
-// Selector depending on project id from state (active project)
-
-export const leadsForProjectSelector = createSelector(
-    activeProjectSelector,
-    leadsSelector,
-    (activeProject, leads) => (leads[activeProject] || emptyList),
-);
-
-export const totalLeadsCountForProjectSelector = createSelector(
-    activeProjectSelector,
-    totalLeadsCountSelector,
-    (activeProject, totalLeadsCount) => (totalLeadsCount[activeProject] || 0),
-);
-
-export const leadFilterOptionsForProjectSelector = createSelector(
-    activeProjectSelector,
-    leadFilterOptionsSelector,
-    (activeProject, leadFilterOptions) => (leadFilterOptions[activeProject] || emptyObject),
-);
-
-// Selector depending on user id from state (logged-in user)
-// and on project id from state (active project)
-
-export const currentUserActiveProjectSelector = createSelector(
-    currentUserProjectsSelector,
-    activeProjectSelector,
-    (currentUserProjects, activeProject) => (
-        currentUserProjects.find(project => project.id === activeProject) || emptyObject
-    ),
 );

@@ -8,6 +8,9 @@ import App from './App';
 import store from './common/store';
 import storeConfig from './common/config/store';
 
+import reduxSync from './public/utils/redux-sync';
+
+
 export default class Root extends React.Component {
     constructor(props) {
         super(props);
@@ -21,7 +24,12 @@ export default class Root extends React.Component {
     componentWillMount() {
         console.log('Mounting Root');
         const afterRehydrateCallback = () => this.setState({ rehydrated: true });
-        persistStore(this.store, storeConfig, afterRehydrateCallback);
+        const persistor = persistStore(this.store, storeConfig, afterRehydrateCallback);
+        reduxSync(
+            persistor,
+            ['siloDomainData'],
+            storeConfig.keyPrefix,
+        );
     }
 
     render() {

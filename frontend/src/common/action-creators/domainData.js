@@ -8,8 +8,6 @@ import {
     SET_USER_GROUP,
     UNSET_USER_GROUP,
     DUMMY_ACTION,
-    SET_ACTIVE_PROJECT,
-    SET_ACTIVE_COUNTRY,
     SET_COUNTRIES,
     ADD_NEW_COUNTRY,
     UNSET_REGION,
@@ -62,16 +60,6 @@ export const unSetUserGroupAction = ({ userId, userGroupId }) => ({
     type: UNSET_USER_GROUP,
     userId,
     userGroupId,
-});
-
-export const setActiveProjectAction = ({ activeProject }) => ({
-    type: SET_ACTIVE_PROJECT,
-    activeProject,
-});
-
-export const setActiveCountryAction = ({ activeCountry }) => ({
-    type: SET_ACTIVE_COUNTRY,
-    activeCountry,
 });
 
 export const unSetRegionAction = ({ regionId }) => ({

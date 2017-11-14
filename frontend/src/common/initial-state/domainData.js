@@ -432,9 +432,5 @@ const initialDomainDataState = {
             },
         ],
     },
-
-    activeProject: 1,
-
-    activeCountry: undefined,
 };
 export default initialDomainDataState;
