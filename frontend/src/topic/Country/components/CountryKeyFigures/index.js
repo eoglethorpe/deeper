@@ -130,7 +130,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="INDEX"
-                        styleName="index"
+                        styleName="index text-input"
                         type="number"
                         step="any"
                         min="0"
@@ -139,19 +139,19 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="GEO-RANK"
-                        styleName="geo-rank"
+                        styleName="geo-rank text-input"
                         readOnly
                         formname="geo-rank"
                     />
                     <TextInput
                         label="GEO-SCORE"
-                        styleName="geo-score"
+                        styleName="geo-score text-input"
                         readOnly
                         formname="geo-score"
                     />
                     <TextInput
                         label="RANK"
-                        styleName="rank"
+                        styleName="rank text-input"
                         formname="rank"
                     />
                 </div>
@@ -172,13 +172,13 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="U5M"
-                        styleName="u5m"
+                        styleName="u5m text-input"
                         formname="u5m"
                         type="number"
                     />
                     <TextInput
                         label="GEO SCORE"
-                        styleName="geo-score-u5m"
+                        styleName="geo-score-u5m text-input"
                         readOnly
                         formname="geo-score-u5m"
                     />
@@ -200,29 +200,29 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="Number of Refugees"
-                        styleName="number-of-refugees"
+                        styleName="number-of-refugees text-input"
                         formname="number-of-refugees"
                     />
                     <TextInput
                         label="Percentage of Uprooted People"
-                        styleName="percentage-uprooted-people"
+                        styleName="percentage-uprooted-people text-input"
                         readOnly
                         formname="percentage-uprooted-people"
                     />
                     <TextInput
                         label="GEO-SCORE"
-                        styleName="geo-score-uprooted"
+                        styleName="geo-score-uprooted text-input"
                         readOnly
                         formname="geo-score-uprooted"
                     />
                     <TextInput
                         label="Number of IDPs"
-                        styleName="number-idp"
+                        styleName="number-idp text-input"
                         formname="number-idp"
                     />
                     <TextInput
                         label="Number of returned refugees"
-                        styleName="number-returned-refugees"
+                        styleName="number-returned-refugees text-input"
                         formname="number-returned-refugees"
                     />
                 </div>
@@ -243,27 +243,27 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="Risk Calss"
-                        styleName="risk-class"
+                        styleName="risk-class text-input"
                         formname="risk-class"
                     />
                     <TextInput
                         label="Inform Risk Index"
-                        styleName="inform-risk-index"
+                        styleName="inform-risk-index text-input"
                         formname="inform-risk-index"
                     />
                     <TextInput
                         label="Hazard and Exposure"
-                        styleName="hazard-and-exposure"
+                        styleName="hazard-and-exposure text-input"
                         formname="hazard-and-exposure"
                     />
                     <TextInput
                         label="Vulnerability"
-                        styleName="vulnerability"
+                        styleName="vulnerability text-input"
                         formname="vulnerability"
                     />
                     <TextInput
                         label="Lack of Coping Capacity"
-                        styleName="lack-of-coping-capacity"
+                        styleName="lack-of-coping-capacity text-input"
                         formname="lack-of-coping-capacity"
                     />
                 </div>

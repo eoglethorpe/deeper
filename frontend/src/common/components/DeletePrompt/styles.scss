@@ -23,21 +23,15 @@
     }
 }
 
-.warning-text {
-    margin-bottom: $spacing-large;
-    text-align: center;
 
-    p {
-        margin-top: 0;
-        font-size: $font-size-large;
-    }
+.warning-text {
+    padding: 0 0 $spacing-large;
 }
 
 .action-buttons {
-    margin-top: $spacing-large;
     text-align: right;
 
     .delete-btn {
-        margin-left: $spacing-large;
+        margin-left: $spacing-small;
     }
 }

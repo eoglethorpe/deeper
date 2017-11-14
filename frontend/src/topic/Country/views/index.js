@@ -340,6 +340,7 @@ export default class CountryPanel extends React.PureComponent {
                             Add country
                         </PrimaryButton>
                         <TextInput
+                            styleName="search-input"
                             onChange={this.search}
                             placeholder="Search Country"
                             type="search"

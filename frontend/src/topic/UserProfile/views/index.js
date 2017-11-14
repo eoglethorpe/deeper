@@ -10,7 +10,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    PrimaryButton,
+    TransparentPrimaryButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -184,31 +184,6 @@ export default class UserProfile extends React.PureComponent {
                         { pageTitles.userProfile }
                     </title>
                 </Helmet>
-                <header styleName="header">
-                    <h1>
-                        { pageTitles.userProfile }
-                    </h1>
-                    {
-                        isCurrentUser &&
-                        <PrimaryButton onClick={this.handleEditProfileClick}>
-                            Edit profile
-                        </PrimaryButton>
-                    }
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleEditProfileClose}
-                        show={this.state.editProfile}
-                    >
-                        <ModalHeader title="Edit profile" />
-                        <ModalBody>
-                            <UserEdit
-                                userId={userId}
-                                userInformation={userInformation}
-                                handleModalClose={this.handleEditProfileClose}
-                            />
-                        </ModalBody>
-                    </Modal>
-                </header>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
                     <img
@@ -218,12 +193,34 @@ export default class UserProfile extends React.PureComponent {
                     />
                     <div styleName="detail">
                         <p styleName="name">
-                            <span styleName="first">
-                                { userInformation.firstName }
-                            </span>
-                            <span styleName="last">
-                                { userInformation.lastName }
-                            </span>
+                            <div>
+                                <span styleName="first">
+                                    { userInformation.firstName }
+                                </span>
+                                <span styleName="last">
+                                    { userInformation.lastName }
+                                </span>
+                            </div>
+                            {
+                                isCurrentUser &&
+                                <TransparentPrimaryButton onClick={this.handleEditProfileClick}>
+                                    <span className="ion-edit" />
+                                </TransparentPrimaryButton>
+                            }
+                            <Modal
+                                closeOnEscape
+                                onClose={this.handleEditProfileClose}
+                                show={this.state.editProfile}
+                            >
+                                <ModalHeader title="Edit profile" />
+                                <ModalBody>
+                                    <UserEdit
+                                        userId={userId}
+                                        userInformation={userInformation}
+                                        handleModalClose={this.handleEditProfileClose}
+                                    />
+                                </ModalBody>
+                            </Modal>
                         </p>
                         <p styleName="email">
                             { userInformation.email }

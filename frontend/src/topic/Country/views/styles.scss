@@ -1,6 +1,6 @@
 @import '../../../stylesheets/base';
 
-$height-header: 124px;
+$height-header: calc(#{$height-header} + #{$height-tabbar});
 $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
 .country-details-alt {
@@ -23,11 +23,14 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 .country-panel {
     display: flex;
     padding: $spacing-large;
+    $width-list: 320px;
 
     .country-list {
         @include shadow-medium;
-        flex-basis: 25%;
+        flex-basis: 20%;
+        flex-shrink: 0;
         background-color: $color-foreground;
+        min-width: 320px;
 
         .list-header {
             display: flex;
@@ -37,6 +40,14 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-medium $spacing-large;
             height: $height-header;
+
+            .search-input {
+                padding: 0;
+
+                :global .error {
+                    display: none;
+                }
+            }
 
             .header-text {
                 text-transform: uppercase;
@@ -71,13 +82,11 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
                 background-color: $color-hover;
             }
         }
-
     }
-
 
     .country-details {
         @include shadow-medium;
-        flex-basis: 75%;
+        flex-grow: 1;
         background-color: darken($color-foreground, 1%);
         height: $height-full-page;
     }

@@ -7,9 +7,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    DangerButton,
-    PrimaryButton,
+    TransparentDangerButton,
+    TransparentPrimaryButton,
 } from '../../../public/components/Action';
+
+import {
+    LoadingAnimation,
+} from '../../../public/components/View';
 
 import styles from './styles.scss';
 
@@ -33,6 +37,19 @@ export default class DeletePrompt extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            error: false,
+        };
+    }
+
+    componentDidCatch(error, info) {
+        console.warn(error, info);
+        this.setState({ error, info });
+    }
+
     render() {
         const {
             handleDelete,
@@ -44,37 +61,38 @@ export default class DeletePrompt extends React.PureComponent {
         } = this.props;
 
         const getTypeNameDefined = getType && getName;
+
+        if (this.state.error) {
+            return <div>Error: {this.state.error.toString()}</div>;
+        }
+
         return (
             <div>
-                {
-                    pending &&
-                    <div styleName="pending-overlay">
-                        <i
-                            className="ion-load-c"
-                            styleName="loading-icon"
-                        />
-                    </div>
-                }
-                <div styleName="warning-text">
-                    <p>
-                        { getTypeNameDefined ?
-                            `Do you want to delete the ${getType()} '${getName()}' ?` :
-                            'Are you sure you want to delete ?'
-                        }
-                    </p>
+                { pending && <LoadingAnimation key="animation" /> }
+                <div
+                    key="text"
+                    styleName="warning-text"
+                >
+                    { getTypeNameDefined ?
+                        `Do you want to delete the ${getType()} '${getName()}' ?` :
+                        'Are you sure you want to delete ?'
+                    }
                 </div>
-                <div styleName="action-buttons">
-                    <PrimaryButton
+                <div
+                    key="action-buttons"
+                    styleName="action-buttons"
+                >
+                    <TransparentPrimaryButton
                         onClick={handleCancel}
                     >
                         Cancel
-                    </PrimaryButton>
-                    <DangerButton
+                    </TransparentPrimaryButton>
+                    <TransparentDangerButton
                         onClick={handleDelete}
                         styleName="delete-btn"
                     >
                         Delete
-                    </DangerButton>
+                    </TransparentDangerButton>
                 </div>
             </div>
         );
