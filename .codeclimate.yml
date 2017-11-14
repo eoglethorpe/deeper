@@ -2,10 +2,16 @@ engines:
   eslint:
     enabled: true
     channel: "eslint-4"
+    checks:
+      complexity:
+        enabled: false
     config:
       config: frontend/.eslintrc
   pep8:
     enabled: true
+    checks:
+      complexity:
+        enabled: false
   scss-lint:
     enabled: true
     config: frontend/.scss-lint.yml
