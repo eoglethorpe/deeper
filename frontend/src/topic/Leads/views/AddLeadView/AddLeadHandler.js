@@ -56,7 +56,7 @@ export default class AddLeadHandler {
                 isFiltrate: true,
             };
 
-            newLeads.push(lead);
+            newLeads.unshift(lead);
         }
 
 
@@ -100,7 +100,7 @@ export default class AddLeadHandler {
                 isFiltrate: true,
             };
 
-            newLeads.push(lead);
+            newLeads.unshift(lead);
         }
 
 
@@ -166,7 +166,7 @@ export default class AddLeadHandler {
                 isFiltrate: true,
             };
 
-            newLeads.push(lead);
+            newLeads.unshift(lead);
         }
 
         this.uploadCoordinator.queueAll();
@@ -177,7 +177,6 @@ export default class AddLeadHandler {
 
     fromWebsite = () => {
         const newLeads = [
-            ...this.parent.state.leads,
             {
                 data: {
                     id: `lead-${this.counter}`,
@@ -201,6 +200,7 @@ export default class AddLeadHandler {
                 // has passed filter
                 isFiltrate: true,
             },
+            ...this.parent.state.leads,
         ];
 
         this.counter += 1;
@@ -209,7 +209,6 @@ export default class AddLeadHandler {
 
     fromText = () => {
         const newLeads = [
-            ...this.parent.state.leads,
             {
                 data: {
                     id: `lead-${this.counter}`,
@@ -233,6 +232,7 @@ export default class AddLeadHandler {
                 // has passed filter
                 isFiltrate: true,
             },
+            ...this.parent.state.leads,
         ];
 
         this.counter += 1;
