@@ -10,8 +10,8 @@ import {
     SET_USERS_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
-    SET_COUNTRIES,
-    ADD_NEW_COUNTRY,
+    SET_REGIONS,
+    ADD_NEW_REGION,
     UNSET_REGION,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
@@ -94,14 +94,14 @@ export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => 
     leadFilterOptions,
 });
 
-export const setCountriesAction = ({ countries }) => ({
-    type: SET_COUNTRIES,
-    countries,
+export const setRegionsAction = ({ regions }) => ({
+    type: SET_REGIONS,
+    regions,
 });
 
-export const addNewCountryAction = ({ countryDetail }) => ({
-    type: ADD_NEW_COUNTRY,
-    countryDetail,
+export const addNewRegionAction = ({ regionDetail }) => ({
+    type: ADD_NEW_REGION,
+    regionDetail,
 });
 
 export const dummyAction = () => ({

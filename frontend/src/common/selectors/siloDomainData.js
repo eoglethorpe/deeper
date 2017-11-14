@@ -27,8 +27,8 @@ export const activeCountrySelector = ({ siloDomainData }) => (
 export const countryDetailSelector = createSelector(
     countriesListSelector,
     activeCountrySelector,
-    (countries, activeCountry) => (
-        countries.find(country => country.id === activeCountry) || emptyObject
+    (regions, activeCountry) => (
+        regions.find(country => country.id === activeCountry) || emptyObject
     ),
 );
 

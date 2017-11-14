@@ -24,14 +24,14 @@ import {
 import {
     tokenSelector,
 
-    addNewCountryAction,
+    addNewRegionAction,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
     token: PropTypes.object.isRequired, // eslint-disable-line
-    addNewCountry: PropTypes.func.isRequired,
+    addNewRegion: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
 };
 
@@ -40,7 +40,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addNewCountry: params => dispatch(addNewCountryAction(params)),
+    addNewRegion: params => dispatch(addNewRegionAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -93,8 +93,8 @@ export default class AddCountry extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'regionCreateResponse');
-                    this.props.addNewCountry({
-                        countryDetail: response,
+                    this.props.addNewRegion({
+                        regionDetail: response,
                     });
                     this.props.onModalClose();
                     browserHistory.push(`/countrypanel/${response.id}`);

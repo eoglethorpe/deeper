@@ -1,10 +1,10 @@
 const regionSchema = [];
 
 {
-    const name = 'country';
+    const name = 'region';
     const schema = {
         doc: {
-            name: 'Country',
+            name: 'Region',
             description: 'One of the main entities',
         },
         extends: 'dbentity',
@@ -19,17 +19,17 @@ const regionSchema = [];
 }
 
 {
-    const name = 'countriesGetResponse';
+    const name = 'regionsGetResponse';
     const schema = {
         doc: {
-            name: 'Countries Get Response',
+            name: 'Regions Get Response',
             description: 'Response for GET /regions/',
         },
         fields: {
             count: { type: 'uint', required: true },
             next: { type: 'string' },
             previous: { type: 'string' },
-            results: { type: 'array.country', required: true },
+            results: { type: 'array.region', required: true },
         },
     };
     regionSchema.push({ name, schema });
@@ -39,10 +39,10 @@ const regionSchema = [];
     const name = 'regionCreateResponse';
     const schema = {
         doc: {
-            name: 'Country Post Response',
+            name: 'Region Post Response',
             description: 'Response for Post',
         },
-        extends: 'country',
+        extends: 'region',
     };
     regionSchema.push({ name, schema });
 }

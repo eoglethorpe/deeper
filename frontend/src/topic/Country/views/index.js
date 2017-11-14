@@ -36,7 +36,7 @@ import {
     setNavbarStateAction,
 
     setActiveCountryAction,
-    setCountriesAction,
+    setRegionsAction,
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
@@ -51,7 +51,7 @@ const propTypes = {
             countryId: PropTypes.string,
         }),
     }),
-    setCountries: PropTypes.func.isRequired,
+    setRegions: PropTypes.func.isRequired,
     setActiveCountry: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
@@ -75,7 +75,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setCountries: params => dispatch(setCountriesAction(params)),
+    setRegions: params => dispatch(setRegionsAction(params)),
     setActiveCountry: params => dispatch(setActiveCountryAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
@@ -112,9 +112,9 @@ export default class CountryPanel extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    schema.validate(response, 'countriesGetResponse');
-                    this.props.setCountries({
-                        countries: response.results,
+                    schema.validate(response, 'regionsGetResponse');
+                    this.props.setRegions({
+                        regions: response.results,
                     });
                 } catch (er) {
                     console.error(er);

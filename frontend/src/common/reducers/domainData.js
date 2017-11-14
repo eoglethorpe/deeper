@@ -11,8 +11,8 @@ import {
     UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
     UNSET_REGION,
-    ADD_NEW_COUNTRY,
-    SET_COUNTRIES,
+    ADD_NEW_REGION,
+    SET_REGIONS,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 } from '../action-types/domainData';
@@ -267,25 +267,25 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
-        case SET_COUNTRIES: {
-            const countries = action.countries.reduce((acc, country) => (
+        case SET_REGIONS: {
+            const regions = action.regions.reduce((acc, region) => (
                 {
                     ...acc,
-                    [country.id]: { $auto: {
-                        $set: country,
+                    [region.id]: { $auto: {
+                        $set: region,
                     } },
                 }
             ), {});
 
             const settings = {
-                countries,
+                regions,
             };
             return update(state, settings);
         }
 
         case UNSET_REGION: {
             const settings = {
-                countries: {
+                regions: {
                     [action.regionId]: { $auto: {
                         $set: undefined,
                     } },
@@ -294,11 +294,11 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
 
-        case ADD_NEW_COUNTRY: {
+        case ADD_NEW_REGION: {
             const settings = {
-                countries: { $autoArray: {
-                    [action.countryDetail.id]: { $auto: {
-                        $merge: action.countryDetail,
+                regions: { $autoArray: {
+                    [action.regionDetail.id]: { $auto: {
+                        $merge: action.regionDetail,
                     } },
                 } },
             };

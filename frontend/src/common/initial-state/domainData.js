@@ -74,7 +74,7 @@ const initialDomainDataState = {
             userGroups: [1, 2],
         },
     },
-    countries: {
+    regions: {
         /*
         1: { id: 1, title: 'Afghanistan', code: 'AFG' },
         2: { id: 2, title: 'Aland Islands', code: 'ALA' },
