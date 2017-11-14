@@ -101,6 +101,18 @@ export const userGroupsSelector = createSelector(
         ))) || emptyList),
 );
 
+export const userGroupProjectSelector = createSelector(
+    projectsSelector,
+    groupIdFromRoute,
+    (projects, userGroupId) => (Object.keys(projects).reduce((acc, projectId) => {
+        const userGroups = (projects[projectId] || emptyObject).userGroups;
+        if (userGroups && userGroups.includes(parseInt(userGroupId, 10))) {
+            acc.push(projects[projectId]);
+        }
+        return acc;
+    }, []) || emptyList),
+);
+
 export const groupSelector = createSelector(
     groupsSelector,
     groupIdFromRoute,

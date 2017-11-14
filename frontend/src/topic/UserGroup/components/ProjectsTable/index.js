@@ -1,5 +1,8 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import {
     Table,
     Modal,
@@ -17,15 +20,48 @@ import {
 import {
     UserProjectAdd,
 } from '../../../UserProfile/components';
+
+import {
+    userGroupProjectSelector,
+    tokenSelector,
+    setUserProjectsAction,
+    unSetProjectAction,
+} from '../../../../common/redux';
+import {
+    createUrlForUserGroupProjects,
+    createParamsForUser,
+    createParamsForProjectDelete,
+    createUrlForProject,
+} from '../../../../common/rest';
+
+import { RestBuilder } from '../../../../public/utils/rest';
+import schema from '../../../../common/schema';
+import DeletePrompt from '../../../../common/components/DeletePrompt';
+
 import styles from './styles.scss';
 
 const propTypes = {
-
+    match: PropTypes.object.isRequired, // eslint-disable-line
+    projects: PropTypes.array.isRequired,// eslint-disable-line
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
+    unSetProject: PropTypes.func.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = (state, props) => ({
+    projects: userGroupProjectSelector(state, props),
+    token: tokenSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    setUserGroupProject: params => dispatch(setUserProjectsAction(params)),
+    unSetProject: params => dispatch(unSetProjectAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectsTable extends React.PureComponent {
     static propTypes = propTypes;
@@ -36,6 +72,9 @@ export default class ProjectsTable extends React.PureComponent {
 
         this.state = {
             showAddProjectModal: false,
+            showDeleteProjectModal: false,
+            deletePending: false,
+            activeProjectDelete: {},
         };
 
         this.projectHeaders = [
@@ -44,7 +83,7 @@ export default class ProjectsTable extends React.PureComponent {
                 label: 'Title',
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.name.localeCompare(b.name),
+                comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
@@ -61,7 +100,8 @@ export default class ProjectsTable extends React.PureComponent {
                 label: 'Countries',
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => a.name.localeCompare(b.name),
+                modifier: d => ((d.regions || []).length),
+                comparator: (a, b) => a - b,
             },
             {
                 key: 'status',
@@ -69,7 +109,7 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
                 sortable: true,
-                comparator: (a, b) => a.name.localeCompare(b.name),
+                // comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'modifiedAt',
@@ -81,7 +121,8 @@ export default class ProjectsTable extends React.PureComponent {
                 label: 'Members',
                 order: 7,
                 sortable: true,
-                comparator: (a, b) => a.name.localeCompare(b.name),
+                modifier: d => ((d.memberships || []).length),
+                comparator: (a, b) => a - b,
             },
             {
                 key: 'actions',
@@ -91,8 +132,7 @@ export default class ProjectsTable extends React.PureComponent {
                     <div className="actions">
                         <TransparentButton
                             className="delete-btn"
-                            title="Remove Member"
-                            onClick={() => this.handleRemoveProjectClick(row)}
+                            onClick={() => this.handleDeleteProjectClick(row)}
 
                         >
                             <i className="ion-android-delete" />
@@ -100,29 +140,129 @@ export default class ProjectsTable extends React.PureComponent {
                         <TransparentAccentButton
                             className="forward-btn"
                         >
-                            <i className="ion-forward" />
+                            <Link
+                                key={row.id}
+                                to={`/${row.id}/projectpanel/`}
+                            >
+                                <i className="ion-forward" />
+                            </Link>
                         </TransparentAccentButton>
                     </div>
                 ),
             },
         ];
-        this.projectData = [
-            {
-                id: 1,
-                title: 'Nepal Monitoring',
-                createdAt: '12322344',
-                startDate: 'jacky@jacky.com',
-                countries: 'Nepal',
-                status: 'GG WP',
-                modifiedAt: '12442312',
-                members: 22,
-            },
-        ];
     }
 
-    handleRemoveProjectClick = (row) => {
-        console.log(row);
+    componentWillMount() {
+        this.requestForUserGroupProjects = this.createRequestForUserGroupProjects(
+            this.props.match.params.userGroupId,
+        );
+        this.requestForUserGroupProjects.start();
+    }
+
+    componentWillUnmount() {
+        if (this.requestForUserGroupProjects) {
+            this.requestForUserGroupProjects.stop();
+        }
+    }
+
+    getDeleteProjectName = () => {
+        console.log(this.props.projects[this.state.activeProjectDeleteId].title);
+    }
+
+    createRequestForUserGroupProjects = (id) => {
+        const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
+        const userGroupRequest = new RestBuilder()
+            .url(urlForUserGroupProjects)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectsGetResponse');
+                    this.props.setUserGroupProject({
+                        projects: response.results,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return userGroupRequest;
+    }
+
+    createRequestForProjectDelete = (projectId) => {
+        const urlForProject = createUrlForProject(projectId);
+
+        const projectDeleteRequest = new RestBuilder()
+            .url(urlForProject)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForProjectDelete({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .success(() => {
+                try {
+                    this.props.unSetProject({
+                        projectId,
+                    });
+                    this.setState({ showDeleteProjectModal: false });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .preLoad(() => {
+                this.setState({ deletePending: true });
+            })
+            .postLoad(() => {
+                this.setState({ deletePending: false });
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return projectDeleteRequest;
+    }
+
+    handleDeleteProjectClick = (project) => {
+        this.setState({
+            activeProjectDelete: project,
+            showDeleteProjectModal: true,
+        });
     };
+
+    handleDeleteProjectClose = () => {
+        this.setState({ showDeleteProjectModal: false });
+    }
+
+    deleteActiveProject = () => {
+        if (this.projectDeleteRequest) {
+            this.projectDeleteRequest.stop();
+        }
+
+        const { activeProjectDelete } = this.state;
+        this.projectDeleteRequest = this.createRequestForProjectDelete(
+            activeProjectDelete.id,
+        );
+        this.projectDeleteRequest.start();
+    }
 
     handleAddProjectClick = (row) => {
         this.setState({
@@ -137,7 +277,19 @@ export default class ProjectsTable extends React.PureComponent {
             showAddProjectModal: false,
         });
     }
+
+    keyExtractor = rowData => rowData.id
+
     render() {
+        const { projects, match } = this.props;
+
+        const {
+            activeProjectDelete,
+            deletePending,
+            showAddProjectModal,
+            showDeleteProjectModal,
+        } = this.state;
+
         return (
             <div styleName="projects">
                 <div styleName="header">
@@ -157,24 +309,40 @@ export default class ProjectsTable extends React.PureComponent {
                 </div>
                 <div styleName="content">
                     <Table
-                        data={this.projectData}
+                        data={projects}
                         headers={this.projectHeaders}
-                        keyExtractor={(rowData) => {
-                            console.log('rowdata', rowData);
-                            return rowData.id;
-                        }}
+                        keyExtractor={this.keyExtractor}
                     />
                 </div>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddProjectModalClose}
-                    show={this.state.showAddProjectModal}
+                    show={showAddProjectModal}
                 >
                     <ModalHeader
                         title="Add New Project"
                     />
                     <ModalBody>
-                        <UserProjectAdd handleModalClose={this.handleAddProjectModalClose} />
+                        <UserProjectAdd
+                            userGroups={[match.params.userGroupId]}
+                            handleModalClose={this.handleAddProjectModalClose}
+                        />
+                    </ModalBody>
+                </Modal>
+                <Modal
+                    closeOnEscape
+                    onClose={this.handleDeleteProjectClose}
+                    show={showDeleteProjectModal}
+                >
+                    <ModalHeader title="Delete Project" />
+                    <ModalBody>
+                        <DeletePrompt
+                            handleCancel={this.handleDeleteProjectClose}
+                            handleDelete={this.deleteActiveProject}
+                            getName={() => (activeProjectDelete.title)}
+                            getType={() => ('Project')}
+                            pending={deletePending}
+                        />
                     </ModalBody>
                 </Modal>
             </div>

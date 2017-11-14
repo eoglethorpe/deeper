@@ -8,6 +8,8 @@ export const UNSET_USER_PROJECT = 'domain-data/UNSET_USER_PROJECT';
 export const SET_USER_GROUPS = 'domain-data/SET_USER_GROUPS';
 export const SET_USER_GROUP = 'domain-data/SET_USER_GROUP';
 export const UNSET_USER_GROUP = 'domain-data/UNSET_USER_GROUP';
+export const SET_USERS_MEMBERSHIP = 'domain-data/SET_USERS_MEMBERSHIP';
+export const UNSET_USER_MEMBERSHIP = 'domain-data/UNSET_USER_MEMBERSHIP';
 
 export const UNSET_REGION = 'domain-data/UNSET_REGION';
 export const ADD_NEW_COUNTRY = 'domain-data/ADD_NEW_COUNTRY';

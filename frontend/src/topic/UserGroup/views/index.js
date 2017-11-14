@@ -161,7 +161,7 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroup } = this.props;
+        const { userGroup, match } = this.props;
 
         return (
             <div styleName="usergroup">
@@ -198,13 +198,16 @@ export default class UserGroup extends React.PureComponent {
                         >
                             <MembersTable
                                 memberData={userGroup.memberships || []}
+                                userGroupId={parseInt(match.params.userGroupId, 10)}
                             />
                         </TabContent>
                         <TabContent
                             for="Projects"
                             styleName="tab"
                         >
-                            <ProjectsTable />
+                            <ProjectsTable
+                                match={match}
+                            />
                         </TabContent>
                     </Tabs>
                 </div>

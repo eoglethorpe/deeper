@@ -6,6 +6,10 @@ export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`
 );
 
+export const createUrlForUserGroupProjects = id => (
+    `${wsEndpoint}/projects/?${p({ userGroup: id })}`
+);
+
 export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title`;
 
 export const urlForProjectCreate = `${wsEndpoint}/projects/`;
@@ -18,7 +22,7 @@ export const createParamsForProjects = ({ access }) => ({
     },
 });
 
-export const createParamsForProjectCreate = ({ access }, { title }) => ({
+export const createParamsForProjectCreate = ({ access }, { title, userGroups }) => ({
     method: POST,
     headers: {
         Authorization: `Bearer ${access}`,
@@ -26,6 +30,7 @@ export const createParamsForProjectCreate = ({ access }, { title }) => ({
     },
     body: JSON.stringify({
         title,
+        userGroups,
     }),
 });
 
