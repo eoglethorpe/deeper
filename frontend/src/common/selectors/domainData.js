@@ -76,6 +76,12 @@ export const userInformationSelector = createSelector(
     userSelector,
     user => (user.information || emptyObject),
 );
+export const usersInformationListSelector = createSelector(
+    usersSelector,
+    users => (Object.keys(users).map(id =>
+        users[id].information,
+    ) || emptyList).filter(d => d),
+);
 
 export const userProjectsSelector = createSelector(
     projectsSelector,
