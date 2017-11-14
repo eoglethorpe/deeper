@@ -1,3 +1,7 @@
+/**
+ * @author frozenhelium <fren.ankit@gmail.com>
+ */
+
 import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
@@ -40,6 +44,7 @@ import AddLeadListItem from '../../components/AddLeadListItem';
 import styles from './styles.scss';
 
 import AddLeadHandler from './AddLeadHandler';
+import { saveLead } from '../../utils';
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
@@ -78,7 +83,7 @@ const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase(
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLead extends React.PureComponent {
+export default class AddLeadView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -403,6 +408,45 @@ export default class AddLead extends React.PureComponent {
     }
 
     handleFormSuccess = (values) => {
+        const { access } = this.props.token;
+        const { leads, activeLeadId } = this.state;
+        const activeLeadIndex = leads.findIndex(lead => lead.data.id === activeLeadId);
+
+        /*
+        saveLead(
+            leads[activeLeadIndex],
+            access,
+        ).then((response) => {
+            console.log(response);
+
+            const settings = {
+                [activeLeadIndex]: {
+                    uiState: {
+                        pending: { $set: false },
+                    },
+                },
+            };
+
+            const newLeads = update(leads, settings);
+            this.setState({
+                leads: newLeads,
+            });
+        });
+        */
+
+        const settings = {
+            [activeLeadIndex]: {
+                uiState: {
+                    pending: { $set: true },
+                },
+            },
+        };
+
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+
         console.log(values);
     }
 
@@ -448,6 +492,12 @@ export default class AddLead extends React.PureComponent {
         filters.status = value;
 
         this.setLeadsWithFilters(leads, filters);
+    }
+
+    handleLeadNext = () => {
+    }
+
+    handleLeadPrev = () => {
     }
 
     renderLeadItem = (key, lead) => (
@@ -575,6 +625,9 @@ export default class AddLead extends React.PureComponent {
                                     onChange: this.handleFormChange,
                                     onFailure: this.handleFormFailure,
                                     onSuccess: this.handleFormSuccess,
+                                    onSave: this.handleLeadSave,
+                                    onNext: this.handleLeadNext,
+                                    onPrev: this.handleLeadPrev,
                                 }}
                                 lead={activeLead}
                                 leadOptions={this.props.leadOptions}
