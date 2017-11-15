@@ -46,8 +46,6 @@ export const saveLead = (lead, access) => {
             );
         } else {
             leadRequest = createLeadRequest(
-                urlForLead,
-                () => createParamsForLeadCreate({ access }, lead.form.values),
                 resolve,
             );
         }

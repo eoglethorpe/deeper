@@ -49,10 +49,14 @@ export default class AddLeadListItem extends React.PureComponent {
             onClick,
             lead,
         } = this.props;
+        const {
+            data,
+            serverId,
+        } = lead;
 
         const {
             type,
-        } = lead.data;
+        } = data;
 
         const {
             title,
@@ -95,6 +99,14 @@ export default class AddLeadListItem extends React.PureComponent {
                         <span
                             styleName="stale"
                             className="ion-code-working"
+                        />
+                    )
+                }
+                {
+                    !error && !stale && serverId && (
+                        <span
+                            styleName="complete"
+                            className="ion-checkmark-circled"
                         />
                     )
                 }

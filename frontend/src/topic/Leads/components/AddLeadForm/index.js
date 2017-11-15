@@ -263,13 +263,13 @@ export default class AddLeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            {
+                            {/*
                                 lead.upload.error ? (
                                     lead.upload.error
                                 ) : (
                                     lead.upload.title
                                 )
-                            }
+                            */}
                         </p>,
                         <HiddenInput
                             formname="server_id"

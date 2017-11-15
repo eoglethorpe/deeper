@@ -149,6 +149,10 @@
             justify-content: center;
             border-top: $width-separator-medium solid $color-separator;
         }
+
+        &.hidden {
+            display: none;
+        }
     }
 }
 

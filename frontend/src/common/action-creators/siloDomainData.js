@@ -1,6 +1,13 @@
 import {
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
+
+    SET_ADD_LEAD_VIEW_FILTERS,
+    SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
+    ADD_ADD_LEAD_VIEW_LEADS,
+    ADD_LEAD_VIEW_LEAD_CHANGE,
+    ADD_LEAD_VIEW_LEAD_SET_PENDING,
+    ADD_LEAD_VIEW_LEAD_SAVE,
 } from '../action-types/siloDomainData';
 
 
@@ -12,4 +19,39 @@ export const setActiveProjectAction = ({ activeProject }) => ({
 export const setActiveCountryAction = ({ activeCountry }) => ({
     type: SET_ACTIVE_COUNTRY,
     activeCountry,
+});
+
+export const setAddLeadViewFiltersAction = filters => ({
+    type: SET_ADD_LEAD_VIEW_FILTERS,
+    filters,
+});
+
+export const setAddLeadViewActiveLeadIdAction = leadId => ({
+    type: SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
+    leadId,
+});
+
+export const addAddLeadViewLeadsAction = leads => ({
+    type: ADD_ADD_LEAD_VIEW_LEADS,
+    leads,
+});
+
+export const addLeadViewLeadChangeAction = ({ leadId, values, formErrors, formFieldErrors }) => ({
+    type: ADD_LEAD_VIEW_LEAD_CHANGE,
+    leadId,
+    values,
+    formErrors,
+    formFieldErrors,
+});
+
+export const addLeadViewLeadSetPendingAction = ({ leadId, pending }) => ({
+    type: ADD_LEAD_VIEW_LEAD_SET_PENDING,
+    leadId,
+    pending,
+});
+
+export const addLeadViewLeadSaveAction = ({ leadId, serverId }) => ({
+    type: ADD_LEAD_VIEW_LEAD_SAVE,
+    leadId,
+    serverId,
 });

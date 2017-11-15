@@ -1,241 +1,182 @@
-import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
-
-import {
-    urlForUpload,
-    createHeaderForFileUpload,
-} from '../../../../common/rest';
-
-export default class AddLeadHandler {
-    constructor(parent) {
-        this.parent = parent;
-        this.uploadCoordinator = new UploadCoordinator();
-        this.counter = 1;
+/*
+    this.uploadCoordinator = new UploadCoordinator();
+    // TRANSIENT DATA
+    for (let i = 0; i < files.length; i += 1) {
+        const leadId = `lead-${this.counter + i}`;
+        const uploader = new Uploader(
+            files[i],
+            urlForUpload,
+            createHeaderForFileUpload(this.props.token),
+        );
+        uploader.onLoad = (status, response) => {
+            this.handleUploadComplete(leadId, leadId, status, response);
+        };
+        uploader.onProgress = (progress) => {
+            this.handleLeadUploadProgress(leadId, progress);
+        };
+        this.uploadCoordinator.add(leadId, uploader);
     }
-
-    fromGoogleDrive = (response) => {
-        const newLeads = [
-            ...this.parent.state.leads,
-        ];
-
-        if (response.action !== 'picked') {
-            return newLeads;
-        }
-
-        const {
-            activeProject,
-        } = this.parent.props;
-
-        const {
-            docs,
-        } = response;
-
-        for (let i = 0; i < docs.length; i += 1) {
-            const leadId = `lead-${this.counter + i}`;
-
-            const lead = {
-                data: {
-                    id: leadId,
-                    type: 'drive',
-                },
-                form: {
-                    values: {
-                        title: docs[i].name,
-                        project: activeProject,
-                    },
-                    errors: [],
-                    fieldErrors: {},
-                },
-                uiState: {
-                    error: false,
-                    pending: false,
-                    ready: false,
-                    stale: false,
-                },
-
-                // has passed filter
-                isFiltrate: true,
-            };
-
-            newLeads.unshift(lead);
-        }
+    this.uploadCoordinator.queueAll();
+    this.counter += files.length;
+*/
 
 
-        this.counter += docs.length;
-        return newLeads;
-    }
+/*
+    import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
+    import {
+        urlForUpload,
+        createHeaderForFileUpload,
+    } from '../../../../common/rest';
+*/
 
-    fromDropbox = (response) => {
-        const newLeads = [
-            ...this.parent.state.leads,
-        ];
-
-        const {
-            activeProject,
-        } = this.parent.props;
-
-        for (let i = 0; i < response.length; i += 1) {
-            const leadId = `lead-${this.counter + i}`;
-
-            const lead = {
-                data: {
-                    id: leadId,
-                    type: 'dropbox',
-                },
-                form: {
-                    values: {
-                        title: response[i].name,
-                        project: activeProject,
-                    },
-                    errors: [],
-                    fieldErrors: {},
-                },
-                uiState: {
-                    error: false,
-                    pending: false,
-                    ready: false,
-                    stale: false,
-                },
-
-                // has passed filter
-                isFiltrate: true,
-            };
-
-            newLeads.unshift(lead);
-        }
-
-
-        this.counter += response.length;
-        return newLeads;
-    }
-
-    fromDisk = (e) => {
-        const {
-            activeProject,
-        } = this.parent.props;
-
-        const newLeads = [
-            ...this.parent.state.leads,
-        ];
-
-        const files = Object.values(e);
-
-        for (let i = 0; i < files.length; i += 1) {
-            const leadId = `lead-${this.counter + i}`;
-
-            const uploader = new Uploader(
-                files[i],
-                urlForUpload,
-                createHeaderForFileUpload(this.parent.props.token),
-            );
-
-            uploader.onLoad = (status, response) => {
-                this.parent.handleUploadComplete(leadId, leadId, status, response);
-            };
-
-            uploader.onProgress = (progress) => {
-                this.parent.handleLeadUploadProgress(leadId, progress);
-            };
-
-            this.uploadCoordinator.add(leadId, uploader);
-
-            const lead = {
-                data: {
-                    id: leadId,
-                    type: 'file',
-                },
-                form: {
-                    values: {
-                        title: files[i].name,
-                        project: activeProject,
-                    },
-                    errors: [],
-                    fieldErrors: {},
-                },
-                uiState: {
-                    error: false,
-                    pending: false,
-                    ready: false,
-                    stale: false,
-                },
+    /*
+    handleLeadUploadProgress = (leadId, progress) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.data.id === leadId);
+        const settings = {
+            [leadIndex]: {
                 upload: {
-                    progress: 0,
-                    uploader,
+                    progress: {
+                        $set: progress,
+                    },
                 },
+            },
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    }
 
-                // has passed filter
-                isFiltrate: true,
+    handleUploadComplete = (uploaderId, leadId, status, response) => {
+        const { leads } = this.state;
+        const leadIndex = leads.findIndex(d => d.data.id === leadId);
+        const r = JSON.parse(response);
+
+        if (parseInt(status / 100, 10) === 2) {
+            // success (eg: 200, 201)
+            const settings = {
+                [leadIndex]: {
+                    upload: {
+                        $merge: {
+                            progress: 100,
+                            serverId: r.id,
+                            title: r.title,
+                            error: undefined,
+                        },
+                    },
+                    form: {
+                        error: { $set: [] },
+                    },
+                    uiState: {
+                        error: { $set: false },
+                    },
+                },
+            };
+            const newLeads = update(leads, settings);
+            this.setState({
+                leads: newLeads,
+            });
+        } else {
+            const settings = {
+                [leadIndex]: {
+                    upload: {
+                        $merge: {
+                            progress: 0,
+                            error: `Failed to upload file (${status})`,
+                        },
+                    },
+                    form: {
+                        error: {
+                            $set: [`Failed to upload file (${status})`],
+                        },
+                    },
+                    uiState: {
+                        error: { $set: true },
+                    },
+                },
             };
 
-            newLeads.unshift(lead);
+            const newLeads = update(leads, settings);
+            this.setState({
+                leads: this.applyFiltersFromState(newLeads),
+            });
         }
-
-        this.uploadCoordinator.queueAll();
-        this.counter += files.length;
-
-        return newLeads;
     }
+*/
 
-    fromWebsite = () => {
-        const newLeads = [
-            {
-                data: {
-                    id: `lead-${this.counter}`,
-                    type: 'website',
+/*
+handleLeadUploadProgress = (leadId, progress) => {
+    const { leads } = this.state;
+    const leadIndex = leads.findIndex(d => d.data.id === leadId);
+    const settings = {
+        [leadIndex]: {
+            upload: {
+                progress: {
+                    $set: progress,
+                },
+            },
+        },
+    };
+    const newLeads = update(leads, settings);
+    this.setState({
+        leads: newLeads,
+    });
+}
+
+handleUploadComplete = (uploaderId, leadId, status, response) => {
+    const { leads } = this.state;
+    const leadIndex = leads.findIndex(d => d.data.id === leadId);
+    const r = JSON.parse(response);
+
+    if (parseInt(status / 100, 10) === 2) {
+        // success (eg: 200, 201)
+        const settings = {
+            [leadIndex]: {
+                upload: {
+                    $merge: {
+                        progress: 100,
+                        serverId: r.id,
+                        title: r.title,
+                        error: undefined,
+                    },
                 },
                 form: {
-                    values: {
-                        title: `Lead #${this.counter}`,
-                        project: this.parent.props.activeProject,
-                    },
-                    errors: [],
-                    fieldErrors: {},
+                    error: { $set: [] },
                 },
                 uiState: {
-                    error: false,
-                    pending: false,
-                    ready: false,
-                    stale: false,
+                    error: { $set: false },
                 },
-
-                // has passed filter
-                isFiltrate: true,
             },
-            ...this.parent.state.leads,
-        ];
-
-        this.counter += 1;
-        return newLeads;
-    }
-
-    fromText = () => {
-        const newLeads = [
-            {
-                data: {
-                    id: `lead-${this.counter}`,
-                    type: 'text',
+        };
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: newLeads,
+        });
+    } else {
+        const settings = {
+            [leadIndex]: {
+                upload: {
+                    $merge: {
+                        progress: 0,
+                        error: `Failed to upload file (${status})`,
+                    },
                 },
                 form: {
-                    values: {
-                        title: `Lead #${this.counter}`,
-                        project: this.parent.props.activeProject,
+                    error: {
+                        $set: [`Failed to upload file (${status})`],
                     },
-                    errors: [],
-                    fieldErrors: {},
                 },
                 uiState: {
-                    error: false,
-                    pending: false,
-                    ready: false,
-                    stale: false,
+                    error: { $set: true },
                 },
-
-                // has passed filter
-                isFiltrate: true,
             },
-            ...this.parent.state.leads,
-        ];
+        };
 
-        this.counter += 1;
-        return newLeads;
+        const newLeads = update(leads, settings);
+        this.setState({
+            leads: this.applyFiltersFromState(newLeads),
+        });
     }
 }
+*/

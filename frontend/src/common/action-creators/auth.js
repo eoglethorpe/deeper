@@ -2,6 +2,7 @@ import {
     LOGIN_ACTION,
     LOGOUT_ACTION,
     AUTHENTICATE_ACTION,
+
     SET_ACCESS_TOKEN_ACTION,
 } from '../action-types/auth';
 

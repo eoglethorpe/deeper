@@ -40,6 +40,7 @@
     }
 
     .error,
+    .complete,
     .stale {
         flex-shrink: 0;
         margin: 0 $spacing-small;
@@ -51,6 +52,10 @@
 
     .error {
         color: $color-danger;
+    }
+
+    .complete {
+        color: $color-success;
     }
 
     .progress-bar {
