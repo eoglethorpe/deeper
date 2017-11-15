@@ -1,7 +1,6 @@
 @import '../../../../stylesheets/base';
 
 .key-figures {
-
     display: flex;
     flex-wrap: wrap;
     padding: $spacing-large;
@@ -21,6 +20,13 @@
         flex-basis: 100%;
     }
 
+    .text-input {
+        background-color: transparent;
+
+        .text-input {
+            background-color: transparent;
+        }
+    }
 
     .pending-overlay {
         display: flex;
@@ -43,14 +49,13 @@
             color: $color-accent;
             font-size: $width-icon-super-large;
         }
-
     }
+
     .hdi {
         display: flex;
         flex-basis: 100%;
         flex-wrap: wrap;
         padding: $spacing-medium;
-
 
         .index,
         .geo-rank,
@@ -92,8 +97,6 @@
             flex-basis: 30%;
             margin-right: $spacing-super-large;
         }
-
-
     }
 
     .inform-score {
@@ -110,7 +113,6 @@
             flex-basis: 30%;
             margin-right: $spacing-super-large;
         }
-
     }
 
     .icon {

@@ -7,6 +7,7 @@ import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import { DangerButton } from '../../../../public/components/Action';
 import {
     Modal,
+    ModalBody,
     ModalHeader,
 } from '../../../../public/components/View';
 
@@ -144,19 +145,22 @@ export default class CountryDetail extends React.PureComponent {
                         </DangerButton>
                     </div>
                     <Modal
+                        styleName="delete-confirm-modal"
                         closeOnEscape
                         onClose={this.handleDeleteCountryClose}
                         show={deleteCountry}
                         closeOnBlur
                     >
                         <ModalHeader title="Delete Country" />
-                        <DeletePrompt
-                            handleCancel={this.handleDeleteCountryClose}
-                            handleDelete={this.deleteActiveCountry}
-                            getName={() => countryDetail.title}
-                            getType={() => 'Country'}
-                            pending={deletePending}
-                        />
+                        <ModalBody>
+                            <DeletePrompt
+                                handleCancel={this.handleDeleteCountryClose}
+                                handleDelete={this.deleteActiveCountry}
+                                getName={() => countryDetail.title}
+                                getType={() => 'Country'}
+                                pending={deletePending}
+                            />
+                        </ModalBody>
                     </Modal>
                 </div>
                 <Tabs

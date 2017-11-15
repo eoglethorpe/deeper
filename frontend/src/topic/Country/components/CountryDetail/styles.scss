@@ -1,5 +1,6 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
+@import '../../../../stylesheets/modal';
 
 .country-detail {
     $height-header: 48px;
@@ -30,5 +31,15 @@
 
     .tab {
         height: calc(100%);
+    }
+}
+
+.delete-confirm-modal {
+    width: 400px;
+
+    :global .modal-header {
+        .heading {
+            font-size: $font-size-medium-alt;
+        }
     }
 }

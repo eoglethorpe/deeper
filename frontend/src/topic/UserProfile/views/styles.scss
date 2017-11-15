@@ -5,15 +5,14 @@
     $info-height: 144px;
 
     display: grid;
+    padding: $spacing-large;
+    height: calc(100vh - #{$height-navbar});
     grid-template-areas:
-        "header header"
         "info projects"
         "stats projects"
         "stats groups";
     grid-template-columns: 2fr 3fr;
-    grid-template-rows: auto $info-height 3fr 2fr;
-    height: calc(100vh - #{$height-navbar});
-    padding: $spacing-large;
+    grid-template-rows: $info-height 3fr 2fr;
 
     >* {
         border: $width-separator-thin solid $color-separator;
@@ -23,12 +22,6 @@
         h2 {
             margin-bottom: $spacing-medium;
         }
-    }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        grid-area: header;
     }
 
     .info {
@@ -48,6 +41,8 @@
             padding: $spacing-medium $spacing-extra-large;
 
             .name {
+                display: flex;
+                justify-content: space-between;
                 margin: $spacing-small 0;
                 font-size: $font-size-super-large;
 

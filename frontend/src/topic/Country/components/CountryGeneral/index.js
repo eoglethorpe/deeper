@@ -251,10 +251,10 @@ export default class CountryGeneral extends React.PureComponent {
                             countryDetail.code &&
                             <TextInput
                                 disabled
-                                value={countryDetail.code}
                                 label="Country code"
                                 placeholder="NPL"
                                 styleName="text-input"
+                                value={countryDetail.code}
                             />
                         }
                         {
@@ -266,53 +266,60 @@ export default class CountryGeneral extends React.PureComponent {
                             />
                         }
                         <TextInput
-                            label="Name"
-                            formname="countryName"
-                            placeholder="Nepal"
-                            value={countryDetail.title}
                             error={formFieldErrors.countryName}
+                            formname="countryName"
+                            label="Name"
+                            placeholder="Nepal"
+                            styleName="text-input"
+                            value={countryDetail.title}
                         />
                         <TextInput
-                            label="WB Region"
-                            formname="wbRegion"
-                            placeholder="Enter WB Region"
-                            value={formValues.wbRegion}
                             error={formFieldErrors.wbRegion}
+                            formname="wbRegion"
+                            label="WB Region"
+                            placeholder="Enter WB Region"
+                            styleName="text-input"
+                            value={formValues.wbRegion}
                         />
                         <TextInput
-                            label="WB Income Region"
-                            formname="wbIncomeRegion"
-                            placeholder="Enter WB Income Region"
-                            value={formValues.wbIncomeRegion}
                             error={formFieldErrors.wbIncomeRegion}
+                            formname="wbIncomeRegion"
+                            label="WB Income Region"
+                            placeholder="Enter WB Income Region"
+                            styleName="text-input"
+                            value={formValues.wbIncomeRegion}
                         />
                         <TextInput
-                            label="OCHA Region"
-                            formname="ochaRegion"
-                            placeholder="Enter OCHA Region"
-                            value={formValues.ochaRegion}
                             error={formFieldErrors.ochaRegion}
+                            formname="ochaRegion"
+                            label="OCHA Region"
+                            placeholder="Enter OCHA Region"
+                            styleName="text-input"
+                            value={formValues.ochaRegion}
                         />
                         <TextInput
-                            label="ECHO Region"
-                            formname="echoRegion"
-                            placeholder="Enter ECHO Region"
-                            value={formValues.echoRegion}
                             error={formFieldErrors.echoRegion}
+                            formname="echoRegion"
+                            label="ECHO Region"
+                            placeholder="Enter ECHO Region"
+                            styleName="text-input"
+                            value={formValues.echoRegion}
                         />
                         <TextInput
-                            label="UN Geographical Region"
-                            formname="unGeoRegion"
-                            placeholder="Enter UN Geographical Region"
-                            value={formValues.unGeoRegion}
                             error={formFieldErrors.unGeoRegion}
+                            formname="unGeoRegion"
+                            label="UN Geographical Region"
+                            placeholder="Enter UN Geographical Region"
+                            styleName="text-input"
+                            value={formValues.unGeoRegion}
                         />
                         <TextInput
-                            label="UN Geographical Sub Region"
-                            formname="unGeoSubregion"
-                            placeholder="Enter UN Geographical Sub Region"
-                            value={formValues.unGeoSubregion}
                             error={formFieldErrors.unGeoSubregion}
+                            formname="unGeoSubregion"
+                            label="UN Geographical Sub Region"
+                            placeholder="Enter UN Geographical Sub Region"
+                            styleName="text-input"
+                            value={formValues.unGeoSubregion}
                         />
                     </Form>
                     <div styleName="map-container">

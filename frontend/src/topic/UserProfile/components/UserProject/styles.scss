@@ -40,51 +40,33 @@
                     background-color: $color-background-hover;
                 }
             }
-                }
+        }
     }
 }
 
-:global .edit-btn {
-    padding: $spacing-small;
-
-    .ion-edit {
-        margin: 0 $spacing-small;
-        color: $color-primary;
-
-    }
+.action-button {
+    padding: $spacing-extra-small $spacing-small;
+    min-width: $width-icon-large;
 
     &:hover {
-        background-color: $color-background-hover;
+        background-color: $color-hover;
     }
-
 }
 
-:global .watch-btn {
-    padding: $spacing-small;
-
-    .ion-eye {
-        margin: 0 $spacing-small;
-        color: $color-primary;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
+.link-to-project {
+    color: $color-primary;
 }
 
-:global .delete-btn {
-    padding: $spacing-small;
+.delete-btn {
+    color: $color-danger;
+}
 
-    .ion-android-delete {
-        margin: 0 $spacing-small;
-        color: $color-danger;
+.delete-confirm-modal {
+    width: 400px;
 
+    :global .modal-header {
+        .heading {
+            font-size: $font-size-medium-alt;
+        }
     }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
 }

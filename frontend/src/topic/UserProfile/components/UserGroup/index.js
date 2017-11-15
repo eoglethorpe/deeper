@@ -148,40 +148,41 @@ export default class UserGroup extends React.PureComponent {
 
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
-                            <TransparentButton
-                                className="watch-btn"
+                            <Link
+                                className={`
+                                    ${styles['link-to-usergroup']}
+                                    ${styles['action-button']}
+                                `}
+                                to={`/usergroup/${d.id}/`}
                             >
-                                <Link
-                                    key={d.title}
-                                    to={`/usergroup/${d.id}/`}
-                                >
-                                    <i className="ion-eye" />
-                                </Link>
-                            </TransparentButton>
+                                <i className="ion-android-open" />
+                            </Link>
                         );
                     }
 
                     const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
-                    return (
-                        <div>
-                            <TransparentButton
-                                className="edit-btn"
-                            >
-                                <Link
-                                    key={d.title}
-                                    to={`/usergroup/${d.id}/`}
-                                >
-                                    <i className="ion-edit" />
-                                </Link>
-                            </TransparentButton>
-                            <TransparentButton
-                                onClick={onDeleteClick}
-                                className="delete-btn"
-                            >
-                                <i className="ion-android-delete" />
-                            </TransparentButton>
-                        </div>
-                    );
+                    return ([
+                        <Link
+                            className={`
+                                ${styles['link-to-usergroup']}
+                                ${styles['action-button']}
+                            `}
+                            key="usergroup-panel"
+                            to={`/usergroup/${d.id}/`}
+                        >
+                            <span className="ion-edit" />
+                        </Link>,
+                        <TransparentButton
+                            key="delete"
+                            className={`
+                                ${styles['delete-btn']}
+                                ${styles['action-button']}
+                            `}
+                            onClick={onDeleteClick}
+                        >
+                            <span className="ion-android-delete" />
+                        </TransparentButton>,
+                    ]);
                 },
             },
         ];

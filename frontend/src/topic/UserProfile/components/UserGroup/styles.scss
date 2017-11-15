@@ -44,47 +44,21 @@
     }
 }
 
-:global .edit-btn {
-    padding: $spacing-small;
-
-    .ion-edit {
-        margin: 0 $spacing-small;
-        color: $color-primary;
-
-    }
+.action-button {
+    margin: $spacing-extra-small;
+    padding: $spacing-extra-small $spacing-small;
+    min-width: $width-icon-large;
 
     &:hover {
-        background-color: $color-background-hover;
+        background-color: $color-hover;
     }
-
 }
 
-:global .watch-btn {
-    padding: $spacing-small;
-
-    .ion-eye {
-        margin: 0 $spacing-small;
-        color: $color-primary;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
+.link-to-usergroup {
+    color: $color-primary;
 }
 
-:global .delete-btn {
-    padding: $spacing-small;
-
-    .ion-android-delete {
-        margin: 0 $spacing-small;
-        color: $color-danger;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
+.delete-btn {
+    color: $color-danger;
 }
+
