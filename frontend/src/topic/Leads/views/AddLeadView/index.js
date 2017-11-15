@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-// import update from '../../../../public/utils/immutable-update';
 import { RestBuilder } from '../../../../public/utils/rest';
 
 import {
@@ -32,7 +31,6 @@ import {
     tokenSelector,
     activeProjectSelector,
     setLeadFilterOptionsAction,
-    // addLeadViewActiveLeadSelector,
     addLeadViewLeadChangeAction,
     addLeadViewActiveLeadIdSelector,
     addLeadViewLeadsSelector,
@@ -47,13 +45,10 @@ import AddLeadList from './AddLeadList';
 import AddLeadButtons from './AddLeadButtons';
 import styles from './styles.scss';
 
-// import { saveLead } from '../../utils';
-
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     token: tokenSelector(state),
     activeLeadId: addLeadViewActiveLeadIdSelector(state),
-    // activeLead: addLeadViewActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
     leadFilterOptions: leadFilterOptionsSelector(state),
 });
@@ -78,17 +73,15 @@ const propTypes = {
         access: PropTypes.string,
     }).isRequired,
 
-    // activeLead: PropTypes.object, // eslint-disable-line
-    addLeadViewLeadChange: PropTypes.func.isRequired,
-    addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
     activeLeadId: PropTypes.number.isRequired,
-    addLeadViewLeadSetPending: PropTypes.func.isRequired,
-    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
+    addLeadViewLeadChange: PropTypes.func.isRequired,
     addLeadViewLeadSave: PropTypes.func.isRequired,
+    addLeadViewLeadSetPending: PropTypes.func.isRequired,
+    addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
+    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
-    // activeLead: undefined,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -166,7 +159,6 @@ export default class AddLeadView extends React.PureComponent {
         return leadFilterOptionsRequest;
     }
 
-
     // HANDLE FORM
 
     handleFormChange = leadId => (values, { formErrors, formFieldErrors }) => {
@@ -216,17 +208,16 @@ export default class AddLeadView extends React.PureComponent {
                 });
             })
             .success((response) => {
+                // TODO:
+                // schema validation
                 console.log(response);
-                // console.log(response);
                 this.props.addLeadViewLeadSave({ leadId: lead.data.id, serverId: response.id });
             })
             .failure((response) => {
-                console.error(response);
-                // console.error('Failed lead request:', response);
+                console.error('Failed lead request:', response);
             })
             .fatal((response) => {
                 console.error('Fatal error occured during lead request:', response);
-                // resolve(response);
             })
             .build();
         return leadCreateRequest;
@@ -236,31 +227,6 @@ export default class AddLeadView extends React.PureComponent {
         const specificLead = this.props.addLeadViewLeads.find(lead => lead.data.id === leadId);
         const leadSaveRequest = this.createLeadRequest(specificLead);
         leadSaveRequest.start();
-        /*
-        const { access } = this.props.token;
-        const { leads, activeLeadId } = this.state;
-        const activeLeadIndex = leads.findIndex(lead => lead.data.id === activeLeadId);
-
-        saveLead(
-            leads[activeLeadIndex],
-            access,
-        ).then((response) => {
-            const settings = {
-                [activeLeadIndex]: {
-                    uiState: {
-                        pending: { $set: false },
-                        stale: { $set: false },
-                    },
-                    serverId: { $set: response.id },
-                },
-            };
-
-            const newLeads = update(leads, settings);
-            this.setState({
-                leads: newLeads,
-            });
-        });
-        */
     }
 
     handleLeadNext = leadId => (e) => {
@@ -299,7 +265,6 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     render() {
-        // const { activeLead } = this.props;
         return (
             <div styleName="add-lead">
                 <Helmet>
