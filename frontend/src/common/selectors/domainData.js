@@ -26,12 +26,7 @@ export const regionsSelector = ({ domainData }) => (
 export const countriesListSelector = createSelector(
     regionsSelector,
     regions => (
-        regions && Object.keys(regions).reduce((acc, regionId) => {
-            if (regions[regionId] && regions[regionId].public) {
-                acc.push(regions[regionId]);
-            }
-            return acc;
-        }, [])
+        regions && Object.values(regions).filter(region => region && region.public)
     ) || emptyList,
 );
 
