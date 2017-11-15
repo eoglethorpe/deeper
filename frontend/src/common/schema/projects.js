@@ -30,6 +30,7 @@ const projectSchema = [];
             joinedAt: { type: 'string' }, // date
             member: { type: 'uint', required: true },
             memberName: { type: 'string' },
+            memberEmail: { type: 'email' },
             project: { type: 'uint', required: true },
             role: { type: 'string' }, // enum: normal, admin
         },
