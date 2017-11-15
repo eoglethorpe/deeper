@@ -95,7 +95,7 @@
 :global .admin-btn {
     padding: $spacing-small;
 
-    .ion-ios-locked {
+    .ion-locked {
         margin: 0 $spacing-small;
         color: $color-primary;
 
@@ -110,7 +110,7 @@
 :global .member-add-btn {
     padding: $spacing-small;
 
-    .ion-plus {
+    .ion-close {
         margin: 0 $spacing-small;
 
     }

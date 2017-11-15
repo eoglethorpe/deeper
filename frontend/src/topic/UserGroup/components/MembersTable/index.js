@@ -8,6 +8,7 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter,
+    FormattedDate,
 } from '../../../../public/components/View';
 import {
     TextInput,
@@ -17,7 +18,7 @@ import {
     PrimaryButton,
     DangerButton,
     TransparentButton,
-    TransparentAccentButton,
+    TransparentDangerButton,
 } from '../../../../public/components/Action';
 import {
     tokenSelector,
@@ -110,6 +111,7 @@ export default class MembersTable extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.joinedAt - b.joinedAt,
+                modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'actions',
@@ -120,7 +122,7 @@ export default class MembersTable extends React.PureComponent {
                         <TransparentButton
                             className="admin-btn"
                         >
-                            <i className="ion-ios-locked" />
+                            <i className="ion-locked" />
                         </TransparentButton>
                         <TransparentButton
                             className="delete-btn"
@@ -154,17 +156,18 @@ export default class MembersTable extends React.PureComponent {
                 order: 5,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentAccentButton
-                            className="member-add-btn"
-                            onClick={() => this.handleAddNewMemberClick(row)}
-                        >
-                            <i className="ion-plus" />
-                        </TransparentAccentButton>
                         <TransparentButton
                             className="admin-btn"
+                            onClick={this.handleRoleChangeForNewMember}
                         >
-                            <i className="ion-ios-locked" />
+                            <i className="ion-locked" />
                         </TransparentButton>
+                        <TransparentDangerButton
+                            className="member-add-btn"
+                            onClick={() => this.handleRemoveSelectedMember(row)}
+                        >
+                            <i className="ion-close" />
+                        </TransparentDangerButton>
                     </div>
                 ),
             },
@@ -273,8 +276,20 @@ export default class MembersTable extends React.PureComponent {
         return membershipDeleteRequest;
     }
 
-    handleAddNewMemberClick = (row) => {
-        console.log(row);
+    handleRemoveSelectedMember = (row) => {
+        const { newMemberList } = this.state;
+        const removalIndex = newMemberList.findIndex(
+            member => member.id === row.id,
+        );
+        console.log(newMemberList, removalIndex);
+        if (removalIndex !== -1) {
+            const newerMemberList = [...newMemberList];
+            newerMemberList.splice(removalIndex, 1);
+            this.setState({
+                newMemberList: newerMemberList,
+                addMemberSelectInputValue: newerMemberList.map(member => member.id),
+            });
+        }
     };
 
     handleAddMemberClick = (row) => {
@@ -305,21 +320,21 @@ export default class MembersTable extends React.PureComponent {
         this.setState({ showDeleteMemberModal: false });
     }
 
-    handleRoleChangeForNewMember = (memberId, newRole) => {
-        const { newMemberUsers } = this.state;
-        const newMemberArrayIndex = newMemberUsers.findIndex(
+    handleRoleChangeForNewMember = ({ memberId, newRole }) => {
+        const { newMemberList } = this.state;
+        const newMemberArrayIndex = newMemberList.findIndex(
             newMemberUser => (newMemberUser === memberId));
 
         if (newMemberArrayIndex !== -1) {
-            const updatedNewMemberUsers = [...newMemberUsers];
+            const updatedNewMemberUsers = [...newMemberList];
 
             updatedNewMemberUsers[newMemberArrayIndex] = {
-                ...newMemberUsers[newMemberArrayIndex],
+                ...newMemberList[newMemberArrayIndex],
                 role: newRole,
             };
 
             this.setState({
-                newMemberUsers: updatedNewMemberUsers,
+                newMemberList: updatedNewMemberUsers,
             });
         }
     }
@@ -342,15 +357,6 @@ export default class MembersTable extends React.PureComponent {
             this.requestForMembershipCreate.stop();
         }
 
-        /* NOTE: For pprabesh needed field for rest, TODO: remove this
-        const newMemberUsers = [
-            {
-                id: 1,
-                role: 'normal',
-                ...other fields
-            },
-        ];
-        */
         let newMemberList = [...this.state.newMemberList];
         const { userGroupId } = this.props;
 
