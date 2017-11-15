@@ -10,9 +10,12 @@ import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
-    activeProjectSelector,
     currentUserProjectsSelector,
 } from '../../../common/selectors/domainData';
+
+import {
+    activeProjectSelector,
+} from '../../../common/selectors/siloDomainData';
 
 import styles from './styles.scss';
 
