@@ -18,19 +18,15 @@ export const countryIdFromProps = (state, { countryId }) => countryId;
 export const leadsSelector = ({ domainData }) => (
     domainData.leads || emptyObject
 );
-export const countriesSelector = ({ domainData }) => (
-    domainData.countries || emptyObject
+
+export const regionsSelector = ({ domainData }) => (
+    domainData.regions || emptyObject
 );
 
 export const countriesListSelector = createSelector(
-    countriesSelector,
-    countries => (
-        countries && Object.keys(countries).reduce((acc, countryId) => {
-            if (countries[countryId]) {
-                acc.push(countries[countryId]);
-            }
-            return acc;
-        }, [])
+    regionsSelector,
+    regions => (
+        regions && Object.values(regions).filter(region => region && region.public)
     ) || emptyList,
 );
 

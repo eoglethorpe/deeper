@@ -12,9 +12,9 @@ export const SET_USERS_MEMBERSHIP = 'domain-data/SET_USERS_MEMBERSHIP';
 export const UNSET_USER_MEMBERSHIP = 'domain-data/UNSET_USER_MEMBERSHIP';
 
 export const UNSET_REGION = 'domain-data/UNSET_REGION';
-export const ADD_NEW_COUNTRY = 'domain-data/ADD_NEW_COUNTRY';
+export const ADD_NEW_REGION = 'domain-data/ADD_NEW_REGION';
 
 export const SET_LEADS = 'domain-data/SET_LEADS';
 export const SET_LEAD_FILTER_OPTIONS = 'domain-data/SET_LEAD_FILTER_OPTIONS';
 
-export const SET_COUNTRIES = 'domain-data/SET_COUNTRIES';
+export const SET_REGIONS = 'domain-data/SET_REGIONS';
