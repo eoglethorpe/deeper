@@ -78,6 +78,8 @@ export default class ProjectsTable extends React.PureComponent {
             showDeleteProjectModal: false,
             deletePending: false,
             activeProjectDelete: {},
+            searchProjectInputValue: '',
+            projects: this.props.projects,
         };
 
         this.projectHeaders = [
@@ -163,6 +165,12 @@ export default class ProjectsTable extends React.PureComponent {
         this.requestForUserGroupProjects.start();
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            projects: nextProps.projects,
+        });
+        console.warn(nextProps.projects);
+    }
     componentWillUnmount() {
         if (this.requestForUserGroupProjects) {
             this.requestForUserGroupProjects.stop();
@@ -278,16 +286,43 @@ export default class ProjectsTable extends React.PureComponent {
         });
     }
 
+    applySearch = (projects, searchInputValue) => {
+        const caseInsensitiveSubmatch = (str, value) => (
+            !value || (str || '').toLowerCase().includes(
+                (value || '').toLowerCase(),
+            )
+        );
+
+        const newProjects = projects.filter(
+            project => (
+                caseInsensitiveSubmatch(
+                    project.title,
+                    searchInputValue,
+                )
+            ),
+        );
+        return newProjects;
+    };
+
+    handleSearchProjectChange = (value) => {
+        this.setState({
+            searchProjectInputValue: value,
+            projects: this.applySearch(this.props.projects, value),
+        });
+    }
+
     keyExtractor = rowData => rowData.id
 
     render() {
-        const { projects, match } = this.props;
+        const { match } = this.props;
 
         const {
             activeProjectDelete,
             deletePending,
             showAddProjectModal,
             showDeleteProjectModal,
+            projects,
+            searchProjectInputValue,
         } = this.state;
 
         return (
@@ -295,6 +330,8 @@ export default class ProjectsTable extends React.PureComponent {
                 <div styleName="header">
                     <TextInput
                         placeholder="Search Projects"
+                        onChange={this.handleSearchProjectChange}
+                        value={searchProjectInputValue}
                         type="search"
                         styleName="search-input"
                         showLabel={false}
