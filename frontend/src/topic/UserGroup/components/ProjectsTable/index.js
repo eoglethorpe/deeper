@@ -26,6 +26,7 @@ import {
     tokenSelector,
     setUserProjectsAction,
     unSetProjectAction,
+    activeUserSelector,
 } from '../../../../common/redux';
 import {
     createUrlForUserGroupProjects,
@@ -46,6 +47,7 @@ const propTypes = {
     token: PropTypes.object.isRequired, // eslint-disable-line
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
     unSetProject: PropTypes.func.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -54,6 +56,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projects: userGroupProjectSelector(state, props),
     token: tokenSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -221,6 +224,7 @@ export default class ProjectsTable extends React.PureComponent {
                 try {
                     this.props.unSetProject({
                         projectId,
+                        userId: this.props.activeUser.userId,
                     });
                     this.setState({ showDeleteProjectModal: false });
                 } catch (er) {
