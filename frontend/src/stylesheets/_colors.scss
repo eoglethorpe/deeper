@@ -21,15 +21,15 @@ $color-primary: #37474f;
 $color-text-active-tab: $color-primary;
 $color-accent: #009688;
 
-$color-danger: #e74c3c;
-$color-success: #2ecc71;
-$color-warning: #f39c12;
+$color-danger: #dd2c00;
+$color-text-on-danger: #fff;
+$color-success: #4cbf50;
+$color-text-on-success: #fff;
+$color-warning: #fb8c00;
+$color-text-on-warning: #fff;
 
 $color-negative: #e74c3c;
 $color-positive: #2ecc71;
-
-$color-positive-low: #66cfac;
-$color-negative-low: #ff5f5e;
 
 $color-text-on-primary: rgba(255, 255, 255, .8);
 $color-text-on-accent: rgba(255, 255, 255, .9);
