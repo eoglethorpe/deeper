@@ -29,6 +29,7 @@ const userGroupSchema = [];
             group: { type: 'uint', required: true },
             id: { type: 'uint', required: true },
             memberName: { type: 'string' },
+            memberEmail: { type: 'email' },
             role: { type: 'string' }, // enum: normal, admin
             joinedAt: { type: 'string' }, // date
         },

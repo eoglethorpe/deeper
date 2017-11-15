@@ -87,11 +87,11 @@ export default class MembersTable extends React.PureComponent {
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
-                key: 'email',
+                key: 'memberEmail',
                 label: 'Email',
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.email.localeCompare(b.memberName),
+                comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
             },
             {
                 key: 'role',
@@ -244,7 +244,7 @@ export default class MembersTable extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    schema.validate({ results: response }, 'userMembershipCreateResponse');
+                    schema.validate(response, 'userMembershipCreateResponse');
                     this.props.setUsersMembership({
                         usersMembership: response,
                         userGroupId,
