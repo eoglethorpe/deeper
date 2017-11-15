@@ -53,17 +53,17 @@
     display: flex;
     flex-direction: column;
     padding: $spacing-medium;
+    height: 70vh;
 
     .modal-search-input {
-        flex-basis: 20%;
         flex-shrink: 0;
         margin-bottom: $spacing-small;
         padding: $spacing-medium;
     }
 
     .new-member-table {
+        flex-basis: 100%;
         flex-grow: 1;
-        height: 100%;
         overflow-y: auto;
 
         :global .header {

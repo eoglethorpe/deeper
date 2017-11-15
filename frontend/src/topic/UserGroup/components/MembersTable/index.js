@@ -11,6 +11,7 @@ import {
 } from '../../../../public/components/View';
 import {
     TextInput,
+    SelectInput,
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
@@ -76,8 +77,11 @@ export default class MembersTable extends React.PureComponent {
             nonMemberUsers: this.getNonMemberUsers(props.users, props.memberData),
             newMemberUsers: [],
             saveChangeDisabled: true,
+            searchMemberInputValue: '',
+            addMemberSelectInputValue: [],
+            newMemberList: [],
+            memberData: this.props.memberData,
         };
-
         this.memberHeaders = [
             {
                 key: 'memberName',
@@ -170,6 +174,7 @@ export default class MembersTable extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         this.setState({
             nonMemberUsers: this.getNonMemberUsers(nextProps.users, nextProps.memberData),
+            memberData: nextProps.memberData,
         });
     }
 
@@ -249,7 +254,11 @@ export default class MembersTable extends React.PureComponent {
                         usersMembership: response,
                         userGroupId,
                     });
-                    this.setState({ showAddMemberModal: false });
+                    this.setState({
+                        showAddMemberModal: false,
+                        newMemberList: [],
+                        addMemberSelectInputValue: [],
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -279,7 +288,8 @@ export default class MembersTable extends React.PureComponent {
         this.setState({
             // editRow: {},
             showAddMemberModal: false,
-            newMemberUsers: [],
+            addMemberSelectInputValue: [],
+            newMemberList: [],
             saveChangeDisabled: true,
         });
     }
@@ -341,10 +351,10 @@ export default class MembersTable extends React.PureComponent {
             },
         ];
         */
-        const { newMemberUsers } = this.state;
+        let newMemberList = [...this.state.newMemberList];
         const { userGroupId } = this.props;
 
-        const newMemberList = newMemberUsers.map(newMemberUser => (
+        newMemberList = newMemberList.map(newMemberUser => (
             {
                 group: userGroupId,
                 member: newMemberUser.id,
@@ -368,16 +378,56 @@ export default class MembersTable extends React.PureComponent {
         this.membershipDeleteRequest.start();
     }
 
-    render() {
-        const { memberData } = this.props;
+    applySearch = (memberData, searchInputValue) => {
+        const caseInsensitiveSubmatch = (str, value) => (
+            !value || (str || '').toLowerCase().includes(
+                (value || '').toLowerCase(),
+            )
+        );
 
+        const newMemberData = memberData.filter(
+            memberDatum => (
+                caseInsensitiveSubmatch(
+                    memberDatum.memberName,
+                    searchInputValue,
+                )
+            ),
+        );
+        return newMemberData;
+    };
+
+    handleSearchMemberChange = (value) => {
+        this.setState({
+            searchMemberInputValue: value,
+            memberData: this.applySearch(this.props.memberData, value),
+        });
+    }
+
+    handleAddMemberSelectChange = (value) => {
+        const { users } = this.props;
+        const newMemberList = users.filter(user => value.indexOf(user.id) !== -1);
+
+        this.setState({
+            addMemberSelectInputValue: value,
+            newMemberList,
+            saveChangeDisabled: false,
+        });
+
+        console.log('select change', newMemberList);
+    }
+
+    render() {
         const {
             activeMemberDelete,
             deletePending,
-            showDeleteMemberModal,
-            newMemberUsers,
+            memberData,
             saveChangeDisabled,
+            showDeleteMemberModal,
+            searchMemberInputValue,
             showAddMemberModal,
+            addMemberSelectInputValue,
+            newMemberList,
+            nonMemberUsers,
         } = this.state;
 
         return (
@@ -385,6 +435,8 @@ export default class MembersTable extends React.PureComponent {
                 <div styleName="header">
                     <TextInput
                         placeholder="Search Member"
+                        onChange={this.handleSearchMemberChange}
+                        value={searchMemberInputValue}
                         type="search"
                         styleName="search-input"
                         showLabel={false}
@@ -415,16 +467,21 @@ export default class MembersTable extends React.PureComponent {
                     <ModalBody
                         styleName="add-member-modal"
                     >
-                        <TextInput
+                        <SelectInput
                             placeholder="Search Member"
-                            type="search"
                             styleName="modal-search-input"
                             showLabel={false}
                             showHintAndError={false}
+                            options={nonMemberUsers}
+                            keySelector={(user = {}) => user.id}
+                            labelSelector={(user = {}) => user.displayName}
+                            value={addMemberSelectInputValue}
+                            onChange={this.handleAddMemberSelectChange}
+                            multiple
                         />
                         <div styleName="new-member-table">
                             <Table
-                                data={newMemberUsers}
+                                data={newMemberList}
                                 headers={this.newMemberHeaders}
                                 keyExtractor={rowData => rowData.id}
                             />
@@ -438,8 +495,8 @@ export default class MembersTable extends React.PureComponent {
                                 Cancel
                             </DangerButton>
                             <PrimaryButton
-                                onClick={this.saveNewMemberChanges}
                                 disabled={saveChangeDisabled}
+                                onClick={this.saveNewMemberChanges}
                             >
                                 Save changes
                             </PrimaryButton>
