@@ -7,6 +7,8 @@ import {
     SET_USER_GROUPS,
     SET_USER_GROUP,
     UNSET_USER_GROUP,
+    SET_USERS_MEMBERSHIP,
+    UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
     UNSET_REGION,
     ADD_NEW_COUNTRY,
@@ -199,6 +201,44 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 }
             }
             return update(state, settings);
+        }
+        case SET_USERS_MEMBERSHIP: {
+            const memberships = ((state.userGroups[action.userGroupId] || {}).memberships || []);
+            const newUsersMemberShip = action.usersMembership.filter(
+                userMembership => (
+                    memberships.findIndex(member => (member.id === userMembership.id)) === -1
+                ),
+            );
+
+            const settings = {
+                userGroups: {
+                    [action.userGroupId]: { $auto: {
+                        memberships: { $autoArray: {
+                            $push: newUsersMemberShip,
+                        } },
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
+        case UNSET_USER_MEMBERSHIP: {
+            const memberships = ((state.userGroups[action.userGroupId] || {}).memberships || []);
+            const groupMembershipArrayIndex = memberships.findIndex(
+                membership => (membership.id === action.membershipId));
+
+            if (groupMembershipArrayIndex !== -1) {
+                const settings = {
+                    userGroups: {
+                        [action.userGroupId]: { $auto: {
+                            memberships: { $autoArray: {
+                                $splice: [[groupMembershipArrayIndex, 1]],
+                            } },
+                        } },
+                    },
+                };
+                return update(state, settings);
+            }
+            return state;
         }
         case SET_LEADS: {
             const settings = {

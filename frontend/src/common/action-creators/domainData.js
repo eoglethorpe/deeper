@@ -7,6 +7,8 @@ import {
     SET_USER_GROUPS,
     SET_USER_GROUP,
     UNSET_USER_GROUP,
+    SET_USERS_MEMBERSHIP,
+    UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
     SET_COUNTRIES,
     ADD_NEW_COUNTRY,
@@ -59,6 +61,18 @@ export const setUserGroupAction = ({ userId, userGroup }) => ({
 export const unSetUserGroupAction = ({ userId, userGroupId }) => ({
     type: UNSET_USER_GROUP,
     userId,
+    userGroupId,
+});
+
+export const setUsersMembershipAction = ({ usersMembership, userGroupId }) => ({
+    type: SET_USERS_MEMBERSHIP,
+    usersMembership,
+    userGroupId,
+});
+
+export const unSetMembershipAction = ({ membershipId, userGroupId }) => ({
+    type: UNSET_USER_MEMBERSHIP,
+    membershipId,
     userGroupId,
 });
 

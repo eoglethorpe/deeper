@@ -362,7 +362,7 @@ export default class UserProject extends React.PureComponent {
             deletePending,
         } = this.state;
 
-        const isCurrentUser = parseInt(match.params.userId, 10) === activeUser.userId;
+        const isCurrentUser = +match.params.userId === activeUser.userId;
 
         return (
             <div styleName="projects">

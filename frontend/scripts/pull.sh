@@ -1,6 +1,3 @@
-echo "Pulling deep"
-git pull --rebase
-
 echo "Pulling react-store"
 git -C src/public pull --rebase
 

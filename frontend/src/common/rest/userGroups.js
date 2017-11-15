@@ -1,6 +1,11 @@
 import { wsEndpoint, GET, POST, DELETE, commonHeaderForPost, p } from '../config/rest';
 
+export const urlForUserMembership = `${wsEndpoint}/group-memberships/`;
+
 export const createUrlForUserGroup = userGroupId => `${wsEndpoint}/user-groups/${userGroupId}/`;
+
+export const createUrlForUserMembership = userMembershipId =>
+    `${wsEndpoint}/group-memberships/${userMembershipId}/`;
 
 export const createUrlForUserGroupsOfUser = userId => (
     `${wsEndpoint}/user-groups/?${p({ user: userId })}`
@@ -34,3 +39,23 @@ export const createParamsForUserGroupsDelete = ({ access }) => ({
         ...commonHeaderForPost,
     },
 });
+
+export const createParamsForUserMembershipDelete = ({ access }) => ({
+    method: DELETE,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});
+
+export const createParamsForUserMembershipCreate = ({ access }, { memberList }) => ({
+    method: POST,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify({
+        list: memberList,
+    }),
+});
+

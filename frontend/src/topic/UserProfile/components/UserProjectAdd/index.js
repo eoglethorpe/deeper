@@ -38,9 +38,11 @@ const propTypes = {
     setProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userGroups: PropTypes.arrayOf(PropTypes.number),
 };
 
 const defaultProps = {
+    userGroups: [],
 };
 
 const mapStateToProps = state => ({
@@ -85,6 +87,8 @@ export default class UserProjectAdd extends React.PureComponent {
     }
 
     createRequestForProjectCreate = ({ title }) => {
+        const userGroups = this.props.userGroups;
+
         const projectCreateRequest = new RestBuilder()
             .url(urlForProjectCreate)
             .params(() => {
@@ -92,7 +96,7 @@ export default class UserProjectAdd extends React.PureComponent {
                 const { access } = token;
                 return createParamsForProjectCreate(
                     { access },
-                    { title });
+                    { title, userGroups });
             })
             .decay(0.3)
             .maxRetryTime(3000)
