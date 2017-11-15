@@ -80,7 +80,7 @@ export default class MembersTable extends React.PureComponent {
             saveChangeDisabled: true,
             searchMemberInputValue: '',
             addMemberSelectInputValue: [],
-            newMemberList: [],
+            newMembers: {},
             memberData: this.props.memberData,
         };
         this.memberHeaders = [
@@ -154,22 +154,33 @@ export default class MembersTable extends React.PureComponent {
                 key: 'actions',
                 label: 'Actions',
                 order: 5,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentButton
-                            className="admin-btn"
-                            onClick={this.handleRoleChangeForNewMember}
-                        >
-                            <i className="ion-locked" />
-                        </TransparentButton>
-                        <TransparentDangerButton
-                            className="member-add-btn"
-                            onClick={() => this.handleRemoveSelectedMember(row)}
-                        >
-                            <i className="ion-close" />
-                        </TransparentDangerButton>
-                    </div>
-                ),
+                modifier: (row) => {
+                    const isAdmin = row.role === 'admin';
+                    return (
+                        <div className="actions">
+                            <TransparentButton
+                                className="admin-btn"
+                                onClick={() =>
+                                    this.handleRoleChangeForNewMember({
+                                        memberId: row.id,
+                                        newRole: isAdmin ? 'normal' : 'admin',
+                                    })
+                                }
+                            >
+                                {
+                                    isAdmin ? <i className="ion-locked" />
+                                        : <i className="ion-android-person" />
+                                }
+                            </TransparentButton>
+                            <TransparentDangerButton
+                                className="member-add-btn"
+                                onClick={() => this.handleRemoveSelectedMember(row)}
+                            >
+                                <i className="ion-close" />
+                            </TransparentDangerButton>
+                        </div>
+                    );
+                },
             },
         ];
     }
@@ -254,14 +265,10 @@ export default class MembersTable extends React.PureComponent {
                 try {
                     schema.validate(response, 'userMembershipCreateResponse');
                     this.props.setUsersMembership({
-                        usersMembership: response,
+                        usersMembership: response.results,
                         userGroupId,
                     });
-                    this.setState({
-                        showAddMemberModal: false,
-                        newMemberList: [],
-                        addMemberSelectInputValue: [],
-                    });
+                    this.handleAddMemberModalClose();
                 } catch (er) {
                     console.error(er);
                 }
@@ -277,19 +284,13 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleRemoveSelectedMember = (row) => {
-        const { newMemberList } = this.state;
-        const removalIndex = newMemberList.findIndex(
-            member => member.id === row.id,
-        );
-        console.log(newMemberList, removalIndex);
-        if (removalIndex !== -1) {
-            const newerMemberList = [...newMemberList];
-            newerMemberList.splice(removalIndex, 1);
-            this.setState({
-                newMemberList: newerMemberList,
-                addMemberSelectInputValue: newerMemberList.map(member => member.id),
-            });
-        }
+        const newerMembers = { ...this.state.newMembers };
+        delete newerMembers[row.id];
+
+        this.setState({
+            newMembers: newerMembers,
+            addMemberSelectInputValue: Object.keys(newerMembers).map(id => +id),
+        });
     };
 
     handleAddMemberClick = (row) => {
@@ -304,7 +305,7 @@ export default class MembersTable extends React.PureComponent {
             // editRow: {},
             showAddMemberModal: false,
             addMemberSelectInputValue: [],
-            newMemberList: [],
+            newMembers: {},
             saveChangeDisabled: true,
         });
     }
@@ -321,35 +322,12 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleRoleChangeForNewMember = ({ memberId, newRole }) => {
-        const { newMemberList } = this.state;
-        const newMemberArrayIndex = newMemberList.findIndex(
-            newMemberUser => (newMemberUser === memberId));
+        const newMembers = { ...this.state.newMembers };
 
-        if (newMemberArrayIndex !== -1) {
-            const updatedNewMemberUsers = [...newMemberList];
-
-            updatedNewMemberUsers[newMemberArrayIndex] = {
-                ...newMemberList[newMemberArrayIndex],
-                role: newRole,
-            };
-
-            this.setState({
-                newMemberList: updatedNewMemberUsers,
-            });
-        }
-    }
-
-    addNewMember = (newMember) => {
-        const { newMemberUsers } = this.state;
-        const newMemberArrayIndex = newMemberUsers.findIndex(
-            newMemberUser => (newMemberUser.id === newMember.id));
-
-        if (newMemberArrayIndex !== -1) {
-            this.setState({
-                saveChangeDisabled: false,
-                newMemberUsers: [...this.state.newMemberUsers, newMember],
-            });
-        }
+        newMembers[memberId].role = newRole;
+        this.setState({
+            newMembers,
+        });
     }
 
     saveNewMemberChanges = () => {
@@ -357,14 +335,14 @@ export default class MembersTable extends React.PureComponent {
             this.requestForMembershipCreate.stop();
         }
 
-        let newMemberList = [...this.state.newMemberList];
+        const { newMembers } = this.state;
         const { userGroupId } = this.props;
 
-        newMemberList = newMemberList.map(newMemberUser => (
+        const newMemberList = Object.keys(newMembers).map(id => (
             {
                 group: userGroupId,
-                member: newMemberUser.id,
-                role: newMemberUser.role,
+                member: newMembers[id].id,
+                role: newMembers[id].role,
             }
         ));
 
@@ -410,16 +388,19 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleAddMemberSelectChange = (value) => {
-        const { users } = this.props;
-        const newMemberList = users.filter(user => value.indexOf(user.id) !== -1);
+        const newMembers = { ...this.state.newMembers };
+
+        value.forEach((id) => {
+            if (newMembers[id]) { return; }
+            newMembers[id] = { ...this.state.nonMemberUsers.find(user => user.id === id) };
+            newMembers[id].role = newMembers[id].role || 'normal';
+        });
 
         this.setState({
             addMemberSelectInputValue: value,
-            newMemberList,
+            newMembers,
             saveChangeDisabled: false,
         });
-
-        console.log('select change', newMemberList);
     }
 
     render() {
@@ -432,9 +413,11 @@ export default class MembersTable extends React.PureComponent {
             searchMemberInputValue,
             showAddMemberModal,
             addMemberSelectInputValue,
-            newMemberList,
+            newMembers,
             nonMemberUsers,
         } = this.state;
+
+        const newMemberList = Object.keys(newMembers).map(id => newMembers[id]);
 
         return (
             <div styleName="members">

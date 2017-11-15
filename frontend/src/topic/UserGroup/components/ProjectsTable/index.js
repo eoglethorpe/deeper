@@ -169,8 +169,8 @@ export default class ProjectsTable extends React.PureComponent {
         this.setState({
             projects: nextProps.projects,
         });
-        console.warn(nextProps.projects);
     }
+
     componentWillUnmount() {
         if (this.requestForUserGroupProjects) {
             this.requestForUserGroupProjects.stop();
