@@ -24,42 +24,4 @@
             border: $width-separator-thin solid $color-separator;
         }
     }
-
-    .edit-admin-modal {
-        :global .modal-content {
-            width: 720px;
-        }
-    }
-
-    .admin-levels {
-        border-top: $width-separator-thin solid $color-separator;
-        height: 40%;
-
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-medium $spacing-large;
-            width: 100%;
-            height: $height-header;
-            text-transform: uppercase;
-            font-size: 1.6em;
-        }
-
-        .admin-levels-list {
-            height: calc(100% - #{$height-header});
-            overflow: auto;
-            font-size: 1.2em;
-        }
-
-        :global .edit {
-            color: $color-primary;
-        }
-
-        :global .delete {
-            color: $color-danger;
-            font-size: $font-size-large;
-        }
-    }
 }

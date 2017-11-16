@@ -2,19 +2,18 @@
 
 .text-input {
     background-color: transparent!important;
+    padding: 0;
 }
 
 .header-title {
     display: flex;
     justify-content: space-between;
-    margin-bottom: $spacing-medium;
 
     .action-buttons {
-        margin-top: $spacing-medium;
         text-align: right;
 
         button {
-            margin-right: $spacing-large;
+            margin-left: $spacing-medium;
         }
     }
 

@@ -5,8 +5,8 @@ import React from 'react';
 import {
     DangerButton,
     SuccessButton,
-} from '../../../../public/components/Action';
-import { TextInput } from '../../../../public/components/Input';
+} from '../../../public/components/Action';
+import { TextInput } from '../../../public/components/Input';
 
 import styles from './styles.scss';
 
@@ -35,7 +35,7 @@ const defaultProps = {
 
 
 @CSSModules(styles)
-export default class EditAdminLevelForm extends React.PureComponent {
+export default class EditAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -97,14 +97,12 @@ export default class EditAdminLevelForm extends React.PureComponent {
                     <DangerButton onClick={onClose}>
                         Cancel
                     </DangerButton>
-                    <div>
-                        <DangerButton onClick={this.deleteAdminLevel}>
-                            Delete Admin Level
-                        </DangerButton>
-                        <SuccessButton onClick={this.saveAdminLevel}>
-                            Save Changes
-                        </SuccessButton>
-                    </div>
+                    <SuccessButton
+                        onClick={this.saveAdminLevel}
+                        styleName="save-btn"
+                    >
+                        Save Changes
+                    </SuccessButton>
                 </div>
             </div>
         );

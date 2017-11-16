@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {
+    projectDetailsSelector,
+} from '../../../../common/redux';
+
 import ProjectRegionDetail from '../ProjectRegionDetail';
 import styles from './styles.scss';
 
@@ -15,11 +19,15 @@ const defaultProps = {
     activeProject: undefined,
 };
 
+const mapStateToProps = (state, props) => ({
+    projectDetails: projectDetailsSelector(state, props),
+});
+
 const mapDispatchToProps = dispatch => ({
     dispatch,
 });
 
-@connect(null, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectRegions extends React.PureComponent {
     static propTypes = propTypes;
@@ -27,33 +35,15 @@ export default class ProjectRegions extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        const { projectDetails } = props;
+        let selectedRegion = 0;
+        if (projectDetails && projectDetails.regions) {
+            selectedRegion = projectDetails.regions[0];
+        }
 
         this.state = {
-            selectedRegion: 1,
+            selectedRegion,
         };
-
-        this.projectRegionsList = [
-            {
-                id: 1,
-                title: 'One',
-            },
-            {
-                id: 2,
-                title: 'Two',
-            },
-            {
-                id: 3,
-                title: 'Three',
-            },
-            {
-                id: 4,
-                title: 'Four',
-            },
-            {
-                id: 6,
-                title: 'Six',
-            },
-        ];
     }
 
     handleRegionClick = (regionId) => {
@@ -78,13 +68,12 @@ export default class ProjectRegions extends React.PureComponent {
         } = this.props;
 
         const { selectedRegion } = this.state;
-        console.log();
 
         return (
             <div styleName="project-regions">
                 <div styleName="list-container">
                     {
-                        (projectDetails.regions || []).map(region => (
+                        ((projectDetails && projectDetails.regions) || []).map(region => (
                             <button
                                 key={region}
                                 onClick={() => this.handleRegionClick(region)}

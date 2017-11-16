@@ -1,4 +1,4 @@
-@import '../../../../stylesheets/base';
+@import '../../../stylesheets/base';
 
 .form-container {
     .edit-admin-level-form {
@@ -18,6 +18,10 @@
 
     .action-buttons {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+
+        .save-btn {
+            margin-left: $spacing-medium-alt;
+        }
     }
 }

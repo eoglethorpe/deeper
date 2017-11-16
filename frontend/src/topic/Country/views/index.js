@@ -301,7 +301,10 @@ export default class CountryPanel extends React.PureComponent {
         if (activeCountryIndex >= 0) {
             return (
                 <div styleName="country-details">
-                    <CountryDetail countryId={activeCountry} />
+                    <CountryDetail
+                        key={activeCountry}
+                        countryId={activeCountry}
+                    />
                 </div>
             );
         }
