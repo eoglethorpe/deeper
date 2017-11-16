@@ -6,7 +6,7 @@
     display: flex;
     margin: $spacing-large;
     $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-    $height-header: 56px;
+    $height-header: 40px;
     background-color: $color-foreground;
     height: $height-full-page;
 

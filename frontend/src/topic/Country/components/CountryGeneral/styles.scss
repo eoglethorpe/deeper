@@ -14,45 +14,7 @@
             padding: $spacing-large;
             height: 100%;
             overflow: auto;
-
-            .text-input {
-                background-color: transparent;
-                padding: $spacing-small 0;
-            }
         }
-
-        .header-title {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: $spacing-medium;
-
-            .action-buttons {
-                margin-top: $spacing-medium;
-                text-align: right;
-
-                button {
-                    margin-right: $spacing-large;
-                }
-            }
-
-            .non-field-errors {
-                .error {
-                    color: $color-danger;
-
-                    &.empty {
-                        color: transparent;
-                        user-select: none;
-                    }
-
-                    &:not(:last-child) {
-                        &::after {
-                            content: ', ';
-                        }
-                    }
-                }
-            }
-        }
-
 
         .map-container {
             display: flex;

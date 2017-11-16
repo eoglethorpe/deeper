@@ -1,0 +1,28 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
+
+$height-header: 40px;
+$height-full-page: calc(
+        100vh
+        - #{$height-navbar}
+        -  2 * #{$spacing-large}
+        - #{$height-header}
+        - #{$height-tabbar}
+);
+
+.project-regions {
+    display: flex;
+
+    .list-container {
+        flex-basis: 20%;
+        background-color: pink;
+        min-width: 320px;
+        height: $height-full-page;
+    }
+
+    .details-container {
+        flex-grow: 1;
+        background-color: $color-success;
+        height: $height-full-page;
+    }
+}

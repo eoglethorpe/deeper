@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import ProjectGeneral from '../ProjectGeneral';
-import ProjectGeoRegions from '../ProjectGeoRegions';
+import ProjectRegions from '../ProjectRegions';
 import ProjectAnalysisFramework from '../ProjectAnalysisFramework';
 import styles from './styles.scss';
 
@@ -48,7 +48,7 @@ export default class ProjectDetails extends React.PureComponent {
                         for="geo-areas"
                         styleName="tab"
                     >
-                        <ProjectGeoRegions />
+                        <ProjectRegions />
                     </TabContent>
                     <TabContent
                         for="analysis-framework"

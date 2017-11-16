@@ -2,8 +2,8 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
 
+import { withRouter, Link } from 'react-router-dom';
 import { List, ListView } from '../../../public/components/View';
 import {
     DropdownMenu,
@@ -110,12 +110,12 @@ export default class Navbar extends React.PureComponent {
         this.setState({ navbarItems, dropdownItems });
     }
 
-    componentWillReceiveProps() {
+    componentWillReceiveProps(nextProps) {
         const {
             activeCountry,
             activeProject,
             activeUser,
-        } = this.props;
+        } = nextProps;
         const navbarItems = this.createNavbarItems(activeProject);
         const dropdownItems = this.createDropdownItems(
             activeProject,

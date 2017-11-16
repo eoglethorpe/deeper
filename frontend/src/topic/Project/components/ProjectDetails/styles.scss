@@ -1,14 +1,15 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
 
+$height-header: 40px;
+
 .tabs-container {
-    height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
     background-color: $color-foreground;
-    
+    height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
 }
 
 .tab {
+    background-color: $color-foreground;
     height: 100%;
     font-size: 1em;
-    background-color: $color-foreground;
 }
