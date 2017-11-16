@@ -95,7 +95,7 @@
 :global .admin-btn {
     padding: $spacing-small;
 
-    .ion-locked {
+    .ion-locked, .ion-android-person {
         margin: 0 $spacing-small;
         color: $color-primary;
 

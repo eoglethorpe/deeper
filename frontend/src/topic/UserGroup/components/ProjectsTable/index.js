@@ -48,6 +48,7 @@ const propTypes = {
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
     unSetProject: PropTypes.func.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    isCurrentUserAdmin: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -135,13 +136,16 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 8,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentButton
-                            className="delete-btn"
-                            onClick={() => this.handleDeleteProjectClick(row)}
+                        {
+                            this.props.isCurrentUserAdmin &&
+                            <TransparentButton
+                                className="delete-btn"
+                                onClick={() => this.handleDeleteProjectClick(row)}
 
-                        >
-                            <i className="ion-android-delete" />
-                        </TransparentButton>
+                            >
+                                <i className="ion-android-delete" />
+                            </TransparentButton>
+                        }
                         <TransparentAccentButton
                             className="forward-btn"
                         >
@@ -338,11 +342,14 @@ export default class ProjectsTable extends React.PureComponent {
                         showHintAndError={false}
                     />
                     <div styleName="pusher" />
-                    <PrimaryButton
-                        onClick={this.handleAddProjectClick}
-                    >
-                        Add New Project
-                    </PrimaryButton>
+                    {
+                        this.props.isCurrentUserAdmin &&
+                        <PrimaryButton
+                            onClick={this.handleAddProjectClick}
+                        >
+                            Add New Project
+                        </PrimaryButton>
+                    }
                 </div>
                 <div styleName="content">
                     <Table

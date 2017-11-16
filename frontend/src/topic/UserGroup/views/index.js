@@ -16,6 +16,7 @@ import {
     setUsersInformationAction,
 
     tokenSelector,
+    activeUserSelector,
 } from '../../../common/redux';
 
 import {
@@ -34,6 +35,7 @@ const propTypes = {
     userGroup: PropTypes.object, // eslint-disable-line
     setUserGroup: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -44,6 +46,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     token: tokenSelector(state),
     userGroup: groupSelector(state, props),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -160,8 +163,16 @@ export default class UserGroup extends React.PureComponent {
         return usersRequest;
     }
 
+    isCurrentUserAdmin = memberData => (
+        memberData.findIndex(member => (
+            member.role === 'admin' && member.member === this.props.activeUser.userId
+        )) !== -1
+    )
+
     render() {
         const { userGroup, match } = this.props;
+
+        const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || []);
 
         return (
             <div styleName="usergroup">
@@ -199,6 +210,8 @@ export default class UserGroup extends React.PureComponent {
                             <MembersTable
                                 memberData={userGroup.memberships || []}
                                 userGroupId={+match.params.userGroupId}
+                                isCurrentUserAdmin={isCurrentUserAdmin}
+                                activeUser={this.props.activeUser}
                             />
                         </TabContent>
                         <TabContent
@@ -207,6 +220,7 @@ export default class UserGroup extends React.PureComponent {
                         >
                             <ProjectsTable
                                 match={match}
+                                isCurrentUserAdmin={isCurrentUserAdmin}
                             />
                         </TabContent>
                     </Tabs>
