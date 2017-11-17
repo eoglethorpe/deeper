@@ -73,13 +73,15 @@ export default class FilterSection extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="leads-table">
+            <div styleName="leads-overview">
                 <h4>Leads Overview</h4>
-                <Table
-                    data={this.data}
-                    headers={this.leadsHeaders}
-                    keyExtractor={rowData => rowData.id}
-                />
+                <div styleName="leads-table">
+                    <Table
+                        data={this.data}
+                        headers={this.leadsHeaders}
+                        keyExtractor={rowData => rowData.id}
+                    />
+                </div>
             </div>
         );
     }

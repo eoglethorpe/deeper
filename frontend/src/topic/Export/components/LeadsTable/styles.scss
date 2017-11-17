@@ -1,6 +1,6 @@
 @import '../../../../stylesheets/base';
 
-.leads-table {
+.leads-overview {
     display: flex;
     flex-wrap: wrap;
     padding: $spacing-medium;
@@ -11,18 +11,22 @@
         font-weight: $font-weight-medium;
     }
 
-    :global .header {
-        position: sticky;
-        top: 0;
-        border-bottom: $width-separator-medium solid $color-separator;
-        padding: $spacing-small $spacing-medium-alt;
-        user-select: none;
+    .leads-table {
+        flex-basis: 100%;
+        
+        :global .header {
+            position: sticky;
+            top: 0;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+            user-select: none;
 
-        &:not(.actions) {
-            cursor: pointer;
+            &:not(.actions) {
+                cursor: pointer;
 
-            &:hover {
-                background-color: $color-background-hover;
+                &:hover {
+                    background-color: $color-background-hover;
+                }
             }
         }
     }
