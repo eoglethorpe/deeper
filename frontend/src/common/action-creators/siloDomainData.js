@@ -8,6 +8,10 @@ import {
     ADD_LEAD_VIEW_LEAD_CHANGE,
     ADD_LEAD_VIEW_LEAD_SET_PENDING,
     ADD_LEAD_VIEW_LEAD_SAVE,
+
+    SET_LEAD_PAGE_FILTER,
+    SET_LEAD_PAGE_ACTIVE_PAGE,
+    SET_LEAD_PAGE_ACTIVE_SORT,
 } from '../action-types/siloDomainData';
 
 
@@ -54,4 +58,20 @@ export const addLeadViewLeadSaveAction = ({ leadId, serverId }) => ({
     type: ADD_LEAD_VIEW_LEAD_SAVE,
     leadId,
     serverId,
+});
+
+export const setLeadPageFilterAction = ({ filters }) => ({
+    type: SET_LEAD_PAGE_FILTER,
+    filters,
+});
+
+
+export const setLeadPageActivePageAction = ({ activePage }) => ({
+    type: SET_LEAD_PAGE_ACTIVE_PAGE,
+    activePage,
+});
+
+export const setLeadPageActiveSortAction = ({ activeSort }) => ({
+    type: SET_LEAD_PAGE_ACTIVE_SORT,
+    activeSort,
 });

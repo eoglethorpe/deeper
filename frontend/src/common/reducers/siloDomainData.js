@@ -8,6 +8,9 @@ import {
     ADD_LEAD_VIEW_LEAD_CHANGE,
     ADD_LEAD_VIEW_LEAD_SET_PENDING,
     ADD_LEAD_VIEW_LEAD_SAVE,
+    SET_LEAD_PAGE_FILTER,
+    SET_LEAD_PAGE_ACTIVE_PAGE,
+    SET_LEAD_PAGE_ACTIVE_SORT,
 } from '../action-types/siloDomainData';
 
 import {
@@ -190,6 +193,19 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             };
             return update(state, settings);
         }
+        case SET_LEAD_PAGE_FILTER: {
+            const { filters } = action;
+            const { activeProject } = state;
+            const settings = {
+                leadPage: {
+                    [activeProject]: { $auto: {
+                        filter: { $set: filters },
+                        activePage: { $set: 1 },
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
         case ADD_LEAD_VIEW_LEAD_SAVE: {
             const {
                 leadId,
@@ -217,12 +233,37 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             };
             return update(state, settings);
         }
+        case SET_LEAD_PAGE_ACTIVE_PAGE: {
+            const { activePage } = action;
+            const { activeProject } = state;
+            const settings = {
+                leadPage: {
+                    [activeProject]: { $auto: {
+                        activePage: { $set: activePage },
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
         case SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID: {
             const settings = {
                 addLeadView: {
                     activeLeadId: {
                         $set: action.leadId,
                     },
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_LEAD_PAGE_ACTIVE_SORT: {
+            const { activeSort } = action;
+            const { activeProject } = state;
+            const settings = {
+                leadPage: {
+                    [activeProject]: { $auto: {
+                        activeSort: { $set: activeSort },
+                        activePage: { $set: 1 },
+                    } },
                 },
             };
             return update(state, settings);

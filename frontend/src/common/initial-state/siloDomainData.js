@@ -68,6 +68,16 @@ const initialSiloDomainData = {
         activeLeadId: 'lead-1',
     },
 
+    // lead page for project i
+    leadPage: {
+        /*
+        1: {
+            activeSort: '-created_at',
+            activePage: 1,
+            filters: {},
+        },
+        */
+    },
 };
 
 export default initialSiloDomainData;

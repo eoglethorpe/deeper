@@ -94,3 +94,29 @@ export const currentUserActiveProjectSelector = createSelector(
         currentUserProjects.find(project => project.id === activeProject) || emptyObject
     ),
 );
+
+
+export const leadPageSelector = ({ siloDomainData }) => siloDomainData.leadPage;
+
+export const leadPageForProjectSelector = createSelector(
+    leadPageSelector,
+    activeProjectSelector,
+    (leadPage, activeProject) => (
+        leadPage[activeProject] || {}
+    ),
+);
+
+export const leadPageFilterSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.filter || emptyObject,
+);
+
+export const leadPageActivePageSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.activePage || 1,
+);
+
+export const leadPageActiveSortSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.activeSort || '-created_at',
+);

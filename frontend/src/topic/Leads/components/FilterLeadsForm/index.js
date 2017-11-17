@@ -35,6 +35,7 @@ const propTypes = {
         access: PropTypes.string,
     }).isRequired,
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line 
+    value:  PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -63,7 +64,7 @@ export default class FilterLeadsForm extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formValues: {},
+            formValues: this.props.value,
             stale: false,
         };
 
@@ -84,10 +85,20 @@ export default class FilterLeadsForm extends React.PureComponent {
             'status',
         ];
     }
-
-    componentDidMount() {
+    componentWillMount() {
         const { activeProject } = this.props;
         this.requestProjectLeadFilterOptions(activeProject);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { value, activeProject } = nextProps;
+        if (this.props.value !== value) {
+            console.warn('new value', value);
+            this.setState({ formValues: value }, () => console.warn(this.state));
+        }
+        if (this.props.activeProject !== activeProject) {
+            this.requestProjectLeadFilterOptions(activeProject);
+        }
     }
 
     requestProjectLeadFilterOptions = (activeProject) => {
@@ -137,6 +148,7 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     handleChange = (values) => {
+        console.error(values);
         this.setState({
             formValues: { ...this.state.formValues, ...values },
             stale: true,
@@ -167,7 +179,6 @@ export default class FilterLeadsForm extends React.PureComponent {
             assignee,
         } = leadFilterOptions;
 
-        console.log(leadFilterOptions);
         return (
             <Form
                 styleName="filters"
