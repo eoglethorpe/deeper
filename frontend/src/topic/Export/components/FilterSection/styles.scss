@@ -1,0 +1,19 @@
+@import '../../../../stylesheets/base';
+
+.filters {
+    padding: $spacing-large;
+
+    h2 {
+        margin: $spacing-large 0;
+        font-weight: $font-weight-medium;
+    }
+
+    .basic-information,
+    .entry-attributes,
+    .lead-information,
+    .leads-table {
+        display: flex;
+        flex-wrap: wrap;
+        padding: $spacing-medium;
+    }
+}

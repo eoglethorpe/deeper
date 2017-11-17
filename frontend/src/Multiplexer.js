@@ -16,25 +16,25 @@ import { authenticatedSelector } from './common/selectors/auth';
 
 const Leads = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/`} >
-        <Bundle load={() => import('./topic/Leads/views/')} />,
+        <Bundle load={() => import('./topic/Leads/views/')} />
     </ProjectRouteSynchronizer>
 );
 
 const Entries = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/entries/`} >
-        <Bundle load={() => import('./topic/Entries/views/')} />,
+        <Bundle load={() => import('./topic/Entries/views/')} />
     </ProjectRouteSynchronizer>
 );
 
 const Ary = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/ary/`} >
-        <Bundle load={() => import('./topic/Ary/views/')} />,
+        <Bundle load={() => import('./topic/Ary/views/')} />
     </ProjectRouteSynchronizer>
 );
 
 const Export = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/export/`} >
-        <Bundle load={() => import('./topic/Export/views/')} />,
+        <Bundle load={() => import('./topic/Export/views/')} />
     </ProjectRouteSynchronizer>
 );
 

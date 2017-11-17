@@ -1,0 +1,79 @@
+@import '../../../stylesheets/base';
+
+$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+
+.export {
+    @include shadow-medium;
+    display: flex;
+    padding: $spacing-large;
+
+
+    .preview-container {
+        display: flex;
+        flex-basis: 30%;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-foreground-alt;
+        height: $height-full-page;
+
+        h1 {
+            color: $color-text-disabled;
+            font-weight: bold;
+        }
+    }
+
+    .form-container {
+        flex-basis: 70%;
+        background-color: $color-foreground;
+        height: $height-full-page;
+
+        .header {
+            flex-basis: 100%;
+            padding: $spacing-large;
+            height: 48px;
+
+            .action-buttons {
+                flex-basis: 100%;
+                text-align: right;
+
+                button {
+                    margin-left: $spacing-medium;
+                    padding: $spacing-small $spacing-medium-alt;
+                    color: $color-foreground;
+                }
+
+                .word-document {
+                    background-color: $color-docx;
+                }
+
+                .excel-document {
+                    background-color: $color-excel;
+                }
+
+                .pdf-document {
+                    background-color: $color-pdf;
+                }
+
+                :global .ion-android-document {
+                    margin-right: $spacing-medium;
+                }
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-basis: 100%;
+            flex-wrap: wrap;
+            height: calc(#{$height-full-page} - #{$height-header});
+
+            .filter-section {
+                flex-basis: 65%;
+            }
+
+            .structure-section {
+                flex-basis: 35%;
+            }
+        }
+    }
+
+}

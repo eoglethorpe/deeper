@@ -1,0 +1,29 @@
+@import '../../../../stylesheets/base';
+
+.leads-table {
+    display: flex;
+    flex-wrap: wrap;
+    padding: $spacing-medium;
+
+    h4 {
+        flex-basis: 100%;
+        margin: $spacing-medium 0;
+        font-weight: $font-weight-medium;
+    }
+
+    :global .header {
+        position: sticky;
+        top: 0;
+        border-bottom: $width-separator-medium solid $color-separator;
+        padding: $spacing-small $spacing-medium-alt;
+        user-select: none;
+
+        &:not(.actions) {
+            cursor: pointer;
+
+            &:hover {
+                background-color: $color-background-hover;
+            }
+        }
+    }
+}
