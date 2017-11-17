@@ -37,6 +37,7 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
                 text-align: right;
 
                 button {
+                    margin-bottom: $spacing-large;
                     margin-left: $spacing-medium;
                     padding: $spacing-small $spacing-medium-alt;
                     color: $color-foreground;

@@ -1,0 +1,10 @@
+@import '../../../../stylesheets/base';
+
+.report-structure {
+    padding: $spacing-large;
+
+    h2 {
+        margin: $spacing-large 0;
+        font-weight: $font-weight-medium;
+    }
+}
