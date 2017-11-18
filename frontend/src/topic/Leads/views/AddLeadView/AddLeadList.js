@@ -24,7 +24,7 @@ const defaultProps = {
 };
 
 const propTypes = {
-    activeLeadId: PropTypes.number.isRequired,
+    activeLeadId: PropTypes.string.isRequired,
     setActiveLeadId: PropTypes.func.isRequired,
     leadsFiltered: PropTypes.array.isRequired, // eslint-disable-line
 };

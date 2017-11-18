@@ -84,12 +84,22 @@ export default class AddLeadForm extends React.PureComponent {
 
     onPrev = (e) => {
         e.preventDefault();
-        this.props.formCallbacks.onPrev();
+
+        const {
+            formCallbacks,
+        } = this.props;
+
+        formCallbacks.onPrev();
     }
 
     onNext = (e) => {
         e.preventDefault();
-        this.props.formCallbacks.onNext();
+
+        const {
+            formCallbacks,
+        } = this.props;
+
+        formCallbacks.onNext();
     }
 
     render() {
@@ -143,10 +153,12 @@ export default class AddLeadForm extends React.PureComponent {
                     <div styleName="action-buttons">
                         <Button
                             onClick={onPrev}
+                            disabled
                         >
                             Prev
                         </Button>
                         <Button
+                            disabled
                             onClick={onNext}
                         >
                             Next

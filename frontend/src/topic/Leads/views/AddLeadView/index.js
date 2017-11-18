@@ -73,7 +73,7 @@ const propTypes = {
         access: PropTypes.string,
     }).isRequired,
 
-    activeLeadId: PropTypes.number.isRequired,
+    activeLeadId: PropTypes.string.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
     addLeadViewLeadSave: PropTypes.func.isRequired,
     addLeadViewLeadSetPending: PropTypes.func.isRequired,
@@ -231,10 +231,12 @@ export default class AddLeadView extends React.PureComponent {
 
     handleLeadNext = leadId => (e) => {
         e.preventDefault();
+        console.log(leadId);
     }
 
     handleLeadPrev = leadId => (e) => {
         e.preventDefault();
+        console.log(leadId);
     }
 
     renderLeadDetail = (key, lead) => {
@@ -246,9 +248,14 @@ export default class AddLeadView extends React.PureComponent {
             onPrev: this.handleLeadNext(key),
             onNext: this.handleLeadNext(key),
         };
+
+        const {
+            activeLeadId,
+        } = this.props;
+
         return (
             <div
-                className={`${styles.right} ${key !== this.props.activeLeadId ? styles.hidden : ''}`}
+                className={`${styles.right} ${key !== activeLeadId ? styles.hidden : ''}`}
                 key={key}
             >
                 <AddLeadForm
