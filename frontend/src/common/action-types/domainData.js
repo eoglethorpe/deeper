@@ -19,3 +19,4 @@ export const SET_LEADS = 'domain-data/SET_LEADS';
 export const SET_LEAD_FILTER_OPTIONS = 'domain-data/SET_LEAD_FILTER_OPTIONS';
 
 export const SET_REGIONS = 'domain-data/SET_REGIONS';
+export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';

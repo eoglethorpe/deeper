@@ -117,7 +117,7 @@ export default class CountryPanel extends React.PureComponent {
                         regions: response.results,
                     });
                 } catch (er) {
-                    console.error(er);
+                    console.error(er, response);
                 }
             })
             .build();

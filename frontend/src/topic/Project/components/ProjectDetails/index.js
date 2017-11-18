@@ -14,6 +14,7 @@ export default class ProjectDetails extends React.PureComponent {
             <Tabs
                 activeLinkStyle={{ none: 'none' }}
                 styleName="tabs-container"
+                renderActiveTabContentOnly
             >
                 <div styleName="tabs-header-container">
                     <TabLink

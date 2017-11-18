@@ -14,15 +14,52 @@ $height-full-page: calc(
     display: flex;
 
     .list-container {
+        @include shadow-small;
         flex-basis: 20%;
-        background-color: pink;
         min-width: 320px;
         height: $height-full-page;
+
+        .list {
+            height: calc(#{$height-full-page} - #{$height-header});
+            overflow: auto;
+
+            :global .list-item {
+                transition: .2s all ease-in-out;
+                border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
+                padding: 0;
+
+                .btn {
+                    display: block;
+                    padding: $spacing-medium $spacing-large;
+                    width: 100%;
+                    text-align: left;
+
+                    &:active {
+                        transform: translateY(0);
+                        box-shadow: none;
+                        background-color: $color-hover;
+                    }
+
+                    &:focus {
+                        background-color: $color-hover;
+                    }
+                }
+
+                &:hover {
+                    background-color: $color-hover;
+                }
+
+                &.active {
+                    border-left: $width-separator-thick solid $color-accent;
+                    background-color: $color-hover;
+                }
+            }
+        }
     }
 
     .details-container {
         flex-grow: 1;
-        background-color: $color-success;
         height: $height-full-page;
     }
 }

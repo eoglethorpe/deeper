@@ -1,0 +1,27 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
+
+.region-details {
+    height: 100%;
+
+    .form-map-container {
+        display: flex;
+        justify-content: space-between;
+        height: 60%;
+
+        .country-general-form {
+            flex-basis: 36%;
+            padding: $spacing-large;
+            height: 100%;
+            overflow: auto;
+        }
+
+        .map-container {
+            display: flex;
+            flex-basis: 64%;
+            align-items: center;
+            justify-content: center;
+            border: $width-separator-thin solid $color-separator;
+        }
+    }
+}

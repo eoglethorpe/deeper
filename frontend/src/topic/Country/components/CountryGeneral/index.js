@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import RegionDetailForm from '../../../../common/components/RegionDetailForm';
-import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
-
 import {
     countryDetailSelector,
 } from '../../../../common/redux';
+
+import RegionDetailForm from '../../../../common/components/RegionDetailForm';
+import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 
 import styles from './styles.scss';
 
@@ -38,14 +38,13 @@ export default class CountryGeneral extends React.PureComponent {
         const {
             countryDetail,
         } = this.props;
-        console.error(countryDetail.id);
 
         return (
             <div styleName="country-general">
                 <div styleName="form-map-container">
                     <RegionDetailForm
                         styleName="country-general-form"
-                        countryDetail={countryDetail}
+                        regionDetail={countryDetail}
                     />
                     <div styleName="map-container">
                         The map

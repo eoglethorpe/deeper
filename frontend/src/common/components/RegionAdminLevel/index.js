@@ -15,7 +15,7 @@ import {
 } from '../../../public/components/View';
 
 import {
-    adminLevelSelector,
+    adminLevelForRegionSelector,
 } from '../../../common/redux';
 
 import EditAdminLevel from '../EditAdminLevel';
@@ -40,7 +40,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    adminLevelList: adminLevelSelector(state, props),
+    adminLevelList: adminLevelForRegionSelector(state, props),
     state,
 });
 

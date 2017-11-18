@@ -2,7 +2,7 @@ import { wsEndpoint, POST, DELETE, commonHeaderForPost } from '../config/rest';
 
 export const urlForRegions = `${wsEndpoint}/regions/`;
 export const urlForRegionCreate = `${wsEndpoint}/regions/`;
-export const createUrlForRegion = id => `${wsEndpoint}/regions/${id}/`;
+export const createUrlForRegion = regionId => `${wsEndpoint}/regions/${regionId}/`;
 
 export const createParamsForRegionCreate = ({ access }, data) => ({
     method: POST,

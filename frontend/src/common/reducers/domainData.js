@@ -14,6 +14,7 @@ import {
     UNSET_REGION,
     ADD_NEW_REGION,
     SET_REGIONS,
+    SET_REGION_DETAILS,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 } from '../action-types/domainData';
@@ -80,6 +81,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             }
             return update(state, settings);
         }
+
         case UNSET_USER_PROJECT: {
             const settings = {
                 projects: {
@@ -301,6 +303,17 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
             const settings = {
                 regions,
+            };
+            return update(state, settings);
+        }
+
+        case SET_REGION_DETAILS: {
+            const settings = {
+                regions: {
+                    [action.regionId]: { $auto: {
+                        $merge: action.regionDetails,
+                    } },
+                },
             };
             return update(state, settings);
         }

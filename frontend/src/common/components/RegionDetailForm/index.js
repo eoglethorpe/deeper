@@ -22,7 +22,7 @@ const propTypes = {
     className: PropTypes.string,
     pending: PropTypes.bool,
     stale: PropTypes.bool.isRequired,
-    countryDetail: PropTypes.shape({
+    regionDetail: PropTypes.shape({
         code: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
     }).isRequired,
@@ -93,7 +93,7 @@ export default class RegionDetailForm extends React.PureComponent {
 
     render() {
         const {
-            countryDetail,
+            regionDetail,
             pending,
             stale,
             className,
@@ -133,17 +133,17 @@ export default class RegionDetailForm extends React.PureComponent {
                     </div>
                 </header>
                 {
-                    countryDetail.code &&
+                    regionDetail.code &&
                         <TextInput
                             disabled
                             label="Country code"
                             placeholder="NPL"
                             styleName="text-input"
-                            value={countryDetail.code}
+                            value={regionDetail.code}
                         />
                 }
                 {
-                    !countryDetail.code &&
+                    !regionDetail.code &&
                         <TextInput
                             label="Country code"
                             placeholder="NPL"
@@ -156,7 +156,7 @@ export default class RegionDetailForm extends React.PureComponent {
                     label="Name"
                     placeholder="Nepal"
                     styleName="text-input"
-                    value={countryDetail.title}
+                    value={regionDetail.title}
                 />
                 <TextInput
                     error={formFieldErrors.wbRegion}

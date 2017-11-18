@@ -51,12 +51,19 @@ export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
 );
 
-// FIXME: rename to adminLevelForCountrySelector
-export const adminLevelSelector = createSelector(
+export const adminLevelForRegionSelector = createSelector(
     adminLevelsSelector,
     regionIdFromProps,
     (adminLevels, regionId) => (
         adminLevels[regionId] || emptyList
+    ),
+);
+
+export const regionDetailForRegionSelector = createSelector(
+    regionsSelector,
+    regionIdFromProps,
+    (regions, regionId) => (
+        regions[regionId] || emptyObject
     ),
 );
 
