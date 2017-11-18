@@ -74,7 +74,7 @@ const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-const MAX_LEADS_PER_REQUEST = 2;
+const MAX_LEADS_PER_REQUEST = 18;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })

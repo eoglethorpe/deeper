@@ -6,7 +6,6 @@ import {
     DateInput,
     Form,
     HiddenInput,
-    LoadingAnimation,
     NonFieldErrors,
     SelectInput,
     TextArea,
@@ -16,7 +15,11 @@ import {
 } from '../../../../public/components/Input';
 
 import {
-    PrimaryButton,
+    LoadingAnimation,
+} from '../../../../public/components/View';
+
+import {
+    Button,
     SuccessButton,
 } from '../../../../public/components/Action';
 
@@ -79,6 +82,26 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
+    onPrev = (e) => {
+        e.preventDefault();
+
+        const {
+            formCallbacks,
+        } = this.props;
+
+        formCallbacks.onPrev();
+    }
+
+    onNext = (e) => {
+        e.preventDefault();
+
+        const {
+            formCallbacks,
+        } = this.props;
+
+        formCallbacks.onNext();
+    }
+
     render() {
         const {
             className,
@@ -105,6 +128,11 @@ export default class AddLeadForm extends React.PureComponent {
             fieldErrors,
         } = lead.form;
 
+        const {
+            onPrev,
+            onNext,
+        } = this;
+
         return (
             <Form
                 changeCallback={onChange}
@@ -123,16 +151,23 @@ export default class AddLeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
+                        <Button
+                            onClick={onPrev}
+                            disabled
+                        >
+                            Prev
+                        </Button>
+                        <Button
+                            disabled
+                            onClick={onNext}
+                        >
+                            Next
+                        </Button>
                         <SuccessButton
                             disabled={pending || !stale || !ready}
                         >
                             Save
                         </SuccessButton>
-                        <PrimaryButton
-                            disabled={pending || !stale || !ready}
-                        >
-                            Save &amp; next
-                        </PrimaryButton>
                     </div>
                 </header>
                 <SelectInput
@@ -240,13 +275,13 @@ export default class AddLeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            {
+                            {/*
                                 lead.upload.error ? (
                                     lead.upload.error
                                 ) : (
                                     lead.upload.title
                                 )
-                            }
+                            */}
                         </p>,
                         <HiddenInput
                             formname="server_id"

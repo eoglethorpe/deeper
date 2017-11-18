@@ -15,6 +15,32 @@ const emptyObject = {};
 
 // Using state
 
+export const addLeadViewFiltersSelector = ({ siloDomainData }) => (
+    siloDomainData.addLeadView.filters || emptyObject
+);
+export const addLeadViewLeadsCountSelector = ({ siloDomainData }) => (
+    (siloDomainData.addLeadView.leads || emptyList).length
+);
+export const addLeadViewActiveLeadIdSelector = ({ siloDomainData }) => (
+    siloDomainData.addLeadView.activeLeadId
+);
+
+export const addLeadViewLeadsSelector = ({ siloDomainData }) => (
+    siloDomainData.addLeadView.leads || emptyList
+);
+export const addLeadViewLeadsFilteredSelector = createSelector(
+    addLeadViewLeadsSelector,
+    leads => leads.filter(lead => lead.isFiltrate),
+);
+
+/*
+export const addLeadViewActiveLeadSelector = createSelector(
+    addLeadViewLeadsSelector,
+    addLeadViewActiveLeadIdSelector,
+    (leads, leadId) => leads.find(lead => lead.data.id === leadId),
+);
+*/
+
 export const activeProjectSelector = ({ siloDomainData }) => (
     siloDomainData.activeProject
 );

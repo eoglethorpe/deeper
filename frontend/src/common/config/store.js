@@ -1,7 +1,8 @@
 // import localforage from 'localforage';
 
 const storeConfig = {
-    // blacklist: ['websocket', 'domainData', 'datetime', 'navbar'],
+    blacklist: ['siloDomainData'],
+    // blacklist: ['siloDomaindata', 'websocket', 'domainData', 'datetime', 'navbar'],
     // storage: localforage,
     keyPrefix: 'deeper-',
     // TODO: add transforms
