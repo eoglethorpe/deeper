@@ -139,6 +139,7 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
                 values,
                 formErrors,
                 formFieldErrors,
+                upload = {},
             } = action;
 
             const index = state.addLeadView.leads.findIndex(
@@ -159,8 +160,13 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
                             },
                             form: {
                                 values: { $merge: values || {} },
-                                errors: { $merge: formErrors },
+                                errors: { $set: formErrors },
                                 fieldErrors: { $merge: formFieldErrors },
+                            },
+
+                            upload: {
+                                errorMessage: { $set: upload.errorMessage },
+                                title: { $set: upload.title },
                             },
                         },
                     },

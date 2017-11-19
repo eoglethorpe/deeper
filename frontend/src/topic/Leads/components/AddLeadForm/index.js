@@ -43,7 +43,6 @@ const propTypes = {
 
 const defaultProps = {
     className: '',
-    uploadData: {},
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -132,6 +131,8 @@ export default class AddLeadForm extends React.PureComponent {
             onPrev,
             onNext,
         } = this;
+
+        console.warn('Form', lead);
 
         return (
             <Form
@@ -275,13 +276,13 @@ export default class AddLeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            {/*
-                                lead.upload.error ? (
-                                    lead.upload.error
+                            {
+                                lead.upload.errorMessage ? (
+                                    lead.upload.errorMessage
                                 ) : (
                                     lead.upload.title
                                 )
-                            */}
+                            }
                         </p>,
                         <HiddenInput
                             formname="server_id"

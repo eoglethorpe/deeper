@@ -300,7 +300,6 @@ export default class AddLeadView extends React.PureComponent {
         const newLeadUploads = update(leadUploads, uploadSettings);
 
         const newLead = update(theLead, leadSettings);
-
         const {
             values,
             errors,
@@ -312,7 +311,6 @@ export default class AddLeadView extends React.PureComponent {
             values,
             formErrors: errors,
             formFieldErrors: fieldErrors,
-            upload: newLead.upload,
         });
 
         this.setState({

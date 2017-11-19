@@ -15,12 +15,17 @@ import {
 import {
     FileInput,
 } from '../../../../public/components/Input';
-
+import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
 import {
     addAddLeadViewLeadsAction,
     addLeadViewLeadsCountSelector,
     activeProjectSelector,
+    tokenSelector,
 } from '../../../../common/redux';
+import {
+    urlForUpload,
+    createHeaderForFileUpload,
+} from '../../../../common/rest';
 import DropboxChooser from '../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../common/components/GooglePicker';
 import { dropboxAppKey } from '../../../../common/config/dropbox';
@@ -65,12 +70,16 @@ const leadReference = {
         stale: false,
     },
     isFiltrate: true,
+    upload: {
+        title: undefined,
+        errorMessage: undefined,
+    },
 };
 
-const leadForGoogleDrive = (counter, title, projectId) => {
+const leadForGoogleDrive = (id, title, projectId) => {
     const settings = {
         data: {
-            id: { $set: `lead-${counter}` },
+            id: { $set: id },
             type: { $set: 'drive' },
         },
         form: { values: {
@@ -81,10 +90,10 @@ const leadForGoogleDrive = (counter, title, projectId) => {
     return update(leadReference, settings);
 };
 
-const leadForDropbox = (counter, title, projectId) => {
+const leadForDropbox = (id, title, projectId) => {
     const settings = {
         data: {
-            id: { $set: `lead-${counter}` },
+            id: { $set: id },
             type: { $set: 'dropbox' },
         },
         form: { values: {
@@ -95,10 +104,10 @@ const leadForDropbox = (counter, title, projectId) => {
     return update(leadReference, settings);
 };
 
-const leadForFile = (counter, title, projectId) => {
+const leadForFile = (id, title, projectId) => {
     const settings = {
         data: {
-            id: { $set: `lead-${counter}` },
+            id: { $set: id },
             type: { $set: 'file' },
         },
         uiState: {
@@ -108,32 +117,33 @@ const leadForFile = (counter, title, projectId) => {
             title: { $set: title },
             project: { $set: projectId },
         } },
+
     };
     return update(leadReference, settings);
 };
 
-const leadForWebsite = (counter, projectId) => {
+const leadForWebsite = (id, title, projectId) => {
     const settings = {
         data: {
-            id: { $set: `lead-${counter}` },
+            id: { $set: id },
             type: { $set: 'website' },
         },
         form: { values: {
-            title: { $set: `Lead #${counter}` },
+            title: { $set: title },
             project: { $set: projectId },
         } },
     };
     return update(leadReference, settings);
 };
 
-const leadForText = (counter, projectId) => {
+const leadForText = (id, title, projectId) => {
     const settings = {
         data: {
-            id: { $set: `lead-${counter}` },
+            id: { $set: id },
             type: { $set: 'text' },
         },
         form: { values: {
-            title: { $set: `Lead #${counter}` },
+            title: { $set: title },
             project: { $set: projectId },
         } },
     };
@@ -147,11 +157,16 @@ const propTypes = {
     leadsCount: PropTypes.number.isRequired,
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
+    onNewUploader: PropTypes.func.isRequired,
+    token: PropTypes.shape({
+        access: PropTypes.string,
+    }).isRequired,
 };
 
 const mapStateToProps = state => ({
     leadsCount: addLeadViewLeadsCountSelector(state),
     activeProject: activeProjectSelector(state),
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -167,6 +182,7 @@ export default class AddLeadFilter extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { dropboxDisabled: false };
+        this.uploadCoordinator = new UploadCoordinator();
     }
 
     handleAddLeadFromGoogleDrive = (response) => {
@@ -180,7 +196,7 @@ export default class AddLeadFilter extends React.PureComponent {
         let counter = this.props.leadsCount;
         docs.forEach((doc) => {
             counter += 1;
-            const newLead = leadForGoogleDrive(counter, doc.name, activeProject);
+            const newLead = leadForGoogleDrive(`lead-${counter}`, doc.name, activeProject);
             newLeads.unshift(newLead);
         });
         this.props.addLeads(newLeads);
@@ -195,7 +211,7 @@ export default class AddLeadFilter extends React.PureComponent {
         let counter = this.props.leadsCount;
         response.forEach((doc) => {
             counter += 1;
-            const newLead = leadForDropbox(counter, doc.name, activeProject);
+            const newLead = leadForDropbox(`lead-${counter}`, doc.name, activeProject);
             newLeads.unshift(newLead);
         });
         this.props.addLeads(newLeads);
@@ -209,20 +225,42 @@ export default class AddLeadFilter extends React.PureComponent {
 
         const { activeProject } = this.props;
         const newLeads = [];
-        let counter = this.props.leadsCount;
+
+        const {
+            addLeads,
+            leadsCount,
+            onNewUploader,
+            token,
+        } = this.props;
+
+        let counter = leadsCount;
+
         files.forEach((file) => {
             counter += 1;
-            const newLead = leadForFile(counter, file.name, activeProject);
+            const newLeadId = `lead-${counter}`;
+            const newLead = leadForFile(newLeadId, file.name, activeProject);
             newLeads.unshift(newLead);
+
+            const uploader = new Uploader(
+                file,
+                urlForUpload,
+                createHeaderForFileUpload(token),
+            );
+
+            onNewUploader(newLeadId, uploader);
+            this.uploadCoordinator.add(newLeadId, uploader);
         });
-        this.props.addLeads(newLeads);
+
+        console.warn('Uploading', newLeads);
+        addLeads(newLeads);
+        this.uploadCoordinator.queueAll();
     }
 
     handleAddLeadFromWebsite = () => {
         const { activeProject } = this.props;
         let counter = this.props.leadsCount;
         counter += 1;
-        const newLead = leadForWebsite(counter, activeProject);
+        const newLead = leadForWebsite(`lead-${counter}`, activeProject);
         this.props.addLeads([newLead]);
     }
 
@@ -230,7 +268,7 @@ export default class AddLeadFilter extends React.PureComponent {
         const { activeProject } = this.props;
         let counter = this.props.leadsCount;
         counter += 1;
-        const newLead = leadForText(counter, activeProject);
+        const newLead = leadForText(`lead-${counter}`, activeProject);
         this.props.addLeads([newLead]);
     }
 
