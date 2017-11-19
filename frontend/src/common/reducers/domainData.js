@@ -8,6 +8,7 @@ import {
     SET_USER_GROUP,
     UNSET_USER_GROUP,
     SET_USERS_MEMBERSHIP,
+    SET_USER_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
     UNSET_REGION,
@@ -215,6 +216,27 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     [action.userGroupId]: { $auto: {
                         memberships: { $autoArray: {
                             $push: newUsersMemberShip,
+                        } },
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
+        case SET_USER_MEMBERSHIP: {
+            const memberships = ((state.userGroups[action.userGroupId] || {}).memberships || []);
+            const updatedUsersMemberShipIndex = memberships.findIndex(
+                userMembership => (
+                    action.userMembership.id === userMembership.id
+                ),
+            );
+
+            const settings = {
+                userGroups: {
+                    [action.userGroupId]: { $auto: {
+                        memberships: { $autoArray: {
+                            [updatedUsersMemberShipIndex]: { $auto: {
+                                $merge: action.userMembership,
+                            } },
                         } },
                     } },
                 },

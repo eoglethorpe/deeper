@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, POST, DELETE, commonHeaderForPost, p } from '../config/rest';
+import { wsEndpoint, GET, POST, DELETE, PATCH, commonHeaderForPost, p } from '../config/rest';
 
 export const urlForUserMembership = `${wsEndpoint}/group-memberships/`;
 
@@ -59,3 +59,13 @@ export const createParamsForUserMembershipCreate = ({ access }, { memberList }) 
     }),
 });
 
+export const createParamsForUserMembershipRoleChange = ({ access }, { newRole }) => ({
+    method: PATCH,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify({
+        role: newRole,
+    }),
+});

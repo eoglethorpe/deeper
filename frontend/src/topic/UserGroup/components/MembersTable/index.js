@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Table,
@@ -8,14 +9,17 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter,
+    FormattedDate,
 } from '../../../../public/components/View';
 import {
     TextInput,
+    SelectInput,
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
     DangerButton,
     TransparentButton,
+    TransparentDangerButton,
     TransparentAccentButton,
 } from '../../../../public/components/Action';
 import {
@@ -23,12 +27,14 @@ import {
     usersInformationListSelector,
     unSetMembershipAction,
     setUsersMembershipAction,
+    setUserMembershipAction,
 } from '../../../../common/redux';
 import {
     createUrlForUserMembership,
     createParamsForUserMembershipDelete,
     createParamsForUserMembershipCreate,
     urlForUserMembership,
+    createParamsForUserMembershipRoleChange,
 } from '../../../../common/rest';
 
 import { RestBuilder } from '../../../../public/utils/rest';
@@ -44,6 +50,9 @@ const propTypes = {
     unSetMembership: PropTypes.func.isRequired, // eslint-disable-line
     userGroupId: PropTypes.number.isRequired,
     setUsersMembership: PropTypes.func.isRequired,
+    setUserMembership: PropTypes.func.isRequired,
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    isCurrentUserAdmin: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -57,6 +66,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     unSetMembership: params => dispatch(unSetMembershipAction(params)),
     setUsersMembership: params => dispatch(setUsersMembershipAction(params)),
+    setUserMembership: params => dispatch(setUserMembershipAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -76,8 +86,12 @@ export default class MembersTable extends React.PureComponent {
             nonMemberUsers: this.getNonMemberUsers(props.users, props.memberData),
             newMemberUsers: [],
             saveChangeDisabled: true,
+            searchMemberInputValue: '',
+            addMemberSelectInputValue: [],
+            newMembers: {},
+            memberData: this.props.memberData,
+            roleChangPending: false,
         };
-
         this.memberHeaders = [
             {
                 key: 'memberName',
@@ -106,26 +120,51 @@ export default class MembersTable extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.joinedAt - b.joinedAt,
+                modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'actions',
                 label: 'Actions',
                 order: 5,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentButton
-                            className="admin-btn"
-                        >
-                            <i className="ion-ios-locked" />
-                        </TransparentButton>
-                        <TransparentButton
-                            className="delete-btn"
-                            onClick={() => this.handleDeleteMemberClick(row)}
-                        >
-                            <i className="ion-android-delete" />
-                        </TransparentButton>
-                    </div>
-                ),
+                modifier: (row) => {
+                    const isAdmin = row.role === 'admin';
+                    const isCurrentUser = row.member === this.props.activeUser.userId;
+                    if (isCurrentUser || !this.props.isCurrentUserAdmin) {
+                        return (
+                            <div className="actions">
+                                <Link
+                                    title="View Member"
+                                    className="forward-btn"
+                                    key={row.member}
+                                    to={`/users/${row.member}/`}
+                                >
+                                    <i className="ion-forward" />
+                                </Link>
+                            </div>
+                        );
+                    }
+                    return (
+                        <div className="actions">
+                            <TransparentButton
+                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
+                                className="admin-btn"
+                                onClick={() => this.handleToggleMemberRole(row)}
+                            >
+                                {
+                                    isAdmin ? <i className="ion-locked" />
+                                        : <i className="ion-android-person" />
+                                }
+                            </TransparentButton>
+                            <TransparentButton
+                                title="Delete Member"
+                                className="delete-btn"
+                                onClick={() => this.handleDeleteMemberClick(row)}
+                            >
+                                <i className="ion-android-delete" />
+                            </TransparentButton>
+                        </div>
+                    );
+                },
             },
         ];
 
@@ -148,21 +187,35 @@ export default class MembersTable extends React.PureComponent {
                 key: 'actions',
                 label: 'Actions',
                 order: 5,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentAccentButton
-                            className="member-add-btn"
-                            onClick={() => this.handleAddNewMemberClick(row)}
-                        >
-                            <i className="ion-plus" />
-                        </TransparentAccentButton>
-                        <TransparentButton
-                            className="admin-btn"
-                        >
-                            <i className="ion-ios-locked" />
-                        </TransparentButton>
-                    </div>
-                ),
+                modifier: (row) => {
+                    const isAdmin = row.role === 'admin';
+                    return (
+                        <div className="actions">
+                            <TransparentButton
+                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
+                                className="admin-btn"
+                                onClick={() =>
+                                    this.handleRoleChangeForNewMember({
+                                        memberId: row.id,
+                                        newRole: isAdmin ? 'normal' : 'admin',
+                                    })
+                                }
+                            >
+                                {
+                                    isAdmin ? <i className="ion-locked" />
+                                        : <i className="ion-android-person" />
+                                }
+                            </TransparentButton>
+                            <TransparentDangerButton
+                                title="Remove Member"
+                                className="member-add-btn"
+                                onClick={() => this.handleRemoveSelectedMember(row)}
+                            >
+                                <i className="ion-close" />
+                            </TransparentDangerButton>
+                        </div>
+                    );
+                },
             },
         ];
     }
@@ -170,6 +223,7 @@ export default class MembersTable extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         this.setState({
             nonMemberUsers: this.getNonMemberUsers(nextProps.users, nextProps.memberData),
+            memberData: nextProps.memberData,
         });
     }
 
@@ -246,10 +300,10 @@ export default class MembersTable extends React.PureComponent {
                 try {
                     schema.validate(response, 'userMembershipCreateResponse');
                     this.props.setUsersMembership({
-                        usersMembership: response,
+                        usersMembership: response.results,
                         userGroupId,
                     });
-                    this.setState({ showAddMemberModal: false });
+                    this.handleAddMemberModalClose();
                 } catch (er) {
                     console.error(er);
                 }
@@ -264,8 +318,60 @@ export default class MembersTable extends React.PureComponent {
         return membershipDeleteRequest;
     }
 
-    handleAddNewMemberClick = (row) => {
-        console.log(row);
+    createRequestForMembershipRoleChange = ({ membershipId, newRole }) => {
+        const urlForUserMembershipPatch = createUrlForUserMembership(membershipId);
+        const userGroupId = this.props.userGroupId;
+
+        const membershipRoleChangeRequest = new RestBuilder()
+            .url(urlForUserMembershipPatch)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUserMembershipRoleChange(
+                    { access },
+                    { newRole },
+                );
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(1)
+            .preLoad(() => {
+                // TODO: use this state
+                this.setState({ roleChangPending: true });
+            })
+            .postLoad(() => {
+                this.setState({ roleChangPending: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate({ results: [response] }, 'userMembershipCreateResponse');
+                    this.props.setUserMembership({
+                        userMembership: response,
+                        userGroupId,
+                    });
+                    this.handleAddMemberModalClose();
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return membershipRoleChangeRequest;
+    }
+
+    handleRemoveSelectedMember = (row) => {
+        const newerMembers = { ...this.state.newMembers };
+        delete newerMembers[row.id];
+
+        this.setState({
+            newMembers: newerMembers,
+            addMemberSelectInputValue: Object.keys(newerMembers).map(id => +id),
+        });
     };
 
     handleAddMemberClick = (row) => {
@@ -279,7 +385,8 @@ export default class MembersTable extends React.PureComponent {
         this.setState({
             // editRow: {},
             showAddMemberModal: false,
-            newMemberUsers: [],
+            addMemberSelectInputValue: [],
+            newMembers: {},
             saveChangeDisabled: true,
         });
     }
@@ -295,36 +402,13 @@ export default class MembersTable extends React.PureComponent {
         this.setState({ showDeleteMemberModal: false });
     }
 
-    handleRoleChangeForNewMember = (memberId, newRole) => {
-        const { newMemberUsers } = this.state;
-        const newMemberArrayIndex = newMemberUsers.findIndex(
-            newMemberUser => (newMemberUser === memberId));
+    handleRoleChangeForNewMember = ({ memberId, newRole }) => {
+        const newMembers = { ...this.state.newMembers };
 
-        if (newMemberArrayIndex !== -1) {
-            const updatedNewMemberUsers = [...newMemberUsers];
-
-            updatedNewMemberUsers[newMemberArrayIndex] = {
-                ...newMemberUsers[newMemberArrayIndex],
-                role: newRole,
-            };
-
-            this.setState({
-                newMemberUsers: updatedNewMemberUsers,
-            });
-        }
-    }
-
-    addNewMember = (newMember) => {
-        const { newMemberUsers } = this.state;
-        const newMemberArrayIndex = newMemberUsers.findIndex(
-            newMemberUser => (newMemberUser.id === newMember.id));
-
-        if (newMemberArrayIndex !== -1) {
-            this.setState({
-                saveChangeDisabled: false,
-                newMemberUsers: [...this.state.newMemberUsers, newMember],
-            });
-        }
+        newMembers[memberId].role = newRole;
+        this.setState({
+            newMembers,
+        });
     }
 
     saveNewMemberChanges = () => {
@@ -332,23 +416,14 @@ export default class MembersTable extends React.PureComponent {
             this.requestForMembershipCreate.stop();
         }
 
-        /* NOTE: For pprabesh needed field for rest, TODO: remove this
-        const newMemberUsers = [
-            {
-                id: 1,
-                role: 'normal',
-                ...other fields
-            },
-        ];
-        */
-        const { newMemberUsers } = this.state;
+        const { newMembers } = this.state;
         const { userGroupId } = this.props;
 
-        const newMemberList = newMemberUsers.map(newMemberUser => (
+        const newMemberList = Object.keys(newMembers).map(id => (
             {
                 group: userGroupId,
-                member: newMemberUser.id,
-                role: newMemberUser.role,
+                member: newMembers[id].id,
+                role: newMembers[id].role,
             }
         ));
 
@@ -368,34 +443,107 @@ export default class MembersTable extends React.PureComponent {
         this.membershipDeleteRequest.start();
     }
 
-    render() {
-        const { memberData } = this.props;
+    applySearch = (memberData, searchInputValue) => {
+        const caseInsensitiveSubmatch = (str, value) => (
+            !value || (str || '').toLowerCase().includes(
+                (value || '').toLowerCase(),
+            )
+        );
 
+        const newMemberData = memberData.filter(
+            memberDatum => (
+                caseInsensitiveSubmatch(
+                    memberDatum.memberName,
+                    searchInputValue,
+                )
+            ),
+        );
+        return newMemberData;
+    };
+
+    handleSearchMemberChange = (value) => {
+        this.setState({
+            searchMemberInputValue: value,
+            memberData: this.applySearch(this.props.memberData, value),
+        });
+    }
+
+    handleToggleMemberRole = (member) => {
+        if (this.membershipRoleChangeRequest) {
+            this.membershipRoleChangeRequest.stop();
+        }
+
+        this.membershipRoleChangeRequest = this.createRequestForMembershipRoleChange({
+            membershipId: member.id,
+            newRole: member.role === 'admin' ? 'normal' : 'admin',
+        });
+
+        this.membershipRoleChangeRequest.start();
+    }
+
+    handleAddMemberSelectChange = (value) => {
+        const newMembers = { ...this.state.newMembers };
+        const removedNewMembersId = Object.keys(newMembers).filter(id => (
+            value.indexOf(id) === -1),
+        );
+
+        removedNewMembersId.forEach((id) => {
+            delete newMembers[id];
+        });
+
+        value.forEach((id) => {
+            if (newMembers[id]) {
+                return;
+            }
+            const currentMember = this.state.nonMemberUsers.find(user => user.id === id);
+            newMembers[id] = { ...currentMember };
+            newMembers[id].role = newMembers[id].role || 'normal';
+        });
+
+        this.setState({
+            addMemberSelectInputValue: value,
+            newMembers,
+            saveChangeDisabled: false,
+        });
+    }
+
+    render() {
         const {
             activeMemberDelete,
             deletePending,
-            showDeleteMemberModal,
-            newMemberUsers,
+            memberData,
             saveChangeDisabled,
+            showDeleteMemberModal,
+            searchMemberInputValue,
             showAddMemberModal,
+            addMemberSelectInputValue,
+            newMembers,
+            nonMemberUsers,
         } = this.state;
+
+        const newMemberList = Object.keys(newMembers).map(id => newMembers[id]);
 
         return (
             <div styleName="members">
                 <div styleName="header">
                     <TextInput
                         placeholder="Search Member"
+                        onChange={this.handleSearchMemberChange}
+                        value={searchMemberInputValue}
                         type="search"
                         styleName="search-input"
                         showLabel={false}
                         showHintAndError={false}
                     />
                     <div styleName="pusher" />
-                    <PrimaryButton
-                        onClick={this.handleAddMemberClick}
-                    >
-                        Add New Member
-                    </PrimaryButton>
+                    {
+                        this.props.isCurrentUserAdmin &&
+                        <PrimaryButton
+                            onClick={this.handleAddMemberClick}
+                        >
+                            Add New Member
+                        </PrimaryButton>
+                    }
                 </div>
                 <div styleName="content">
                     <Table
@@ -415,16 +563,21 @@ export default class MembersTable extends React.PureComponent {
                     <ModalBody
                         styleName="add-member-modal"
                     >
-                        <TextInput
+                        <SelectInput
                             placeholder="Search Member"
-                            type="search"
                             styleName="modal-search-input"
                             showLabel={false}
                             showHintAndError={false}
+                            options={nonMemberUsers}
+                            keySelector={(user = {}) => user.id}
+                            labelSelector={(user = {}) => user.displayName}
+                            value={addMemberSelectInputValue}
+                            onChange={this.handleAddMemberSelectChange}
+                            multiple
                         />
                         <div styleName="new-member-table">
                             <Table
-                                data={newMemberUsers}
+                                data={newMemberList}
                                 headers={this.newMemberHeaders}
                                 keyExtractor={rowData => rowData.id}
                             />
@@ -438,8 +591,8 @@ export default class MembersTable extends React.PureComponent {
                                 Cancel
                             </DangerButton>
                             <PrimaryButton
-                                onClick={this.saveNewMemberChanges}
                                 disabled={saveChangeDisabled}
+                                onClick={this.saveNewMemberChanges}
                             >
                                 Save changes
                             </PrimaryButton>

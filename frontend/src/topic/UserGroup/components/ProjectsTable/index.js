@@ -48,6 +48,7 @@ const propTypes = {
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
     unSetProject: PropTypes.func.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    isCurrentUserAdmin: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -78,6 +79,8 @@ export default class ProjectsTable extends React.PureComponent {
             showDeleteProjectModal: false,
             deletePending: false,
             activeProjectDelete: {},
+            searchProjectInputValue: '',
+            projects: this.props.projects,
         };
 
         this.projectHeaders = [
@@ -133,23 +136,25 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 8,
                 modifier: row => (
                     <div className="actions">
-                        <TransparentButton
-                            className="delete-btn"
-                            onClick={() => this.handleDeleteProjectClick(row)}
+                        {
+                            this.props.isCurrentUserAdmin &&
+                            <TransparentButton
+                                title="Delete Project"
+                                className="delete-btn"
+                                onClick={() => this.handleDeleteProjectClick(row)}
 
-                        >
-                            <i className="ion-android-delete" />
-                        </TransparentButton>
-                        <TransparentAccentButton
-                            className="forward-btn"
-                        >
-                            <Link
-                                key={row.id}
-                                to={`/${row.id}/projectpanel/`}
                             >
-                                <i className="ion-forward" />
-                            </Link>
-                        </TransparentAccentButton>
+                                <i className="ion-android-delete" />
+                            </TransparentButton>
+                        }
+                        <Link
+                            className="forward-btn"
+                            title="View Project"
+                            key={row.id}
+                            to={`/${row.id}/projectpanel/`}
+                        >
+                            <i className="ion-forward" />
+                        </Link>
                     </div>
                 ),
             },
@@ -161,6 +166,12 @@ export default class ProjectsTable extends React.PureComponent {
             this.props.match.params.userGroupId,
         );
         this.requestForUserGroupProjects.start();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            projects: nextProps.projects,
+        });
     }
 
     componentWillUnmount() {
@@ -278,16 +289,43 @@ export default class ProjectsTable extends React.PureComponent {
         });
     }
 
+    applySearch = (projects, searchInputValue) => {
+        const caseInsensitiveSubmatch = (str, value) => (
+            !value || (str || '').toLowerCase().includes(
+                (value || '').toLowerCase(),
+            )
+        );
+
+        const newProjects = projects.filter(
+            project => (
+                caseInsensitiveSubmatch(
+                    project.title,
+                    searchInputValue,
+                )
+            ),
+        );
+        return newProjects;
+    };
+
+    handleSearchProjectChange = (value) => {
+        this.setState({
+            searchProjectInputValue: value,
+            projects: this.applySearch(this.props.projects, value),
+        });
+    }
+
     keyExtractor = rowData => rowData.id
 
     render() {
-        const { projects, match } = this.props;
+        const { match } = this.props;
 
         const {
             activeProjectDelete,
             deletePending,
             showAddProjectModal,
             showDeleteProjectModal,
+            projects,
+            searchProjectInputValue,
         } = this.state;
 
         return (
@@ -295,17 +333,23 @@ export default class ProjectsTable extends React.PureComponent {
                 <div styleName="header">
                     <TextInput
                         placeholder="Search Projects"
+                        onChange={this.handleSearchProjectChange}
+                        value={searchProjectInputValue}
                         type="search"
                         styleName="search-input"
                         showLabel={false}
                         showHintAndError={false}
                     />
                     <div styleName="pusher" />
-                    <PrimaryButton
-                        onClick={this.handleAddProjectClick}
-                    >
-                        Add New Project
-                    </PrimaryButton>
+                    {
+                        this.props.isCurrentUserAdmin &&
+                        <PrimaryButton
+                            onClick={this.handleAddProjectClick}
+                            title="Project"
+                        >
+                            Add New Project
+                        </PrimaryButton>
+                    }
                 </div>
                 <div styleName="content">
                     <Table

@@ -78,6 +78,20 @@ const mapDispatchToProps = dispatch => ({
     unSetUserGroup: params => dispatch(unSetUserGroupAction(params)),
 });
 
+// TODO: move this to common
+const dateComparator = (a, b) => {
+    if (!a && !b) {
+        return 1;
+    } else if (!a) {
+        return -1;
+    } else if (!b) {
+        return 1;
+    }
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateA.getTime() - dateB.getTime();
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {
@@ -123,7 +137,7 @@ export default class UserGroup extends React.PureComponent {
                 label: 'Joined At',
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.joinedAt - b.joinedAt,
+                comparator: (a, b) => dateComparator(a.joinedAt, b.joinedAt),
                 modifier: (row) => {
                     const { userId } = this.props.match.params;
                     const { memberships = [] } = row;
@@ -149,6 +163,7 @@ export default class UserGroup extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
+                                title="View UserGroup"
                                 className={`
                                     ${styles['link-to-usergroup']}
                                     ${styles['action-button']}
@@ -163,6 +178,7 @@ export default class UserGroup extends React.PureComponent {
                     const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
                     return ([
                         <Link
+                            title="Edit UserGroup"
                             className={`
                                 ${styles['link-to-usergroup']}
                                 ${styles['action-button']}
@@ -174,6 +190,7 @@ export default class UserGroup extends React.PureComponent {
                         </Link>,
                         <TransparentButton
                             key="delete"
+                            title="Delete UserGroup"
                             className={`
                                 ${styles['delete-btn']}
                                 ${styles['action-button']}
