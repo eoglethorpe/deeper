@@ -25,9 +25,10 @@ export default class ProjectDetails extends React.PureComponent {
                     </TabLink>
                     <TabLink
                         styleName="tab-header"
-                        to="geo-areas"
+                        to="project-regions"
+                        default
                     >
-                        Geo Areas
+                        Regions
                     </TabLink>
                     <TabLink
                         styleName="tab-header"
@@ -46,7 +47,7 @@ export default class ProjectDetails extends React.PureComponent {
                         <ProjectGeneral />
                     </TabContent>
                     <TabContent
-                        for="geo-areas"
+                        for="project-regions"
                         styleName="tab"
                     >
                         <ProjectRegions />

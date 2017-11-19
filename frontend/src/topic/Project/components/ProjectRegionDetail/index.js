@@ -5,6 +5,10 @@ import { connect } from 'react-redux';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
+    DangerButton,
+    PrimaryButton,
+} from '../../../../public/components/Action';
+import {
     createParamsForUser,
     createUrlForRegion,
 } from '../../../../common/rest';
@@ -92,20 +96,55 @@ export default class ProjectRegionDetail extends React.PureComponent {
             regionDetails,
         } = this.props;
 
+        const isPublic = regionDetails.public;
+        console.log(isPublic);
+
         return (
-            <div styleName="region-details">
-                <div styleName="form-map-container">
-                    <RegionDetailForm
-                        styleName="country-general-form"
-                        regionDetail={regionDetails}
-                    />
-                    <div styleName="map-container">
-                        The map
+            <div styleName="region-details-container">
+                <header styleName="header">
+                    <h2>
+                        {regionDetails.title}
+                    </h2>
+                    <div styleName="action-btns">
+                        <DangerButton>
+                            Remove Region
+                        </DangerButton>
+                        {isPublic &&
+                            <PrimaryButton
+                                styleName="clone-btn"
+                            >
+                                Clone and Edit
+                            </PrimaryButton>
+                        }
                     </div>
-                </div>
-                <RegionAdminLevel
-                    regionId={regionId}
-                />
+                </header>
+                {!isPublic &&
+                    <div styleName="region-details">
+                        <RegionDetailForm
+                            styleName="region-general-form"
+                            regionDetail={regionDetails}
+                        />
+                        <div styleName="map-details">
+                            <div styleName="map-container">
+                                The map
+                            </div>
+                            <RegionAdminLevel
+                                styleName="admin-levels"
+                                regionId={regionId}
+                            />
+                        </div>
+                    </div>
+                }
+                {isPublic &&
+                    <div styleName="region-details-non-edit">
+                        <div styleName="details-non-edit">
+                            Region Details
+                        </div>
+                        <div styleName="map-container-non-edit">
+                            The map
+                        </div>
+                    </div>
+                }
             </div>
         );
     }

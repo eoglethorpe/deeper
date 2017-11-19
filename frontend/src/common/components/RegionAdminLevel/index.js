@@ -22,6 +22,7 @@ import EditAdminLevel from '../EditAdminLevel';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     adminLevelList: PropTypes.arrayOf(
         PropTypes.shape({
             adminLevelId: PropTypes.number,
@@ -36,6 +37,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     adminLevelList: [],
 };
 
@@ -139,9 +141,13 @@ export default class RegionAdminLevel extends React.PureComponent {
         const {
             displayAdminLevelList,
         } = this.state;
+        const { className } = this.props;
 
         return (
-            <div styleName="admin-levels">
+            <div
+                className={className}
+                styleName="admin-levels"
+            >
                 <div styleName="header">
                     Admin Levels
                     <TransparentPrimaryButton onClick={this.addAdminLevel}>

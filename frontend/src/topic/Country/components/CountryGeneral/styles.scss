@@ -2,26 +2,31 @@
 @import '../../../../stylesheets/modal';
 
 .country-general {
+    display: flex;
     height: 100%;
 
-    .form-map-container {
-        display: flex;
-        justify-content: space-between;
-        height: 60%;
+    .country-general-form {
+        flex-basis: 30%;
+        border-right: $width-separator-thin solid $color-hover;
+        padding: $spacing-large;
+        min-width: 240px;
+        height: 100%;
+        overflow: auto;
+    }
 
-        .country-general-form {
-            flex-basis: 36%;
-            padding: $spacing-large;
-            height: 100%;
-            overflow: auto;
-        }
+    .map-details {
+        flex-grow: 1;
 
         .map-container {
             display: flex;
-            flex-basis: 64%;
             align-items: center;
             justify-content: center;
             border: $width-separator-thin solid $color-separator;
+            height: 50%;
+        }
+
+        .admin-levels {
+            height: 50%;
         }
     }
 }

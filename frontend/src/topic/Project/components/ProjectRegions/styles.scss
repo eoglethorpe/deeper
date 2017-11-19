@@ -18,6 +18,30 @@ $height-full-page: calc(
         flex-basis: 20%;
         min-width: 320px;
         height: $height-full-page;
+        $height-header: 96px;
+
+        .list-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-extra-small $spacing-medium;
+            height: $height-header;
+
+            .search-input {
+                padding: 0;
+
+                :global .error {
+                    display: none;
+                }
+            }
+
+            .header-text {
+                text-transform: uppercase;
+                font-size: $font-size-extra-large;
+            }
+        }
 
         .list {
             height: calc(#{$height-full-page} - #{$height-header});

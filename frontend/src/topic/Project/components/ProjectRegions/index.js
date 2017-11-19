@@ -4,8 +4,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    PrimaryButton,
     TransparentButton,
 } from '../../../../public/components/Action';
+import {
+    TextInput,
+} from '../../../../public/components/Input';
 import {
     ListItem,
     ListView,
@@ -104,6 +108,24 @@ export default class ProjectRegions extends React.PureComponent {
         return (
             <div styleName="project-regions">
                 <div styleName="list-container">
+                    <div styleName="list-header">
+                        <h1 styleName="header-text">
+                            Regions
+                        </h1>
+                        <PrimaryButton
+                            iconName="ion-plus"
+                            onClick={this.onAddRegion}
+                        >
+                            Add Region
+                        </PrimaryButton>
+                        <TextInput
+                            styleName="search-input"
+                            onChange={this.search}
+                            placeholder="Search Regions"
+                            type="search"
+                            value={this.state.searchInputValue}
+                        />
+                    </div>
                     <ListView
                         styleName="list"
                         modifier={this.renderRegionList}

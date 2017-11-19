@@ -205,9 +205,7 @@ export default class ProjectPanel extends React.PureComponent {
         const { projectDetails } = this.props;
 
         return (
-            <div
-                styleName="project-panel"
-            >
+            <div styleName="project-panel">
                 <Helmet>
                     <title>{ pageTitles.projectPanel }</title>
                 </Helmet>
