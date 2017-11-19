@@ -80,6 +80,20 @@ const mapDispatchToProps = dispatch => ({
     unSetProject: params => dispatch(unSetProjectAction(params)),
 });
 
+// TODO: move this to common
+const dateComparator = (a, b) => {
+    if (!a && !b) {
+        return 1;
+    } else if (!a) {
+        return -1;
+    } else if (!b) {
+        return 1;
+    }
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateA.getTime() - dateB.getTime();
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserProject extends React.PureComponent {
@@ -126,7 +140,7 @@ export default class UserProject extends React.PureComponent {
                 label: 'Created at',
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.createdAt - b.createdAt,
+                comparator: (a, b) => dateComparator(a.createdAt, b.createdAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}
@@ -139,7 +153,7 @@ export default class UserProject extends React.PureComponent {
                 label: 'Last Modified at',
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => a.modifiedAt - b.modifiedAt,
+                comparator: (a, b) => dateComparator(a.modifiedAt, b.modifiedAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.modifiedAt}
@@ -151,8 +165,6 @@ export default class UserProject extends React.PureComponent {
                 key: 'status',
                 label: 'Status',
                 order: 5,
-                sortable: true,
-                comparator: (a, b) => a.status.localeCompare(b.status),
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
@@ -175,6 +187,7 @@ export default class UserProject extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
+                                title="View Project"
                                 className={`
                                     ${styles['link-to-project']}
                                     ${styles['action-button']}
@@ -189,6 +202,7 @@ export default class UserProject extends React.PureComponent {
                     const onDeleteClick = () => this.handleDeleteProjectClick(d.id);
                     return ([
                         <Link
+                            title="Edit Project"
                             className={`
                                 ${styles['link-to-project']}
                                 ${styles['action-button']}
@@ -200,6 +214,7 @@ export default class UserProject extends React.PureComponent {
                         </Link>,
                         <TransparentButton
                             key="delete"
+                            title="Delete Project"
                             className={`
                                 ${styles['delete-btn']}
                                 ${styles['action-button']}

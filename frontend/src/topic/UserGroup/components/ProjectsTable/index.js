@@ -139,6 +139,7 @@ export default class ProjectsTable extends React.PureComponent {
                         {
                             this.props.isCurrentUserAdmin &&
                             <TransparentButton
+                                title="Delete Project"
                                 className="delete-btn"
                                 onClick={() => this.handleDeleteProjectClick(row)}
 
@@ -146,16 +147,14 @@ export default class ProjectsTable extends React.PureComponent {
                                 <i className="ion-android-delete" />
                             </TransparentButton>
                         }
-                        <TransparentAccentButton
+                        <Link
                             className="forward-btn"
+                            title="View Project"
+                            key={row.id}
+                            to={`/${row.id}/projectpanel/`}
                         >
-                            <Link
-                                key={row.id}
-                                to={`/${row.id}/projectpanel/`}
-                            >
-                                <i className="ion-forward" />
-                            </Link>
-                        </TransparentAccentButton>
+                            <i className="ion-forward" />
+                        </Link>
                     </div>
                 ),
             },
@@ -346,6 +345,7 @@ export default class ProjectsTable extends React.PureComponent {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
+                            title="Project"
                         >
                             Add New Project
                         </PrimaryButton>

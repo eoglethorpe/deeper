@@ -132,22 +132,21 @@ export default class MembersTable extends React.PureComponent {
                     if (isCurrentUser || !this.props.isCurrentUserAdmin) {
                         return (
                             <div className="actions">
-                                <TransparentAccentButton
+                                <Link
+                                    title="View Member"
                                     className="forward-btn"
+                                    key={row.member}
+                                    to={`/users/${row.member}/`}
                                 >
-                                    <Link
-                                        key={row.member}
-                                        to={`/users/${row.member}/`}
-                                    >
-                                        <i className="ion-forward" />
-                                    </Link>
-                                </TransparentAccentButton>
+                                    <i className="ion-forward" />
+                                </Link>
                             </div>
                         );
                     }
                     return (
                         <div className="actions">
                             <TransparentButton
+                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
                                 className="admin-btn"
                                 onClick={() => this.handleToggleMemberRole(row)}
                             >
@@ -157,6 +156,7 @@ export default class MembersTable extends React.PureComponent {
                                 }
                             </TransparentButton>
                             <TransparentButton
+                                title="Delete Member"
                                 className="delete-btn"
                                 onClick={() => this.handleDeleteMemberClick(row)}
                             >
@@ -192,6 +192,7 @@ export default class MembersTable extends React.PureComponent {
                     return (
                         <div className="actions">
                             <TransparentButton
+                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
                                 className="admin-btn"
                                 onClick={() =>
                                     this.handleRoleChangeForNewMember({
@@ -206,6 +207,7 @@ export default class MembersTable extends React.PureComponent {
                                 }
                             </TransparentButton>
                             <TransparentDangerButton
+                                title="Remove Member"
                                 className="member-add-btn"
                                 onClick={() => this.handleRemoveSelectedMember(row)}
                             >
