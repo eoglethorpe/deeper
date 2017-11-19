@@ -10,7 +10,7 @@ const initialAuthState = {
     activeUser: {
         userId: undefined,
         username: undefined,
-        displayName: undefined,
+        displayName: undefined, // can change later
         exp: undefined,
     },
 };
