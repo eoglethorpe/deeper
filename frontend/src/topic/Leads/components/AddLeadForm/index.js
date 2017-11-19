@@ -62,7 +62,7 @@ export default class AddLeadForm extends React.PureComponent {
             'date',
             'url',
             'website',
-            'server_id',
+            'attachment',
             'text',
         ];
 
@@ -77,7 +77,7 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
-            // TODO: add validation for server_id
+            // TODO: add validation for attachment 
         };
     }
 
@@ -131,8 +131,6 @@ export default class AddLeadForm extends React.PureComponent {
             onPrev,
             onNext,
         } = this;
-
-        console.warn('Form', lead);
 
         return (
             <Form
@@ -285,9 +283,9 @@ export default class AddLeadForm extends React.PureComponent {
                             }
                         </p>,
                         <HiddenInput
-                            formname="server_id"
+                            formname="attachment"
                             key="input"
-                            value={values.server_id}
+                            value={values.attachment}
                         />,
                     ])
                 }

@@ -251,7 +251,6 @@ export default class AddLeadFilter extends React.PureComponent {
             this.uploadCoordinator.add(newLeadId, uploader);
         });
 
-        console.warn('Uploading', newLeads);
         addLeads(newLeads);
         this.uploadCoordinator.queueAll();
     }
@@ -260,7 +259,7 @@ export default class AddLeadFilter extends React.PureComponent {
         const { activeProject } = this.props;
         let counter = this.props.leadsCount;
         counter += 1;
-        const newLead = leadForWebsite(`lead-${counter}`, activeProject);
+        const newLead = leadForWebsite(`lead-${counter}`, `Lead #${counter}`, activeProject);
         this.props.addLeads([newLead]);
     }
 
@@ -268,7 +267,7 @@ export default class AddLeadFilter extends React.PureComponent {
         const { activeProject } = this.props;
         let counter = this.props.leadsCount;
         counter += 1;
-        const newLead = leadForText(`lead-${counter}`, activeProject);
+        const newLead = leadForText(`lead-${counter}`, `Lead #${counter}`, activeProject);
         this.props.addLeads([newLead]);
     }
 

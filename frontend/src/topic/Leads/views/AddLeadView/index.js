@@ -276,7 +276,13 @@ export default class AddLeadView extends React.PureComponent {
                     title: { $set: response.title },
                 },
                 form: {
+                    values: {
+                        attachment: { $set: response.id },
+                    },
                     errors: { $set: [] },
+                },
+                uiState: {
+                    ready: { $set: true },
                 },
             };
         } else {
@@ -292,7 +298,13 @@ export default class AddLeadView extends React.PureComponent {
                     errorMessage: { $set: `Failed to upload file (${status})` },
                 },
                 form: {
+                    values: {
+                        attachment: { $set: undefined },
+                    },
                     errors: { $set: [`Failed to upload file (${status})`] },
+                },
+                uiState: {
+                    ready: { $set: false },
                 },
             };
         }
@@ -313,6 +325,7 @@ export default class AddLeadView extends React.PureComponent {
             formErrors: errors,
             formFieldErrors: fieldErrors,
             upload: newLead.upload,
+            uiState: newLead.uiState,
         });
 
         this.setState({
@@ -342,26 +355,23 @@ export default class AddLeadView extends React.PureComponent {
             leadUploads,
         } = this.state;
 
-        // eslint-disable-next-line no-param-reassign
-        uploader.onLoad = (status, response) => {
-            this.handleLeadUploadComplete(leadId, status, response);
+        const id = leadId;
+        const u = uploader;
+
+        u.onLoad = (status, response) => {
+            this.handleLeadUploadComplete(id, status, response);
         };
 
-        // eslint-disable-next-line no-param-reassign
-        uploader.onProgress = (progress) => {
-            this.handleLeadUploadProgress(leadId, progress);
+        u.onProgress = (progress) => {
+            this.handleLeadUploadProgress(id, progress);
         };
 
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 0 },
-                isCompleted: { $set: false },
-            } },
+        leadUploads[id] = {
+            progress: 0,
+            isCompleted: false,
         };
-
-        const newLeadUploads = update(leadUploads, settings);
         this.setState({
-            leadUploads: newLeadUploads,
+            leadUploads,
         });
     }
 
