@@ -10,6 +10,7 @@ import {
 } from '../../../../public/components/Input';
 
 import { RestBuilder } from '../../../../public/utils/rest';
+import { isTruthy } from '../../../../public/utils/common';
 
 import {
     createParamsForUser,
@@ -228,6 +229,12 @@ export default class FilterLeadsForm extends React.PureComponent {
                     keySelector={FilterLeadsForm.optionKeySelector}
                     value={formValues.status}
                 />
+                <div
+                    styleName="filter"
+                    hidden={isTruthy(formValues.similarLead)}
+                >
+                    {formValues.similarLead}
+                </div>
                 <Button
                     styleName="apply-filter-btn"
                     disabled={!stale}

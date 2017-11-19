@@ -177,6 +177,12 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton
+                            tooltip="Search similar lead"
+                            onClick={() => this.handleSearchSimilarLead(row)}
+                        >
+                            <i className="ion-search" />
+                        </TransparentButton>
+                        <TransparentButton
                             tooltip="Edit lead"
                             onClick={() => this.handleEditLeadClick(row)}
                         >
@@ -395,6 +401,10 @@ export default class Leads extends React.PureComponent {
     handlePageClick = (page) => {
         this.props.setLeadPageActivePage({ activePage: page });
     }
+
+    handleSearchSimilarLead = (row) => {
+        console.log(row);
+    };
 
     isColumnClickable = key => (
         ['actions'].indexOf(key) === -1
