@@ -11,7 +11,7 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 
-export const countryIdFromProps = (state, { countryId }) => countryId;
+export const regionIdFromProps = (state, { regionId }) => regionId;
 
 // Using state
 
@@ -51,12 +51,19 @@ export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
 );
 
-// FIXME: rename to adminLevelForCountrySelector
-export const adminLevelSelector = createSelector(
+export const adminLevelForRegionSelector = createSelector(
     adminLevelsSelector,
-    countryIdFromProps,
-    (adminLevels, countryId) => (
-        adminLevels[countryId] || emptyList
+    regionIdFromProps,
+    (adminLevels, regionId) => (
+        adminLevels[regionId] || emptyList
+    ),
+);
+
+export const regionDetailForRegionSelector = createSelector(
+    regionsSelector,
+    regionIdFromProps,
+    (regions, regionId) => (
+        regions[regionId] || emptyObject
     ),
 );
 

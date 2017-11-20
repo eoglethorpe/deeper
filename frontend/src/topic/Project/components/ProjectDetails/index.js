@@ -3,7 +3,7 @@ import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import ProjectGeneral from '../ProjectGeneral';
-import ProjectGeoRegions from '../ProjectGeoRegions';
+import ProjectRegions from '../ProjectRegions';
 import ProjectAnalysisFramework from '../ProjectAnalysisFramework';
 import styles from './styles.scss';
 
@@ -14,6 +14,7 @@ export default class ProjectDetails extends React.PureComponent {
             <Tabs
                 activeLinkStyle={{ none: 'none' }}
                 styleName="tabs-container"
+                renderActiveTabContentOnly
             >
                 <div styleName="tabs-header-container">
                     <TabLink
@@ -24,9 +25,10 @@ export default class ProjectDetails extends React.PureComponent {
                     </TabLink>
                     <TabLink
                         styleName="tab-header"
-                        to="geo-areas"
+                        to="project-regions"
+                        default
                     >
-                        Geo Areas
+                        Regions
                     </TabLink>
                     <TabLink
                         styleName="tab-header"
@@ -45,10 +47,10 @@ export default class ProjectDetails extends React.PureComponent {
                         <ProjectGeneral />
                     </TabContent>
                     <TabContent
-                        for="geo-areas"
+                        for="project-regions"
                         styleName="tab"
                     >
-                        <ProjectGeoRegions />
+                        <ProjectRegions />
                     </TabContent>
                     <TabContent
                         for="analysis-framework"

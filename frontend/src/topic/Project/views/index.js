@@ -205,9 +205,7 @@ export default class ProjectPanel extends React.PureComponent {
         const { projectDetails } = this.props;
 
         return (
-            <div
-                styleName="project-panel"
-            >
+            <div styleName="project-panel">
                 <Helmet>
                     <title>{ pageTitles.projectPanel }</title>
                 </Helmet>
@@ -224,7 +222,7 @@ export default class ProjectPanel extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     </header>
-                    <ProjectDetails />
+                    <ProjectDetails project={projectDetails} />
                 </div>
                 <div
                     styleName={sideBarVisibility ? 'side-bar show' : 'side-bar'}

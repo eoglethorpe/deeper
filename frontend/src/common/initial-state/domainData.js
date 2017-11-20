@@ -328,7 +328,7 @@ const initialDomainDataState = {
     },
 
     adminLevels: {
-        1: [
+        804: [
             {
                 adminLevelId: 1,
                 level: 1,

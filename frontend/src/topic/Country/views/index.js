@@ -117,7 +117,7 @@ export default class CountryPanel extends React.PureComponent {
                         regions: response.results,
                     });
                 } catch (er) {
-                    console.error(er);
+                    console.error(er, response);
                 }
             })
             .build();
@@ -301,7 +301,10 @@ export default class CountryPanel extends React.PureComponent {
         if (activeCountryIndex >= 0) {
             return (
                 <div styleName="country-details">
-                    <CountryDetail countryId={activeCountry} />
+                    <CountryDetail
+                        key={activeCountry}
+                        countryId={activeCountry}
+                    />
                 </div>
             );
         }

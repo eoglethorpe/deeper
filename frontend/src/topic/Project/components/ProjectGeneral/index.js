@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+import {
     DateInput,
     Form,
     NonFieldErrors,
@@ -112,15 +115,7 @@ export default class ProjectGeneral extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
             >
-                {
-                    pending &&
-                        <div styleName="pending-overlay">
-                            <i
-                                className="ion-load-c"
-                                styleName="loading-icon"
-                            />
-                        </div>
-                }
+                { pending && <LoadingAnimation /> }
                 <header styleName="header">
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">

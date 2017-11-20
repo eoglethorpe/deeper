@@ -12,6 +12,7 @@ import {
     UNSET_USER_MEMBERSHIP,
     DUMMY_ACTION,
     SET_REGIONS,
+    SET_REGION_DETAILS,
     ADD_NEW_REGION,
     UNSET_REGION,
     SET_LEADS,
@@ -99,6 +100,12 @@ export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => 
     type: SET_LEAD_FILTER_OPTIONS,
     projectId,
     leadFilterOptions,
+});
+
+export const setRegionDetailsAction = ({ regionDetails, regionId }) => ({
+    type: SET_REGION_DETAILS,
+    regionId,
+    regionDetails,
 });
 
 export const setRegionsAction = ({ regions }) => ({
