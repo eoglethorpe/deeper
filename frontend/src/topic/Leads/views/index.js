@@ -177,13 +177,13 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton
-                            tooltip="Search similar lead"
+                            title="Search similar lead"
                             onClick={() => this.handleSearchSimilarLead(row)}
                         >
                             <i className="ion-search" />
                         </TransparentButton>
                         <TransparentButton
-                            tooltip="Edit lead"
+                            title="Edit lead"
                             onClick={() => this.handleEditLeadClick(row)}
                         >
                             <i className="ion-edit" />
@@ -245,6 +245,7 @@ export default class Leads extends React.PureComponent {
             filters,
             activePage,
         } = nextProps;
+
         if (
             this.props.activeProject !== activeProject ||
             this.props.activeSort !== activeSort ||
@@ -272,12 +273,12 @@ export default class Leads extends React.PureComponent {
             const filter = filters[key];
             switch (key) {
                 case 'created_at':
-                    requestFilters.created_at__gte = '2010-10-12';
-                    requestFilters.created_at__lte = '2019-12-01';
+                    // requestFilters.created_at__gte = '2010-10-12';
+                    // requestFilters.created_at__lte = '2019-12-01';
                     break;
                 case 'published_on':
-                    requestFilters.published_on__gte = '2010-09-01';
-                    requestFilters.published_on__lte = '2019-12-01';
+                    // requestFilters.published_on__gte = '2010-09-01';
+                    // requestFilters.published_on__lte = '2019-12-01';
                     break;
                 default:
                     requestFilters[key] = filter;
@@ -403,7 +404,12 @@ export default class Leads extends React.PureComponent {
     }
 
     handleSearchSimilarLead = (row) => {
-        console.log(row);
+        this.props.setLeadPageFilter({
+            filters: {
+                ...this.props.filters,
+                similar: row.id,
+            },
+        });
     };
 
     isColumnClickable = key => (

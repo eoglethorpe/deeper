@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from '../../../../public/components/Action';
+import { Button, TransparentButton } from '../../../../public/components/Action';
 import {
     Form,
     SelectInput,
@@ -54,7 +54,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class FilterLeadsForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -94,12 +94,17 @@ export default class FilterLeadsForm extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { value, activeProject } = nextProps;
         if (this.props.value !== value) {
-            console.warn('new value', value);
-            this.setState({ formValues: value }, () => console.warn(this.state));
+            this.setState({ formValues: value });
         }
         if (this.props.activeProject !== activeProject) {
             this.requestProjectLeadFilterOptions(activeProject);
         }
+    }
+
+    clearSimilarselection = () => {
+        this.handleChange({
+            selected: undefined,
+        });
     }
 
     requestProjectLeadFilterOptions = (activeProject) => {
@@ -149,7 +154,6 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     handleChange = (values) => {
-        console.error(values);
         this.setState({
             formValues: { ...this.state.formValues, ...values },
             stale: true,
@@ -235,6 +239,18 @@ export default class FilterLeadsForm extends React.PureComponent {
                 >
                     {formValues.similarLead}
                 </div>
+                {isTruthy(formValues.similar) && (
+                    <div
+                        styleName="filter similar"
+                    >
+                        Showing similar leads
+                        <TransparentButton
+                            onClick={this.clearSimilarselection}
+                        >
+                            <span className="ion-android-close" />
+                        </TransparentButton>
+                    </div>
+                )}
                 <Button
                     styleName="apply-filter-btn"
                     disabled={!stale}
