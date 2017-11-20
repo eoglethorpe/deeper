@@ -77,7 +77,7 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
-            // TODO: add validation for attachment 
+            // TODO: add validation for attachment
         };
     }
 
