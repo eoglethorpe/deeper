@@ -209,9 +209,8 @@ export default class UserEdit extends React.PureComponent {
         );
 
         uploader.onLoad = (status, response) => {
-            const r = JSON.parse(response);
             this.setState({
-                formValues: { ...this.state.formValues, displayPicture: r.id },
+                formValues: { ...this.state.formValues, displayPicture: response.id },
                 stale: true,
             });
         };

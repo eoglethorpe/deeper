@@ -8,6 +8,7 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
+    FormattedDate,
 } from '../../../../public/components/View';
 import {
     TextInput,
@@ -94,11 +95,13 @@ export default class ProjectsTable extends React.PureComponent {
                 key: 'createdAt',
                 label: 'Created at',
                 order: 2,
+                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'startDate',
                 label: 'Start Date',
                 order: 3,
+                modifier: row => <FormattedDate date={row.startDate} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'countries',
@@ -120,6 +123,7 @@ export default class ProjectsTable extends React.PureComponent {
                 key: 'modifiedAt',
                 label: 'Last Modified at',
                 order: 6,
+                modifier: row => <FormattedDate date={row.modifiedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'members',
@@ -152,7 +156,7 @@ export default class ProjectsTable extends React.PureComponent {
                             key={row.id}
                             to={`/${row.id}/projectpanel/`}
                         >
-                            <i className="ion-forward" />
+                            <span className="ion-android-open" />
                         </Link>
                     </div>
                 ),
