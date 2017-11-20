@@ -27,6 +27,9 @@ const propTypes = {
     activeLeadId: PropTypes.string.isRequired,
     setActiveLeadId: PropTypes.func.isRequired,
     leadsFiltered: PropTypes.array.isRequired, // eslint-disable-line
+    leadUploads: PropTypes.shape({
+        dummy: PropTypes.string,
+    }).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -46,14 +49,21 @@ export default class AddLeadFilter extends React.PureComponent {
 
     calcLeadKey = lead => lead.data.id
 
-    renderLeadItem = (key, lead) => (
-        <AddLeadListItem
-            active={this.props.activeLeadId === lead.data.id}
-            key={key}
-            lead={lead}
-            onClick={() => this.props.setActiveLeadId(lead.data.id)}
-        />
-    )
+    renderLeadItem = (key, lead) => {
+        const {
+            leadUploads,
+        } = this.props;
+
+        return (
+            <AddLeadListItem
+                active={this.props.activeLeadId === lead.data.id}
+                key={key}
+                lead={lead}
+                onClick={() => this.props.setActiveLeadId(lead.data.id)}
+                upload={leadUploads[key]}
+            />
+        );
+    }
 
     render() {
         const { leadsFiltered } = this.props;

@@ -14,11 +14,16 @@ const propTypes = {
     lead: PropTypes.shape({
         dummy: PropTypes.string,
     }).isRequired,
+
+    upload: PropTypes.shape({
+        dummy: PropTypes.string,
+    }),
 };
 
 const defaultProps = {
     active: false,
     className: '',
+    upload: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -48,6 +53,7 @@ export default class AddLeadListItem extends React.PureComponent {
             className,
             onClick,
             lead,
+            upload,
         } = this.props;
         const {
             data,
@@ -66,10 +72,6 @@ export default class AddLeadListItem extends React.PureComponent {
             error,
             stale,
         } = lead.uiState;
-
-        const {
-            upload,
-        } = lead;
 
         return (
             <button
@@ -111,7 +113,7 @@ export default class AddLeadListItem extends React.PureComponent {
                     )
                 }
                 {
-                    upload && (
+                    upload && !upload.errorMsg && (
                         <span
                             styleName={`
                                 progress-bar

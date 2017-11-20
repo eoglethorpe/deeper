@@ -43,7 +43,6 @@ const propTypes = {
 
 const defaultProps = {
     className: '',
-    uploadData: {},
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -63,7 +62,7 @@ export default class AddLeadForm extends React.PureComponent {
             'date',
             'url',
             'website',
-            'server_id',
+            'attachment',
             'text',
         ];
 
@@ -78,7 +77,7 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
-            // TODO: add validation for server_id
+            // TODO: add validation for attachment
         };
     }
 
@@ -275,18 +274,18 @@ export default class AddLeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            {/*
-                                lead.upload.error ? (
-                                    lead.upload.error
+                            {
+                                lead.upload.errorMessage ? (
+                                    lead.upload.errorMessage
                                 ) : (
                                     lead.upload.title
                                 )
-                            */}
+                            }
                         </p>,
                         <HiddenInput
-                            formname="server_id"
+                            formname="attachment"
                             key="input"
-                            value={values.server_id}
+                            value={values.attachment}
                         />,
                     ])
                 }

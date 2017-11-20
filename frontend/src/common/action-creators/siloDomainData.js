@@ -40,12 +40,16 @@ export const addAddLeadViewLeadsAction = leads => ({
     leads,
 });
 
-export const addLeadViewLeadChangeAction = ({ leadId, values, formErrors, formFieldErrors }) => ({
+export const addLeadViewLeadChangeAction = ({
+    leadId, values, formErrors, formFieldErrors, upload, uiState,
+}) => ({
     type: ADD_LEAD_VIEW_LEAD_CHANGE,
     leadId,
     values,
     formErrors,
     formFieldErrors,
+    upload,
+    uiState,
 });
 
 export const addLeadViewLeadSetPendingAction = ({ leadId, pending }) => ({

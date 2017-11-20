@@ -139,11 +139,15 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
                 values,
                 formErrors,
                 formFieldErrors,
+                upload = {},
+                uiState = {},
             } = action;
 
             const index = state.addLeadView.leads.findIndex(
                 lead => lead.data.id === leadId,
             );
+
+            const currentLead = state.addLeadView.leads[index];
 
             // NOTE: if values is defined, it is onChange else onFailure action
             // stale must be true if onChange
@@ -155,13 +159,16 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
                                 $merge: {
                                     stale: !!values,
                                     error: false,
+                                    ready: uiState.ready || currentLead.uiState.ready,
                                 },
                             },
                             form: {
                                 values: { $merge: values || {} },
-                                errors: { $merge: formErrors },
+                                errors: { $set: formErrors },
                                 fieldErrors: { $merge: formFieldErrors },
                             },
+
+                            upload: { $merge: upload },
                         },
                     },
                 },

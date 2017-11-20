@@ -15,7 +15,6 @@ import {
 import {
     PrimaryButton,
     TransparentButton,
-    TransparentAccentButton,
 } from '../../../../public/components/Action';
 import {
     UserProjectAdd,

@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import update from '../../../../public/utils/immutable-update';
 import { RestBuilder } from '../../../../public/utils/rest';
 
 import {
@@ -89,6 +90,14 @@ const defaultProps = {
 export default class AddLeadView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            leadUploads: {},
+        };
+    }
 
     componentWillMount() {
         this.props.setNavbarState({
@@ -239,6 +248,133 @@ export default class AddLeadView extends React.PureComponent {
         console.log(leadId);
     }
 
+    handleLeadUploadComplete = (leadId, status, response) => {
+        const {
+            addLeadViewLeadChange,
+            addLeadViewLeads,
+        } = this.props;
+
+        const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
+
+        const {
+            leadUploads,
+        } = this.state;
+
+        let uploadSettings;
+        let leadSettings;
+
+        if (parseInt(status / 100, 10) === 2) {
+            uploadSettings = {
+                [leadId]: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                },
+            };
+
+            leadSettings = {
+                upload: {
+                    title: { $set: response.title },
+                },
+                form: {
+                    values: {
+                        attachment: { $set: response.id },
+                    },
+                    errors: { $set: [] },
+                },
+                uiState: {
+                    ready: { $set: true },
+                },
+            };
+        } else {
+            uploadSettings = {
+                [leadId]: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                },
+            };
+
+            leadSettings = {
+                upload: {
+                    errorMessage: { $set: `Failed to upload file (${status})` },
+                },
+                form: {
+                    values: {
+                        attachment: { $set: undefined },
+                    },
+                    errors: { $set: [`Failed to upload file (${status})`] },
+                },
+                uiState: {
+                    ready: { $set: false },
+                },
+            };
+        }
+
+        const newLeadUploads = update(leadUploads, uploadSettings);
+
+        const newLead = update(theLead, leadSettings);
+
+        const {
+            values,
+            errors,
+            fieldErrors,
+        } = newLead.form;
+
+        addLeadViewLeadChange({
+            leadId,
+            values,
+            formErrors: errors,
+            formFieldErrors: fieldErrors,
+            upload: newLead.upload,
+            uiState: newLead.uiState,
+        });
+
+        this.setState({
+            leadUploads: newLeadUploads,
+        });
+    }
+
+    handleLeadUploadProgress = (leadId, progress) => {
+        const {
+            leadUploads,
+        } = this.state;
+
+        const settings = {
+            [leadId]: {
+                progress: { $set: progress },
+            },
+        };
+
+        const newLeadUploads = update(leadUploads, settings);
+        this.setState({
+            leadUploads: newLeadUploads,
+        });
+    }
+
+    handleNewUploader = (leadId, uploader) => {
+        const {
+            leadUploads,
+        } = this.state;
+
+        const id = leadId;
+        const u = uploader;
+
+        u.onLoad = (status, response) => {
+            this.handleLeadUploadComplete(id, status, response);
+        };
+
+        u.onProgress = (progress) => {
+            this.handleLeadUploadProgress(id, progress);
+        };
+
+        leadUploads[id] = {
+            progress: 0,
+            isCompleted: false,
+        };
+        this.setState({
+            leadUploads,
+        });
+    }
+
     renderLeadDetail = (key, lead) => {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project] || {};
         const formCallbacks = {
@@ -272,6 +408,10 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     render() {
+        const {
+            leadUploads,
+        } = this.state;
+
         return (
             <div styleName="add-lead">
                 <Helmet>
@@ -281,8 +421,12 @@ export default class AddLeadView extends React.PureComponent {
                 </Helmet>
                 <div styleName="left">
                     <AddLeadFilter />
-                    <AddLeadList />
-                    <AddLeadButtons />
+                    <AddLeadList
+                        leadUploads={leadUploads}
+                    />
+                    <AddLeadButtons
+                        onNewUploader={this.handleNewUploader}
+                    />
                 </div>
                 <List
                     data={this.props.addLeadViewLeads}

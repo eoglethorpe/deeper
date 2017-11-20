@@ -20,7 +20,6 @@ import {
     DangerButton,
     TransparentButton,
     TransparentDangerButton,
-    TransparentAccentButton,
 } from '../../../../public/components/Action';
 import {
     tokenSelector,
