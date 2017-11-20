@@ -21,5 +21,5 @@ DEEP is a humanitarian tool to collect and analyze secondary data from various p
 - [Contributing](docs/contributing.md)
 - [Git For Noobs](docs/git.md)
 - [REST API](docs/api-rest.md)
-- [Websocet API](docs/api-websocket.md)
+- [Websocket API](docs/api-websocket.md)
 - [Testing](docs/testing.md)
