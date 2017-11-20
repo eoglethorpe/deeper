@@ -115,9 +115,10 @@ export default class RegionDetailForm extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
                 className={className}
+                styleName="region-detail-form"
             >
                 { pending && <LoadingAnimation /> }
-                <header styleName="header-title">
+                <header styleName="header">
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">
                         <DangerButton
@@ -132,80 +133,82 @@ export default class RegionDetailForm extends React.PureComponent {
                         </SuccessButton>
                     </div>
                 </header>
-                {
-                    regionDetail.code &&
-                        <TextInput
-                            disabled
-                            label="Country code"
-                            placeholder="NPL"
-                            styleName="text-input"
-                            value={regionDetail.code}
-                        />
-                }
-                {
-                    !regionDetail.code &&
-                        <TextInput
-                            label="Country code"
-                            placeholder="NPL"
-                            styleName="text-input"
-                        />
-                }
-                <TextInput
-                    error={formFieldErrors.countryName}
-                    formname="countryName"
-                    label="Name"
-                    placeholder="Nepal"
-                    styleName="text-input"
-                    value={regionDetail.title}
-                />
-                <TextInput
-                    error={formFieldErrors.wbRegion}
-                    formname="wbRegion"
-                    label="WB Region"
-                    placeholder="Enter WB Region"
-                    styleName="text-input"
-                    value={formValues.wbRegion}
-                />
-                <TextInput
-                    error={formFieldErrors.wbIncomeRegion}
-                    formname="wbIncomeRegion"
-                    label="WB Income Region"
-                    placeholder="Enter WB Income Region"
-                    styleName="text-input"
-                    value={formValues.wbIncomeRegion}
-                />
-                <TextInput
-                    error={formFieldErrors.ochaRegion}
-                    formname="ochaRegion"
-                    label="OCHA Region"
-                    placeholder="Enter OCHA Region"
-                    styleName="text-input"
-                    value={formValues.ochaRegion}
-                />
-                <TextInput
-                    error={formFieldErrors.echoRegion}
-                    formname="echoRegion"
-                    label="ECHO Region"
-                    placeholder="Enter ECHO Region"
-                    styleName="text-input"
-                    value={formValues.echoRegion}
-                />
-                <TextInput
-                    error={formFieldErrors.unGeoRegion}
-                    formname="unGeoRegion"
-                    label="UN Geographical Region"
-                    placeholder="Enter UN Geographical Region"
-                    styleName="text-input"
-                    value={formValues.unGeoRegion}
-                />
-                <TextInput
-                    error={formFieldErrors.unGeoSubregion}
-                    formname="unGeoSubregion"
-                    label="UN Geographical Sub Region"
-                    placeholder="Enter UN Geographical Sub Region"
-                    styleName="text-input"
-                    value={formValues.unGeoSubregion}
-                />
+                <div styleName="input-container">
+                    {
+                        regionDetail.code &&
+                            <TextInput
+                                disabled
+                                label="Country code"
+                                placeholder="NPL"
+                                styleName="text-input"
+                                value={regionDetail.code}
+                            />
+                    }
+                    {
+                        !regionDetail.code &&
+                            <TextInput
+                                label="Country code"
+                                placeholder="NPL"
+                                styleName="text-input"
+                            />
+                    }
+                    <TextInput
+                        error={formFieldErrors.countryName}
+                        formname="countryName"
+                        label="Name"
+                        placeholder="Nepal"
+                        styleName="text-input"
+                        value={regionDetail.title}
+                    />
+                    <TextInput
+                        error={formFieldErrors.wbRegion}
+                        formname="wbRegion"
+                        label="WB Region"
+                        placeholder="Enter WB Region"
+                        styleName="text-input"
+                        value={formValues.wbRegion}
+                    />
+                    <TextInput
+                        error={formFieldErrors.wbIncomeRegion}
+                        formname="wbIncomeRegion"
+                        label="WB Income Region"
+                        placeholder="Enter WB Income Region"
+                        styleName="text-input"
+                        value={formValues.wbIncomeRegion}
+                    />
+                    <TextInput
+                        error={formFieldErrors.ochaRegion}
+                        formname="ochaRegion"
+                        label="OCHA Region"
+                        placeholder="Enter OCHA Region"
+                        styleName="text-input"
+                        value={formValues.ochaRegion}
+                    />
+                    <TextInput
+                        error={formFieldErrors.echoRegion}
+                        formname="echoRegion"
+                        label="ECHO Region"
+                        placeholder="Enter ECHO Region"
+                        styleName="text-input"
+                        value={formValues.echoRegion}
+                    />
+                    <TextInput
+                        error={formFieldErrors.unGeoRegion}
+                        formname="unGeoRegion"
+                        label="UN Geographical Region"
+                        placeholder="Enter UN Geographical Region"
+                        styleName="text-input"
+                        value={formValues.unGeoRegion}
+                    />
+                    <TextInput
+                        error={formFieldErrors.unGeoSubregion}
+                        formname="unGeoSubregion"
+                        label="UN Geographical Sub Region"
+                        placeholder="Enter UN Geographical Sub Region"
+                        styleName="text-input"
+                        value={formValues.unGeoSubregion}
+                    />
+                </div>
             </Form>
         );
     }

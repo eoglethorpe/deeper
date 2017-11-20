@@ -30,9 +30,7 @@
             .region-detail-form {
                 flex-basis: 30%;
                 border-right: $width-separator-thin solid $color-hover;
-                padding: $spacing-large;
                 min-width: 240px;
-                overflow: auto;
             }
 
             .map-container {
@@ -40,7 +38,6 @@
                 flex-grow: 1;
                 align-items: center;
                 justify-content: center;
-                border: $width-separator-thin solid $color-separator;
             }
         }
 
