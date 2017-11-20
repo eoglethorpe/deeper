@@ -77,6 +77,10 @@ const FourHundredFour = () => (
     <Bundle load={() => import('./topic/FourHundredFour/views')} />
 );
 
+const AnalysisFramework = () => (
+    <Bundle load={() => import('./topic/AnalysisFramework/views/')} />
+);
+
 const AddLead = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/new`} >
         <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
@@ -177,6 +181,12 @@ export default class Multiplexer extends React.PureComponent {
             path: '/countrypanel/',
             name: pageTitles.countryPanel,
             component: CountryPanel,
+            private: true,
+        },
+        {
+            path: '/analysis-framework/*',
+            name: pageTitles.analysisFramework,
+            component: AnalysisFramework,
             private: true,
         },
         {
