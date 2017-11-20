@@ -15,18 +15,22 @@ export default class FilterSection extends React.PureComponent {
         super(props);
         this.data = [
             {
+                id: 1,
                 title: 'Power price hike likely this month | Dhaka Tribune',
                 publishedOn: 125412312,
             },
             {
+                id: 2,
                 title: 'Hill cutting rampant in Khagrachhari | Dhaka Tribune',
                 publishedOn: 525412312,
             },
             {
+                id: 3,
                 title: 'Power price hike likely this month | Dhaka Tribune',
                 publishedOn: 125412312,
             },
             {
+                id: 4,
                 title: 'Hill cutting rampant in Khagrachhari | Dhaka Tribune',
                 publishedOn: 525412312,
             },
@@ -51,7 +55,7 @@ export default class FilterSection extends React.PureComponent {
             {
                 key: 'actions',
                 label: 'Actions',
-                order: 5,
+                order: 3,
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton

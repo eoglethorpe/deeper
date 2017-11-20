@@ -37,6 +37,12 @@ export default class Export extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+
+        this.elements = [];
+    }
+
     componentWillMount() {
         this.props.setNavbarState({
             visible: true,
@@ -67,6 +73,7 @@ export default class Export extends React.PureComponent {
                 </div>
                 <Form
                     styleName="form-container"
+                    elements={this.elements}
                 >
                     <header
                         styleName="header"

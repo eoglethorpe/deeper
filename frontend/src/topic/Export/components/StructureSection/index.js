@@ -72,10 +72,12 @@ export default class StructureSection extends React.PureComponent {
         return (
             <div styleName="report-structure">
                 <h2> Report Structure</h2>
-                <MultiCheckboxCollection
-                    options={this.sample}
-                    onChange={() => {}}
-                />
+                <div styleName="multi-checkbox">
+                    <MultiCheckboxCollection
+                        options={this.sample}
+                        onChange={() => {}}
+                    />
+                </div>
             </div>
         );
     }
