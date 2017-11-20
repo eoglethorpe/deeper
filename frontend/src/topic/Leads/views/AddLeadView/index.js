@@ -25,6 +25,11 @@ import {
     createParamsForLeadCreate,
     urlForLead,
     createUrlForLeadEdit,
+
+    urlForGoogleDriveFileUpload,
+    urlForDropboxFileUpload,
+    createHeaderForGoogleDriveFileUpload,
+    createHeaderForDropboxUpload,
 } from '../../../../common/rest';
 
 import {
@@ -136,6 +141,146 @@ export default class AddLeadView extends React.PureComponent {
         // eslint-disable-next-line
         this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(activeProject);
         this.leadFilterOptionsRequest.start();
+    }
+
+    createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
+        const googleDriveUploadRequest = new RestBuilder()
+            .url(urlForGoogleDriveFileUpload)
+            .params(() => {
+                const { token } = this.props;
+                console.log(token);
+                return createHeaderForGoogleDriveFileUpload(
+                    token,
+                    { title, accessToken, fileId, mimeType },
+                );
+            })
+            .success((response) => {
+                try {
+                    const {
+                        addLeadViewLeads,
+                        addLeadViewLeadChange,
+                    } = this.props;
+                    const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
+
+                    const leadSettings = {
+                        upload: {
+                            title: { $set: response.title },
+                            url: { $set: response.file },
+                        },
+                        form: {
+                            values: {
+                                attachment: { $set: response.id },
+                            },
+                            errors: { $set: [] },
+                        },
+                        uiState: {
+                            ready: { $set: true },
+                        },
+                    };
+
+
+                    const newLead = update(theLead, leadSettings);
+                    const {
+                        values,
+                        errors,
+                        fieldErrors,
+                    } = newLead.form;
+
+                    addLeadViewLeadChange({
+                        leadId,
+                        values,
+                        formErrors: errors,
+                        formFieldErrors: fieldErrors,
+                        upload: newLead.upload,
+                        uiState: newLead.uiState,
+                    });
+
+                    const uploadSettings = {
+                        [leadId]: {
+                            progress: { $set: 100 },
+                            isCompleted: { $set: true },
+                        },
+                    };
+                    const leadUploads = update(this.state.leadUploads, uploadSettings);
+
+                    this.setState({ leadUploads });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .retryTime(1000)
+            .build();
+
+        return googleDriveUploadRequest;
+    }
+
+    createRequestForDropboxUpload = ({ leadId, title, fileUrl }) => {
+        const dropboxUploadRequest = new RestBuilder()
+            .url(urlForDropboxFileUpload)
+            .params(() => {
+                const { token } = this.props;
+                return createHeaderForDropboxUpload(
+                    token,
+                    { title, fileUrl },
+                );
+            })
+            .success((response) => {
+                try {
+                    const {
+                        addLeadViewLeads,
+                        addLeadViewLeadChange,
+                    } = this.props;
+                    const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
+
+                    const leadSettings = {
+                        upload: {
+                            title: { $set: response.title },
+                            url: { $set: response.file },
+                        },
+                        form: {
+                            values: {
+                                attachment: { $set: response.id },
+                            },
+                            errors: { $set: [] },
+                        },
+                        uiState: {
+                            ready: { $set: true },
+                        },
+                    };
+
+                    const newLead = update(theLead, leadSettings);
+                    const {
+                        values,
+                        errors,
+                        fieldErrors,
+                    } = newLead.form;
+
+                    addLeadViewLeadChange({
+                        leadId,
+                        values,
+                        formErrors: errors,
+                        formFieldErrors: fieldErrors,
+                        upload: newLead.upload,
+                        uiState: newLead.uiState,
+                    });
+
+                    const uploadSettings = {
+                        [leadId]: {
+                            progress: { $set: 100 },
+                            isCompleted: { $set: true },
+                        },
+                    };
+                    const leadUploads = update(this.state.leadUploads, uploadSettings);
+
+                    this.setState({ leadUploads });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .retryTime(1000)
+            .build();
+
+        return dropboxUploadRequest;
     }
 
     createRequestForProjectLeadFilterOptions = (activeProject) => {
@@ -274,6 +419,7 @@ export default class AddLeadView extends React.PureComponent {
             leadSettings = {
                 upload: {
                     title: { $set: response.title },
+                    url: { $set: response.file },
                 },
                 form: {
                     values: {
@@ -375,6 +521,54 @@ export default class AddLeadView extends React.PureComponent {
         });
     }
 
+    handleGoogleDriveSelect = (leadId, accessToken, doc) => {
+        const request = this.createRequestForGoogleDriveUpload({
+            leadId,
+            accessToken,
+            title: doc.name,
+            fileId: doc.id,
+            mimeType: doc.mimeType,
+        });
+
+        const {
+            leadUploads,
+        } = this.state;
+
+        leadUploads[leadId] = {
+            progress: 0,
+            isCompleted: false,
+        };
+
+        this.setState({
+            leadUploads,
+        });
+
+        request.start();
+    }
+
+    handleDropboxSelect = (leadId, doc) => {
+        const request = this.createRequestForDropboxUpload({
+            leadId,
+            title: doc.name,
+            fileUrl: doc.link,
+        });
+
+        const {
+            leadUploads,
+        } = this.state;
+
+        leadUploads[leadId] = {
+            progress: 0,
+            isCompleted: false,
+        };
+
+        this.setState({
+            leadUploads,
+        });
+
+        request.start();
+    }
+
     renderLeadDetail = (key, lead) => {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project] || {};
         const formCallbacks = {
@@ -425,6 +619,8 @@ export default class AddLeadView extends React.PureComponent {
                         leadUploads={leadUploads}
                     />
                     <AddLeadButtons
+                        onDropboxSelect={this.handleDropboxSelect}
+                        onGoogleDriveSelect={this.handleGoogleDriveSelect}
                         onNewUploader={this.handleNewUploader}
                     />
                 </div>

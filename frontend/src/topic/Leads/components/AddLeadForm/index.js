@@ -25,6 +25,10 @@ import {
 
 import styles from './styles.scss';
 
+const ATTACHMENT_TYPES = [
+    'file', 'dropbox', 'drive',
+];
+
 const propTypes = {
     className: PropTypes.string,
 
@@ -269,7 +273,7 @@ export default class AddLeadForm extends React.PureComponent {
                         />
                 }
                 {
-                    lead.data.type === 'file' && ([
+                    ATTACHMENT_TYPES.indexOf(lead.data.type) !== -1 && ([
                         <p
                             key="title"
                             styleName="file-title"
@@ -278,7 +282,12 @@ export default class AddLeadForm extends React.PureComponent {
                                 lead.upload.errorMessage ? (
                                     lead.upload.errorMessage
                                 ) : (
-                                    lead.upload.title
+                                    <a
+                                        href={lead.upload.url}
+                                        target="_blank"
+                                    >
+                                        {lead.upload.title}
+                                    </a>
                                 )
                             }
                         </p>,

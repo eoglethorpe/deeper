@@ -1,4 +1,4 @@
-import { wsEndpoint } from '../config/rest';
+import { POST, wsEndpoint, commonHeaderForPost } from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
 export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
@@ -8,9 +8,17 @@ export const createHeaderForFileUpload = ({ access }) => ({
     Authorization: `Bearer ${access}`,
 });
 
-export const createHeaderForGoogleDriveFileUpload = ({ access },
-    { title, accessToken, fileId, mimeType }) => ({
-    Authorization: `Bearer ${access}`,
+export const createHeaderForGoogleDriveFileUpload = ({ access }, {
+    title,
+    accessToken,
+    fileId,
+    mimeType,
+}) => ({
+    method: POST,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
     body: JSON.stringify({
         title,
         accessToken,
@@ -20,9 +28,15 @@ export const createHeaderForGoogleDriveFileUpload = ({ access },
 });
 
 
-export const createHeaderForDropboxUpload = ({ access },
-    { title, fileUrl }) => ({
-    Authorization: `Bearer ${access}`,
+export const createHeaderForDropboxUpload = ({ access }, {
+    title,
+    fileUrl,
+}) => ({
+    method: POST,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
     body: JSON.stringify({
         title,
         fileUrl,
