@@ -16,6 +16,7 @@ import { startTokenRefreshAction } from './common/middlewares/refreshAccessToken
 import {
     setAccessTokenAction,
 
+    logoutAction,
     tokenSelector,
     currentUserProjectsSelector,
 } from './common/redux';
@@ -31,6 +32,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setAccessToken: access => dispatch(setAccessTokenAction(access)),
     startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
+    logout: () => dispatch(logoutAction()),
 });
 
 const propTypes = {
@@ -38,6 +40,7 @@ const propTypes = {
     setAccessToken: PropTypes.func.isRequired,
     startTokenRefresh: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
+    logout: PropTypes.func.isRequired,
 };
 
 @withRouter
@@ -128,11 +131,11 @@ export default class App extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
+                this.props.logout();
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
+                // TODO: something wrong with the internet or server
             })
             .build();
         return refreshRequest;

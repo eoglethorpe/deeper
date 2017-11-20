@@ -27,6 +27,7 @@ import {
     activeCountrySelector,
     activeProjectSelector,
     activeUserSelector,
+    currentUserInformationSelector,
     currentUserProjectsSelector,
 
     navbarActiveLinkSelector,
@@ -34,14 +35,15 @@ import {
     navbarVisibleSelector,
 } from '../../../common/redux';
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     activeCountry: activeCountrySelector(state),
     navbarActiveLink: navbarActiveLinkSelector(state),
     navbarValidLinks: navbarValidLinksSelector(state),
     navbarVisible: navbarVisibleSelector(state),
     activeUser: activeUserSelector(state),
-    userProjects: currentUserProjectsSelector(state, props),
+    userInformation: currentUserInformationSelector(state),
+    userProjects: currentUserProjectsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -64,6 +66,7 @@ const propTypes = {
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
+    userInformation: PropTypes.object, // eslint-disable-line
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.number,
@@ -80,6 +83,7 @@ const defaultProps = {
     navbarVisible: false,
     activeUser: {},
     userProjects: {},
+    userInformation: {},
 };
 
 const getValidLinkOrEmpty = value => (value ? `${value}/` : '');
@@ -293,6 +297,7 @@ export default class Navbar extends React.PureComponent {
         const {
             activeProject,
             activeUser,
+            userInformation,
             navbarVisible,
             userProjects,
         } = this.props;
@@ -341,7 +346,7 @@ export default class Navbar extends React.PureComponent {
                     styleName="dropdown-menu"
                     className="dropdown-title"
                     iconLeft="ion-android-person"
-                    title={activeUser.displayName || 'Anon'}
+                    title={userInformation.displayName || activeUser.displayName || 'Anon'}
                 >
                     <List
                         data={dropdownItems}
