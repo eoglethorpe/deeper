@@ -158,6 +158,8 @@ const propTypes = {
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
     onNewUploader: PropTypes.func.isRequired,
+    onGoogleDriveSelect: PropTypes.func.isRequired,
+    onDropboxSelect: PropTypes.func.isRequired,
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
@@ -196,8 +198,15 @@ export default class AddLeadFilter extends React.PureComponent {
         let counter = this.props.leadsCount;
         docs.forEach((doc) => {
             counter += 1;
-            const newLead = leadForGoogleDrive(`lead-${counter}`, doc.name, activeProject);
+            const newLeadId = `lead-${counter}`;
+            const newLead = leadForGoogleDrive(newLeadId, doc.name, activeProject);
             newLeads.unshift(newLead);
+
+            this.props.onGoogleDriveSelect(
+                newLeadId,
+                this.googleDriveAccessToken,
+                doc,
+            );
         });
         this.props.addLeads(newLeads);
     }
@@ -211,8 +220,14 @@ export default class AddLeadFilter extends React.PureComponent {
         let counter = this.props.leadsCount;
         response.forEach((doc) => {
             counter += 1;
-            const newLead = leadForDropbox(`lead-${counter}`, doc.name, activeProject);
+            const newLeadId = `lead-${counter}`;
+            const newLead = leadForDropbox(newLeadId, doc.name, activeProject);
             newLeads.unshift(newLead);
+
+            this.props.onDropboxSelect(
+                newLeadId,
+                doc,
+            );
         });
         this.props.addLeads(newLeads);
     }
@@ -271,6 +286,14 @@ export default class AddLeadFilter extends React.PureComponent {
         this.props.addLeads([newLead]);
     }
 
+    handleGoogleDriveOnAuthenticate = (accessToken) => {
+        // TODO: use this token will uploading
+        // console.log(accessToken);
+        if (accessToken) {
+            this.googleDriveAccessToken = accessToken;
+        }
+    }
+
     render() {
         const {
             dropboxDisabled,
@@ -285,6 +308,7 @@ export default class AddLeadFilter extends React.PureComponent {
                     styleName="add-lead-btn"
                     clientId={googleDriveClientId}
                     developerKey={googleDriveDeveloperKey}
+                    onAuthenticate={this.handleGoogleDriveOnAuthenticate}
                     onChange={this.handleAddLeadFromGoogleDrive}
                     mimeTypes={supportedGoogleDriveMimeTypes}
                     multiselect
