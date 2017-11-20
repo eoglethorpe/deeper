@@ -146,10 +146,10 @@ export default class Login extends React.PureComponent {
             .decay(0.3)
             .maxRetryTime(2000)
             .maxRetryAttempts(10)
-            .preload(() => {
+            .preLoad(() => {
                 this.setState({ pending: true, stale: false });
             })
-            .postload(() => {
+            .postLoad(() => {
                 this.setState({ pending: false });
             })
             .success((response) => {
