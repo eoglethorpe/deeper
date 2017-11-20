@@ -86,4 +86,12 @@ $height-full-page: calc(
         flex-grow: 1;
         height: $height-full-page;
     }
+
+    .no-regions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
 }

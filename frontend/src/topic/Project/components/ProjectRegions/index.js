@@ -86,14 +86,20 @@ export default class ProjectRegions extends React.PureComponent {
         );
     }
 
-    renderSelectedRegionDetails = (selectedRegion) => {
-        console.log(selectedRegion);
+    renderSelectedRegionDetails = (projectDetails, selectedRegion) => {
+        if ((projectDetails.regions || []).length > 0) {
+            return (
+                <ProjectRegionDetail
+                    key={selectedRegion}
+                    regionId={selectedRegion}
+                />
+            );
+        }
 
         return (
-            <ProjectRegionDetail
-                key={selectedRegion}
-                regionId={selectedRegion}
-            />
+            <h1 styleName="no-regions">
+                There are no regions in this project.
+            </h1>
         );
     }
 
@@ -134,7 +140,7 @@ export default class ProjectRegions extends React.PureComponent {
                     />
                 </div>
                 <div styleName="details-container">
-                    {this.renderSelectedRegionDetails(selectedRegion)}
+                    {this.renderSelectedRegionDetails(projectDetails, selectedRegion)}
                 </div>
             </div>
         );
