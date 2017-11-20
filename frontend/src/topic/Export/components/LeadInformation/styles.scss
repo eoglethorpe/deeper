@@ -1,0 +1,19 @@
+@import '../../../../stylesheets/base';
+
+.lead-information {
+    display: flex;
+    flex-wrap: wrap;
+
+    h4 {
+        flex-basis: 100%;
+        margin: $spacing-medium 0;
+        font-weight: $font-weight-medium;
+    }
+
+    .lead-title,
+    .source,
+    .date-published {
+        flex-basis: 33%;
+        padding: $spacing-small;
+    }
+}

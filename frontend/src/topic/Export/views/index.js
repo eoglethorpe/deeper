@@ -7,8 +7,17 @@ import { connect } from 'react-redux';
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/utils/labels';
 import {
+    Form,
+} from '../../../public/components/Input';
+import {
+    TransparentButton,
+} from '../../../public/components/Action';
+
+import {
     setNavbarStateAction,
 } from '../../../common/redux';
+import FilterSection from '../components/FilterSection';
+import StructureSection from '../components/StructureSection';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
@@ -27,6 +36,12 @@ const mapDispatchToProps = dispatch => ({
 export default class Export extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.elements = [];
+    }
 
     componentWillMount() {
         this.props.setNavbarState({
@@ -49,11 +64,56 @@ export default class Export extends React.PureComponent {
 
     render() {
         return (
-            <div>
+            <div styleName="export">
                 <Helmet>
                     <title>{ pageTitles.export }</title>
                 </Helmet>
-                { pageTitles.export }
+                <div styleName="preview-container">
+                    <div><h1>No Preview Available</h1></div>
+                </div>
+                <Form
+                    styleName="form-container"
+                    elements={this.elements}
+                >
+                    <header
+                        styleName="header"
+                    >
+                        <div styleName="action-buttons">
+                            <TransparentButton
+                                styleName="word-document"
+                            >
+                                <i className="ion-android-document" />
+                                Preview Docx
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="word-document"
+                            >
+                                <i className="ion-android-document" />
+                                Export Docx
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="pdf-document"
+                            >
+                                <i className="ion-android-document" />
+                                Export Pdf
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="excel-document"
+                            >
+                                <i className="ion-android-document" />
+                                Export Excel
+                            </TransparentButton>
+                        </div>
+                    </header>
+                    <div styleName="content">
+                        <div styleName="filter-section">
+                            <FilterSection />
+                        </div >
+                        <div styleName="structure-section" >
+                            <StructureSection />
+                        </div>
+                    </div>
+                </Form>
             </div>
         );
     }
