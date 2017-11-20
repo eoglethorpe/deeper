@@ -137,7 +137,7 @@ export default class MembersTable extends React.PureComponent {
                                     key={row.member}
                                     to={`/users/${row.member}/`}
                                 >
-                                    <i className="ion-forward" />
+                                    <span className="ion-android-open" />
                                 </Link>
                             </div>
                         );

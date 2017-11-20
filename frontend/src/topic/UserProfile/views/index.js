@@ -192,7 +192,7 @@ export default class UserProfile extends React.PureComponent {
                         styleName="display-picture"
                     />
                     <div styleName="detail">
-                        <p styleName="name">
+                        <div styleName="name">
                             <div>
                                 <span styleName="first">
                                     { userInformation.firstName }
@@ -221,7 +221,7 @@ export default class UserProfile extends React.PureComponent {
                                     />
                                 </ModalBody>
                             </Modal>
-                        </p>
+                        </div>
                         <p styleName="email">
                             { userInformation.email }
                         </p>
