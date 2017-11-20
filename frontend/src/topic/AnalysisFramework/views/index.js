@@ -22,12 +22,16 @@ import {
 } from '../../../public/components/General';
 
 import {
-    TextInput,
+    TextArea,
 } from '../../../public/components/Input';
 
 import {
     TransparentButton,
 } from '../../../public/components/Action';
+
+import {
+    Table,
+} from '../../../public/components/View';
 
 import styles from './styles.scss';
 
@@ -62,7 +66,73 @@ export default class AnalysisFramework extends React.PureComponent {
             items: [
                 {
                     key: 'a',
+                    title: 'Excerpt',
                     gridData: { x: 2, y: 2, w: 30, h: 20 },
+                    content: (<TextArea label="Excerpt" />),
+                },
+                {
+                    key: 'b',
+                    title: 'Sectors',
+                    gridData: { x: 2, y: 40, w: 40, h: 25, minW: 30, minH: 25 },
+                    content: (
+                        <Table
+                            headers={[
+                                {
+                                    key: 'category',
+                                    label: '',
+                                },
+                                {
+                                    key: 'health',
+                                    label: 'Health',
+                                    modifier: () => (<div className="matrix-item" />),
+                                },
+                                {
+                                    key: 'education',
+                                    label: 'Education',
+                                    modifier: () => (<div className="matrix-item" />),
+                                },
+                                {
+                                    key: 'protection',
+                                    label: 'Protection',
+                                    modifier: () => (<div className="matrix-item" />),
+                                },
+                                {
+                                    key: 'shelter',
+                                    label: 'Shelter',
+                                    modifier: () => (<div className="matrix-item" />),
+                                },
+                                {
+                                    key: 'food',
+                                    label: 'Food',
+                                    modifier: () => (<div className="matrix-item" />),
+                                },
+                            ]}
+                            data={[
+                                {
+                                    category: 'Scope and scale',
+                                },
+                                {
+                                    category: 'Humanitarian conditions',
+                                },
+                                {
+                                    category: 'Capacities and response',
+                                },
+                            ]}
+                            keyExtractor={item => item.category}
+                        />
+                    ),
+                },
+                {
+                    key: 'c',
+                    title: 'Image',
+                    gridData: { x: 40, y: 2, w: 20, h: 30 },
+                    content: (
+                        <img
+                            alt="Sample widget"
+                            styleName="image-widget"
+                            src="https://i.imgur.com/ejDSwZW.jpg"
+                        />
+                    ),
                 },
             ],
         };
@@ -101,7 +171,7 @@ export default class AnalysisFramework extends React.PureComponent {
                 <header
                     styleName="header"
                 >
-                    <h2>Grid item</h2>
+                    <h2>{item.title}</h2>
                     <div styleName="actions">
                         <span
                             styleName="drag-handle"
@@ -115,9 +185,7 @@ export default class AnalysisFramework extends React.PureComponent {
                     </div>
                 </header>
                 <div styleName="content">
-                    <TextInput
-                        label="Wow"
-                    />
+                    {item.content}
                 </div>
             </div>
         ));
