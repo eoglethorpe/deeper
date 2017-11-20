@@ -120,19 +120,19 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 </header>
                 {!isPublic &&
                     <div styleName="region-details">
-                        <RegionDetailForm
-                            styleName="region-general-form"
-                            regionDetail={regionDetails}
-                        />
-                        <div styleName="map-details">
+                        <div styleName="detail-map-container">
+                            <RegionDetailForm
+                                styleName="region-detail-form"
+                                regionDetail={regionDetails}
+                            />
                             <div styleName="map-container">
                                 The map
                             </div>
-                            <RegionAdminLevel
-                                styleName="admin-levels"
-                                regionId={regionId}
-                            />
                         </div>
+                        <RegionAdminLevel
+                            styleName="admin-levels"
+                            regionId={regionId}
+                        />
                     </div>
                 }
                 {isPublic &&

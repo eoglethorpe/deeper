@@ -41,19 +41,19 @@ export default class CountryGeneral extends React.PureComponent {
 
         return (
             <div styleName="country-general">
-                <RegionDetailForm
-                    styleName="country-general-form"
-                    regionDetail={countryDetail}
-                />
-                <div styleName="map-details">
+                <div styleName="detail-map-container">
+                    <RegionDetailForm
+                        styleName="region-detail-form"
+                        regionDetail={countryDetail}
+                    />
                     <div styleName="map-container">
                         The map
                     </div>
-                    <RegionAdminLevel
-                        styleName="admin-levels"
-                        regionId={countryDetail.id}
-                    />
                 </div>
+                <RegionAdminLevel
+                    styleName="admin-levels"
+                    regionId={countryDetail.id}
+                />
             </div>
         );
     }
