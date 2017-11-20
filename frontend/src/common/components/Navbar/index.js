@@ -196,6 +196,12 @@ export default class Navbar extends React.PureComponent {
                     private: true,
                 },
                 {
+                    linkTo: '/analysis-framework/',
+                    name: pageTitles.analysisFramework,
+                    iconName: 'ion-android-apps',
+                    private: true,
+                },
+                {
                     linkTo: '/admin/',
                     name: pageTitles.adminPanel,
                     iconName: 'ion-locked',
