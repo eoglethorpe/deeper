@@ -13,7 +13,10 @@ const projectSchema = [];
             memberships: { type: 'array.projectMembership' },
             regions: { type: 'array.object' },
             title: { type: 'string', required: true },
+            description: { type: 'string', required: false },
             userGroups: { type: 'array.uint' },
+            startDate: { type: 'string' }, // date
+            endDate: { type: 'string' }, // date
         },
     };
     projectSchema.push({ name, schema });
