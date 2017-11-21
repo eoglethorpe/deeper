@@ -1,44 +1,108 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { RestBuilder } from '../../../../public/utils/rest';
+import schema from '../../../../common/schema';
 import {
     Form,
     TextInput,
+    NonFieldErrors,
 } from '../../../../public/components/Input';
 import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
-
+import {
+    createParamsForRegionPatch,
+    createUrlForRegion,
+} from '../../../../common/rest';
+import {
+    countryDetailSelector,
+    setRegionDetailsAction,
+    tokenSelector,
+} from '../../../../common/redux';
 import styles from './styles.scss';
 
+const propTypes = {
+    regionDetail: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        code: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        keyFigures: PropTypes.shape({}),
+    }).isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setRegionDetails: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+    className: '',
+};
+
+const mapStateToProps = (state, props) => ({
+    regionDetail: countryDetailSelector(state, props),
+    token: tokenSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryKeyFigures extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
 
         this.state = {
             stale: false,
             pending: false,
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: props.regionDetail.keyFigures || {},
         };
+
         this.elements = [
             'index',
-            'geo-rank',
-            'geo-score',
-            'geo-score-u5m',
+            'geoRank',
+            'geoScore',
+            'geoScoreU5m',
             'rank',
             'u5m',
-            'number-of-refugees',
-            'percentage-uprooted-people',
-            'geo-score-uprooted',
-            'number-idp',
-            'number-returned-refugees',
-            'risk-class',
-            'hazard-and-exposure',
+            'numberOfRefugees',
+            'percentageUprootedPeople',
+            'geoScoreUprooted',
+            'numberIdp',
+            'numberReturnedRefugees',
+            'riskClass',
+            'hazardAndExposure',
             'vulnerability',
-            'inform-risk-index',
-            'lack-of-coping-capacity',
+            'informRiskIndex',
+            'lackOfCopingCapacity',
         ];
+
+        this.validations = {
+            index: [],
+            geoRank: [],
+            geoScore: [],
+            geoScoreU5m: [],
+            rank: [],
+            u5m: [],
+            numberOfRefugees: [],
+            percentageUprootedPeople: [],
+            geoScoreUprooted: [],
+            numberIdp: [],
+            numberReturnedRefugees: [],
+            riskClass: [],
+            hazardAndExposure: [],
+            vulnerability: [],
+            informRiskIndex: [],
+            lackOfCopingCapacity: [],
+        };
     }
 
     // FORM RELATED
@@ -62,6 +126,7 @@ export default class CountryKeyFigures extends React.PureComponent {
         });
     };
 
+
     failureCallback = ({ formErrors, formFieldErrors }) => {
         this.setState({
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
@@ -69,22 +134,102 @@ export default class CountryKeyFigures extends React.PureComponent {
         });
     };
 
+    createRequestForRegionDetailPatch = (regionId, data) => {
+        const urlForRegion = createUrlForRegion(regionId);
+        const regionDetailPatchRequest = new RestBuilder()
+            .url(urlForRegion)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForRegionPatch(
+                    { access }, data);
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'regionPatchResponse');
+                    this.props.setRegionDetails({
+                        regionDetails: response,
+                        regionId,
+                    });
+                    this.setState({ stale: false });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+
+                const { errors } = response;
+                const formFieldErrors = {};
+                const { nonFieldErrors } = errors;
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formFieldErrors[key] = errors[key].join(' ');
+                    }
+                });
+
+                this.setState({
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
+                    pending: false,
+                });
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return regionDetailPatchRequest;
+    }
+
     successCallback = (values) => {
-        this.setState({ pending: true });
         console.log(values);
+        // Stop old patch request
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+
+        // Create new patch request
+        const data = {
+            keyFigures: values,
+        };
+
+        this.regionDetailPatchRequest =
+            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+        this.regionDetailPatchRequest.start();
     };
 
     handleFormCancel = (e) => {
+        // TODO: use prompt
         e.preventDefault();
-        // TODO: do something later
-        console.log('Form cancel');
+
+        this.setState({
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: this.props.regionDetail.keyFigures || {},
+            pending: false,
+            stale: false,
+        });
     };
 
     render() {
         const {
             stale,
             pending,
+            formValues,
+            formErrors,
+            formFieldErrors,
         } = this.state;
+
         return (
             <Form
                 styleName="key-figures"
@@ -92,6 +237,8 @@ export default class CountryKeyFigures extends React.PureComponent {
                 elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
+                validations={this.validations}
+                onSubmit={this.handleSubmit}
             >
                 {
                     pending &&
@@ -102,10 +249,11 @@ export default class CountryKeyFigures extends React.PureComponent {
                         />
                     </div>
                 }
+                <NonFieldErrors errors={formErrors} />
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.handleFormCancel}
-                        disabled={pending}
+                        disabled={pending || !stale}
                     >
                         Cancel
                     </DangerButton>
@@ -136,23 +284,31 @@ export default class CountryKeyFigures extends React.PureComponent {
                         min="0"
                         max="1"
                         formname="index"
+                        value={formValues.index}
+                        error={formFieldErrors.index}
                     />
                     <TextInput
                         label="GEO-RANK"
                         styleName="geo-rank text-input"
                         readOnly
-                        formname="geo-rank"
+                        formname="geoRank"
+                        value={formValues.geoRank}
+                        error={formFieldErrors.geoRank}
                     />
                     <TextInput
                         label="GEO-SCORE"
                         styleName="geo-score text-input"
                         readOnly
-                        formname="geo-score"
+                        formname="geoScore"
+                        value={formValues.geoScore}
+                        error={formFieldErrors.geoScore}
                     />
                     <TextInput
                         label="RANK"
                         styleName="rank text-input"
                         formname="rank"
+                        value={formValues.rank}
+                        error={formFieldErrors.rank}
                     />
                 </div>
                 <div styleName="under-five-mortality-rate">
@@ -174,13 +330,17 @@ export default class CountryKeyFigures extends React.PureComponent {
                         label="U5M"
                         styleName="u5m text-input"
                         formname="u5m"
+                        value={formValues.u5m}
+                        error={formFieldErrors.u5m}
                         type="number"
                     />
                     <TextInput
                         label="GEO SCORE"
                         styleName="geo-score-u5m text-input"
                         readOnly
-                        formname="geo-score-u5m"
+                        formname="geoScoreU5m"
+                        value={formValues.geoScoreU5m}
+                        error={formFieldErrors.geoScoreU5m}
                     />
                 </div>
                 <div styleName="uprooted-people">
@@ -201,29 +361,39 @@ export default class CountryKeyFigures extends React.PureComponent {
                     <TextInput
                         label="Number of Refugees"
                         styleName="number-of-refugees text-input"
-                        formname="number-of-refugees"
+                        formname="numberOfRefugees"
+                        value={formValues.numberOfRefugees}
+                        error={formFieldErrors.numberOfRefugees}
                     />
                     <TextInput
                         label="Percentage of Uprooted People"
                         styleName="percentage-uprooted-people text-input"
                         readOnly
-                        formname="percentage-uprooted-people"
+                        formname="percentageUprootedPeople"
+                        value={formValues.percentageUprootedPeople}
+                        error={formFieldErrors.percentageUprootedPeople}
                     />
                     <TextInput
                         label="GEO-SCORE"
                         styleName="geo-score-uprooted text-input"
                         readOnly
-                        formname="geo-score-uprooted"
+                        formname="geoScoreUprooted"
+                        value={formValues.geoScoreUprooted}
+                        error={formFieldErrors.geoScoreUprooted}
                     />
                     <TextInput
                         label="Number of IDPs"
                         styleName="number-idp text-input"
-                        formname="number-idp"
+                        formname="numberIdp"
+                        value={formValues.numberIdp}
+                        error={formFieldErrors.numberIdp}
                     />
                     <TextInput
                         label="Number of returned refugees"
                         styleName="number-returned-refugees text-input"
-                        formname="number-returned-refugees"
+                        formname="numberReturnedRefugees"
+                        value={formValues.numberReturnedRefugees}
+                        error={formFieldErrors.numberReturnedRefugees}
                     />
                 </div>
                 <div styleName="inform-score">
@@ -244,27 +414,37 @@ export default class CountryKeyFigures extends React.PureComponent {
                     <TextInput
                         label="Risk Calss"
                         styleName="risk-class text-input"
-                        formname="risk-class"
+                        formname="riskClass"
+                        value={formValues.riskClass}
+                        error={formFieldErrors.riskClass}
                     />
                     <TextInput
                         label="Inform Risk Index"
                         styleName="inform-risk-index text-input"
-                        formname="inform-risk-index"
+                        formname="informRiskIndex"
+                        value={formValues.informRiskIndex}
+                        error={formFieldErrors.informRiskIndex}
                     />
                     <TextInput
                         label="Hazard and Exposure"
                         styleName="hazard-and-exposure text-input"
-                        formname="hazard-and-exposure"
+                        formname="hazardAndExposure"
+                        value={formValues.hazardAndExposure}
+                        error={formFieldErrors.hazardAndExposure}
                     />
                     <TextInput
                         label="Vulnerability"
                         styleName="vulnerability text-input"
                         formname="vulnerability"
+                        value={formValues.vulnerability}
+                        error={formFieldErrors.vulnerability}
                     />
                     <TextInput
                         label="Lack of Coping Capacity"
                         styleName="lack-of-coping-capacity text-input"
-                        formname="lack-of-coping-capacity"
+                        formname="lackOfCopingCapacity"
+                        value={formValues.lackOfCopingCapacity}
+                        error={formFieldErrors.lackOfCopingCapacity}
                     />
                 </div>
             </Form>

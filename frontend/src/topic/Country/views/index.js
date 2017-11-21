@@ -103,24 +103,8 @@ export default class CountryPanel extends React.PureComponent {
             name: [requiredCondition],
             code: [requiredCondition],
         };
-        const { token } = this.props;
-        this.countriesRequest = new RestBuilder()
-            .url(urlForRegions)
-            .params(() => {
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'regionsGetResponse');
-                    this.props.setRegions({
-                        regions: response.results,
-                    });
-                } catch (er) {
-                    console.error(er, response);
-                }
-            })
-            .build();
+
+        this.countriesRequest = this.createRequestforCountries();
     }
 
     componentWillMount() {
@@ -236,6 +220,29 @@ export default class CountryPanel extends React.PureComponent {
         }
 
         return styleNames.join(' ');
+    }
+
+    createRequestforCountries = () => {
+        const { token } = this.props;
+
+        const countriesRequest = new RestBuilder()
+            .url(urlForRegions)
+            .params(() => {
+                const { access } = token;
+                return createParamsForUser({ access });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'regionsGetResponse');
+                    this.props.setRegions({
+                        regions: response.results,
+                    });
+                } catch (er) {
+                    console.error(er, response);
+                }
+            })
+            .build();
+        return countriesRequest;
     }
 
     search = (value) => {

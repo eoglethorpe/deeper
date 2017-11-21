@@ -4,6 +4,8 @@
     display: flex;
     flex-wrap: wrap;
     padding: $spacing-large;
+    height: 100%;
+    overflow: auto;
 
     .action-buttons {
         display: flex;

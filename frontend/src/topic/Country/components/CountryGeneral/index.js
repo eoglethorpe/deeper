@@ -3,11 +3,22 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { RestBuilder } from '../../../../public/utils/rest';
+
+import {
+    createParamsForUser,
+    createUrlForRegion,
+} from '../../../../common/rest';
+
 import {
     countryDetailSelector,
+    tokenSelector,
+    setRegionDetailsAction,
+    activeUserSelector,
 } from '../../../../common/redux';
 
-import RegionDetailForm from '../../../../common/components/RegionDetailForm';
+import schema from '../../../../common/schema';
+import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 
 import styles from './styles.scss';
@@ -18,15 +29,19 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
     }).isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setRegionDetails: PropTypes.func.isRequired,
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
-    state,
+    token: tokenSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -34,26 +49,65 @@ const mapDispatchToProps = dispatch => ({
 export default class CountryGeneral extends React.PureComponent {
     static propTypes = propTypes;
 
+    constructor(props) {
+        super(props);
+
+        this.requestForRegion = this.createRegionRequest(props.countryDetail.id);
+    }
+
+    componentWillMount() {
+        this.requestForRegion.start();
+    }
+
+    createRegionRequest = (regionId) => {
+        const regionRequest = new RestBuilder()
+            .url(createUrlForRegion(regionId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({
+                    access,
+                });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'region');
+                    this.props.setRegionDetails({
+                        regionDetails: response,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return regionRequest;
+    }
+
     render() {
         const {
             countryDetail,
+            activeUser,
         } = this.props;
 
         return (
             <div styleName="country-general">
                 <div styleName="detail-map-container">
-                    <RegionDetailForm
+                    <RegionDetail
                         styleName="region-detail-form"
-                        regionDetail={countryDetail}
+                        regionId={countryDetail.id}
                     />
                     <div styleName="map-container">
                         The map
                     </div>
                 </div>
-                <RegionAdminLevel
-                    styleName="admin-levels"
-                    regionId={countryDetail.id}
-                />
+                {
+                    activeUser.isSuperuser &&
+                    <RegionAdminLevel
+                        styleName="admin-levels"
+                        regionId={countryDetail.id}
+                    />
+                }
             </div>
         );
     }
