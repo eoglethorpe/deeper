@@ -8,6 +8,7 @@ const initialAuthState = {
 
     // currently logged-in user-detail
     activeUser: {
+        isSuperuser: undefined,
         userId: undefined,
         username: undefined,
         displayName: undefined, // can change later

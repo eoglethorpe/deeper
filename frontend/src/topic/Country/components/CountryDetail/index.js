@@ -23,6 +23,7 @@ import {
     tokenSelector,
     countryDetailSelector,
     unSetRegionAction,
+    activeUserSelector,
 } from '../../../../common/redux';
 
 import CountryGeneral from '../CountryGeneral';
@@ -39,6 +40,7 @@ const propTypes = {
     }).isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     unSetRegion: PropTypes.func.isRequired,
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -48,7 +50,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
     token: tokenSelector(state),
-    state,
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -131,7 +133,7 @@ export default class CountryDetail extends React.PureComponent {
 
     render() {
         const { deleteCountry, deletePending } = this.state;
-        const { countryDetail } = this.props;
+        const { countryDetail, activeUser } = this.props;
 
         return (
             <div styleName="country-detail">
@@ -140,9 +142,12 @@ export default class CountryDetail extends React.PureComponent {
                         {countryDetail.title}
                     </div>
                     <div styleName="button-container">
-                        <DangerButton onClick={this.onClickDeleteButton}>
-                            Delete Country
-                        </DangerButton>
+                        {
+                            activeUser.isSuperuser &&
+                            <DangerButton onClick={this.onClickDeleteButton}>
+                                Delete Country
+                            </DangerButton>
+                        }
                     </div>
                     <Modal
                         styleName="delete-confirm-modal"

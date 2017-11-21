@@ -14,6 +14,7 @@ import {
     countryDetailSelector,
     tokenSelector,
     setRegionDetailsAction,
+    activeUserSelector,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -30,12 +31,13 @@ const propTypes = {
     }).isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
     token: tokenSelector(state),
-    state,
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -85,6 +87,7 @@ export default class CountryGeneral extends React.PureComponent {
     render() {
         const {
             countryDetail,
+            activeUser,
         } = this.props;
 
         return (
@@ -98,10 +101,13 @@ export default class CountryGeneral extends React.PureComponent {
                         The map
                     </div>
                 </div>
-                <RegionAdminLevel
-                    styleName="admin-levels"
-                    regionId={countryDetail.id}
-                />
+                {
+                    activeUser.isSuperuser &&
+                    <RegionAdminLevel
+                        styleName="admin-levels"
+                        regionId={countryDetail.id}
+                    />
+                }
             </div>
         );
     }

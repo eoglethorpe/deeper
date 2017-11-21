@@ -18,6 +18,7 @@ const decodeAccessToken = (access) => {
             userId: decodedToken.userId,
             username: decodedToken.username,
             displayName: decodedToken.displayName,
+            isSuperuser: decodedToken.isSuperuser,
             exp: decodedToken.exp,
         };
     } catch (ex) {
