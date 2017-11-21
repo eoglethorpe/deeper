@@ -34,6 +34,13 @@ Useful commands for:
 
 [Note: `web` is the container name (view `docker-compose.yml`)]
 
+## Useful Plugins
+
+Add the following plugins for easier debugging for React
+
+- [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+- [Redux DevTools](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en)
+
 ## Adding dependencies
 
 - Get into web container bash
