@@ -1,7 +1,10 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
+import { RestBuilder } from '../../../public/utils/rest';
+import schema from '../../../common/schema';
 import {
     DangerButton,
     SuccessButton,
@@ -16,24 +19,44 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
+import {
+    createParamsForRegionPatch,
+    createUrlForRegion,
+} from '../../../common/rest';
+import {
+    regionDetailForRegionSelector,
+    setRegionDetailsAction,
+    tokenSelector,
+} from '../../../common/redux';
+
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    pending: PropTypes.bool,
-    stale: PropTypes.bool.isRequired,
     regionDetail: PropTypes.shape({
+        id: PropTypes.number.isRequired,
         code: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
+        regionalGroups: PropTypes.shape({}),
     }).isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setRegionDetails: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    pending: false,
-    stale: false,
 };
 
+const mapStateToProps = (state, props) => ({
+    regionDetail: regionDetailForRegionSelector(state, props),
+    token: tokenSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class RegionDetailForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -42,11 +65,20 @@ export default class RegionDetailForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { regionDetail } = this.props;
+
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues: {},
+            formValues: {
+                ...regionDetail.regionalGroups,
+                countryCode: regionDetail.code,
+                countryName: regionDetail.title,
+            },
+            pending: false,
+            stale: false,
         };
+
         this.elements = [
             'countryCode',
             'countryName',
@@ -57,16 +89,74 @@ export default class RegionDetailForm extends React.PureComponent {
             'unGeoRegion',
             'unGeoSubregion',
         ];
+
         this.validations = {
             countryCode: [requiredCondition],
             countryName: [requiredCondition],
-            wbRegion: [requiredCondition],
-            wbIncomeRegion: [requiredCondition],
-            ochaRegion: [requiredCondition],
-            echoRegion: [requiredCondition],
-            unGeoRegion: [requiredCondition],
-            unGeoSubregion: [requiredCondition],
+            wbRegion: [],
+            wbIncomeRegion: [],
+            ochaRegion: [],
+            echoRegion: [],
+            unGeoRegion: [],
+            unGeoSubregion: [],
         };
+    }
+
+    createRequestForRegionDetailPatch = (regionId, data) => {
+        const urlForRegion = createUrlForRegion(regionId);
+        const regionDetailPatchRequest = new RestBuilder()
+            .url(urlForRegion)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForRegionPatch(
+                    { access }, data);
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'regionPatchResponse');
+                    this.props.setRegionDetails({
+                        regionDetails: response,
+                        regionId,
+                    });
+                    this.setState({ stale: false });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+
+                const { errors } = response;
+                const formFieldErrors = {};
+                const { nonFieldErrors } = errors;
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formFieldErrors[key] = errors[key].join(' ');
+                    }
+                });
+
+                this.setState({
+                    formFieldErrors,
+                    formErrors: nonFieldErrors,
+                    pending: false,
+                });
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return regionDetailPatchRequest;
     }
 
     // FORM RELATED
@@ -76,6 +166,7 @@ export default class RegionDetailForm extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
+            stale: true,
         });
     };
 
@@ -83,19 +174,57 @@ export default class RegionDetailForm extends React.PureComponent {
         this.setState({
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
+            stale: false,
         });
     };
 
     successCallback = (values) => {
         console.log(values);
-        // Rest Request goes here
+        // Stop old patch request
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+
+        // Create data for patch
+        const data = {
+            code: values.countryCode,
+            title: values.countryName,
+            regionalGroups: {
+                wbRegion: values.wbRegion,
+                wbIncomeRegion: values.wbIncomeRegion,
+                ochaRegion: values.ochaRegion,
+                echoRegion: values.echoRegion,
+                unGeoRegion: values.unGeoRegion,
+                unGeoSubregion: values.unGeoSubregion,
+            },
+        };
+
+        // Create new patch request
+        this.regionDetailPatchRequest =
+            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+        this.regionDetailPatchRequest.start();
     };
+
+    handleFormCancel = (e) => {
+        // TODO: use prompt
+        e.preventDefault();
+        const { regionDetail } = this.props;
+
+        this.setState({
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {
+                ...regionDetail.regionalGroups,
+                countryCode: regionDetail.code,
+                countryName: regionDetail.title,
+            },
+            pending: false,
+            stale: false,
+        });
+    }
 
     render() {
         const {
-            regionDetail,
-            pending,
-            stale,
             className,
         } = this.props;
 
@@ -103,6 +232,8 @@ export default class RegionDetailForm extends React.PureComponent {
             formErrors,
             formFieldErrors,
             formValues,
+            pending,
+            stale,
         } = this.state;
 
         return (
@@ -122,7 +253,8 @@ export default class RegionDetailForm extends React.PureComponent {
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">
                         <DangerButton
-                            disabled={pending}
+                            onClick={this.handleFormCancel}
+                            disabled={pending || !stale}
                         >
                             Cancel
                         </DangerButton>
@@ -134,31 +266,21 @@ export default class RegionDetailForm extends React.PureComponent {
                     </div>
                 </header>
                 <div styleName="input-container">
-                    {
-                        regionDetail.code &&
-                            <TextInput
-                                disabled
-                                label="Country code"
-                                placeholder="NPL"
-                                styleName="text-input"
-                                value={regionDetail.code}
-                            />
-                    }
-                    {
-                        !regionDetail.code &&
-                            <TextInput
-                                label="Country code"
-                                placeholder="NPL"
-                                styleName="text-input"
-                            />
-                    }
+                    <TextInput
+                        error={formFieldErrors.countryCode}
+                        formname="countryCode"
+                        label="Country code"
+                        placeholder="NPL"
+                        styleName="text-input"
+                        value={formValues.countryCode}
+                    />
                     <TextInput
                         error={formFieldErrors.countryName}
                         formname="countryName"
                         label="Name"
                         placeholder="Nepal"
                         styleName="text-input"
-                        value={regionDetail.title}
+                        value={formValues.countryName}
                     />
                     <TextInput
                         error={formFieldErrors.wbRegion}

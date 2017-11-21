@@ -11,7 +11,6 @@ const regionSchema = [];
         fields: {
             adminLevels: { type: 'array.object', required: false },
             code: { type: 'string', required: true },
-            data: { type: 'object', required: false },
             keyFigures: { type: 'object', required: false },
             mediaSources: { type: 'object', required: false },
             populationData: { type: 'object', required: false },
@@ -42,6 +41,17 @@ const regionSchema = [];
 
 {
     const name = 'regionCreateResponse';
+    const schema = {
+        doc: {
+            name: 'Region Post Response',
+            description: 'Response for Post',
+        },
+        extends: 'region',
+    };
+    regionSchema.push({ name, schema });
+}
+{
+    const name = 'regionPatchResponse';
     const schema = {
         doc: {
             name: 'Region Post Response',
