@@ -17,7 +17,7 @@ import {
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
-import RegionDetailForm from '../../../../common/components/RegionDetailForm';
+import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 
 import styles from './styles.scss';
@@ -90,7 +90,7 @@ export default class CountryGeneral extends React.PureComponent {
         return (
             <div styleName="country-general">
                 <div styleName="detail-map-container">
-                    <RegionDetailForm
+                    <RegionDetail
                         styleName="region-detail-form"
                         regionId={countryDetail.id}
                     />

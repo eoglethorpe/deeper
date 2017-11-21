@@ -58,7 +58,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class RegionDetailForm extends React.PureComponent {
+export default class RegionDetail extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
