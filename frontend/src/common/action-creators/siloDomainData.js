@@ -8,6 +8,7 @@ import {
     ADD_LEAD_VIEW_LEAD_CHANGE,
     ADD_LEAD_VIEW_LEAD_SET_PENDING,
     ADD_LEAD_VIEW_LEAD_SAVE,
+    ADD_LEAD_VIEW_LEAD_REMOVE,
 
     SET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
@@ -62,6 +63,11 @@ export const addLeadViewLeadSaveAction = ({ leadId, serverId }) => ({
     type: ADD_LEAD_VIEW_LEAD_SAVE,
     leadId,
     serverId,
+});
+
+export const addLeadViewLeadRemoveAction = leadId => ({
+    type: ADD_LEAD_VIEW_LEAD_REMOVE,
+    leadId,
 });
 
 export const setLeadPageFilterAction = ({ filters }) => ({

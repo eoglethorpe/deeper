@@ -13,9 +13,7 @@ import update from '../../../../public/utils/immutable-update';
 import { RestBuilder } from '../../../../public/utils/rest';
 import { UploadBuilder } from '../../../../public/utils/Uploader';
 
-import {
-    List,
-} from '../../../../public/components/View/';
+import { List } from '../../../../public/components/View/';
 import { pageTitles } from '../../../../common/utils/labels';
 
 import {
@@ -606,9 +604,7 @@ export default class AddLeadView extends React.PureComponent {
             onNext: this.handleLeadNext(key),
         };
 
-        const {
-            activeLeadId,
-        } = this.props;
+        const { activeLeadId } = this.props;
 
         return (
             <div
