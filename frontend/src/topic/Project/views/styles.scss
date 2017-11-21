@@ -4,48 +4,46 @@
 .project-panel {
     @include shadow-medium;
     display: flex;
-    margin: $spacing-large;
-    $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-    $height-header: 40px;
+    margin: $spacing-medium-alt;
     background-color: $color-foreground;
-    height: $height-full-page;
+    height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});
 
     .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: $spacing-medium;
-        width: 100%;
-        height: $height-header;
+        padding: $spacing-small $spacing-medium;
 
         .heading {
             color: $color-primary;
             font-size: $font-size-extra-large;
         }
 
-        :global .ion-eye {
+        .sidebar-icon {
             font-size: $font-size-large;
         }
     }
 
     .content {
+        display: flex;
         flex-basis: 100%;
+        flex-direction: column;
 
         &.side-bar-shown {
-            flex-basis: 75%;
+            flex-grow: 1;
         }
     }
 
     .side-bar {
         @include shadow-medium;
         display: none;
-        flex-basis: 0%;
         background-color: $color-foreground;
-        $height-header: 96px;
 
         &.show {
-            display: block;
-            flex-basis: 25%;
+            display: flex;
+            flex-basis: 16%;
+            flex-direction: column;
+            min-width: 320px;
         }
 
         .header {
@@ -55,11 +53,11 @@
             justify-content: space-between;
             border-bottom: $width-separator-normal solid $color-separator;
             padding: $spacing-medium;
-            height: $height-header;
         }
 
         .list {
-            height: calc(100% - #{$height-header});
+            flex-grow: 1;
+            overflow-y: auto;
 
             .list-item {
                 display: block;

@@ -1,15 +1,19 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
 
-$height-header: 40px;
-
 .tabs-container {
-    background-color: $color-foreground;
-    height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
-}
+    flex-grow: 1;
+    overflow: auto;
 
-.tab {
-    background-color: $color-foreground;
-    height: 100%;
-    font-size: 1em;
+    .tabs-content {
+        display: flex;
+        flex-direction: column;
+
+        .tab {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: auto;
+        }
+    }
 }

@@ -8,31 +8,49 @@
 }
 
 .admin-levels {
+    display: flex;
+    flex-direction: column;
     border-top: $width-separator-thin solid $color-separator;
 
     .header {
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
         padding: $spacing-medium $spacing-large;
-        width: 100%;
-        height: $height-header;
         text-transform: uppercase;
         font-size: $font-size-extra-large;
     }
 
     .admin-levels-list {
-        height: calc(100% - #{$height-header});
+        flex-grow: 1;
         overflow: auto;
     }
 
-    :global .edit {
-        color: $color-primary;
-    }
+    :global {
+        .edit {
+            color: $color-primary;
+        }
 
-    :global .delete {
-        color: $color-danger;
-        font-size: $font-size-large;
+        .delete {
+            color: $color-danger;
+            font-size: $font-size-large;
+        }
+
+        .raw-table {
+            .headers {
+                .level {
+                    width: 64px;
+                }
+            }
+            .body {
+                .row {
+                    .cell {
+                        padding: $spacing-extra-small $spacing-medium;
+                    }
+                }
+            }
+        }
     }
 }

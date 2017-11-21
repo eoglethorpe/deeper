@@ -302,8 +302,9 @@ export default class CountryPanel extends React.PureComponent {
             return (
                 <div styleName="country-details">
                     <CountryDetail
-                        key={activeCountry}
                         countryId={activeCountry}
+                        key={activeCountry}
+                        styleName="country-detail"
                     />
                 </div>
             );
@@ -333,15 +334,17 @@ export default class CountryPanel extends React.PureComponent {
                 </Helmet>
                 <div styleName="country-list">
                     <div styleName="list-header">
-                        <div styleName="header-text">
-                            Countries
+                        <div styleName="header-button-container">
+                            <div styleName="header-text">
+                                Countries
+                            </div>
+                            <PrimaryButton
+                                iconName="ion-plus"
+                                onClick={this.onAddCountry}
+                            >
+                                Add country
+                            </PrimaryButton>
                         </div>
-                        <PrimaryButton
-                            iconName="ion-plus"
-                            onClick={this.onAddCountry}
-                        >
-                            Add country
-                        </PrimaryButton>
                         <TextInput
                             styleName="search-input"
                             onChange={this.search}

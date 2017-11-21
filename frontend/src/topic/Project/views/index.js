@@ -216,11 +216,12 @@ export default class ProjectPanel extends React.PureComponent {
                         <h1 styleName="heading">
                             { projectDetails.title }
                         </h1>
-                        {!sideBarVisibility &&
-                            <TransparentPrimaryButton onClick={this.showProjectList}>
-                                <span className="ion-eye" />
-                            </TransparentPrimaryButton>
-                        }
+                        <TransparentPrimaryButton onClick={this.showProjectList}>
+                            <span
+                                className="ion-android-menu"
+                                styleName="sidebar-icon"
+                            />
+                        </TransparentPrimaryButton>
                     </header>
                     <ProjectDetails project={projectDetails} />
                 </div>

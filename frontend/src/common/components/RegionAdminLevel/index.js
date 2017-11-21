@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import {
     TransparentButton,
     TransparentPrimaryButton,
+    PrimaryButton,
+    TransparentAccentButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -62,7 +64,7 @@ export default class RegionAdminLevel extends React.PureComponent {
         this.adminLevelHeaders = [
             {
                 key: 'level',
-                label: 'Admin Level',
+                label: 'Level',
                 order: 1,
             },
             {
@@ -142,6 +144,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             displayAdminLevelList,
         } = this.state;
         const { className } = this.props;
+        console.log(displayAdminLevelList);
 
         return (
             <div
@@ -150,9 +153,12 @@ export default class RegionAdminLevel extends React.PureComponent {
             >
                 <div styleName="header">
                     Admin Levels
-                    <TransparentPrimaryButton onClick={this.addAdminLevel}>
+                    <PrimaryButton
+                        iconName="ion-plus"
+                        onClick={this.addAdminLevel}
+                    >
                         Add admin level
-                    </TransparentPrimaryButton>
+                    </PrimaryButton>
                     <Modal
                         closeOnEscape
                         onClose={this.handleModalClose}
