@@ -9,35 +9,19 @@
 
     .header {
         display: flex;
+        flex-shrink: 0;
         justify-content: space-between;
         padding: $spacing-small $spacing-medium-alt;
-        flex-shrink: 0;
-
-        .header-title {
-            font-size: 1.6em;
-        }
-
-        .button-container {
-            font-size: inherit;
-
-            :global .save-btn {
-                margin-right: $spacing-medium;
-            }
-        }
     }
 
     .tabs-container {
         flex-grow: 1;
 
-        .tabs-content {
+        .tab-content {
             display: flex;
             flex-direction: column;
-
-            .tab {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
+            flex-grow: 1;
+            overflow-y: auto;
         }
     }
 }

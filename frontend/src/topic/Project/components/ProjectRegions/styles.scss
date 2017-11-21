@@ -7,16 +7,19 @@
 
     .list-container {
         @include shadow-small;
+        display: flex;
         flex-basis: 16%;
+        flex-direction: column;
         min-width: 320px;
 
         .list-header {
             display: flex;
+            flex-shrink: 0;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-extra-small $spacing-medium;
+            padding: $spacing-medium $spacing-medium-alt;
 
             .search-input {
                 padding: 0;
@@ -33,7 +36,8 @@
         }
 
         .list {
-            overflow: auto;
+            flex-grow: 1;
+            overflow-y: auto;
 
             :global .list-item {
                 transition: .2s all ease-in-out;

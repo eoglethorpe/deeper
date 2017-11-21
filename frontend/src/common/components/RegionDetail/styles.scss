@@ -1,10 +1,5 @@
 @import '../../../stylesheets/base';
 
-.text-input {
-    background-color: transparent!important;
-    padding: 0;
-}
-
 .region-detail-form {
     display: flex;
     flex-direction: column;
@@ -44,5 +39,13 @@
         flex-grow: 1;
         padding: $spacing-medium-alt;
         overflow-y: auto;
+
+        .text-input {
+            padding: 0;
+
+            input {
+                background-color: transparent;
+            }
+        }
     }
 }

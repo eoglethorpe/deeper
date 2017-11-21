@@ -4,12 +4,14 @@
 .project-panel {
     @include shadow-medium;
     display: flex;
+    flex-direction: column;
     margin: $spacing-medium-alt;
     background-color: $color-foreground;
     height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});
 
     .header {
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
         padding: $spacing-small $spacing-medium;
@@ -28,6 +30,7 @@
         display: flex;
         flex-basis: 100%;
         flex-direction: column;
+        flex-grow: 1;
 
         &.side-bar-shown {
             flex-grow: 1;

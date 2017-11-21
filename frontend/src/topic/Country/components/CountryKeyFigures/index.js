@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+import {
     Form,
     TextInput,
     NonFieldErrors,
@@ -106,16 +109,6 @@ export default class CountryKeyFigures extends React.PureComponent {
     }
 
     // FORM RELATED
-
-    onSubmit = () => {
-        this.form.onSubmit();
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.onSubmit();
-        return false;
-    }
 
     changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
@@ -238,30 +231,23 @@ export default class CountryKeyFigures extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
-                onSubmit={this.handleSubmit}
             >
-                {
-                    pending &&
-                    <div styleName="pending-overlay">
-                        <i
-                            className="ion-load-c"
-                            styleName="loading-icon"
-                        />
+                { pending && <LoadingAnimation /> }
+                <header styleName="header">
+                    <NonFieldErrors errors={formErrors} />
+                    <div styleName="action-buttons">
+                        <DangerButton
+                            onClick={this.handleFormCancel}
+                            disabled={pending || !stale}
+                        >
+                            Cancel
+                        </DangerButton>
+                        <PrimaryButton disabled={pending || !stale} >
+                            Save changes
+                        </PrimaryButton>
                     </div>
-                }
-                <NonFieldErrors errors={formErrors} />
-                <div styleName="action-buttons">
-                    <DangerButton
-                        onClick={this.handleFormCancel}
-                        disabled={pending || !stale}
-                    >
-                        Cancel
-                    </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
-                        Save changes
-                    </PrimaryButton>
-                </div>
-                <div styleName="hdi">
+                </header>
+                <div styleName="section">
                     <h3>
                      Human Development Index
                         <a
@@ -278,7 +264,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="INDEX"
-                        styleName="index text-input"
+                        styleName="text-input"
                         type="number"
                         step="any"
                         min="0"
@@ -289,7 +275,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="GEO-RANK"
-                        styleName="geo-rank text-input"
+                        styleName="text-input"
                         readOnly
                         formname="geoRank"
                         value={formValues.geoRank}
@@ -297,7 +283,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="GEO-SCORE"
-                        styleName="geo-score text-input"
+                        styleName="text-input"
                         readOnly
                         formname="geoScore"
                         value={formValues.geoScore}
@@ -305,13 +291,13 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="RANK"
-                        styleName="rank text-input"
+                        styleName="text-input"
                         formname="rank"
                         value={formValues.rank}
                         error={formFieldErrors.rank}
                     />
                 </div>
-                <div styleName="under-five-mortality-rate">
+                <div styleName="section">
                     <h3>
                      UNDER FIVE MORTALITY RATE (per 1.000 live births)
                         <a
@@ -328,7 +314,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="U5M"
-                        styleName="u5m text-input"
+                        styleName="text-input"
                         formname="u5m"
                         value={formValues.u5m}
                         error={formFieldErrors.u5m}
@@ -336,14 +322,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="GEO SCORE"
-                        styleName="geo-score-u5m text-input"
+                        styleName="text-input"
                         readOnly
                         formname="geoScoreU5m"
                         value={formValues.geoScoreU5m}
                         error={formFieldErrors.geoScoreU5m}
                     />
                 </div>
-                <div styleName="uprooted-people">
+                <div styleName="section">
                     <h3>
                      UPROOTED PEOPLE (refugees + IDPs + returned refugees)
                         <a
@@ -360,14 +346,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="Number of Refugees"
-                        styleName="number-of-refugees text-input"
+                        styleName="text-input"
                         formname="numberOfRefugees"
                         value={formValues.numberOfRefugees}
                         error={formFieldErrors.numberOfRefugees}
                     />
                     <TextInput
                         label="Percentage of Uprooted People"
-                        styleName="percentage-uprooted-people text-input"
+                        styleName="text-input"
                         readOnly
                         formname="percentageUprootedPeople"
                         value={formValues.percentageUprootedPeople}
@@ -375,7 +361,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="GEO-SCORE"
-                        styleName="geo-score-uprooted text-input"
+                        styleName="text-input"
                         readOnly
                         formname="geoScoreUprooted"
                         value={formValues.geoScoreUprooted}
@@ -383,20 +369,20 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label="Number of IDPs"
-                        styleName="number-idp text-input"
+                        styleName="text-input"
                         formname="numberIdp"
                         value={formValues.numberIdp}
                         error={formFieldErrors.numberIdp}
                     />
                     <TextInput
                         label="Number of returned refugees"
-                        styleName="number-returned-refugees text-input"
+                        styleName="text-input"
                         formname="numberReturnedRefugees"
                         value={formValues.numberReturnedRefugees}
                         error={formFieldErrors.numberReturnedRefugees}
                     />
                 </div>
-                <div styleName="inform-score">
+                <div styleName="section">
                     <h3>
                     Inform Score
                         <a
@@ -413,35 +399,35 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label="Risk Calss"
-                        styleName="risk-class text-input"
+                        styleName="text-input"
                         formname="riskClass"
                         value={formValues.riskClass}
                         error={formFieldErrors.riskClass}
                     />
                     <TextInput
                         label="Inform Risk Index"
-                        styleName="inform-risk-index text-input"
+                        styleName="text-input"
                         formname="informRiskIndex"
                         value={formValues.informRiskIndex}
                         error={formFieldErrors.informRiskIndex}
                     />
                     <TextInput
                         label="Hazard and Exposure"
-                        styleName="hazard-and-exposure text-input"
+                        styleName="text-input"
                         formname="hazardAndExposure"
                         value={formValues.hazardAndExposure}
                         error={formFieldErrors.hazardAndExposure}
                     />
                     <TextInput
                         label="Vulnerability"
-                        styleName="vulnerability text-input"
+                        styleName="text-input"
                         formname="vulnerability"
                         value={formValues.vulnerability}
                         error={formFieldErrors.vulnerability}
                     />
                     <TextInput
                         label="Lack of Coping Capacity"
-                        styleName="lack-of-coping-capacity text-input"
+                        styleName="text-input"
                         formname="lackOfCopingCapacity"
                         value={formValues.lackOfCopingCapacity}
                         error={formFieldErrors.lackOfCopingCapacity}

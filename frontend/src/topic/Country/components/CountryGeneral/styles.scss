@@ -3,13 +3,13 @@
 
 .country-general {
     display: flex;
+    flex-basis: 100%;
     flex-direction: column;
     flex-grow: 1;
-    height: 100%;
-    overflow: auto;
 
     .detail-map-container {
         display: flex;
+        height: 480px;
 
         .region-detail-form {
             flex-basis: 30%;
@@ -26,6 +26,6 @@
     }
 
     .admin-levels {
-        flex-grow: 1;
+        flex-grow: 0;
     }
 }
