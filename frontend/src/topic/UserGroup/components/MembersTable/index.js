@@ -510,6 +510,7 @@ export default class MembersTable extends React.PureComponent {
         const {
             activeMemberDelete,
             deletePending,
+            addPending,
             memberData,
             saveChangeDisabled,
             showDeleteMemberModal,
@@ -575,6 +576,15 @@ export default class MembersTable extends React.PureComponent {
                             multiple
                         />
                         <div styleName="new-member-table">
+                            {
+                                addPending &&
+                                <div styleName="pending-overlay">
+                                    <i
+                                        className="ion-load-c"
+                                        styleName="loading-icon"
+                                    />
+                                </div>
+                            }
                             <Table
                                 data={newMemberList}
                                 headers={this.newMemberHeaders}
