@@ -532,7 +532,7 @@ export default class AddLeadView extends React.PureComponent {
             .progress((progressPercent) => {
                 this.handleLeadUploadProgress(leadId, progressPercent);
             })
-            .success((response, status) => {
+            .success((response) => {
                 this.handleLeadUploadSuccess(leadId, response);
             })
             .failure((response, status) => {
