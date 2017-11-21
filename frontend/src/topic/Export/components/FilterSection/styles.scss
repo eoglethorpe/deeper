@@ -1,6 +1,11 @@
 @import '../../../../stylesheets/base';
 
+$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+
 .filters {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     padding: $spacing-large;
 
     h2 {
@@ -10,10 +15,13 @@
 
     .basic-information,
     .entry-attributes,
-    .lead-information,
-    .leads-table {
+    .lead-information, {
         display: flex;
-        flex-wrap: wrap;
-        padding: $spacing-medium;
+        flex-shrink: 0;
+        padding: $spacing-small 0;
+    }
+
+    .leads-table {
+        flex-grow: 1;
     }
 }

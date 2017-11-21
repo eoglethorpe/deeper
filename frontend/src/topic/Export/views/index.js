@@ -106,12 +106,12 @@ export default class Export extends React.PureComponent {
                         </div>
                     </header>
                     <div styleName="content">
-                        <div styleName="filter-section">
-                            <FilterSection />
-                        </div >
-                        <div styleName="structure-section" >
-                            <StructureSection />
-                        </div>
+                        <FilterSection
+                            styleName="filter-section"
+                        />
+                        <StructureSection
+                            styleName="structure-section"
+                        />
                     </div>
                 </Form>
             </div>

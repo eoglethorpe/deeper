@@ -3,8 +3,8 @@ import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 
 import {
-    TextInput,
     SelectInput,
+    TextInput,
 } from '../../../../public/components/Input';
 
 @CSSModules(styles, { allowMultiple: true })
@@ -14,21 +14,24 @@ export default class BasicInformation extends React.PureComponent {
             <div styleName="basic-information">
                 <h4>Basic Information</h4>
                 <TextInput
-                    placeholder="Search Excerpt"
+                    placeholder="eg: The conflict in Syria..."
                     styleName="search-excerpt"
-                    showLabel={false}
+                    label="Search Excerpt"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Imported By"
+                    placeholder="eg: John Doe"
                     styleName="imported-by"
-                    showLabel={false}
+                    label="Imported By"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Date Imported"
+                    placeholder=""
+                    label="Date Imported"
                     styleName="date-imported"
-                    showLabel={false}
+                    showLabel
                     showHintAndError={false}
                 />
             </div>

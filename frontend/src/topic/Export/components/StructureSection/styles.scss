@@ -1,7 +1,10 @@
 @import '../../../../stylesheets/base';
 
+$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
+
 .report-structure {
     padding: $spacing-large;
+    height: calc(#{$height-full-page} - #{$height-header});
 
     h2 {
         margin: $spacing-large 0;

@@ -1,10 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 import MultiCheckboxCollection from '../../../../public/components/MultiCheckboxCollection';
-@CSSModules(styles, { allowMultiple: true })
 
+const propTypes = {
+    className: PropTypes.string,
+};
+
+const defaultProps = {
+    className: '',
+};
+
+@CSSModules(styles, { allowMultiple: true })
 export default class StructureSection extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
     constructor(props) {
         super(props);
 
@@ -70,7 +81,10 @@ export default class StructureSection extends React.PureComponent {
     }
     render() {
         return (
-            <div styleName="report-structure">
+            <div
+                className={this.props.className}
+                styleName="report-structure"
+            >
                 <h2> Report Structure</h2>
                 <div styleName="multi-checkbox">
                     <MultiCheckboxCollection

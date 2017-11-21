@@ -2,18 +2,18 @@
 
 .leads-overview {
     display: flex;
-    flex-wrap: wrap;
-    padding: $spacing-medium;
+    flex-direction: column;
 
     h4 {
-        flex-basis: 100%;
-        margin: $spacing-medium 0;
+        flex-shrink: 0;
+        padding: $spacing-medium $spacing-small;
         font-weight: $font-weight-medium;
     }
 
     .leads-table {
-        flex-basis: 100%;
-        
+        flex-grow: 1;
+        overflow-y: auto;
+
         :global .header {
             position: sticky;
             top: 0;

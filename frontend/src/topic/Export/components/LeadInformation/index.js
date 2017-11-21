@@ -3,8 +3,8 @@ import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 
 import {
-    TextInput,
     SelectInput,
+    TextInput,
 } from '../../../../public/components/Input';
 
 @CSSModules(styles, { allowMultiple: true })
@@ -14,21 +14,24 @@ export default class FilterSection extends React.PureComponent {
             <div styleName="lead-information">
                 <h4>Lead Information</h4>
                 <TextInput
-                    placeholder="Lead Title"
+                    placeholder="The election in Kenya..."
+                    label="Lead Title"
                     styleName="lead-title"
-                    showLabel={false}
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Source"
+                    placeholder="eg: Reliefweb"
+                    label="Source"
                     styleName="source"
-                    showLabel={false}
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Date Published"
+                    placeholder=""
+                    label="Date Published"
                     styleName="date-published"
-                    showLabel={false}
+                    showLabel
                     showHintAndError={false}
                 />
             </div>
