@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     TransparentButton,
-    TransparentPrimaryButton,
     PrimaryButton,
-    TransparentAccentButton,
 } from '../../../public/components/Action';
 import {
     Modal,
