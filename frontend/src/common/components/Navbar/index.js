@@ -19,7 +19,12 @@ import { pageTitles } from '../../utils/labels';
 import logo from '../../../img/black-logo.png';
 import styles from './styles.scss';
 
-import { stopTokenRefreshAction } from '../../../common/middlewares/refreshAccessToken';
+import {
+    stopSiloBackgroundTasksAction,
+} from '../../../common/middlewares/siloBackgroundTasks';
+import {
+    stopRefreshAction,
+} from '../../../common/middlewares/refresher';
 
 import {
     logoutAction,
@@ -50,7 +55,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
-    stopTokenRefresh: () => dispatch(stopTokenRefreshAction()),
+    stopRefresh: () => dispatch(stopRefreshAction()),
+    stopSiloTasks: () => dispatch(stopSiloBackgroundTasksAction()),
 });
 
 const propTypes = {
@@ -63,7 +69,8 @@ const propTypes = {
     navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
     navbarVisible: PropTypes.bool,
     setActiveProject: PropTypes.func.isRequired,
-    stopTokenRefresh: PropTypes.func.isRequired,
+    stopRefresh: PropTypes.func.isRequired,
+    stopSiloTasks: PropTypes.func.isRequired,
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
@@ -133,7 +140,8 @@ export default class Navbar extends React.PureComponent {
     }
 
     handleLogoutButtonClick = () => {
-        this.props.stopTokenRefresh();
+        this.props.stopRefresh();
+        this.props.stopSiloTasks();
         this.props.logout();
     }
 

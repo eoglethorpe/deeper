@@ -2,17 +2,17 @@ import { compose, createStore, applyMiddleware } from 'redux';
 import { autoRehydrate } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from './middlewares/logger';
-import createRefreshAccessToken from './middlewares/refreshAccessToken';
+import refresher from './middlewares/refresher';
+import siloBackgroundTasks from './middlewares/siloBackgroundTasks';
 
 import reducer from './reducers';
 
 // Invoke refresh access token every 10m
-const refreshAccessToken = createRefreshAccessToken(1000 * 60 * 10);
-
 const middleware = [
-    thunk,
-    refreshAccessToken,
     logger,
+    refresher,
+    siloBackgroundTasks,
+    thunk,
 ];
 
 // Get compose from Redux Devtools Extension

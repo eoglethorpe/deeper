@@ -12,7 +12,14 @@ import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
 } from './common/rest';
-import { startTokenRefreshAction } from './common/middlewares/refreshAccessToken';
+import {
+    startRefreshAction,
+    stopRefreshAction,
+} from './common/middlewares/refresher';
+import {
+    startSiloBackgroundTasksAction,
+    stopSiloBackgroundTasksAction,
+} from './common/middlewares/siloBackgroundTasks';
 import {
     setAccessTokenAction,
 
@@ -31,14 +38,20 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setAccessToken: access => dispatch(setAccessTokenAction(access)),
-    startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
+    startRefresh: params => dispatch(startRefreshAction(params)),
+    stopRefresh: () => dispatch(stopRefreshAction()),
+    startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
+    stopSiloTasks: () => dispatch(stopSiloBackgroundTasksAction()),
     logout: () => dispatch(logoutAction()),
 });
 
 const propTypes = {
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     setAccessToken: PropTypes.func.isRequired,
-    startTokenRefresh: PropTypes.func.isRequired,
+    startRefresh: PropTypes.func.isRequired,
+    stopRefresh: PropTypes.func.isRequired,
+    startSiloTasks: PropTypes.func.isRequired,
+    stopSiloTasks: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     logout: PropTypes.func.isRequired,
 };
@@ -94,6 +107,9 @@ export default class App extends React.PureComponent {
         if (this.refreshRequest) {
             this.refreshRequest.stop();
         }
+
+        this.props.stopRefresh();
+        this.props.stopSiloTasks();
     }
 
     createRequestForRefresh = () => {
@@ -117,14 +133,19 @@ export default class App extends React.PureComponent {
                     if (this.props.currentUserProjects.length <= 0) {
                         console.info('No projects in cache');
                         // set pending to false after api call is complete
-                        this.props.startTokenRefresh(() => {
+                        this.props.startRefresh(() => {
                             this.setState({ pending: false });
                         });
                     } else {
                         // set pending to false irrespective of api call
-                        this.props.startTokenRefresh();
+                        this.props.startRefresh();
                         this.setState({ pending: false });
                     }
+
+                    // Start the locked silo tasks
+                    this.props.startSiloTasks(() => {
+                        console.log('Silo tasks started');
+                    });
                 } catch (er) {
                     console.error(er);
                 }

@@ -33,7 +33,14 @@ import {
     createParamsForTokenCreateHid,
     urlForTokenCreateHid,
 } from '../../../../common/rest';
-import { startTokenRefreshAction } from '../../../../common/middlewares/refreshAccessToken';
+
+import {
+    startRefreshAction,
+} from '../../../../common/middlewares/refresher';
+import {
+    startSiloBackgroundTasksAction,
+} from '../../../../common/middlewares/siloBackgroundTasks';
+
 import {
     setNavbarStateAction,
 
@@ -51,7 +58,8 @@ const propTypes = {
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
-    startTokenRefresh: PropTypes.func.isRequired,
+    startRefresh: PropTypes.func.isRequired,
+    startSiloTasks: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -65,7 +73,8 @@ const mapDispatchToProps = dispatch => ({
     authenticate: () => dispatch(authenticateAction()),
     login: params => dispatch(loginAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
-    startTokenRefresh: params => dispatch(startTokenRefreshAction(params)),
+    startRefresh: params => dispatch(startRefreshAction(params)),
+    startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -214,13 +223,18 @@ export default class Login extends React.PureComponent {
                     if (this.props.currentUserProjects.length <= 0) {
                         console.warn('No projects in cache');
                         // if there is no projects, block and get from api
-                        this.props.startTokenRefresh(() => {
+                        this.props.startRefresh(() => {
                             this.props.authenticate();
                         });
                     } else {
-                        this.props.startTokenRefresh();
+                        this.props.startRefresh();
                         this.props.authenticate();
                     }
+
+                    // Start the locked silo tasks
+                    this.props.startSiloTasks(() => {
+                        console.log('Silo tasks started');
+                    });
                 } catch (err) {
                     console.error(err);
                 }
