@@ -2,11 +2,14 @@
 @import '../../../../stylesheets/modal';
 
 .country-general {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     height: 100%;
+    overflow: auto;
 
     .detail-map-container {
         display: flex;
-        height: 54%;
 
         .region-detail-form {
             flex-basis: 30%;
@@ -23,6 +26,6 @@
     }
 
     .admin-levels {
-        height: 46%;
+        flex-grow: 1;
     }
 }

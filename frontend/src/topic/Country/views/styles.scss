@@ -1,18 +1,14 @@
 @import '../../../stylesheets/base';
 
-$height-header: calc(#{$height-header} + #{$height-tabbar});
-$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
-
 .country-details-alt {
     @include shadow-medium;
     display: flex;
-    flex-basis: 75%;
     flex-direction: column;
+    flex-grow: 1;
     align-items: center;
     justify-content: center;
     background-color: $color-foreground;
-    padding: $spacing-large;
-    height: $height-full-page;
+    padding: $spacing-medium-alt;
 
     h1 {
         margin-bottom: $spacing-large;
@@ -22,27 +18,32 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
 
 .country-panel {
     display: flex;
-    padding: $spacing-large;
+    padding: $spacing-medium-alt;
     $width-list: 320px;
+    height: calc(100vh - #{$height-navbar});
 
     .country-list {
         @include shadow-medium;
-        flex-basis: 20%;
+        display: flex;
+        flex-basis: 16%;
+        flex-direction: column;
         flex-shrink: 0;
         background-color: $color-foreground;
         min-width: 320px;
+        height: 100%;
 
         .list-header {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-medium $spacing-large;
-            height: $height-header;
+            padding: $spacing-medium $spacing-medium-alt;
+
+            .header-button-container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
 
             .search-input {
-                padding: 0;
+                padding: $spacing-small 0;
 
                 :global .error {
                     display: none;
@@ -54,32 +55,32 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
                 font-size: 1.6em;
             }
         }
-    }
 
-    .list {
-        height: calc(#{$height-full-page} - #{$height-header});
-        overflow: auto;
+        .list {
+            flex-grow: 1;
+            overflow-y: auto;
 
-        :global .list-item {
-            transition: .2s all ease-in-out;
-            border-bottom: $width-separator-thin solid $color-separator;
-            border-left: $width-separator-thick solid transparent;
-            padding: 0;
+            :global .list-item {
+                transition: .2s all ease-in-out;
+                border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
+                padding: 0;
 
-            .link {
-                display: block;
-                padding: $spacing-medium $spacing-large;
-                width: 100%;
-                height: 100%;
-            }
+                .link {
+                    display: block;
+                    padding: $spacing-medium $spacing-large;
+                    width: 100%;
+                    height: 100%;
+                }
 
-            &:hover {
-                background-color: $color-hover;
-            }
+                &:hover {
+                    background-color: $color-hover;
+                }
 
-            &.active {
-                border-left: $width-separator-thick solid $color-accent;
-                background-color: $color-hover;
+                &.active {
+                    border-left: $width-separator-thick solid $color-accent;
+                    background-color: $color-hover;
+                }
             }
         }
     }
@@ -88,6 +89,10 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
         @include shadow-medium;
         flex-grow: 1;
         background-color: darken($color-foreground, 1%);
-        height: $height-full-page;
+        height: 100%;
+
+        .country-detail {
+            height: 100%;
+        }
     }
 }

@@ -3,14 +3,15 @@
 @import '../../../../stylesheets/modal';
 
 .country-detail {
-    $height-header: 48px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
     .header {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: $spacing-medium $spacing-large 0;
-        height: $height-header;
+        padding: $spacing-small $spacing-medium-alt;
+        flex-shrink: 0;
 
         .header-title {
             font-size: 1.6em;
@@ -26,11 +27,18 @@
     }
 
     .tabs-container {
-        height: calc(100vh - #{$height-navbar} - #{$height-header} - 2 * #{$spacing-large});
-    }
+        flex-grow: 1;
 
-    .tab {
-        height: 100%;
+        .tabs-content {
+            display: flex;
+            flex-direction: column;
+
+            .tab {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+            }
+        }
     }
 }
 

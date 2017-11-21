@@ -1,24 +1,14 @@
-@import '../../../../stylesheets/base';
 @import '../../../../stylesheets/modal';
-
-$height-header: 40px;
-$height-full-page: calc(
-        100vh
-        - #{$height-navbar}
-        -  2 * #{$spacing-large}
-        - #{$height-header}
-        - #{$height-tabbar}
-);
+@import '../../../../stylesheets/base';
 
 .project-regions {
     display: flex;
+    flex-grow: 1;
 
     .list-container {
         @include shadow-small;
-        flex-basis: 20%;
+        flex-basis: 16%;
         min-width: 320px;
-        height: $height-full-page;
-        $height-header: 96px;
 
         .list-header {
             display: flex;
@@ -27,7 +17,6 @@ $height-full-page: calc(
             justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-extra-small $spacing-medium;
-            height: $height-header;
 
             .search-input {
                 padding: 0;
@@ -44,7 +33,6 @@ $height-full-page: calc(
         }
 
         .list {
-            height: calc(#{$height-full-page} - #{$height-header});
             overflow: auto;
 
             :global .list-item {
@@ -84,14 +72,13 @@ $height-full-page: calc(
 
     .details-container {
         flex-grow: 1;
-        height: $height-full-page;
     }
 
     .no-regions {
         display: flex;
+        flex-grow: 1;
         align-items: center;
         justify-content: center;
-        width: 100%;
         height: 100%;
     }
 }
