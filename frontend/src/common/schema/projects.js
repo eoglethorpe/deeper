@@ -11,7 +11,7 @@ const projectSchema = [];
         fields: {
             data: { type: 'object' },
             memberships: { type: 'array.projectMembership' },
-            regions: { type: 'array.uint' },
+            regions: { type: 'array.object' },
             title: { type: 'string', required: true },
             userGroups: { type: 'array.uint' },
         },

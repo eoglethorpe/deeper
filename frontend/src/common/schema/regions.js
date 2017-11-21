@@ -9,10 +9,15 @@ const regionSchema = [];
         },
         extends: 'dbentity',
         fields: {
+            adminLevels: { type: 'array.object', required: false },
             code: { type: 'string', required: true },
-            title: { type: 'string', required: true },
             data: { type: 'object', required: false },
+            keyFigures: { type: 'object', required: false },
+            mediaSources: { type: 'object', required: false },
+            populationData: { type: 'object', required: false },
             public: { type: 'boolean', required: true },
+            regionalGroups: { type: 'object', required: false },
+            title: { type: 'string', required: true },
         },
     };
     regionSchema.push({ name, schema });

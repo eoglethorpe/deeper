@@ -5,9 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     TransparentButton,
-    TransparentPrimaryButton,
     PrimaryButton,
-    TransparentAccentButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -144,7 +142,6 @@ export default class RegionAdminLevel extends React.PureComponent {
             displayAdminLevelList,
         } = this.state;
         const { className } = this.props;
-        console.log(displayAdminLevelList);
 
         return (
             <div

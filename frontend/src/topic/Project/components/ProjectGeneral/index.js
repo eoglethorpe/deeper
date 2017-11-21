@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     LoadingAnimation,
@@ -13,6 +14,9 @@ import {
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
+    projectDetailsSelector,
+} from '../../../../common/redux';
+import {
     DangerButton,
     PrimaryButton,
     SuccessButton,
@@ -21,6 +25,7 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     pending: PropTypes.bool,
     stale: PropTypes.bool,
 };
@@ -31,6 +36,11 @@ const defaultProps = {
     className: '',
 };
 
+const mapStateToProps = (state, props) => ({
+    projectDetails: projectDetailsSelector(state, props),
+});
+
+@connect(mapStateToProps, null)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectGeneral extends React.PureComponent {
     static propTypes = propTypes;
@@ -38,6 +48,8 @@ export default class ProjectGeneral extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        const { projectDetails } = this.props;
+        console.log(projectDetails);
 
         this.state = {
             formErrors: [],
@@ -142,8 +154,8 @@ export default class ProjectGeneral extends React.PureComponent {
                     formname="name"
                     placeholder="Enter Project Name"
                     styleName="name"
-                    value={formValues.name}
-                    error={formFieldErrors.name}
+                    value={formValues.title}
+                    error={formFieldErrors.title}
                 />
                 <DateInput
                     label="Start Date"
