@@ -273,12 +273,24 @@ export default class Leads extends React.PureComponent {
             const filter = filters[key];
             switch (key) {
                 case 'created_at':
-                    // requestFilters.created_at__gte = '2010-10-12';
-                    // requestFilters.created_at__lte = '2019-12-01';
+                    if (filter) {
+                        requestFilters.created_at__gte = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.created_at__lte = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
                     break;
                 case 'published_on':
-                    // requestFilters.published_on__gte = '2010-09-01';
-                    // requestFilters.published_on__lte = '2019-12-01';
+                    if (filter) {
+                        requestFilters.published_on__gte = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.published_on__lte = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
                     break;
                 default:
                     requestFilters[key] = filter;
