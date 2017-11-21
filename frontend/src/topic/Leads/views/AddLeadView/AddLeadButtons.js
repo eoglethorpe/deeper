@@ -15,7 +15,7 @@ import {
 import {
     FileInput,
 } from '../../../../public/components/Input';
-import Uploader, { UploadCoordinator } from '../../../../public/utils/Uploader';
+import { Coordinator } from '../../../../public/utils/Uploader';
 import {
     addAddLeadViewLeadsAction,
     addLeadViewLeadsCountSelector,
@@ -24,7 +24,7 @@ import {
 } from '../../../../common/redux';
 import {
     urlForUpload,
-    createHeaderForFileUpload,
+    createParamsForFileUpload,
 } from '../../../../common/rest';
 import DropboxChooser from '../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../common/components/GooglePicker';
@@ -184,7 +184,7 @@ export default class AddLeadFilter extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { dropboxDisabled: false };
-        this.uploadCoordinator = new UploadCoordinator();
+        this.uploadCoordinator = new Coordinator();
     }
 
     handleAddLeadFromGoogleDrive = (response) => {
@@ -256,13 +256,12 @@ export default class AddLeadFilter extends React.PureComponent {
             const newLead = leadForFile(newLeadId, file.name, activeProject);
             newLeads.unshift(newLead);
 
-            const uploader = new Uploader(
+            const uploader = onNewUploader({
                 file,
-                urlForUpload,
-                createHeaderForFileUpload(token),
-            );
-
-            onNewUploader(newLeadId, uploader);
+                url: urlForUpload,
+                params: createParamsForFileUpload(token),
+                leadId: newLeadId,
+            });
             this.uploadCoordinator.add(newLeadId, uploader);
         });
 

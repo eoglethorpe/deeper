@@ -4,8 +4,10 @@ export const urlForUpload = `${wsEndpoint}/files/`;
 export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
 
-export const createHeaderForFileUpload = ({ access }) => ({
-    Authorization: `Bearer ${access}`,
+export const createParamsForFileUpload = ({ access }) => ({
+    headers: {
+        Authorization: `Bearer ${access}`,
+    },
 });
 
 export const createHeaderForGoogleDriveFileUpload = ({ access }, {

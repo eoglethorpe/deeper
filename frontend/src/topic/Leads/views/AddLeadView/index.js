@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 
 import update from '../../../../public/utils/immutable-update';
 import { RestBuilder } from '../../../../public/utils/rest';
+import { UploadBuilder } from '../../../../public/utils/Uploader';
 
 import {
     List,
@@ -393,7 +394,9 @@ export default class AddLeadView extends React.PureComponent {
         console.log(leadId);
     }
 
-    handleLeadUploadComplete = (leadId, status, response) => {
+    handleLeadUploadSuccess = (leadId, response) => {
+        // FOR DATA CHANGE
+
         const {
             addLeadViewLeadChange,
             addLeadViewLeads,
@@ -401,79 +404,94 @@ export default class AddLeadView extends React.PureComponent {
 
         const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
 
-        const {
-            leadUploads,
-        } = this.state;
-
-        let uploadSettings;
-        let leadSettings;
-
-        if (parseInt(status / 100, 10) === 2) {
-            uploadSettings = {
-                [leadId]: {
-                    progress: { $set: 100 },
-                    isCompleted: { $set: true },
+        const leadSettings = {
+            upload: {
+                title: { $set: response.title },
+                url: { $set: response.file },
+            },
+            form: {
+                values: {
+                    attachment: { $set: response.id },
                 },
-            };
-
-            leadSettings = {
-                upload: {
-                    title: { $set: response.title },
-                    url: { $set: response.file },
-                },
-                form: {
-                    values: {
-                        attachment: { $set: response.id },
-                    },
-                    errors: { $set: [] },
-                },
-                uiState: {
-                    ready: { $set: true },
-                },
-            };
-        } else {
-            uploadSettings = {
-                [leadId]: {
-                    progress: { $set: 100 },
-                    isCompleted: { $set: true },
-                },
-            };
-
-            leadSettings = {
-                upload: {
-                    errorMessage: { $set: `Failed to upload file (${status})` },
-                },
-                form: {
-                    values: {
-                        attachment: { $set: undefined },
-                    },
-                    errors: { $set: [`Failed to upload file (${status})`] },
-                },
-                uiState: {
-                    ready: { $set: false },
-                },
-            };
-        }
-
-        const newLeadUploads = update(leadUploads, uploadSettings);
-
+                errors: { $set: [] },
+            },
+            uiState: {
+                ready: { $set: true },
+            },
+        };
         const newLead = update(theLead, leadSettings);
-
-        const {
-            values,
-            errors,
-            fieldErrors,
-        } = newLead.form;
-
         addLeadViewLeadChange({
             leadId,
-            values,
-            formErrors: errors,
-            formFieldErrors: fieldErrors,
+            values: newLead.form.values,
+            formErrors: newLead.form.errors,
+            formFieldErrors: newLead.form.fieldErrors,
             upload: newLead.upload,
             uiState: newLead.uiState,
         });
 
+
+        // FOR UPLAOD
+
+        const { leadUploads } = this.state;
+
+        const uploadSettings = {
+            [leadId]: {
+                progress: { $set: 100 },
+                isCompleted: { $set: true },
+            },
+        };
+        const newLeadUploads = update(leadUploads, uploadSettings);
+        this.setState({
+            leadUploads: newLeadUploads,
+        });
+    }
+
+    handleLeadUploadFailure = (leadId, status) => {
+        // FOR DATA CHANGE
+
+        const {
+            addLeadViewLeadChange,
+            addLeadViewLeads,
+        } = this.props;
+
+        const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
+
+        const leadSettings = {
+            upload: {
+                errorMessage: { $set: `Failed to upload file (${status})` },
+            },
+            form: {
+                values: {
+                    attachment: { $set: undefined },
+                },
+                errors: { $set: [`Failed to upload file (${status})`] },
+            },
+            uiState: {
+                ready: { $set: false },
+            },
+        };
+        const newLead = update(theLead, leadSettings);
+        addLeadViewLeadChange({
+            leadId,
+            values: newLead.form.values,
+            formErrors: newLead.form.errors,
+            formFieldErrors: newLead.form.fieldErrors,
+            upload: newLead.upload,
+            uiState: newLead.uiState,
+        });
+
+
+        // FOR UPLAOD
+
+        const { leadUploads } = this.state;
+
+        const uploadSettings = {
+            [leadId]: {
+                progress: { $set: 100 },
+                isCompleted: { $set: true },
+            },
+        };
+        const newLeadUploads = update(leadUploads, uploadSettings);
         this.setState({
             leadUploads: newLeadUploads,
         });
@@ -496,29 +514,38 @@ export default class AddLeadView extends React.PureComponent {
         });
     }
 
-    handleNewUploader = (leadId, uploader) => {
-        const {
-            leadUploads,
-        } = this.state;
-
-        const id = leadId;
-        const u = uploader;
-
-        u.onLoad = (status, response) => {
-            this.handleLeadUploadComplete(id, status, response);
-        };
-
-        u.onProgress = (progress) => {
-            this.handleLeadUploadProgress(id, progress);
-        };
-
-        leadUploads[id] = {
-            progress: 0,
-            isCompleted: false,
-        };
-        this.setState({
-            leadUploads,
-        });
+    handleNewUploader = ({ file, url, params, leadId }) => {
+        const uploader = new UploadBuilder()
+            .file(file)
+            .url(url)
+            .params(params)
+            .preLoad(() => {
+                // create empty entries
+                // TODO: use immutability helpers
+                const { leadUploads } = this.state;
+                leadUploads[leadId] = {
+                    progress: 0,
+                    isCompleted: false,
+                };
+                this.setState({ leadUploads });
+            })
+            .progress((progressPercent) => {
+                this.handleLeadUploadProgress(leadId, progressPercent);
+            })
+            .success((response) => {
+                this.handleLeadUploadSuccess(leadId, response);
+            })
+            .failure((response, status) => {
+                this.handleLeadUploadFailure(leadId, status);
+            })
+            .fatal((response, status) => {
+                this.handleLeadUploadFailure(leadId, status);
+            })
+            .abort((response, status) => {
+                this.handleLeadUploadFailure(leadId, status);
+            })
+            .build();
+        return uploader;
     }
 
     handleGoogleDriveSelect = (leadId, accessToken, doc) => {
