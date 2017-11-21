@@ -1,5 +1,7 @@
 import React from 'react';
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
+
 import styles from './styles.scss';
 import {
     Table,
@@ -9,8 +11,19 @@ import {
     TransparentButton,
 } from '../../../../public/components/Action';
 
+const propTypes = {
+    className: PropTypes.string,
+};
+
+const defaultProps = {
+    className: '',
+};
+
 @CSSModules(styles, { allowMultiple: true })
 export default class FilterSection extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
         this.data = [
@@ -33,6 +46,31 @@ export default class FilterSection extends React.PureComponent {
                 id: 4,
                 title: 'Hill cutting rampant in Khagrachhari | Dhaka Tribune',
                 publishedOn: 525412312,
+            },
+            {
+                id: 5,
+                title: 'Power price hike likely this month | Dhaka Tribune',
+                publishedOn: 125412312,
+            },
+            {
+                id: 6,
+                title: 'Hill cutting rampant in Khagrachhari | Dhaka Tribune',
+                publishedOn: 525412312,
+            },
+            {
+                id: 7,
+                title: 'Power price hike likely this month | Dhaka Tribune',
+                publishedOn: 125412312,
+            },
+            {
+                id: 8,
+                title: 'Hill cutting rampant in Khagrachhari | Dhaka Tribune',
+                publishedOn: 525412312,
+            },
+            {
+                id: 9,
+                title: 'Power price hike likely this month | Dhaka Tribune',
+                publishedOn: 125412312,
             },
         ];
         this.leadsHeaders = [
@@ -77,7 +115,10 @@ export default class FilterSection extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="leads-overview">
+            <div
+                className={this.props.className}
+                styleName="leads-overview"
+            >
                 <h4>Leads Overview</h4>
                 <div styleName="leads-table">
                     <Table

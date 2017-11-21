@@ -54,6 +54,19 @@
                 .last {
                     color: $color-text;
                 }
+
+                button {
+                    margin-left: $spacing-small;
+
+                    .ion-edit {
+                        margin: $spacing-small;
+                    }
+
+                    &:hover {
+                        background-color: $color-background-hover;
+                    }
+
+                }
             }
 
             .email {

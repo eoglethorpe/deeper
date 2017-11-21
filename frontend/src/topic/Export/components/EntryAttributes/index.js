@@ -16,61 +16,71 @@ export default class EntryAttributes extends React.PureComponent {
                 <SelectInput
                     placeholder="Pillars"
                     styleName="pillars"
-                    showLabel={false}
+                    label="Pillars"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="Sub-Pillars"
                     styleName="sub-pillars"
-                    showLabel={false}
+                    label="Sub-Pillars"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="Sectors and Subsectors"
                     styleName="sector-and-subsectors"
-                    showLabel={false}
+                    label="Sectors and Sub-sectors"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="From"
                     styleName="severity-from"
-                    showLabel={false}
+                    label="Severity"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="To"
                     styleName="severity-to"
-                    showLabel={false}
+                    label="Severity"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="Location"
                     styleName="location"
-                    showLabel={false}
+                    label="Location"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="Affected Groups"
                     styleName="affected-groups"
-                    showLabel={false}
+                    label="Affected Groups"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="Demographic Groups"
                     styleName="demographic-groups"
-                    showLabel={false}
+                    label="Demographic Groups"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="From"
                     styleName="reliability-from"
-                    showLabel={false}
+                    label="Reliability"
+                    showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
                     placeholder="To"
                     styleName="reliability-to"
-                    showLabel={false}
+                    label="Reliability"
+                    showLabel
                     showHintAndError={false}
                 />
             </div>

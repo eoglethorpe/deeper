@@ -210,7 +210,7 @@ export default class UserProject extends React.PureComponent {
                             key="project-panel"
                             to={`/${d.id}/projectpanel/`}
                         >
-                            <span className="ion-edit" />
+                            <i className="ion-edit" />
                         </Link>,
                         <TransparentButton
                             key="delete"
@@ -221,7 +221,7 @@ export default class UserProject extends React.PureComponent {
                             `}
                             onClick={onDeleteClick}
                         >
-                            <span className="ion-android-delete" />
+                            <i className="ion-android-delete" />
                         </TransparentButton>,
                     ]);
                 },

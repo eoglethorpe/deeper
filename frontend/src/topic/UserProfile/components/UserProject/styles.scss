@@ -54,11 +54,26 @@
 }
 
 .link-to-project {
+    padding: $spacing-small;
     color: $color-primary;
+
+    :global .ion-android-open {
+        margin: 0 $spacing-small;
+    }
+
+    :global .ion-edit {
+        margin: 0 $spacing-small;
+    }
 }
 
+
 .delete-btn {
+    padding: $spacing-small;
     color: $color-danger;
+
+    :global .ion-android-delete {
+        margin: 0 $spacing-small;
+    }
 }
 
 .delete-confirm-modal {
