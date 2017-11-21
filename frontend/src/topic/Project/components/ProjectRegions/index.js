@@ -47,8 +47,8 @@ export default class ProjectRegions extends React.PureComponent {
         super(props);
         const { projectDetails } = props;
         let selectedRegion = 0;
-        if (projectDetails.regions) {
-            selectedRegion = projectDetails.regions[0];
+        if (projectDetails.regions && projectDetails.regions.length > 0) {
+            selectedRegion = projectDetails.regions[0].id;
         }
 
         this.state = {
@@ -58,7 +58,9 @@ export default class ProjectRegions extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps && nextProps.projectDetails.regions) {
-            this.setState({ selectedRegion: nextProps.projectDetails.regions[0] });
+            if (nextProps.projectDetails.regions.length > 0) {
+                this.setState({ selectedRegion: nextProps.projectDetails.regions[0].id });
+            }
         }
     }
 
@@ -66,10 +68,10 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion: regionId });
     }
 
-    calcRegionKey = region => region;
+    calcRegionKey = region => region.id;
 
-    renderRegionList = (key, regionId) => {
-        const isActive = regionId === this.state.selectedRegion;
+    renderRegionList = (key, region) => {
+        const isActive = region.id === this.state.selectedRegion;
         return (
             <ListItem
                 active={isActive}
@@ -78,9 +80,9 @@ export default class ProjectRegions extends React.PureComponent {
             >
                 <TransparentButton
                     className="btn"
-                    onClick={() => this.handleRegionClick(regionId)}
+                    onClick={() => this.handleRegionClick(region.id)}
                 >
-                    {regionId}
+                    {region.title}
                 </TransparentButton>
             </ListItem>
         );
@@ -102,7 +104,6 @@ export default class ProjectRegions extends React.PureComponent {
             </h1>
         );
     }
-
 
     render() {
         const {

@@ -144,7 +144,6 @@ export default class RegionAdminLevel extends React.PureComponent {
             displayAdminLevelList,
         } = this.state;
         const { className } = this.props;
-        console.log(displayAdminLevelList);
 
         return (
             <div

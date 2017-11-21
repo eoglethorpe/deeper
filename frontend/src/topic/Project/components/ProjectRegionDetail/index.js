@@ -97,7 +97,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         } = this.props;
 
         const isPublic = regionDetails.public;
-        console.log(isPublic);
 
         return (
             <div styleName="region-details-container">

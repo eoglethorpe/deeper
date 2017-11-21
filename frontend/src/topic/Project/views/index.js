@@ -223,7 +223,10 @@ export default class ProjectPanel extends React.PureComponent {
                             />
                         </TransparentPrimaryButton>
                     </header>
-                    <ProjectDetails project={projectDetails} />
+                    <ProjectDetails
+                        key={projectDetails}
+                        project={projectDetails}
+                    />
                 </div>
                 <div
                     styleName={sideBarVisibility ? 'side-bar show' : 'side-bar'}
