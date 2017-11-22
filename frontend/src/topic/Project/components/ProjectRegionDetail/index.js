@@ -75,6 +75,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     access,
                 });
             })
+            .preLoad(() => { this.setState({ dataLoading: true }); })
+            .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
@@ -95,6 +97,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
             regionId,
             regionDetails,
         } = this.props;
+
+        const { dataLoading } = this.state;
 
         const isPublic = regionDetails.public;
 
@@ -121,8 +125,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     <div styleName="region-details">
                         <div styleName="detail-map-container">
                             <RegionDetail
+                                dataLoading={dataLoading}
+                                regionId={regionDetails.id}
                                 styleName="region-detail-form"
-                                regionDetail={regionDetails}
                             />
                             <div styleName="map-container">
                                 The map
