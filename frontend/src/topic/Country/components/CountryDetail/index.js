@@ -182,6 +182,7 @@ export default class CountryDetail extends React.PureComponent {
                 <Tabs
                     activeLinkStyle={{ none: 'none' }}
                     styleName="tabs-container"
+                    renderActiveTabContentOnly
                 >
                     <div styleName="tabs-header-container">
                         <TabLink

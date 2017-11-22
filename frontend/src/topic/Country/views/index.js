@@ -37,6 +37,7 @@ import {
 
     setActiveCountryAction,
     setRegionsAction,
+    activeUserSelector,
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
@@ -56,6 +57,7 @@ const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -72,6 +74,7 @@ const mapStateToProps = state => ({
     activeCountry: activeCountrySelector(state),
     countries: countriesListSelector(state),
     token: tokenSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -326,6 +329,7 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList,
         } = this.state;
 
+        const { activeUser } = this.props;
         const sortedCountries = [...displayCountryList];
         sortedCountries.sort((a, b) => (a.title.localeCompare(b.title)));
 
@@ -339,12 +343,15 @@ export default class CountryPanel extends React.PureComponent {
                 <div styleName="country-list">
                     <header styleName="list-header">
                         <h2>Countries</h2>
-                        <PrimaryButton
-                            iconName="ion-plus"
-                            onClick={this.onAddCountry}
-                        >
-                            Add country
-                        </PrimaryButton>
+                        {
+                            activeUser.isSuperuser &&
+                            <PrimaryButton
+                                iconName="ion-plus"
+                                onClick={this.onAddCountry}
+                            >
+                                Add country
+                            </PrimaryButton>
+                        }
                         <TextInput
                             styleName="search-input"
                             onChange={this.handleSearchInputChange}
