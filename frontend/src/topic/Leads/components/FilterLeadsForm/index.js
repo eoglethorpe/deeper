@@ -7,6 +7,7 @@ import { Button, TransparentButton } from '../../../../public/components/Action'
 import {
     Form,
     SelectInput,
+    DateFilter,
 } from '../../../../public/components/Input';
 
 import { RestBuilder } from '../../../../public/utils/rest';
@@ -68,15 +69,6 @@ export default class FilterLeadsForm extends React.PureComponent {
             formValues: this.props.value,
             stale: false,
         };
-
-        this.dateFilterOptions = [
-            { key: 'today', label: 'Today' },
-            { key: 'yesterday', label: 'Yesterday' },
-            { key: 'this-week', label: 'This week' },
-            { key: 'this-month', label: 'This month' },
-            { key: 'this-year', label: 'This year' },
-            { key: 'custom', label: 'Custom' },
-        ];
 
         this.formElements = [
             'assignee',
@@ -202,18 +194,17 @@ export default class FilterLeadsForm extends React.PureComponent {
                     value={formValues.assignee}
                     multiple
                 />
-                <SelectInput
+                <DateFilter
                     formname="created_at"
-                    options={this.dateFilterOptions}
                     placeholder="Created at"
                     styleName="filter"
                     value={formValues.created_at}
                 />
-                <SelectInput
+                <DateFilter
                     formname="published_on"
-                    options={this.dateFilterOptions}
                     placeholder="Published on"
                     styleName="filter"
+                    value={formValues.published_on}
                 />
                 <SelectInput
                     formname="confidentiality"
