@@ -1,21 +1,5 @@
 @import '../../../stylesheets/base';
 
-.country-details-alt {
-    @include shadow-medium;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    background-color: $color-foreground;
-    padding: $spacing-medium-alt;
-
-    h1 {
-        margin-bottom: $spacing-large;
-        text-transform: none;
-    }
-}
-
 .country-panel {
     display: flex;
     padding: $spacing-medium-alt;
@@ -33,26 +17,21 @@
         height: 100%;
 
         .list-header {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-medium $spacing-medium-alt;
 
-            .header-button-container {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-            }
-
             .search-input {
+                flex-basis: 100%;
                 padding: $spacing-small 0;
 
                 :global .error {
                     display: none;
                 }
-            }
-
-            .header-text {
-                text-transform: uppercase;
-                font-size: 1.6em;
             }
         }
 
@@ -85,14 +64,23 @@
         }
     }
 
-    .country-details {
+    .country-detail {
         @include shadow-medium;
         flex-grow: 1;
         background-color: darken($color-foreground, 1%);
         height: 100%;
+    }
 
-        .country-detail {
-            height: 100%;
-        }
+    .country-detail-alt {
+        @include shadow-medium;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-foreground;
+        padding: $spacing-medium-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
     }
 }

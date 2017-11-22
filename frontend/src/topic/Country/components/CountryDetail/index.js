@@ -34,6 +34,7 @@ import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     countryDetail: PropTypes.shape({
         id: PropTypes.number.isRequired,
         title: PropTypes.string,
@@ -44,6 +45,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     title: '',
 };
 
@@ -132,23 +134,32 @@ export default class CountryDetail extends React.PureComponent {
     }
 
     render() {
-        const { deleteCountry, deletePending } = this.state;
-        const { countryDetail, activeUser } = this.props;
+        const {
+            deleteCountry,
+            deletePending,
+        } = this.state;
+
+        const {
+            className,
+            countryDetail,
+            activeUser,
+        } = this.props;
 
         return (
-            <div styleName="country-detail">
-                <div styleName="header">
-                    <div styleName="header-title">
+            <div
+                className={className}
+                styleName="country-detail"
+            >
+                <header styleName="header">
+                    <h2>
                         {countryDetail.title}
-                    </div>
-                    <div styleName="button-container">
-                        {
-                            activeUser.isSuperuser &&
+                    </h2>
+                    {
+                        activeUser.isSuperuser &&
                             <DangerButton onClick={this.onClickDeleteButton}>
                                 Delete Country
                             </DangerButton>
-                        }
-                    </div>
+                    }
                     <Modal
                         styleName="delete-confirm-modal"
                         closeOnEscape
@@ -167,7 +178,7 @@ export default class CountryDetail extends React.PureComponent {
                             />
                         </ModalBody>
                     </Modal>
-                </div>
+                </header>
                 <Tabs
                     activeLinkStyle={{ none: 'none' }}
                     styleName="tabs-container"
@@ -206,38 +217,36 @@ export default class CountryDetail extends React.PureComponent {
                         {/* Essential for border bottom, for more info contact AdityaKhatri */}
                         <div styleName="empty-tab" />
                     </div>
-                    <div styleName="tabs-content">
-                        <TabContent
-                            for="general"
-                            styleName="tab"
-                        >
-                            <CountryGeneral countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="key-figures"
-                            styleName="tab"
-                        >
-                            <CountryKeyFigures countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="population-data"
-                            styleName="tab"
-                        >
-                            <CountryPopulationData countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="seasonal-calendar"
-                            styleName="tab"
-                        >
-                            <CountrySeasonalCalendar countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="media-sources"
-                            styleName="tab"
-                        >
-                            <CountryMediaSources countryId={countryDetail.id} />
-                        </TabContent>
-                    </div>
+                    <TabContent
+                        for="general"
+                        styleName="tab-content"
+                    >
+                        <CountryGeneral countryId={countryDetail.id} />
+                    </TabContent>
+                    <TabContent
+                        for="key-figures"
+                        styleName="tab-content"
+                    >
+                        <CountryKeyFigures countryId={countryDetail.id} />
+                    </TabContent>
+                    <TabContent
+                        for="population-data"
+                        styleName="tab-content"
+                    >
+                        <CountryPopulationData countryId={countryDetail.id} />
+                    </TabContent>
+                    <TabContent
+                        for="seasonal-calendar"
+                        styleName="tab-content"
+                    >
+                        <CountrySeasonalCalendar countryId={countryDetail.id} />
+                    </TabContent>
+                    <TabContent
+                        for="media-sources"
+                        styleName="tab-content"
+                    >
+                        <CountryMediaSources countryId={countryDetail.id} />
+                    </TabContent>
                 </Tabs>
             </div>
         );

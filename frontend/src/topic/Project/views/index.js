@@ -83,7 +83,7 @@ export default class ProjectPanel extends React.PureComponent {
 
         this.state = {
             displayUserProjects: this.props.userProjects,
-            sideBarVisibility: false,
+            isSidebarVisible: false,
             searchInputValue: '',
         };
 
@@ -179,17 +179,17 @@ export default class ProjectPanel extends React.PureComponent {
 
     showProjectList = () => {
         this.setState({
-            sideBarVisibility: true,
+            isSidebarVisible: true,
         });
     };
 
     closeProjectList = () => {
         this.setState({
-            sideBarVisibility: false,
+            isSidebarVisible: false,
         });
     };
 
-    search = (value) => {
+    handleSearchInputChange = (value) => {
         const caseInsensitiveSubmatch = project => (
             project.title.toLowerCase().includes(value.toLowerCase())
         );
@@ -201,7 +201,7 @@ export default class ProjectPanel extends React.PureComponent {
         });
     };
     render() {
-        const { sideBarVisibility, displayUserProjects } = this.state;
+        const { isSidebarVisible, displayUserProjects } = this.state;
         const { projectDetails } = this.props;
 
         return (
@@ -210,18 +210,22 @@ export default class ProjectPanel extends React.PureComponent {
                     <title>{ pageTitles.projectPanel }</title>
                 </Helmet>
                 <div
-                    styleName={sideBarVisibility ? 'content side-bar-shown' : 'content'}
+                    styleName={isSidebarVisible ? 'content side-bar-shown' : 'content'}
                 >
                     <header styleName="header">
                         <h1 styleName="heading">
                             { projectDetails.title }
                         </h1>
-                        <TransparentPrimaryButton onClick={this.showProjectList}>
-                            <span
-                                className="ion-android-menu"
-                                styleName="sidebar-icon"
-                            />
-                        </TransparentPrimaryButton>
+                        {
+                            !isSidebarVisible && (
+                                <TransparentPrimaryButton
+                                    styleName="sidebar-toggle-button"
+                                    onClick={this.showProjectList}
+                                >
+                                    <span className="ion-android-menu" />
+                                </TransparentPrimaryButton>
+                            )
+                        }
                     </header>
                     <ProjectDetails
                         key={projectDetails}
@@ -229,20 +233,26 @@ export default class ProjectPanel extends React.PureComponent {
                     />
                 </div>
                 <div
-                    styleName={sideBarVisibility ? 'side-bar show' : 'side-bar'}
+                    styleName={isSidebarVisible ? 'side-bar show' : 'side-bar'}
                 >
                     <header styleName="header">
                         <h1 styleName="heading">
                             Projects
                         </h1>
-                        <TransparentPrimaryButton onClick={this.closeProjectList}>
+                        <TransparentPrimaryButton
+                            styleName="close-sidebar-button"
+                            onClick={this.closeProjectList}
+                        >
                             <span className="ion-android-close" />
                         </TransparentPrimaryButton>
                         <TextInput
-                            onChange={this.search}
+                            onChange={this.handleSearchInputChange}
                             placeholder="Search Project"
-                            value={this.state.searchInputValue}
+                            styleName="search-input"
                             type="search"
+                            value={this.state.searchInputValue}
+                            showLabel={false}
+                            showHintAndError={false}
                         />
                     </header>
                     <ListView

@@ -245,7 +245,7 @@ export default class CountryPanel extends React.PureComponent {
         return countriesRequest;
     }
 
-    search = (value) => {
+    handleSearchInputChange = (value) => {
         const caseInsensitiveSubmatch = country => (
             country.title.toLowerCase().includes(value.toLowerCase())
         );
@@ -264,7 +264,6 @@ export default class CountryPanel extends React.PureComponent {
             addCountryModal: false,
         });
     };
-
 
     calcCountryListItemKey = country => country.id;
 
@@ -295,8 +294,8 @@ export default class CountryPanel extends React.PureComponent {
 
         if (countries.length <= 0) {
             return (
-                <div styleName="country-details-alt">
-                    <h1>There are no countries.</h1>
+                <div styleName="country-detail-alt">
+                    There are no countries.
                 </div>
             );
         }
@@ -307,19 +306,17 @@ export default class CountryPanel extends React.PureComponent {
 
         if (activeCountryIndex >= 0) {
             return (
-                <div styleName="country-details">
-                    <CountryDetail
-                        countryId={activeCountry}
-                        key={activeCountry}
-                        styleName="country-detail"
-                    />
-                </div>
+                <CountryDetail
+                    countryId={activeCountry}
+                    key={activeCountry}
+                    styleName="country-detail"
+                />
             );
         }
 
         return (
-            <div styleName="country-details-alt">
-                <h1>The country you previously selected was deleted or does not exist.</h1>
+            <div styleName="country-detail-alt">
+                The country you previously selected was deleted or does not exist.
             </div>
         );
     }
@@ -340,26 +337,22 @@ export default class CountryPanel extends React.PureComponent {
                     </title>
                 </Helmet>
                 <div styleName="country-list">
-                    <div styleName="list-header">
-                        <div styleName="header-button-container">
-                            <div styleName="header-text">
-                                Countries
-                            </div>
-                            <PrimaryButton
-                                iconName="ion-plus"
-                                onClick={this.onAddCountry}
-                            >
-                                Add country
-                            </PrimaryButton>
-                        </div>
+                    <header styleName="list-header">
+                        <h2>Countries</h2>
+                        <PrimaryButton
+                            iconName="ion-plus"
+                            onClick={this.onAddCountry}
+                        >
+                            Add country
+                        </PrimaryButton>
                         <TextInput
                             styleName="search-input"
-                            onChange={this.search}
+                            onChange={this.handleSearchInputChange}
                             placeholder="Search Country"
                             type="search"
                             value={this.state.searchInputValue}
                         />
-                    </div>
+                    </header>
                     <ListView
                         styleName="list"
                         modifier={this.renderCountryListItem}
