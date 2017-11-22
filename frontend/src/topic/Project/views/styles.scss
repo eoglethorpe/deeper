@@ -4,7 +4,6 @@
 .project-panel {
     @include shadow-medium;
     display: flex;
-    flex-direction: column;
     margin: $spacing-medium-alt;
     background-color: $color-foreground;
     height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});
@@ -21,7 +20,8 @@
             font-size: $font-size-extra-large;
         }
 
-        .sidebar-icon {
+        .sidebar-toggle-button {
+            padding: 0 $spacing-small;
             font-size: $font-size-large;
         }
     }
@@ -55,7 +55,19 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-normal solid $color-separator;
-            padding: $spacing-medium;
+
+            .header {
+                padding: $spacing-small;
+
+                .close-sidebar-button {
+                    padding: 0 $spacing-small;
+                }
+            }
+
+
+            .search-input {
+                padding: 0;
+            }
         }
 
         .list {
@@ -69,7 +81,7 @@
 
                 .link {
                     display: block;
-                    padding: $spacing-medium $spacing-large;
+                    padding: $spacing-small $spacing-medium-alt;
                     width: 100%;
                     height: 100%;
                 }
