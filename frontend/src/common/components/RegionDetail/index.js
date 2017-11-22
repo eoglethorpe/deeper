@@ -41,10 +41,12 @@ const propTypes = {
     }).isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
+    dataLoading: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
+    dataLoading: false,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -100,6 +102,26 @@ export default class RegionDetail extends React.PureComponent {
             unGeoRegion: [],
             unGeoSubregion: [],
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.resetForm(nextProps);
+    }
+
+    resetForm = (props) => {
+        const { regionDetail } = props;
+
+        this.setState({
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: {
+                ...regionDetail.regionalGroups,
+                countryCode: regionDetail.code,
+                countryName: regionDetail.title,
+            },
+            pending: false,
+            stale: false,
+        });
     }
 
     createRequestForRegionDetailPatch = (regionId, data) => {
@@ -208,24 +230,13 @@ export default class RegionDetail extends React.PureComponent {
     handleFormCancel = (e) => {
         // TODO: use prompt
         e.preventDefault();
-        const { regionDetail } = this.props;
-
-        this.setState({
-            formErrors: [],
-            formFieldErrors: {},
-            formValues: {
-                ...regionDetail.regionalGroups,
-                countryCode: regionDetail.code,
-                countryName: regionDetail.title,
-            },
-            pending: false,
-            stale: false,
-        });
+        this.resetForm(this.props);
     }
 
     render() {
         const {
             className,
+            dataLoading,
         } = this.props;
 
         const {
@@ -248,7 +259,7 @@ export default class RegionDetail extends React.PureComponent {
                 className={className}
                 styleName="region-detail-form"
             >
-                { pending && <LoadingAnimation /> }
+                { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">

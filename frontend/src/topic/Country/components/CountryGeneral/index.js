@@ -7,7 +7,7 @@ import { RestBuilder } from '../../../../public/utils/rest';
 
 import {
     createParamsForUser,
-    createUrlForRegion,
+    createUrlForRegionWithField,
 } from '../../../../common/rest';
 
 import {
@@ -60,8 +60,10 @@ export default class CountryGeneral extends React.PureComponent {
     }
 
     createRegionRequest = (regionId) => {
+        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
+
         const regionRequest = new RestBuilder()
-            .url(createUrlForRegion(regionId))
+            .url(urlForRegionForRegionalGroups)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
@@ -69,6 +71,8 @@ export default class CountryGeneral extends React.PureComponent {
                     access,
                 });
             })
+            .preLoad(() => { this.setState({ dataLoading: true }); })
+            .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
@@ -90,12 +94,15 @@ export default class CountryGeneral extends React.PureComponent {
             activeUser,
         } = this.props;
 
+        const { dataLoading } = this.state;
+
         return (
             <div styleName="country-general">
                 <div styleName="detail-map-container">
                     <RegionDetail
                         styleName="region-detail-form"
                         regionId={countryDetail.id}
+                        dataLoading={dataLoading}
                     />
                     <div styleName="map-container">
                         The map

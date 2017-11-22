@@ -20,6 +20,8 @@ import {
 import {
     createParamsForRegionPatch,
     createUrlForRegion,
+    createUrlForRegionWithField,
+    createParamsForUser,
 } from '../../../../common/rest';
 import {
     countryDetailSelector,
@@ -67,6 +69,7 @@ export default class CountryKeyFigures extends React.PureComponent {
             formErrors: [],
             formFieldErrors: {},
             formValues: props.regionDetail.keyFigures || {},
+            dataLoading: false,
         };
 
         this.elements = [
@@ -106,6 +109,22 @@ export default class CountryKeyFigures extends React.PureComponent {
             informRiskIndex: [],
             lackOfCopingCapacity: [],
         };
+
+        this.regionKeyFiguresRequest = this.createRegionKeyFiguresRequest(props.regionDetail.id);
+    }
+
+    componentWillMount() {
+        this.regionKeyFiguresRequest.start();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.resetForm(nextProps);
+    }
+
+    componentWillUnmount() {
+        if (this.regionKeyFiguresRequest) {
+            this.regionKeyFiguresRequest.stop();
+        }
     }
 
     // FORM RELATED
@@ -126,6 +145,35 @@ export default class CountryKeyFigures extends React.PureComponent {
             formErrors,
         });
     };
+
+    createRegionKeyFiguresRequest = (regionId) => {
+        const urlForRegionForKeyFigures = createUrlForRegionWithField(regionId, ['key_figures']);
+
+        const regionRequest = new RestBuilder()
+            .url(urlForRegionForKeyFigures)
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({
+                    access,
+                });
+            })
+            .preLoad(() => { this.setState({ dataLoading: true }); })
+            .postLoad(() => { this.setState({ dataLoading: false }); })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'region');
+                    this.props.setRegionDetails({
+                        regionDetails: response,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return regionRequest;
+    }
 
     createRequestForRegionDetailPatch = (regionId, data) => {
         const urlForRegion = createUrlForRegion(regionId);
@@ -204,11 +252,14 @@ export default class CountryKeyFigures extends React.PureComponent {
     handleFormCancel = (e) => {
         // TODO: use prompt
         e.preventDefault();
+        this.resetForm(this.props);
+    }
 
+    resetForm = (props) => {
         this.setState({
             formErrors: [],
             formFieldErrors: {},
-            formValues: this.props.regionDetail.keyFigures || {},
+            formValues: props.regionDetail.keyFigures || {},
             pending: false,
             stale: false,
         });
@@ -221,6 +272,7 @@ export default class CountryKeyFigures extends React.PureComponent {
             formValues,
             formErrors,
             formFieldErrors,
+            dataLoading,
         } = this.state;
 
         return (
@@ -232,7 +284,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 successCallback={this.successCallback}
                 validations={this.validations}
             >
-                { pending && <LoadingAnimation /> }
+                { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">
