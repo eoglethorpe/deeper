@@ -13,6 +13,7 @@ const tokenSchema = [];
             username: { type: 'string', required: 'true' },
             displayName: { type: 'string', required: 'true' },
             exp: { type: 'uint', required: 'true' },
+            isSuperuser: { type: 'boolean', required: true },
         },
     };
     tokenSchema.push({ name, schema });

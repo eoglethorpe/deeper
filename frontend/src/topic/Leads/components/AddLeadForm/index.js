@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -20,14 +21,26 @@ import {
 
 import {
     Button,
+    WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 
+import {
+    addLeadViewLeadRemoveAction,
+} from '../../../../common/redux';
+
+
 import styles from './styles.scss';
 
-const ATTACHMENT_TYPES = [
-    'file', 'dropbox', 'drive',
-];
+const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
+
+const mapStateToProps = state => ({
+    state,
+});
+
+const mapDispatchToProps = dispatch => ({
+    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
+});
 
 const propTypes = {
     className: PropTypes.string,
@@ -43,12 +56,15 @@ const propTypes = {
     leadOptions: PropTypes.shape({
         dummy: PropTypes.string,
     }).isRequired,
+
+    addLeadViewLeadRemove: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -88,21 +104,21 @@ export default class AddLeadForm extends React.PureComponent {
     onPrev = (e) => {
         e.preventDefault();
 
-        const {
-            formCallbacks,
-        } = this.props;
-
+        const { formCallbacks } = this.props;
         formCallbacks.onPrev();
     }
 
     onNext = (e) => {
         e.preventDefault();
 
-        const {
-            formCallbacks,
-        } = this.props;
-
+        const { formCallbacks } = this.props;
         formCallbacks.onNext();
+    }
+
+    handleRemoveButtonClick = (e) => {
+        e.preventDefault();
+        const { lead } = this.props;
+        this.props.addLeadViewLeadRemove(lead.data.id);
     }
 
     render() {
@@ -154,14 +170,17 @@ export default class AddLeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
+                        <WarningButton
+                            onClick={this.handleRemoveButtonClick}
+                        >
+                            Remove
+                        </WarningButton>
                         <Button
                             onClick={onPrev}
-                            disabled
                         >
                             Prev
                         </Button>
                         <Button
-                            disabled
                             onClick={onNext}
                         >
                             Next
