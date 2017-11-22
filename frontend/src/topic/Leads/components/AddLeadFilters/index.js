@@ -16,7 +16,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class FilterLeadsForm extends React.PureComponent {
+export default class AddLeadFilters extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
