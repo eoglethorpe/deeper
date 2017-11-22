@@ -21,7 +21,7 @@ import {
 
 import {
     Button,
-    DangerButton,
+    WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 
@@ -101,12 +101,6 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
-    onRemove = (e) => {
-        e.preventDefault();
-        const { lead } = this.props;
-        this.props.addLeadViewLeadRemove(lead.data.id);
-    }
-
     onPrev = (e) => {
         e.preventDefault();
 
@@ -119,6 +113,12 @@ export default class AddLeadForm extends React.PureComponent {
 
         const { formCallbacks } = this.props;
         formCallbacks.onNext();
+    }
+
+    handleRemoveButtonClick = (e) => {
+        e.preventDefault();
+        const { lead } = this.props;
+        this.props.addLeadViewLeadRemove(lead.data.id);
     }
 
     render() {
@@ -170,11 +170,11 @@ export default class AddLeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
-                        <DangerButton
-                            onClick={this.onRemove}
+                        <WarningButton
+                            onClick={this.handleRemoveButtonClick}
                         >
                             Remove
-                        </DangerButton>
+                        </WarningButton>
                         <Button
                             onClick={onPrev}
                         >

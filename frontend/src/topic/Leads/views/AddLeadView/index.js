@@ -390,11 +390,11 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     handleLeadNext = leadId => () => {
-        this.props.addLeadViewLeadNext();
+        this.props.addLeadViewLeadNext(leadId);
     }
 
     handleLeadPrev = leadId => () => {
-        this.props.addLeadViewLeadPrev();
+        this.props.addLeadViewLeadPrev(leadId);
     }
 
     handleLeadUploadSuccess = (leadId, response) => {
