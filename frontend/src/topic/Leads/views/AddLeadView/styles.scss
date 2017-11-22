@@ -42,6 +42,7 @@
 
             .filter {
                 flex-basis: calc(100% / 3 - #{$spacing-extra-small});
+                margin-top: $spacing-small;
             }
         }
 

@@ -97,6 +97,8 @@ export default class AddLeadForm extends React.PureComponent {
                 urlCondition,
             ],
             website: [requiredCondition],
+            text: [requiredCondition],
+            attachment: [requiredCondition],
             // TODO: add validation for attachment
         };
     }
@@ -283,6 +285,7 @@ export default class AddLeadForm extends React.PureComponent {
                 {
                     lead.data.type === 'text' &&
                         <TextArea
+                            error={fieldErrors.text}
                             formname="text"
                             label="Text"
                             placeholder="Enter text"
