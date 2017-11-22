@@ -1,9 +1,16 @@
-import { wsEndpoint, POST, PATCH, DELETE, commonHeaderForPost } from '../config/rest';
+import { wsEndpoint, POST, PATCH, DELETE, p, commonHeaderForPost } from '../config/rest';
 
-const regionsUrlFields = 'id,code,title,public,created_at,modified_at';
-export const urlForRegions = `${wsEndpoint}/regions/?fields=${regionsUrlFields}`;
+const regionsUrlFields = ['id', 'code', 'title', 'public', 'created_at', 'modified_at'];
+export const urlForRegions = `${wsEndpoint}/regions/?${p({ fields: regionsUrlFields })}`;
 export const urlForRegionCreate = `${wsEndpoint}/regions/`;
 export const createUrlForRegion = regionId => `${wsEndpoint}/regions/${regionId}/`;
+export const createUrlForRegionWithField = (regionId, fields) => {
+    if (fields) {
+        const finalFields = regionsUrlFields.concat(fields);
+        return `${wsEndpoint}/regions/${regionId}/?${p({ fields: finalFields })}`;
+    }
+    return `${wsEndpoint}/regions/${regionId}/`;
+};
 
 export const createParamsForRegionCreate = ({ access }, data) => ({
     method: POST,
