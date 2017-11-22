@@ -8,6 +8,8 @@ export const ADD_LEAD_VIEW_LEAD_CHANGE = 'domain-data/ADD_LEAD_VIEW_LEAD_CHANGE'
 export const ADD_LEAD_VIEW_LEAD_SET_PENDING = 'domain-data/ADD_LEAD_VIEW_LEAD_SET_PENDING';
 export const ADD_LEAD_VIEW_LEAD_SAVE = 'domain-data/ADD_LEAD_VIEW_LEAD_SAVE';
 export const ADD_LEAD_VIEW_LEAD_REMOVE = 'domain-data/ADD_LEAD_VIEW_LEAD_REMOVE';
+export const ADD_LEAD_VIEW_LEAD_NEXT = 'domain-data/ADD_LEAD_VIEW_LEAD_NEXT';
+export const ADD_LEAD_VIEW_LEAD_PREV = 'domain-data/ADD_LEAD_VIEW_LEAD_PREV';
 
 export const SET_LEAD_PAGE_FILTER = 'silo-domain-data/SET_LEAD_PAGE_FILTER';
 export const SET_LEAD_PAGE_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';

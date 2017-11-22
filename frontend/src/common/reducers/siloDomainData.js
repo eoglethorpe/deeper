@@ -9,6 +9,8 @@ import {
     ADD_LEAD_VIEW_LEAD_SET_PENDING,
     ADD_LEAD_VIEW_LEAD_SAVE,
     ADD_LEAD_VIEW_LEAD_REMOVE,
+    ADD_LEAD_VIEW_LEAD_NEXT,
+    ADD_LEAD_VIEW_LEAD_PREV,
 
     SET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
@@ -263,6 +265,44 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
                     leads: {
                         $splice: [[index, 1]],
                     },
+                    activeLeadId: { $set: newActiveId },
+                },
+            };
+            return update(state, settings);
+        }
+        case ADD_LEAD_VIEW_LEAD_PREV: {
+            const index = state.addLeadView.leads.findIndex(
+                lead => lead.data.id === state.addLeadView.activeLeadId,
+            );
+
+            let newActiveId;
+            if (index - 1 >= 0) {
+                newActiveId = state.addLeadView.leads[index - 1].data.id;
+            } else {
+                return state;
+            }
+
+            const settings = {
+                addLeadView: {
+                    activeLeadId: { $set: newActiveId },
+                },
+            };
+            return update(state, settings);
+        }
+        case ADD_LEAD_VIEW_LEAD_NEXT: {
+            const index = state.addLeadView.leads.findIndex(
+                lead => lead.data.id === state.addLeadView.activeLeadId,
+            );
+
+            let newActiveId;
+            if (index + 1 < state.addLeadView.leads.length) {
+                newActiveId = state.addLeadView.leads[index + 1].data.id;
+            } else {
+                return state;
+            }
+
+            const settings = {
+                addLeadView: {
                     activeLeadId: { $set: newActiveId },
                 },
             };

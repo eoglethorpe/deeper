@@ -42,6 +42,8 @@ import {
     addLeadViewLeadSetPendingAction,
     leadFilterOptionsSelector,
     addLeadViewLeadSaveAction,
+    addLeadViewLeadNextAction,
+    addLeadViewLeadPrevAction,
 } from '../../../../common/redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
@@ -64,6 +66,8 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
     addLeadViewLeadSetPending: params => dispatch(addLeadViewLeadSetPendingAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
+    addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
+    addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
 });
 
 const propTypes = {
@@ -84,6 +88,8 @@ const propTypes = {
     addLeadViewLeadSetPending: PropTypes.func.isRequired,
     addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
+    addLeadViewLeadNext: PropTypes.func.isRequired,
+    addLeadViewLeadPrev: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -312,25 +318,6 @@ export default class AddLeadView extends React.PureComponent {
         return leadFilterOptionsRequest;
     }
 
-    // HANDLE FORM
-
-    handleFormChange = leadId => (values, { formErrors, formFieldErrors }) => {
-        this.props.addLeadViewLeadChange({
-            leadId,
-            values,
-            formErrors,
-            formFieldErrors,
-        });
-    }
-
-    handleFormFailure = leadId => ({ formErrors, formFieldErrors }) => {
-        this.props.addLeadViewLeadChange({
-            leadId,
-            formErrors,
-            formFieldErrors,
-        });
-    }
-
     createLeadRequest = (lead) => {
         const { access } = this.props.token;
         let url;
@@ -376,20 +363,38 @@ export default class AddLeadView extends React.PureComponent {
         return leadCreateRequest;
     };
 
+
+    // HANDLE FORM
+
+    handleFormChange = leadId => (values, { formErrors, formFieldErrors }) => {
+        this.props.addLeadViewLeadChange({
+            leadId,
+            values,
+            formErrors,
+            formFieldErrors,
+        });
+    }
+
+    handleFormFailure = leadId => ({ formErrors, formFieldErrors }) => {
+        this.props.addLeadViewLeadChange({
+            leadId,
+            formErrors,
+            formFieldErrors,
+        });
+    }
+
     handleFormSuccess = leadId => () => {
         const specificLead = this.props.addLeadViewLeads.find(lead => lead.data.id === leadId);
         const leadSaveRequest = this.createLeadRequest(specificLead);
         leadSaveRequest.start();
     }
 
-    handleLeadNext = leadId => (e) => {
-        e.preventDefault();
-        console.log(leadId);
+    handleLeadNext = leadId => () => {
+        this.props.addLeadViewLeadNext();
     }
 
-    handleLeadPrev = leadId => (e) => {
-        e.preventDefault();
-        console.log(leadId);
+    handleLeadPrev = leadId => () => {
+        this.props.addLeadViewLeadPrev();
     }
 
     handleLeadUploadSuccess = (leadId, response) => {
@@ -431,7 +436,6 @@ export default class AddLeadView extends React.PureComponent {
         // FOR UPLAOD
 
         const { leadUploads } = this.state;
-
         const uploadSettings = {
             [leadId]: {
                 progress: { $set: 100 },
@@ -439,9 +443,7 @@ export default class AddLeadView extends React.PureComponent {
             },
         };
         const newLeadUploads = update(leadUploads, uploadSettings);
-        this.setState({
-            leadUploads: newLeadUploads,
-        });
+        this.setState({ leadUploads: newLeadUploads });
     }
 
     handleLeadUploadFailure = (leadId, status) => {
@@ -480,9 +482,7 @@ export default class AddLeadView extends React.PureComponent {
 
 
         // FOR UPLAOD
-
         const { leadUploads } = this.state;
-
         const uploadSettings = {
             [leadId]: {
                 progress: { $set: 100 },
@@ -490,26 +490,18 @@ export default class AddLeadView extends React.PureComponent {
             },
         };
         const newLeadUploads = update(leadUploads, uploadSettings);
-        this.setState({
-            leadUploads: newLeadUploads,
-        });
+        this.setState({ leadUploads: newLeadUploads });
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
-        const {
-            leadUploads,
-        } = this.state;
-
+        const { leadUploads } = this.state;
         const settings = {
             [leadId]: {
                 progress: { $set: progress },
             },
         };
-
         const newLeadUploads = update(leadUploads, settings);
-        this.setState({
-            leadUploads: newLeadUploads,
-        });
+        this.setState({ leadUploads: newLeadUploads });
     }
 
     handleNewUploader = ({ file, url, params, leadId }) => {
@@ -518,7 +510,6 @@ export default class AddLeadView extends React.PureComponent {
             .url(url)
             .params(params)
             .preLoad(() => {
-                // create empty entries
                 // TODO: use immutability helpers
                 const { leadUploads } = this.state;
                 leadUploads[leadId] = {
@@ -554,21 +545,15 @@ export default class AddLeadView extends React.PureComponent {
             fileId: doc.id,
             mimeType: doc.mimeType,
         });
+        request.start();
 
-        const {
-            leadUploads,
-        } = this.state;
-
+        // TODO: use immutable
+        const { leadUploads } = this.state;
         leadUploads[leadId] = {
             progress: 0,
             isCompleted: false,
         };
-
-        this.setState({
-            leadUploads,
-        });
-
-        request.start();
+        this.setState({ leadUploads });
     }
 
     handleDropboxSelect = (leadId, doc) => {
@@ -577,22 +562,20 @@ export default class AddLeadView extends React.PureComponent {
             title: doc.name,
             fileUrl: doc.link,
         });
+        request.start();
 
-        const {
-            leadUploads,
-        } = this.state;
-
+        // TODO: use immutable
+        const { leadUploads } = this.state;
         leadUploads[leadId] = {
             progress: 0,
             isCompleted: false,
         };
-
-        this.setState({
-            leadUploads,
-        });
-
-        request.start();
+        this.setState({ leadUploads });
     }
+
+    // UI
+
+    leadDetailKeyExtractor = lead => lead.data.id;
 
     renderLeadDetail = (key, lead) => {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project] || {};
@@ -600,7 +583,7 @@ export default class AddLeadView extends React.PureComponent {
             onChange: this.handleFormChange(key),
             onFailure: this.handleFormFailure(key),
             onSuccess: this.handleFormSuccess(key),
-            onPrev: this.handleLeadNext(key),
+            onPrev: this.handleLeadPrev(key),
             onNext: this.handleLeadNext(key),
         };
 
@@ -650,7 +633,7 @@ export default class AddLeadView extends React.PureComponent {
                 <List
                     data={this.props.addLeadViewLeads}
                     modifier={this.renderLeadDetail}
-                    keyExtractor={lead => lead.data.id}
+                    keyExtractor={this.leadDetailKeyExtractor}
                 />
             </div>
         );

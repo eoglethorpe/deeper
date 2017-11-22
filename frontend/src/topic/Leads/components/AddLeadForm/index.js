@@ -177,12 +177,10 @@ export default class AddLeadForm extends React.PureComponent {
                         </DangerButton>
                         <Button
                             onClick={onPrev}
-                            disabled
                         >
                             Prev
                         </Button>
                         <Button
-                            disabled
                             onClick={onNext}
                         >
                             Next
