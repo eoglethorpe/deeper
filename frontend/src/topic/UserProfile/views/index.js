@@ -18,6 +18,7 @@ import {
     ModalHeader,
 } from '../../../public/components/View';
 
+import GalleryImage from '../../../common/components/GalleryImage';
 import {
     UserProject,
     UserGroup,
@@ -186,9 +187,8 @@ export default class UserProfile extends React.PureComponent {
                 </Helmet>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
-                    <img
-                        alt="User avatar"
-                        src={userInformation.displayPicture || 'https://i.imgur.com/yJP07D6.png'}
+                    <GalleryImage
+                        galleryId={userInformation.displayPicture}
                         styleName="display-picture"
                     />
                     <div styleName="detail">
