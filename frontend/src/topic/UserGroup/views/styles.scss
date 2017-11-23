@@ -12,9 +12,23 @@
         flex-direction: column;
 
         .title {
+            display: flex;
             flex-shrink: 0;
             background-color: $color-foreground;
             padding: $spacing-medium $spacing-large;
+
+            button {
+                margin-left: $spacing-small;
+
+                .ion-edit {
+                    margin: $spacing-small;
+                }
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+
+            }
         }
 
         .tabs-container {
@@ -42,4 +56,8 @@
         background-color: $color-foreground;
         padding: $spacing-small;
     }
+}
+
+.user-group-edit-modal {
+    width: 480px;
 }

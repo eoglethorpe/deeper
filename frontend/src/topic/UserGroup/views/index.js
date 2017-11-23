@@ -263,6 +263,7 @@ export default class UserGroup extends React.PureComponent {
                     closeOnEscape
                     onClose={this.handleUserGroupEditModalClose}
                     show={showUserGroupEditModal}
+                    styleName="user-group-edit-modal"
                 >
                     <ModalHeader
                         title={`Edit User Group: ${userGroup.title}`}

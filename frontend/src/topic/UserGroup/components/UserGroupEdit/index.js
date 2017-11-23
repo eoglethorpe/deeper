@@ -82,10 +82,6 @@ export default class UserGroupEdit extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        console.warn('Mounting User Group Edit');
-    }
-
     componentWillUnmount() {
         if (this.userGroupCreateRequest) {
             this.userGroupCreateRequest.stop();
@@ -224,7 +220,7 @@ export default class UserGroupEdit extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Create
+                        Save
                     </PrimaryButton>
                 </div>
             </Form>
