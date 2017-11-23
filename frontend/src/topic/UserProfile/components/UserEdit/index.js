@@ -23,11 +23,11 @@ import {
 } from '../../../../public/components/Action';
 
 import { RestBuilder } from '../../../../public/utils/rest';
-import Uploader from '../../../../public/utils/Uploader';
+import { Uploader } from '../../../../public/utils/Uploader';
 
 import schema from '../../../../common/schema';
 import {
-    createHeaderForFileUpload,
+    createParamsForFileUpload,
     createParamsForUserPatch,
     createUrlForUserPatch,
     urlForUpload,
@@ -205,10 +205,10 @@ export default class UserEdit extends React.PureComponent {
         const uploader = new Uploader(
             files[0],
             urlForUpload,
-            createHeaderForFileUpload(this.props.token),
+            createParamsForFileUpload(this.props.token),
         );
 
-        uploader.onLoad = (status, response) => {
+        uploader.success = (response) => {
             this.setState({
                 formValues: { ...this.state.formValues, displayPicture: response.id },
                 stale: true,
