@@ -1,8 +1,14 @@
-import { POST, wsEndpoint, commonHeaderForPost } from '../config/rest';
+import {
+    GET,
+    POST,
+    wsEndpoint,
+    commonHeaderForPost,
+} from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
 export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
+export const createUrlForGalleryFile = fileId => `${wsEndpoint}/files/${fileId}/`;
 
 export const createParamsForFileUpload = ({ access }) => ({
     headers: {
@@ -45,3 +51,10 @@ export const createHeaderForDropboxUpload = ({ access }, {
     }),
 });
 
+export const createHeaderForGalleryFile = ({ access }) => ({
+    method: GET,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+});
