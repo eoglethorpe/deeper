@@ -1,56 +1,99 @@
 @import '../../../stylesheets/base';
 
 .analysis-framework {
-    display: flex;
     padding: $spacing-medium-alt;
     width: 100%;
     height: calc(100vh - #{$height-navbar});
 
-    .left {
-        display: flex;
-        flex-basis: 26%;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-foreground;
+    :global .responsive-wrapper {
+        height: 100%;
     }
 
-    .right {
-        flex-basis: 74%;
-        background-color: $color-foreground-alt;
-        overflow-y: auto;
+    .overview {
+        display: flex;
+        height: 100%;
 
-        .grid-layout {
-            min-height: 100%;
-            overflow-y: hidden;
-            overflow-x: auto;
+        .left {
+            display: flex;
+            flex-basis: 26%;
+            flex-direction: column;
+            background-color: $color-foreground;
 
-            .grid-item {
-                .header {
+            .header {
+                flex-shrink: 0;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium;
+            }
+
+            .widget-list {
+                flex-grow: 1;
+                overflow-y: auto;
+
+                .widget-list-item {
                     display: flex;
-                    flex-shrink: 0;
                     align-items: center;
                     justify-content: space-between;
+                    background-color: $color-background-row;
                     padding: $spacing-small $spacing-medium;
 
+                    .title {
+                        color: $color-text;
+                    }
+
                     .actions {
-                        font-size: $font-size-large;
+                        background-color: transparent;
+                    }
 
-                        .drag-handle {
-                            cursor: grab;
-                            color: $color-text;
-                        }
-
-                        .close-button {
-                            margin-left: $spacing-small;
-                            color: $color-danger;
-                        }
+                    &:nth-child(odd) {
+                        background-color: $color-background-row-alt;
                     }
                 }
+            }
 
-                .content {
-                    flex-grow: 1;
-                    padding: $spacing-medium;
-                    height: calc(100% - 48px);
+            .footer {
+                flex-shrink: 0;
+                padding: $spacing-medium;
+            }
+        }
+
+        .right {
+            flex-basis: 74%;
+            background-color: $color-foreground-alt;
+            overflow-y: auto;
+
+            .grid-layout {
+                min-height: 100%;
+                overflow-y: hidden;
+                overflow-x: auto;
+
+                .grid-item {
+                    .header {
+                        display: flex;
+                        flex-shrink: 0;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: $spacing-small $spacing-medium;
+
+                        .actions {
+                            font-size: $font-size-large;
+
+                            .drag-handle {
+                                cursor: grab;
+                                color: $color-text;
+                            }
+
+                            .close-button {
+                                margin-left: $spacing-small;
+                                color: $color-danger;
+                            }
+                        }
+                    }
+
+                    .content {
+                        flex-grow: 1;
+                        padding: $spacing-medium;
+                        height: calc(100% - 48px);
+                    }
                 }
             }
         }
