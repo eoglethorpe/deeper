@@ -42,7 +42,9 @@ import DeletePrompt from '../../../../common/components/DeletePrompt';
 import styles from './styles.scss';
 
 const propTypes = {
+    // match required by selectors
     match: PropTypes.object.isRequired, // eslint-disable-line
+    userGroup: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array.isRequired,// eslint-disable-line
     token: PropTypes.object.isRequired, // eslint-disable-line
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
@@ -166,7 +168,7 @@ export default class ProjectsTable extends React.PureComponent {
 
     componentWillMount() {
         this.requestForUserGroupProjects = this.createRequestForUserGroupProjects(
-            this.props.match.params.userGroupId,
+            this.props.userGroup.id,
         );
         this.requestForUserGroupProjects.start();
     }
@@ -320,7 +322,7 @@ export default class ProjectsTable extends React.PureComponent {
     keyExtractor = rowData => rowData.id
 
     render() {
-        const { match } = this.props;
+        const { userGroup } = this.props;
 
         const {
             activeProjectDelete,
@@ -371,7 +373,7 @@ export default class ProjectsTable extends React.PureComponent {
                     />
                     <ModalBody>
                         <UserProjectAdd
-                            userGroups={[match.params.userGroupId]}
+                            userGroups={[userGroup]}
                             handleModalClose={this.handleAddProjectModalClose}
                         />
                     </ModalBody>

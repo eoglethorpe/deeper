@@ -5,9 +5,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+} from '../../../public/components/View';
+import {
+    TransparentPrimaryButton,
+} from '../../../public/components/Action';
 import styles from './styles.scss';
+
 import MembersTable from '../components/MembersTable';
 import ProjectsTable from '../components/ProjectsTable';
+import UserGroupEdit from '../components/UserGroupEdit';
+
 import { pageTitles } from '../../../common/utils/labels';
 import {
     groupSelector,
@@ -66,6 +77,10 @@ export default class UserGroup extends React.PureComponent {
 
         const { match } = props;
         const userGroupId = match.params.userGroupId;
+
+        this.state = {
+            showUserGroupEditModal: false,
+        };
 
         this.usersFields = ['display_name', 'email', 'id'];
 
@@ -169,8 +184,17 @@ export default class UserGroup extends React.PureComponent {
         )) !== -1
     )
 
+    handleUserGroupEditModalClose = () => {
+        this.setState({ showUserGroupEditModal: false });
+    }
+
+    handleUserGroupEditClick = () => {
+        this.setState({ showUserGroupEditModal: true });
+    }
+
     render() {
         const { userGroup, match } = this.props;
+        const { showUserGroupEditModal } = this.state;
 
         const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || []);
 
@@ -182,6 +206,12 @@ export default class UserGroup extends React.PureComponent {
                     </Helmet>
                     <div styleName="title">
                         <h1>{ userGroup.title }</h1>
+                        {
+                            isCurrentUserAdmin &&
+                            <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
+                                <span className="ion-edit" />
+                            </TransparentPrimaryButton>
+                        }
                     </div>
                     <Tabs
                         activeLinkStyle={{ none: 'none' }}
@@ -221,6 +251,7 @@ export default class UserGroup extends React.PureComponent {
                             <ProjectsTable
                                 match={match}
                                 isCurrentUserAdmin={isCurrentUserAdmin}
+                                userGroup={userGroup}
                             />
                         </TabContent>
                     </Tabs>
@@ -228,6 +259,21 @@ export default class UserGroup extends React.PureComponent {
                 <div styleName="right">
                     Activity Log
                 </div>
+                <Modal
+                    closeOnEscape
+                    onClose={this.handleUserGroupEditModalClose}
+                    show={showUserGroupEditModal}
+                >
+                    <ModalHeader
+                        title={`Edit User Group: ${userGroup.title}`}
+                    />
+                    <ModalBody>
+                        <UserGroupEdit
+                            userGroup={userGroup}
+                            handleModalClose={this.handleUserGroupEditModalClose}
+                        />
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }

@@ -32,6 +32,18 @@ export const createParamsForUserGroupsCreate = ({ access }, { title }) => ({
     }),
 });
 
+export const createParamsForUserGroupsPatch = ({ access }, { title }) => ({
+    method: PATCH,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify({
+        title,
+    }),
+});
+
+
 export const createParamsForUserGroupsDelete = ({ access }) => ({
     method: DELETE,
     headers: {

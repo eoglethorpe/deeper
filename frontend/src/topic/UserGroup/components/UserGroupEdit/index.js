@@ -25,11 +25,10 @@ import { RestBuilder } from '../../../../public/utils/rest';
 
 import schema from '../../../../common/schema';
 import {
-    createParamsForUserGroupsCreate,
-    urlForUserGroups,
+    createParamsForUserGroupsPatch,
+    createUrlForUserGroup,
 } from '../../../../common/rest';
 import {
-    activeUserSelector,
     setUserGroupAction,
     tokenSelector,
 } from '../../../../common/redux';
@@ -38,9 +37,12 @@ import styles from './styles.scss';
 
 const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
+    userGroup: PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+    }).isRequired,
     setUserGroup: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -48,7 +50,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     token: tokenSelector(state),
-    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -57,7 +58,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class UserGroupAdd extends React.PureComponent {
+export default class UserGroupEdit extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -67,7 +68,7 @@ export default class UserGroupAdd extends React.PureComponent {
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues: {},
+            formValues: { title: props.userGroup.title },
             pending: false,
             stale: false,
         };
@@ -82,7 +83,7 @@ export default class UserGroupAdd extends React.PureComponent {
     }
 
     componentWillMount() {
-        console.warn('Mounting User Group Add');
+        console.warn('Mounting User Group Edit');
     }
 
     componentWillUnmount() {
@@ -91,13 +92,14 @@ export default class UserGroupAdd extends React.PureComponent {
         }
     }
 
-    createRequestForUserGroupCreate = ({ title }) => {
+    createRequestForUserGroupPatch = (userGroupId, { title }) => {
+        const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userGroupCreateRequest = new RestBuilder()
-            .url(urlForUserGroups)
+            .url(urlForUserGroup)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForUserGroupsCreate(
+                return createParamsForUserGroupsPatch(
                     { access },
                     { title });
             })
@@ -114,7 +116,6 @@ export default class UserGroupAdd extends React.PureComponent {
                 try {
                     schema.validate(response, 'userGroupCreateResponse');
                     this.props.setUserGroup({
-                        userId: this.props.activeUser.userId,
                         userGroup: response,
                     });
                     this.props.handleModalClose();
@@ -171,7 +172,10 @@ export default class UserGroupAdd extends React.PureComponent {
             this.userGroupCreateRequest.stop();
         }
 
-        this.userGroupCreateRequest = this.createRequestForUserGroupCreate(values);
+        this.userGroupCreateRequest = this.createRequestForUserGroupPatch(
+            this.props.userGroup.id,
+            values,
+        );
         this.userGroupCreateRequest.start();
     };
 
@@ -192,7 +196,7 @@ export default class UserGroupAdd extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-group-add-form"
+                styleName="user-group-edit-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}

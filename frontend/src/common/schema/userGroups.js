@@ -1,6 +1,20 @@
 const userGroupSchema = [];
 
 {
+    const name = 'userGroupBase';
+    const schema = {
+        doc: {
+            name: 'User Group Base',
+            description: 'User Group with id and title only',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            title: { type: 'string', required: true },
+        },
+    };
+    userGroupSchema.push({ name, schema });
+}
+{
     const name = 'userGroup';
     const schema = {
         doc: {
