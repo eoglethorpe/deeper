@@ -8,6 +8,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import GalleryImage from '../../../../common/components/GalleryImage';
 
 import {
     Form,
@@ -21,6 +22,9 @@ import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
+import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import { Uploader } from '../../../../public/utils/Uploader';
@@ -76,6 +80,7 @@ export default class UserEdit extends React.PureComponent {
             formValues: this.props.userInformation,
             pending: false,
             stale: false,
+            showGalleryImage: true,
         };
 
         this.elements = [
@@ -202,6 +207,10 @@ export default class UserEdit extends React.PureComponent {
 
     // Image Input Change
     handleImageInputChange = (files) => {
+        this.setState({
+            pending: true,
+        });
+
         const uploader = new Uploader(
             files[0],
             urlForUpload,
@@ -212,6 +221,13 @@ export default class UserEdit extends React.PureComponent {
             this.setState({
                 formValues: { ...this.state.formValues, displayPicture: response.id },
                 stale: true,
+                pending: false,
+            });
+        };
+
+        uploader.failure = () => {
+            this.setState({
+                pending: false,
             });
         };
 
@@ -232,7 +248,10 @@ export default class UserEdit extends React.PureComponent {
             formFieldErrors,
             pending,
             stale,
+            showGalleryImage,
         } = this.state;
+
+        console.log('form values', formValues);
 
         return (
             <Form
@@ -244,13 +263,7 @@ export default class UserEdit extends React.PureComponent {
                 validations={this.validations}
             >
                 {
-                    pending &&
-                    <div styleName="pending-overlay">
-                        <i
-                            className="ion-load-c"
-                            styleName="loading-icon"
-                        />
-                    </div>
+                    pending && <LoadingAnimation />
                 }
                 <NonFieldErrors errors={formErrors} />
                 {/*
@@ -261,8 +274,17 @@ export default class UserEdit extends React.PureComponent {
                     value={formValues.displayPicture}
                     error={formFieldErrors.displayPicture}
                 />
+                {
+                    showGalleryImage && (
+                        <GalleryImage
+                            styleName="gallery-image"
+                            galleryId={formValues.displayPicture}
+                        />
+                    )
+                }
                 <ImageInput
-                    showPreview
+                    showPreview={!showGalleryImage}
+                    showStatus={false}
                     styleName="display-picture"
                     onChange={this.handleImageInputChange}
                     disabled={pending}

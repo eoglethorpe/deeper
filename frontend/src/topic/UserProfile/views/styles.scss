@@ -1,17 +1,16 @@
 @import '../../../stylesheets/base';
-@import '../../../stylesheets/modal';
 
 .user-profile {
     $info-height: 144px;
 
     display: grid;
-    padding: $spacing-large;
+    padding: $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar});
     grid-template-areas:
         "info projects"
         "stats projects"
         "stats groups";
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 3fr 7fr;
     grid-template-rows: $info-height 3fr 2fr;
 
     >* {
@@ -95,4 +94,8 @@
         grid-area: groups;
     }
 
+}
+
+.user-profile-edit-modal {
+    width: 480px;
 }

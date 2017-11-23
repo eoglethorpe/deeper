@@ -86,7 +86,9 @@ export default class UserProfile extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = { editProfile: false };
+        this.state = {
+            editProfile: false,
+        };
     }
 
     componentWillMount() {
@@ -211,6 +213,7 @@ export default class UserProfile extends React.PureComponent {
                                 closeOnEscape
                                 onClose={this.handleEditProfileClose}
                                 show={this.state.editProfile}
+                                styleName="user-profile-edit-modal"
                             >
                                 <ModalHeader title="Edit profile" />
                                 <ModalBody>
