@@ -23,6 +23,7 @@ import {
 
 import styles from './styles.scss';
 
+import widgetStore from '../widgetStore';
 import Overview from './Overview';
 import List from './List';
 
@@ -69,6 +70,33 @@ export default class AnalysisFramework extends React.PureComponent {
     }
 
     render() {
+        const OverviewWrapper = props => (
+            <Overview
+                widgets={
+                    widgetStore.filter(widget => widget.analysisFramework.overviewComponent)
+                        .map(widget => ({
+                            id: widget.id,
+                            title: widget.title,
+                            component: <widget.analysisFramework.overviewComponent />,
+                        }))
+                }
+                {...props}
+            />
+        );
+        const ListWrapper = props => (
+            <List
+                widgets={
+                    widgetStore.filter(widget => widget.analysisFramework.listComponent)
+                        .map(widget => ({
+                            id: widget.id,
+                            title: widget.title,
+                            component: <widget.analysisFramework.listComponent />,
+                        }))
+                }
+                {...props}
+            />
+        );
+
         return (
             <HashRouter>
                 <div styleName="analysis-framework">
@@ -84,8 +112,8 @@ export default class AnalysisFramework extends React.PureComponent {
                             )
                         }
                     />
-                    <Route path="/overview" component={Overview} />
-                    <Route path="/list" component={List} />
+                    <Route path="/overview" component={OverviewWrapper} />
+                    <Route path="/list" component={ListWrapper} />
                 </div>
             </HashRouter>
         );

@@ -19,8 +19,8 @@ import {
 } from '../../../public/components/Action';
 
 import {
-    Table,
-} from '../../../public/components/View';
+    randomString,
+} from '../../../public/utils/common';
 
 import styles from './styles.scss';
 
@@ -29,6 +29,11 @@ const propTypes = {
         width: PropTypes.number,
         height: PropTypes.number,
     }).isRequired,
+    widgets: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.string,
+        title: PropTypes.string,
+        component: PropTypes.element,
+    })).isRequired,
 };
 
 @Responsive
@@ -44,80 +49,23 @@ export default class Overview extends React.PureComponent {
                 {
                     key: 'a',
                     title: 'Excerpt',
+                    widgetId: 'excerpt',
                     gridData: { x: 2, y: 2, w: 30, h: 20 },
                     content: (<TextArea label="Excerpt" />),
                 },
-                {
-                    key: 'b',
-                    title: 'Sectors',
-                    gridData: { x: 2, y: 40, w: 40, h: 25, minW: 30, minH: 25 },
-                    content: (
-                        <Table
-                            headers={[
-                                {
-                                    key: 'category',
-                                    label: '',
-                                },
-                                {
-                                    key: 'health',
-                                    label: 'Health',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'education',
-                                    label: 'Education',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'protection',
-                                    label: 'Protection',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'shelter',
-                                    label: 'Shelter',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'food',
-                                    label: 'Food',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                            ]}
-                            data={[
-                                {
-                                    category: 'Scope and scale',
-                                },
-                                {
-                                    category: 'Humanitarian conditions',
-                                },
-                                {
-                                    category: 'Capacities and response',
-                                },
-                            ]}
-                            keyExtractor={item => item.category}
-                        />
-                    ),
-                },
-                {
-                    key: 'c',
-                    title: 'Image',
-                    gridData: { x: 40, y: 2, w: 20, h: 30 },
-                    content: (
-                        <img
-                            alt="Sample widget"
-                            styleName="image-widget"
-                            src="https://i.imgur.com/ejDSwZW.jpg"
-                        />
-                    ),
-                },
-            ],
-            widgets: [
-                { id: 'text-input', title: 'Text Input' },
-                { id: 'select-input', title: 'Select Input' },
-                { id: 'matrix-2d', title: 'Matrix 2d' },
             ],
         };
+    }
+
+    getUniqueKey = () => {
+        let key;
+        const checkExisting = () => this.state.items.find(item => item.key === key);
+
+        do {
+            key = randomString();
+        } while (checkExisting());
+
+        return key;
     }
 
     getGridItems = () => {
@@ -128,6 +76,7 @@ export default class Overview extends React.PureComponent {
         return items.map(item => (
             <div
                 key={item.key}
+                data-af-key={item.key}
                 data-grid={item.gridData}
                 styleName="grid-item"
             >
@@ -155,15 +104,47 @@ export default class Overview extends React.PureComponent {
     }
 
     handleAddWidgetButtonClick = (id) => {
-        console.log('Add widget', id);
+        const widget = this.props.widgets.find(w => w.id === id);
+
+        const item = {
+            key: this.getUniqueKey(),
+            title: widget.title,
+            widgetId: widget.id,
+            gridData: { x: 2, y: 2, w: 30, h: 20 },
+            content: widget.component,
+        };
+
+        const items = [item, ...this.state.items];
+        this.setState({ items });
     }
 
-    handleItemResize = (layout, oldItem, newItem) => {
-        console.log(layout, oldItem, newItem);
-    }
+    handleLayoutChange = (layout) => {
+        setTimeout(() => {
+            if (this.gridLayout) {
+                const items = [...this.state.items];
+                layout.forEach((itemLayout) => {
+                    const key = this.gridLayout.props.children.find(
+                        child => child.key === itemLayout.i,
+                    ).props['data-af-key'];
 
-    handleItemDragStop = (e, node) => {
-        console.log(e, node);
+                    const itemIndex = items.findIndex(i => i.key === key);
+                    const item = items[itemIndex];
+
+                    items[itemIndex] = {
+                        ...item,
+                        gridData: {
+                            ...item.gridData,
+                            y: itemLayout.y,
+                            x: itemLayout.x,
+                            w: itemLayout.w,
+                            h: itemLayout.h,
+                        },
+                    };
+                });
+
+                this.setState({ items });
+            }
+        }, 0);
     }
 
     render() {
@@ -191,7 +172,7 @@ export default class Overview extends React.PureComponent {
                         styleName="widget-list"
                     >
                         {
-                            this.state.widgets.map(widget => (
+                            this.props.widgets.map(widget => (
                                 <div
                                     styleName="widget-list-item"
                                     key={widget.id}
@@ -236,9 +217,9 @@ export default class Overview extends React.PureComponent {
                         width={width || 0}
                         rowHeight={rowHeight}
                         compactType={null}
-                        onDragStop={this.handleItemDragStop}
-                        onResizeStop={this.handleItemResize}
+                        onLayoutChange={this.handleLayoutChange}
                         draggableHandle=".drag-handle"
+                        ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }
                     </ReactGridLayout>
