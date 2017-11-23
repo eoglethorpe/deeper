@@ -14,6 +14,9 @@ import {
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
@@ -38,7 +41,9 @@ const propTypes = {
     setProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
-    userGroups: PropTypes.arrayOf(PropTypes.number),
+    userGroups: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+    })),
 };
 
 const defaultProps = {
@@ -198,12 +203,7 @@ export default class UserProjectAdd extends React.PureComponent {
             >
                 {
                     pending &&
-                    <div styleName="pending-overlay">
-                        <i
-                            className="ion-load-c"
-                            styleName="loading-icon"
-                        />
-                    </div>
+                    <LoadingAnimation />
                 }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput

@@ -109,7 +109,7 @@ export const userGroupProjectSelector = createSelector(
     groupIdFromRoute,
     (projects, userGroupId) => (Object.keys(projects).reduce((acc, projectId) => {
         const userGroups = (projects[projectId] || emptyObject).userGroups;
-        if (userGroups && userGroups.includes(+userGroupId)) {
+        if (userGroups && userGroups.find(userGroup => (userGroup.id === +userGroupId))) {
             acc.push(projects[projectId]);
         }
         return acc;
