@@ -1,6 +1,7 @@
 @import '../../../../stylesheets/base';
 
 .key-figures {
+    position: relative;
     padding: 0 $spacing-medium-alt;
     height: 100%;
     overflow-y: auto;

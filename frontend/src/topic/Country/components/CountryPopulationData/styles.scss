@@ -1,8 +1,8 @@
 @import '../../../../stylesheets/base';
 
 .country-population {
-
     display: flex;
+    position: relative;
     flex-wrap: wrap;
     padding: $spacing-large;
 
