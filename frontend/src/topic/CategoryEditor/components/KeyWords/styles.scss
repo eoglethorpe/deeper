@@ -1,0 +1,35 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+@import '../../../../stylesheets/modal';
+
+
+.keywords-content {
+    display: flex;
+    flex-grow: 1;
+    border: $width-separator-medium solid $color-separator;
+
+
+    .tabs-container {
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: column;
+        flex-grow: 1;
+        background-color: $color-foreground;
+
+        .tabs-header-container {
+            flex-shrink: 0;
+        }
+
+        .tab {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            padding: $spacing-large;
+
+            .keywords-words {
+                margin: $spacing-medium-alt;
+                width: 30%;
+            }
+        }
+    }
+}

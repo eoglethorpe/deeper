@@ -33,13 +33,6 @@ export default class AddLeadFilter extends React.PureComponent {
                     <span className="ion-social-dropbox" />
                     <p>Dropbox</p>
                 </DropboxChooser>
-                <FileInput
-                    styleName="add-lead-btn"
-                    showStatus={false}
-                >
-                    <span className="ion-android-upload" />
-                    <p>Local disk</p>
-                </FileInput>
                 <TransparentButton
                     styleName="add-lead-btn"
                 >
@@ -52,6 +45,13 @@ export default class AddLeadFilter extends React.PureComponent {
                     <span className="ion-clipboard" />
                     <p>ARY</p>
                 </TransparentButton>
+                <FileInput
+                    styleName="add-lead-btn"
+                    showStatus={false}
+                >
+                    <span className="ion-android-upload" />
+                    <p>Local disk</p>
+                </FileInput>
             </div>
         );
     }

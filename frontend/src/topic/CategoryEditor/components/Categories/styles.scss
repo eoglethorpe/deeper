@@ -1,0 +1,35 @@
+@import '../../../../stylesheets/base';
+
+.categories {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-large;
+
+    h2 {
+        flex-shrink: 0;
+        border-bottom: $width-separator-medium solid $color-separator;
+        padding: $spacing-small;
+        font-weight: $font-weight-medium;
+    }
+
+    .category-group {
+        display: flex;
+        padding: $spacing-large 0;
+
+        .sub-categories,
+        .sub-sub-categories, {
+            display: flex;
+            flex-direction: column;
+            margin-right: $spacing-large;
+            border: $width-separator-medium solid $color-separator;
+            padding: $spacing-large;
+            width: 15%;
+
+            >* {
+                margin-bottom: $spacing-large;
+            }
+
+        }
+
+    }
+}

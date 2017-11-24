@@ -18,8 +18,8 @@ import {
 
 import styles from './styles.scss';
 
-import DocumentView from '../components/DocumentView';
-import CategoryView from '../components/CategoryView';
+import DocumentView from './DocumentView';
+import CategoryView from './CategoryView';
 
 
 const propTypes = {
