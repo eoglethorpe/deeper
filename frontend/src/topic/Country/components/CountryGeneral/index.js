@@ -19,6 +19,7 @@ import {
 
 import schema from '../../../../common/schema';
 import RegionDetail from '../../../../common/components/RegionDetail';
+import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 
 import styles from './styles.scss';
@@ -98,22 +99,31 @@ export default class CountryGeneral extends React.PureComponent {
 
         return (
             <div styleName="country-general">
-                <div styleName="detail-map-container">
-                    <RegionDetail
-                        styleName="region-detail-form"
-                        regionId={countryDetail.id}
-                        dataLoading={dataLoading}
-                    />
-                    <div styleName="map-container">
-                        The map
+                { activeUser.isSuperuser &&
+                    <div styleName="details-edit">
+                        <div styleName="detail-map-container">
+                            <RegionDetail
+                                styleName="region-detail-form"
+                                regionId={countryDetail.id}
+                                dataLoading={dataLoading}
+                            />
+                            <div styleName="map-container">
+                                The map
+                            </div>
+                        </div>
+                        <RegionAdminLevel
+                            styleName="admin-levels"
+                            regionId={countryDetail.id}
+                        />
                     </div>
-                </div>
-                {
-                    activeUser.isSuperuser &&
-                    <RegionAdminLevel
-                        styleName="admin-levels"
-                        regionId={countryDetail.id}
-                    />
+                }
+                { !activeUser.isSuperuser &&
+                    <div styleName="details-no-edit">
+                        <RegionDetailView regionId={countryDetail.id} />
+                        <div styleName="map-container">
+                            The map
+                        </div>
+                    </div>
                 }
             </div>
         );

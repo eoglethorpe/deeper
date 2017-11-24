@@ -4,19 +4,44 @@
 .country-general {
     display: flex;
     position: relative;
-    flex-basis: 100%;
     flex-direction: column;
     flex-grow: 1;
 
-    .detail-map-container {
+    .details-edit {
         display: flex;
-        height: 480px;
+        flex-direction: column;
+        flex-grow: 1;
 
-        .region-detail-form {
-            flex-basis: 30%;
-            border-right: $width-separator-thin solid $color-hover;
-            min-width: 240px;
+        .detail-map-container {
+            display: flex;
+            flex-shrink: 0;
+            height: 480px;
+
+            .region-detail-form {
+                flex-basis: 30%;
+                border-right: $width-separator-thin solid $color-hover;
+                min-width: 240px;
+            }
+
+            .map-container {
+                display: flex;
+                flex-grow: 1;
+                align-items: center;
+                justify-content: center;
+            }
         }
+
+        .admin-levels {
+            flex-grow: 0;
+        }
+    }
+
+    .details-no-edit {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        width: 100%;
+        height: 100%;
 
         .map-container {
             display: flex;
@@ -24,9 +49,5 @@
             align-items: center;
             justify-content: center;
         }
-    }
-
-    .admin-levels {
-        flex-grow: 0;
     }
 }

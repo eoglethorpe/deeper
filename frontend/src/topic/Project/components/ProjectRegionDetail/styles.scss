@@ -50,17 +50,6 @@
         position: relative;
         height: calc(100% - #{$height-header});
 
-        .details-non-edit {
-            @include shadow-small;
-            position: absolute;
-            top: $spacing-medium;
-            left: $spacing-medium;
-            border-right: $width-separator-thin solid $color-separator;
-            background-color: $color-foreground;
-            padding: $spacing-large;
-            min-width: 240px;
-        }
-
         .map-container-non-edit {
             display: flex;
             align-items: center;

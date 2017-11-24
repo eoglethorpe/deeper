@@ -21,6 +21,7 @@ import {
 import schema from '../../../../common/schema';
 
 import RegionDetail from '../../../../common/components/RegionDetail';
+import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 
 import styles from './styles.scss';
@@ -126,7 +127,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         <div styleName="detail-map-container">
                             <RegionDetail
                                 dataLoading={dataLoading}
-                                regionId={regionDetails.id}
+                                regionId={regionId}
                                 styleName="region-detail-form"
                             />
                             <div styleName="map-container">
@@ -141,9 +142,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
                 {isPublic &&
                     <div styleName="region-details-non-edit">
-                        <div styleName="details-non-edit">
-                            Region Details
-                        </div>
+                        <RegionDetailView regionId={regionId} />
                         <div styleName="map-container-non-edit">
                             The map
                         </div>
