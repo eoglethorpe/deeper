@@ -2,7 +2,7 @@
 
 const storeConfig = {
     // blacklist: ['websocket', 'datetime', 'navbar', 'domainData', 'siloDomainData'],
-    blacklist: ['websocket', 'datetime', 'navbar'],
+    blacklist: ['domainData', 'websocket', 'datetime', 'navbar'],
     keyPrefix: 'deeper-',
     // storage: localforage,
     // TODO: add transforms

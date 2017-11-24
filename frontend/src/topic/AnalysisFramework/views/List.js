@@ -2,6 +2,9 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactGridLayout from 'react-grid-layout';
+import update from 'immutability-helper';
+
+import { connect } from 'react-redux';
 
 import {
     Link,
@@ -19,6 +22,12 @@ import {
     randomString,
 } from '../../../public/utils/common';
 
+import {
+    addAnalysisFrameworkWidget,
+    updateAnalysisFrameworkWidget,
+} from '../../../common/action-creators/domainData';
+
+import widgetStore from '../widgetStore';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -27,64 +36,38 @@ const propTypes = {
         height: PropTypes.number,
     }).isRequired,
 
-    widgets: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.string,
-        title: PropTypes.string,
-        component: PropTypes.element,
-    })).isRequired,
+    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
+    addWidget: PropTypes.func.isRequired,
+    updateWidget: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+    state,
+});
+
+const mapDispatchToProps = dispatch => ({
+    addWidget: params => dispatch(addAnalysisFrameworkWidget(params)),
+    updateWidget: params => dispatch(updateAnalysisFrameworkWidget(params)),
+});
+
 @Responsive
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            items: [],
-        };
+        this.update(props.analysisFramework);
     }
 
-    getGridItems = () => {
-        const {
-            items,
-        } = this.state;
-
-        return items.map(item => (
-            <div
-                key={item.key}
-                data-af-key={item.key}
-                data-grid={item.gridData}
-                styleName="grid-item"
-            >
-                <header
-                    styleName="header"
-                >
-                    <h2>{item.title}</h2>
-                    <div styleName="actions">
-                        <span
-                            styleName="drag-handle"
-                            className="ion-arrow-move drag-handle"
-                        />
-                        <TransparentButton
-                            styleName="close-button"
-                        >
-                            <span className="ion-android-close" />
-                        </TransparentButton>
-                    </div>
-                </header>
-                <div styleName="content">
-                    {item.content}
-                </div>
-            </div>
-        ));
+    componentWillReceiveProps(nextProps) {
+        this.update(nextProps.analysisFramework);
     }
 
     getUniqueKey = () => {
         let key;
-        const checkExisting = () => this.state.items.find(item => item.key === key);
+        const checkExisting = () => this.items.find(item => item.key === key);
 
         do {
             key = randomString();
@@ -93,20 +76,105 @@ export default class List extends React.PureComponent {
         return key;
     }
 
+    getGridItems = () => {
+        const {
+            widgets,
+            items,
+        } = this;
+
+        return items.map((item) => {
+            const Component = widgets.find(w => w.id === item.widgetId).component;
+            return (
+                <div
+                    key={item.key}
+                    data-af-key={item.key}
+                    data-grid={item.properties.gridData}
+                    styleName="grid-item"
+                >
+                    <header
+                        styleName="header"
+                    >
+                        <h2>{item.title}</h2>
+                        <div styleName="actions">
+                            <span
+                                styleName="drag-handle"
+                                className="ion-arrow-move drag-handle"
+                            />
+                            <TransparentButton
+                                styleName="close-button"
+                            >
+                                <span className="ion-android-close" />
+                            </TransparentButton>
+                        </div>
+                    </header>
+                    <div styleName="content">
+                        <Component />
+                    </div>
+                </div>
+            );
+        });
+    }
 
     handleAddWidgetButtonClick = (id) => {
-        const widget = this.props.widgets.find(w => w.id === id);
+        const widget = this.widgets.find(w => w.id === id);
 
         const item = {
-            key: this.getUniqueKey(),
-            title: widget.title,
+            key: `list-${this.getUniqueKey()}`,
             widgetId: widget.id,
-            gridData: { x: 2, y: 2, w: 30, h: 20 },
-            content: widget.component,
+            title: widget.title,
+            properties: {
+                gridData: { x: 2, y: 2, w: 30, h: 20 },
+            },
         };
 
-        const items = [item, ...this.state.items];
-        this.setState({ items });
+        const analysisFrameworkId = this.props.analysisFramework.id;
+        this.props.addWidget({
+            analysisFrameworkId,
+            widget: item,
+        });
+    }
+
+    handleLayoutChange = (layout) => {
+        setTimeout(() => {
+            if (this.gridLayout) {
+                layout.forEach((itemLayout) => {
+                    const key = this.gridLayout.props.children.find(
+                        child => child.key === itemLayout.i,
+                    ).props['data-af-key'];
+
+                    const itemIndex = this.items.findIndex(i => i.key === key);
+                    const item = this.items[itemIndex];
+
+                    const settings = {
+                        properties: {
+                            gridData: { $merge: {
+                                x: itemLayout.x,
+                                y: itemLayout.y,
+                                w: itemLayout.w,
+                                h: itemLayout.h,
+                            } },
+                        },
+                    };
+
+                    const analysisFrameworkId = this.props.analysisFramework.id;
+                    const widget = update(item, settings);
+                    this.props.updateWidget({ analysisFrameworkId, widget });
+                });
+            }
+        }, 0);
+    }
+
+    update(analysisFramework) {
+        this.widgets = widgetStore
+            .filter(widget => widget.analysisFramework.listComponent)
+            .map(widget => ({
+                id: widget.id,
+                title: widget.title,
+                component: widget.analysisFramework.listComponent,
+            }));
+        this.items = analysisFramework.widgets.filter(
+            w => this.widgets.find(w1 => w1.id === w.widgetId),
+        );
     }
 
     render() {
@@ -141,7 +209,7 @@ export default class List extends React.PureComponent {
                         styleName="widget-list"
                     >
                         {
-                            this.props.widgets.map(widget => (
+                            this.widgets.map(widget => (
                                 <div
                                     styleName="widget-list-item"
                                     key={widget.id}

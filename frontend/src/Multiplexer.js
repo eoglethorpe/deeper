@@ -184,7 +184,7 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/analysis-framework/*',
+            path: '/analysis-framework/:analysisFrameworkId/',
             name: pageTitles.analysisFramework,
             component: AnalysisFramework,
             private: true,

@@ -4,20 +4,29 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     UNSET_USER_PROJECT,
+
     SET_USER_GROUPS,
     SET_USER_GROUP,
     UNSET_USER_GROUP,
+
     SET_USERS_MEMBERSHIP,
     SET_USER_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
+
     DUMMY_ACTION,
+
     SET_REGIONS,
     SET_REGION_DETAILS,
     ADD_NEW_REGION,
     REMOVE_PROJECT_REGION,
     UNSET_REGION,
+
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
+
+    ADD_ANALYSIS_FRAMEWORK_WIDGET,
+    REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
+    UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -124,6 +133,24 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
     type: REMOVE_PROJECT_REGION,
     projectId,
     regionId,
+});
+
+export const addAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) => ({
+    type: ADD_ANALYSIS_FRAMEWORK_WIDGET,
+    analysisFrameworkId,
+    widget,
+});
+
+export const removeAnalysisFrameworkWidget = ({ analysisFrameworkId, widgetId }) => ({
+    type: REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
+    analysisFrameworkId,
+    widgetId,
+});
+
+export const updateAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) => ({
+    type: UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
+    analysisFrameworkId,
+    widget,
 });
 
 export const dummyAction = () => ({

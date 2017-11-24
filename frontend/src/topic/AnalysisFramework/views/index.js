@@ -14,31 +14,21 @@ import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
-    currentUserProjectsSelector,
+    currentAnalysisFrameworkSelector,
 } from '../../../common/selectors/domainData';
-
-import {
-    activeProjectSelector,
-} from '../../../common/selectors/siloDomainData';
 
 import styles from './styles.scss';
 
-import widgetStore from '../widgetStore';
 import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
-    // boundingClientRect: PropTypes.shape({
-    //     width: PropTypes.number,
-    //     height: PropTypes.number,
-    // }).isRequired,
+    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
 };
 
-const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    currentUserProjects: currentUserProjectsSelector(state),
+const mapStateToProps = (state, props) => ({
+    analysisFramework: currentAnalysisFrameworkSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -70,32 +60,7 @@ export default class AnalysisFramework extends React.PureComponent {
     }
 
     render() {
-        const OverviewWrapper = props => (
-            <Overview
-                widgets={
-                    widgetStore.filter(widget => widget.analysisFramework.overviewComponent)
-                        .map(widget => ({
-                            id: widget.id,
-                            title: widget.title,
-                            component: <widget.analysisFramework.overviewComponent />,
-                        }))
-                }
-                {...props}
-            />
-        );
-        const ListWrapper = props => (
-            <List
-                widgets={
-                    widgetStore.filter(widget => widget.analysisFramework.listComponent)
-                        .map(widget => ({
-                            id: widget.id,
-                            title: widget.title,
-                            component: <widget.analysisFramework.listComponent />,
-                        }))
-                }
-                {...props}
-            />
-        );
+        const { analysisFramework } = this.props;
 
         return (
             <HashRouter>
@@ -112,8 +77,24 @@ export default class AnalysisFramework extends React.PureComponent {
                             )
                         }
                     />
-                    <Route path="/overview" component={OverviewWrapper} />
-                    <Route path="/list" component={ListWrapper} />
+                    <Route
+                        path="/overview"
+                        render={props => (
+                            <Overview
+                                {...props}
+                                analysisFramework={analysisFramework}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/list"
+                        render={props => (
+                            <List
+                                {...props}
+                                analysisFramework={analysisFramework}
+                            />
+                        )}
+                    />
                 </div>
             </HashRouter>
         );

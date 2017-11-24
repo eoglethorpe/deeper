@@ -10,6 +10,7 @@ const emptyObject = {};
 
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
+export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
 
@@ -142,4 +143,17 @@ export const currentUserProjectsSelector = createSelector(
             projects[projectId] || emptyObject
         ))
     ) || emptyList),
+);
+
+
+export const analysisFrameworksSelector = ({ domainData }) => (
+    domainData.analysisFrameworks || emptyObject
+);
+
+export const currentAnalysisFrameworkSelector = createSelector(
+    analysisFrameworkIdFromProps,
+    analysisFrameworksSelector,
+    (analysisFrameworkId, analysisFrameworks) => (
+        analysisFrameworks[analysisFrameworkId] || emptyObject
+    ),
 );

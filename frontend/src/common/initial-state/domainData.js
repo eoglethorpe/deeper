@@ -26,6 +26,38 @@ const initialDomainDataState = {
         },
     },
 
+    analysisFrameworks: {
+        1: {
+            id: 1,
+            title: 'ACAPS Framework',
+
+            /*
+            createdAt: '',
+            modifiedAt: '',
+            createdBy: 1,
+            modifiedBy: 1,
+            */
+
+            widgets: [
+                /*
+                {
+                    id: 1,
+                    widgetId: 'excerpt-1xs',
+                    title: 'Excerpt',
+                    properties: {},
+                }
+                */
+            ],
+
+            /*
+            filters: [
+            ],
+            exportables: [
+            ],
+            */
+        },
+    },
+
     // index is project id
     leads: {
         1: [
@@ -74,6 +106,7 @@ const initialDomainDataState = {
             userGroups: [1, 2],
         },
     },
+
     regions: {
         /*
         1: { id: 1, title: 'Afghanistan', code: 'AFG' },

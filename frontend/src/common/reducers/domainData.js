@@ -4,20 +4,29 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
     UNSET_USER_PROJECT,
+
     SET_USER_GROUPS,
     SET_USER_GROUP,
     UNSET_USER_GROUP,
+
     SET_USERS_MEMBERSHIP,
     SET_USER_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
+
     DUMMY_ACTION,
+
     UNSET_REGION,
     ADD_NEW_REGION,
     REMOVE_PROJECT_REGION,
     SET_REGIONS,
     SET_REGION_DETAILS,
+
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
+
+    ADD_ANALYSIS_FRAMEWORK_WIDGET,
+    REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
+    UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -349,7 +358,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
         case ADD_NEW_REGION: {
             const settings = {
-                regions: { $autoArray: {
+                regions: { $auto: {
                     [action.regionDetail.id]: { $auto: {
                         $merge: action.regionDetail,
                     } },
@@ -372,6 +381,71 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                 }
             }
             return update(state, settings);
+        }
+        case ADD_ANALYSIS_FRAMEWORK_WIDGET: {
+            const widget = action.widget;
+            const existingWidgets = (
+                state.analysisFrameworks[action.analysisFrameworkId] || {}
+            ).widgets || [];
+            const index = existingWidgets.findIndex(w => w.key === widget.key);
+
+            if (index === -1) {
+                const settings = {
+                    analysisFrameworks: { $auto: {
+                        [action.analysisFrameworkId]: { $auto: {
+                            widgets: { $set: [...existingWidgets, widget] },
+                        } },
+                    } },
+                };
+
+                return update(state, settings);
+            }
+
+            return state;
+        }
+        case REMOVE_ANALYSIS_FRAMEWORK_WIDGET: {
+            const existingWidgets = (
+                state.analysisFrameworks[action.analysisFrameworkId] || {}
+            ).widgets || [];
+            const index = existingWidgets.findIndex(w => w.key === action.key);
+
+            if (index !== -1) {
+                const settings = {
+                    analysisFrameworks: { $auto: {
+                        [action.analysisFrameworkId]: { $auto: {
+                            widgets: { $set: [...existingWidgets].splice(index, 1) },
+                        } },
+                    } },
+                };
+
+                return update(state, settings);
+            }
+
+            return state;
+        }
+        case UPDATE_ANALYSIS_FRAMEWORK_WIDGET: {
+            const widget = action.widget;
+            const existingWidgets = (
+                state.analysisFrameworks[action.analysisFrameworkId] || {}
+            ).widgets || [];
+            const index = existingWidgets.findIndex(w => w.key === widget.key);
+
+            if (index !== -1) {
+                const newWidgets = [...existingWidgets];
+                newWidgets[index] = widget;
+
+                const settings = {
+                    analysisFrameworks: { $auto: {
+                        [action.analysisFrameworkId]: { $auto: {
+                            widgets: { $set: newWidgets },
+                        } },
+                    } },
+                };
+
+                return update(state, settings);
+            }
+
+            return state;
         }
         case DUMMY_ACTION: {
             const dummy = {
