@@ -9,6 +9,61 @@
         height: 100%;
     }
 
+    %widget-list {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .widget-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: $color-background-row;
+            padding: $spacing-small $spacing-medium;
+
+            .title {
+                color: $color-text;
+            }
+
+            .actions {
+                background-color: transparent;
+            }
+
+            &:nth-child(odd) {
+                background-color: $color-background-row-alt;
+            }
+        }
+    }
+
+    %grid-item {
+        .header {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+            padding: $spacing-small $spacing-medium;
+
+            .actions {
+                font-size: $font-size-large;
+
+                .drag-handle {
+                    cursor: grab;
+                    color: $color-text;
+                }
+
+                .close-button {
+                    margin-left: $spacing-small;
+                    color: $color-danger;
+                }
+            }
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: $spacing-medium;
+            height: calc(100% - 48px);
+        }
+    }
+
     .overview {
         display: flex;
         height: 100%;
@@ -26,28 +81,7 @@
             }
 
             .widget-list {
-                flex-grow: 1;
-                overflow-y: auto;
-
-                .widget-list-item {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    background-color: $color-background-row;
-                    padding: $spacing-small $spacing-medium;
-
-                    .title {
-                        color: $color-text;
-                    }
-
-                    .actions {
-                        background-color: transparent;
-                    }
-
-                    &:nth-child(odd) {
-                        background-color: $color-background-row-alt;
-                    }
-                }
+                @extend %widget-list;
             }
 
             .footer {
@@ -67,34 +101,32 @@
                 overflow-x: auto;
 
                 .grid-item {
-                    .header {
-                        display: flex;
-                        flex-shrink: 0;
-                        align-items: center;
-                        justify-content: space-between;
-                        padding: $spacing-small $spacing-medium;
-
-                        .actions {
-                            font-size: $font-size-large;
-
-                            .drag-handle {
-                                cursor: grab;
-                                color: $color-text;
-                            }
-
-                            .close-button {
-                                margin-left: $spacing-small;
-                                color: $color-danger;
-                            }
-                        }
-                    }
-
-                    .content {
-                        flex-grow: 1;
-                        padding: $spacing-medium;
-                        height: calc(100% - 48px);
-                    }
+                    @extend %grid-item;
                 }
+            }
+        }
+    }
+
+    .list {
+        height: 100%;
+
+        .top {
+            height: 500px;
+
+            .grid-layout {
+                min-height: 100%;
+                overflow-y: hidden;
+                overflow-x: auto;
+
+                .grid-item {
+                    @extend %grid-item;
+                }
+            }
+        }
+
+        .bottom {
+            .widget-list {
+                @extend %widget-list;
             }
         }
     }
