@@ -18,6 +18,10 @@ import {
 
 import styles from './styles.scss';
 
+import DocumentView from '../components/DocumentView';
+import CategoryView from '../components/CategoryView';
+
+
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired, // eslint-disable-line
@@ -34,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AnalysisFramework extends React.PureComponent {
+export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
 
     componentWillMount() {
@@ -58,11 +62,16 @@ export default class AnalysisFramework extends React.PureComponent {
 
     render() {
         return (
-            <div>
+            <div styleName="category-editor">
                 <Helmet>
                     <title>{ pageTitles.categoryEditor }</title>
                 </Helmet>
-                    Category Editor
+                <DocumentView
+                    className="left"
+                />
+                <CategoryView
+                    className="right"
+                />
             </div>
         );
     }

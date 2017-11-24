@@ -331,7 +331,6 @@ export default class Navbar extends React.PureComponent {
         if (!navbarVisible) {
             return null;
         }
-        console.log(pageTitles.categoryEditor);
 
         return (
             <div styleName="navbar">
