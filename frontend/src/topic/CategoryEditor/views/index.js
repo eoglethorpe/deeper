@@ -5,32 +5,42 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { pageTitles } from '../../../common/utils/labels';
-import { setNavbarStateAction } from '../../../common/redux';
+import {
+    setNavbarStateAction,
+} from '../../../common/action-creators/navbar';
+import {
+    currentUserProjectsSelector,
+} from '../../../common/selectors/domainData';
+
+import {
+    activeProjectSelector,
+} from '../../../common/selectors/siloDomainData';
 
 import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
+    activeProject: PropTypes.number.isRequired, // eslint-disable-line
 };
 
-const defaultProps = {
-    leads: [],
-};
+const mapStateToProps = state => ({
+    activeProject: activeProjectSelector(state),
+    currentUserProjects: currentUserProjectsSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class Ary extends React.PureComponent {
+export default class AnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
-    static defaultProps = defaultProps;
 
     componentWillMount() {
         this.props.setNavbarState({
             visible: true,
-            activeLink: pageTitles.ary,
+            activeLink: undefined,
             validLinks: [
                 pageTitles.leads,
                 pageTitles.entries,
@@ -41,7 +51,6 @@ export default class Ary extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
-                pageTitles.categoryEditor,
                 pageTitles.projectPanel,
             ],
         });
@@ -51,9 +60,9 @@ export default class Ary extends React.PureComponent {
         return (
             <div>
                 <Helmet>
-                    <title>{ pageTitles.ary }</title>
+                    <title>{ pageTitles.categoryEditor }</title>
                 </Helmet>
-                { pageTitles.ary }
+                    Category Editor
             </div>
         );
     }

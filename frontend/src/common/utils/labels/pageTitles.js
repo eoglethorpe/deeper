@@ -24,6 +24,8 @@ const pageTitles = {
 
     analysisFramework: 'Analysis Framework',
 
+    categoryEditor: 'Category Editor',
+
     weeklySnapshot: 'Weekly Snapshot',
 
     apiDocs: 'Api Doc',

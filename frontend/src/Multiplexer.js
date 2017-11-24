@@ -92,6 +92,10 @@ const AnalysisFramework = () => (
     <Bundle load={() => import('./topic/AnalysisFramework/views/')} />
 );
 
+const CategoryEditor = () => (
+    <Bundle load={() => import('./topic/CategoryEditor/views/')} />
+);
+
 const ApiDocs = () => (
     <Bundle load={() => import('./topic/ApiDocs/views')} />
 );
@@ -196,6 +200,12 @@ export default class Multiplexer extends React.PureComponent {
             path: '/analysis-framework/:analysisFrameworkId/',
             name: pageTitles.analysisFramework,
             component: AnalysisFramework,
+            private: true,
+        },
+        {
+            path: '/category-editor/*',
+            name: pageTitles.categoryEditor,
+            component: CategoryEditor,
             private: true,
         },
         {

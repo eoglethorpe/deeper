@@ -45,6 +45,7 @@ export default class Dashboard extends React.PureComponent {
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
                 pageTitles.projectPanel,
+                pageTitles.categoryEditor,
                 pageTitles.analysisFramework,
             ],
         });
