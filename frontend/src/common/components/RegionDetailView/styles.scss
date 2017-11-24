@@ -2,6 +2,7 @@
 
 .region-detail-view {
     @include shadow-small;
+    display: table;
     position: absolute;
     bottom: $spacing-medium;
     left: $spacing-medium;
@@ -16,15 +17,14 @@
     }
 
     .row {
-        display: flex;
-        flex-direction: column;
-        padding: $spacing-small $spacing-medium;
+        display: table-row;
 
         .key {
+            display: table-cell;
+            padding: $spacing-extra-small $spacing-medium;
             text-transform: uppercase;
             color: $color-label;
-            font-size: $font-size-extra-small;
-            font-weight: $font-weight-bold;
+            font-size: $font-size-small;
 
             &::after {
                 content: ':';
@@ -32,6 +32,8 @@
         }
 
         .value {
+            display: table-cell;
+            padding: $spacing-extra-small $spacing-medium;
             color: $color-text;
             font-size: $font-size-medium-alt;
         }
