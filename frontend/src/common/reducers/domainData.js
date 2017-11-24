@@ -13,6 +13,7 @@ import {
     DUMMY_ACTION,
     UNSET_REGION,
     ADD_NEW_REGION,
+    REMOVE_PROJECT_REGION,
     SET_REGIONS,
     SET_REGION_DETAILS,
     SET_LEADS,
@@ -329,6 +330,23 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
 
+        case REMOVE_PROJECT_REGION: {
+            const settings = {};
+            const index = ((state.projects[action.projectId] || {}).regions
+                || []).findIndex(d => (d.id === action.regionId));
+
+            if (index !== -1) {
+                settings.projects = {
+                    [action.projectId]: { $auto: {
+                        regions: { $autoArray: {
+                            $splice: [[index, 1]],
+                        } },
+                    } },
+                };
+            }
+            return update(state, settings);
+        }
+
         case ADD_NEW_REGION: {
             const settings = {
                 regions: { $autoArray: {
@@ -337,6 +355,22 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
                     } },
                 } },
             };
+            if (action.projectId) {
+                const index = ((state.projects[action.projectId] || {}).regions
+                    || []).findIndex(d => (d.id === action.regionDetail.id));
+                if (index === -1) {
+                    settings.projects = {
+                        [action.projectId]: { $auto: {
+                            regions: { $autoArray: {
+                                $push: [{
+                                    id: action.regionDetail.id,
+                                    title: action.regionDetail.title,
+                                }],
+                            } },
+                        } },
+                    };
+                }
+            }
             return update(state, settings);
         }
         case DUMMY_ACTION: {

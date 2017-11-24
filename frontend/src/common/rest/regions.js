@@ -4,6 +4,9 @@ const regionsUrlFields = ['id', 'code', 'title', 'public', 'created_at', 'modifi
 export const urlForRegions = `${wsEndpoint}/regions/?${p({ fields: regionsUrlFields })}`;
 export const urlForRegionCreate = `${wsEndpoint}/regions/`;
 export const createUrlForRegion = regionId => `${wsEndpoint}/regions/${regionId}/`;
+
+export const createUrlForRegionClone = regionId => `${wsEndpoint}/clone-region/${regionId}/`;
+
 export const createUrlForRegionWithField = (regionId, fields) => {
     if (fields) {
         const finalFields = regionsUrlFields.concat(fields);
@@ -13,6 +16,15 @@ export const createUrlForRegionWithField = (regionId, fields) => {
 };
 
 export const createParamsForRegionCreate = ({ access }, data) => ({
+    method: POST,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify(data),
+});
+
+export const createParamsForRegionClone = ({ access }, data) => ({
     method: POST,
     headers: {
         Authorization: `Bearer ${access}`,

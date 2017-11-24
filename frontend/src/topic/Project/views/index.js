@@ -166,6 +166,7 @@ export default class ProjectPanel extends React.PureComponent {
                     this.props.setProject({
                         project: response,
                     });
+                    console.log(response);
                     this.setState({
                         loadingLeads: false,
                     });
