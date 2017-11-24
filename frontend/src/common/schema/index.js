@@ -7,6 +7,7 @@ import regions from './regions';
 import token from './token';
 import userGroups from './userGroups';
 import users from './users';
+import analysisFrameworks from './analysisFrameworks';
 
 // ATTACHING BEHAVIORS
 attachValidator(dict);
@@ -45,6 +46,7 @@ const userDefinedSchemas = [];
     ...token,
     ...userGroups,
     ...users,
+    ...analysisFrameworks,
 ].forEach(({ name, schema }) => dict.put(name, schema));
 
 export default dict;

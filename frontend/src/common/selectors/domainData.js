@@ -154,6 +154,6 @@ export const currentAnalysisFrameworkSelector = createSelector(
     analysisFrameworkIdFromProps,
     analysisFrameworksSelector,
     (analysisFrameworkId, analysisFrameworks) => (
-        analysisFrameworks[analysisFrameworkId] || emptyObject
+        analysisFrameworks[analysisFrameworkId]
     ),
 );

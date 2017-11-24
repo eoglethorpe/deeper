@@ -24,6 +24,7 @@ import {
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 
+    SET_ANALYSIS_FRAMEWORK,
     ADD_ANALYSIS_FRAMEWORK_WIDGET,
     REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
     UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
@@ -133,6 +134,12 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
     type: REMOVE_PROJECT_REGION,
     projectId,
     regionId,
+});
+
+
+export const setAnalysisFramework = ({ analysisFramework }) => ({
+    type: SET_ANALYSIS_FRAMEWORK,
+    analysisFramework,
 });
 
 export const addAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) => ({

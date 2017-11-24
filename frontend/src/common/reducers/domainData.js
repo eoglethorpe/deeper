@@ -24,6 +24,7 @@ import {
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 
+    SET_ANALYSIS_FRAMEWORK,
     ADD_ANALYSIS_FRAMEWORK_WIDGET,
     REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
     UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
@@ -382,6 +383,18 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             }
             return update(state, settings);
         }
+
+        case SET_ANALYSIS_FRAMEWORK: {
+            const settings = {
+                analysisFrameworks: { $auto: {
+                    [action.analysisFramework.id]: { $auto: {
+                        $merge: action.analysisFramework,
+                    } },
+                } },
+            };
+            return update(state, settings);
+        }
+
         case ADD_ANALYSIS_FRAMEWORK_WIDGET: {
             const widget = action.widget;
             const existingWidgets = (
@@ -403,6 +416,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
             return state;
         }
+
         case REMOVE_ANALYSIS_FRAMEWORK_WIDGET: {
             const existingWidgets = (
                 state.analysisFrameworks[action.analysisFrameworkId] || {}
@@ -423,6 +437,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
             return state;
         }
+
         case UPDATE_ANALYSIS_FRAMEWORK_WIDGET: {
             const widget = action.widget;
             const existingWidgets = (
