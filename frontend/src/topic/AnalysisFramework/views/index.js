@@ -99,6 +99,9 @@ export default class AnalysisFramework extends React.PureComponent {
         if (this.analysisFrameworkRequest) {
             this.analysisFrameworkRequest.stop();
         }
+        if (this.analysisFrameworkSaveRequest) {
+            this.analysisFrameworkSaveRequest.stop();
+        }
     }
 
     createRequestForAnalysisFramework = ({ analysisFrameworkId }) => {
@@ -109,8 +112,7 @@ export default class AnalysisFramework extends React.PureComponent {
             .url(urlForAnalysisFramework)
             .params(() => {
                 const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
+                return createParamsForUser(token);
             })
             .preLoad(() => {
             })
@@ -128,6 +130,45 @@ export default class AnalysisFramework extends React.PureComponent {
             })
             .build();
         return analysisFrameworkRequest;
+    }
+
+    createRequestForAnalysisFrameworkSave = ({ analysisFramework }) => {
+        const urlForAnalysisFramework = createUrlForAnalysisFramework(
+            analysisFramework.id,
+        );
+        const analysisFrameworkSaveRequest = new RestBuilder()
+            .url(urlForAnalysisFramework)
+            .params(() => {
+                const { token } = this.props;
+                return createParamsForAnalysisFrameworkEdit(token, analysisFramework);
+            })
+            .preLoad(() => {
+            })
+            .postLoad(() => {
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.setAnalysisFramework({
+                        analysisFramework: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return analysisFrameworkSaveRequest;
+    }
+
+    handleSave = () => {
+        if (!this.props.analysisFramework) {
+            return;
+        }
+
+        this.analysisFrameworkSaveRequest = this.createRequestForAnalysisFrameworkSave({
+            analysisFramework: this.props.analysisFramework,
+        });
+        this.analysisFrameworkSaveRequest.start();
     }
 
     render() {
@@ -165,6 +206,7 @@ export default class AnalysisFramework extends React.PureComponent {
                             <Overview
                                 {...props}
                                 analysisFramework={analysisFramework}
+                                onSave={this.handleSave}
                             />
                         )}
                     />
@@ -174,6 +216,7 @@ export default class AnalysisFramework extends React.PureComponent {
                             <List
                                 {...props}
                                 analysisFramework={analysisFramework}
+                                onSave={this.handleSave}
                             />
                         )}
                     />

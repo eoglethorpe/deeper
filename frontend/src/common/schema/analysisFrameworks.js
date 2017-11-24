@@ -28,6 +28,7 @@ const analysisFrameworkSchema = [];
             id: { type: 'uint', required: 'true' },
             title: { type: 'string', required: true },
             analysisFramework: { type: 'uint', required: true },
+            key: { type: 'string' },
             widgetId: { type: 'string', required: true },
             properties: { type: 'object' },
         },

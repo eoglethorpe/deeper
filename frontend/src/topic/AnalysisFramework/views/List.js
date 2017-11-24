@@ -38,6 +38,7 @@ const propTypes = {
 
     analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
     addWidget: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
 };
 
@@ -116,9 +117,11 @@ export default class List extends React.PureComponent {
     }
 
     handleAddWidgetButtonClick = (id) => {
+        const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = this.widgets.find(w => w.id === id);
 
         const item = {
+            analysisFramework: analysisFrameworkId,
             key: `list-${this.getUniqueKey()}`,
             widgetId: widget.id,
             title: widget.title,
@@ -127,7 +130,6 @@ export default class List extends React.PureComponent {
             },
         };
 
-        const analysisFrameworkId = this.props.analysisFramework.id;
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
@@ -239,6 +241,11 @@ export default class List extends React.PureComponent {
                     <Link to="/overview" >
                         Go to overview
                     </Link>
+                    <TransparentButton
+                        onClick={this.props.onSave}
+                    >
+                        Save
+                    </TransparentButton>
                 </div>
             </div>
         );

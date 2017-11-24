@@ -1,6 +1,6 @@
 import {
     wsEndpoint,
-    PATCH,
+    PUT,
     commonHeaderForPost,
 } from '../config/rest';
 
@@ -10,7 +10,7 @@ export const createUrlForAnalysisFramework = analysisFrameworkId => (
 );
 
 export const createParamsForAnalysisFrameworkEdit = ({ access }, data) => ({
-    method: PATCH,
+    method: PUT,
     headers: {
         Authorization: `Bearer ${access}`,
         ...commonHeaderForPost,

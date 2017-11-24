@@ -38,6 +38,7 @@ const propTypes = {
 
     analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
     addWidget: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
 };
 
@@ -116,9 +117,11 @@ export default class Overview extends React.PureComponent {
     }
 
     handleAddWidgetButtonClick = (id) => {
+        const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = this.widgets.find(w => w.id === id);
 
         const item = {
+            analysisFramework: analysisFrameworkId,
             key: `overview-${this.getUniqueKey()}`,
             widgetId: widget.id,
             title: widget.title,
@@ -127,7 +130,6 @@ export default class Overview extends React.PureComponent {
             },
         };
 
-        const analysisFrameworkId = this.props.analysisFramework.id;
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
@@ -138,9 +140,15 @@ export default class Overview extends React.PureComponent {
         setTimeout(() => {
             if (this.gridLayout) {
                 layout.forEach((itemLayout) => {
-                    const key = this.gridLayout.props.children.find(
-                        child => child.key === itemLayout.i,
-                    ).props['data-af-key'];
+                    const child = this.gridLayout.props.children.find(
+                        c => c.key === itemLayout.i,
+                    );
+
+                    if (!child) {
+                        return;
+                    }
+
+                    const key = child.props['data-af-key'];
 
                     const itemIndex = this.items.findIndex(i => i.key === key);
                     const item = this.items[itemIndex];
@@ -193,6 +201,11 @@ export default class Overview extends React.PureComponent {
                 <div
                     styleName="left"
                 >
+                    <TransparentButton
+                        onClick={this.props.onSave}
+                    >
+                        Save
+                    </TransparentButton>
                     <header
                         styleName="header"
                     >
