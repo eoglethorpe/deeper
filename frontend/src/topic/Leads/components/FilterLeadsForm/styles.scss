@@ -1,0 +1,37 @@
+@import '../../../../stylesheets/base';
+
+$width-action-button: 16px;
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .filter {
+        margin: $spacing-small;
+
+        &.similar {
+            border-bottom: $width-separator-medium solid $color-separator-alt;
+            padding: $spacing-small;
+
+            button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-left: $spacing-small;
+                border-radius: 50%;
+                padding: 0;
+                width: $width-action-button;
+                height: $width-action-button;
+
+                &:hover {
+                    background-color: $color-hover;
+                }
+            }
+        }
+    }
+
+    .apply-filter-btn {
+        padding: $spacing-small $spacing-medium;
+    }
+}
