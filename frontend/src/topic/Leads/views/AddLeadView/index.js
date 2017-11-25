@@ -58,13 +58,14 @@ const propTypes = {
         access: PropTypes.string,
     }).isRequired,
 
-    activeLeadId: PropTypes.string.isRequired,
+    activeLeadId: PropTypes.string,
     addLeadViewLeadChange: PropTypes.func.isRequired,
     addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
+    activeLeadId: undefined,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)

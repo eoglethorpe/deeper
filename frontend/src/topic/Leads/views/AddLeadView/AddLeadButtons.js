@@ -72,7 +72,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadFilter extends React.PureComponent {
+export default class AddLeadButtons extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -82,12 +82,15 @@ export default class AddLeadFilter extends React.PureComponent {
         this.uploadCoordinator = new Coordinator();
     }
 
+    componentWillUnmount() {
+        this.uploadCoordinator.close();
+    }
+
     handleAddLeadFromGoogleDrive = (response) => {
         const { docs, action } = response;
         if (action !== 'picked') {
             return;
         }
-
 
         const { activeProject } = this.props;
         const newLeads = [];
@@ -149,7 +152,6 @@ export default class AddLeadFilter extends React.PureComponent {
         const newLeads = [];
 
         const {
-            addLeads,
             onNewUploader,
             token,
         } = this.props;
@@ -175,7 +177,7 @@ export default class AddLeadFilter extends React.PureComponent {
             this.uploadCoordinator.add(newLeadId, uploader);
         });
 
-        addLeads(newLeads);
+        this.props.addLeads(newLeads);
         this.uploadCoordinator.queueAll();
     }
 
