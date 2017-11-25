@@ -29,6 +29,23 @@ import update from '../../public/utils/immutable-update';
 
 const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase()));
 
+const statusMatch = (status, { error, stale, serverId }) => {
+    switch (status) {
+        /*
+        case 'other':
+            return !error && !serverId && !stale;
+        */
+        case 'saved':
+            return !error && serverId && !stale;
+        case 'unsaved':
+            return !error && stale;
+        case 'invalid':
+            return error;
+        default:
+            return false;
+    }
+};
+
 const leadReference = {
     data: {
         id: 'lead-0',
@@ -55,7 +72,7 @@ const leadReference = {
     },
 };
 
-const createLead = ({ id, type, title, projectId, ready = true }) => {
+const createLead = ({ id, type, title, projectId, ready = true, stale = true }) => {
     const settings = {
         data: {
             id: { $set: id },
@@ -67,6 +84,7 @@ const createLead = ({ id, type, title, projectId, ready = true }) => {
         } },
         uiState: {
             ready: { $set: ready },
+            stale: { $set: stale },
         },
     };
     return update(leadReference, settings);
@@ -162,25 +180,35 @@ const addLeadViewSetFilters = (state, action) => {
         search,
         type,
         source,
-        // status,
+        status,
     } = newState.addLeadView.filters;
 
     const leadsSettings = { addLeadView: { leads: {} } };
     newState.addLeadView.leads.forEach((lead, i) => {
-        const { type: leadType } = lead.data;
+        const { serverId, data, form, uiState } = lead;
+        const { type: leadType } = data;
         const {
             title: leadTitle = '',
             source: leadSource = '',
-        } = lead.form.values;
+        } = form.values;
 
+        const {
+            error,
+            stale,
+        } = uiState;
+
+        const alias = leadsSettings.addLeadView.leads;
         if (search.length !== 0 && !strMatchesSub(leadTitle, search)) {
-            leadsSettings.addLeadView.leads[i] = { isFiltrate: { $set: false } };
+            alias[i] = { isFiltrate: { $set: false } };
         } else if (source.length !== 0 && !strMatchesSub(leadSource, source)) {
-            leadsSettings.addLeadView.leads[i] = { isFiltrate: { $set: false } };
+            alias[i] = { isFiltrate: { $set: false } };
         } else if (type.length !== 0 && type.indexOf(leadType) === -1) {
-            leadsSettings.addLeadView.leads[i] = { isFiltrate: { $set: false } };
+            alias[i] = { isFiltrate: { $set: false } };
+        } else if (status && status.length !== 0 &&
+              !statusMatch(status, { error, stale, serverId })) {
+            alias[i] = { isFiltrate: { $set: false } };
         } else {
-            leadsSettings.addLeadView.leads[i] = { isFiltrate: { $set: true } };
+            alias[i] = { isFiltrate: { $set: true } };
         }
     });
     return update(newState, leadsSettings);

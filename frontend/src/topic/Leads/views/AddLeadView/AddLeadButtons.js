@@ -99,6 +99,7 @@ export default class AddLeadButtons extends React.PureComponent {
                 title: doc.name,
                 projectId: activeProject,
                 ready: true,
+                stale: true,
             });
 
             this.props.onGoogleDriveSelect(
@@ -127,6 +128,7 @@ export default class AddLeadButtons extends React.PureComponent {
                 title: doc.name,
                 projectId: activeProject,
                 ready: true,
+                stale: true,
             });
 
             this.props.onDropboxSelect(
@@ -161,6 +163,7 @@ export default class AddLeadButtons extends React.PureComponent {
                 title: file.name,
                 projectId: activeProject,
                 ready: false,
+                stale: true,
             });
 
             const uploader = onNewUploader({
@@ -189,6 +192,7 @@ export default class AddLeadButtons extends React.PureComponent {
             title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
             ready: true,
+            stale: true,
         });
 
         this.props.addLeads(newLeads);
@@ -207,6 +211,7 @@ export default class AddLeadButtons extends React.PureComponent {
             title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
             ready: true,
+            stale: true,
         });
 
         this.props.addLeads(newLeads);
