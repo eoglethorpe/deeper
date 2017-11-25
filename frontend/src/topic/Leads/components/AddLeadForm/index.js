@@ -15,18 +15,27 @@ import {
     urlCondition,
 } from '../../../../public/components/Input';
 import {
-    Button,
+    PrimaryButton,
     WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 import { LoadingAnimation } from '../../../../public/components/View';
 
-import { addLeadViewLeadRemoveAction } from '../../../../common/redux';
+import {
+    addLeadViewLeadRemoveAction,
+    addLeadViewCanNextSelector,
+    addLeadViewCanPrevSelector,
+} from '../../../../common/redux';
 
 
 import styles from './styles.scss';
 
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
+
+const mapStateToProps = state => ({
+    addLeadViewCanNext: addLeadViewCanNextSelector(state),
+    addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
@@ -50,13 +59,16 @@ const propTypes = {
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+
+    addLeadViewCanNext: PropTypes.bool.isRequired,
+    addLeadViewCanPrev: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -157,24 +169,22 @@ export default class AddLeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
-                        <WarningButton
-                            onClick={this.handleRemoveButtonClick}
-                        >
-                            Remove
-                        </WarningButton>
-                        <Button
+                        <PrimaryButton
+                            disabled={!this.props.addLeadViewCanPrev}
                             onClick={onPrev}
                         >
                             Prev
-                        </Button>
-                        <Button
+                        </PrimaryButton>
+                        <PrimaryButton
+                            disabled={!this.props.addLeadViewCanNext}
                             onClick={onNext}
                         >
                             Next
-                        </Button>
-                        <SuccessButton
-                            disabled={pending || !stale || !ready}
-                        >
+                        </PrimaryButton>
+                        <WarningButton onClick={this.handleRemoveButtonClick} >
+                            Remove
+                        </WarningButton>
+                        <SuccessButton disabled={pending || !stale || !ready} >
                             Save
                         </SuccessButton>
                     </div>

@@ -33,13 +33,27 @@ export const addLeadViewLeadsFilteredSelector = createSelector(
     leads => leads.filter(lead => lead.isFiltrate),
 );
 
-/*
-export const addLeadViewActiveLeadSelector = createSelector(
+export const addLeadViewCanNextSelector = createSelector(
     addLeadViewLeadsSelector,
     addLeadViewActiveLeadIdSelector,
-    (leads, leadId) => leads.find(lead => lead.data.id === leadId),
+    (leads, activeLeadId) => {
+        const index = leads.findIndex(
+            lead => lead.data.id === activeLeadId,
+        );
+        return index + 1 < leads.length;
+    },
 );
-*/
+
+export const addLeadViewCanPrevSelector = createSelector(
+    addLeadViewLeadsSelector,
+    addLeadViewActiveLeadIdSelector,
+    (leads, activeLeadId) => {
+        const index = leads.findIndex(
+            lead => lead.data.id === activeLeadId,
+        );
+        return index - 1 >= 0;
+    },
+);
 
 export const activeProjectSelector = ({ siloDomainData }) => (
     siloDomainData.activeProject
