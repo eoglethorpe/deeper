@@ -18,9 +18,6 @@ const emptyObject = {};
 export const addLeadViewFiltersSelector = ({ siloDomainData }) => (
     siloDomainData.addLeadView.filters || emptyObject
 );
-export const addLeadViewLeadsCountSelector = ({ siloDomainData }) => (
-    (siloDomainData.addLeadView.leads || emptyList).length
-);
 export const addLeadViewActiveLeadIdSelector = ({ siloDomainData }) => (
     siloDomainData.addLeadView.activeLeadId
 );

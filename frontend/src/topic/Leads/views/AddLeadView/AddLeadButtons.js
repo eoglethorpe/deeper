@@ -11,10 +11,10 @@ import { connect } from 'react-redux';
 import { TransparentButton } from '../../../../public/components/Action';
 import { FileInput } from '../../../../public/components/Input';
 import { Coordinator } from '../../../../public/utils/Uploader';
+import { randomString } from '../../../../public/utils/common';
 
 import {
     addAddLeadViewLeadsAction,
-    addLeadViewLeadsCountSelector,
     activeProjectSelector,
     tokenSelector,
 } from '../../../../common/redux';
@@ -51,7 +51,6 @@ const defaultProps = {
 };
 
 const propTypes = {
-    leadsCount: PropTypes.number.isRequired,
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
     onNewUploader: PropTypes.func.isRequired,
@@ -63,7 +62,6 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    leadsCount: addLeadViewLeadsCountSelector(state),
     activeProject: activeProjectSelector(state),
     token: tokenSelector(state),
 });
@@ -90,12 +88,12 @@ export default class AddLeadFilter extends React.PureComponent {
             return;
         }
 
+
         const { activeProject } = this.props;
         const newLeads = [];
-        let counter = this.props.leadsCount;
         docs.forEach((doc) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
 
             newLeads.unshift({
                 id: newLeadId,
@@ -121,10 +119,9 @@ export default class AddLeadFilter extends React.PureComponent {
         }
         const { activeProject } = this.props;
         const newLeads = [];
-        let counter = this.props.leadsCount;
         response.forEach((doc) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
 
             newLeads.unshift({
                 id: newLeadId,
@@ -153,16 +150,13 @@ export default class AddLeadFilter extends React.PureComponent {
 
         const {
             addLeads,
-            leadsCount,
             onNewUploader,
             token,
         } = this.props;
 
-        let counter = leadsCount;
-
         files.forEach((file) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
 
             newLeads.unshift({
                 id: newLeadId,
@@ -189,14 +183,13 @@ export default class AddLeadFilter extends React.PureComponent {
         const { activeProject } = this.props;
         const newLeads = [];
 
-        let counter = this.props.leadsCount;
-        counter += 1;
-        const newLeadId = `lead-${counter}`;
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
 
         newLeads.unshift({
             id: newLeadId,
             type: 'website',
-            title: `Lead #${counter}`,
+            title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
             ready: true,
         });
@@ -208,14 +201,13 @@ export default class AddLeadFilter extends React.PureComponent {
         const { activeProject } = this.props;
         const newLeads = [];
 
-        let counter = this.props.leadsCount;
-        counter += 1;
-        const newLeadId = `lead-${counter}`;
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
 
         newLeads.unshift({
             id: newLeadId,
             type: 'text',
-            title: `Lead #${counter}`,
+            title: `Lead ${(new Date()).toLocaleTimeStringgetDate()}`,
             projectId: activeProject,
             ready: true,
         });
@@ -223,7 +215,7 @@ export default class AddLeadFilter extends React.PureComponent {
         this.props.addLeads(newLeads);
     }
 
-    handleGoogleDriveOnAuthenticate = (accessToken) => {
+    handleGoogleDriveOnAuthenticated = (accessToken) => {
         // TODO: use this token will uploading
         // console.log(accessToken);
         if (accessToken) {
