@@ -127,33 +127,33 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         const { activeProject } = this.props;
-        this.requestProjectLeadFilterOptions(activeProject);
+        this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(
+            activeProject,
+        );
+        this.leadFilterOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.activeProject !== nextProps.activeProject) {
-            this.requestProjectLeadFilterOptions(nextProps.activeProject);
+        const { activeProject } = nextProps;
+        if (this.props.activeProject !== activeProject) {
+            if (this.leadFilterOptionsRequest) {
+                this.leadFilterOptionsRequest.stop();
+            }
+
+            this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(
+                activeProject,
+            );
+            this.leadFilterOptionsRequest.start();
         }
     }
 
     // REST REQUEST FOR PROJECT LEAD FILTERS
-
-    requestProjectLeadFilterOptions = (activeProject) => {
-        if (this.leadFilterOptionsRequest) {
-            this.leadFilterOptionsRequest.stop();
-        }
-
-        // eslint-disable-next-line
-        this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(activeProject);
-        this.leadFilterOptionsRequest.start();
-    }
 
     createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
         const googleDriveUploadRequest = new RestBuilder()
             .url(urlForGoogleDriveFileUpload)
             .params(() => {
                 const { token } = this.props;
-                console.log(token);
                 return createHeaderForGoogleDriveFileUpload(
                     token,
                     { title, accessToken, fileId, mimeType },
@@ -161,45 +161,19 @@ export default class AddLeadView extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    const {
-                        addLeadViewLeads,
-                        addLeadViewLeadChange,
-                    } = this.props;
-                    const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
-
-                    const leadSettings = {
-                        upload: {
-                            title: { $set: response.title },
-                            url: { $set: response.file },
-                        },
-                        form: {
-                            values: {
-                                attachment: { $set: response.id },
-                            },
-                            errors: { $set: [] },
-                        },
-                        uiState: {
-                            ready: { $set: true },
-                        },
-                    };
-
-
-                    const newLead = update(theLead, leadSettings);
-                    const {
-                        values,
-                        errors,
-                        fieldErrors,
-                    } = newLead.form;
-
+                    // FOR DATA CHANGE
+                    const { addLeadViewLeadChange } = this.props;
                     addLeadViewLeadChange({
                         leadId,
-                        values,
-                        formErrors: errors,
-                        formFieldErrors: fieldErrors,
-                        upload: newLead.upload,
-                        uiState: newLead.uiState,
+                        values: { attachment: response.id },
+                        upload: {
+                            title: response.title,
+                            url: response.file,
+                        },
+                        uiState: { stale: true, ready: true },
                     });
 
+                    // FOR UPLOAD
                     const uploadSettings = {
                         [leadId]: {
                             progress: { $set: 100 },
@@ -207,7 +181,6 @@ export default class AddLeadView extends React.PureComponent {
                         },
                     };
                     const leadUploads = update(this.state.leadUploads, uploadSettings);
-
                     this.setState({ leadUploads });
                 } catch (er) {
                     console.error(er);
@@ -231,44 +204,19 @@ export default class AddLeadView extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    const {
-                        addLeadViewLeads,
-                        addLeadViewLeadChange,
-                    } = this.props;
-                    const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
-
-                    const leadSettings = {
-                        upload: {
-                            title: { $set: response.title },
-                            url: { $set: response.file },
-                        },
-                        form: {
-                            values: {
-                                attachment: { $set: response.id },
-                            },
-                            errors: { $set: [] },
-                        },
-                        uiState: {
-                            ready: { $set: true },
-                        },
-                    };
-
-                    const newLead = update(theLead, leadSettings);
-                    const {
-                        values,
-                        errors,
-                        fieldErrors,
-                    } = newLead.form;
-
+                    // FOR DATA CHANGE
+                    const { addLeadViewLeadChange } = this.props;
                     addLeadViewLeadChange({
                         leadId,
-                        values,
-                        formErrors: errors,
-                        formFieldErrors: fieldErrors,
-                        upload: newLead.upload,
-                        uiState: newLead.uiState,
+                        values: { attachment: response.id },
+                        upload: {
+                            title: response.title,
+                            url: response.file,
+                        },
+                        uiState: { stale: true, ready: true },
                     });
 
+                    // FOR UPLOAD
                     const uploadSettings = {
                         [leadId]: {
                             progress: { $set: 100 },
@@ -276,7 +224,6 @@ export default class AddLeadView extends React.PureComponent {
                         },
                     };
                     const leadUploads = update(this.state.leadUploads, uploadSettings);
-
                     this.setState({ leadUploads });
                 } catch (er) {
                     console.error(er);
@@ -290,27 +237,20 @@ export default class AddLeadView extends React.PureComponent {
 
     createRequestForProjectLeadFilterOptions = (activeProject) => {
         const urlForProjectFilterOptions = createUrlForLeadFilterOptions(activeProject);
+        const paramsForProjectFilterOptions = () => {
+            const { token } = this.props;
+            const { access } = token;
+            return createParamsForUser({ access });
+        };
 
         const leadFilterOptionsRequest = new RestBuilder()
             .url(urlForProjectFilterOptions)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(paramsForProjectFilterOptions)
             .success((response) => {
-                try {
-                    // TODO:
-                    // schema.validate(response, 'leadFilterOptionsGetResponse');
-                    this.props.setLeadFilterOptions({
-                        projectId: activeProject,
-                        leadFilterOptions: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
+                this.props.setLeadFilterOptions({
+                    projectId: activeProject,
+                    leadFilterOptions: response,
+                });
             })
             .retryTime(1000)
             .build();
@@ -319,16 +259,22 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     createLeadRequest = (lead) => {
-        const { access } = this.props.token;
         let url;
         let params;
         if (lead.serverId) {
             url = createUrlForLeadEdit(lead.serverId);
-            params = createParamsForLeadEdit({ access }, lead.form.values);
+            params = () => {
+                const { access } = this.props.token;
+                createParamsForLeadEdit({ access }, lead.form.values);
+            };
         } else {
             url = urlForLead;
-            params = () => createParamsForLeadCreate({ access }, lead.form.values);
+            params = () => {
+                const { access } = this.props.token;
+                createParamsForLeadCreate({ access }, lead.form.values);
+            };
         }
+
         const leadCreateRequest = new RestBuilder()
             .url(url)
             .params(params)
@@ -348,9 +294,6 @@ export default class AddLeadView extends React.PureComponent {
                 });
             })
             .success((response) => {
-                // TODO:
-                // schema validation
-                console.log(response);
                 this.props.addLeadViewLeadSave({ leadId: lead.data.id, serverId: response.id });
             })
             .failure((response) => {
@@ -372,6 +315,7 @@ export default class AddLeadView extends React.PureComponent {
             values,
             formErrors,
             formFieldErrors,
+            uiState: { stale: true },
         });
     }
 
@@ -385,6 +329,7 @@ export default class AddLeadView extends React.PureComponent {
 
     handleFormSuccess = leadId => () => {
         const specificLead = this.props.addLeadViewLeads.find(lead => lead.data.id === leadId);
+
         const leadSaveRequest = this.createLeadRequest(specificLead);
         leadSaveRequest.start();
     }
@@ -399,109 +344,59 @@ export default class AddLeadView extends React.PureComponent {
 
     handleLeadUploadSuccess = (leadId, response) => {
         // FOR DATA CHANGE
-
-        const {
-            addLeadViewLeadChange,
-            addLeadViewLeads,
-        } = this.props;
-
-        const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
-
-        const leadSettings = {
-            upload: {
-                title: { $set: response.title },
-                url: { $set: response.file },
-            },
-            form: {
-                values: {
-                    attachment: { $set: response.id },
-                },
-                errors: { $set: [] },
-            },
-            uiState: {
-                ready: { $set: true },
-            },
-        };
-        const newLead = update(theLead, leadSettings);
+        const { addLeadViewLeadChange } = this.props;
         addLeadViewLeadChange({
             leadId,
-            values: newLead.form.values,
-            formErrors: newLead.form.errors,
-            formFieldErrors: newLead.form.fieldErrors,
-            upload: newLead.upload,
-            uiState: newLead.uiState,
+            values: { attachment: response.id },
+            upload: {
+                title: response.title,
+                url: response.file,
+            },
+            uiState: { stale: true, ready: true },
         });
 
-
         // FOR UPLAOD
-
-        const { leadUploads } = this.state;
         const uploadSettings = {
             [leadId]: {
                 progress: { $set: 100 },
                 isCompleted: { $set: true },
             },
         };
-        const newLeadUploads = update(leadUploads, uploadSettings);
-        this.setState({ leadUploads: newLeadUploads });
+        const leadUploads = update(this.state.leadUploads, uploadSettings);
+        this.setState({ leadUploads });
     }
 
     handleLeadUploadFailure = (leadId, status) => {
         // FOR DATA CHANGE
-
-        const {
-            addLeadViewLeadChange,
-            addLeadViewLeads,
-        } = this.props;
-
-        const theLead = addLeadViewLeads.find(lead => lead.data.id === leadId);
-
-        const leadSettings = {
-            upload: {
-                errorMessage: { $set: `Failed to upload file (${status})` },
-            },
-            form: {
-                values: {
-                    attachment: { $set: undefined },
-                },
-                errors: { $set: [`Failed to upload file (${status})`] },
-            },
-            uiState: {
-                ready: { $set: false },
-            },
-        };
-        const newLead = update(theLead, leadSettings);
+        const { addLeadViewLeadChange } = this.props;
         addLeadViewLeadChange({
             leadId,
-            values: newLead.form.values,
-            formErrors: newLead.form.errors,
-            formFieldErrors: newLead.form.fieldErrors,
-            upload: newLead.upload,
-            uiState: newLead.uiState,
+            values: { attachment: undefined },
+            upload: { errorMessage: `Failed to upload file (${status})` },
+            uiState: { stale: true, ready: false },
+            formErrors: [`Failed to upload file (${status})`],
         });
 
-
         // FOR UPLAOD
-        const { leadUploads } = this.state;
         const uploadSettings = {
             [leadId]: {
                 progress: { $set: 100 },
                 isCompleted: { $set: true },
             },
         };
-        const newLeadUploads = update(leadUploads, uploadSettings);
-        this.setState({ leadUploads: newLeadUploads });
+        const leadUploads = update(this.state.leadUploads, uploadSettings);
+        this.setState({ leadUploads });
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
-        const { leadUploads } = this.state;
+        // TODO: only update if progress has changed
         const settings = {
             [leadId]: {
                 progress: { $set: progress },
             },
         };
-        const newLeadUploads = update(leadUploads, settings);
-        this.setState({ leadUploads: newLeadUploads });
+        const leadUploads = update(this.state.leadUploads, settings);
+        this.setState({ leadUploads });
     }
 
     handleNewUploader = ({ file, url, params, leadId }) => {
@@ -608,9 +503,7 @@ export default class AddLeadView extends React.PureComponent {
     }
 
     render() {
-        const {
-            leadUploads,
-        } = this.state;
+        const { leadUploads } = this.state;
 
         return (
             <div styleName="add-lead">
@@ -621,9 +514,7 @@ export default class AddLeadView extends React.PureComponent {
                 </Helmet>
                 <div styleName="left">
                     <AddLeadFilter />
-                    <AddLeadList
-                        leadUploads={leadUploads}
-                    />
+                    <AddLeadList leadUploads={leadUploads} />
                     <AddLeadButtons
                         onDropboxSelect={this.handleDropboxSelect}
                         onGoogleDriveSelect={this.handleGoogleDriveSelect}

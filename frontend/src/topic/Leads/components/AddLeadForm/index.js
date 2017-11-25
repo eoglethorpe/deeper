@@ -14,20 +14,14 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../public/components/Input';
-
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
 import {
     Button,
     WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
+import { LoadingAnimation } from '../../../../public/components/View';
 
-import {
-    addLeadViewLeadRemoveAction,
-} from '../../../../common/redux';
+import { addLeadViewLeadRemoveAction } from '../../../../common/redux';
 
 
 import styles from './styles.scss';
