@@ -203,14 +203,10 @@ const addLeadViewChangeLead = (state, action) => {
     const settings = {
         addLeadView: { leads: { [index]: { form: { } } } },
     };
-    if (values) {
-        settings.addLeadView.leads[index].form.values = { $merge: values };
-    }
+    settings.addLeadView.leads[index].form.values = { $merge: values };
+    settings.addLeadView.leads[index].form.fieldErrors = { $merge: formFieldErrors };
     if (formErrors) {
         settings.addLeadView.leads[index].form.errors = { $set: formErrors };
-    }
-    if (formFieldErrors) {
-        settings.addLeadView.leads[index].form.fieldErrors = { $merge: formFieldErrors };
     }
     if (uiState) {
         settings.addLeadView.leads[index].uiState = { $merge: uiState };
@@ -300,10 +296,11 @@ const addLeadViewSaveLead = (state, action) => {
 };
 
 const addLeadViewSetActiveLead = (state, action) => {
+    const { leadId } = action;
     const settings = {
         addLeadView: {
             activeLeadId: {
-                $set: action.leadId,
+                $set: leadId,
             },
         },
     };

@@ -80,13 +80,13 @@ export default class AddLeadFormItem extends React.PureComponent {
             url = createUrlForLeadEdit(lead.serverId);
             params = () => {
                 const { access } = this.props.token;
-                createParamsForLeadEdit({ access }, lead.form.values);
+                return createParamsForLeadEdit({ access }, lead.form.values);
             };
         } else {
             url = urlForLead;
             params = () => {
                 const { access } = this.props.token;
-                createParamsForLeadCreate({ access }, lead.form.values);
+                return createParamsForLeadCreate({ access }, lead.form.values);
             };
         }
 

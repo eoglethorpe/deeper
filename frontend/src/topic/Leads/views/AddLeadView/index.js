@@ -138,7 +138,7 @@ export default class AddLeadView extends React.PureComponent {
         return dropboxUploadRequest;
     }
 
-    createUploderForFileUpload = ({ file, url, params, leadId }) => {
+    createUploaderForFileUpload = ({ file, url, params, leadId }) => {
         const uploader = new UploadBuilder()
             .file(file)
             .url(url)
@@ -368,7 +368,7 @@ export default class AddLeadView extends React.PureComponent {
                     <AddLeadButtons
                         onDropboxSelect={this.handleDropboxSelect}
                         onGoogleDriveSelect={this.handleGoogleDriveSelect}
-                        onNewUploader={this.createUploderForFileUpload}
+                        onNewUploader={this.createUploaderForFileUpload}
                     />
                 </div>
                 <List

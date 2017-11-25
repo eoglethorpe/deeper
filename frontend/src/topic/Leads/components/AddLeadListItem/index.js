@@ -57,7 +57,6 @@ export default class AddLeadListItem extends React.PureComponent {
         const {
             active,
             className,
-            onClick,
             lead,
             upload,
         } = this.props;
@@ -76,7 +75,7 @@ export default class AddLeadListItem extends React.PureComponent {
             <button
                 styleName={`add-lead-list-item ${active ? 'active' : ''}`}
                 className={className}
-                onClick={onClick}
+                onClick={this.handleClick}
             >
                 <span
                     styleName="icon"
