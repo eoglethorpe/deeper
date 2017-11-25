@@ -22,7 +22,6 @@ import {
 import { LoadingAnimation } from '../../../../public/components/View';
 
 import {
-    addLeadViewLeadRemoveAction,
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
 } from '../../../../common/redux';
@@ -37,10 +36,6 @@ const mapStateToProps = state => ({
     addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
-});
-
 const propTypes = {
     className: PropTypes.string,
 
@@ -52,13 +47,12 @@ const propTypes = {
         dummy: PropTypes.string,
     }).isRequired,
 
-    addLeadViewLeadRemove: PropTypes.func.isRequired,
-
     onPrev: PropTypes.func.isRequired,
     onNext: PropTypes.func.isRequired,
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
 
     addLeadViewCanNext: PropTypes.bool.isRequired,
     addLeadViewCanPrev: PropTypes.bool.isRequired,
@@ -68,7 +62,7 @@ const defaultProps = {
     className: '',
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -107,20 +101,19 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
-    onPrev = (e) => {
+    handlePrev = (e) => {
         e.preventDefault();
         this.props.onPrev();
     }
 
-    onNext = (e) => {
+    handleNext = (e) => {
         e.preventDefault();
         this.props.onNext();
     }
 
-    handleRemoveButtonClick = (e) => {
+    handleRemove = (e) => {
         e.preventDefault();
-        const { lead } = this.props;
-        this.props.addLeadViewLeadRemove(lead.data.id);
+        this.props.onRemove();
     }
 
     render() {
@@ -146,11 +139,6 @@ export default class AddLeadForm extends React.PureComponent {
             fieldErrors,
         } = lead.form;
 
-        const {
-            onPrev,
-            onNext,
-        } = this;
-
         return (
             <Form
                 changeCallback={onChange}
@@ -171,17 +159,17 @@ export default class AddLeadForm extends React.PureComponent {
                     <div styleName="action-buttons">
                         <PrimaryButton
                             disabled={!this.props.addLeadViewCanPrev}
-                            onClick={onPrev}
+                            onClick={this.handlePrev}
                         >
                             Prev
                         </PrimaryButton>
                         <PrimaryButton
                             disabled={!this.props.addLeadViewCanNext}
-                            onClick={onNext}
+                            onClick={this.handleNext}
                         >
                             Next
                         </PrimaryButton>
-                        <WarningButton onClick={this.handleRemoveButtonClick} >
+                        <WarningButton onClick={this.handleRemove} >
                             Remove
                         </WarningButton>
                         <SuccessButton disabled={pending || !stale || !ready} >

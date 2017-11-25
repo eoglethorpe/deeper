@@ -22,6 +22,7 @@ import {
     addLeadViewLeadNextAction,
     addLeadViewLeadPrevAction,
     addLeadViewLeadChangeAction,
+    addLeadViewLeadRemoveAction,
 } from '../../../../common/redux';
 
 import AddLeadForm from '../../components/AddLeadForm';
@@ -44,6 +45,7 @@ const propTypes = {
     addLeadViewLeadNext: PropTypes.func.isRequired,
     addLeadViewLeadPrev: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
+    addLeadViewLeadRemove: PropTypes.func.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
@@ -59,6 +61,7 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
     addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
+    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -163,6 +166,11 @@ export default class AddLeadFormItem extends React.PureComponent {
         this.props.addLeadViewLeadPrev(leadId);
     }
 
+    handleRemove = () => {
+        const leadId = this.props.leadKey;
+        this.props.addLeadViewLeadRemove(leadId);
+    }
+
     render() {
         console.log('Rendering AddLeadFormItem');
 
@@ -184,6 +192,7 @@ export default class AddLeadFormItem extends React.PureComponent {
                     onSuccess={this.handleFormSuccess}
                     onPrev={this.handleLeadPrev}
                     onNext={this.handleLeadNext}
+                    onRemove={this.handleRemove}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW
