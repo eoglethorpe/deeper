@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import update from '../../../../public/utils/immutable-update';
 import { RestBuilder } from '../../../../public/utils/rest';
-import { UploadBuilder } from '../../../../public/utils/Uploader';
+import { Coordinator, UploadBuilder } from '../../../../public/utils/Uploader';
 
 import { List } from '../../../../public/components/View/';
 import { pageTitles } from '../../../../common/utils/labels';
@@ -80,6 +80,8 @@ export default class AddLeadView extends React.PureComponent {
         this.state = {
             leadUploads: {},
         };
+
+        this.uploadCoordinator = new Coordinator();
     }
 
     componentWillMount() {
@@ -100,6 +102,10 @@ export default class AddLeadView extends React.PureComponent {
         });
     }
 
+    componentWillUnmount() {
+        this.uploadCoordinator.close();
+    }
+
     // REST REQUEST
 
     createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
@@ -117,7 +123,6 @@ export default class AddLeadView extends React.PureComponent {
             })
             .retryTime(1000)
             .build();
-
         return googleDriveUploadRequest;
     }
 
@@ -159,8 +164,9 @@ export default class AddLeadView extends React.PureComponent {
             .fatal((response, status) => {
                 this.handleLeadUploadFailure(leadId, status);
             })
-            .abort((response, status) => {
-                this.handleLeadUploadFailure(leadId, status);
+            .abort(() => {
+                // console.warn('aborted');
+                this.handleLeadUploadFailure(leadId, 0);
             })
             .build();
         return uploader;
@@ -182,14 +188,16 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLOAD
-        const uploadSettings = {
-            [leadId]: {
-                progress: { $set: 100 },
-                isCompleted: { $set: true },
-            },
-        };
-        const leadUploads = update(this.state.leadUploads, uploadSettings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleLeadGoogleDriveUploadSuccess = (leadId, response) => {
@@ -206,28 +214,34 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLOAD
-        const uploadSettings = {
-            [leadId]: {
-                progress: { $set: 100 },
-                isCompleted: { $set: true },
-            },
-        };
-        const leadUploads = update(this.state.leadUploads, uploadSettings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleLeadUploadPreLoad = (leadId) => {
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 0 },
-                isCompleted: { $set: false },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        // console.warn('START', leadId);
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 0 },
+                    isCompleted: { $set: false },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleLeadUploadSuccess = (leadId, response) => {
+        // console.warn('SUCCESS', leadId);
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.props;
         addLeadViewLeadChange({
@@ -241,14 +255,16 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLAOD
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 100 },
-                isCompleted: { $set: true },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleLeadUploadFailure = (leadId, status) => {
@@ -263,30 +279,35 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLAOD
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 100 },
-                isCompleted: { $set: true },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 100 },
+                    isCompleted: { $set: true },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
         const theLeadUpload = this.state.leadUploads[leadId];
         if (!theLeadUpload || theLeadUpload.progress === progress) {
+            // console.warn('PROGRESS MISSED', leadId, progress, this.state.leadUploads);
             return;
         }
-
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: progress },
-                isCompleted: { $set: false },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        // console.warn('PROGRESS', leadId, progress);
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: progress },
+                    isCompleted: { $set: false },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     // HANDLE SELECTION
@@ -301,14 +322,16 @@ export default class AddLeadView extends React.PureComponent {
         });
         request.start();
 
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 0 },
-                isCompleted: { $set: false },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 0 },
+                    isCompleted: { $set: false },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     handleDropboxSelect = (leadId, doc) => {
@@ -319,14 +342,16 @@ export default class AddLeadView extends React.PureComponent {
         });
         request.start();
 
-        const settings = {
-            [leadId]: { $auto: {
-                progress: { $set: 0 },
-                isCompleted: { $set: false },
-            } },
-        };
-        const leadUploads = update(this.state.leadUploads, settings);
-        this.setState({ leadUploads });
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: { $auto: {
+                    progress: { $set: 0 },
+                    isCompleted: { $set: false },
+                } },
+            };
+            const leadUploads = update(state.leadUploads, uploadSettings);
+            return { leadUploads };
+        });
     }
 
     // UI
@@ -343,6 +368,8 @@ export default class AddLeadView extends React.PureComponent {
                 lead={lead}
                 leadOptions={leadOptions}
                 activeLeadId={activeLeadId}
+
+                uploadCoordinator={this.uploadCoordinator}
 
                 onChange={this.handleFormChange}
                 onFailure={this.handleFormFailure}
@@ -367,6 +394,7 @@ export default class AddLeadView extends React.PureComponent {
                     <AddLeadFilter />
                     <AddLeadList leadUploads={leadUploads} />
                     <AddLeadButtons
+                        uploadCoordinator={this.uploadCoordinator}
                         onDropboxSelect={this.handleDropboxSelect}
                         onGoogleDriveSelect={this.handleGoogleDriveSelect}
                         onNewUploader={this.createUploaderForFileUpload}

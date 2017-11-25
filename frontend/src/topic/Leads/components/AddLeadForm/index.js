@@ -117,7 +117,6 @@ export default class AddLeadForm extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering AddLeadForm');
         const {
             className,
             lead,

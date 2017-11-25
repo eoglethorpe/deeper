@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 
 import { TransparentButton } from '../../../../public/components/Action';
 import { FileInput } from '../../../../public/components/Input';
-import { Coordinator } from '../../../../public/utils/Uploader';
 import { randomString } from '../../../../public/utils/common';
 
 import {
@@ -59,6 +58,7 @@ const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
+    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
@@ -79,11 +79,6 @@ export default class AddLeadButtons extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = { dropboxDisabled: false };
-        this.uploadCoordinator = new Coordinator();
-    }
-
-    componentWillUnmount() {
-        this.uploadCoordinator.close();
     }
 
     handleAddLeadFromGoogleDrive = (response) => {
@@ -174,11 +169,11 @@ export default class AddLeadButtons extends React.PureComponent {
                 params: createParamsForFileUpload(token),
                 leadId: newLeadId,
             });
-            this.uploadCoordinator.add(newLeadId, uploader);
+            this.props.uploadCoordinator.add(newLeadId, uploader);
         });
 
         this.props.addLeads(newLeads);
-        this.uploadCoordinator.queueAll();
+        this.props.uploadCoordinator.queueAll();
     }
 
     handleAddLeadFromWebsite = () => {
@@ -209,7 +204,7 @@ export default class AddLeadButtons extends React.PureComponent {
         newLeads.unshift({
             id: newLeadId,
             type: 'text',
-            title: `Lead ${(new Date()).toLocaleTimeStringgetDate()}`,
+            title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
             ready: true,
         });

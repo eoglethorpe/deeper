@@ -30,6 +30,7 @@ import AddLeadForm from '../../components/AddLeadForm';
 import styles from './styles.scss';
 
 const propTypes = {
+    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
 
     token: PropTypes.shape({
         access: PropTypes.string,
@@ -168,12 +169,11 @@ export default class AddLeadFormItem extends React.PureComponent {
 
     handleRemove = () => {
         const leadId = this.props.leadKey;
+        this.props.uploadCoordinator.remove(leadId);
         this.props.addLeadViewLeadRemove(leadId);
     }
 
     render() {
-        console.log('Rendering AddLeadFormItem');
-
         const {
             leadKey,
             lead,
