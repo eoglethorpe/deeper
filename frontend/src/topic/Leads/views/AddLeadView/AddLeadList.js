@@ -21,10 +21,11 @@ import AddLeadListItem from '../../components/AddLeadListItem';
 import styles from './styles.scss';
 
 const defaultProps = {
+    activeLeadId: undefined,
 };
 
 const propTypes = {
-    activeLeadId: PropTypes.string.isRequired,
+    activeLeadId: PropTypes.string,
     setActiveLeadId: PropTypes.func.isRequired,
     leadsFiltered: PropTypes.array.isRequired, // eslint-disable-line
     leadUploads: PropTypes.shape({
@@ -43,7 +44,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadFilter extends React.PureComponent {
+export default class AddLeadList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -52,15 +53,17 @@ export default class AddLeadFilter extends React.PureComponent {
     renderLeadItem = (key, lead) => {
         const {
             leadUploads,
+            activeLeadId,
         } = this.props;
 
         return (
             <AddLeadListItem
-                active={this.props.activeLeadId === lead.data.id}
+                active={activeLeadId === lead.data.id}
                 key={key}
+                leadKey={key}
                 lead={lead}
-                onClick={() => this.props.setActiveLeadId(lead.data.id)}
                 upload={leadUploads[key]}
+                onClick={this.props.setActiveLeadId}
             />
         );
     }

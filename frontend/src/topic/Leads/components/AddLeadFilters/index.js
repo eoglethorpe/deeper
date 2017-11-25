@@ -27,7 +27,7 @@ export default class AddLeadFilters extends React.PureComponent {
         super(props);
         this.state = {
             formValues: {},
-            stale: false,
+            // stale: false,
         };
 
         this.statusFilterOptions = [
@@ -60,14 +60,16 @@ export default class AddLeadFilters extends React.PureComponent {
     handleChange = (values) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
-            stale: true,
+            // stale: true,
         });
     }
 
     handleSubmit = (values) => {
+        /*
         this.setState({
             stale: false,
         });
+        */
         this.props.onSubmit(values);
     }
 

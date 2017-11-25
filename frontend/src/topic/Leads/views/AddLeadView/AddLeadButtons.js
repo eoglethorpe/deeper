@@ -8,17 +8,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import update from '../../../../public/utils/immutable-update';
-import {
-    TransparentButton,
-} from '../../../../public/components/Action';
-import {
-    FileInput,
-} from '../../../../public/components/Input';
-import { Coordinator } from '../../../../public/utils/Uploader';
+import { TransparentButton } from '../../../../public/components/Action';
+import { FileInput } from '../../../../public/components/Input';
+import { randomString } from '../../../../public/utils/common';
+
 import {
     addAddLeadViewLeadsAction,
-    addLeadViewLeadsCountSelector,
     activeProjectSelector,
     tokenSelector,
 } from '../../../../common/redux';
@@ -50,111 +45,11 @@ const supportedDropboxExtension = [
     '.jpg', '.gif', '.json', '.xml',
 ];
 
-const leadReference = {
-    data: {
-        id: 'lead-0',
-        type: 'void',
-    },
-    form: {
-        values: {
-            title: 'Lead #0',
-            project: 0,
-        },
-        errors: [],
-        fieldErrors: {},
-    },
-    uiState: {
-        error: false,
-        pending: false,
-        ready: true,
-        stale: false,
-    },
-    isFiltrate: true,
-    upload: {
-        title: undefined,
-        errorMessage: undefined,
-    },
-};
-
-const leadForGoogleDrive = (id, title, projectId) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            type: { $set: 'drive' },
-        },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
-    };
-    return update(leadReference, settings);
-};
-
-const leadForDropbox = (id, title, projectId) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            type: { $set: 'dropbox' },
-        },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
-    };
-    return update(leadReference, settings);
-};
-
-const leadForFile = (id, title, projectId) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            type: { $set: 'file' },
-        },
-        uiState: {
-            ready: { $set: false },
-        },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
-
-    };
-    return update(leadReference, settings);
-};
-
-const leadForWebsite = (id, title, projectId) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            type: { $set: 'website' },
-        },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
-    };
-    return update(leadReference, settings);
-};
-
-const leadForText = (id, title, projectId) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            type: { $set: 'text' },
-        },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
-    };
-    return update(leadReference, settings);
-};
 
 const defaultProps = {
 };
 
 const propTypes = {
-    leadsCount: PropTypes.number.isRequired,
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
     onNewUploader: PropTypes.func.isRequired,
@@ -163,10 +58,10 @@ const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
+    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
-    leadsCount: addLeadViewLeadsCountSelector(state),
     activeProject: activeProjectSelector(state),
     token: tokenSelector(state),
 });
@@ -177,14 +72,13 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadFilter extends React.PureComponent {
+export default class AddLeadButtons extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
         this.state = { dropboxDisabled: false };
-        this.uploadCoordinator = new Coordinator();
     }
 
     handleAddLeadFromGoogleDrive = (response) => {
@@ -195,12 +89,18 @@ export default class AddLeadFilter extends React.PureComponent {
 
         const { activeProject } = this.props;
         const newLeads = [];
-        let counter = this.props.leadsCount;
         docs.forEach((doc) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
-            const newLead = leadForGoogleDrive(newLeadId, doc.name, activeProject);
-            newLeads.unshift(newLead);
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
+
+            newLeads.unshift({
+                id: newLeadId,
+                type: 'google-drive',
+                title: doc.name,
+                projectId: activeProject,
+                ready: true,
+                stale: true,
+            });
 
             this.props.onGoogleDriveSelect(
                 newLeadId,
@@ -208,6 +108,7 @@ export default class AddLeadFilter extends React.PureComponent {
                 doc,
             );
         });
+
         this.props.addLeads(newLeads);
     }
 
@@ -217,12 +118,18 @@ export default class AddLeadFilter extends React.PureComponent {
         }
         const { activeProject } = this.props;
         const newLeads = [];
-        let counter = this.props.leadsCount;
         response.forEach((doc) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
-            const newLead = leadForDropbox(newLeadId, doc.name, activeProject);
-            newLeads.unshift(newLead);
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
+
+            newLeads.unshift({
+                id: newLeadId,
+                type: 'dropbox',
+                title: doc.name,
+                projectId: activeProject,
+                ready: true,
+                stale: true,
+            });
 
             this.props.onDropboxSelect(
                 newLeadId,
@@ -242,19 +149,22 @@ export default class AddLeadFilter extends React.PureComponent {
         const newLeads = [];
 
         const {
-            addLeads,
-            leadsCount,
             onNewUploader,
             token,
         } = this.props;
 
-        let counter = leadsCount;
-
         files.forEach((file) => {
-            counter += 1;
-            const newLeadId = `lead-${counter}`;
-            const newLead = leadForFile(newLeadId, file.name, activeProject);
-            newLeads.unshift(newLead);
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
+
+            newLeads.unshift({
+                id: newLeadId,
+                type: 'file',
+                title: file.name,
+                projectId: activeProject,
+                ready: false,
+                stale: true,
+            });
 
             const uploader = onNewUploader({
                 file,
@@ -262,36 +172,62 @@ export default class AddLeadFilter extends React.PureComponent {
                 params: createParamsForFileUpload(token),
                 leadId: newLeadId,
             });
-            this.uploadCoordinator.add(newLeadId, uploader);
+            this.props.uploadCoordinator.add(newLeadId, uploader);
         });
 
-        addLeads(newLeads);
-        this.uploadCoordinator.queueAll();
+        this.props.addLeads(newLeads);
+        this.props.uploadCoordinator.queueAll();
     }
 
     handleAddLeadFromWebsite = () => {
         const { activeProject } = this.props;
-        let counter = this.props.leadsCount;
-        counter += 1;
-        const newLead = leadForWebsite(`lead-${counter}`, `Lead #${counter}`, activeProject);
-        this.props.addLeads([newLead]);
+        const newLeads = [];
+
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
+
+        newLeads.unshift({
+            id: newLeadId,
+            type: 'website',
+            title: `Lead ${(new Date()).toLocaleTimeString()}`,
+            projectId: activeProject,
+            ready: true,
+            stale: true,
+        });
+
+        this.props.addLeads(newLeads);
     }
 
     handleAddLeadFromText = () => {
         const { activeProject } = this.props;
-        let counter = this.props.leadsCount;
-        counter += 1;
-        const newLead = leadForText(`lead-${counter}`, `Lead #${counter}`, activeProject);
-        this.props.addLeads([newLead]);
+        const newLeads = [];
+
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
+
+        newLeads.unshift({
+            id: newLeadId,
+            type: 'text',
+            title: `Lead ${(new Date()).toLocaleTimeString()}`,
+            projectId: activeProject,
+            ready: true,
+            stale: true,
+        });
+
+        this.props.addLeads(newLeads);
     }
 
-    handleGoogleDriveOnAuthenticate = (accessToken) => {
+    handleGoogleDriveOnAuthenticated = (accessToken) => {
         // TODO: use this token will uploading
         // console.log(accessToken);
         if (accessToken) {
             this.googleDriveAccessToken = accessToken;
         }
     }
+
+    handleDropboxChooserClick = () => this.setState({ dropboxDisabled: true });
+
+    handleDropboxChooserCancel = () => this.setState({ dropboxDisabled: false });
 
     render() {
         const {
@@ -322,8 +258,8 @@ export default class AddLeadFilter extends React.PureComponent {
                     multiselect
                     extensions={supportedDropboxExtension}
                     success={this.handleAddLeadFromDropbox}
-                    onClick={() => this.setState({ dropboxDisabled: true })}
-                    cancel={() => this.setState({ dropboxDisabled: false })}
+                    onClick={this.handleDropboxChooserClick}
+                    cancel={this.handleDropboxChooserCancel}
                     disabled={dropboxDisabled}
                 >
                     <span className="ion-social-dropbox" />

@@ -14,19 +14,16 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../public/components/Input';
-
 import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
-import {
-    Button,
+    PrimaryButton,
     WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
+import { LoadingAnimation } from '../../../../public/components/View';
 
 import {
-    addLeadViewLeadRemoveAction,
+    addLeadViewCanNextSelector,
+    addLeadViewCanPrevSelector,
 } from '../../../../common/redux';
 
 
@@ -35,19 +32,12 @@ import styles from './styles.scss';
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
 
 const mapStateToProps = state => ({
-    state,
-});
-
-const mapDispatchToProps = dispatch => ({
-    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
+    addLeadViewCanNext: addLeadViewCanNextSelector(state),
+    addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
 });
 
 const propTypes = {
     className: PropTypes.string,
-
-    formCallbacks: PropTypes.shape({
-        dummy: PropTypes.string,
-    }).isRequired,
 
     lead: PropTypes.shape({
         dummy: PropTypes.string,
@@ -57,14 +47,22 @@ const propTypes = {
         dummy: PropTypes.string,
     }).isRequired,
 
-    addLeadViewLeadRemove: PropTypes.func.isRequired,
+    onPrev: PropTypes.func.isRequired,
+    onNext: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    onFailure: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onRemove: PropTypes.func.isRequired,
+
+    addLeadViewCanNext: PropTypes.bool.isRequired,
+    addLeadViewCanPrev: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -103,39 +101,30 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
-    onPrev = (e) => {
+    handlePrev = (e) => {
         e.preventDefault();
-
-        const { formCallbacks } = this.props;
-        formCallbacks.onPrev();
+        this.props.onPrev();
     }
 
-    onNext = (e) => {
+    handleNext = (e) => {
         e.preventDefault();
-
-        const { formCallbacks } = this.props;
-        formCallbacks.onNext();
+        this.props.onNext();
     }
 
-    handleRemoveButtonClick = (e) => {
+    handleRemove = (e) => {
         e.preventDefault();
-        const { lead } = this.props;
-        this.props.addLeadViewLeadRemove(lead.data.id);
+        this.props.onRemove();
     }
 
     render() {
         const {
             className,
-            formCallbacks,
             lead,
             leadOptions,
-        } = this.props;
-
-        const {
             onChange,
             onFailure,
             onSuccess,
-        } = formCallbacks;
+        } = this.props;
 
         const {
             pending,
@@ -148,11 +137,6 @@ export default class AddLeadForm extends React.PureComponent {
             errors,
             fieldErrors,
         } = lead.form;
-
-        const {
-            onPrev,
-            onNext,
-        } = this;
 
         return (
             <Form
@@ -172,24 +156,22 @@ export default class AddLeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
-                        <WarningButton
-                            onClick={this.handleRemoveButtonClick}
-                        >
-                            Remove
-                        </WarningButton>
-                        <Button
-                            onClick={onPrev}
+                        <PrimaryButton
+                            disabled={!this.props.addLeadViewCanPrev}
+                            onClick={this.handlePrev}
                         >
                             Prev
-                        </Button>
-                        <Button
-                            onClick={onNext}
+                        </PrimaryButton>
+                        <PrimaryButton
+                            disabled={!this.props.addLeadViewCanNext}
+                            onClick={this.handleNext}
                         >
                             Next
-                        </Button>
-                        <SuccessButton
-                            disabled={pending || !stale || !ready}
-                        >
+                        </PrimaryButton>
+                        <WarningButton onClick={this.handleRemove} >
+                            Remove
+                        </WarningButton>
+                        <SuccessButton disabled={pending || !stale || !ready} >
                             Save
                         </SuccessButton>
                     </div>
