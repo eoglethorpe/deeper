@@ -11,6 +11,7 @@ import {
     DropdownGroupTitle,
 } from '../../../public/components/Action';
 import { SelectInput } from '../../../public/components/Input';
+import { isTruthy } from '../../../public/utils/common';
 
 
 import LinkOutsideRouter from '../LinkOutsideRouter';
@@ -126,7 +127,9 @@ export default class Navbar extends React.PureComponent {
     }
 
     onSelectChangeHandler = (key) => {
-        this.props.setActiveProject({ activeProject: key });
+        if (isTruthy(key)) {
+            this.props.setActiveProject({ activeProject: key });
+        }
     }
 
     handleLogoutButtonClick = () => {
