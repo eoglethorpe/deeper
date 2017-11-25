@@ -144,13 +144,7 @@ export default class AddLeadView extends React.PureComponent {
             .url(url)
             .params(params)
             .preLoad(() => {
-                // TODO: use immutability helpers
-                const { leadUploads } = this.state;
-                leadUploads[leadId] = {
-                    progress: 0,
-                    isCompleted: false,
-                };
-                this.setState({ leadUploads });
+                this.handleLeadUploadPreLoad(leadId);
             })
             .progress((progressPercent) => {
                 this.handleLeadUploadProgress(leadId, progressPercent);
@@ -221,6 +215,17 @@ export default class AddLeadView extends React.PureComponent {
         this.setState({ leadUploads });
     }
 
+    handleLeadUploadPreLoad = (leadId) => {
+        const settings = {
+            [leadId]: { $auto: {
+                progress: { $set: 0 },
+                isCompleted: { $set: false },
+            } },
+        };
+        const leadUploads = update(this.state.leadUploads, settings);
+        this.setState({ leadUploads });
+    }
+
     handleLeadUploadSuccess = (leadId, response) => {
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.props;
@@ -235,13 +240,13 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLAOD
-        const uploadSettings = {
-            [leadId]: {
+        const settings = {
+            [leadId]: { $auto: {
                 progress: { $set: 100 },
                 isCompleted: { $set: true },
-            },
+            } },
         };
-        const leadUploads = update(this.state.leadUploads, uploadSettings);
+        const leadUploads = update(this.state.leadUploads, settings);
         this.setState({ leadUploads });
     }
 
@@ -257,27 +262,31 @@ export default class AddLeadView extends React.PureComponent {
         });
 
         // FOR UPLAOD
-        const uploadSettings = {
-            [leadId]: {
+        const settings = {
+            [leadId]: { $auto: {
                 progress: { $set: 100 },
                 isCompleted: { $set: true },
-            },
-        };
-        const leadUploads = update(this.state.leadUploads, uploadSettings);
-        this.setState({ leadUploads });
-    }
-
-    handleLeadUploadProgress = (leadId, progress) => {
-        // TODO: only update if progress has changed
-        const settings = {
-            [leadId]: {
-                progress: { $set: progress },
-            },
+            } },
         };
         const leadUploads = update(this.state.leadUploads, settings);
         this.setState({ leadUploads });
     }
 
+    handleLeadUploadProgress = (leadId, progress) => {
+        const theLeadUpload = this.state.leadUploads[leadId];
+        if (!theLeadUpload || theLeadUpload.progress === progress) {
+            return;
+        }
+
+        const settings = {
+            [leadId]: { $auto: {
+                progress: { $set: progress },
+                isCompleted: { $set: false },
+            } },
+        };
+        const leadUploads = update(this.state.leadUploads, settings);
+        this.setState({ leadUploads });
+    }
 
     // HANDLE SELECTION
 
@@ -291,12 +300,13 @@ export default class AddLeadView extends React.PureComponent {
         });
         request.start();
 
-        // TODO: use immutable
-        const { leadUploads } = this.state;
-        leadUploads[leadId] = {
-            progress: 0,
-            isCompleted: false,
+        const settings = {
+            [leadId]: { $auto: {
+                progress: { $set: 0 },
+                isCompleted: { $set: false },
+            } },
         };
+        const leadUploads = update(this.state.leadUploads, settings);
         this.setState({ leadUploads });
     }
 
@@ -308,12 +318,13 @@ export default class AddLeadView extends React.PureComponent {
         });
         request.start();
 
-        // TODO: use immutable
-        const { leadUploads } = this.state;
-        leadUploads[leadId] = {
-            progress: 0,
-            isCompleted: false,
+        const settings = {
+            [leadId]: { $auto: {
+                progress: { $set: 0 },
+                isCompleted: { $set: false },
+            } },
         };
+        const leadUploads = update(this.state.leadUploads, settings);
         this.setState({ leadUploads });
     }
 

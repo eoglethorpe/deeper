@@ -52,15 +52,17 @@ export default class AddLeadFilter extends React.PureComponent {
     renderLeadItem = (key, lead) => {
         const {
             leadUploads,
+            activeLeadId,
         } = this.props;
 
         return (
             <AddLeadListItem
-                active={this.props.activeLeadId === lead.data.id}
+                active={activeLeadId === lead.data.id}
                 key={key}
+                leadKey={key}
                 lead={lead}
-                onClick={() => this.props.setActiveLeadId(lead.data.id)}
                 upload={leadUploads[key]}
+                onClick={this.props.setActiveLeadId}
             />
         );
     }

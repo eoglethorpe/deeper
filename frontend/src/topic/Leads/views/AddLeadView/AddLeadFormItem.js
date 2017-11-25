@@ -29,6 +29,7 @@ import AddLeadForm from '../../components/AddLeadForm';
 import styles from './styles.scss';
 
 const propTypes = {
+
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,

@@ -15,6 +15,8 @@ const propTypes = {
         dummy: PropTypes.string,
     }).isRequired,
 
+    leadKey: PropTypes.string.isRequired,
+
     upload: PropTypes.shape({
         dummy: PropTypes.string,
     }),
@@ -47,6 +49,10 @@ export default class AddLeadListItem extends React.PureComponent {
         return this.leadTypeToIconClassMap[type];
     }
 
+    handleClick = () => {
+        this.props.onClick(this.props.leadKey);
+    }
+
     render() {
         const {
             active,
@@ -59,15 +65,8 @@ export default class AddLeadListItem extends React.PureComponent {
             data,
             serverId,
         } = lead;
-
-        const {
-            type,
-        } = data;
-
-        const {
-            title,
-        } = lead.form.values;
-
+        const { type } = data;
+        const { title } = lead.form.values;
         const {
             error,
             stale,
