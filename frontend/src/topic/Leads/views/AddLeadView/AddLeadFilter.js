@@ -8,15 +8,24 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { RestBuilder } from '../../../../public/utils/rest';
 import {
     SelectInput,
     TextInput,
 } from '../../../../public/components/Input';
 
 import {
+    tokenSelector,
+    activeProjectSelector,
     setAddLeadViewFiltersAction,
     addLeadViewFiltersSelector,
+    setLeadFilterOptionsAction,
 } from '../../../../common/redux';
+import {
+    createParamsForUser,
+    createUrlForLeadFilterOptions,
+} from '../../../../common/rest';
+
 
 import styles from './styles.scss';
 
@@ -39,16 +48,25 @@ const defaultProps = {
 };
 
 const propTypes = {
+    token: PropTypes.shape({
+        access: PropTypes.string,
+    }).isRequired,
+
     filters: PropTypes.object.isRequired, // eslint-disable-line
+    activeProject: PropTypes.number.isRequired,
     setLeadViewFilters: PropTypes.func.isRequired,
+    setLeadFilterOptions: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
+    token: tokenSelector(state),
+    activeProject: activeProjectSelector(state),
     filters: addLeadViewFiltersSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setLeadViewFilters: filters => dispatch(setAddLeadViewFiltersAction(filters)),
+    setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -56,6 +74,58 @@ const mapDispatchToProps = dispatch => ({
 export default class AddLeadFilter extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    componentWillMount() {
+        const { activeProject } = this.props;
+        this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(
+            activeProject,
+        );
+        this.leadFilterOptionsRequest.start();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { activeProject } = nextProps;
+        if (this.props.activeProject !== activeProject) {
+            if (this.leadFilterOptionsRequest) {
+                this.leadFilterOptionsRequest.stop();
+            }
+
+            this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(
+                activeProject,
+            );
+            this.leadFilterOptionsRequest.start();
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.leadFilterOptionsRequest) {
+            this.leadFilterOptionsRequest.stop();
+        }
+    }
+
+    createRequestForProjectLeadFilterOptions = (activeProject) => {
+        const urlForProjectFilterOptions = createUrlForLeadFilterOptions(activeProject);
+        const paramsForProjectFilterOptions = () => {
+            const { token } = this.props;
+            const { access } = token;
+            return createParamsForUser({ access });
+        };
+
+        const leadFilterOptionsRequest = new RestBuilder()
+            .url(urlForProjectFilterOptions)
+            .params(paramsForProjectFilterOptions)
+            .success((response) => {
+                this.props.setLeadFilterOptions({
+                    projectId: activeProject,
+                    leadFilterOptions: response,
+                });
+            })
+            .retryTime(1000)
+            .build();
+
+        return leadFilterOptionsRequest;
+    }
+
 
     handleSearchChange = (value) => {
         this.props.setLeadViewFilters({ search: value });

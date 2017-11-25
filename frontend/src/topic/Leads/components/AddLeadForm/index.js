@@ -28,20 +28,12 @@ import styles from './styles.scss';
 
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
 
-const mapStateToProps = state => ({
-    state,
-});
-
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
 });
 
 const propTypes = {
     className: PropTypes.string,
-
-    formCallbacks: PropTypes.shape({
-        dummy: PropTypes.string,
-    }).isRequired,
 
     lead: PropTypes.shape({
         dummy: PropTypes.string,
@@ -52,13 +44,19 @@ const propTypes = {
     }).isRequired,
 
     addLeadViewLeadRemove: PropTypes.func.isRequired,
+
+    onPrev: PropTypes.func.isRequired,
+    onNext: PropTypes.func.isRequired,
+    onSuccess: PropTypes.func.isRequired,
+    onFailure: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -99,16 +97,12 @@ export default class AddLeadForm extends React.PureComponent {
 
     onPrev = (e) => {
         e.preventDefault();
-
-        const { formCallbacks } = this.props;
-        formCallbacks.onPrev();
+        this.props.onPrev();
     }
 
     onNext = (e) => {
         e.preventDefault();
-
-        const { formCallbacks } = this.props;
-        formCallbacks.onNext();
+        this.props.onNext();
     }
 
     handleRemoveButtonClick = (e) => {
@@ -118,18 +112,15 @@ export default class AddLeadForm extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering AddLeadForm');
         const {
             className,
-            formCallbacks,
             lead,
             leadOptions,
-        } = this.props;
-
-        const {
             onChange,
             onFailure,
             onSuccess,
-        } = formCallbacks;
+        } = this.props;
 
         const {
             pending,
