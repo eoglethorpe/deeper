@@ -1,0 +1,25 @@
+@import '../../../../stylesheets/base';
+
+.edit-entry {
+    padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
+
+    .overview {
+        display: flex;
+        height: 100%;
+
+        .left {
+            flex-basis: 30%;
+            background-color: $color-foreground;
+        }
+
+        .right {
+            flex-basis: 70%;
+            background-color: $color-foreground-alt;
+        }
+
+        .entry-list {
+            height: 100%;
+        }
+    }
+}
