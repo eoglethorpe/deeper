@@ -1,16 +1,24 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
-import {
-    TextInput,
-} from '../../../../public/components/Input';
 import styles from './styles.scss';
+
+const propTypes = {
+    className: PropTypes.string,
+};
+
+const defaultProps = {
+    className: '',
+};
 
 @CSSModules(styles, { allowMultiple: true })
 export default class KeyWords extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
     render() {
         return (
-            <div styleName="keywords-content">
+            <div styleName={this.props.className}>
                 <Tabs
                     activeLinkStyle={{ none: 'none' }}
                     styleName="tabs-container"
@@ -41,34 +49,50 @@ export default class KeyWords extends React.PureComponent {
                         for="keywords"
                         styleName="tab"
                     >
-                        <TextInput
-                            styleName="keywords-words"
-                            value="Cholera"
+                        <p
+                            draggable
                             readOnly
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
-                        <TextInput
                             styleName="keywords-words"
-                            value="Pump"
-                            readOnly
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
-                        <TextInput
+                        >
+                            Sickness
+                            <span> (331) </span>
+                        </p>
+                        <br />
+                        <span
                             styleName="keywords-words"
-                            value="Latrines"
                             readOnly
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
-                        <TextInput
+                            draggable
+                        >
+                            Cholera
+                            <span> (298) </span>
+                        </span>
+                        <br />
+                        <span
                             styleName="keywords-words"
-                            value="Sanitation"
+                            draggable
                             readOnly
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
+                        >
+                            Pump
+                            <span> (210) </span>
+                        </span>
+                        <br />
+                        <span
+                            styleName="keywords-words"
+                            draggable
+                            readOnly
+                        >
+                            Latrines
+                            <span> (125) </span>
+                        </span>
+                        <br />
+                        <span
+                            styleName="keywords-words"
+                            draggable
+                            readOnly
+                        >
+                            Saniatation
+                            <span> (45) </span>
+                        </span>
                     </TabContent>
                     <TabContent
                         for="n-gram-2"
