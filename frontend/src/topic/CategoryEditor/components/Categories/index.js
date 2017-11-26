@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import styles from './styles.scss';
 import KeyWords from '../../components/KeyWords';
+import EditCategoryModal from '../EditCategoryModal';
 
 import {
     TextInput,
@@ -70,7 +71,7 @@ export default class Categories extends React.PureComponent {
                 },
                 {
                     id: 6,
-                    title: 'DISAESES',
+                    title: 'DISEASES',
                 },
                 {
                     id: 7,
@@ -87,9 +88,13 @@ export default class Categories extends React.PureComponent {
             ],
             activeSubCategory: {
                 id: 1,
+                title: 'WASH',
+            },
+            activeSubSubCategory: {
+                id: 1,
                 title: 'WATER',
             },
-            activeSubSubCategoryId: 1,
+            editCategoryModal: false,
         };
     }
 
@@ -144,9 +149,9 @@ export default class Categories extends React.PureComponent {
         });
     }
 
-    handleSubSubCategoryClick = (id) => {
+    handleSubSubCategoryClick = (subSubCategory) => {
         this.setState({
-            activeSubSubCategoryId: id,
+            activeSubSubCategory: subSubCategory,
         });
     }
 
@@ -179,6 +184,19 @@ export default class Categories extends React.PureComponent {
         });
     }
 
+    // Edit Category Modal
+
+    handleEditCategoryModalClose = () => {
+        this.setState({
+            editCategoryModal: false,
+        });
+    }
+
+    handleEditCategoryModalShow = () => {
+        this.setState({
+            editCategoryModal: true,
+        });
+    }
 
     render() {
         const {
@@ -189,7 +207,8 @@ export default class Categories extends React.PureComponent {
             activeSubCategory,
             subSubCategoryData,
             newSubSubCategoryInputValue,
-            activeSubSubCategoryId,
+            activeSubSubCategory,
+            editCategoryModal,
         } = this.state;
 
         return (
@@ -201,13 +220,18 @@ export default class Categories extends React.PureComponent {
                     <div styleName="sub-categories">
                         {
                             subCategoryData.map(d => (
-                                <div
-                                    role="presentation"
-                                    key={d.id}
-                                    onClick={() => { this.handleSubCategoryClick(d); }}
-                                    styleName={`sub-category ${activeSubCategory.id === d.id ? 'active' : ''}`}
-                                >
-                                    {d.title}
+                                <div styleName="sub-group">
+                                    <div
+                                        role="presentation"
+                                        key={d.id}
+                                        onClick={() => { this.handleSubCategoryClick(d); }}
+                                        styleName={`sub-category ${activeSubCategory.id === d.id ? 'active' : ''}`}
+                                    >
+                                        {d.title}
+                                    </div>
+                                    <span
+                                        className={`${activeSubCategory.id === d.id ? 'ion-chevron-right' : ''}`}
+                                    />
                                 </div>
                             ))
                         }
@@ -222,13 +246,20 @@ export default class Categories extends React.PureComponent {
                     <div styleName="sub-sub-categories">
                         {
                             subSubCategoryData.map(d => (
-                                <div
-                                    role="presentation"
-                                    key={d.id}
-                                    onClick={() => { this.handleSubSubCategoryClick(d.id); }}
-                                    styleName={`sub-sub-category ${activeSubSubCategoryId === d.id ? 'active' : ''}`}
-                                >
-                                    {d.title}
+                                <div styleName="sub-group">
+                                    <div
+                                        role="presentation"
+                                        key={d.id}
+                                        onClick={() => { this.handleSubSubCategoryClick(d); }}
+                                        styleName={`sub-sub-category ${activeSubSubCategory.id === d.id ? 'active' : ''}`}
+                                    >
+                                        {d.title}
+                                    </div>
+                                    <span
+                                        className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
+                                        onClick={this.handleEditCategoryModalShow}
+                                        role="presentation"
+                                    />
                                 </div>
                             ))
                         }
@@ -297,6 +328,30 @@ export default class Categories extends React.PureComponent {
                             onClick={this.handleAddNewSubSubCategory}
                         >
                             Add
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
+                <Modal
+                    closeOnEscape
+                    onClose={this.handleEditCategoryModalClose}
+                    show={editCategoryModal}
+                >
+                    <ModalHeader
+                        title={`${activeSubCategory.title} > ${activeSubSubCategory.title}`}
+                    />
+                    <ModalBody>
+                        <EditCategoryModal />
+                    </ModalBody>
+                    <ModalFooter>
+                        <DangerButton
+                            onClick={this.handleEditCategoryModalClose}
+                        >
+                            Cancel
+                        </DangerButton>
+                        <PrimaryButton
+                            onClick={this.handleAddNewSubSubCategory}
+                        >
+                            Save
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

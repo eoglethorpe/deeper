@@ -20,36 +20,73 @@
         .sub-categories,
         .sub-sub-categories {
             display: flex;
-            flex-direction: column;
+            flex-basis: 20%;
+            flex-wrap: wrap;
             margin-right: $spacing-large;
             border: $width-separator-medium solid $color-separator;
             padding: $spacing-large;
-            width: 20%;
             height: 100%;
 
-            >* {
-                margin-bottom: $spacing-large;
-            }
+            .sub-group {
+                display: flex;
+                flex-basis: 100%;
+                flex-wrap: wrap;
+                margin-bottom: $spacing-small;
+                padding: $spacing-medium 0;
 
-            .clicked {
-                border-radius: $width-separator-thick;
-                background-color: $color-primary;
-                cursor: pointer;
-                padding: $spacing-small;
-                text-align: center;
-                color: $color-text-on-primary;
-                user-select: none;
+                .sub-category,
+                .not-clicked,
+                .add-button,
+                .sub-sub-category {
+                    flex-basis: 80%;
+                    border-radius: $width-separator-thick;
+                    cursor: pointer;
+                    padding: $spacing-small;
+                    text-align: center;
+                    user-select: none;
 
-                &:active {
-                    @include shadow-small;
-                    transform: translateY(1px);
+                    &:hover {
+                        background-color: $color-background-hover;
+                    }
+
+                    &:focus {
+                        background-color: $color-primary;
+                    }
+
+                    &.active {
+                        @include shadow-small;
+                        background-color: $color-primary;
+                        color: $color-text-on-primary;
+                    }
+
+                }
+
+                :global .ion-edit {
+                    flex-basis: 10%;
+                    margin-left: $spacing-medium-alt;
+                    cursor: pointer;
+                    padding: $spacing-small;
+
+                    &:hover {
+                        background-color: $color-background-hover;
+                    }
+
+                    &:active {
+                        @include shadow-small;
+                        transform: translateY(1px);
+                    }
+                }
+
+                :global .ion-chevron-right {
+                    flex-basis: 10%;
+                    margin-left: $spacing-medium-alt;
+                    padding: $spacing-small;
+                    font-size: $font-size-large;
                 }
             }
 
-            .sub-category,
-            .not-clicked,
-            .add-button,
-            .sub-sub-category {
+            .add-button {
+                flex-basis: 80%;
                 border-radius: $width-separator-thick;
                 cursor: pointer;
                 padding: $spacing-small;
@@ -65,12 +102,11 @@
                 }
 
                 &.active {
+                    @include shadow-small;
                     background-color: $color-primary;
                     color: $color-text-on-primary;
                 }
             }
-
         }
-
     }
 }
