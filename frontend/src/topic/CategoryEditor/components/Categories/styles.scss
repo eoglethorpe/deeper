@@ -29,6 +29,39 @@
                 margin-bottom: $spacing-large;
             }
 
+            .clicked {
+                border-radius: $width-separator-thick;
+                background-color: $color-primary;
+                cursor: pointer;
+                padding: $spacing-small;
+                text-align: center;
+                color: $color-text-on-primary;
+
+                &:active {
+                    @include shadow-small;
+                    transform: translateY(1px);
+                }
+            }
+
+            .not-clicked {
+                border-radius: $width-separator-thick;
+                cursor: pointer;
+                padding: $spacing-small;
+                text-align: center;
+
+                &:active {
+                    transform: translateY(1px);
+                }
+
+                &:hover {
+                    background-color: $color-background-hover;
+                }
+
+                &:focus {
+                    background-color: $color-primary;
+                }
+            }
+
         }
 
     }

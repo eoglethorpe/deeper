@@ -1,9 +1,5 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import {
-    PrimaryButton,
-    TransparentButton,
-} from '../../../../public/components/Action';
 import styles from './styles.scss';
 import KeyWords from '../../components/KeyWords';
 
@@ -18,47 +14,47 @@ export default class Categories extends React.PureComponent {
                 </h2>
                 <div styleName="category-group">
                     <div styleName="sub-categories">
-                        <PrimaryButton>
+                        <div styleName="clicked">
                             WASH
-                        </PrimaryButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             FOOD
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             SHELTER
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             NFI
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             PROTECTION
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             <i className="ion-plus" />
-                        </TransparentButton>
+                        </div>
                     </div>
                     <div styleName="sub-sub-categories">
-                        <TransparentButton>
+                        <div styleName="not-clicked">
                             WATER
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             SANITATION
-                        </TransparentButton>
-                        <PrimaryButton>
+                        </div>
+                        <div styleName="clicked">
                             HYGIENE
-                        </PrimaryButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             VECTOR CONTROL
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             WASTE MANAGEMENT
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             DISAESES
-                        </TransparentButton>
-                        <TransparentButton>
+                        </div>
+                        <div styleName="not-clicked">
                             <i className="ion-plus" />
-                        </TransparentButton>
+                        </div>
                     </div>
                     <KeyWords />
                 </div>
