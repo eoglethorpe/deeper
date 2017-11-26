@@ -14,6 +14,7 @@ import {
     SET_REGIONS,
     SET_REGION_DETAILS,
     ADD_NEW_REGION,
+    REMOVE_PROJECT_REGION,
     UNSET_REGION,
     SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
@@ -41,12 +42,12 @@ export const setProjectAction = ({ userId, project }) => ({
     userId,
     project,
 });
+
 export const unSetProjectAction = ({ userId, projectId }) => ({
     type: UNSET_USER_PROJECT,
     userId,
     projectId,
 });
-
 
 export const setUserGroupsAction = ({ userId, userGroups }) => ({
     type: SET_USER_GROUPS,
@@ -113,9 +114,16 @@ export const setRegionsAction = ({ regions }) => ({
     regions,
 });
 
-export const addNewRegionAction = ({ regionDetail }) => ({
+export const addNewRegionAction = ({ regionDetail, projectId }) => ({
     type: ADD_NEW_REGION,
     regionDetail,
+    projectId,
+});
+
+export const removeProjectRegionAction = ({ projectId, regionId }) => ({
+    type: REMOVE_PROJECT_REGION,
+    projectId,
+    regionId,
 });
 
 export const dummyAction = () => ({

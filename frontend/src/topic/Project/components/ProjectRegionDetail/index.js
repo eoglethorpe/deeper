@@ -10,13 +10,21 @@ import {
 } from '../../../../public/components/Action';
 import {
     createParamsForUser,
+    createParamsForRegionClone,
+    createParamsForProjectPatch,
     createUrlForRegion,
+    createUrlForProject,
+    createUrlForRegionClone,
 } from '../../../../common/rest';
 import {
+    activeProjectSelector,
     tokenSelector,
 
     regionDetailForRegionSelector,
+    projectDetailsSelector,
     setRegionDetailsAction,
+    removeProjectRegionAction,
+    addNewRegionAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -27,21 +35,30 @@ import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 import styles from './styles.scss';
 
 const propTypes = {
+    activeProject: PropTypes.number,
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     regionId: PropTypes.number.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     regionDetails: PropTypes.object.isRequired, // eslint-disable-line
+    addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
+    removeProjectRegion: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
+    activeProject: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
+    activeProject: activeProjectSelector(state),
+    projectDetails: projectDetailsSelector(state, props),
     regionDetails: regionDetailForRegionSelector(state, props),
     token: tokenSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
+    addNewRegion: params => dispatch(addNewRegionAction(params)),
     setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    removeProjectRegion: params => dispatch(removeProjectRegionAction(params)),
     dispatch,
 });
 
@@ -93,10 +110,89 @@ export default class ProjectRegionDetail extends React.PureComponent {
         return regionRequest;
     };
 
+    createRegionCloneRequest = (regionId, projectId) => {
+        const regionCloneRequest = new RestBuilder()
+            .url(createUrlForRegionClone(regionId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForRegionClone(
+                    { access },
+                    { project: projectId },
+                );
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'region');
+                    this.props.addNewRegion({
+                        regionDetail: response,
+                        projectId,
+                    });
+                    this.props.removeProjectRegion({
+                        projectId,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return regionCloneRequest;
+    };
+
+    createProjectPatchRequest = (projectDetails, removedRegionId) => {
+        const projectId = projectDetails.id;
+        const regions = [...projectDetails.regions];
+        const index = regions.findIndex(d => (d.id === removedRegionId));
+        regions.splice(index, 1);
+
+        const projectPatchRequest = new RestBuilder()
+            .url(createUrlForProject(projectId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForProjectPatch(
+                    { access },
+                    { regions },
+                );
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'project');
+                    this.props.removeProjectRegion({
+                        projectId,
+                        regionId: removedRegionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return projectPatchRequest;
+    };
+
+    handleRegionClone = (regionId, activeProject) => {
+        if (this.regionCloneRequest) {
+            this.regionCloneRequest.stop();
+        }
+        this.regionCloneRequest = this.createRegionCloneRequest(regionId, activeProject);
+        this.regionCloneRequest.start();
+    }
+
+    handleRegionRemove = (projectDetails, removedRegionId) => {
+        if (this.regionRemoveRequest) {
+            this.regionRemoveRequest.stop();
+        }
+        this.regionRemoveRequest = this.createProjectPatchRequest(projectDetails, removedRegionId);
+        this.regionRemoveRequest.start();
+    }
+
     render() {
         const {
             regionId,
             regionDetails,
+            activeProject,
+            projectDetails,
         } = this.props;
 
         const { dataLoading } = this.state;
@@ -110,12 +206,15 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         {regionDetails.title}
                     </h2>
                     <div styleName="action-btns">
-                        <DangerButton>
+                        <DangerButton
+                            onClick={() => this.handleRegionRemove(projectDetails, regionId)}
+                        >
                             Remove Region
                         </DangerButton>
                         {isPublic &&
                             <PrimaryButton
                                 styleName="clone-btn"
+                                onClick={() => this.handleRegionClone(regionId, activeProject)}
                             >
                                 Clone and Edit
                             </PrimaryButton>
