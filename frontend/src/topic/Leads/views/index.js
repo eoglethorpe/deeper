@@ -229,6 +229,7 @@ export default class Leads extends React.PureComponent {
             filters,
             activePage,
         } = this.props;
+
         this.leadRequest = this.createRequestForProjectLeads({
             activeProject,
             activePage,
@@ -267,6 +268,8 @@ export default class Leads extends React.PureComponent {
         this.leadRequest.stop();
     }
 
+    // REST UTILS
+
     getFiltersForRequest = (filters) => {
         const requestFilters = {};
         Object.keys(filters).forEach((key) => {
@@ -300,6 +303,8 @@ export default class Leads extends React.PureComponent {
         return requestFilters;
     }
 
+    // REST
+
     createRequestForProjectLeads = ({ activeProject, activePage, activeSort, filters }) => {
         const sanitizedFilters = this.getFiltersForRequest(filters);
         const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
@@ -322,6 +327,7 @@ export default class Leads extends React.PureComponent {
                     access,
                 });
             })
+            .retryTime(1000)
             .preLoad(() => {
                 this.setState({ loadingLeads: true });
             })
@@ -344,6 +350,12 @@ export default class Leads extends React.PureComponent {
         return leadRequest;
     }
 
+    // UI
+
+    handleAddLeadClick = () => {
+        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+    }
+
     handleEditLeadClick = (row) => {
         this.setState({
             editRow: row,
@@ -358,17 +370,31 @@ export default class Leads extends React.PureComponent {
         });
     }
 
+    handleSearchSimilarLead = (row) => {
+        this.props.setLeadPageFilter({
+            filters: { similar: row.id },
+        });
+    };
+
+    handlePageClick = (page) => {
+        this.props.setLeadPageActivePage({ activePage: page });
+    }
+
+    // TABLE
+
     leadKeyExtractor = lead => (lead.id.toString())
 
     leadModifier = (lead, columnKey) => {
         const header = this.headers.find(d => d.key === columnKey);
-
         if (header.modifier) {
             return header.modifier(lead);
         }
-
         return lead[columnKey];
     }
+
+    isColumnClickable = key => (
+        ['actions'].indexOf(key) === -1
+    )
 
     headerModifier = (headerData) => {
         const { activeSort } = this.props;
@@ -388,14 +414,6 @@ export default class Leads extends React.PureComponent {
         );
     }
 
-    handleAddLeadClick = () => {
-        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
-    }
-
-    handleApplyFilters = (filters) => {
-        this.props.setLeadPageFilter({ filters });
-    }
-
     handleTableHeaderClick = (key) => {
         // prevent click on 'actions' column
         if (!this.isColumnClickable(key)) {
@@ -410,23 +428,6 @@ export default class Leads extends React.PureComponent {
         }
         this.props.setLeadPageActiveSort({ activeSort });
     }
-
-    handlePageClick = (page) => {
-        this.props.setLeadPageActivePage({ activePage: page });
-    }
-
-    handleSearchSimilarLead = (row) => {
-        this.props.setLeadPageFilter({
-            filters: {
-                ...this.props.filters,
-                similar: row.id,
-            },
-        });
-    };
-
-    isColumnClickable = key => (
-        ['actions'].indexOf(key) === -1
-    )
 
     render() {
         console.log('Rendering Leads');
@@ -466,7 +467,6 @@ export default class Leads extends React.PureComponent {
                 <FilterLeadsForm
                     styleName="filters"
                     value={this.props.filters}
-                    onSubmit={this.handleApplyFilters}
                 />
 
                 <div styleName="table-container">

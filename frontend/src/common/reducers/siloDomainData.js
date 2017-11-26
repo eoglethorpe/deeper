@@ -395,16 +395,18 @@ const addLeadViewRemoveLead = (state, action) => {
 
 
 const leadViewSetFilter = (state, action) => {
+    console.warn(action);
     const { filters } = action;
     const { activeProject } = state;
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
-                filter: { $set: filters },
+                filter: { $auto: { $merge: filters } },
                 activePage: { $set: 1 },
             } },
         },
     };
+    console.warn(settings);
     return update(state, settings);
 };
 

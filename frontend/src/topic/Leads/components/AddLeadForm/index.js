@@ -16,7 +16,7 @@ import {
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
-    WarningButton,
+    DangerButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 import { LoadingAnimation } from '../../../../public/components/View';
@@ -168,22 +168,23 @@ export default class AddLeadForm extends React.PureComponent {
                         >
                             Next
                         </PrimaryButton>
-                        <WarningButton onClick={this.handleRemove} >
+                        <DangerButton onClick={this.handleRemove} >
                             Remove
-                        </WarningButton>
+                        </DangerButton>
                         <SuccessButton disabled={pending || !stale || !ready} >
                             Save
                         </SuccessButton>
                     </div>
                 </header>
                 <SelectInput
+                    disabled
                     error={fieldErrors.project}
                     formname="project"
                     keySelector={d => (d || {}).key}
                     label="Project"
                     labelSelector={d => (d || {}).value}
                     options={leadOptions.project}
-                    placeholder="Select a project"
+                    placeholder="Project Deep"
                     showHintAndError
                     showLabel
                     styleName="project"
@@ -196,7 +197,7 @@ export default class AddLeadForm extends React.PureComponent {
                     error={fieldErrors.title}
                     formname="title"
                     label="Title"
-                    placeholder="Title of lead"
+                    placeholder="Lead 12:21:00 PM"
                     styleName="title"
                     value={values.title}
                 />
@@ -204,7 +205,7 @@ export default class AddLeadForm extends React.PureComponent {
                     error={fieldErrors.source}
                     formname="source"
                     label="Source"
-                    placeholder="Source of lead (eg: Press)"
+                    placeholder="Newspaper"
                     styleName="source"
                     value={values.source}
                 />
@@ -215,7 +216,7 @@ export default class AddLeadForm extends React.PureComponent {
                     label="Confidentiality"
                     labelSelector={d => (d || {}).value}
                     options={leadOptions.confidentiality}
-                    placeholder="Select a confidentiality"
+                    placeholder="Select one"
                     showHintAndError
                     showLabel
                     styleName="confidentiality"
@@ -228,7 +229,7 @@ export default class AddLeadForm extends React.PureComponent {
                     label="Assign To"
                     labelSelector={d => (d || {}).value}
                     options={leadOptions.assignee}
-                    placeholder="Select a user"
+                    placeholder="Select one"
                     showHintAndError
                     showLabel
                     styleName="user"
@@ -238,7 +239,7 @@ export default class AddLeadForm extends React.PureComponent {
                     error={fieldErrors.date}
                     formname="date"
                     label="Publication Date"
-                    placeholder="Enter a descriptive name"
+                    placeholder="12/12/2012"
                     styleName="date"
                     value={values.date}
                 />
@@ -249,7 +250,7 @@ export default class AddLeadForm extends React.PureComponent {
                             formname="url"
                             key="url"
                             label="URL"
-                            placeholder="Enter a descriptive name"
+                            placeholder="https://deeper.togglecorp.com"
                             styleName="url"
                             value={values.url}
                         />,
@@ -258,7 +259,7 @@ export default class AddLeadForm extends React.PureComponent {
                             formname="website"
                             key="website"
                             label="Website"
-                            placeholder="Enter a descriptive name"
+                            placeholder="togglecorp.com"
                             styleName="website"
                             value={values.website}
                         />,
@@ -270,7 +271,7 @@ export default class AddLeadForm extends React.PureComponent {
                             error={fieldErrors.text}
                             formname="text"
                             label="Text"
-                            placeholder="Enter text"
+                            placeholder="Enter text description here"
                             rows="3"
                             styleName="text"
                             value={values.text}
