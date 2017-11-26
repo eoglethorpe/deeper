@@ -185,9 +185,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 elements={this.formElements}
             >
                 <SelectInput
+                    label="Assigned to"
+                    showLabel
+                    placeholder="Anybody"
                     formname="assignee"
                     options={assignee}
-                    placeholder="Assigned to"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
@@ -195,30 +197,38 @@ export default class FilterLeadsForm extends React.PureComponent {
                     multiple
                 />
                 <DateFilter
+                    label="Created at"
+                    showLabel
+                    placeholder="Anytime"
                     formname="created_at"
-                    placeholder="Created at"
                     styleName="filter"
                     value={formValues.created_at}
                 />
                 <DateFilter
+                    label="Published on"
+                    showLabel
+                    placeholder="Anytime"
                     formname="published_on"
-                    placeholder="Published on"
                     styleName="filter"
                     value={formValues.published_on}
                 />
                 <SelectInput
+                    label="Confidentiality"
+                    showLabel
+                    placeholder="Any"
                     formname="confidentiality"
                     options={confidentiality}
-                    placeholder="Confidentiality"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
                     value={formValues.confidentiality}
                 />
                 <SelectInput
+                    label="Status"
+                    showLabel
+                    placeholder="Any"
                     formname="status"
                     options={status}
-                    placeholder="Status"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}

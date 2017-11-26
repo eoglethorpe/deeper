@@ -157,31 +157,36 @@ export default class AddLeadFilter extends React.PureComponent {
                     styleName="search"
                     onChange={this.handleSearchChange}
                     value={filters.search}
-                    placeholder="Search leads"
+                    placeholder="Search"
                     type="search"
                 />
-                <SelectInput
-                    options={leadTypeOptions}
-                    placeholder="Lead Type"
-                    styleName="filter"
-                    multiple
-                    value={filters.type}
-                    optionsIdentifier="lead-list-filter-options"
-                    onChange={this.handleLeadTypeFilterChange}
-                />
                 <TextInput
-                    placeholder="Source"
+                    label="Source"
+                    placeholder="Any"
                     styleName="filter source-filter"
                     value={filters.source}
                     onChange={this.handleLeadSourceFilterChange}
                 />
                 <SelectInput
+                    label="Status"
+                    showLabel
                     options={leadStatusFilterOptions}
-                    placeholder="Status"
+                    placeholder="All"
                     styleName="filter"
                     value={filters.status}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadStatusFilterChange}
+                />
+                <SelectInput
+                    label="Lead Type"
+                    showLabel
+                    options={leadTypeOptions}
+                    placeholder="All"
+                    styleName="filter"
+                    multiple
+                    value={filters.type}
+                    optionsIdentifier="lead-list-filter-options"
+                    onChange={this.handleLeadTypeFilterChange}
                 />
             </div>
         );
