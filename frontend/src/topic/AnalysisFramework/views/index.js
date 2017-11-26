@@ -2,141 +2,74 @@ import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout';
 import { connect } from 'react-redux';
+import {
+    Redirect,
+    Route,
+    HashRouter,
+} from 'react-router-dom';
 
+import schema from '../../../common/schema';
+import { RestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/utils/labels';
+
+import {
+    LoadingAnimation,
+} from '../../../public/components/View';
+
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
 import {
-    currentUserProjectsSelector,
+    setAnalysisFramework,
+} from '../../../common/action-creators/domainData';
+import {
+    analysisFrameworkIdFromProps,
+    currentAnalysisFrameworkSelector,
 } from '../../../common/selectors/domainData';
 
 import {
-    activeProjectSelector,
-} from '../../../common/selectors/siloDomainData';
-
+    createParamsForUser,
+    createParamsForAnalysisFrameworkEdit,
+    createUrlForAnalysisFramework,
+} from '../../../common/rest';
 import {
-    Responsive,
-} from '../../../public/components/General';
-
-import {
-    TextArea,
-} from '../../../public/components/Input';
-
-import {
-    TransparentButton,
-} from '../../../public/components/Action';
-
-import {
-    Table,
-} from '../../../public/components/View';
+    tokenSelector,
+} from '../../../common/redux';
 
 import styles from './styles.scss';
 
+import Overview from './Overview';
+import List from './List';
+
 const propTypes = {
+    analysisFramework: PropTypes.object, // eslint-disable-line
+    analysisFrameworkId: PropTypes.string.isRequired,
+    setAnalysisFramework: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
-    boundingClientRect: PropTypes.shape({
-        width: PropTypes.number,
-        height: PropTypes.number,
-    }).isRequired,
+    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
-const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    currentUserProjects: currentUserProjectsSelector(state),
+const defaultProps = {
+    analysisFramework: undefined,
+};
+
+const mapStateToProps = (state, props) => ({
+    analysisFramework: currentAnalysisFrameworkSelector(state, props),
+    analysisFrameworkId: analysisFrameworkIdFromProps(state, props),
+    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
+    setAnalysisFramework: params => dispatch(setAnalysisFramework(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@Responsive
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            items: [
-                {
-                    key: 'a',
-                    title: 'Excerpt',
-                    gridData: { x: 2, y: 2, w: 30, h: 20 },
-                    content: (<TextArea label="Excerpt" />),
-                },
-                {
-                    key: 'b',
-                    title: 'Sectors',
-                    gridData: { x: 2, y: 40, w: 40, h: 25, minW: 30, minH: 25 },
-                    content: (
-                        <Table
-                            headers={[
-                                {
-                                    key: 'category',
-                                    label: '',
-                                },
-                                {
-                                    key: 'health',
-                                    label: 'Health',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'education',
-                                    label: 'Education',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'protection',
-                                    label: 'Protection',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'shelter',
-                                    label: 'Shelter',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                                {
-                                    key: 'food',
-                                    label: 'Food',
-                                    modifier: () => (<div className="matrix-item" />),
-                                },
-                            ]}
-                            data={[
-                                {
-                                    category: 'Scope and scale',
-                                },
-                                {
-                                    category: 'Humanitarian conditions',
-                                },
-                                {
-                                    category: 'Capacities and response',
-                                },
-                            ]}
-                            keyExtractor={item => item.category}
-                        />
-                    ),
-                },
-                {
-                    key: 'c',
-                    title: 'Image',
-                    gridData: { x: 40, y: 2, w: 20, h: 30 },
-                    content: (
-                        <img
-                            alt="Sample widget"
-                            styleName="image-widget"
-                            src="https://i.imgur.com/ejDSwZW.jpg"
-                        />
-                    ),
-                },
-            ],
-        };
-    }
+    static defaultProps = defaultProps;
 
     componentWillMount() {
         this.props.setNavbarState({
@@ -155,89 +88,140 @@ export default class AnalysisFramework extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
+
+        this.analysisFrameworkRequest = this.createRequestForAnalysisFramework({
+            analysisFrameworkId: this.props.analysisFrameworkId,
+        });
+        this.analysisFrameworkRequest.start();
     }
 
-    getGridItems = () => {
-        const {
-            items,
-        } = this.state;
-
-        return items.map(item => (
-            <div
-                key={item.key}
-                data-grid={item.gridData}
-                styleName="grid-item"
-            >
-                <header
-                    styleName="header"
-                >
-                    <h2>{item.title}</h2>
-                    <div styleName="actions">
-                        <span
-                            styleName="drag-handle"
-                            className="ion-arrow-move drag-handle"
-                        />
-                        <TransparentButton
-                            styleName="close-button"
-                        >
-                            <span className="ion-android-close" />
-                        </TransparentButton>
-                    </div>
-                </header>
-                <div styleName="content">
-                    {item.content}
-                </div>
-            </div>
-        ));
+    componentWillUnmount() {
+        if (this.analysisFrameworkRequest) {
+            this.analysisFrameworkRequest.stop();
+        }
+        if (this.analysisFrameworkSaveRequest) {
+            this.analysisFrameworkSaveRequest.stop();
+        }
     }
 
-    handleItemResize = (layout, oldItem, newItem) => {
-        console.log(layout, oldItem, newItem);
+    createRequestForAnalysisFramework = ({ analysisFrameworkId }) => {
+        const urlForAnalysisFramework = createUrlForAnalysisFramework(
+            analysisFrameworkId,
+        );
+        const analysisFrameworkRequest = new RestBuilder()
+            .url(urlForAnalysisFramework)
+            .params(() => {
+                const { token } = this.props;
+                return createParamsForUser(token);
+            })
+            .preLoad(() => {
+            })
+            .postLoad(() => {
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.setAnalysisFramework({
+                        analysisFramework: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return analysisFrameworkRequest;
     }
 
-    handleItemDragStop = (e, node) => {
-        console.log(e, node);
+    createRequestForAnalysisFrameworkSave = ({ analysisFramework }) => {
+        const urlForAnalysisFramework = createUrlForAnalysisFramework(
+            analysisFramework.id,
+        );
+        const analysisFrameworkSaveRequest = new RestBuilder()
+            .url(urlForAnalysisFramework)
+            .params(() => {
+                const { token } = this.props;
+                return createParamsForAnalysisFrameworkEdit(token, analysisFramework);
+            })
+            .preLoad(() => {
+            })
+            .postLoad(() => {
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.setAnalysisFramework({
+                        analysisFramework: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return analysisFrameworkSaveRequest;
+    }
+
+    handleSave = () => {
+        if (!this.props.analysisFramework) {
+            return;
+        }
+
+        this.analysisFrameworkSaveRequest = this.createRequestForAnalysisFrameworkSave({
+            analysisFramework: this.props.analysisFramework,
+        });
+        this.analysisFrameworkSaveRequest.start();
     }
 
     render() {
-        const {
-            width,
-            height,
-        } = this.props.boundingClientRect;
+        const { analysisFramework } = this.props;
 
-        const numOfRows = 100;
-        const numOfColumns = 100;
-        const margin = [0, 0];
-        const rowHeight = parseInt((height || 0) / numOfRows, 10);
+        if (!analysisFramework) {
+            return (
+                <div styleName="analysis-framework">
+                    <Helmet>
+                        <title>{ pageTitles.analysisFramework }</title>
+                    </Helmet>
+                    <LoadingAnimation />
+                </div>
+            );
+        }
 
         return (
-            <div styleName="analysis-framework">
-                <Helmet>
-                    <title>{ pageTitles.analysisFramework }</title>
-                </Helmet>
-                <div
-                    styleName="left"
-                >
-                    Widgets
+            <HashRouter>
+                <div styleName="analysis-framework">
+                    <Helmet>
+                        <title>{ pageTitles.analysisFramework }</title>
+                    </Helmet>
+                    <Route
+                        exact
+                        path="/"
+                        component={
+                            () => (
+                                <Redirect to="/overview" />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/overview"
+                        render={props => (
+                            <Overview
+                                {...props}
+                                analysisFramework={analysisFramework}
+                                onSave={this.handleSave}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/list"
+                        render={props => (
+                            <List
+                                {...props}
+                                analysisFramework={analysisFramework}
+                                onSave={this.handleSave}
+                            />
+                        )}
+                    />
                 </div>
-                <div
-                    styleName="right"
-                >
-                    <ReactGridLayout
-                        styleName="grid-layout"
-                        cols={numOfColumns}
-                        margin={margin}
-                        width={width || 0}
-                        rowHeight={rowHeight}
-                        compactType={null}
-                        onDragStop={this.handleItemDragStop}
-                        onResizeStop={this.handleItemResize}
-                        draggableHandle=".drag-handle"
-                    >
-                        { this.getGridItems() }
-                    </ReactGridLayout>
-                </div>
-            </div>
+            </HashRouter>
         );
     }
 }

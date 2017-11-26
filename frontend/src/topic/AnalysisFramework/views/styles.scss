@@ -1,57 +1,132 @@
 @import '../../../stylesheets/base';
 
 .analysis-framework {
-    display: flex;
     padding: $spacing-medium-alt;
     width: 100%;
     height: calc(100vh - #{$height-navbar});
 
-    .left {
-        display: flex;
-        flex-basis: 26%;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-foreground;
+    :global .responsive-wrapper {
+        height: 100%;
     }
 
-    .right {
-        flex-basis: 74%;
-        background-color: $color-foreground-alt;
+    %widget-list {
+        flex-grow: 1;
         overflow-y: auto;
 
-        .grid-layout {
-            min-height: 100%;
-            overflow-y: hidden;
-            overflow-x: auto;
+        .widget-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: $color-background-row;
+            padding: $spacing-small $spacing-medium;
 
-            .grid-item {
-                .header {
-                    display: flex;
-                    flex-shrink: 0;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: $spacing-small $spacing-medium;
+            .title {
+                color: $color-text;
+            }
 
-                    .actions {
-                        font-size: $font-size-large;
+            .actions {
+                background-color: transparent;
+            }
 
-                        .drag-handle {
-                            cursor: grab;
-                            color: $color-text;
-                        }
+            &:nth-child(odd) {
+                background-color: $color-background-row-alt;
+            }
+        }
+    }
 
-                        .close-button {
-                            margin-left: $spacing-small;
-                            color: $color-danger;
-                        }
-                    }
+    %grid-item {
+        .header {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+            padding: $spacing-small $spacing-medium;
+
+            .actions {
+                font-size: $font-size-large;
+
+                .drag-handle {
+                    cursor: grab;
+                    color: $color-text;
                 }
 
-                .content {
-                    flex-grow: 1;
-                    padding: $spacing-medium;
-                    height: calc(100% - 48px);
+                .close-button {
+                    margin-left: $spacing-small;
+                    color: $color-danger;
                 }
+            }
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: $spacing-medium;
+            height: calc(100% - 48px);
+        }
+    }
+
+    .overview {
+        display: flex;
+        height: 100%;
+
+        .left {
+            display: flex;
+            flex-basis: 26%;
+            flex-direction: column;
+            background-color: $color-foreground;
+
+            .header {
+                flex-shrink: 0;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium;
+            }
+
+            .widget-list {
+                @extend %widget-list;
+            }
+
+            .footer {
+                flex-shrink: 0;
+                padding: $spacing-medium;
+            }
+        }
+
+        .right {
+            flex-basis: 74%;
+            background-color: $color-foreground-alt;
+            overflow-y: auto;
+
+            .grid-layout {
+                min-height: 100%;
+                overflow-y: hidden;
+                overflow-x: auto;
+
+                .grid-item {
+                    @extend %grid-item;
+                }
+            }
+        }
+    }
+
+    .list {
+        height: 100%;
+
+        .top {
+            height: 500px;
+
+            .grid-layout {
+                min-height: 100%;
+                overflow-y: hidden;
+                overflow-x: auto;
+
+                .grid-item {
+                    @extend %grid-item;
+                }
+            }
+        }
+
+        .bottom {
+            .widget-list {
+                @extend %widget-list;
             }
         }
     }

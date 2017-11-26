@@ -7,3 +7,4 @@ export * from './regions';
 export * from './token';
 export * from './userGroups';
 export * from './users';
+export * from './analysisFramework';
