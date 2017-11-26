@@ -70,8 +70,11 @@ class Refresher {
     }
 
     load = (loadCallback) => {
-        this.stop();
-        this.loadCallback = loadCallback;
+        if (this.projectsRequest) {
+            this.stop();
+            this.loadCallback = loadCallback;
+            this.projectsRequest.start();
+        }
     }
 
     stop = () => {
