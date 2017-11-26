@@ -1,4 +1,6 @@
 import {
+    SET_LEADS,
+
     SET_ACTIVE_COUNTRY,
     SET_ACTIVE_PROJECT,
 
@@ -437,6 +439,20 @@ const leadViewSetActiveSort = (state, action) => {
     return update(state, settings);
 };
 
+const setLeads = (state, action) => {
+    const { leads, totalLeadsCount, projectId } = action;
+    const settings = {
+        leadPage: {
+            [projectId]: { $auto: {
+                leads: { $set: leads },
+                totalLeadsCount: { $set: totalLeadsCount },
+            } },
+        },
+    };
+
+    return update(state, settings);
+};
+
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
     switch (action.type) {
         case SET_USER_PROJECTS:
@@ -471,6 +487,9 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             return leadViewSetActivePage(state, action);
         case SET_LEAD_PAGE_ACTIVE_SORT:
             return leadViewSetActiveSort(state, action);
+
+        case SET_LEADS:
+            return setLeads(state, action);
         default:
             return state;
     }

@@ -3,17 +3,13 @@ import {
     countriesListSelector,
     currentUserProjectsSelector,
     leadFilterOptionsSelector,
-    leadsSelector,
     projectsSelector,
-    totalLeadsCountSelector,
 } from './domainData';
 
 
 // NOTE: Use these to make sure reference don't change
 const emptyList = [];
 const emptyObject = {};
-
-// Using state
 
 export const addLeadViewFiltersSelector = ({ siloDomainData }) => (
     siloDomainData.addLeadView.filters || emptyObject
@@ -77,18 +73,6 @@ export const projectDetailsSelector = createSelector(
 
 // Selector depending on project id from state (active project)
 
-export const leadsForProjectSelector = createSelector(
-    activeProjectSelector,
-    leadsSelector,
-    (activeProject, leads) => (leads[activeProject] || emptyList),
-);
-
-export const totalLeadsCountForProjectSelector = createSelector(
-    activeProjectSelector,
-    totalLeadsCountSelector,
-    (activeProject, totalLeadsCount) => (totalLeadsCount[activeProject] || 0),
-);
-
 export const leadFilterOptionsForProjectSelector = createSelector(
     activeProjectSelector,
     leadFilterOptionsSelector,
@@ -130,4 +114,14 @@ export const leadPageActivePageSelector = createSelector(
 export const leadPageActiveSortSelector = createSelector(
     leadPageForProjectSelector,
     leadPage => leadPage.activeSort || '-created_at',
+);
+
+export const leadsForProjectSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.leads || emptyList,
+);
+
+export const totalLeadsCountForProjectSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.totalLeadsCount || 0,
 );

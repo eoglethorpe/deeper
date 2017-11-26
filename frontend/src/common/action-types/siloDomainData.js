@@ -14,3 +14,5 @@ export const ADD_LEAD_VIEW_LEAD_PREV = 'domain-data/ADD_LEAD_VIEW_LEAD_PREV';
 export const SET_LEAD_PAGE_FILTER = 'silo-domain-data/SET_LEAD_PAGE_FILTER';
 export const SET_LEAD_PAGE_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
 export const SET_LEAD_PAGE_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
+
+export const SET_LEADS = 'domain-data/SET_LEADS';

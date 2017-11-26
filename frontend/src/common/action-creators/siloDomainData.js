@@ -1,4 +1,6 @@
 import {
+    SET_LEADS,
+
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
 
@@ -94,4 +96,11 @@ export const setLeadPageActivePageAction = ({ activePage }) => ({
 export const setLeadPageActiveSortAction = ({ activeSort }) => ({
     type: SET_LEAD_PAGE_ACTIVE_SORT,
     activeSort,
+});
+
+export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
+    type: SET_LEADS,
+    projectId,
+    leads,
+    totalLeadsCount,
 });

@@ -275,6 +275,8 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             }
             return state;
         }
+
+        // TODO: move these
         case SET_LEADS: {
             const settings = {
                 leads: {
@@ -291,6 +293,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
 
             return update(state, settings);
         }
+        // TODO: upto here
 
         case SET_LEAD_FILTER_OPTIONS: {
             const settings = {
@@ -302,6 +305,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
+
         case SET_REGIONS: {
             const regions = action.regions.reduce((acc, region) => (
                 {

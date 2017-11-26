@@ -59,16 +59,9 @@ const initialDomainDataState = {
     },
 
     // index is project id
-    leads: {
-        1: [
-        ],
-    },
     leadFilterOptions: {
         1: {
         },
-    },
-    totalLeadsCount: {
-        // ???
     },
 
     // index is project id
