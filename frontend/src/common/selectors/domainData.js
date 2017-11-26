@@ -11,6 +11,7 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
+export const leadIdFromProps = (state, { match }) => match.params.leadId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
 
@@ -18,6 +19,15 @@ export const regionIdFromProps = (state, { regionId }) => regionId;
 
 export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
+);
+
+export const allLeadsSelector = createSelector(
+    leadsSelector,
+    leads => (
+        Object.values(leads).reduce((acc, projectLeads) => (
+            acc.concat(Object.values(projectLeads))
+        ), [])
+    ),
 );
 
 export const regionsSelector = ({ domainData }) => (
@@ -139,6 +149,21 @@ export const currentUserProjectsSelector = createSelector(
 );
 
 
+export const currentLeadSelector = createSelector(
+    allLeadsSelector,
+    leadIdFromProps,
+    (leads, leadId) => (
+        leads.find(lead => lead.id === +leadId)
+    ),
+);
+
+export const currentLeadProjectSelector = createSelector(
+    currentLeadSelector,
+    projectsSelector,
+    (lead, projects) => lead && projects[lead.project],
+);
+
+
 export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
@@ -148,5 +173,13 @@ export const currentAnalysisFrameworkSelector = createSelector(
     analysisFrameworksSelector,
     (analysisFrameworkId, analysisFrameworks) => (
         analysisFrameworks[analysisFrameworkId]
+    ),
+);
+
+export const currentLeadAnalysisFrameworkSelector = createSelector(
+    currentLeadProjectSelector,
+    analysisFrameworksSelector,
+    (project, analysisFrameworks) => (
+        project && analysisFrameworks[project.analysisFramework]
     ),
 );

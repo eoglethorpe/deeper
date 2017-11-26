@@ -9,28 +9,71 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
-import styles from './styles.scss';
+import schema from '../../../../common/schema';
+import { RestBuilder } from '../../../../public/utils/rest';
 import { pageTitles } from '../../../../common/utils/labels';
-import {
-    setNavbarStateAction,
-} from '../../../../common/redux';
 
+import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+
+import {
+    leadIdFromProps,
+    currentLeadSelector,
+    currentLeadProjectSelector,
+    currentLeadAnalysisFrameworkSelector,
+    tokenSelector,
+
+    setNavbarStateAction,
+    setAnalysisFramework,
+    setLeadAction,
+    setProjectAction,
+} from '../../../../common/redux';
+import {
+    createParamsForUser,
+    createUrlForAnalysisFramework,
+    createUrlForLead,
+    createUrlForProject,
+} from '../../../../common/rest';
+
+import styles from './styles.scss';
 import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
+    analysisFramework: PropTypes.object, // eslint-disable-line
+    lead: PropTypes.object, // eslint-disable-line
+    leadId: PropTypes.string.isRequired,
+    project: PropTypes.object, // eslint-disable-line
+    token: PropTypes.object.isRequired, // eslint-disable-line
+    setAnalysisFramework: PropTypes.func.isRequired,
+    setLead: PropTypes.func.isRequired,
     setNavbarState: PropTypes.func.isRequired,
+    setProject: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    leads: [],
+    lead: undefined,
+    project: undefined,
+    analysisFramework: undefined,
 };
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+const mapStateToProps = (state, props) => ({
+    analysisFramework: currentLeadAnalysisFrameworkSelector(state, props),
+    lead: currentLeadSelector(state, props),
+    leadId: leadIdFromProps(state, props),
+    project: currentLeadProjectSelector(state, props),
+    token: tokenSelector(state),
 });
 
-@connect(undefined, mapDispatchToProps)
+const mapDispatchToProps = dispatch => ({
+    setAnalysisFramework: params => dispatch(setAnalysisFramework(params)),
+    setLead: params => dispatch(setLeadAction(params)),
+    setNavbarState: params => dispatch(setNavbarStateAction(params)),
+    setProject: params => dispatch(setProjectAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class EditEntryView extends React.PureComponent {
     static propTypes = propTypes;
@@ -53,9 +96,125 @@ export default class EditEntryView extends React.PureComponent {
                 pageTitles.projectPanel,
             ],
         });
+
+        this.leadRequest = this.createRequestForLead(this.props.leadId);
+        this.leadRequest.start();
+    }
+
+    componentWillUnmount() {
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
+
+        if (this.projectRequest) {
+            this.projectRequest.stop();
+        }
+
+        if (this.analysisFrameworkRequest) {
+            this.analysisFrameworkRequest.stop();
+        }
+    }
+
+    createRequestForLead = (leadId) => {
+        const leadRequest = new RestBuilder()
+            .url(createUrlForLead(leadId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({
+                    access,
+                });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'lead');
+                    this.props.setLead({
+                        lead: response,
+                    });
+
+                    this.projectRequest = this.createRequestForProject(response.project);
+                    this.projectRequest.start();
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return leadRequest;
+    }
+
+    createRequestForProject = (projectId) => {
+        const projectRequest = new RestBuilder()
+            .url(createUrlForProject(projectId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForUser({
+                    access,
+                });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectGetResponse');
+                    this.props.setProject({
+                        project: response,
+                    });
+
+                    this.analysisFramework = this.createRequestForAnalysisFramework(
+                        response.analysisFramework,
+                    );
+                    this.analysisFramework.start();
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return projectRequest;
+    };
+
+    createRequestForAnalysisFramework = (analysisFrameworkId) => {
+        const urlForAnalysisFramework = createUrlForAnalysisFramework(
+            analysisFrameworkId,
+        );
+        const analysisFrameworkRequest = new RestBuilder()
+            .url(urlForAnalysisFramework)
+            .params(() => {
+                const { token } = this.props;
+                return createParamsForUser(token);
+            })
+            .preLoad(() => {
+            })
+            .postLoad(() => {
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.setAnalysisFramework({
+                        analysisFramework: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return analysisFrameworkRequest;
     }
 
     render() {
+        const {
+            analysisFramework,
+        } = this.props;
+
+        if (!analysisFramework) {
+            return (
+                <div styleName="edit-entry">
+                    <Helmet>
+                        <title>{ pageTitles.editEntry }</title>
+                    </Helmet>
+                    <LoadingAnimation />
+                </div>
+            );
+        }
+
         return (
             <HashRouter>
                 <div styleName="edit-entry">
@@ -76,6 +235,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <Overview
                                 {...props}
+                                analysisFramework={analysisFramework}
                             />
                         )}
                     />
@@ -84,6 +244,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <List
                                 {...props}
+                                analysisFramework={analysisFramework}
                             />
                         )}
                     />

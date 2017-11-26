@@ -1,6 +1,7 @@
 @import '../../../../stylesheets/base';
 
 .edit-entry {
+    position: relative;
     padding: $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar});
 

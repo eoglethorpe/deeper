@@ -18,27 +18,20 @@ import {
 } from '../../../public/components/View';
 
 import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
-    setAnalysisFramework,
-} from '../../../common/action-creators/domainData';
-import {
-    analysisFrameworkIdFromProps,
-    currentAnalysisFrameworkSelector,
-} from '../../../common/selectors/domainData';
-
-import {
     createParamsForUser,
     createParamsForAnalysisFrameworkEdit,
     createUrlForAnalysisFramework,
 } from '../../../common/rest';
 import {
+    analysisFrameworkIdFromProps,
+    currentAnalysisFrameworkSelector,
     tokenSelector,
+
+    setNavbarStateAction,
+    setAnalysisFramework,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
-
 import Overview from './Overview';
 import List from './List';
 
@@ -89,9 +82,9 @@ export default class AnalysisFramework extends React.PureComponent {
             ],
         });
 
-        this.analysisFrameworkRequest = this.createRequestForAnalysisFramework({
-            analysisFrameworkId: this.props.analysisFrameworkId,
-        });
+        this.analysisFrameworkRequest = this.createRequestForAnalysisFramework(
+            this.props.analysisFrameworkId,
+        );
         this.analysisFrameworkRequest.start();
     }
 
@@ -104,7 +97,7 @@ export default class AnalysisFramework extends React.PureComponent {
         }
     }
 
-    createRequestForAnalysisFramework = ({ analysisFrameworkId }) => {
+    createRequestForAnalysisFramework = (analysisFrameworkId) => {
         const urlForAnalysisFramework = createUrlForAnalysisFramework(
             analysisFrameworkId,
         );
