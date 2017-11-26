@@ -82,7 +82,7 @@ export default class ProjectRegions extends React.PureComponent {
                     className="btn"
                     onClick={() => this.handleRegionClick(region.id)}
                 >
-                    {region.title}{region.id}
+                    {region.title}
                 </TransparentButton>
             </ListItem>
         );

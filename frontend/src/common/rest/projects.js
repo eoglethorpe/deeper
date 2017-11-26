@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, POST, DELETE, commonHeaderForPost, p } from '../config/rest';
+import { wsEndpoint, GET, POST, PATCH, DELETE, commonHeaderForPost, p } from '../config/rest';
 
 export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
 
@@ -20,6 +20,15 @@ export const createParamsForProjects = ({ access }) => ({
         Authorization: `Bearer ${access}`,
         ...commonHeaderForPost,
     },
+});
+
+export const createParamsForProjectPatch = ({ access }, data) => ({
+    method: PATCH,
+    headers: {
+        Authorization: `Bearer ${access}`,
+        ...commonHeaderForPost,
+    },
+    body: JSON.stringify(data),
 });
 
 export const createParamsForProjectCreate = ({ access }, { title, userGroups }) => ({
