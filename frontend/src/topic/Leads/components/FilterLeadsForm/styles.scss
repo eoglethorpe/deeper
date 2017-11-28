@@ -7,11 +7,26 @@ $width-action-button: 16px;
     flex-wrap: wrap;
     align-items: center;
 
+    .text-input {
+        width: auto;
+        padding: 0;
+    }
+
+    :global {
+        .text-input-wrapper {
+            .text-input {
+                input {
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+
     .filter {
         margin: 0 $spacing-small;
     }
 
-    .apply-filter-btn {
+    .filter-btn {
         margin: 0 $spacing-small;
         padding: $spacing-small $spacing-medium;
     }

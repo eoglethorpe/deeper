@@ -15,6 +15,7 @@ import {
     ADD_LEAD_VIEW_LEAD_PREV,
 
     SET_LEAD_PAGE_FILTER,
+    UNSET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
     SET_LEAD_PAGE_ACTIVE_SORT,
 } from '../action-types/siloDomainData';
@@ -395,7 +396,6 @@ const addLeadViewRemoveLead = (state, action) => {
     return update(state, settings);
 };
 
-
 const leadViewSetFilter = (state, action) => {
     const { filters } = action;
     const { activeProject } = state;
@@ -409,6 +409,20 @@ const leadViewSetFilter = (state, action) => {
     };
     return update(state, settings);
 };
+
+const leadViewUnsetFilter = (state) => {
+    const { activeProject } = state;
+    const settings = {
+        leadPage: {
+            [activeProject]: { $auto: {
+                filter: { $auto: { $set: {} } },
+                activePage: { $set: 1 },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 
 const leadViewSetActivePage = (state, action) => {
     const { activePage } = action;
@@ -481,6 +495,8 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
 
         case SET_LEAD_PAGE_FILTER:
             return leadViewSetFilter(state, action);
+        case UNSET_LEAD_PAGE_FILTER:
+            return leadViewUnsetFilter(state, action);
         case SET_LEAD_PAGE_ACTIVE_PAGE:
             return leadViewSetActivePage(state, action);
         case SET_LEAD_PAGE_ACTIVE_SORT:

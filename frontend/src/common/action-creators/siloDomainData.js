@@ -15,6 +15,7 @@ import {
     ADD_LEAD_VIEW_LEAD_PREV,
 
     SET_LEAD_PAGE_FILTER,
+    UNSET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
     SET_LEAD_PAGE_ACTIVE_SORT,
 } from '../action-types/siloDomainData';
@@ -87,6 +88,9 @@ export const setLeadPageFilterAction = ({ filters }) => ({
     filters,
 });
 
+export const unsetLeadPageFilterAction = () => ({
+    type: UNSET_LEAD_PAGE_FILTER,
+});
 
 export const setLeadPageActivePageAction = ({ activePage }) => ({
     type: SET_LEAD_PAGE_ACTIVE_PAGE,
