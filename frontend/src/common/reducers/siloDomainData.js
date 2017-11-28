@@ -397,7 +397,6 @@ const addLeadViewRemoveLead = (state, action) => {
 
 
 const leadViewSetFilter = (state, action) => {
-    console.warn(action);
     const { filters } = action;
     const { activeProject } = state;
     const settings = {
@@ -408,7 +407,6 @@ const leadViewSetFilter = (state, action) => {
             } },
         },
     };
-    console.warn(settings);
     return update(state, settings);
 };
 

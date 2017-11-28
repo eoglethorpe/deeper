@@ -83,6 +83,7 @@ const initialDomainDataState = {
     },
 
     users: {
+        /*
         1: {
             information: {
                 id: 14,
@@ -98,6 +99,7 @@ const initialDomainDataState = {
             ],
             userGroups: [1, 2],
         },
+        */
     },
 
     regions: {
