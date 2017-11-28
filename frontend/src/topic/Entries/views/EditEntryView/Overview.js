@@ -36,6 +36,13 @@ import {
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
+    addEntry: PropTypes.func.isRequired,
+    removeEntry: PropTypes.func.isRequired,
+    leadId: PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+    ]).isRequired,
+    entries: PropTypes.array.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = (state, props) => ({
@@ -73,7 +80,6 @@ export default class Overview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.warn('entries', nextProps.entries);
         this.update(nextProps.analysisFramework);
     }
 

@@ -201,15 +201,9 @@ export default class EditEntryView extends React.PureComponent {
 
     render() {
         const {
-            lead,
-            project,
             analysisFramework,
             leadId,
         } = this.props;
-
-        console.log(lead);
-        console.log(project);
-        console.log(analysisFramework);
 
         if (!analysisFramework) {
             return (

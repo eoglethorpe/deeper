@@ -5,7 +5,6 @@ import {
     currentUserProjectsSelector,
     leadFilterOptionsSelector,
     leadIdFromProps,
-    leadsSelector,
     projectsSelector,
 } from './domainData';
 
