@@ -335,12 +335,15 @@ export default class Categories extends React.PureComponent {
                     closeOnEscape
                     onClose={this.handleEditCategoryModalClose}
                     show={editCategoryModal}
+                    styleName="edit-modal-category"
                 >
                     <ModalHeader
                         title={`${activeSubCategory.title} > ${activeSubSubCategory.title}`}
                     />
                     <ModalBody>
-                        <EditCategoryModal />
+                        <EditCategoryModal
+                            className="edit-category-modal"
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <DangerButton

@@ -110,3 +110,9 @@
         }
     }
 }
+
+.edit-modal-category {
+    :global .modal-content {
+        width: 40vw;
+    }
+}

@@ -52,14 +52,14 @@ export default class KeyWords extends React.PureComponent {
                         <p
                             draggable
                             readOnly
-                            styleName="keywords-words"
+                            styleName="keywords-words-green"
                         >
                             Sickness
                             <span> (331) </span>
                         </p>
                         <br />
                         <span
-                            styleName="keywords-words"
+                            styleName="keywords-words-green"
                             readOnly
                             draggable
                         >
@@ -68,7 +68,7 @@ export default class KeyWords extends React.PureComponent {
                         </span>
                         <br />
                         <span
-                            styleName="keywords-words"
+                            styleName="keywords-words-grey"
                             draggable
                             readOnly
                         >
@@ -77,7 +77,7 @@ export default class KeyWords extends React.PureComponent {
                         </span>
                         <br />
                         <span
-                            styleName="keywords-words"
+                            styleName="keywords-words-green"
                             draggable
                             readOnly
                         >
@@ -86,7 +86,7 @@ export default class KeyWords extends React.PureComponent {
                         </span>
                         <br />
                         <span
-                            styleName="keywords-words"
+                            styleName="keywords-words-grey"
                             draggable
                             readOnly
                         >

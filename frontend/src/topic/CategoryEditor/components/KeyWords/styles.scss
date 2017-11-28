@@ -24,10 +24,22 @@
         .tab {
             padding: $spacing-large;
 
-            .keywords-words {
+            .keywords-words-green {
                 display: inline-block;
                 margin: $spacing-medium;
                 background-color: $color-success;
+                cursor: pointer;
+                padding: $spacing-medium;
+                width: 20%;
+                text-align: center;
+                font-weight: $font-weight-medium;
+
+            }
+
+            .keywords-words-grey {
+                display: inline-block;
+                margin: $spacing-medium;
+                background-color: $color-background-hover;
                 cursor: pointer;
                 padding: $spacing-medium;
                 width: 20%;
