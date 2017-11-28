@@ -107,6 +107,7 @@ export default class AnalysisFramework extends React.PureComponent {
                 const { token } = this.props;
                 return createParamsForUser(token);
             })
+            .retryTime(1000)
             .preLoad(() => {
             })
             .postLoad(() => {
@@ -135,6 +136,8 @@ export default class AnalysisFramework extends React.PureComponent {
                 const { token } = this.props;
                 return createParamsForAnalysisFrameworkEdit(token, analysisFramework);
             })
+            .retryTime(2000)
+            .maxRetryAttempts(3)
             .preLoad(() => {
             })
             .postLoad(() => {

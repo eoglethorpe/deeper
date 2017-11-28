@@ -27,6 +27,9 @@ import {
     ADD_ANALYSIS_FRAMEWORK_WIDGET,
     REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
     UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
+
+    ADD_ENTRY,
+    REMOVE_ENTRY,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -152,6 +155,19 @@ export const updateAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) =
     widget,
 });
 
+export const addEntryAction = ({ leadId, entry }) => ({
+    type: ADD_ENTRY,
+    leadId,
+    entry,
+});
+
+export const removeEntryAction = ({ leadId, entryId }) => ({
+    type: REMOVE_ENTRY,
+    leadId,
+    entryId,
+});
+
 export const dummyAction = () => ({
     type: DUMMY_ACTION,
 });
+

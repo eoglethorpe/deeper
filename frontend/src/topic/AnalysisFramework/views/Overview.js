@@ -11,12 +11,13 @@ import {
 } from 'react-router-dom';
 
 import {
-    Responsive,
-} from '../../../public/components/General';
+    TransparentButton,
+    Button,
+} from '../../../public/components/Action';
 
 import {
-    TransparentButton,
-} from '../../../public/components/Action';
+    SelectInput,
+} from '../../../public/components/Input';
 
 import {
     randomString,
@@ -31,11 +32,6 @@ import widgetStore from '../widgetStore';
 import styles from './styles.scss';
 
 const propTypes = {
-    boundingClientRect: PropTypes.shape({
-        width: PropTypes.number,
-        height: PropTypes.number,
-    }).isRequired,
-
     analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
     addWidget: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
@@ -47,7 +43,6 @@ const mapDispatchToProps = dispatch => ({
     updateWidget: params => dispatch(updateAnalysisFrameworkWidget(params)),
 });
 
-@Responsive
 @connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
@@ -56,6 +51,20 @@ export default class Overview extends React.PureComponent {
     constructor(props) {
         super(props);
         this.update(props.analysisFramework);
+
+        this.state = {
+            gridLayoutBoundingRect: {},
+        };
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            if (this.gridLayoutContainer) {
+                this.setState({
+                    gridLayoutBoundingRect: this.gridLayoutContainer.getBoundingClientRect(),
+                });
+            }
+        }, 0);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -185,7 +194,7 @@ export default class Overview extends React.PureComponent {
         const {
             width,
             height,
-        } = this.props.boundingClientRect;
+        } = this.state.gridLayoutBoundingRect;
 
         const numOfRows = 100;
         const numOfColumns = 100;
@@ -247,8 +256,47 @@ export default class Overview extends React.PureComponent {
                     </footer>
                 </div>
                 <div
+                    ref={(el) => { this.gridLayoutContainer = el; }}
                     styleName="right"
                 >
+                    <header
+                        styleName="header"
+                    >
+                        <div
+                            styleName="entry-actions"
+                        >
+                            <SelectInput
+                                disabled
+                                showHintAndError={false}
+                                showLabel={false}
+                                options={[]}
+                            />
+                            <TransparentButton
+                                disabled
+                            >
+                                +
+                            </TransparentButton>
+                            <TransparentButton
+                                disabled
+                            >
+                                -
+                            </TransparentButton>
+                        </div>
+                        <div
+                            styleName="action-buttons"
+                        >
+                            <Button
+                                disabled
+                            >
+                                Goto list
+                            </Button>
+                            <Button
+                                disabled
+                            >
+                                Save
+                            </Button>
+                        </div>
+                    </header>
                     <ReactGridLayout
                         styleName="grid-layout"
                         cols={numOfColumns}

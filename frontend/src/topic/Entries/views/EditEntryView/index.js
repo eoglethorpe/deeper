@@ -202,6 +202,7 @@ export default class EditEntryView extends React.PureComponent {
     render() {
         const {
             analysisFramework,
+            match,
         } = this.props;
 
         if (!analysisFramework) {
@@ -235,6 +236,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <Overview
                                 {...props}
+                                leadId={match.params.leadId}
                                 analysisFramework={analysisFramework}
                             />
                         )}
@@ -244,6 +246,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <List
                                 {...props}
+                                leadId={match.params.leadId}
                                 analysisFramework={analysisFramework}
                             />
                         )}

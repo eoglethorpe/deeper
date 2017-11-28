@@ -27,6 +27,9 @@ import {
     ADD_ANALYSIS_FRAMEWORK_WIDGET,
     REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
     UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
+
+    ADD_ENTRY,
+    REMOVE_ENTRY,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -466,6 +469,41 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
+
+        case ADD_ENTRY: {
+            const entry = action.entry;
+            const leadId = action.leadId;
+
+            const settings = {
+                entries: { $auto: {
+                    [leadId]: { $autoArray: {
+                        $push: [entry],
+                    } },
+                } },
+            };
+
+            return update(state, settings);
+        }
+
+        case REMOVE_ENTRY: {
+            const entryId = action.entryId;
+            const leadId = action.leadId;
+
+            const entryIndex = state.entries[leadId].findIndex(
+                d => d.id === entryId,
+            );
+
+            const settings = {
+                entries: { $auto: {
+                    [leadId]: { $autoArray: {
+                        $splice: [[entryIndex, 1]],
+                    } },
+                } },
+            };
+
+            return update(state, settings);
+        }
+
         default:
             return state;
     }

@@ -53,6 +53,34 @@
             background-color: $color-foreground-alt;
             overflow-y: auto;
 
+            >.header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                left: 0;
+                align-items: center;
+                justify-content: space-between;
+                z-index: 11;
+                border-bottom: $width-separator-thin solid $color-separator;
+                background-color: $color-background-header;
+                padding: $spacing-small $spacing-medium;
+                width: 100%;
+
+                .entry-actions {
+                    display: flex;
+
+                    >* {
+                        margin-right: $spacing-small;
+                    }
+                }
+
+                .action-buttons {
+                    .save-button {
+                        margin-left: $spacing-medium;
+                    }
+                }
+            }
+
             .grid-layout {
                 min-height: 100%;
                 overflow-y: hidden;
@@ -71,6 +99,10 @@
 }
 
 :global {
+    #select-options-container {
+        z-index: 11;
+    }
+
     .react-grid-layout {
         position: relative;
     }

@@ -25,6 +25,7 @@ body {
         ::-webkit-scrollbar {
             background-color: $color-background-scrollbar;
             width: $spacing-small;
+            height: $spacing-small;
         }
 
         ::-webkit-scrollbar-thumb {

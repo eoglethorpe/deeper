@@ -93,12 +93,33 @@
         .right {
             flex-basis: 74%;
             background-color: $color-foreground-alt;
-            overflow-y: auto;
+            overflow: auto;
+
+            >.header {
+                display: flex;
+                position: sticky;
+                top: 0;
+                left: 0;
+                align-items: center;
+                justify-content: space-between;
+                z-index: 11;
+                border-bottom: $width-separator-thin solid $color-separator;
+                background-color: $color-background-header;
+                padding: $spacing-small $spacing-medium;
+                width: 100%;
+
+                .entry-actions {
+                    display: flex;
+                }
+
+                .action-buttons {
+                    align-self: center;
+                }
+            }
 
             .grid-layout {
                 min-height: 100%;
-                overflow-y: hidden;
-                overflow-x: auto;
+                overflow: visible;
 
                 .grid-item {
                     @extend %grid-item;

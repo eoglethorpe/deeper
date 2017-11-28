@@ -21,13 +21,8 @@ export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
 );
 
-export const allLeadsSelector = createSelector(
-    leadsSelector,
-    leads => (
-        Object.values(leads).reduce((acc, projectLeads) => (
-            acc.concat(Object.values(projectLeads))
-        ), [])
-    ),
+export const entriesSelector = ({ domainData }) => (
+    domainData.entries || emptyObject
 );
 
 export const regionsSelector = ({ domainData }) => (
@@ -149,21 +144,6 @@ export const currentUserProjectsSelector = createSelector(
 );
 
 
-export const currentLeadSelector = createSelector(
-    allLeadsSelector,
-    leadIdFromProps,
-    (leads, leadId) => (
-        leads.find(lead => lead.id === +leadId)
-    ),
-);
-
-export const currentLeadProjectSelector = createSelector(
-    currentLeadSelector,
-    projectsSelector,
-    (lead, projects) => lead && projects[lead.project],
-);
-
-
 export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
@@ -176,10 +156,8 @@ export const currentAnalysisFrameworkSelector = createSelector(
     ),
 );
 
-export const currentLeadAnalysisFrameworkSelector = createSelector(
-    currentLeadProjectSelector,
-    analysisFrameworksSelector,
-    (project, analysisFrameworks) => (
-        project && analysisFrameworks[project.analysisFramework]
-    ),
+export const entriesForLeadSelector = createSelector(
+    entriesSelector,
+    leadIdFromProps,
+    (entries, leadId) => (entries[leadId] || emptyList),
 );
