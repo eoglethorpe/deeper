@@ -351,6 +351,7 @@ export default class Navbar extends React.PureComponent {
                         options={this.props.userProjects}
                         value={activeProject}
                         onChange={this.onSelectChangeHandler}
+                        clearable={false}
                     />
                 }
                 <ListView

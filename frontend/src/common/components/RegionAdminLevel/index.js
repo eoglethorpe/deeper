@@ -43,7 +43,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     adminLevelList: adminLevelForRegionSelector(state, props),
-    state,
 });
 
 const mapDispatchToProps = dispatch => ({

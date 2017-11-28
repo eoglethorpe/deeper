@@ -101,18 +101,15 @@ export default class AddLeadForm extends React.PureComponent {
         };
     }
 
-    handlePrev = (e) => {
-        e.preventDefault();
+    handlePrev = () => {
         this.props.onPrev();
     }
 
-    handleNext = (e) => {
-        e.preventDefault();
+    handleNext = () => {
         this.props.onNext();
     }
 
-    handleRemove = (e) => {
-        e.preventDefault();
+    handleRemove = () => {
         this.props.onRemove();
     }
 
@@ -157,18 +154,23 @@ export default class AddLeadForm extends React.PureComponent {
                     <NonFieldErrors errors={errors} />
                     <div styleName="action-buttons">
                         <PrimaryButton
+                            type="button"
                             disabled={!this.props.addLeadViewCanPrev}
                             onClick={this.handlePrev}
                         >
                             Prev
                         </PrimaryButton>
                         <PrimaryButton
+                            type="button"
                             disabled={!this.props.addLeadViewCanNext}
                             onClick={this.handleNext}
                         >
                             Next
                         </PrimaryButton>
-                        <DangerButton onClick={this.handleRemove} >
+                        <DangerButton
+                            type="button"
+                            onClick={this.handleRemove}
+                        >
                             Remove
                         </DangerButton>
                         <SuccessButton disabled={pending || !stale || !ready} >

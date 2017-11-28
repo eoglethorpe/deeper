@@ -176,8 +176,7 @@ export default class UserGroupAdd extends React.PureComponent {
     };
 
     // BUTTONS
-    handleFormClose = (e) => {
-        e.preventDefault();
+    handleFormClose = () => {
         this.props.handleModalClose();
     }
 
@@ -214,6 +213,7 @@ export default class UserGroupAdd extends React.PureComponent {
                 />
                 <div styleName="action-buttons">
                     <DangerButton
+                        type="button"
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >

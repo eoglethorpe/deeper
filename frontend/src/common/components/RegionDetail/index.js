@@ -227,9 +227,8 @@ export default class RegionDetail extends React.PureComponent {
         this.regionDetailPatchRequest.start();
     };
 
-    handleFormCancel = (e) => {
+    handleFormCancel = () => {
         // TODO: use prompt
-        e.preventDefault();
         this.resetForm(this.props);
     }
 
@@ -264,6 +263,7 @@ export default class RegionDetail extends React.PureComponent {
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="action-buttons">
                         <DangerButton
+                            type="button"
                             onClick={this.handleFormCancel}
                             disabled={pending || !stale}
                         >
