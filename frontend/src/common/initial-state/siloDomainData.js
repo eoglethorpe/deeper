@@ -75,6 +75,8 @@ const initialSiloDomainData = {
             activeSort: '-created_at',
             activePage: 1,
             filters: {},
+            leads: [],
+            totalLeadsCount: {},
         },
         */
     },

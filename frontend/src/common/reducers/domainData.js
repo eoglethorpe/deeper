@@ -21,7 +21,6 @@ import {
     SET_REGIONS,
     SET_REGION_DETAILS,
 
-    SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
@@ -275,22 +274,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             }
             return state;
         }
-        case SET_LEADS: {
-            const settings = {
-                leads: {
-                    [action.projectId]: { $autoArray: {
-                        $set: action.leads,
-                    } },
-                },
-                totalLeadsCount: {
-                    [action.projectId]: { $auto: {
-                        $set: action.totalLeadsCount,
-                    } },
-                },
-            };
-
-            return update(state, settings);
-        }
 
         case SET_LEAD_FILTER_OPTIONS: {
             const settings = {
@@ -302,6 +285,7 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             };
             return update(state, settings);
         }
+
         case SET_REGIONS: {
             const regions = action.regions.reduce((acc, region) => (
                 {

@@ -21,7 +21,6 @@ import {
     REMOVE_PROJECT_REGION,
     UNSET_REGION,
 
-    SET_LEADS,
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
@@ -98,13 +97,6 @@ export const unSetMembershipAction = ({ membershipId, userGroupId }) => ({
 export const unSetRegionAction = ({ regionId }) => ({
     type: UNSET_REGION,
     regionId,
-});
-
-export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
-    type: SET_LEADS,
-    projectId,
-    leads,
-    totalLeadsCount,
 });
 
 export const setLeadFilterOptionsAction = ({ projectId, leadFilterOptions }) => ({

@@ -146,6 +146,7 @@ export default class AddLeadFormItem extends React.PureComponent {
             leadId,
             formErrors,
             formFieldErrors,
+            uiState: { stale: false },
         });
     }
 

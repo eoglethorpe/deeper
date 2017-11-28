@@ -368,14 +368,7 @@ export default class AddLeadView extends React.PureComponent {
                 lead={lead}
                 leadOptions={leadOptions}
                 activeLeadId={activeLeadId}
-
                 uploadCoordinator={this.uploadCoordinator}
-
-                onChange={this.handleFormChange}
-                onFailure={this.handleFormFailure}
-                onSuccess={this.handleFormSuccess}
-                onPrev={this.handleLeadPrev}
-                onNext={this.handleLeadNext}
             />
         );
     }

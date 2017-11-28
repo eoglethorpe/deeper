@@ -16,8 +16,8 @@ export const regionIdFromProps = (state, { regionId }) => regionId;
 
 // Using state
 
-export const leadsSelector = ({ domainData }) => (
-    domainData.leads || emptyObject
+export const leadFilterOptionsSelector = ({ domainData }) => (
+    domainData.leadFilterOptions || emptyObject
 );
 
 export const regionsSelector = ({ domainData }) => (
@@ -43,13 +43,6 @@ export const projectsSelector = ({ domainData }) => (
 
 export const groupsSelector = ({ domainData }) => (
     domainData.userGroups || emptyObject
-);
-
-export const totalLeadsCountSelector = ({ domainData }) => (
-    domainData.totalLeadsCount || emptyObject
-);
-export const leadFilterOptionsSelector = ({ domainData }) => (
-    domainData.leadFilterOptions || emptyObject
 );
 
 export const adminLevelForRegionSelector = createSelector(

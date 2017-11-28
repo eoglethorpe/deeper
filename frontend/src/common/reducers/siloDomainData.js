@@ -1,4 +1,6 @@
 import {
+    SET_LEADS,
+
     SET_ACTIVE_COUNTRY,
     SET_ACTIVE_PROJECT,
 
@@ -400,7 +402,7 @@ const leadViewSetFilter = (state, action) => {
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
-                filter: { $set: filters },
+                filter: { $auto: { $merge: filters } },
                 activePage: { $set: 1 },
             } },
         },
@@ -432,6 +434,20 @@ const leadViewSetActiveSort = (state, action) => {
             } },
         },
     };
+    return update(state, settings);
+};
+
+const setLeads = (state, action) => {
+    const { leads, totalLeadsCount, projectId } = action;
+    const settings = {
+        leadPage: {
+            [projectId]: { $auto: {
+                leads: { $set: leads },
+                totalLeadsCount: { $set: totalLeadsCount },
+            } },
+        },
+    };
+
     return update(state, settings);
 };
 
@@ -469,6 +485,9 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             return leadViewSetActivePage(state, action);
         case SET_LEAD_PAGE_ACTIVE_SORT:
             return leadViewSetActiveSort(state, action);
+
+        case SET_LEADS:
+            return setLeads(state, action);
         default:
             return state;
     }

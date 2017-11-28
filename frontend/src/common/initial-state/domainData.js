@@ -59,16 +59,9 @@ const initialDomainDataState = {
     },
 
     // index is project id
-    leads: {
-        1: [
-        ],
-    },
     leadFilterOptions: {
         1: {
         },
-    },
-    totalLeadsCount: {
-        // ???
     },
 
     // index is project id
@@ -90,6 +83,7 @@ const initialDomainDataState = {
     },
 
     users: {
+        /*
         1: {
             information: {
                 id: 14,
@@ -105,6 +99,7 @@ const initialDomainDataState = {
             ],
             userGroups: [1, 2],
         },
+        */
     },
 
     regions: {

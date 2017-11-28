@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button, TransparentButton } from '../../../../public/components/Action';
+import { Button, DangerButton } from '../../../../public/components/Action';
 import {
     Form,
     SelectInput,
@@ -21,6 +21,8 @@ import {
     activeProjectSelector,
     leadFilterOptionsForProjectSelector,
 
+    setLeadPageFilterAction,
+
     tokenSelector,
 
     setLeadFilterOptionsAction,
@@ -31,13 +33,13 @@ import styles from './styles.scss';
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
     className: PropTypes.string,
-    onSubmit: PropTypes.func.isRequired,
     setLeadFilterOptions: PropTypes.func.isRequired,
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line 
     value:  PropTypes.object.isRequired, // eslint-disable-line
+    setLeadPageFilter: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -52,6 +54,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
+    setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -88,16 +91,17 @@ export default class FilterLeadsForm extends React.PureComponent {
         if (this.props.value !== value) {
             this.setState({ formValues: value });
         }
+
         if (this.props.activeProject !== activeProject) {
             this.requestProjectLeadFilterOptions(activeProject);
         }
     }
 
-    clearSimilarselection = () => {
-        this.handleChange({
-            selected: undefined,
-        });
+    componentWillUnmount() {
+        this.leadFilterOptionsRequest.stop();
     }
+
+    // REST
 
     requestProjectLeadFilterOptions = (activeProject) => {
         if (this.leadFilterOptionsRequest) {
@@ -121,6 +125,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     access,
                 });
             })
+            .retryTime(1000)
             .preLoad(() => {
                 this.setState({ loadingLeadFilters: true });
             })
@@ -139,11 +144,12 @@ export default class FilterLeadsForm extends React.PureComponent {
                     console.error(er);
                 }
             })
-            .retryTime(1000)
             .build();
 
         return leadFilterOptionsRequest;
     }
+
+    // UI
 
     handleChange = (values) => {
         this.setState({
@@ -153,10 +159,17 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     handleSubmit = (values) => {
-        this.setState({
-            stale: false,
+        this.setState({ stale: false });
+        this.props.setLeadPageFilter({
+            filters: values,
         });
-        this.props.onSubmit(values);
+    }
+
+    handleClearSimilarSelection = (e) => {
+        e.preventDefault();
+        this.props.setLeadPageFilter({
+            filters: { similar: undefined },
+        });
     }
 
     render() {
@@ -185,9 +198,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 elements={this.formElements}
             >
                 <SelectInput
+                    label="Assigned to"
+                    showLabel
+                    placeholder="Anybody"
                     formname="assignee"
                     options={assignee}
-                    placeholder="Assigned to"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
@@ -195,59 +210,57 @@ export default class FilterLeadsForm extends React.PureComponent {
                     multiple
                 />
                 <DateFilter
+                    label="Created at"
+                    showLabel
+                    placeholder="Anytime"
                     formname="created_at"
-                    placeholder="Created at"
                     styleName="filter"
                     value={formValues.created_at}
                 />
                 <DateFilter
+                    label="Published on"
+                    showLabel
+                    placeholder="Anytime"
                     formname="published_on"
-                    placeholder="Published on"
                     styleName="filter"
                     value={formValues.published_on}
                 />
                 <SelectInput
+                    label="Confidentiality"
+                    showLabel
+                    placeholder="Any"
                     formname="confidentiality"
                     options={confidentiality}
-                    placeholder="Confidentiality"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
                     value={formValues.confidentiality}
                 />
                 <SelectInput
+                    label="Status"
+                    showLabel
+                    placeholder="Any"
                     formname="status"
                     options={status}
-                    placeholder="Status"
                     styleName="filter"
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
                     value={formValues.status}
                 />
-                <div
-                    styleName="filter"
-                    hidden={isTruthy(formValues.similarLead)}
-                >
-                    {formValues.similarLead}
-                </div>
-                {isTruthy(formValues.similar) && (
-                    <div
-                        styleName="filter similar"
-                    >
-                        Showing similar leads
-                        <TransparentButton
-                            onClick={this.clearSimilarselection}
-                        >
-                            <span className="ion-android-close" />
-                        </TransparentButton>
-                    </div>
-                )}
                 <Button
                     styleName="apply-filter-btn"
                     disabled={!stale}
                 >
                     Apply Filter
                 </Button>
+                {isTruthy(this.props.value.similar) && (
+                    <DangerButton
+                        styleName="apply-filter-btn"
+                        onClick={this.handleClearSimilarSelection}
+                    >
+                        Clear Similarity Filter
+                    </DangerButton>
+                )}
             </Form>
         );
     }
