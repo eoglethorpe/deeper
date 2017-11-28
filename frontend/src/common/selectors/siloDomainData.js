@@ -1,8 +1,11 @@
 import { createSelector } from 'reselect';
 import {
+    analysisFrameworksSelector,
     countriesListSelector,
     currentUserProjectsSelector,
     leadFilterOptionsSelector,
+    leadIdFromProps,
+    leadsSelector,
     projectsSelector,
 } from './domainData';
 
@@ -124,4 +127,30 @@ export const leadsForProjectSelector = createSelector(
 export const totalLeadsCountForProjectSelector = createSelector(
     leadPageForProjectSelector,
     leadPage => leadPage.totalLeadsCount || 0,
+);
+
+export const editEntryViewLeadSelector = ({ siloDomainData }) => (
+    siloDomainData.editEntryView.lead
+);
+
+export const editEntryViewCurrentLeadSelector = createSelector(
+    editEntryViewLeadSelector,
+    leadIdFromProps,
+    (lead, leadId) => (
+        (lead.id === +leadId) ? lead : undefined
+    ),
+);
+
+export const editEntryViewCurrentProjectSelector = createSelector(
+    editEntryViewCurrentLeadSelector,
+    projectsSelector,
+    (lead, projects) => lead && projects[lead.project],
+);
+
+export const editEntryViewCurrentAnalysisFrameworkSelector = createSelector(
+    editEntryViewCurrentProjectSelector,
+    analysisFrameworksSelector,
+    (project, analysisFrameworks) => (
+        project && analysisFrameworks[project.analysisFramework]
+    ),
 );

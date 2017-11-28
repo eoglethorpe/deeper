@@ -18,6 +18,8 @@ import {
     UNSET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
     SET_LEAD_PAGE_ACTIVE_SORT,
+
+    SET_EDIT_ENTRY_VIEW_LEAD,
 } from '../action-types/siloDomainData';
 
 import {
@@ -461,7 +463,17 @@ const setLeads = (state, action) => {
             } },
         },
     };
+    return update(state, settings);
+};
 
+const editEntryViewSetLead = (state, action) => {
+    const settings = {
+        editEntryView: {
+            lead: {
+                $set: action.lead,
+            },
+        },
+    };
     return update(state, settings);
 };
 
@@ -501,9 +513,10 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             return leadViewSetActivePage(state, action);
         case SET_LEAD_PAGE_ACTIVE_SORT:
             return leadViewSetActiveSort(state, action);
-
         case SET_LEADS:
             return setLeads(state, action);
+        case SET_EDIT_ENTRY_VIEW_LEAD:
+            return editEntryViewSetLead(state, action);
         default:
             return state;
     }

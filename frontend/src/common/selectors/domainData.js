@@ -143,7 +143,6 @@ export const currentUserProjectsSelector = createSelector(
     ) || emptyList),
 );
 
-
 export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );

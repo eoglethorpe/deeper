@@ -19,14 +19,14 @@ import {
 
 import {
     leadIdFromProps,
-    currentLeadSelector,
-    currentLeadProjectSelector,
-    currentLeadAnalysisFrameworkSelector,
+    editEntryViewCurrentLeadSelector,
+    editEntryViewCurrentProjectSelector,
+    editEntryViewCurrentAnalysisFrameworkSelector,
     tokenSelector,
 
     setNavbarStateAction,
     setAnalysisFramework,
-    setLeadAction,
+    setEditEntryViewLeadAction,
     setProjectAction,
 } from '../../../../common/redux';
 import {
@@ -59,16 +59,16 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    analysisFramework: currentLeadAnalysisFrameworkSelector(state, props),
-    lead: currentLeadSelector(state, props),
+    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
+    lead: editEntryViewCurrentLeadSelector(state, props),
     leadId: leadIdFromProps(state, props),
-    project: currentLeadProjectSelector(state, props),
+    project: editEntryViewCurrentProjectSelector(state, props),
     token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAnalysisFramework(params)),
-    setLead: params => dispatch(setLeadAction(params)),
+    setLead: params => dispatch(setEditEntryViewLeadAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
@@ -201,9 +201,15 @@ export default class EditEntryView extends React.PureComponent {
 
     render() {
         const {
+            lead,
+            project,
             analysisFramework,
-            match,
+            leadId,
         } = this.props;
+
+        console.log(lead);
+        console.log(project);
+        console.log(analysisFramework);
 
         if (!analysisFramework) {
             return (
@@ -236,7 +242,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <Overview
                                 {...props}
-                                leadId={match.params.leadId}
+                                leadId={leadId}
                                 analysisFramework={analysisFramework}
                             />
                         )}
@@ -246,7 +252,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <List
                                 {...props}
-                                leadId={match.params.leadId}
+                                leadId={leadId}
                                 analysisFramework={analysisFramework}
                             />
                         )}
