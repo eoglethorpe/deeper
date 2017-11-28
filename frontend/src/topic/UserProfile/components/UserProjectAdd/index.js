@@ -216,6 +216,7 @@ export default class UserProjectAdd extends React.PureComponent {
                 <div styleName="action-buttons">
                     <DangerButton
                         type="button"
+                        onClick={this.handleFormClose}
                         disabled={pending}
                     >
                         Cancel

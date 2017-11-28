@@ -314,6 +314,7 @@ export default class UserEdit extends React.PureComponent {
                 />
                 <div styleName="action-buttons">
                     <DangerButton
+                        onClick={this.handleFormClose}
                         type="button"
                         disabled={pending}
                     >
