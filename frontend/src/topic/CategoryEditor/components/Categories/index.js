@@ -1,8 +1,8 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './styles.scss';
 import KeyWords from '../../components/KeyWords';
-import EditCategoryModal from '../EditCategoryModal';
 
 import {
     TextInput,
@@ -29,70 +29,70 @@ export default class Categories extends React.PureComponent {
             subCategoryData: [
                 {
                     id: 1,
-                    title: 'WASH',
+                    title: 'wash',
                 },
                 {
                     id: 2,
-                    title: 'FOOD',
+                    title: 'food',
                 },
                 {
                     id: 3,
-                    title: 'SHELTER',
+                    title: 'shelter',
                 },
                 {
                     id: 4,
-                    title: 'NFI',
+                    title: 'nfi',
                 },
                 {
                     id: 5,
-                    title: 'PROTECTION',
+                    title: 'protection',
                 },
             ],
             subSubCategoryData: [
                 {
                     id: 1,
-                    title: 'WATER',
+                    title: 'water',
                 },
                 {
                     id: 2,
-                    title: 'SANITATION',
+                    title: 'sanitation',
                 },
                 {
                     id: 3,
-                    title: 'HYGIENE',
+                    title: 'hygiene',
                 },
                 {
                     id: 4,
-                    title: 'VECTOR CONTROL',
+                    title: 'vector control',
                 },
                 {
                     id: 5,
-                    title: 'WASTE MANAGEMENT',
+                    title: 'waste management',
                 },
                 {
                     id: 6,
-                    title: 'DISEASES',
+                    title: 'diseases',
                 },
                 {
                     id: 7,
-                    title: 'WATER',
+                    title: 'bad water',
                 },
                 {
                     id: 8,
-                    title: 'SANITATION',
+                    title: 'sanitation',
                 },
                 {
                     id: 9,
-                    title: 'HYGIENE',
+                    title: 'dysentery',
                 },
             ],
             activeSubCategory: {
                 id: 1,
-                title: 'WASH',
+                title: 'wash',
             },
             activeSubSubCategory: {
                 id: 1,
-                title: 'WATER',
+                title: 'water',
             },
             editCategoryModal: false,
         };
@@ -184,20 +184,6 @@ export default class Categories extends React.PureComponent {
         });
     }
 
-    // Edit Category Modal
-
-    handleEditCategoryModalClose = () => {
-        this.setState({
-            editCategoryModal: false,
-        });
-    }
-
-    handleEditCategoryModalShow = () => {
-        this.setState({
-            editCategoryModal: true,
-        });
-    }
-
     render() {
         const {
             addNewSubCategory,
@@ -208,7 +194,6 @@ export default class Categories extends React.PureComponent {
             subSubCategoryData,
             newSubSubCategoryInputValue,
             activeSubSubCategory,
-            editCategoryModal,
         } = this.state;
 
         return (
@@ -229,9 +214,11 @@ export default class Categories extends React.PureComponent {
                                     >
                                         {d.title}
                                     </div>
-                                    <span
-                                        className={`${activeSubCategory.id === d.id ? 'ion-chevron-right' : ''}`}
-                                    />
+                                    <div styleName="icon-btn">
+                                        <span
+                                            className={`${activeSubCategory.id === d.id ? 'ion-chevron-right' : ''}`}
+                                        />
+                                    </div>
                                 </div>
                             ))
                         }
@@ -255,11 +242,16 @@ export default class Categories extends React.PureComponent {
                                     >
                                         {d.title}
                                     </div>
-                                    <span
-                                        className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
-                                        onClick={this.handleEditCategoryModalShow}
-                                        role="presentation"
-                                    />
+                                    <div styleName="icon-btn">
+                                        <Link
+                                            title="Edit Sub Category"
+                                            className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
+                                            to={`/edit/${activeSubCategory.title}/${d.title}/`}
+                                        />
+                                        <span
+                                            className={`${activeSubSubCategory.id === d.id ? 'ion-android-delete' : ''}`}
+                                        />
+                                    </div>
                                 </div>
                             ))
                         }
@@ -328,33 +320,6 @@ export default class Categories extends React.PureComponent {
                             onClick={this.handleAddNewSubSubCategory}
                         >
                             Add
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleEditCategoryModalClose}
-                    show={editCategoryModal}
-                    styleName="edit-modal-category"
-                >
-                    <ModalHeader
-                        title={`${activeSubCategory.title} > ${activeSubSubCategory.title}`}
-                    />
-                    <ModalBody>
-                        <EditCategoryModal
-                            className="edit-category-modal"
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <DangerButton
-                            onClick={this.handleEditCategoryModalClose}
-                        >
-                            Cancel
-                        </DangerButton>
-                        <PrimaryButton
-                            onClick={this.handleAddNewSubSubCategory}
-                        >
-                            Save
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

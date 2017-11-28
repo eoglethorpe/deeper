@@ -3,33 +3,33 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+    Redirect,
+    Route,
+    HashRouter,
+} from 'react-router-dom';
 
 import { pageTitles } from '../../../common/utils/labels';
+
 import {
     setNavbarStateAction,
 } from '../../../common/action-creators/navbar';
-import {
-    currentUserProjectsSelector,
-} from '../../../common/selectors/domainData';
-
-import {
-    activeProjectSelector,
-} from '../../../common/selectors/siloDomainData';
 
 import styles from './styles.scss';
 
-import DocumentView from './DocumentView';
-import CategoryView from './CategoryView';
-
+import Overview from './Overview';
+import EditCategoryPage from '../components/EditCategoryPage';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
+};
+
+const defaultProps = {
+    analysisFramework: undefined,
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    currentUserProjects: currentUserProjectsSelector(state),
+    state,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -40,6 +40,7 @@ const mapDispatchToProps = dispatch => ({
 @CSSModules(styles, { allowMultiple: true })
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     componentWillMount() {
         this.props.setNavbarState({
@@ -62,17 +63,38 @@ export default class CategoryEditor extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="category-editor">
-                <Helmet>
-                    <title>{ pageTitles.categoryEditor }</title>
-                </Helmet>
-                <DocumentView
-                    className="left"
-                />
-                <CategoryView
-                    className="right"
-                />
-            </div>
+            <HashRouter>
+                <div styleName="category-editor">
+                    <Helmet>
+                        <title>{ pageTitles.analysisFramework }</title>
+                    </Helmet>
+                    <Route
+                        exact
+                        path="/"
+                        component={
+                            () => (
+                                <Redirect to="/overview" />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/overview"
+                        render={props => (
+                            <Overview
+                                {...props}
+                            />
+                        )}
+                    />
+                    <Route
+                        path="/edit"
+                        render={props => (
+                            <EditCategoryPage
+                                {...props}
+                            />
+                        )}
+                    />
+                </div>
+            </HashRouter>
         );
     }
 }

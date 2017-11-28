@@ -2,108 +2,111 @@
 @import '../../../stylesheets/modal';
 
 .category-editor {
-
-    display: flex;
     padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
 
-    .left {
+    .overview {
         display: flex;
-        flex-basis: 30%;
-        flex-direction: column;
-        background-color: $color-foreground-alt;
-        height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
-        overflow-y: hidden;
+        height: 100%;
 
-        .header {
+        .left {
             display: flex;
-            position: relative;
-            flex-shrink: 0;
-            background-color: $color-background-header;
-            padding: $spacing-medium $spacing-medium-alt;
-        }
-
-        .preview-container {
-            display: flex;
-            flex-grow: 1;
-            align-items: center;
-            justify-content: center;
+            flex-basis: 30%;
+            flex-direction: column;
             background-color: $color-foreground-alt;
-            overflow-y: auto;
+            overflow-y: hidden;
 
-            h1 {
-                color: $color-text-disabled;
-                font-weight: bold;
+            .header {
+                display: flex;
+                position: relative;
+                flex-shrink: 0;
+                background-color: $color-background-header;
+                padding: $spacing-medium $spacing-medium-alt;
             }
+
+            .preview-container {
+                display: flex;
+                flex-grow: 1;
+                align-items: center;
+                justify-content: center;
+                background-color: $color-foreground-alt;
+                overflow-y: auto;
+
+                h1 {
+                    color: $color-text-disabled;
+                    font-weight: bold;
+                }
+            }
+
+            .add-lead-buttons {
+                display: flex;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-around;
+
+                .heading {
+                    flex-basis: 100%;
+                    margin: 0;
+                    border-top: $width-separator-normal solid $color-separator;
+                    // border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium $spacing-large;
+                    color: $color-label;
+                    font-size: $font-size-small;
+                    font-weight: $font-weight-medium;
+                }
+
+                .add-lead-btn {
+                    flex-basis: 20%;
+                    color: $color-text;
+                    font-family: inherit;
+                    font-size: inherit;
+
+                    span {
+                        font-size: $font-size-extra-large;
+                    }
+
+                    p {
+                        margin: $spacing-medium 0 0;
+                        font-size: $font-size-extra-small;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        color: $color-accent;
+                    }
+                }
+            }
+
         }
 
-        .add-lead-buttons {
+        .right {
             display: flex;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-around;
+            flex-basis: 70%;
+            flex-direction: column;
+            background-color: $color-foreground;
+            height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
 
-            .heading {
-                flex-basis: 100%;
-                margin: 0;
-                border-top: $width-separator-normal solid $color-separator;
-                // border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-medium $spacing-large;
-                color: $color-label;
-                font-size: $font-size-small;
-                font-weight: $font-weight-medium;
-            }
+            .header {
+                display: flex;
+                flex-shrink: 0;
+                justify-content: flex-end;
+                padding: $spacing-large;
+                width: 100%;
 
-            .add-lead-btn {
-                flex-basis: 20%;
-                color: $color-text;
-                font-family: inherit;
-                font-size: inherit;
-
-                span {
-                    font-size: $font-size-extra-large;
+                .search-category {
+                    flex-basis: 30%;
                 }
 
-                p {
-                    margin: $spacing-medium 0 0;
-                    font-size: $font-size-extra-small;
+                .pusher {
+                    flex-basis: 60%;
                 }
 
-                &:hover {
-                    cursor: pointer;
-                    color: $color-accent;
+                .add-category-btn {
+                    flex-basis: 11%;
                 }
             }
+
         }
-
-    }
-
-    .right {
-        display: flex;
-        flex-basis: 70%;
-        flex-direction: column;
-        background-color: $color-foreground;
-        height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
-
-        .header {
-            display: flex;
-            flex-shrink: 0;
-            justify-content: flex-end;
-            padding: $spacing-large;
-            width: 100%;
-
-            .search-category {
-                flex-basis: 30%;
-            }
-
-            .pusher {
-                flex-basis: 60%;
-            }
-
-            .add-category-btn {
-                flex-basis: 11%;
-            }
-        }
-
     }
 }

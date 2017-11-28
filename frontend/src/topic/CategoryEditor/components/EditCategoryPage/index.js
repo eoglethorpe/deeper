@@ -18,7 +18,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class EditCategoryModal extends React.PureComponent {
+export default class EditCategoryPage extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
     render() {
