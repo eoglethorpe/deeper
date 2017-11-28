@@ -33,12 +33,6 @@ export default class CountryPopulationData extends React.PureComponent {
         this.form.onSubmit();
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.onSubmit();
-        return false;
-    }
-
     changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
@@ -60,8 +54,7 @@ export default class CountryPopulationData extends React.PureComponent {
         console.log(values);
     };
 
-    handleFormCancel = (e) => {
-        e.preventDefault();
+    handleFormCancel = () => {
         // TODO: do something later
         console.log('Form cancel');
     };
@@ -89,6 +82,7 @@ export default class CountryPopulationData extends React.PureComponent {
                 }
                 <div styleName="action-buttons">
                     <DangerButton
+                        type="button"
                         onClick={this.handleFormCancel}
                         disabled={pending}
                     >

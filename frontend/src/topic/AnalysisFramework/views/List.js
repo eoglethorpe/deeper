@@ -42,17 +42,13 @@ const propTypes = {
     updateWidget: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-    state,
-});
-
 const mapDispatchToProps = dispatch => ({
     addWidget: params => dispatch(addAnalysisFrameworkWidget(params)),
     updateWidget: params => dispatch(updateAnalysisFrameworkWidget(params)),
 });
 
 @Responsive
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
