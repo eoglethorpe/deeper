@@ -306,7 +306,7 @@ export default class LeadAdd extends React.PureComponent {
             leadId,
             values: { attachment: undefined },
             upload: { errorMessage: `Failed to upload file (${status})` },
-            uiState: { stale: true, ready: false },
+            uiState: { stale: false, ready: true },
             formErrors: [`Failed to upload file (${status})`],
         });
 
@@ -414,6 +414,24 @@ export default class LeadAdd extends React.PureComponent {
         }
     }
 
+    handleBulkSave = () => {
+        // FIXME: Don't close and make new co-ordinator
+        // just add new leads (only new leads)
+        this.formCoordinator.close();
+
+        this.formCoordinator = new Coordinator();
+        const leadKeys = this.props.addLeadViewLeads
+            .map(this.leadDetailKeyExtractor);
+        leadKeys.forEach((id) => {
+            this.formCoordinator.add(id, this.leadRefs[id]);
+        });
+        this.formCoordinator.start();
+    }
+
+    handleFormComplete = (id) => {
+        this.formCoordinator.notifyComplete(id);
+    }
+
     // UI
 
     leadDetailKeyExtractor = lead => lead.data.id;
@@ -432,9 +450,10 @@ export default class LeadAdd extends React.PureComponent {
                 ref={this.referenceForLeadDetail(key)}
                 key={key}
                 leadKey={key}
+                active={key === activeLeadId}
                 lead={lead}
                 leadOptions={leadOptions}
-                activeLeadId={activeLeadId}
+                notifyComplete={this.handleFormComplete}
             />
         );
     }
@@ -443,7 +462,7 @@ export default class LeadAdd extends React.PureComponent {
         const { leadUploads } = this.state;
 
         const { activeLead } = this.props;
-        const { uiState } = activeLead;
+        const { uiState } = activeLead || {};
 
         return (
             <div styleName="add-lead">
@@ -480,6 +499,11 @@ export default class LeadAdd extends React.PureComponent {
                                 disabled={uiState.pending || !uiState.stale || !uiState.ready}
                             >
                                 Save
+                            </SuccessButton>
+                            <SuccessButton
+                                onClick={this.handleBulkSave}
+                            >
+                                Bulk Save
                             </SuccessButton>
                         </div>
                     }

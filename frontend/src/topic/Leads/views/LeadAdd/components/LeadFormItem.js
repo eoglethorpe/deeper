@@ -32,13 +32,15 @@ const propTypes = {
     }).isRequired,
 
     leadKey: PropTypes.string.isRequired,
-    activeLeadId: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line
     leadOptions: PropTypes.object.isRequired, // eslint-disable-line
 
     addLeadViewLeadSave: PropTypes.func.isRequired,
     addLeadViewLeadSetPending: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
+
+    notifyComplete: PropTypes.func.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
@@ -106,12 +108,15 @@ export default class LeadFormItem extends React.PureComponent {
                     leadId: lead.data.id,
                     serverId: response.id,
                 });
+                this.props.notifyComplete(this.props.leadKey);
             })
             .failure((response) => {
                 console.error('Failed lead request:', response);
+                this.props.notifyComplete(this.props.leadKey);
             })
             .fatal((response) => {
                 console.error('Fatal error occured during lead request:', response);
+                this.props.notifyComplete(this.props.leadKey);
             })
             .build();
         return leadCreateRequest;
@@ -137,6 +142,8 @@ export default class LeadFormItem extends React.PureComponent {
             formFieldErrors,
             uiState: { stale: false },
         });
+
+        this.props.notifyComplete(this.props.leadKey);
     }
 
     handleFormSuccess = () => {
@@ -148,24 +155,24 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     start = () => {
-        this.containerRef.submit();
+        if (this.containerRef) {
+            this.containerRef.submit();
+        }
     }
 
     close = () => {
-        // cleanup if you want
         console.log('Close forced');
     }
 
     render() {
         const {
-            leadKey,
             lead,
             leadOptions,
-            activeLeadId,
+            active,
         } = this.props;
 
         return (
-            <div className={`${styles.right} ${leadKey !== activeLeadId ? styles.hidden : ''}`} >
+            <div className={`${styles.right} ${!active ? styles.hidden : ''}`} >
                 <LeadForm
                     ref={(ref) => { this.containerRef = ref; }}
                     className={styles['add-lead-form']}
