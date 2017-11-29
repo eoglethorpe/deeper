@@ -4,14 +4,17 @@ import React from 'react';
 import {
     SelectInput,
     TextInput,
-    TextArea,
+    requiredCondition,
+    Form,
+    NonFieldErrors,
 } from '../../../public/components/Input';
 import {
     Modal,
     ModalBody,
     ModalHeader,
-    ModalFooter,
+    LoadingAnimation,
 } from '../../../public/components/View';
+import { randomString } from '../../../public/utils/common';
 import {
     PrimaryButton,
     DangerButton,
@@ -42,25 +45,43 @@ export default class CategoryView extends React.PureComponent {
                 {
                     key: 1,
                     label: 'Sectors',
-                    description: '',
+                    description: 'WaduHek',
                     owner: 'Jacky',
                 },
                 {
                     key: 2,
                     label: 'Affected Groups',
-                    description: '',
+                    description: 'WaduHek',
                     owner: 'Jacky',
                 },
                 {
                     key: 3,
                     label: 'Demographic Groups',
-                    description: '',
+                    description: 'WaduHek',
                     owner: 'Jacky',
                 },
             ],
             activeCategory: 1,
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: [],
+            pending: false,
+            stale: false,
+        };
+
+        this.elements = [
+            'label',
+            'description',
+            'owner',
+        ];
+
+        this.validations = {
+            label: [requiredCondition],
+            description: [requiredCondition],
+            owner: [requiredCondition],
         };
     }
+
     handleAddNewCategoryClick = () => {
         this.setState({ addNewCategory: true });
     }
@@ -72,45 +93,42 @@ export default class CategoryView extends React.PureComponent {
         });
     }
 
-    handleNewCategoryInputLabelChange = (value) => {
+    handleCategorySelectChange = (key) => {
         this.setState({
-            newCategoryInputLabelValue: value,
+            activeCategory: key,
         });
     }
 
-    handleNewCategoryInputDescriptionChange = (value) => {
-        this.setState({
-            newCategoryInputDescriptionValue: value,
-        });
-    }
+    // FORM RELATED
 
-    handleNewCategoryInputOwnerChange = (value) => {
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
-            newCategoryInputOwnerValue: value,
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
         });
-    }
+    };
 
-    handleAddNewCategory = () => {
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    successCallback = (values) => {
         this.setState({
             categoryData: [
                 ...this.state.categoryData,
                 {
-                    key: this.state.newCategoryInputLabelValue,
-                    label: this.state.newCategoryInputLabelValue,
-                    description: this.state.newCategoryInputDescriptionValue,
-                    owner: this.state.newCategoryInputOwnerValue,
+                    key: randomString(),
+                    label: values.label,
+                    description: values.description,
+                    owner: values.owner,
                 },
             ],
-            newCategoryInputLabelValue: '',
-            newCategoryInputDescriptionValue: '',
-            newCategoryInputOwnerValue: '',
             addNewCategory: false,
-        });
-    }
-
-    handleCategorySelectChange = (key) => {
-        this.setState({
-            activeCategory: key,
         });
     }
     render() {
@@ -119,10 +137,12 @@ export default class CategoryView extends React.PureComponent {
         );
         const {
             addNewCategory,
-            newCategoryInputLabelValue,
-            newCategoryInputDescriptionValue,
-            newCategoryInputOwnerValue,
             activeCategory,
+            formFieldErrors,
+            formValues,
+            pending,
+            stale,
+            formErrors = [],
         } = this.state;
         return (
             <div styleName={this.props.className}>
@@ -130,10 +150,11 @@ export default class CategoryView extends React.PureComponent {
                     <div styleName="search-category">
                         <SelectInput
                             placeholder="Select a Category"
-                            showLabel={false}
+                            label="Category"
                             showHintAndError={false}
                             options={this.state.categoryData}
                             value={activeCategory}
+                            showLabel
                             onChange={this.handleCategorySelectChange}
                         />
                     </div>
@@ -155,39 +176,56 @@ export default class CategoryView extends React.PureComponent {
                     onClose={this.handleAddNewCategoryClose}
                     show={addNewCategory}
                 >
-                    <ModalHeader title="Add New Category" />
-                    <ModalBody>
-                        <TextInput
-                            placeholder="Enter Category Name"
-                            label="Title"
-                            onChange={this.handleNewCategoryInputLabelChange}
-                            value={newCategoryInputLabelValue}
-                        />
-                        <TextArea
-                            placeholder="Enter Description"
-                            label="Description"
-                            onChange={this.handleNewCategoryInputDescriptionChange}
-                            value={newCategoryInputDescriptionValue}
-                        />
-                        <TextInput
-                            placeholder="Enter Owner's Name"
-                            label="Owner"
-                            onChange={this.handleNewCategoryInputOwnerChange}
-                            value={newCategoryInputOwnerValue}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <DangerButton
-                            onClick={this.handleAddNewCategoryClose}
-                        >
-                            Cancel
-                        </DangerButton>
-                        <PrimaryButton
-                            onClick={this.handleAddNewCategory}
-                        >
-                            Save
-                        </PrimaryButton>
-                    </ModalFooter>
+                    <Form
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.successCallback}
+                        validations={this.validations}
+                    >
+                        <ModalHeader title="Add New Category" />
+                        {
+                            pending && <LoadingAnimation />
+                        }
+                        <NonFieldErrors errors={formErrors} />
+                        <ModalBody>
+                            <TextInput
+                                formname="label"
+                                placeholder="Enter Category Name"
+                                label="Name"
+                                value={formValues.label}
+                                error={formFieldErrors.label}
+                            />
+                            <TextInput
+                                formname="description"
+                                placeholder="Enter Description"
+                                label="Description"
+                                value={formValues.description}
+                                error={formFieldErrors.description}
+                            />
+                            <TextInput
+                                formname="owner"
+                                placeholder="Enter Owner's Name"
+                                label="Owner"
+                                value={formValues.owner}
+                                error={formFieldErrors.owner}
+                            />
+                        </ModalBody>
+                        <div styleName="action-buttons">
+                            <DangerButton
+                                onClick={this.handleAddNewCategoryClose}
+                                type="button"
+                                disabled={pending}
+                            >
+                                Cancel
+                            </DangerButton>
+                            <PrimaryButton
+                                disabled={pending || !stale}
+                            >
+                                Save
+                            </PrimaryButton>
+                        </div>
+                    </Form>
                 </Modal>
             </div>
         );
