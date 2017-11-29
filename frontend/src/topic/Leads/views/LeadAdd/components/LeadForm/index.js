@@ -13,18 +13,18 @@ import {
     TextInput,
     requiredCondition,
     urlCondition,
-} from '../../../../public/components/Input';
+} from '../../../../../../public/components/Input';
 import {
     PrimaryButton,
     DangerButton,
     SuccessButton,
-} from '../../../../public/components/Action';
-import { LoadingAnimation } from '../../../../public/components/View';
+} from '../../../../../../public/components/Action';
+import { LoadingAnimation } from '../../../../../../public/components/View';
 
 import {
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
-} from '../../../../common/redux';
+} from '../../../../../../common/redux';
 
 
 import styles from './styles.scss';
@@ -64,7 +64,7 @@ const defaultProps = {
 
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadForm extends React.PureComponent {
+export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 

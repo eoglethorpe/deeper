@@ -32,10 +32,10 @@ import {
     leadFilterOptionsSelector,
 } from '../../../../common/redux';
 
-import AddLeadFilter from './AddLeadFilter';
-import AddLeadList from './AddLeadList';
-import AddLeadButtons from './AddLeadButtons';
-import AddLeadFormItem from './AddLeadFormItem';
+import LeadFilter from './components/LeadFilter';
+import LeadButtons from './components/LeadButtons';
+import LeadList from './components/LeadList';
+import LeadFormItem from './components/LeadFormItem';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
@@ -70,7 +70,7 @@ const defaultProps = {
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadView extends React.PureComponent {
+export default class LeadAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -362,7 +362,7 @@ export default class AddLeadView extends React.PureComponent {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project];
         const { activeLeadId } = this.props;
         return (
-            <AddLeadFormItem
+            <LeadFormItem
                 key={key}
                 leadKey={key}
                 lead={lead}
@@ -384,9 +384,9 @@ export default class AddLeadView extends React.PureComponent {
                     </title>
                 </Helmet>
                 <div styleName="left">
-                    <AddLeadFilter />
-                    <AddLeadList leadUploads={leadUploads} />
-                    <AddLeadButtons
+                    <LeadFilter />
+                    <LeadList leadUploads={leadUploads} />
+                    <LeadButtons
                         uploadCoordinator={this.uploadCoordinator}
                         onDropboxSelect={this.handleDropboxSelect}
                         onGoogleDriveSelect={this.handleGoogleDriveSelect}

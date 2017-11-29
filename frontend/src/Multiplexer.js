@@ -16,7 +16,13 @@ import { authenticatedSelector } from './common/selectors/auth';
 
 const Leads = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/`} >
-        <Bundle load={() => import('./topic/Leads/views/')} />
+        <Bundle load={() => import('./topic/Leads/views/Leads')} />
+    </ProjectRouteSynchronizer>
+);
+
+const LeadAdd = () => (
+    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/new`} >
+        <Bundle load={() => import('./topic/Leads/views/LeadAdd')} />
     </ProjectRouteSynchronizer>
 );
 
@@ -24,6 +30,10 @@ const Entries = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/entries/`} >
         <Bundle load={() => import('./topic/Entries/views/')} />
     </ProjectRouteSynchronizer>
+);
+
+const EditEntry = () => (
+    <Bundle load={() => import('./topic/Entries/views/EditEntryView')} />
 );
 
 const Ary = () => (
@@ -44,28 +54,32 @@ const Dashboard = () => (
     </ProjectRouteSynchronizer>
 );
 
+const HomeScreen = () => (
+    <Bundle load={() => import('./topic/HomeScreen/views')} />
+);
+
 const ProjectPanel = () => (
     <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/projectpanel/`} >
         <Bundle load={() => import('./topic/Project/views')} />
     </ProjectRouteSynchronizer>
 );
 
-const HomeScreen = () => (
-    <Bundle load={() => import('./topic/HomeScreen/views')} />
-);
-
 const Login = () => (
     <Bundle load={() => import('./topic/Authentication/views/Login')} />
 );
+
 const Register = () => (
     <Bundle load={() => import('./topic/Authentication/views/Register')} />
 );
+
 const UserProfile = () => (
     <Bundle load={() => import('./topic/UserProfile/views/')} />
 );
+
 const UserGroup = () => (
     <Bundle load={() => import('./topic/UserGroup/views/')} />
 );
+
 const WeeklySnapshot = () => (
     <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
 );
@@ -73,26 +87,17 @@ const WeeklySnapshot = () => (
 const CountryPanel = () => (
     <Bundle load={() => import('./topic/Country/views')} />
 );
-const FourHundredFour = () => (
-    <Bundle load={() => import('./topic/FourHundredFour/views')} />
-);
 
 const AnalysisFramework = () => (
     <Bundle load={() => import('./topic/AnalysisFramework/views/')} />
 );
 
-const AddLead = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/new`} >
-        <Bundle load={() => import('./topic/Leads/views/AddLeadView')} />
-    </ProjectRouteSynchronizer>
-);
-
-const EditEntry = () => (
-    <Bundle load={() => import('./topic/Entries/views/EditEntryView')} />
-);
-
 const ApiDocs = () => (
     <Bundle load={() => import('./topic/ApiDocs/views')} />
+);
+
+const FourHundredFour = () => (
+    <Bundle load={() => import('./topic/FourHundredFour/views')} />
 );
 
 const NavbarWithProps = withRouter(props => <Navbar {...props} />);
@@ -154,7 +159,7 @@ export default class Multiplexer extends React.PureComponent {
         {
             path: '/:projectId/leads/:leadId/',
             name: pageTitles.editLeads,
-            component: AddLead,
+            component: LeadAdd,
             private: true,
         },
         {
