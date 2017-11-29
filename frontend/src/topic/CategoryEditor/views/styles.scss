@@ -107,6 +107,13 @@
                 }
             }
 
+            h2 {
+                flex-shrink: 0;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium $spacing-large;
+                font-weight: $font-weight-medium;
+            }
+
         }
     }
 }

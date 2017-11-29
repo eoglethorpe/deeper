@@ -198,9 +198,6 @@ export default class Categories extends React.PureComponent {
 
         return (
             <div styleName="categories">
-                <h2>
-                    1. Sectors
-                </h2>
                 <div styleName="category-group">
                     <div styleName="sub-categories">
                         {

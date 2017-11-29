@@ -5,13 +5,6 @@
     flex-direction: column;
     padding: $spacing-large;
 
-    h2 {
-        flex-shrink: 0;
-        border-bottom: $width-separator-medium solid $color-separator;
-        padding: $spacing-small;
-        font-weight: $font-weight-medium;
-    }
-
     .category-group {
         display: flex;
         padding: $spacing-large 0;
