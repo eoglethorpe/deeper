@@ -22,9 +22,6 @@ export const SET_REGIONS = 'domain-data/SET_REGIONS';
 export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
 
 export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
-export const ADD_ANALYSIS_FRAMEWORK_WIDGET = 'domain-data/ADD_ANALYSIS_FRAMEWORK_WIDGET';
-export const REMOVE_ANALYSIS_FRAMEWORK_WIDGET = 'domain-data/REMOVE_ANALYSIS_FRAMEWORK_WIDGET';
-export const UPDATE_ANALYSIS_FRAMEWORK_WIDGET = 'domain-data/UPDATE_ANALYSIS_FRAMEWORK_WIDGET';
 
 export const ADD_ENTRY = 'domain-data/ADD_ENTRY';
 export const REMOVE_ENTRY = 'domain-data/REMOVE_ENTRY';

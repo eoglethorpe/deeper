@@ -24,11 +24,11 @@ import {
 } from '../../../common/rest';
 import {
     analysisFrameworkIdFromProps,
-    currentAnalysisFrameworkSelector,
-    tokenSelector,
-
+    setAfViewAnalysisFrameworkAction,
     setNavbarStateAction,
-    setAnalysisFramework,
+
+    afViewCurrentAnalysisFrameworkSelector,
+    tokenSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -48,13 +48,13 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    analysisFramework: currentAnalysisFrameworkSelector(state, props),
+    analysisFramework: afViewCurrentAnalysisFrameworkSelector(state, props),
     analysisFrameworkId: analysisFrameworkIdFromProps(state, props),
     token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setAnalysisFramework: params => dispatch(setAnalysisFramework(params)),
+    setAnalysisFramework: params => dispatch(setAfViewAnalysisFrameworkAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 

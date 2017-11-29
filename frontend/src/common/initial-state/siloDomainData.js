@@ -84,6 +84,33 @@ const initialSiloDomainData = {
     editEntryView: {
         lead: {},
     },
+
+    analysisFrameworkView: {
+        analysisFramework: {
+            /*
+            id: 1,
+            title: 'ACAPS Framework',
+            createdAt: '',
+            modifiedAt: '',
+            createdBy: 1,
+            modifiedBy: 1,
+
+            widgets: [
+                {
+                    id: 1,
+                    widgetId: 'excerpt-1xs',
+                    title: 'Excerpt',
+                    properties: {},
+                }
+            ],
+
+            filters: [
+            ],
+            exportables: [
+            ],
+            */
+        },
+    },
 };
 
 export default initialSiloDomainData;
