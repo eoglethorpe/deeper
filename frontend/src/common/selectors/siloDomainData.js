@@ -24,6 +24,12 @@ export const addLeadViewActiveLeadIdSelector = ({ siloDomainData }) => (
 export const addLeadViewLeadsSelector = ({ siloDomainData }) => (
     siloDomainData.addLeadView.leads || emptyList
 );
+export const addLeadViewActiveLeadSelector = createSelector(
+    addLeadViewActiveLeadIdSelector,
+    addLeadViewLeadsSelector,
+    (leadId, leads) => leads.find(lead => lead.data.id === leadId),
+);
+
 export const addLeadViewLeadsFilteredSelector = createSelector(
     addLeadViewLeadsSelector,
     leads => leads.filter(lead => lead.isFiltrate),

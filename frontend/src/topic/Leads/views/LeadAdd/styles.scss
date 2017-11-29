@@ -2,157 +2,160 @@
 
 .add-lead {
     display: flex;
+    flex-direction: column;
     padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
 
-    .left {
+    > .header {
         display: flex;
-        flex-basis: 30%;
-        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        padding: $spacing-medium $spacing-medium-alt;
+        border-bottom: $width-separator-medium solid $color-separator;
         background-color: $color-foreground-alt;
-        height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
-        overflow-y: hidden;
 
-        .header {
+        .action-buttons {
+            button {
+                margin-left: $spacing-medium;
+                padding: $spacing-small $spacing-medium-alt;
+            }
+        }
+
+        .lead-filters {
             display: flex;
             position: relative;
             flex-shrink: 0;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            background-color: $color-background-header;
-            padding: $spacing-medium $spacing-medium-alt;
 
-            .title {
-                flex-basis: 50%;
-                text-transform: uppercase;
-            }
-
-            .search {
-                flex-basis: 50%;
-            }
-
-            .search,
-            .source-filter {
-                background-color: transparent;
-
-                :global .empty {
-                    display: none;
-                }
-            }
-
-            .filter {
-                flex-basis: calc(100% / 3 - #{$spacing-extra-small});
-                margin-top: $spacing-small;
-            }
-        }
-
-        .lead-list {
-            flex-grow: 1;
-            overflow-y: auto;
-
-            .list-item {
-                display: flex;
-                align-items: center;
-                border-bottom: $width-separator-thin solid $color-separator;
-                border-left: $width-separator-thick solid transparent;
-                cursor: pointer;
-                padding-top: $spacing-small $spacing-medium;
-                user-select: none;
-                overflow-y: auto;
-
-                &.active {
-                    border-left: $width-separator-thick solid $color-accent;
-                    background-color: $color-hover;
-                }
-
-                .icon {
-                    display: inline-flex;
-                    flex-basis: $width-icon-large;
-                    flex-shrink: 0;
-                    padding: $spacing-small $spacing-large;
-                    font-size: $font-size-large;
-                }
-
-                .icon-checked {
-                    display: inline-block;
-                    flex-shrink: 0;
-                    padding: $spacing-medium;
-                    color: $color-success;
-                    font-size: $font-size-large;
-                }
-            }
-        }
-
-        .add-lead-buttons {
-            display: flex;
-            flex-shrink: 0;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-around;
-
-            .heading {
-                flex-basis: 100%;
-                margin: 0;
-                border-top: $width-separator-normal solid $color-separator;
-                // border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-medium $spacing-large;
-                color: $color-label;
-                font-size: $font-size-small;
-                font-weight: $font-weight-medium;
-            }
-
-            .add-lead-btn {
-                flex-basis: 20%;
-                color: $color-text;
-                font-family: inherit;
-                font-size: inherit;
-
-                span {
-                    font-size: $font-size-extra-large;
-                }
-
-                p {
-                    margin: $spacing-medium 0 0;
-                    font-size: $font-size-extra-small;
-                }
-
-                &:hover {
-                    cursor: pointer;
-                    color: $color-accent;
-                }
+            >* {
+                margin-right: $spacing-small;
             }
         }
     }
 
-    .right {
+    .content {
         display: flex;
-        flex-basis: 70%;
-        flex-direction: column;
-        background-color: $color-foreground;
-        overflow-y: auto;
+        flex-basis: 100%;
+        flex-grow: 1;
 
-        .add-lead-form {
-            flex-shrink: 0;
-        }
-
-        .empty-form {
+        .left {
             display: flex;
             flex-basis: 30%;
-            flex-shrink: 0;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            background-color: $color-foreground-alt;
+            overflow-y: hidden;
+
+            .lead-list {
+                flex-grow: 1;
+                overflow-y: auto;
+
+                .list-item {
+                    display: flex;
+                    align-items: center;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    border-left: $width-separator-thick solid transparent;
+                    cursor: pointer;
+                    padding-top: $spacing-small $spacing-medium;
+                    user-select: none;
+                    overflow-y: auto;
+
+                    &.active {
+                        border-left: $width-separator-thick solid $color-accent;
+                        background-color: $color-hover;
+                    }
+
+                    .icon {
+                        display: inline-flex;
+                        flex-basis: $width-icon-large;
+                        flex-shrink: 0;
+                        padding: $spacing-small $spacing-large;
+                        font-size: $font-size-large;
+                    }
+
+                    .icon-checked {
+                        display: inline-block;
+                        flex-shrink: 0;
+                        padding: $spacing-medium;
+                        color: $color-success;
+                        font-size: $font-size-large;
+                    }
+                }
+            }
+
+            .add-lead-buttons {
+                display: flex;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-around;
+
+                .heading {
+                    flex-basis: 100%;
+                    margin: 0;
+                    border-top: $width-separator-normal solid $color-separator;
+                    // border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium $spacing-large;
+                    color: $color-label;
+                    font-size: $font-size-small;
+                    font-weight: $font-weight-medium;
+                }
+
+                .add-lead-btn {
+                    flex-basis: 20%;
+                    color: $color-text;
+                    font-family: inherit;
+                    font-size: inherit;
+
+                    span {
+                        font-size: $font-size-extra-large;
+                    }
+
+                    p {
+                        margin: $spacing-medium 0 0;
+                        font-size: $font-size-extra-small;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        color: $color-accent;
+                    }
+                }
+            }
         }
 
-        .lead-preview {
+        .right {
             display: flex;
-            flex-grow: 1;
-            align-items: center;
-            justify-content: center;
-            border-top: $width-separator-medium solid $color-separator;
-        }
+            flex-basis: 70%;
+            flex-direction: column;
+            background-color: $color-foreground;
+            overflow-y: auto;
 
-        &.hidden {
-            display: none;
+            .add-lead-form {
+                flex-shrink: 0;
+            }
+
+            .empty-form {
+                display: flex;
+                flex-basis: 30%;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .lead-preview {
+                display: flex;
+                flex-grow: 1;
+                align-items: center;
+                justify-content: center;
+                border-top: $width-separator-medium solid $color-separator;
+            }
+
+            &.hidden {
+                display: none;
+            }
         }
     }
 }

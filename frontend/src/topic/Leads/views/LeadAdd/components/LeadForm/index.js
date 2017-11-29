@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -14,27 +14,24 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../../../public/components/Input';
+/*
 import {
     PrimaryButton,
     DangerButton,
     SuccessButton,
 } from '../../../../../../public/components/Action';
+*/
 import { LoadingAnimation } from '../../../../../../public/components/View';
-
-import {
-    addLeadViewCanNextSelector,
-    addLeadViewCanPrevSelector,
-} from '../../../../../../common/redux';
 
 
 import styles from './styles.scss';
 
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
 
+/*
 const mapStateToProps = state => ({
-    addLeadViewCanNext: addLeadViewCanNextSelector(state),
-    addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
 });
+*/
 
 const propTypes = {
     className: PropTypes.string,
@@ -47,22 +44,16 @@ const propTypes = {
         dummy: PropTypes.string,
     }).isRequired,
 
-    onPrev: PropTypes.func.isRequired,
-    onNext: PropTypes.func.isRequired,
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    onRemove: PropTypes.func.isRequired,
-
-    addLeadViewCanNext: PropTypes.bool.isRequired,
-    addLeadViewCanPrev: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-@connect(mapStateToProps)
+// @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -101,33 +92,29 @@ export default class LeadForm extends React.PureComponent {
         };
     }
 
-    handlePrev = () => {
-        this.props.onPrev();
-    }
-
-    handleNext = () => {
-        this.props.onNext();
-    }
-
-    handleRemove = () => {
-        this.props.onRemove();
+    submit = () => {
+        const { lead } = this.props;
+        const { pending, stale, ready } = lead.uiState;
+        if (pending || !stale || !ready) {
+            return;
+        }
+        if (this.formRef) {
+            this.formRef.submit();
+        }
     }
 
     render() {
         const {
             className,
             lead,
+
             leadOptions,
             onChange,
             onFailure,
             onSuccess,
         } = this.props;
 
-        const {
-            pending,
-            stale,
-            ready,
-        } = lead.uiState;
+        const { pending } = lead.uiState;
 
         const {
             values,
@@ -137,6 +124,7 @@ export default class LeadForm extends React.PureComponent {
 
         return (
             <Form
+                ref={(ref) => { this.formRef = ref; }}
                 changeCallback={onChange}
                 className={className}
                 elements={this.elements}
@@ -152,31 +140,13 @@ export default class LeadForm extends React.PureComponent {
                     styleName="header"
                 >
                     <NonFieldErrors errors={errors} />
+                    {/*
                     <div styleName="action-buttons">
-                        <PrimaryButton
-                            type="button"
-                            disabled={!this.props.addLeadViewCanPrev}
-                            onClick={this.handlePrev}
-                        >
-                            Prev
-                        </PrimaryButton>
-                        <PrimaryButton
-                            type="button"
-                            disabled={!this.props.addLeadViewCanNext}
-                            onClick={this.handleNext}
-                        >
-                            Next
-                        </PrimaryButton>
-                        <DangerButton
-                            type="button"
-                            onClick={this.handleRemove}
-                        >
-                            Remove
-                        </DangerButton>
                         <SuccessButton disabled={pending || !stale || !ready} >
                             Save
                         </SuccessButton>
                     </div>
+                    */}
                 </header>
                 <SelectInput
                     disabled

@@ -19,10 +19,7 @@ import {
     tokenSelector,
     addLeadViewLeadSetPendingAction,
     addLeadViewLeadSaveAction,
-    addLeadViewLeadNextAction,
-    addLeadViewLeadPrevAction,
     addLeadViewLeadChangeAction,
-    addLeadViewLeadRemoveAction,
 } from '../../../../../common/redux';
 
 import LeadForm from './LeadForm';
@@ -30,8 +27,6 @@ import LeadForm from './LeadForm';
 import styles from '../styles.scss';
 
 const propTypes = {
-    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
-
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
@@ -43,10 +38,7 @@ const propTypes = {
 
     addLeadViewLeadSave: PropTypes.func.isRequired,
     addLeadViewLeadSetPending: PropTypes.func.isRequired,
-    addLeadViewLeadNext: PropTypes.func.isRequired,
-    addLeadViewLeadPrev: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
-    addLeadViewLeadRemove: PropTypes.func.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
@@ -59,13 +51,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadSetPending: params => dispatch(addLeadViewLeadSetPendingAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
-    addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
-    addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
-    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
@@ -158,25 +147,8 @@ export default class LeadFormItem extends React.PureComponent {
         this.leadSaveRequest.start();
     }
 
-    handleLeadNext = () => {
-        const leadId = this.props.leadKey;
-        this.props.addLeadViewLeadNext(leadId);
-    }
-
-    handleLeadPrev = () => {
-        const leadId = this.props.leadKey;
-        this.props.addLeadViewLeadPrev(leadId);
-    }
-
-    handleRemove = () => {
-        const leadId = this.props.leadKey;
-        this.props.uploadCoordinator.remove(leadId);
-        this.props.addLeadViewLeadRemove(leadId);
-    }
-
     start = () => {
-        // submit form
-        console.log('Started');
+        this.containerRef.submit();
     }
 
     close = () => {
@@ -195,15 +167,13 @@ export default class LeadFormItem extends React.PureComponent {
         return (
             <div className={`${styles.right} ${leadKey !== activeLeadId ? styles.hidden : ''}`} >
                 <LeadForm
+                    ref={(ref) => { this.containerRef = ref; }}
                     className={styles['add-lead-form']}
                     lead={lead}
                     leadOptions={leadOptions}
                     onChange={this.handleFormChange}
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
-                    onPrev={this.handleLeadPrev}
-                    onNext={this.handleLeadNext}
-                    onRemove={this.handleRemove}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW
