@@ -2,6 +2,8 @@ FROM devtc/ubuntu-django-react:latest
 
 MAINTAINER togglecorp info@togglecorp.com
 
+RUN apt update && apt install -y binutils libproj-dev gdal-bin
+
 COPY ./deploy/scripts/remote2_syslog_init.sh /tmp/
 RUN /tmp/remote2_syslog_init.sh
 
