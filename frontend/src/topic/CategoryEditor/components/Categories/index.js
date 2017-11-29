@@ -13,6 +13,9 @@ import {
     ModalHeader,
     ModalFooter,
 } from '../../../../public/components/View';
+
+import { randomString } from '../../../../public/utils/common';
+
 import {
     PrimaryButton,
     DangerButton,
@@ -126,7 +129,7 @@ export default class Categories extends React.PureComponent {
             subCategoryData: [
                 ...this.state.subCategoryData,
                 {
-                    id: this.state.newSubCategoryInputValue,
+                    id: randomString(),
                     title: this.state.newSubCategoryInputValue,
                 },
             ],
@@ -169,7 +172,7 @@ export default class Categories extends React.PureComponent {
             subSubCategoryData: [
                 ...this.state.subSubCategoryData,
                 {
-                    id: this.state.newSubSubCategoryInputValue,
+                    id: randomString(),
                     title: this.state.newSubSubCategoryInputValue,
                 },
             ],
@@ -202,7 +205,10 @@ export default class Categories extends React.PureComponent {
                     <div styleName="sub-categories">
                         {
                             subCategoryData.map(d => (
-                                <div styleName="sub-group">
+                                <div
+                                    styleName="sub-group"
+                                    key={d.id}
+                                >
                                     <div
                                         role="presentation"
                                         key={d.id}
@@ -230,7 +236,10 @@ export default class Categories extends React.PureComponent {
                     <div styleName="sub-sub-categories">
                         {
                             subSubCategoryData.map(d => (
-                                <div styleName="sub-group">
+                                <div
+                                    styleName="sub-group"
+                                    key={d.id}
+                                >
                                     <div
                                         role="presentation"
                                         key={d.id}

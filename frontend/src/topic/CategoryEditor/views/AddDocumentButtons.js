@@ -4,12 +4,6 @@ import React from 'react';
 import {
     TransparentButton,
 } from '../../../public/components/Action';
-import {
-    FileInput,
-} from '../../../public/components/Input';
-
-import DropboxChooser from '../../../common/components/DropboxChooser';
-import GooglePicker from '../../../common/components/GooglePicker';
 
 import styles from './styles.scss';
 
@@ -21,18 +15,18 @@ export default class AddLeadFilter extends React.PureComponent {
                 <h3 styleName="heading">
                     Add new document from:
                 </h3>
-                <GooglePicker
+                <TransparentButton
                     styleName="add-lead-btn"
                 >
                     <span className="ion-social-google" />
                     <p>Drive</p>
-                </GooglePicker>
-                <DropboxChooser
+                </TransparentButton>
+                <TransparentButton
                     styleName="add-lead-btn"
                 >
                     <span className="ion-social-dropbox" />
                     <p>Dropbox</p>
-                </DropboxChooser>
+                </TransparentButton>
                 <TransparentButton
                     styleName="add-lead-btn"
                 >
@@ -45,13 +39,12 @@ export default class AddLeadFilter extends React.PureComponent {
                     <span className="ion-clipboard" />
                     <p>ARY</p>
                 </TransparentButton>
-                <FileInput
+                <TransparentButton
                     styleName="add-lead-btn"
-                    showStatus={false}
                 >
                     <span className="ion-android-upload" />
                     <p>Local disk</p>
-                </FileInput>
+                </TransparentButton>
             </div>
         );
     }
