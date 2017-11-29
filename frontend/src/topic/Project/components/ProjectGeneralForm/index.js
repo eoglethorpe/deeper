@@ -10,6 +10,7 @@ import {
     Form,
     NonFieldErrors,
     TextInput,
+    SelectInput,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -51,7 +52,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
             'startDate',
             'endDate',
             'description',
-            'countries',
+            'regions',
             'userGroups',
             'otherMembers',
             'admins',
@@ -62,10 +63,13 @@ export default class ProjectGeneralForm extends React.PureComponent {
             startDate: [requiredCondition],
             endDate: [requiredCondition],
             description: [requiredCondition],
-            countries: [requiredCondition],
+            regions: [requiredCondition],
             userGroups: [requiredCondition],
         };
     }
+
+    regionLabelSelector = (d = {}) => d.title;
+    regionKeySelector = (d = {}) => d.id;
 
     render() {
         const {
@@ -145,13 +149,17 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     error={formFieldErrors.description}
 
                 />
-                <TextInput
-                    label="Countries"
-                    formname="countries"
-                    placeholder="Select countries"
-                    styleName="countries"
-                    value={formValues.countries}
-                    error={formFieldErrors.countries}
+                <SelectInput
+                    label="Regions"
+                    formname="regions"
+                    placeholder="Select regions"
+                    styleName="regions"
+                    value={formValues.regions}
+                    options={formValues.regionOptions}
+                    labelSelector={this.regionLabelSelector}
+                    keySelector={this.regionKeySelector}
+                    error={formFieldErrors.regions}
+                    multiple
                 />
                 <TextInput
                     label="User Groups"

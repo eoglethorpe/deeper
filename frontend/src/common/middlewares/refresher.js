@@ -43,7 +43,7 @@ class Refresher {
             .maxRetryAttempts(1)
             .success((response) => {
                 try {
-                    schema.validate(response, 'projectsGetResponse');
+                    schema.validate(response, 'projectsMiniGetResponse');
                     const { userId } = activeUserSelector(store.getState());
                     store.dispatch(setUserProjectsAction({
                         userId,

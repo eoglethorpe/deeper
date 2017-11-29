@@ -42,15 +42,29 @@ const projectSchema = [];
     projectSchema.push({ name, schema });
 }
 {
-    const name = 'projectList';
+    const name = 'projectMini';
     const schema = {
         doc: {
             name: 'Project',
-            description: 'One of the main entities',
+            description: 'One of the main entities, used only for title and id',
         },
         fields: {
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
+        },
+    };
+    projectSchema.push({ name, schema });
+}
+{
+    const name = 'projectOptionsGetResponse';
+    const schema = {
+        doc: {
+            name: 'Project Options',
+            description: 'Defines response of project options: regions and usergroups',
+        },
+        fields: {
+            regions: { type: 'array.keyValuePair', required: true },
+            userGroups: { type: 'array.keyValuePair', required: true },
         },
     };
     projectSchema.push({ name, schema });
@@ -67,9 +81,22 @@ const projectSchema = [];
     projectSchema.push({ name, schema });
 }
 {
-    // FIXME: Extra field(s) present:
-    // regions,memberships,userGroups,data,createdAt,createdBy,modifiedAt,
-    // modifiedBy,createdByName,modifiedByName'
+    const name = 'projectsMiniGetResponse';
+    const schema = {
+        doc: {
+            name: 'Projects Get Response',
+            description: 'Response for GET /projects/ for title and Id only',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.projectMini', required: true },
+        },
+    };
+    projectSchema.push({ name, schema });
+}
+{
     const name = 'projectsGetResponse';
     const schema = {
         doc: {
@@ -80,7 +107,7 @@ const projectSchema = [];
             count: { type: 'uint', required: true },
             next: { type: 'string' },
             previous: { type: 'string' },
-            results: { type: 'array.projectList', required: true },
+            results: { type: 'array.project', required: true },
         },
     };
     projectSchema.push({ name, schema });

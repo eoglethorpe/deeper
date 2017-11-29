@@ -37,6 +37,20 @@ const userDefinedSchemas = [];
     };
     userDefinedSchemas.push({ name, schema });
 }
+{
+    const name = 'keyValuePair';
+    const schema = {
+        doc: {
+            name: 'Key Value Pair',
+            description: 'Defines key value pair',
+        },
+        fields: {
+            key: { type: 'uint', required: true },
+            value: { type: 'string', required: true },
+        },
+    };
+    userDefinedSchemas.push({ name, schema });
+}
 
 [
     ...userDefinedSchemas,
