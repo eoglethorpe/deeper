@@ -6,6 +6,7 @@ import {
     leadFilterOptionsSelector,
     leadIdFromProps,
     projectsSelector,
+    analysisFrameworkIdFromProps,
 } from './domainData';
 
 
@@ -128,6 +129,7 @@ export const totalLeadsCountForProjectSelector = createSelector(
     leadPage => leadPage.totalLeadsCount || 0,
 );
 
+
 export const editEntryViewLeadSelector = ({ siloDomainData }) => (
     siloDomainData.editEntryView.lead
 );
@@ -151,5 +153,17 @@ export const editEntryViewCurrentAnalysisFrameworkSelector = createSelector(
     analysisFrameworksSelector,
     (project, analysisFrameworks) => (
         project && analysisFrameworks[project.analysisFramework]
+    ),
+);
+
+export const afViewAnalysisFrameworkSelector = ({ siloDomainData }) => (
+    siloDomainData.analysisFrameworkView.analysisFramework
+);
+
+export const afViewCurrentAnalysisFrameworkSelector = createSelector(
+    analysisFrameworkIdFromProps,
+    afViewAnalysisFrameworkSelector,
+    (id, analysisFramework) => (
+        (analysisFramework && analysisFramework.id === +id) ? analysisFramework : undefined
     ),
 );

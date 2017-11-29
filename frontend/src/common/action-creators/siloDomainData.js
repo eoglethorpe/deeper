@@ -20,6 +20,11 @@ import {
     SET_LEAD_PAGE_ACTIVE_SORT,
 
     SET_EDIT_ENTRY_VIEW_LEAD,
+
+    AF_VIEW_SET_ANALYSIS_FRAMEWORK,
+    AF_VIEW_ADD_WIDGET,
+    AF_VIEW_REMOVE_WIDGET,
+    AF_VIEW_UPDATE_WIDGET,
 } from '../action-types/siloDomainData';
 
 
@@ -114,4 +119,27 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
 export const setEditEntryViewLeadAction = ({ lead }) => ({
     type: SET_EDIT_ENTRY_VIEW_LEAD,
     lead,
+});
+
+export const setAfViewAnalysisFrameworkAction = ({ analysisFramework }) => ({
+    type: AF_VIEW_SET_ANALYSIS_FRAMEWORK,
+    analysisFramework,
+});
+
+export const addAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+    type: AF_VIEW_ADD_WIDGET,
+    analysisFrameworkId,
+    widget,
+});
+
+export const removeAfViewWidgetAction = ({ analysisFrameworkId, widgetId }) => ({
+    type: AF_VIEW_REMOVE_WIDGET,
+    analysisFrameworkId,
+    widgetId,
+});
+
+export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+    type: AF_VIEW_UPDATE_WIDGET,
+    analysisFrameworkId,
+    widget,
 });

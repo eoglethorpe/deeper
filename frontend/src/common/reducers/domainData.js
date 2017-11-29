@@ -24,10 +24,6 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
-    ADD_ANALYSIS_FRAMEWORK_WIDGET,
-    REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
-    UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
-
     ADD_ENTRY,
     REMOVE_ENTRY,
 } from '../action-types/domainData';
@@ -382,73 +378,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
 
-        case ADD_ANALYSIS_FRAMEWORK_WIDGET: {
-            const widget = action.widget;
-            const existingWidgets = (
-                state.analysisFrameworks[action.analysisFrameworkId] || {}
-            ).widgets || [];
-            const index = existingWidgets.findIndex(w => w.key === widget.key);
-
-            if (index === -1) {
-                const settings = {
-                    analysisFrameworks: { $auto: {
-                        [action.analysisFrameworkId]: { $auto: {
-                            widgets: { $set: [...existingWidgets, widget] },
-                        } },
-                    } },
-                };
-
-                return update(state, settings);
-            }
-
-            return state;
-        }
-
-        case REMOVE_ANALYSIS_FRAMEWORK_WIDGET: {
-            const existingWidgets = (
-                state.analysisFrameworks[action.analysisFrameworkId] || {}
-            ).widgets || [];
-            const index = existingWidgets.findIndex(w => w.key === action.key);
-
-            if (index !== -1) {
-                const settings = {
-                    analysisFrameworks: { $auto: {
-                        [action.analysisFrameworkId]: { $auto: {
-                            widgets: { $set: [...existingWidgets].splice(index, 1) },
-                        } },
-                    } },
-                };
-
-                return update(state, settings);
-            }
-
-            return state;
-        }
-
-        case UPDATE_ANALYSIS_FRAMEWORK_WIDGET: {
-            const widget = action.widget;
-            const existingWidgets = (
-                state.analysisFrameworks[action.analysisFrameworkId] || {}
-            ).widgets || [];
-            const index = existingWidgets.findIndex(w => w.key === widget.key);
-
-            if (index !== -1) {
-                const newWidgets = [...existingWidgets];
-                newWidgets[index] = widget;
-
-                const settings = {
-                    analysisFrameworks: { $auto: {
-                        [action.analysisFrameworkId]: { $auto: {
-                            widgets: { $set: newWidgets },
-                        } },
-                    } },
-                };
-
-                return update(state, settings);
-            }
-
-            return state;
-        }
         case DUMMY_ACTION: {
             const dummy = {
                 id: 1,

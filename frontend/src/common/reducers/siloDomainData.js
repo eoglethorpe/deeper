@@ -20,6 +20,11 @@ import {
     SET_LEAD_PAGE_ACTIVE_SORT,
 
     SET_EDIT_ENTRY_VIEW_LEAD,
+
+    AF_VIEW_SET_ANALYSIS_FRAMEWORK,
+    AF_VIEW_ADD_WIDGET,
+    AF_VIEW_REMOVE_WIDGET,
+    AF_VIEW_UPDATE_WIDGET,
 } from '../action-types/siloDomainData';
 
 import {
@@ -477,6 +482,80 @@ const editEntryViewSetLead = (state, action) => {
     return update(state, settings);
 };
 
+const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: { $auto: {
+                $set: analysisFramework,
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
+    if (!state.analysisFrameworkView.analysisFramework ||
+        !state.analysisFrameworkView.analysisFramework.widgets ||
+        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+        return state;
+    }
+
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: {
+                widgets: { $push: widget },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
+const afViewRemoveWidget = (state, { analysisFrameworkId, widgetKey }) => {
+    if (!state.analysisFrameworkView.analysisFramework ||
+        !state.analysisFrameworkView.analysisFramework.widgets ||
+        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+        return state;
+    }
+
+    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
+    const index = existingWidgets.findIndex(w => w.key === widgetKey);
+
+    if (index !== -1) {
+        const settings = {
+            analysisFrameworkView: {
+                analysisFramework: {
+                    widgets: { $splice: [[index, 1]] },
+                },
+            },
+        };
+        return update(state, settings);
+    }
+    return state;
+};
+
+const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
+    if (!state.analysisFrameworkView.analysisFramework ||
+        !state.analysisFrameworkView.analysisFramework.widgets ||
+        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+        return state;
+    }
+
+    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
+    const index = existingWidgets.findIndex(w => w.key === widget.key);
+
+    if (index !== -1) {
+        const settings = {
+            analysisFrameworkView: {
+                analysisFramework: {
+                    widgets: { $splice: [[index, 1, widget]] },
+                },
+            },
+        };
+        return update(state, settings);
+    }
+    return state;
+};
+
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
     switch (action.type) {
         case SET_USER_PROJECTS:
@@ -515,8 +594,19 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             return leadViewSetActiveSort(state, action);
         case SET_LEADS:
             return setLeads(state, action);
+
         case SET_EDIT_ENTRY_VIEW_LEAD:
             return editEntryViewSetLead(state, action);
+
+        case AF_VIEW_SET_ANALYSIS_FRAMEWORK:
+            return afViewSetAnalysisFramework(state, action);
+        case AF_VIEW_ADD_WIDGET:
+            return afViewAddWidget(state, action);
+        case AF_VIEW_REMOVE_WIDGET:
+            return afViewRemoveWidget(state, action);
+        case AF_VIEW_UPDATE_WIDGET:
+            return afViewUpdateWidget(state, action);
+
         default:
             return state;
     }

@@ -147,14 +147,6 @@ export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
 
-export const currentAnalysisFrameworkSelector = createSelector(
-    analysisFrameworkIdFromProps,
-    analysisFrameworksSelector,
-    (analysisFrameworkId, analysisFrameworks) => (
-        analysisFrameworks[analysisFrameworkId]
-    ),
-);
-
 export const entriesForLeadSelector = createSelector(
     entriesSelector,
     leadIdFromProps,

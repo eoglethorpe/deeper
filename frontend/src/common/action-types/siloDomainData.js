@@ -18,3 +18,8 @@ export const SET_LEAD_PAGE_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_
 
 export const SET_LEADS = 'domain-data/SET_LEADS';
 export const SET_EDIT_ENTRY_VIEW_LEAD = 'silo-domain-data/SET_EDIT_ENTRY_VIEW_LEAD';
+
+export const AF_VIEW_SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF_VIEW_SET_ANALYSIS_FRAMEWORK';
+export const AF_VIEW_ADD_WIDGET = 'silo-domain-data/AF_VIEW_ADD_WIDGET';
+export const AF_VIEW_REMOVE_WIDGET = 'silo-domain-data/AF_VIEW_REMOVE_WIDGET';
+export const AF_VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';

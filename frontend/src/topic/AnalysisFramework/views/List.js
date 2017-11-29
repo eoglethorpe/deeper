@@ -23,9 +23,10 @@ import {
 } from '../../../public/utils/common';
 
 import {
-    addAnalysisFrameworkWidget,
-    updateAnalysisFrameworkWidget,
-} from '../../../common/action-creators/domainData';
+    addAfViewWidgetAction,
+    // removeAfViewWidgetAction,
+    updateAfViewWidgetAction,
+} from '../../../common/redux';
 
 import widgetStore from '../widgetStore';
 import styles from './styles.scss';
@@ -43,8 +44,8 @@ const propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    addWidget: params => dispatch(addAnalysisFrameworkWidget(params)),
-    updateWidget: params => dispatch(updateAnalysisFrameworkWidget(params)),
+    addWidget: params => dispatch(addAfViewWidgetAction(params)),
+    updateWidget: params => dispatch(updateAfViewWidgetAction(params)),
 });
 
 @Responsive

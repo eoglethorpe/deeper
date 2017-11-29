@@ -25,7 +25,7 @@ import {
     tokenSelector,
 
     setNavbarStateAction,
-    setAnalysisFramework,
+    setAnalysisFrameworkAction,
     setEditEntryViewLeadAction,
     setProjectAction,
 } from '../../../../common/redux';
@@ -67,7 +67,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setAnalysisFramework: params => dispatch(setAnalysisFramework(params)),
+    setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryViewLeadAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setProject: params => dispatch(setProjectAction(params)),

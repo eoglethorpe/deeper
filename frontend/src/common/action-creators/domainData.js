@@ -24,9 +24,6 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
-    ADD_ANALYSIS_FRAMEWORK_WIDGET,
-    REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
-    UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
 
     ADD_ENTRY,
     REMOVE_ENTRY,
@@ -132,27 +129,9 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
 });
 
 
-export const setAnalysisFramework = ({ analysisFramework }) => ({
+export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
     type: SET_ANALYSIS_FRAMEWORK,
     analysisFramework,
-});
-
-export const addAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) => ({
-    type: ADD_ANALYSIS_FRAMEWORK_WIDGET,
-    analysisFrameworkId,
-    widget,
-});
-
-export const removeAnalysisFrameworkWidget = ({ analysisFrameworkId, widgetId }) => ({
-    type: REMOVE_ANALYSIS_FRAMEWORK_WIDGET,
-    analysisFrameworkId,
-    widgetId,
-});
-
-export const updateAnalysisFrameworkWidget = ({ analysisFrameworkId, widget }) => ({
-    type: UPDATE_ANALYSIS_FRAMEWORK_WIDGET,
-    analysisFrameworkId,
-    widget,
 });
 
 export const addEntryAction = ({ leadId, entry }) => ({
