@@ -125,6 +125,7 @@ export default class EditEntryView extends React.PureComponent {
                     access,
                 });
             })
+            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'lead');
@@ -152,6 +153,7 @@ export default class EditEntryView extends React.PureComponent {
                     access,
                 });
             })
+            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -181,10 +183,7 @@ export default class EditEntryView extends React.PureComponent {
                 const { token } = this.props;
                 return createParamsForUser(token);
             })
-            .preLoad(() => {
-            })
-            .postLoad(() => {
-            })
+            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

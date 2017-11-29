@@ -108,10 +108,6 @@ export default class AnalysisFramework extends React.PureComponent {
                 return createParamsForUser(token);
             })
             .retryTime(1000)
-            .preLoad(() => {
-            })
-            .postLoad(() => {
-            })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -138,10 +134,6 @@ export default class AnalysisFramework extends React.PureComponent {
             })
             .retryTime(2000)
             .maxRetryAttempts(3)
-            .preLoad(() => {
-            })
-            .postLoad(() => {
-            })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
