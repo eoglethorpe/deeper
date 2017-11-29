@@ -6,10 +6,6 @@ import ReactGridLayout from 'react-grid-layout';
 import { connect } from 'react-redux';
 
 import {
-    Link,
-} from 'react-router-dom';
-
-import {
     TransparentButton,
     Button,
 } from '../../../../public/components/Action';
@@ -178,9 +174,7 @@ export default class Overview extends React.PureComponent {
                 <div
                     styleName="left"
                 >
-                    <Link to="/list">
-                        Go to list
-                    </Link>
+                    Lead preview
                 </div>
                 <div
                     ref={(el) => { this.gridLayoutContainer = el; }}

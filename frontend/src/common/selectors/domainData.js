@@ -149,6 +149,6 @@ export const analysisFrameworksSelector = ({ domainData }) => (
 
 export const entriesForLeadSelector = createSelector(
     entriesSelector,
-    leadIdFromProps,
+    (state, props) => props.leadId,
     (entries, leadId) => (entries[leadId] || emptyList),
 );
