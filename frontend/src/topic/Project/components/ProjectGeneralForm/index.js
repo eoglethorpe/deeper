@@ -23,6 +23,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     changeCallback: PropTypes.func.isRequired,
+    regionOptions: PropTypes.array.isRequired, //eslint-disable-line
+    userGroupsOptions: PropTypes.array.isRequired, //eslint-disable-line
     failureCallback: PropTypes.func.isRequired,
     formErrors: PropTypes.array.isRequired, //eslint-disable-line
     formFieldErrors: PropTypes.object.isRequired, //eslint-disable-line
@@ -44,18 +46,19 @@ export default class ProjectGeneralForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static optionLabelSelector = (d = {}) => d.value;
+    static optionKeySelector = (d = {}) => d.key;
+
     constructor(props) {
         super(props);
 
         this.elements = [
-            'name',
+            'title',
             'startDate',
             'endDate',
             'description',
             'regions',
             'userGroups',
-            'otherMembers',
-            'admins',
         ];
 
         this.validations = {
@@ -68,9 +71,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
         };
     }
 
-    regionLabelSelector = (d = {}) => d.title;
-    regionKeySelector = (d = {}) => d.id;
-
     render() {
         const {
             changeCallback,
@@ -78,6 +78,8 @@ export default class ProjectGeneralForm extends React.PureComponent {
             formErrors = [],
             formFieldErrors,
             formValues,
+            regionOptions,
+            userGroupsOptions,
             handleFormCancel,
             pending,
             stale,
@@ -118,7 +120,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 </header>
                 <TextInput
                     label="Name"
-                    formname="name"
+                    formname="title"
                     placeholder="Enter Project Name"
                     styleName="name"
                     value={formValues.title}
@@ -147,7 +149,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     styleName="description"
                     value={formValues.description}
                     error={formFieldErrors.description}
-
                 />
                 <SelectInput
                     label="Regions"
@@ -155,19 +156,23 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     placeholder="Select regions"
                     styleName="regions"
                     value={formValues.regions}
-                    options={formValues.regionOptions}
-                    labelSelector={this.regionLabelSelector}
-                    keySelector={this.regionKeySelector}
+                    options={regionOptions}
+                    labelSelector={ProjectGeneralForm.optionLabelSelector}
+                    keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.regions}
                     multiple
                 />
-                <TextInput
+                <SelectInput
                     label="User Groups"
                     formname="userGroups"
-                    placeholder="Select User Group"
+                    placeholder="Select user groups"
                     styleName="user-groups"
                     value={formValues.userGroups}
+                    options={userGroupsOptions}
+                    labelSelector={ProjectGeneralForm.optionLabelSelector}
+                    keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.userGroups}
+                    multiple
                 />
             </Form>
         );

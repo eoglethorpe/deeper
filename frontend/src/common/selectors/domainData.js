@@ -45,6 +45,9 @@ export const usersSelector = ({ domainData }) => (
 export const projectsSelector = ({ domainData }) => (
     domainData.projects || emptyObject
 );
+export const projectsOptionsSelector = ({ domainData }) => (
+    domainData.projectsOptions || emptyObject
+);
 
 export const groupsSelector = ({ domainData }) => (
     domainData.userGroups || emptyObject

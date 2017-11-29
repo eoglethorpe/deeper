@@ -15,6 +15,9 @@ import {
     tokenSelector,
 
     projectDetailsSelector,
+    projectOptionsSelector,
+
+    setProjectOptionsAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -24,6 +27,8 @@ import styles from './styles.scss';
 const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    projectOptions: PropTypes.object.isRequired, // eslint-disable-line
+    setProjectOptions: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -34,10 +39,17 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
+    projectOptions: projectOptionsSelector(state, props),
     token: tokenSelector(state),
 });
 
-@connect(mapStateToProps, null)
+const mapDispatchToProps = dispatch => ({
+    setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
+});
+
+const emptyList = [];
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectGeneral extends React.PureComponent {
     static propTypes = propTypes;
@@ -49,11 +61,12 @@ export default class ProjectGeneral extends React.PureComponent {
         const {
             projectDetails,
             activeProject,
+            projectOptions,
         } = props;
 
         const formValues = {
             ...projectDetails,
-            regions: projectDetails.regions.map(region => region.id),
+            regions: (projectDetails.regions || []).map(region => region.id),
         };
 
         this.state = {
@@ -62,6 +75,8 @@ export default class ProjectGeneral extends React.PureComponent {
             stale: false,
             pending: false,
             formValues,
+            regionOptions: projectOptions.regions || emptyList,
+            userGroupsOptions: projectOptions.userGroups || emptyList,
         };
 
         this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
@@ -72,8 +87,29 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
+        const {
+            projectDetails,
+            activeProject,
+            projectOptions,
+        } = nextProps;
+
         if (nextProps !== this.props) {
-            this.setState({ formValues: { ...nextProps.projectDetails } });
+            const formValues = {
+                ...projectDetails,
+                regions: (projectDetails.regions || []).map(region => region.id),
+            };
+            this.setState({
+                formValues,
+                regionOptions: projectOptions.regions || emptyList,
+                userGroupsOptions: projectOptions.userGroups || emptyList,
+            });
+        }
+        if (nextProps.activeProject !== this.props.activeProject) {
+            if (this.projectOptionsRequest) {
+                this.projectOptionsRequest.stop();
+                this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
+                this.projectOptionsRequest.start();
+            }
         }
     }
 
@@ -113,6 +149,10 @@ export default class ProjectGeneral extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectOptionsGetResponse');
+                    this.props.setProjectOptions({
+                        projectId,
+                        options: response,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -127,6 +167,7 @@ export default class ProjectGeneral extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
+            stale: true,
         });
     };
 
@@ -153,12 +194,16 @@ export default class ProjectGeneral extends React.PureComponent {
             stale,
             pending,
             formValues,
+            regionOptions,
+            userGroupsOptions,
         } = this.state;
 
         return (
             <div styleName="project-general">
                 <ProjectGeneralForm
                     formValues={formValues}
+                    regionOptions={regionOptions}
+                    userGroupsOptions={userGroupsOptions}
                     formErrors={formErrors}
                     formFieldErrors={formFieldErrors}
                     changeCallback={this.changeCallback}

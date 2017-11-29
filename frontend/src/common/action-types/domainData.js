@@ -4,6 +4,7 @@ export const SET_USER_INFORMATION = 'domain-data/SET_USER_INFORMATION';
 export const SET_USERS_INFORMATION = 'domain-data/SET_USERS_INFORMATION';
 export const SET_USER_PROJECTS = 'domain-data/SET_USER_PROJECTS';
 export const SET_USER_PROJECT = 'domain-data/SET_USER_PROJECT';
+export const SET_USER_PROJECT_OPTIONS = 'domain-data/SET_USER_PROJECT_OPTIONS';
 export const UNSET_USER_PROJECT = 'domain-data/UNSET_USER_PROJECT';
 export const SET_USER_GROUPS = 'domain-data/SET_USER_GROUPS';
 export const SET_USER_GROUP = 'domain-data/SET_USER_GROUP';

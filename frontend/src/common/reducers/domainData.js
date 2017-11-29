@@ -2,6 +2,7 @@ import {
     SET_USER_INFORMATION,
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
+    SET_USER_PROJECT_OPTIONS,
     SET_USER_PROJECT,
     UNSET_USER_PROJECT,
 
@@ -90,7 +91,17 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             }
             return update(state, settings);
         }
-
+        case SET_USER_PROJECT_OPTIONS: {
+            console.log(action.options);
+            const settings = {
+                projectsOptions: {
+                    [action.projectId]: { $auto: {
+                        $set: action.options,
+                    } },
+                },
+            };
+            return update(state, settings);
+        }
         case UNSET_USER_PROJECT: {
             const settings = {
                 projects: {
