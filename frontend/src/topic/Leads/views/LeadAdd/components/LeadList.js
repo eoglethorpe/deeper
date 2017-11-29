@@ -9,16 +9,16 @@ import { connect } from 'react-redux';
 
 import {
     ListView,
-} from '../../../../public/components/View';
+} from '../../../../../public/components/View';
 
 import {
     addLeadViewActiveLeadIdSelector,
     addLeadViewLeadsFilteredSelector,
     setAddLeadViewActiveLeadIdAction,
-} from '../../../../common/redux';
+} from '../../../../../common/redux';
 
-import AddLeadListItem from '../../components/AddLeadListItem';
-import styles from './styles.scss';
+import LeadListItem from './LeadListItem';
+import styles from './../styles.scss';
 
 const defaultProps = {
     activeLeadId: undefined,
@@ -44,7 +44,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadList extends React.PureComponent {
+export default class LeadList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -57,7 +57,7 @@ export default class AddLeadList extends React.PureComponent {
         } = this.props;
 
         return (
-            <AddLeadListItem
+            <LeadListItem
                 active={activeLeadId === lead.data.id}
                 key={key}
                 leadKey={key}

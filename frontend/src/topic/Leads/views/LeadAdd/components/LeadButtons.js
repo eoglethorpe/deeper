@@ -8,25 +8,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { TransparentButton } from '../../../../public/components/Action';
-import { FileInput } from '../../../../public/components/Input';
-import { randomString } from '../../../../public/utils/common';
+import { TransparentButton } from '../../../../../public/components/Action';
+import { FileInput } from '../../../../../public/components/Input';
+import { randomString } from '../../../../../public/utils/common';
 
 import {
     addAddLeadViewLeadsAction,
     activeProjectSelector,
     tokenSelector,
-} from '../../../../common/redux';
+} from '../../../../../common/redux';
 import {
     urlForUpload,
     createParamsForFileUpload,
-} from '../../../../common/rest';
-import DropboxChooser from '../../../../common/components/DropboxChooser';
-import GooglePicker from '../../../../common/components/GooglePicker';
-import { dropboxAppKey } from '../../../../common/config/dropbox';
-import { googleDriveClientId, googleDriveDeveloperKey } from '../../../../common/config/google-drive';
+} from '../../../../../common/rest';
+import DropboxChooser from '../../../../../common/components/DropboxChooser';
+import GooglePicker from '../../../../../common/components/GooglePicker';
+import { dropboxAppKey } from '../../../../../common/config/dropbox';
+import {
+    googleDriveClientId,
+    googleDriveDeveloperKey,
+} from '../../../../../common/config/google-drive';
 
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const supportedGoogleDriveMimeTypes = [
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -72,7 +75,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadButtons extends React.PureComponent {
+export default class LeadButtons extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 

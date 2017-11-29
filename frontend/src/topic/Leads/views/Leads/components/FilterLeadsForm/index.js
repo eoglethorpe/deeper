@@ -3,21 +3,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { PrimaryButton, DangerButton } from '../../../../public/components/Action';
+import {
+    PrimaryButton,
+    DangerButton,
+} from '../../../../../../public/components/Action';
 import {
     Form,
     SelectInput,
     TextInput,
     DateFilter,
-} from '../../../../public/components/Input';
-
-import { RestBuilder } from '../../../../public/utils/rest';
-import { isTruthy, isObjectEmpty } from '../../../../public/utils/common';
+} from '../../../../../../public/components/Input';
+import { RestBuilder } from '../../../../../../public/utils/rest';
+import {
+    isTruthy,
+    isObjectEmpty,
+} from '../../../../../../public/utils/common';
 
 import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
-} from '../../../../common/rest';
+} from '../../../../../../common/rest';
 import {
     activeProjectSelector,
     leadFilterOptionsForProjectSelector,
@@ -28,7 +33,7 @@ import {
 
     setLeadFilterOptionsAction,
     unsetLeadPageFilterAction,
-} from '../../../../common/redux';
+} from '../../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -72,8 +77,10 @@ export default class FilterLeadsForm extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        // eslint-disable-next-line no-unused-vars
+        const { similar, ...values } = this.props.value;
         this.state = {
-            formValues: this.props.value,
+            formValues: values,
             stale: false,
         };
 
@@ -94,8 +101,10 @@ export default class FilterLeadsForm extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { value, activeProject } = nextProps;
         if (this.props.value !== value) {
+            // eslint-disable-next-line no-unused-vars
+            const { similar, ...values } = this.props.value;
             this.setState({
-                formValues: value,
+                formValues: values,
                 stale: false,
             });
         }
@@ -173,15 +182,13 @@ export default class FilterLeadsForm extends React.PureComponent {
         });
     }
 
-    handleClearSimilarSelection = (e) => {
-        e.preventDefault();
+    handleClearSimilarSelection = () => {
         this.props.setLeadPageFilter({
             filters: { similar: undefined },
         });
     }
 
-    handleClearFilters = (e) => {
-        e.preventDefault();
+    handleClearFilters = () => {
         if (!this.state.stale) {
             this.props.unsetLeadPageFilter();
         } else {
@@ -289,6 +296,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <DangerButton
                     styleName="filter-btn"
                     disabled={isFilterEmpty}
+                    type="button"
                     onClick={this.handleClearFilters}
                 >
                     Clear Filter
@@ -296,6 +304,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 {isTruthy(this.props.value.similar) && (
                     <DangerButton
                         styleName="filter-btn"
+                        type="button"
                         onClick={this.handleClearSimilarSelection}
                     >
                         Clear Similarity Filter

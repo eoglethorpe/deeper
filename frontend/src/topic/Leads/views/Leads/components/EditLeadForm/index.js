@@ -7,14 +7,14 @@ import styles from './styles.scss';
 import {
     DangerButton,
     PrimaryButton,
-} from '../../../../public/components/Action';
+} from '../../../../../../public/components/Action';
 import {
     Form,
     NonFieldErrors,
     TextInput,
     requiredCondition,
     urlCondition,
-} from '../../../../public/components/Input';
+} from '../../../../../../public/components/Input';
 
 const propTypes = {
     onSubmit: PropTypes.func.isRequired, //eslint-disable-line

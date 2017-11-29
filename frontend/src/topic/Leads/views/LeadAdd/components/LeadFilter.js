@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { RestBuilder } from '../../../../../public/utils/rest';
 import {
     SelectInput,
     TextInput,
-} from '../../../../public/components/Input';
+} from '../../../../../public/components/Input';
 
 import {
     tokenSelector,
@@ -20,14 +20,13 @@ import {
     setAddLeadViewFiltersAction,
     addLeadViewFiltersSelector,
     setLeadFilterOptionsAction,
-} from '../../../../common/redux';
+} from '../../../../../common/redux';
 import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
-} from '../../../../common/rest';
+} from '../../../../../common/rest';
 
-
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 
 const leadTypeOptions = [
@@ -71,7 +70,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadFilter extends React.PureComponent {
+export default class LeadFilter extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 

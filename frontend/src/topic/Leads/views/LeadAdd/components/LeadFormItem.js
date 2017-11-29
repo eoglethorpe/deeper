@@ -7,14 +7,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { RestBuilder } from '../../../../../public/utils/rest';
 
 import {
     createParamsForLeadEdit,
     createParamsForLeadCreate,
     urlForLead,
     createUrlForLeadEdit,
-} from '../../../../common/rest';
+} from '../../../../../common/rest';
 import {
     tokenSelector,
     addLeadViewLeadSetPendingAction,
@@ -23,11 +23,11 @@ import {
     addLeadViewLeadPrevAction,
     addLeadViewLeadChangeAction,
     addLeadViewLeadRemoveAction,
-} from '../../../../common/redux';
+} from '../../../../../common/redux';
 
-import AddLeadForm from '../../components/AddLeadForm';
+import LeadForm from './LeadForm';
 
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const propTypes = {
     uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
@@ -67,7 +67,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadFormItem extends React.PureComponent {
+export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -184,7 +184,7 @@ export default class AddLeadFormItem extends React.PureComponent {
 
         return (
             <div className={`${styles.right} ${leadKey !== activeLeadId ? styles.hidden : ''}`} >
-                <AddLeadForm
+                <LeadForm
                     className={styles['add-lead-form']}
                     lead={lead}
                     leadOptions={leadOptions}

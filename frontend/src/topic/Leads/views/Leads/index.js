@@ -5,7 +5,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { RestBuilder } from '../../../../public/utils/rest';
 import {
     Modal,
     ModalHeader,
@@ -14,17 +14,17 @@ import {
     RawTable,
     FormattedDate,
     LoadingAnimation,
-} from '../../../public/components/View';
+} from '../../../../public/components/View';
 import {
     PrimaryButton,
     TransparentAccentButton,
     TransparentButton,
-} from '../../../public/components/Action';
+} from '../../../../public/components/Action';
 
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
-} from '../../../common/rest';
+} from '../../../../common/rest';
 import {
     tokenSelector,
 
@@ -45,15 +45,15 @@ import {
 
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
-} from '../../../common/redux';
+} from '../../../../common/redux';
 
-import browserHistory from '../../../common/browserHistory';
-import schema from '../../../common/schema';
-import { pageTitles } from '../../../common/utils/labels';
+import browserHistory from '../../../../common/browserHistory';
+import schema from '../../../../common/schema';
+import { pageTitles } from '../../../../common/utils/labels';
 
-import EditLeadForm from '../components/EditLeadForm';
-import FilterLeadsForm from '../components/FilterLeadsForm';
-import LeadColumnHeader from '../components/LeadColumnHeader';
+import EditLeadForm from './components/EditLeadForm';
+import FilterLeadsForm from './components/FilterLeadsForm';
+import LeadColumnHeader from './components/LeadColumnHeader';
 import styles from './styles.scss';
 
 const propTypes = {

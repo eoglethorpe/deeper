@@ -29,7 +29,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class AddLeadListItem extends React.PureComponent {
+export default class LeadListItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
