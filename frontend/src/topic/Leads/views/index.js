@@ -188,7 +188,10 @@ export default class Leads extends React.PureComponent {
                         >
                             <i className="ion-edit" />
                         </TransparentButton>
-                        <TransparentAccentButton >
+                        <TransparentAccentButton
+                            title="Add entry from this lead"
+                            onClick={() => this.handleAddEntryClick(row)}
+                        >
                             <i className="ion-forward" />
                         </TransparentAccentButton>
                     </div>
@@ -354,6 +357,10 @@ export default class Leads extends React.PureComponent {
 
     handleAddLeadClick = () => {
         browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+    }
+
+    handleAddEntryClick = (row) => {
+        browserHistory.push(`/${this.props.activeProject}/entries/${row.id}/`);
     }
 
     handleEditLeadClick = (row) => {

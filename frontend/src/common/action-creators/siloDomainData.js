@@ -18,6 +18,8 @@ import {
     UNSET_LEAD_PAGE_FILTER,
     SET_LEAD_PAGE_ACTIVE_PAGE,
     SET_LEAD_PAGE_ACTIVE_SORT,
+
+    SET_EDIT_ENTRY_VIEW_LEAD,
 } from '../action-types/siloDomainData';
 
 
@@ -107,4 +109,9 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     projectId,
     leads,
     totalLeadsCount,
+});
+
+export const setEditEntryViewLeadAction = ({ lead }) => ({
+    type: SET_EDIT_ENTRY_VIEW_LEAD,
+    lead,
 });

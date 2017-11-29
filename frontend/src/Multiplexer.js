@@ -87,6 +87,10 @@ const AddLead = () => (
     </ProjectRouteSynchronizer>
 );
 
+const EditEntry = () => (
+    <Bundle load={() => import('./topic/Entries/views/EditEntryView')} />
+);
+
 const ApiDocs = () => (
     <Bundle load={() => import('./topic/ApiDocs/views')} />
 );
@@ -154,9 +158,9 @@ export default class Multiplexer extends React.PureComponent {
             private: true,
         },
         {
-            path: '/:projectId/entries/:entryId/',
+            path: '/:projectId/entries/:leadId/',
             name: pageTitles.editEntries,
-            component: () => <h1>{pageTitles.editEntries}</h1>,
+            component: EditEntry,
             private: true,
         },
         {

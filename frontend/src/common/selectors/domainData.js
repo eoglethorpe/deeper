@@ -11,6 +11,7 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
+export const leadIdFromProps = (state, { match }) => match.params.leadId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
 
@@ -18,6 +19,10 @@ export const regionIdFromProps = (state, { regionId }) => regionId;
 
 export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
+);
+
+export const entriesSelector = ({ domainData }) => (
+    domainData.entries || emptyObject
 );
 
 export const regionsSelector = ({ domainData }) => (
@@ -138,7 +143,6 @@ export const currentUserProjectsSelector = createSelector(
     ) || emptyList),
 );
 
-
 export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
@@ -149,4 +153,10 @@ export const currentAnalysisFrameworkSelector = createSelector(
     (analysisFrameworkId, analysisFrameworks) => (
         analysisFrameworks[analysisFrameworkId]
     ),
+);
+
+export const entriesForLeadSelector = createSelector(
+    entriesSelector,
+    leadIdFromProps,
+    (entries, leadId) => (entries[leadId] || emptyList),
 );

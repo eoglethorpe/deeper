@@ -80,6 +80,10 @@ const initialSiloDomainData = {
         },
         */
     },
+
+    editEntryView: {
+        lead: {},
+    },
 };
 
 export default initialSiloDomainData;

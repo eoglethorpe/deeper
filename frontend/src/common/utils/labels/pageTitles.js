@@ -13,6 +13,7 @@ const pageTitles = {
 
     editLeads: 'Edit Leads',
     editEntries: 'Edit Entries',
+    editEntry: 'Edit Entry',
     editAry: 'Edit Ary',
 
     userProfile: 'User Profile',

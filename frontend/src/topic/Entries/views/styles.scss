@@ -1,0 +1,24 @@
+@import '../../../stylesheets/base';
+
+.entries {
+    padding: $spacing-medium-alt;
+
+    .entry-list {
+        .entry {
+            padding: $spacing-large 0;
+            border-bottom: 1px solid $color-separator;
+
+            .header {
+                display: flex;
+
+                .action-buttons {
+                    margin-left: 10px;
+                }
+            }
+
+            .excerpt {
+                margin: 0;
+            }
+        }
+    }
+}

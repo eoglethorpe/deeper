@@ -14,6 +14,7 @@ const projectSchema = [];
             regions: { type: 'array.object' },
             title: { type: 'string', required: true },
             description: { type: 'string', required: false },
+            analysisFramework: { type: 'uint', required: false },
             userGroups: { type: 'array.userGroupBase' },
             startDate: { type: 'string' }, // date
             endDate: { type: 'string' }, // date

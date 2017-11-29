@@ -65,6 +65,7 @@ const initialDomainDataState = {
     },
 
     // index is project id
+    // using lead id instead of project id might be more resonable here --fh
     entries: {
         /*
         1: [
