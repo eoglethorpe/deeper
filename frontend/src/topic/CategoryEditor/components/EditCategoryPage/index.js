@@ -2,12 +2,13 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
-import styles from './styles.scss';
 
 import {
     TextInput,
     TextArea,
 } from '../../../../public/components/Input';
+
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
@@ -21,16 +22,21 @@ const defaultProps = {
 export default class EditCategoryPage extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    tabStyle = { none: 'none' };
+
     render() {
+        const {
+            className,
+        } = this.props;
         return (
-            <div styleName={this.props.className}>
+            <div styleName={className}>
                 <div styleName="header">
                     <div styleName="title-children-parent">
                         <TextInput
                             label="title"
                             styleName="header-input"
                             showHintAndError={false}
-
                         />
                         <TextInput
                             label="Parent"
@@ -49,7 +55,7 @@ export default class EditCategoryPage extends React.PureComponent {
                     />
                 </div>
                 <Tabs
-                    activeLinkStyle={{ none: 'none' }}
+                    activeLinkStyle={this.tabStyle}
                     styleName="tabs-container"
                 >
                     <div styleName="tabs-header-container">
@@ -78,7 +84,7 @@ export default class EditCategoryPage extends React.PureComponent {
                         for="English"
                         styleName="tab"
                     >
-                        asdasd
+                        n-gram-1
                     </TabContent>
                     <TabContent
                         for="French"

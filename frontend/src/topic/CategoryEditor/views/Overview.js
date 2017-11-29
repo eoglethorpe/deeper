@@ -4,31 +4,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { pageTitles } from '../../../common/utils/labels';
 import {
     setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
-import {
     currentUserProjectsSelector,
-} from '../../../common/selectors/domainData';
-
-import {
-    activeProjectSelector,
-} from '../../../common/selectors/siloDomainData';
-
-import styles from './styles.scss';
+} from '../../../common/redux';
+import { pageTitles } from '../../../common/utils/labels';
 
 import DocumentView from './DocumentView';
 import CategoryView from './CategoryView';
-
+import styles from './styles.scss';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
 });
 
@@ -64,14 +54,12 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="overview">
                 <Helmet>
-                    <title>{ pageTitles.categoryEditor }</title>
+                    <title>
+                        { pageTitles.categoryEditor }
+                    </title>
                 </Helmet>
-                <DocumentView
-                    className="left"
-                />
-                <CategoryView
-                    className="right"
-                />
+                <DocumentView className="left" />
+                <CategoryView className="right" />
             </div>
         );
     }

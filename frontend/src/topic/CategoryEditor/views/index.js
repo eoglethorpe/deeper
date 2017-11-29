@@ -10,33 +10,25 @@ import {
 } from 'react-router-dom';
 
 import { pageTitles } from '../../../common/utils/labels';
+import { setNavbarStateAction } from '../../../common/redux';
 
-import {
-    setNavbarStateAction,
-} from '../../../common/action-creators/navbar';
+import EditCategoryPage from '../components/EditCategoryPage';
 
 import styles from './styles.scss';
-
 import Overview from './Overview';
-import EditCategoryPage from '../components/EditCategoryPage';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    analysisFramework: undefined,
 };
-
-const mapStateToProps = state => ({
-    state,
-});
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
@@ -66,31 +58,25 @@ export default class CategoryEditor extends React.PureComponent {
             <HashRouter>
                 <div styleName="category-editor">
                     <Helmet>
-                        <title>{ pageTitles.analysisFramework }</title>
+                        <title>{ pageTitles.categoryEditor }</title>
                     </Helmet>
                     <Route
                         exact
                         path="/"
-                        component={
-                            () => (
-                                <Redirect to="/overview" />
-                            )
-                        }
+                        component={() => (
+                            <Redirect to="/overview" />
+                        )}
                     />
                     <Route
                         path="/overview"
                         render={props => (
-                            <Overview
-                                {...props}
-                            />
+                            <Overview {...props} />
                         )}
                     />
                     <Route
                         path="/edit"
                         render={props => (
-                            <EditCategoryPage
-                                {...props}
-                            />
+                            <EditCategoryPage {...props} />
                         )}
                     />
                 </div>

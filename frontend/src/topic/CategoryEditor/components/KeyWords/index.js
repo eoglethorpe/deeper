@@ -16,11 +16,17 @@ const defaultProps = {
 export default class KeyWords extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    tabStyle = { none: 'none' };
+
     render() {
+        const {
+            className,
+        } = this.props;
         return (
-            <div styleName={this.props.className}>
+            <div styleName={className}>
                 <Tabs
-                    activeLinkStyle={{ none: 'none' }}
+                    activeLinkStyle={this.tabStyle}
                     styleName="tabs-container"
                 >
                     <div styleName="tabs-header-container">

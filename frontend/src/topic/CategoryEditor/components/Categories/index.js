@@ -1,25 +1,24 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import styles from './styles.scss';
-import KeyWords from '../../components/KeyWords';
 
+import { TextInput } from '../../../../public/components/Input';
 import {
-    TextInput,
-} from '../../../../public/components/Input';
+    PrimaryButton,
+    DangerButton,
+} from '../../../../public/components/Action';
 import {
     Modal,
     ModalBody,
     ModalHeader,
     ModalFooter,
 } from '../../../../public/components/View';
-
 import { randomString } from '../../../../public/utils/common';
 
-import {
-    PrimaryButton,
-    DangerButton,
-} from '../../../../public/components/Action';
+import KeyWords from '../../components/KeyWords';
+
+import styles from './styles.scss';
+
 @CSSModules(styles, { allowMultiple: true })
 export default class Categories extends React.PureComponent {
     constructor(props) {
@@ -104,15 +103,11 @@ export default class Categories extends React.PureComponent {
     // For SUB Category Data
 
     handleAddNewSubCategoryShowModal = () => {
-        this.setState({
-            addNewSubCategory: true,
-        });
+        this.setState({ addNewSubCategory: true });
     }
 
     handleSubCategoryClick = (subCategory) => {
-        this.setState({
-            activeSubCategory: subCategory,
-        });
+        this.setState({ activeSubCategory: subCategory });
     }
 
     handleAddNewSubCategoryClose = () => {
@@ -139,23 +134,17 @@ export default class Categories extends React.PureComponent {
     }
 
     handleNewSubCategoryInputChange = (value) => {
-        this.setState({
-            newSubCategoryInputValue: value,
-        });
+        this.setState({ newSubCategoryInputValue: value });
     }
 
     // For SUB-SUB Category Data
 
     handleAddNewSubSubCategoryShowModal = () => {
-        this.setState({
-            addNewSubSubCategory: true,
-        });
+        this.setState({ addNewSubSubCategory: true });
     }
 
     handleSubSubCategoryClick = (subSubCategory) => {
-        this.setState({
-            activeSubSubCategory: subSubCategory,
-        });
+        this.setState({ activeSubSubCategory: subSubCategory });
     }
 
     handleAddNewSubSubCategoryClose = () => {
@@ -182,9 +171,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleNewSubSubCategoryInputChange = (value) => {
-        this.setState({
-            newSubSubCategoryInputValue: value,
-        });
+        this.setState({ newSubSubCategoryInputValue: value });
     }
 
     render() {

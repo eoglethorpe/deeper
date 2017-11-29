@@ -2,8 +2,8 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './styles.scss';
 import AddDocumentButtons from './AddDocumentButtons';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
@@ -17,14 +17,21 @@ const defaultProps = {
 export default class DocumentView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
     render() {
         return (
             <div styleName={this.props.className}>
                 <div styleName="header">
-                    <h2>Category Editor</h2>
+                    <h2>
+                        Category Editor
+                    </h2>
                 </div>
                 <div styleName="preview-container">
-                    <div><h1>No Preview Available</h1></div>
+                    <div>
+                        <h1>
+                            No Preview Available
+                        </h1>
+                    </div>
                 </div>
                 <AddDocumentButtons />
             </div>
