@@ -80,8 +80,11 @@ export default class LeadAdd extends React.PureComponent {
         this.state = {
             leadUploads: {},
         };
+        this.leadRefs = {
+        };
 
         this.uploadCoordinator = new Coordinator();
+        this.formCoordinator = new Coordinator();
     }
 
     componentWillMount() {
@@ -104,6 +107,7 @@ export default class LeadAdd extends React.PureComponent {
 
     componentWillUnmount() {
         this.uploadCoordinator.close();
+        this.formCoordinator.close();
     }
 
     // REST REQUEST
@@ -265,6 +269,8 @@ export default class LeadAdd extends React.PureComponent {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadFailure = (leadId, status) => {
@@ -289,6 +295,8 @@ export default class LeadAdd extends React.PureComponent {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
@@ -363,6 +371,7 @@ export default class LeadAdd extends React.PureComponent {
         const { activeLeadId } = this.props;
         return (
             <LeadFormItem
+                ref={(elem) => { this.leadRefs[key] = elem; }}
                 key={key}
                 leadKey={key}
                 lead={lead}

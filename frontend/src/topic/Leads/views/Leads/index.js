@@ -460,21 +460,17 @@ export default class Leads extends React.PureComponent {
                 </Helmet>
 
                 <header styleName="header">
-                    <h1>
-                        { pageTitles.leads }
-                    </h1>
                     <PrimaryButton
                         styleName="add-lead-button"
                         onClick={this.handleAddLeadClick}
                     >
-                        Add lead
+                        Add leads
                     </PrimaryButton>
+                    <FilterLeadsForm
+                        styleName="filters"
+                        value={this.props.filters}
+                    />
                 </header>
-
-                <FilterLeadsForm
-                    styleName="filters"
-                    value={this.props.filters}
-                />
 
                 <div styleName="table-container">
                     <RawTable

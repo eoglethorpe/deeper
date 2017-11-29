@@ -174,6 +174,16 @@ export default class LeadFormItem extends React.PureComponent {
         this.props.addLeadViewLeadRemove(leadId);
     }
 
+    start = () => {
+        // submit form
+        console.log('Started');
+    }
+
+    close = () => {
+        // cleanup if you want
+        console.log('Close forced');
+    }
+
     render() {
         const {
             leadKey,
