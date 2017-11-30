@@ -3,6 +3,8 @@
 .project-general-form {
     position: relative;
     padding: $spacing-large;
+    width: 100%;
+    max-width: 540px;
 
     .header {
         display: flex;
@@ -44,13 +46,15 @@
 
     .name,
     .description,
-    .regions,
-    .user-groups,
     .other-members,
     .admins {
         flex-basis: 100%;
     }
 
+    .regions,
+    .user-groups {
+        padding: $spacing-medium 0;
+    }
 
     .pending-overlay {
         display: flex;

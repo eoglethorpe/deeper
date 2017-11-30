@@ -92,7 +92,6 @@ const domainDataReducer = (state = initialDomainDataState, action) => {
             return update(state, settings);
         }
         case SET_USER_PROJECT_OPTIONS: {
-            console.log(action.options);
             const settings = {
                 projectsOptions: {
                     [action.projectId]: { $auto: {

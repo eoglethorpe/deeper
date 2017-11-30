@@ -69,7 +69,7 @@ export default class CountryKeyFigures extends React.PureComponent {
             formErrors: [],
             formFieldErrors: {},
             formValues: props.regionDetail.keyFigures || {},
-            dataLoading: false,
+            dataLoading: true,
         };
 
         this.elements = [
@@ -158,6 +158,9 @@ export default class CountryKeyFigures extends React.PureComponent {
                     access,
                 });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {

@@ -71,6 +71,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
     constructor(props) {
         super(props);
         this.regionRequest = this.createRegionRequest(props.regionId);
+        this.state = {
+            dataLoading: true,
+        };
     }
 
     componentWillMount() {
@@ -93,6 +96,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     access,
                 });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
@@ -121,6 +127,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     { project: projectId },
                 );
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
@@ -156,6 +165,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     { regions },
                 );
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

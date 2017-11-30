@@ -18,6 +18,7 @@ import {
     projectOptionsSelector,
 
     setProjectOptionsAction,
+    setProjectAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -28,6 +29,7 @@ const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
+    setProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
@@ -45,6 +47,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
+    setProject: params => dispatch(setProjectAction(params)),
 });
 
 const emptyList = [];
@@ -67,6 +70,7 @@ export default class ProjectGeneral extends React.PureComponent {
         const formValues = {
             ...projectDetails,
             regions: (projectDetails.regions || []).map(region => region.id),
+            userGroups: (projectDetails.userGroups || []).map(userGroups => userGroups.id),
         };
 
         this.state = {
@@ -97,6 +101,7 @@ export default class ProjectGeneral extends React.PureComponent {
             const formValues = {
                 ...projectDetails,
                 regions: (projectDetails.regions || []).map(region => region.id),
+                userGroups: (projectDetails.userGroups || []).map(userGroups => userGroups.id),
             };
             this.setState({
                 formValues,
@@ -117,19 +122,26 @@ export default class ProjectGeneral extends React.PureComponent {
         this.projectOptionsRequest.stop();
     }
 
-    createProjectPatchRequest = () => {
+    createProjectPatchRequest = (newProjectDetails, projectId) => {
         const projectPatchRequest = new RestBuilder()
-            .url(createUrlForProject())
+            .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForProjectPatch(
                     { access },
+                    newProjectDetails,
                 );
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
+                    this.props.setProject({
+                        project: response,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -146,6 +158,9 @@ export default class ProjectGeneral extends React.PureComponent {
                 const { access } = token;
                 return createParamsForProjectOptions({ access });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectOptionsGetResponse');
@@ -175,6 +190,7 @@ export default class ProjectGeneral extends React.PureComponent {
         this.setState({
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
+            stale: false,
         });
     };
 
@@ -183,8 +199,28 @@ export default class ProjectGeneral extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        console.log(values);
-        // Rest Request goes here
+        const { activeProject } = this.props;
+
+        const regions = values.regions.map(region => ({
+            id: region,
+        }));
+        const userGroups = values.userGroups.map(userGroup => ({
+            id: userGroup,
+        }));
+        const newProjectDetails = {
+            ...values,
+            regions,
+            userGroups,
+        };
+
+        if (this.projectPatchRequest) {
+            this.projectPatchRequest.stop();
+        }
+
+        this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, activeProject);
+        this.projectPatchRequest.start();
+
+        this.setState({ stale: false });
     };
 
     render() {
@@ -210,6 +246,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     failureCallback={this.failureCallback}
                     handleFormCancel={this.handleFormCancel}
                     successCallback={this.successCallback}
+                    styleName="project-general-form"
                     stale={stale}
                     pending={pending}
                 />
