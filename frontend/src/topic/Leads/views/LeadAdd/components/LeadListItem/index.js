@@ -54,8 +54,9 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     renderIcon = () => {
-        const { lead } = this.props;
+        const { upload, lead } = this.props;
         const { serverId } = lead;
+        const { type } = lead.data;
         const {
             error,
             stale,
@@ -63,7 +64,15 @@ export default class LeadListItem extends React.PureComponent {
             ready,
         } = lead.uiState;
 
-        if (pending || !ready) {
+        if (type === 'file' && !upload && (!ready || error)) {
+            // no way to resume this upload
+            return (
+                <span
+                    styleName="warning"
+                    className="ion-alert-circled"
+                />
+            );
+        } else if (pending || !ready) {
             return (
                 <span
                     styleName="pending"
@@ -102,8 +111,7 @@ export default class LeadListItem extends React.PureComponent {
             lead,
             upload,
         } = this.props;
-        const { data } = lead;
-        const { type } = data;
+        const { type } = lead.data;
         const { title } = lead.form.values;
 
         return (

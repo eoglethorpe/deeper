@@ -39,6 +39,7 @@
         word-break: break-all;
     }
 
+    .warning,
     .pending,
     .error,
     .complete,
@@ -53,6 +54,10 @@
 
     .pending {
         animation: spin 1s linear infinite;
+    }
+
+    .warning {
+        color: $color-warning;
     }
 
     .error {
