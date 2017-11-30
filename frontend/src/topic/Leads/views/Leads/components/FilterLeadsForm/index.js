@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    PrimaryButton,
+    Button,
     DangerButton,
 } from '../../../../../../public/components/Action';
 import {
@@ -102,7 +102,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         const { value, activeProject } = nextProps;
         if (this.props.value !== value) {
             // eslint-disable-next-line no-unused-vars
-            const { similar, ...values } = this.props.value;
+            const { similar, ...values } = value;
             this.setState({
                 formValues: values,
                 stale: false,
@@ -225,16 +225,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                 changeCallback={this.handleChange}
                 elements={this.formElements}
             >
-                <TextInput
-                    label="Search"
-                    type="search"
-                    showLabel
-                    showHintAndError={false}
-                    placeholder="Nepal"
-                    formname="search"
-                    styleName="filter text-input"
-                    value={formValues.search}
-                />
                 <SelectInput
                     label="Assigned to"
                     showLabel
@@ -287,16 +277,26 @@ export default class FilterLeadsForm extends React.PureComponent {
                     value={formValues.status}
                     multiple
                 />
-                <PrimaryButton
+                <TextInput
+                    label="Search"
+                    type="search"
+                    showLabel
+                    showHintAndError={false}
+                    placeholder="Nepal"
+                    formname="search"
+                    styleName="filter text-input"
+                    value={formValues.search}
+                />
+                <Button
                     styleName="filter-btn"
                     disabled={!stale || isFilterEmpty}
                 >
                     Apply Filter
-                </PrimaryButton>
+                </Button>
                 <DangerButton
                     styleName="filter-btn"
-                    disabled={isFilterEmpty}
                     type="button"
+                    disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
                     Clear Filter

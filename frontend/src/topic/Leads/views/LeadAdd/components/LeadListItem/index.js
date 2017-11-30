@@ -53,6 +53,57 @@ export default class LeadListItem extends React.PureComponent {
         this.props.onClick(this.props.leadKey);
     }
 
+    renderIcon = () => {
+        const { upload, lead } = this.props;
+        const { serverId } = lead;
+        const { type } = lead.data;
+        const {
+            error,
+            stale,
+            pending,
+            ready,
+        } = lead.uiState;
+
+        if (type === 'file' && !upload && (!ready || error)) {
+            // no way to resume this upload
+            return (
+                <span
+                    styleName="warning"
+                    className="ion-alert-circled"
+                />
+            );
+        } else if (pending || !ready) {
+            return (
+                <span
+                    styleName="pending"
+                    className="ion-load-c"
+                />
+            );
+        } else if (error) {
+            return (
+                <span
+                    styleName="error"
+                    className="ion-android-alert"
+                />
+            );
+        } else if (stale) {
+            return (
+                <span
+                    styleName="stale"
+                    className="ion-code-working"
+                />
+            );
+        } else if (serverId) {
+            return (
+                <span
+                    styleName="complete"
+                    className="ion-checkmark-circled"
+                />
+            );
+        }
+        return null;
+    }
+
     render() {
         const {
             active,
@@ -60,16 +111,8 @@ export default class LeadListItem extends React.PureComponent {
             lead,
             upload,
         } = this.props;
-        const {
-            data,
-            serverId,
-        } = lead;
-        const { type } = data;
+        const { type } = lead.data;
         const { title } = lead.form.values;
-        const {
-            error,
-            stale,
-        } = lead.uiState;
 
         return (
             <button
@@ -81,35 +124,10 @@ export default class LeadListItem extends React.PureComponent {
                     styleName="icon"
                     className={this.getIconClassName(type)}
                 />
-                <span
-                    styleName="title"
-                >
+                <span styleName="title" >
                     { title }
                 </span>
-                {
-                    error && (
-                        <span
-                            styleName="error"
-                            className="ion-android-alert"
-                        />
-                    )
-                }
-                {
-                    !error && stale && (
-                        <span
-                            styleName="stale"
-                            className="ion-code-working"
-                        />
-                    )
-                }
-                {
-                    !error && !stale && serverId && (
-                        <span
-                            styleName="complete"
-                            className="ion-checkmark-circled"
-                        />
-                    )
-                }
+                { this.renderIcon() }
                 {
                     upload && !upload.errorMsg && (
                         <span

@@ -179,7 +179,7 @@ export default class LeadButtons extends React.PureComponent {
         });
 
         this.props.addLeads(newLeads);
-        this.props.uploadCoordinator.queueAll();
+        this.props.uploadCoordinator.start();
     }
 
     handleAddLeadFromWebsite = () => {

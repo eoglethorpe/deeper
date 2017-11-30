@@ -19,10 +19,7 @@ import {
     tokenSelector,
     addLeadViewLeadSetPendingAction,
     addLeadViewLeadSaveAction,
-    addLeadViewLeadNextAction,
-    addLeadViewLeadPrevAction,
     addLeadViewLeadChangeAction,
-    addLeadViewLeadRemoveAction,
 } from '../../../../../common/redux';
 
 import LeadForm from './LeadForm';
@@ -30,23 +27,20 @@ import LeadForm from './LeadForm';
 import styles from '../styles.scss';
 
 const propTypes = {
-    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
-
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
 
     leadKey: PropTypes.string.isRequired,
-    activeLeadId: PropTypes.string.isRequired,
+    active: PropTypes.bool.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line
     leadOptions: PropTypes.object.isRequired, // eslint-disable-line
 
     addLeadViewLeadSave: PropTypes.func.isRequired,
     addLeadViewLeadSetPending: PropTypes.func.isRequired,
-    addLeadViewLeadNext: PropTypes.func.isRequired,
-    addLeadViewLeadPrev: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
-    addLeadViewLeadRemove: PropTypes.func.isRequired,
+
+    notifyComplete: PropTypes.func.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
@@ -59,13 +53,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadSetPending: params => dispatch(addLeadViewLeadSetPendingAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
-    addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
-    addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
-    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
@@ -117,12 +108,15 @@ export default class LeadFormItem extends React.PureComponent {
                     leadId: lead.data.id,
                     serverId: response.id,
                 });
+                this.props.notifyComplete(this.props.leadKey);
             })
             .failure((response) => {
                 console.error('Failed lead request:', response);
+                this.props.notifyComplete(this.props.leadKey);
             })
             .fatal((response) => {
                 console.error('Fatal error occured during lead request:', response);
+                this.props.notifyComplete(this.props.leadKey);
             })
             .build();
         return leadCreateRequest;
@@ -148,6 +142,8 @@ export default class LeadFormItem extends React.PureComponent {
             formFieldErrors,
             uiState: { stale: false },
         });
+
+        this.props.notifyComplete(this.props.leadKey);
     }
 
     handleFormSuccess = () => {
@@ -158,42 +154,33 @@ export default class LeadFormItem extends React.PureComponent {
         this.leadSaveRequest.start();
     }
 
-    handleLeadNext = () => {
-        const leadId = this.props.leadKey;
-        this.props.addLeadViewLeadNext(leadId);
+    start = () => {
+        if (this.containerRef) {
+            this.containerRef.submit();
+        }
     }
 
-    handleLeadPrev = () => {
-        const leadId = this.props.leadKey;
-        this.props.addLeadViewLeadPrev(leadId);
-    }
-
-    handleRemove = () => {
-        const leadId = this.props.leadKey;
-        this.props.uploadCoordinator.remove(leadId);
-        this.props.addLeadViewLeadRemove(leadId);
+    close = () => {
+        console.log('Close forced');
     }
 
     render() {
         const {
-            leadKey,
             lead,
             leadOptions,
-            activeLeadId,
+            active,
         } = this.props;
 
         return (
-            <div className={`${styles.right} ${leadKey !== activeLeadId ? styles.hidden : ''}`} >
+            <div className={`${styles.right} ${!active ? styles.hidden : ''}`} >
                 <LeadForm
+                    ref={(ref) => { this.containerRef = ref; }}
                     className={styles['add-lead-form']}
                     lead={lead}
                     leadOptions={leadOptions}
                     onChange={this.handleFormChange}
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
-                    onPrev={this.handleLeadPrev}
-                    onNext={this.handleLeadNext}
-                    onRemove={this.handleRemove}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW

@@ -10,10 +10,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import update from '../../../../public/utils/immutable-update';
+import { List } from '../../../../public/components/View/';
 import { RestBuilder } from '../../../../public/utils/rest';
 import { Coordinator, UploadBuilder } from '../../../../public/utils/Uploader';
 
-import { List } from '../../../../public/components/View/';
+import {
+    PrimaryButton,
+    DangerButton,
+    SuccessButton,
+} from '../../../../public/components/Action/';
 import { pageTitles } from '../../../../common/utils/labels';
 
 import {
@@ -28,8 +33,15 @@ import {
     tokenSelector,
     addLeadViewLeadChangeAction,
     addLeadViewActiveLeadIdSelector,
+    addLeadViewActiveLeadSelector,
     addLeadViewLeadsSelector,
     leadFilterOptionsSelector,
+
+    addLeadViewLeadNextAction,
+    addLeadViewLeadPrevAction,
+    addLeadViewLeadRemoveAction,
+    addLeadViewCanNextSelector,
+    addLeadViewCanPrevSelector,
 } from '../../../../common/redux';
 
 import LeadFilter from './components/LeadFilter';
@@ -41,13 +53,19 @@ import styles from './styles.scss';
 const mapStateToProps = state => ({
     token: tokenSelector(state),
     activeLeadId: addLeadViewActiveLeadIdSelector(state),
+    activeLead: addLeadViewActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
     leadFilterOptions: leadFilterOptionsSelector(state),
+    addLeadViewCanNext: addLeadViewCanNextSelector(state),
+    addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
+    addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
+    addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
+    addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
 });
 
 const propTypes = {
@@ -59,13 +77,21 @@ const propTypes = {
     }).isRequired,
 
     activeLeadId: PropTypes.string,
+    activeLead: PropTypes.object, // eslint-disable-line
     addLeadViewLeadChange: PropTypes.func.isRequired,
     addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
+
+    addLeadViewLeadNext: PropTypes.func.isRequired,
+    addLeadViewLeadPrev: PropTypes.func.isRequired,
+    addLeadViewLeadRemove: PropTypes.func.isRequired,
+    addLeadViewCanNext: PropTypes.bool.isRequired,
+    addLeadViewCanPrev: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     activeLeadId: undefined,
+    activeLead: undefined,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -80,8 +106,11 @@ export default class LeadAdd extends React.PureComponent {
         this.state = {
             leadUploads: {},
         };
+        this.leadRefs = {
+        };
 
         this.uploadCoordinator = new Coordinator();
+        this.formCoordinator = new Coordinator();
     }
 
     componentWillMount() {
@@ -104,6 +133,7 @@ export default class LeadAdd extends React.PureComponent {
 
     componentWillUnmount() {
         this.uploadCoordinator.close();
+        this.formCoordinator.close();
     }
 
     // REST REQUEST
@@ -265,6 +295,8 @@ export default class LeadAdd extends React.PureComponent {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadFailure = (leadId, status) => {
@@ -274,7 +306,7 @@ export default class LeadAdd extends React.PureComponent {
             leadId,
             values: { attachment: undefined },
             upload: { errorMessage: `Failed to upload file (${status})` },
-            uiState: { stale: true, ready: false },
+            uiState: { stale: false, ready: true },
             formErrors: [`Failed to upload file (${status})`],
         });
 
@@ -289,6 +321,8 @@ export default class LeadAdd extends React.PureComponent {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadProgress = (leadId, progress) => {
@@ -354,27 +388,81 @@ export default class LeadAdd extends React.PureComponent {
         });
     }
 
+    // UI BUTTONS
+
+    handleLeadNext = () => {
+        this.props.addLeadViewLeadNext();
+    }
+
+    handleLeadPrev = () => {
+        this.props.addLeadViewLeadPrev();
+    }
+
+    handleRemove = () => {
+        const leadId = this.props.activeLeadId;
+
+        this.uploadCoordinator.remove(leadId);
+        this.props.addLeadViewLeadRemove(leadId);
+    }
+
+    handleSave = () => {
+        const leadId = this.props.activeLeadId;
+
+        const activeLeadForm = this.leadRefs[leadId];
+        if (activeLeadForm) {
+            activeLeadForm.start();
+        }
+    }
+
+    handleBulkSave = () => {
+        // FIXME: Don't close and make new co-ordinator
+        // just add new leads (only new leads)
+        this.formCoordinator.close();
+
+        this.formCoordinator = new Coordinator();
+        const leadKeys = this.props.addLeadViewLeads
+            .map(this.leadDetailKeyExtractor);
+        leadKeys.forEach((id) => {
+            this.formCoordinator.add(id, this.leadRefs[id]);
+        });
+        this.formCoordinator.start();
+    }
+
+    handleFormComplete = (id) => {
+        this.formCoordinator.notifyComplete(id);
+    }
+
     // UI
 
     leadDetailKeyExtractor = lead => lead.data.id;
+
+    referenceForLeadDetail = key => (elem) => {
+        if (elem) {
+            this.leadRefs[key] = elem.getWrappedInstance();
+        }
+    }
 
     renderLeadDetail = (key, lead) => {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project];
         const { activeLeadId } = this.props;
         return (
             <LeadFormItem
+                ref={this.referenceForLeadDetail(key)}
                 key={key}
                 leadKey={key}
+                active={key === activeLeadId}
                 lead={lead}
                 leadOptions={leadOptions}
-                activeLeadId={activeLeadId}
-                uploadCoordinator={this.uploadCoordinator}
+                notifyComplete={this.handleFormComplete}
             />
         );
     }
 
     render() {
         const { leadUploads } = this.state;
+
+        const { activeLead } = this.props;
+        const { uiState } = activeLead || {};
 
         return (
             <div styleName="add-lead">
@@ -383,21 +471,61 @@ export default class LeadAdd extends React.PureComponent {
                         { pageTitles.addLeads }
                     </title>
                 </Helmet>
-                <div styleName="left">
+                <header
+                    styleName="header"
+                >
                     <LeadFilter />
-                    <LeadList leadUploads={leadUploads} />
-                    <LeadButtons
-                        uploadCoordinator={this.uploadCoordinator}
-                        onDropboxSelect={this.handleDropboxSelect}
-                        onGoogleDriveSelect={this.handleGoogleDriveSelect}
-                        onNewUploader={this.createUploaderForFileUpload}
+                    { activeLead &&
+                        <div styleName="action-buttons">
+                            <PrimaryButton
+                                disabled={!this.props.addLeadViewCanPrev}
+                                onClick={this.handleLeadPrev}
+                            >
+                                Prev
+                            </PrimaryButton>
+                            <PrimaryButton
+                                disabled={!this.props.addLeadViewCanNext}
+                                onClick={this.handleLeadNext}
+                            >
+                                Next
+                            </PrimaryButton>
+                            <DangerButton
+                                onClick={this.handleRemove}
+                            >
+                                Remove
+                            </DangerButton>
+                            <SuccessButton
+                                onClick={this.handleSave}
+                                disabled={uiState.pending || !uiState.stale || !uiState.ready}
+                            >
+                                Save
+                            </SuccessButton>
+                            <SuccessButton
+                                onClick={this.handleBulkSave}
+                            >
+                                Bulk Save
+                            </SuccessButton>
+                        </div>
+                    }
+                </header>
+                <div
+                    styleName="content"
+                >
+                    <div styleName="left">
+                        <LeadList leadUploads={leadUploads} />
+                        <LeadButtons
+                            uploadCoordinator={this.uploadCoordinator}
+                            onDropboxSelect={this.handleDropboxSelect}
+                            onGoogleDriveSelect={this.handleGoogleDriveSelect}
+                            onNewUploader={this.createUploaderForFileUpload}
+                        />
+                    </div>
+                    <List
+                        data={this.props.addLeadViewLeads}
+                        modifier={this.renderLeadDetail}
+                        keyExtractor={this.leadDetailKeyExtractor}
                     />
                 </div>
-                <List
-                    data={this.props.addLeadViewLeads}
-                    modifier={this.renderLeadDetail}
-                    keyExtractor={this.leadDetailKeyExtractor}
-                />
             </div>
         );
     }

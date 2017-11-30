@@ -3,7 +3,7 @@
 .leads {
     display: flex;
     flex-direction: column;
-    padding: $spacing-medium-alt $spacing-medium-alt 0;
+    padding: 0 $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar} - #{$spacing-medium * 2});
 
     .header {
@@ -11,10 +11,6 @@
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-
-        h1 {
-            font-size: $font-size-large;
-        }
 
         .add-lead-button {
             padding: $spacing-small $spacing-medium;
@@ -24,6 +20,7 @@
 
     .filters {
         flex-shrink: 0;
+        align-items: flex-end;
         padding: $spacing-large 0;
     }
 

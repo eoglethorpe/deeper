@@ -148,44 +148,44 @@ export default class LeadFilter extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="header">
-                <h2 styleName="title">
-                    Leads
-                </h2>
+            <div
+                styleName="lead-filters"
+            >
                 <TextInput
-                    styleName="search"
+                    label="Search"
                     onChange={this.handleSearchChange}
                     value={filters.search}
                     placeholder="Search"
                     type="search"
+                    showHintAndError={false}
                 />
                 <TextInput
                     label="Source"
                     placeholder="Any"
-                    styleName="filter source-filter"
                     value={filters.source}
                     onChange={this.handleLeadSourceFilterChange}
+                    showHintAndError={false}
                 />
                 <SelectInput
                     label="Status"
                     showLabel
                     options={leadStatusFilterOptions}
                     placeholder="All"
-                    styleName="filter"
                     value={filters.status}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadStatusFilterChange}
+                    showHintAndError={false}
                 />
                 <SelectInput
                     label="Lead Type"
                     showLabel
                     options={leadTypeOptions}
                     placeholder="All"
-                    styleName="filter"
                     multiple
                     value={filters.type}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadTypeFilterChange}
+                    showHintAndError={false}
                 />
             </div>
         );

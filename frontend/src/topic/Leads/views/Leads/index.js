@@ -111,15 +111,9 @@ export default class Leads extends React.PureComponent {
 
         this.headers = [
             {
-                key: 'created_at',
-                label: 'Created at',
+                key: 'title',
+                label: 'Title',
                 order: 1,
-                modifier: row => (
-                    <FormattedDate
-                        date={row.createdAt}
-                        mode="dd-MM-yyyy hh:mm"
-                    />
-                ),
             },
             {
                 key: 'created_by',
@@ -135,13 +129,19 @@ export default class Leads extends React.PureComponent {
                 ),
             },
             {
-                key: 'title',
-                label: 'Title',
+                key: 'created_at',
+                label: 'Created at',
                 order: 3,
+                modifier: row => (
+                    <FormattedDate
+                        date={row.createdAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
             },
             {
                 key: 'published_on',
-                label: 'Published',
+                label: 'Published on',
                 order: 4,
                 modifier: row => (
                     <FormattedDate
@@ -460,21 +460,17 @@ export default class Leads extends React.PureComponent {
                 </Helmet>
 
                 <header styleName="header">
-                    <h1>
-                        { pageTitles.leads }
-                    </h1>
                     <PrimaryButton
                         styleName="add-lead-button"
                         onClick={this.handleAddLeadClick}
                     >
-                        Add lead
+                        Add leads
                     </PrimaryButton>
+                    <FilterLeadsForm
+                        styleName="filters"
+                        value={this.props.filters}
+                    />
                 </header>
-
-                <FilterLeadsForm
-                    styleName="filters"
-                    value={this.props.filters}
-                />
 
                 <div styleName="table-container">
                     <RawTable
