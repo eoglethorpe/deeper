@@ -2,11 +2,12 @@
 @import '../../../../stylesheets/tabs';
 
 
-.edit-category-modal {
+.edit-category-page {
     display: flex;
     flex-wrap: wrap;
-    height: 100%;
-    overflow-y: auto;
+    background-color: $color-foreground;
+    padding: $spacing-large;
+    height: calc(100vh - #{$height-navbar} - 2 * #{$spacing-medium-alt});
 
     .header {
         display: flex;
@@ -17,11 +18,22 @@
             display: flex;
             flex-basis: 100%;
             flex-wrap: wrap;
-            justify-content: space-between;
             margin-bottom: $spacing-large;
 
             .header-input {
+                flex-basis: 20%;
                 margin-right: $spacing-large;
+            }
+
+            .action-buttons {
+                display: flex;
+                flex-basis: 35%;
+                justify-content: flex-end;
+                padding: $spacing-small;
+
+                >* {
+                    margin: 0 $spacing-medium;
+                }
             }
         }
 
@@ -42,18 +54,58 @@
         }
 
         .tab {
-            padding: $spacing-large;
+            display: flex;
+            flex-basis: 100%;
+            flex-wrap: wrap;
+            padding: $spacing-medium 0;
 
-            .keywords-words {
-                display: inline-block;
-                margin: $spacing-medium;
-                background-color: $color-success;
-                cursor: pointer;
-                padding: $spacing-medium;
-                width: 20%;
-                text-align: center;
-                font-weight: $font-weight-medium;
+            .n-gram-1,
+            .n-gram-2,
+            .n-gram-3,
+            .n-gram-4 {
+                display: flex;
+                flex-basis: 32%;
+                flex-wrap: wrap;
+                margin: $spacing-medium-alt;
+                border: $width-separator-medium solid $color-separator-alt;
 
+
+                .header {
+                    display: flex;
+                    flex-basis: 100%;
+                    justify-content: space-between;
+                    padding: $spacing-medium-alt;
+
+                    h3 {
+                        flex-basis: 35%;
+                        color: $color-label;
+                        font-weight: $font-weight-medium;
+                    }
+
+                    .search {
+                        flex-basis: 50%;
+                    }
+                }
+
+                .keyword-table {
+                    flex-basis: 100%;
+
+                    :global .header {
+                        position: sticky;
+                        top: 0;
+                        border-bottom: $width-separator-medium solid $color-separator;
+                        padding: $spacing-small $spacing-medium-alt;
+                        user-select: none;
+
+                        &:not(.actions) {
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: $color-background-hover;
+                            }
+                        }
+                    }
+                }
             }
         }
     }
