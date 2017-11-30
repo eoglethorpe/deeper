@@ -8,17 +8,16 @@
 
     > .header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
         flex-shrink: 0;
-        padding: $spacing-medium $spacing-medium-alt;
+        align-items: center;
+        justify-content: space-between;
         border-bottom: $width-separator-medium solid $color-separator;
         background-color: $color-foreground-alt;
+        padding: $spacing-small;
 
         .action-buttons {
             button {
-                margin-left: $spacing-medium;
-                padding: $spacing-small $spacing-medium-alt;
+                margin: $spacing-small;
             }
         }
 
@@ -31,7 +30,7 @@
             justify-content: space-between;
 
             >* {
-                margin-right: $spacing-small;
+                margin: $spacing-small;
             }
         }
     }

@@ -226,65 +226,70 @@ export default class FilterLeadsForm extends React.PureComponent {
                 elements={this.formElements}
             >
                 <SelectInput
-                    label="Assigned to"
-                    showLabel
-                    placeholder="Anybody"
                     formname="assignee"
-                    options={assignee}
-                    styleName="filter"
-                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    value={formValues.assignee}
+                    label="Assigned to"
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
+                    options={assignee}
+                    placeholder="Anybody"
+                    showHintAndError={false}
+                    showLabel
+                    styleName="filter"
+                    value={formValues.assignee}
                 />
                 <DateFilter
-                    label="Created at"
-                    showLabel
-                    placeholder="Anytime"
                     formname="created_at"
+                    label="Created at"
+                    placeholder="Anytime"
+                    showHintAndError={false}
+                    showLabel
                     styleName="filter"
                     value={formValues.created_at}
                 />
                 <DateFilter
-                    label="Published on"
-                    showLabel
-                    placeholder="Anytime"
                     formname="published_on"
+                    label="Published on"
+                    placeholder="Anytime"
+                    showHintAndError={false}
+                    showLabel
                     styleName="filter"
                     value={formValues.published_on}
                 />
                 <SelectInput
-                    label="Confidentiality"
-                    showLabel
-                    placeholder="Any"
                     formname="confidentiality"
-                    options={confidentiality}
-                    styleName="filter"
-                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    value={formValues.confidentiality}
+                    label="Confidentiality"
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
+                    options={confidentiality}
+                    placeholder="Any"
+                    showHintAndError={false}
+                    showLabel
+                    styleName="filter"
+                    value={formValues.confidentiality}
                 />
                 <SelectInput
-                    label="Status"
-                    showLabel
-                    placeholder="Any"
                     formname="status"
-                    options={status}
-                    styleName="filter"
-                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    value={formValues.status}
+                    label="Status"
+                    labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
+                    options={status}
+                    placeholder="Any"
+                    showHintAndError={false}
+                    showLabel
+                    styleName="filter"
+                    value={formValues.status}
                 />
                 <TextInput
-                    label="Search"
-                    type="search"
-                    showLabel
-                    showHintAndError={false}
-                    placeholder="Nepal"
                     formname="search"
-                    styleName="filter text-input"
+                    label="Search"
+                    placeholder="Nepal"
+                    showHintAndError={false}
+                    showLabel
+                    styleName="filter"
+                    type="search"
                     value={formValues.search}
                 />
                 <Button
@@ -301,15 +306,17 @@ export default class FilterLeadsForm extends React.PureComponent {
                 >
                     Clear Filter
                 </DangerButton>
-                {isTruthy(this.props.value.similar) && (
-                    <DangerButton
-                        styleName="filter-btn"
-                        type="button"
-                        onClick={this.handleClearSimilarSelection}
-                    >
-                        Clear Similarity Filter
-                    </DangerButton>
-                )}
+                {
+                    isTruthy(this.props.value.similar) && (
+                        <DangerButton
+                            styleName="filter-btn"
+                            type="button"
+                            onClick={this.handleClearSimilarSelection}
+                        >
+                            Clear Similarity Filter
+                        </DangerButton>
+                    )
+                }
             </Form>
         );
     }

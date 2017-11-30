@@ -460,16 +460,17 @@ export default class Leads extends React.PureComponent {
                 </Helmet>
 
                 <header styleName="header">
-                    <PrimaryButton
-                        styleName="add-lead-button"
-                        onClick={this.handleAddLeadClick}
-                    >
-                        Add leads
-                    </PrimaryButton>
                     <FilterLeadsForm
                         styleName="filters"
                         value={this.props.filters}
                     />
+                    <PrimaryButton
+                        styleName="add-lead-button"
+                        onClick={this.handleAddLeadClick}
+                        iconName="ion-android-add"
+                    >
+                        Add leads
+                    </PrimaryButton>
                 </header>
 
                 <div styleName="table-container">
