@@ -146,6 +146,16 @@ export default class ProjectGeneral extends React.PureComponent {
                     console.error(er);
                 }
             })
+            .failure((response) => {
+                this.setState({
+                    formErrors: response.errors.nonFieldErrors,
+                });
+            })
+            .fatal((response) => {
+                this.setState({
+                    formErrors: response.errors.nonFieldErrors,
+                });
+            })
             .build();
         return projectPatchRequest;
     };

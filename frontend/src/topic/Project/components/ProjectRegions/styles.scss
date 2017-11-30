@@ -28,11 +28,6 @@
                     display: none;
                 }
             }
-
-            .header-text {
-                text-transform: uppercase;
-                font-size: $font-size-extra-large;
-            }
         }
 
         .list {
@@ -45,29 +40,25 @@
                 border-left: $width-separator-thick solid transparent;
                 padding: 0;
 
-                .btn {
+                .button {
                     display: block;
+                    outline: 0;
+                    border: 0;
+                    background-color: transparent;
+                    cursor: pointer;
                     padding: $spacing-medium $spacing-large;
                     width: 100%;
                     text-align: left;
-
-                    &:active {
-                        transform: translateY(0);
-                        box-shadow: none;
-                        background-color: $color-hover;
-                    }
-
-                    &:focus {
-                        background-color: $color-hover;
-                    }
-                }
-
-                &:hover {
-                    background-color: $color-hover;
+                    font-family: inherit;
+                    font-size: inherit;
                 }
 
                 &.active {
                     border-left: $width-separator-thick solid $color-accent;
+                    background-color: $color-hover;
+                }
+
+                &:hover {
                     background-color: $color-hover;
                 }
             }

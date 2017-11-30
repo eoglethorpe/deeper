@@ -223,41 +223,44 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         >
                             Remove Region
                         </DangerButton>
-                        {isPublic &&
-                            <PrimaryButton
-                                styleName="clone-btn"
-                                onClick={() => this.handleRegionClone(regionId, activeProject)}
-                            >
-                                Clone and Edit
-                            </PrimaryButton>
+                        {
+                            isPublic && (
+                                <PrimaryButton
+                                    styleName="clone-btn"
+                                    onClick={() => this.handleRegionClone(regionId, activeProject)}
+                                >
+                                    Clone and Edit
+                                </PrimaryButton>
+                            )
                         }
                     </div>
                 </header>
-                {!isPublic &&
-                    <div styleName="region-details">
-                        <div styleName="detail-map-container">
-                            <RegionDetail
-                                dataLoading={dataLoading}
-                                regionId={regionId}
-                                styleName="region-detail-form"
-                            />
-                            <div styleName="map-container">
+                {
+                    isPublic ? (
+                        <div styleName="region-details-non-edit">
+                            <RegionDetailView regionId={regionId} />
+                            <div styleName="map-container-non-edit">
                                 The map
                             </div>
                         </div>
-                        <RegionAdminLevel
-                            styleName="admin-levels"
-                            regionId={regionId}
-                        />
-                    </div>
-                }
-                {isPublic &&
-                    <div styleName="region-details-non-edit">
-                        <RegionDetailView regionId={regionId} />
-                        <div styleName="map-container-non-edit">
-                            The map
+                    ) : (
+                        <div styleName="region-details">
+                            <div styleName="detail-map-container">
+                                <RegionDetail
+                                    dataLoading={dataLoading}
+                                    regionId={regionId}
+                                    styleName="region-detail-form"
+                                />
+                                <div styleName="map-container">
+                                    The map
+                                </div>
+                            </div>
+                            <RegionAdminLevel
+                                styleName="admin-levels"
+                                regionId={regionId}
+                            />
                         </div>
-                    </div>
+                    )
                 }
             </div>
         );

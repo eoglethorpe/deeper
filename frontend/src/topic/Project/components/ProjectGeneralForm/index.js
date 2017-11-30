@@ -15,7 +15,6 @@ import {
 } from '../../../../public/components/Input';
 import {
     DangerButton,
-    PrimaryButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 
@@ -75,7 +74,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
         const {
             changeCallback,
             failureCallback,
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             regionOptions,
@@ -85,6 +84,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
             stale,
             successCallback,
         } = this.props;
+        console.log(formErrors, 'asdasdasd');
 
         return (
             <Form
@@ -97,27 +97,20 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 validations={this.validations}
             >
                 { pending && <LoadingAnimation /> }
-                <header styleName="header">
-                    <NonFieldErrors errors={formErrors} />
-                    <div styleName="action-buttons">
-                        <DangerButton
-                            onClick={handleFormCancel}
-                            disabled={pending}
-                        >
-                            Cancel
-                        </DangerButton>
-                        <SuccessButton
-                            disabled={pending || !stale}
-                        >
-                            Save
-                        </SuccessButton>
-                        <PrimaryButton
-                            disabled={pending || !stale}
-                        >
-                            Save &amp; next
-                        </PrimaryButton>
-                    </div>
-                </header>
+                <div styleName="action-buttons">
+                    <DangerButton
+                        onClick={handleFormCancel}
+                        disabled={pending}
+                    >
+                        Cancel
+                    </DangerButton>
+                    <SuccessButton
+                        disabled={pending || !stale}
+                    >
+                        Save
+                    </SuccessButton>
+                </div>
+                <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Name"
                     formname="title"
