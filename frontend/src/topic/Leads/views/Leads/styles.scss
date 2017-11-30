@@ -3,25 +3,30 @@
 .leads {
     display: flex;
     flex-direction: column;
-    padding: 0 $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar} - #{$spacing-medium * 2});
+    padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
 
     .header {
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
+        border-bottom: $width-separator-medium solid $color-separator;
+        background-color: $color-foreground-alt;
+        padding: $spacing-small;
 
         .add-lead-button {
-            padding: $spacing-small $spacing-medium;
-            font-size: $font-size-medium;
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin: $spacing-small;
+            padding: $spacing-small $spacing-medium-alt;
+            font-size: $font-size-large;
         }
-    }
 
-    .filters {
-        flex-shrink: 0;
-        align-items: flex-end;
-        padding: $spacing-large 0;
+        .filters {
+            flex-grow: 1;
+            align-items: flex-end;
+        }
     }
 
     .table-container {
@@ -52,32 +57,11 @@
                 width: 20%;
             }
         }
-
-        .loading-animation {
-            display: flex;
-            position: absolute;
-            top: 0;
-            left: 0;
-            align-items: center;
-            justify-content: center;
-            background-color: $color-background-overlay;
-            width: 100%;
-            height: 100%;
-
-            .icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                animation: spin 1s linear infinite;
-                width: $width-loading-icon;
-                height: $height-loading-icon;
-                font-size: $font-size-loading-icon;
-            }
-        }
     }
 
     .footer {
         flex-shrink: 0;
+        background-color: $color-foreground-alt;
         padding: $spacing-small $spacing-medium-alt;
 
         .pager {
