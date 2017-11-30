@@ -3,37 +3,15 @@
 .project-general-form {
     position: relative;
     padding: $spacing-large;
-
-    .header {
-        display: flex;
-        flex-basis: 100%;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: $spacing-medium;
-
-        .non-field-errors {
-            .error {
-                padding: $spacing-medium $spacing-large;
-                color: $color-danger;
-
-                &.empty {
-                    color: transparent;
-                    user-select: none;
-                }
-
-                &:not(:last-child) {
-                    &::after {
-                        content: ', ';
-                    }
-                }
-            }
-        }
-    }
+    width: 100%;
+    max-width: 540px;
 
     .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+
         button {
             margin-left: $spacing-medium;
-            padding: $spacing-small $spacing-medium-alt;
         }
     }
 
@@ -44,34 +22,13 @@
 
     .name,
     .description,
-    .countries,
-    .user-groups,
     .other-members,
     .admins {
         flex-basis: 100%;
     }
 
-
-    .pending-overlay {
-        display: flex;
-        position: absolute;
-        top: 0;
-        left: 0;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-background-overlay;
-        width: 100%;
-        height: 100%;
-
-        .loading-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: spin 1s linear infinite;
-            width: $width-icon-super-large;
-            height: $width-icon-super-large;
-            color: $color-accent;
-            font-size: $width-icon-super-large;
-        }
+    .regions,
+    .user-groups {
+        padding: $spacing-medium 0;
     }
 }

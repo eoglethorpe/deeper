@@ -53,6 +53,10 @@ export default class CountryGeneral extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            dataLoading: true,
+        };
+
         this.requestForRegion = this.createRegionRequest(props.countryDetail.id);
     }
 
@@ -72,6 +76,9 @@ export default class CountryGeneral extends React.PureComponent {
                     access,
                 });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {

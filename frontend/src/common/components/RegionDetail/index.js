@@ -34,11 +34,11 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     regionDetail: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        code: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        id: PropTypes.number,
+        code: PropTypes.string,
+        title: PropTypes.string,
         regionalGroups: PropTypes.shape({}),
-    }).isRequired,
+    }),
     token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
     dataLoading: PropTypes.bool,
@@ -46,6 +46,7 @@ const propTypes = {
 
 const defaultProps = {
     className: '',
+    regionDetail: {},
     dataLoading: false,
 };
 

@@ -234,6 +234,9 @@ export default class CountryPanel extends React.PureComponent {
                 const { access } = token;
                 return createParamsForUser({ access });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'regionsGetResponse');

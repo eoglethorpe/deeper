@@ -23,7 +23,8 @@ describe('<ProjectGeneralForm />', () => {
                 formErrors={[]}
                 formFieldErrors={{}}
                 formValues={{}}
-
+                userGroupsOptions={[]}
+                regionOptions={[]}
                 pending
                 stale={false}
             />

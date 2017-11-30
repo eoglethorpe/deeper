@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     TextInput,
@@ -68,6 +67,10 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion: regionId });
     }
 
+    handleAddRegionButtonClick = () => {
+        console.log('Coming soon...');
+    }
+
     calcRegionKey = region => region.id;
 
     renderRegionList = (key, region) => {
@@ -78,12 +81,12 @@ export default class ProjectRegions extends React.PureComponent {
                 key={key}
                 scrollIntoView={isActive}
             >
-                <TransparentButton
-                    className="btn"
+                <button
+                    className="button"
                     onClick={() => this.handleRegionClick(region.id)}
                 >
                     {region.title}
-                </TransparentButton>
+                </button>
             </ListItem>
         );
     }
@@ -116,14 +119,14 @@ export default class ProjectRegions extends React.PureComponent {
             <div styleName="project-regions">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <h1 styleName="header-text">
+                        <h2>
                             Regions
-                        </h1>
+                        </h2>
                         <PrimaryButton
                             iconName="ion-plus"
-                            onClick={this.onAddRegion}
+                            onClick={this.handleAddRegionButtonClick}
                         >
-                            Add Region
+                            Add
                         </PrimaryButton>
                         <TextInput
                             styleName="search-input"

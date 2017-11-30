@@ -1,5 +1,9 @@
 @import '../../../../stylesheets/base';
 
 .project-general {
-    display: flex;
+    flex-grow: 1;
+
+    .project-general-form {
+        min-width: 720px;
+    }
 }

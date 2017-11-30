@@ -3,6 +3,7 @@ import {
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
+    SET_USER_PROJECT_OPTIONS,
     UNSET_USER_PROJECT,
 
     SET_USER_GROUPS,
@@ -50,6 +51,12 @@ export const setProjectAction = ({ userId, project }) => ({
     type: SET_USER_PROJECT,
     userId,
     project,
+});
+
+export const setProjectOptionsAction = ({ projectId, options }) => ({
+    type: SET_USER_PROJECT_OPTIONS,
+    projectId,
+    options,
 });
 
 export const unSetProjectAction = ({ userId, projectId }) => ({

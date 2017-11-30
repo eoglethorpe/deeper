@@ -6,6 +6,7 @@ import {
     leadFilterOptionsSelector,
     leadIdFromProps,
     projectsSelector,
+    projectsOptionsSelector,
     analysisFrameworkIdFromProps,
 } from './domainData';
 
@@ -78,6 +79,12 @@ export const projectDetailsSelector = createSelector(
     projectsSelector,
     activeProjectSelector,
     (projects, activeProject) => projects[activeProject] || emptyObject,
+);
+
+export const projectOptionsSelector = createSelector(
+    projectsOptionsSelector,
+    activeProjectSelector,
+    (projectsOptions, activeProject) => projectsOptions[activeProject] || emptyObject,
 );
 
 // Selector depending on project id from state (active project)

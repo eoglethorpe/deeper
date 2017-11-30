@@ -7,10 +7,6 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 
 import {
-    Link,
-} from 'react-router-dom';
-
-import {
     TransparentButton,
     Button,
     SuccessButton,

@@ -23,6 +23,8 @@ describe('<AddLeadListItem />', () => {
                 error={false}
                 title={'Lead #1'}
                 type={'URL'}
+                lead={{ dummy: 'dummy' }}
+                leadKey="key"
             />
         </Provider>,
     );

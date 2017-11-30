@@ -27,6 +27,7 @@ const userGroupSchema = [];
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
             memberships: { type: 'array.userGroupMembership', required: true },
+            customProjectFields: { type: 'object' },
         },
     };
     userGroupSchema.push({ name, schema });

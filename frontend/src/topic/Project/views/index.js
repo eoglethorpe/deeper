@@ -113,7 +113,6 @@ export default class ProjectPanel extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
 
-
         if (this.props.activeProject !== activeProject) {
             this.projectRequest.stop();
             this.projectRequest = this.createProjectRequest(activeProject);
@@ -160,6 +159,9 @@ export default class ProjectPanel extends React.PureComponent {
                     access,
                 });
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -178,15 +180,11 @@ export default class ProjectPanel extends React.PureComponent {
     };
 
     showProjectList = () => {
-        this.setState({
-            isSidebarVisible: true,
-        });
+        this.setState({ isSidebarVisible: true });
     };
 
     closeProjectList = () => {
-        this.setState({
-            isSidebarVisible: false,
-        });
+        this.setState({ isSidebarVisible: false });
     };
 
     handleSearchInputChange = (value) => {
