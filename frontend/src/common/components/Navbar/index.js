@@ -344,14 +344,16 @@ export default class Navbar extends React.PureComponent {
                 {
                     userProjects.length > 0 && activeUser.userId &&
                     <SelectInput
-                        styleName="project-select-input"
-                        placeholder="Select Event"
+                        clearable={false}
                         keySelector={this.labelSelectorForSelectInput}
                         labelSelector={this.keySelectorForSelectInput}
-                        options={this.props.userProjects}
-                        value={activeProject}
                         onChange={this.onSelectChangeHandler}
-                        clearable={false}
+                        options={this.props.userProjects}
+                        placeholder="Select Event"
+                        showLabel={false}
+                        showHintAndError={false}
+                        styleName="project-select-input"
+                        value={activeProject}
                     />
                 }
                 <ListView
