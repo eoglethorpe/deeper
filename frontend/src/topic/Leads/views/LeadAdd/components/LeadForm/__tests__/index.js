@@ -24,6 +24,8 @@ describe('<AddLeadForm />', () => {
                 pending
                 stale={false}
                 data={data}
+                leadOptions={{ dummy: 'dummy' }}
+                lead={{ dummy: 'dummy' }}
                 onChange={() => {}}
                 onSuccess={() => {}}
                 onFailure={() => {}}
