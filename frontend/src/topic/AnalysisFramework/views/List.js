@@ -7,10 +7,8 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 
 import {
-    Link,
-} from 'react-router-dom';
-
-import {
+    Button,
+    SuccessButton,
     TransparentButton,
 } from '../../../public/components/Action';
 
@@ -163,6 +161,10 @@ export default class List extends React.PureComponent {
         }, 0);
     }
 
+    handleGotoOverviewButtonClick = () => {
+        window.location.hash('/overview/');
+    }
+
     update(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.listComponent)
@@ -181,10 +183,9 @@ export default class List extends React.PureComponent {
             width,
         } = this.props.boundingClientRect;
 
-        const numOfRows = 100;
         const numOfColumns = 100;
         const margin = [0, 0];
-        const rowHeight = parseInt(500 / numOfRows, 10);
+        const rowHeight = 24;
 
         return (
             <div styleName="list">
@@ -204,6 +205,23 @@ export default class List extends React.PureComponent {
                     </ReactGridLayout>
                 </div>
                 <div styleName="bottom">
+                    <header
+                        styleName="header"
+                    >
+                        <h2>Widgets</h2>
+                        <div styleName="action-buttons">
+                            <Button
+                                onClick={this.handleGotoOverviewButtonClick}
+                            >
+                                Go to overview
+                            </Button>
+                            <SuccessButton
+                                onClick={this.props.onSave}
+                            >
+                                Save
+                            </SuccessButton>
+                        </div>
+                    </header>
                     <div
                         styleName="widget-list"
                     >
@@ -235,14 +253,6 @@ export default class List extends React.PureComponent {
                             ))
                         }
                     </div>
-                    <Link to="/overview" >
-                        Go to overview
-                    </Link>
-                    <TransparentButton
-                        onClick={this.props.onSave}
-                    >
-                        Save
-                    </TransparentButton>
                 </div>
             </div>
         );

@@ -13,6 +13,7 @@ import {
 import {
     TransparentButton,
     Button,
+    SuccessButton,
 } from '../../../public/components/Action';
 
 import {
@@ -178,6 +179,10 @@ export default class Overview extends React.PureComponent {
         }, 0);
     }
 
+    handleGotoListButtonClick = () => {
+        window.location.hash = '/list/';
+    }
+
     update(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.overviewComponent)
@@ -207,11 +212,6 @@ export default class Overview extends React.PureComponent {
                 <div
                     styleName="left"
                 >
-                    <TransparentButton
-                        onClick={this.props.onSave}
-                    >
-                        Save
-                    </TransparentButton>
                     <header
                         styleName="header"
                     >
@@ -248,13 +248,6 @@ export default class Overview extends React.PureComponent {
                             ))
                         }
                     </div>
-                    <footer
-                        styleName="footer"
-                    >
-                        <Link to="/list" >
-                            Go to list
-                        </Link>
-                    </footer>
                 </div>
                 <div
                     ref={(el) => { this.gridLayoutContainer = el; }}
@@ -275,27 +268,27 @@ export default class Overview extends React.PureComponent {
                             <TransparentButton
                                 disabled
                             >
-                                +
+                                <span className="ion-android-add" />
                             </TransparentButton>
                             <TransparentButton
                                 disabled
                             >
-                                -
+                                <span className="ion-android-remove" />
                             </TransparentButton>
                         </div>
                         <div
                             styleName="action-buttons"
                         >
                             <Button
-                                disabled
+                                onClick={this.handleGotoListButtonClick}
                             >
                                 Goto list
                             </Button>
-                            <Button
-                                disabled
+                            <SuccessButton
+                                onClick={this.props.onSave}
                             >
                                 Save
-                            </Button>
+                            </SuccessButton>
                         </div>
                     </header>
                     <ReactGridLayout
