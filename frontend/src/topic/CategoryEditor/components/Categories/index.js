@@ -2,7 +2,12 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { TextInput } from '../../../../public/components/Input';
+import {
+    TextInput,
+    Form,
+    requiredCondition,
+    NonFieldErrors,
+} from '../../../../public/components/Input';
 import {
     PrimaryButton,
     DangerButton,
@@ -11,7 +16,7 @@ import {
     Modal,
     ModalBody,
     ModalHeader,
-    ModalFooter,
+    LoadingAnimation,
 } from '../../../../public/components/View';
 import { randomString } from '../../../../public/utils/common';
 
@@ -97,6 +102,21 @@ export default class Categories extends React.PureComponent {
                 title: 'water',
             },
             editCategoryModal: false,
+            formErrors: [],
+            formFieldErrors: {},
+            formValues: [],
+            pending: false,
+            stale: false,
+        };
+
+        this.elements = [
+            'subLabel',
+            'subSubLabel',
+        ];
+
+        this.validations = {
+            subLabel: [requiredCondition],
+            subSubLabel: [requiredCondition],
         };
     }
 
@@ -113,28 +133,44 @@ export default class Categories extends React.PureComponent {
     handleAddNewSubCategoryClose = () => {
         this.setState({
             addNewSubCategory: false,
-            newSubCategoryInputValue: '',
+            formValues: [],
+
         });
     }
 
-    // Adding new SUB Category from + button
 
-    handleAddNewSubCategory = () => {
+    // Common FORM functions
+
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+        });
+    };
+
+    // FORM success Sub-Category
+
+    subCategorySuccessCallback = (values) => {
         this.setState({
             subCategoryData: [
                 ...this.state.subCategoryData,
                 {
                     id: randomString(),
-                    title: this.state.newSubCategoryInputValue,
+                    title: values.subLabel,
                 },
             ],
-            newSubCategoryInputValue: '',
             addNewSubCategory: false,
+            formValues: [],
         });
-    }
-
-    handleNewSubCategoryInputChange = (value) => {
-        this.setState({ newSubCategoryInputValue: value });
     }
 
     // For SUB-SUB Category Data
@@ -154,24 +190,20 @@ export default class Categories extends React.PureComponent {
         });
     }
 
-    // Adding new SUB-SUB Category from + button
+    // FORM success Sub-Sub-Category
 
-    handleAddNewSubSubCategory = () => {
+    subSubCategorySuccessCallback = (values) => {
         this.setState({
             subSubCategoryData: [
                 ...this.state.subSubCategoryData,
                 {
                     id: randomString(),
-                    title: this.state.newSubSubCategoryInputValue,
+                    title: values.subSubLabel,
                 },
             ],
-            newSubSubCategoryInputValue: '',
             addNewSubSubCategory: false,
+            formValues: [],
         });
-    }
-
-    handleNewSubSubCategoryInputChange = (value) => {
-        this.setState({ newSubSubCategoryInputValue: value });
     }
 
     render() {
@@ -179,11 +211,14 @@ export default class Categories extends React.PureComponent {
             addNewSubCategory,
             addNewSubSubCategory,
             subCategoryData,
-            newSubCategoryInputValue,
             activeSubCategory,
             subSubCategoryData,
-            newSubSubCategoryInputValue,
             activeSubSubCategory,
+            formFieldErrors,
+            formValues,
+            pending,
+            stale,
+            formErrors = [],
         } = this.state;
 
         return (
@@ -265,56 +300,82 @@ export default class Categories extends React.PureComponent {
                     onClose={this.handleAddNewSubCategoryClose}
                     show={addNewSubCategory}
                 >
-                    <ModalHeader title="Add New Sub Category" />
-                    <ModalBody>
-                        <TextInput
-                            placeholder="Enter Sub Category Name"
-                            label="Name"
-                            onChange={this.handleNewSubCategoryInputChange}
-                            value={newSubCategoryInputValue}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <DangerButton
-                            onClick={this.handleAddNewSubCategoryClose}
-                        >
-                            Cancel
-                        </DangerButton>
-                        <PrimaryButton
-                            onClick={this.handleAddNewSubCategory}
-                        >
-                            Add
-                        </PrimaryButton>
-                    </ModalFooter>
+                    <Form
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.subCategorySuccessCallback}
+                        validations={this.validations}
+                    >
+                        <ModalHeader title="Add New Sub Category" />
+                        {
+                            pending && <LoadingAnimation />
+                        }
+                        <NonFieldErrors errors={formErrors} />
+                        <ModalBody>
+                            <TextInput
+                                formname="subLabel"
+                                placeholder="Enter Subss Category Name"
+                                label="Name"
+                                value={formValues.subLabel}
+                                error={formFieldErrors.subLabel}
+                            />
+                        </ModalBody>
+                        <div styleName="action-buttons">
+                            <DangerButton
+                                onClick={this.handleAddNewSubCategoryClose}
+                                type="button"
+                                disabled={pending}
+                            >
+                                Cancel
+                            </DangerButton>
+                            <PrimaryButton
+                                disabled={pending || !stale}
+                            >
+                                Add
+                            </PrimaryButton>
+                        </div>
+                    </Form>
                 </Modal>
                 <Modal
                     closeOnEscape
                     onClose={this.handleAddNewSubSubCategoryClose}
                     show={addNewSubSubCategory}
                 >
-                    <ModalHeader
-                        title={`Add Sub Category for ${activeSubCategory.title}`}
-                    />
-                    <ModalBody>
-                        <TextInput
-                            placeholder="Enter Sub Sub Category Name"
-                            label="Name"
-                            onChange={this.handleNewSubSubCategoryInputChange}
-                            value={newSubSubCategoryInputValue}
+                    <Form
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.subSubCategorySuccessCallback}
+                        validations={this.validations}
+                    >
+                        <ModalHeader
+                            title={`Add Sub Category for ${activeSubCategory.title}`}
                         />
-                    </ModalBody>
-                    <ModalFooter>
-                        <DangerButton
-                            onClick={this.handleAddNewSubSubCategoryClose}
-                        >
-                            Cancel
-                        </DangerButton>
-                        <PrimaryButton
-                            onClick={this.handleAddNewSubSubCategory}
-                        >
-                            Add
-                        </PrimaryButton>
-                    </ModalFooter>
+                        <ModalBody>
+                            <TextInput
+                                formname="subSubLabel"
+                                placeholder="Enter Sub Sub Category Name"
+                                label="Name"
+                                value={formValues.subSubLabel}
+                                error={formFieldErrors.subSubLabel}
+                            />
+                        </ModalBody>
+                        <div styleName="action-buttons">
+                            <DangerButton
+                                onClick={this.handleAddNewSubSubCategoryClose}
+                                type="button"
+                                disabled={pending}
+                            >
+                                Cancel
+                            </DangerButton>
+                            <PrimaryButton
+                                disabled={pending || !stale}
+                            >
+                                Add
+                            </PrimaryButton>
+                        </div>
+                    </Form>
                 </Modal>
             </div>
         );

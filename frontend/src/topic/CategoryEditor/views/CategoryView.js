@@ -89,7 +89,7 @@ export default class CategoryView extends React.PureComponent {
     handleAddNewCategoryClose = () => {
         this.setState({
             addNewCategory: false,
-            newCategoryInputValue: '',
+            formValues: [],
         });
     }
 
@@ -129,6 +129,7 @@ export default class CategoryView extends React.PureComponent {
                 },
             ],
             addNewCategory: false,
+            formValues: [],
         });
     }
     render() {
@@ -155,6 +156,7 @@ export default class CategoryView extends React.PureComponent {
                             options={this.state.categoryData}
                             value={activeCategory}
                             showLabel
+                            clearable={false}
                             onChange={this.handleCategorySelectChange}
                         />
                     </div>
