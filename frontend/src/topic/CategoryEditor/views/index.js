@@ -3,18 +3,25 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+    Redirect,
+    Route,
+    HashRouter,
+} from 'react-router-dom';
 
 import { pageTitles } from '../../../common/utils/labels';
 import { setNavbarStateAction } from '../../../common/redux';
 
+import EditCategoryPage from '../components/EditCategoryPage';
+
 import styles from './styles.scss';
+import Overview from './Overview';
 
 const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    leads: [],
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -23,14 +30,14 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class Ary extends React.PureComponent {
+export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     componentWillMount() {
         this.props.setNavbarState({
             visible: true,
-            activeLink: pageTitles.ary,
+            activeLink: undefined,
             validLinks: [
                 pageTitles.leads,
                 pageTitles.entries,
@@ -41,7 +48,6 @@ export default class Ary extends React.PureComponent {
                 pageTitles.userProfile,
                 pageTitles.adminPanel,
                 pageTitles.countryPanel,
-                pageTitles.categoryEditor,
                 pageTitles.projectPanel,
             ],
         });
@@ -49,12 +55,32 @@ export default class Ary extends React.PureComponent {
 
     render() {
         return (
-            <div>
-                <Helmet>
-                    <title>{ pageTitles.ary }</title>
-                </Helmet>
-                { pageTitles.ary }
-            </div>
+            <HashRouter>
+                <div styleName="category-editor">
+                    <Helmet>
+                        <title>{ pageTitles.categoryEditor }</title>
+                    </Helmet>
+                    <Route
+                        exact
+                        path="/"
+                        component={() => (
+                            <Redirect to="/overview" />
+                        )}
+                    />
+                    <Route
+                        path="/overview"
+                        render={props => (
+                            <Overview {...props} />
+                        )}
+                    />
+                    <Route
+                        path="/edit"
+                        render={props => (
+                            <EditCategoryPage {...props} />
+                        )}
+                    />
+                </div>
+            </HashRouter>
         );
     }
 }

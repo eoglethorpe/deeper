@@ -213,6 +213,12 @@ export default class Navbar extends React.PureComponent {
                     private: true,
                 },
                 {
+                    linkTo: '/category-editor/',
+                    name: pageTitles.categoryEditor,
+                    iconName: 'ion-document-text',
+                    private: true,
+                },
+                {
                     linkTo: '/admin/',
                     name: pageTitles.adminPanel,
                     iconName: 'ion-locked',
@@ -221,7 +227,6 @@ export default class Navbar extends React.PureComponent {
             ],
         },
     ]
-
     calcNavbarKey = item => item.name
 
     calcDropdownGroupKey = group => group.key
