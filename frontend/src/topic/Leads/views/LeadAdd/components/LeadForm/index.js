@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -14,24 +13,12 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../../../public/components/Input';
-/*
-import {
-    PrimaryButton,
-    DangerButton,
-    SuccessButton,
-} from '../../../../../../public/components/Action';
-*/
 import { LoadingAnimation } from '../../../../../../public/components/View';
 
 
 import styles from './styles.scss';
 
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
-
-/*
-const mapStateToProps = state => ({
-});
-*/
 
 const propTypes = {
     className: PropTypes.string,
@@ -47,13 +34,15 @@ const propTypes = {
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+
+    isFormDisabled: PropTypes.bool.isRequired,
+    isSaveDisabled: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-// @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -93,12 +82,8 @@ export default class LeadForm extends React.PureComponent {
     }
 
     submit = () => {
-        const { lead } = this.props;
-        const { pending, stale, ready } = lead.uiState;
-        if (pending || !stale || !ready) {
-            return;
-        }
-        if (this.formRef) {
+        const { isSaveDisabled } = this.props;
+        if (!isSaveDisabled && this.formRef) {
             this.formRef.submit();
         }
     }
@@ -112,15 +97,17 @@ export default class LeadForm extends React.PureComponent {
             onChange,
             onFailure,
             onSuccess,
+            isFormDisabled,
+            isSaveDisabled,
         } = this.props;
-
-        const { pending } = lead.uiState;
 
         const {
             values,
             errors,
             fieldErrors,
         } = lead.form;
+
+        console.log(isFormDisabled, isSaveDisabled);
 
         return (
             <Form
@@ -134,19 +121,12 @@ export default class LeadForm extends React.PureComponent {
                 validations={this.validations}
             >
                 {
-                    pending && <LoadingAnimation />
+                    isFormDisabled && <LoadingAnimation />
                 }
                 <header
                     styleName="header"
                 >
                     <NonFieldErrors errors={errors} />
-                    {/*
-                    <div styleName="action-buttons">
-                        <SuccessButton disabled={pending || !stale || !ready} >
-                            Save
-                        </SuccessButton>
-                    </div>
-                    */}
                 </header>
                 <SelectInput
                     disabled
@@ -255,18 +235,14 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            {
-                                lead.upload.errorMessage ? (
-                                    lead.upload.errorMessage
-                                ) : (
-                                    <a
-                                        href={lead.upload.url}
-                                        target="_blank"
-                                    >
-                                        {lead.upload.title}
-                                    </a>
-                                )
-                            }
+                            { lead.upload.url && lead.upload.title && (
+                                <a
+                                    href={lead.upload.url}
+                                    target="_blank"
+                                >
+                                    {lead.upload.title}
+                                </a>
+                            ) }
                         </p>,
                         <HiddenInput
                             formname="attachment"

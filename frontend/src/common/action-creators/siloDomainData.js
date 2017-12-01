@@ -8,7 +8,7 @@ import {
     SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
     ADD_ADD_LEAD_VIEW_LEADS,
     ADD_LEAD_VIEW_LEAD_CHANGE,
-    ADD_LEAD_VIEW_LEAD_SET_PENDING,
+    // ADD_LEAD_VIEW_LEAD_SET_PENDING,
     ADD_LEAD_VIEW_LEAD_SAVE,
     ADD_LEAD_VIEW_LEAD_REMOVE,
     ADD_LEAD_VIEW_LEAD_NEXT,
@@ -65,11 +65,13 @@ export const addLeadViewLeadChangeAction = ({
     uiState,
 });
 
+/*
 export const addLeadViewLeadSetPendingAction = ({ leadId, pending }) => ({
     type: ADD_LEAD_VIEW_LEAD_SET_PENDING,
     leadId,
     pending,
 });
+*/
 
 export const addLeadViewLeadSaveAction = ({ leadId, serverId }) => ({
     type: ADD_LEAD_VIEW_LEAD_SAVE,

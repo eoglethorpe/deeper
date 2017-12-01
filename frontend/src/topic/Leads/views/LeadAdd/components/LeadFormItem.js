@@ -7,18 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../../public/utils/rest';
-
 import {
-    createParamsForLeadEdit,
-    createParamsForLeadCreate,
-    urlForLead,
-    createUrlForLeadEdit,
-} from '../../../../../common/rest';
-import {
-    tokenSelector,
-    addLeadViewLeadSetPendingAction,
-    addLeadViewLeadSaveAction,
     addLeadViewLeadChangeAction,
 } from '../../../../../common/redux';
 
@@ -27,36 +16,27 @@ import LeadForm from './LeadForm';
 import styles from '../styles.scss';
 
 const propTypes = {
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
-
     leadKey: PropTypes.string.isRequired,
     active: PropTypes.bool.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line
     leadOptions: PropTypes.object.isRequired, // eslint-disable-line
 
-    addLeadViewLeadSave: PropTypes.func.isRequired,
-    addLeadViewLeadSetPending: PropTypes.func.isRequired,
+    onFormSubmitFailure: PropTypes.func.isRequired,
+    onFormSubmitSuccess: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
 
-    notifyComplete: PropTypes.func.isRequired,
+    isFormDisabled: PropTypes.bool.isRequired,
+    isSaveDisabled: PropTypes.bool.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
-    addLeadViewLeadSetPending: params => dispatch(addLeadViewLeadSetPendingAction(params)),
-    addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
+@connect(undefined, mapDispatchToProps, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
@@ -68,60 +48,6 @@ export default class LeadFormItem extends React.PureComponent {
         }
     }
 
-    createLeadRequest = (lead) => {
-        let url;
-        let params;
-        if (lead.serverId) {
-            url = createUrlForLeadEdit(lead.serverId);
-            params = () => {
-                const { access } = this.props.token;
-                return createParamsForLeadEdit({ access }, lead.form.values);
-            };
-        } else {
-            url = urlForLead;
-            params = () => {
-                const { access } = this.props.token;
-                return createParamsForLeadCreate({ access }, lead.form.values);
-            };
-        }
-
-        const leadCreateRequest = new RestBuilder()
-            .url(url)
-            .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
-            .preLoad(() => {
-                this.props.addLeadViewLeadSetPending({
-                    leadId: lead.data.id,
-                    pending: true,
-                });
-            })
-            .postLoad(() => {
-                this.props.addLeadViewLeadSetPending({
-                    leadId: lead.data.id,
-                    pending: false,
-                });
-            })
-            .success((response) => {
-                this.props.addLeadViewLeadSave({
-                    leadId: lead.data.id,
-                    serverId: response.id,
-                });
-                this.props.notifyComplete(this.props.leadKey);
-            })
-            .failure((response) => {
-                console.error('Failed lead request:', response);
-                this.props.notifyComplete(this.props.leadKey);
-            })
-            .fatal((response) => {
-                console.error('Fatal error occured during lead request:', response);
-                this.props.notifyComplete(this.props.leadKey);
-            })
-            .build();
-        return leadCreateRequest;
-    };
-
     handleFormChange = (values, { formErrors, formFieldErrors }) => {
         const leadId = this.props.leadKey;
 
@@ -130,7 +56,7 @@ export default class LeadFormItem extends React.PureComponent {
             values,
             formErrors,
             formFieldErrors,
-            uiState: { stale: true },
+            uiState: { stale: false },
         });
     }
 
@@ -140,19 +66,21 @@ export default class LeadFormItem extends React.PureComponent {
             leadId,
             formErrors,
             formFieldErrors,
-            uiState: { stale: false },
+            uiState: { stale: true },
         });
 
-        this.props.notifyComplete(this.props.leadKey);
+        this.props.onFormSubmitFailure(this.props.leadKey);
     }
 
     handleFormSuccess = () => {
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
         }
-        this.leadSaveRequest = this.createLeadRequest(this.props.lead);
+        this.leadSaveRequest = this.props.onFormSubmitSuccess(this.props.lead);
         this.leadSaveRequest.start();
     }
+
+    // Called by co-ordinator
 
     start = () => {
         if (this.containerRef) {
@@ -169,6 +97,8 @@ export default class LeadFormItem extends React.PureComponent {
             lead,
             leadOptions,
             active,
+            isFormDisabled,
+            isSaveDisabled,
         } = this.props;
 
         return (
@@ -181,6 +111,8 @@ export default class LeadFormItem extends React.PureComponent {
                     onChange={this.handleFormChange}
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
+                    isFormDisabled={isFormDisabled}
+                    isSaveDisabled={isSaveDisabled}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW
