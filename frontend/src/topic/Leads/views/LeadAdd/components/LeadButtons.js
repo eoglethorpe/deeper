@@ -55,13 +55,12 @@ const defaultProps = {
 const propTypes = {
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
-    onNewUploader: PropTypes.func.isRequired,
+    onFileSelect: PropTypes.func.isRequired,
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
-    uploadCoordinator: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
@@ -101,8 +100,8 @@ export default class LeadButtons extends React.PureComponent {
                 type: 'google-drive',
                 title: doc.name,
                 projectId: activeProject,
-                ready: true,
-                stale: true,
+                // ready: true,
+                stale: false,
             });
 
             this.props.onGoogleDriveSelect(
@@ -130,8 +129,8 @@ export default class LeadButtons extends React.PureComponent {
                 type: 'dropbox',
                 title: doc.name,
                 projectId: activeProject,
-                ready: true,
-                stale: true,
+                // ready: true,
+                stale: false,
             });
 
             this.props.onDropboxSelect(
@@ -152,10 +151,11 @@ export default class LeadButtons extends React.PureComponent {
         const newLeads = [];
 
         const {
-            onNewUploader,
+            onFileSelect,
             token,
         } = this.props;
 
+        const uploads = [];
         files.forEach((file) => {
             const uid = randomString();
             const newLeadId = `lead-${uid}`;
@@ -165,21 +165,21 @@ export default class LeadButtons extends React.PureComponent {
                 type: 'file',
                 title: file.name,
                 projectId: activeProject,
-                ready: false,
-                stale: true,
+                // ready: false,
+                stale: false,
             });
 
-            const uploader = onNewUploader({
+            uploads.unshift({
                 file,
                 url: urlForUpload,
                 params: createParamsForFileUpload(token),
                 leadId: newLeadId,
             });
-            this.props.uploadCoordinator.add(newLeadId, uploader);
         });
 
         this.props.addLeads(newLeads);
-        this.props.uploadCoordinator.start();
+
+        onFileSelect(uploads);
     }
 
     handleAddLeadFromWebsite = () => {
@@ -194,8 +194,8 @@ export default class LeadButtons extends React.PureComponent {
             type: 'website',
             title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
-            ready: true,
-            stale: true,
+            // ready: true,
+            stale: false,
         });
 
         this.props.addLeads(newLeads);
@@ -213,8 +213,8 @@ export default class LeadButtons extends React.PureComponent {
             type: 'text',
             title: `Lead ${(new Date()).toLocaleTimeString()}`,
             projectId: activeProject,
-            ready: true,
-            stale: true,
+            // ready: true,
+            stale: false,
         });
 
         this.props.addLeads(newLeads);

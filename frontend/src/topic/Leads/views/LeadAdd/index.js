@@ -26,6 +26,11 @@ import {
     urlForDropboxFileUpload,
     createHeaderForGoogleDriveFileUpload,
     createHeaderForDropboxUpload,
+
+    createParamsForLeadEdit,
+    createParamsForLeadCreate,
+    urlForLead,
+    createUrlForLeadEdit,
 } from '../../../../common/rest';
 
 import {
@@ -37,13 +42,17 @@ import {
     addLeadViewLeadsSelector,
     leadFilterOptionsSelector,
 
+    addLeadViewLeadSaveAction,
     addLeadViewLeadNextAction,
     addLeadViewLeadPrevAction,
     addLeadViewLeadRemoveAction,
+
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
+
 } from '../../../../common/redux';
 
+import { calcLeadState } from './utils/leadState';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
@@ -63,6 +72,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
+    addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
     addLeadViewLeadPrev: params => dispatch(addLeadViewLeadPrevAction(params)),
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
@@ -87,6 +97,7 @@ const propTypes = {
     addLeadViewLeadRemove: PropTypes.func.isRequired,
     addLeadViewCanNext: PropTypes.bool.isRequired,
     addLeadViewCanPrev: PropTypes.bool.isRequired,
+    addLeadViewLeadSave: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -105,6 +116,7 @@ export default class LeadAdd extends React.PureComponent {
 
         this.state = {
             leadUploads: {},
+            leadRests: {},
         };
         this.leadRefs = {
         };
@@ -138,6 +150,40 @@ export default class LeadAdd extends React.PureComponent {
 
     // REST REQUEST
 
+    createRequestForFormSave = (lead) => {
+        let url;
+        let params;
+        if (lead.serverId) {
+            url = createUrlForLeadEdit(lead.serverId);
+            params = () => {
+                const { access } = this.props.token;
+                return createParamsForLeadEdit({ access }, lead.form.values);
+            };
+        } else {
+            url = urlForLead;
+            params = () => {
+                const { access } = this.props.token;
+                return createParamsForLeadCreate({ access }, lead.form.values);
+            };
+        }
+
+        const leadId = this.leadDetailKeyExtractor(lead);
+
+        const leadCreateRequest = new RestBuilder()
+            .url(url)
+            .params(params)
+            .decay(0.3)
+            .maxRetryTime(2000)
+            .maxRetryAttempts(10)
+            .preLoad(() => this.handleLeadSavePreLoad(leadId))
+            .postLoad(() => this.handleLeadSavePostLoad(leadId))
+            .success(response => this.handleLeadSaveSuccess(leadId, response))
+            .failure(response => this.handleLeadSaveFailure(leadId, response))
+            .fatal(response => this.handleLeadSaveFailure(leadId, response))
+            .build();
+        return leadCreateRequest;
+    }
+
     createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
         const googleDriveUploadRequest = new RestBuilder()
             .url(urlForGoogleDriveFileUpload)
@@ -148,9 +194,7 @@ export default class LeadAdd extends React.PureComponent {
                     { title, accessToken, fileId, mimeType },
                 );
             })
-            .success((response) => {
-                this.handleLeadGoogleDriveUploadSuccess(leadId, response);
-            })
+            .success(response => this.handleLeadGoogleDriveUploadSuccess(leadId, response))
             .retryTime(1000)
             .build();
         return googleDriveUploadRequest;
@@ -166,9 +210,7 @@ export default class LeadAdd extends React.PureComponent {
                     { title, fileUrl },
                 );
             })
-            .success((response) => {
-                this.handleLeadDropboxUploadSuccess(leadId, response);
-            })
+            .success(response => this.handleLeadDropboxUploadSuccess(leadId, response))
             .retryTime(1000)
             .build();
         return dropboxUploadRequest;
@@ -179,25 +221,12 @@ export default class LeadAdd extends React.PureComponent {
             .file(file)
             .url(url)
             .params(params)
-            .preLoad(() => {
-                this.handleLeadUploadPreLoad(leadId);
-            })
-            .progress((progressPercent) => {
-                this.handleLeadUploadProgress(leadId, progressPercent);
-            })
-            .success((response) => {
-                this.handleLeadUploadSuccess(leadId, response);
-            })
-            .failure((response, status) => {
-                this.handleLeadUploadFailure(leadId, status);
-            })
-            .fatal((response, status) => {
-                this.handleLeadUploadFailure(leadId, status);
-            })
-            .abort(() => {
-                // console.warn('aborted');
-                this.handleLeadUploadFailure(leadId, 0);
-            })
+            .preLoad(() => this.handleLeadUploadPreLoad(leadId))
+            .progress(percent => this.handleLeadUploadProgress(leadId, percent))
+            .success(response => this.handleLeadUploadSuccess(leadId, response))
+            .failure((response, status) => this.handleLeadUploadFailure(leadId, status))
+            .fatal((response, status) => this.handleLeadUploadFailure(leadId, status))
+            .abort(() => this.handleLeadUploadFailure(leadId, 0))
             .build();
         return uploader;
     }
@@ -214,19 +243,7 @@ export default class LeadAdd extends React.PureComponent {
                 title: response.title,
                 url: response.file,
             },
-            uiState: { stale: true, ready: true },
-        });
-
-        // FOR UPLOAD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: 100 },
-                    isCompleted: { $set: true },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+            uiState: { stale: false },
         });
     }
 
@@ -240,38 +257,23 @@ export default class LeadAdd extends React.PureComponent {
                 title: response.title,
                 url: response.file,
             },
-            uiState: { stale: true, ready: true },
-        });
-
-        // FOR UPLOAD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: 100 },
-                    isCompleted: { $set: true },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+            uiState: { stale: false },
         });
     }
 
     handleLeadUploadPreLoad = (leadId) => {
-        // console.warn('START', leadId);
+        // FOR UPLOAD
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: 0 },
-                    isCompleted: { $set: false },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
     }
-
     handleLeadUploadSuccess = (leadId, response) => {
-        // console.warn('SUCCESS', leadId);
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.props;
         addLeadViewLeadChange({
@@ -281,7 +283,6 @@ export default class LeadAdd extends React.PureComponent {
                 title: response.title,
                 url: response.file,
             },
-            uiState: { stale: true, ready: true },
         });
 
         // FOR UPLAOD
@@ -289,7 +290,6 @@ export default class LeadAdd extends React.PureComponent {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: 100 },
-                    isCompleted: { $set: true },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -298,15 +298,12 @@ export default class LeadAdd extends React.PureComponent {
 
         this.uploadCoordinator.notifyComplete(leadId);
     }
-
     handleLeadUploadFailure = (leadId, status) => {
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.props;
         addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            upload: { errorMessage: `Failed to upload file (${status})` },
-            uiState: { stale: false, ready: true },
             formErrors: [`Failed to upload file (${status})`],
         });
 
@@ -315,7 +312,6 @@ export default class LeadAdd extends React.PureComponent {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: 100 },
-                    isCompleted: { $set: true },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -324,24 +320,57 @@ export default class LeadAdd extends React.PureComponent {
 
         this.uploadCoordinator.notifyComplete(leadId);
     }
-
     handleLeadUploadProgress = (leadId, progress) => {
         const theLeadUpload = this.state.leadUploads[leadId];
         if (!theLeadUpload || theLeadUpload.progress === progress) {
-            // console.warn('PROGRESS MISSED', leadId, progress, this.state.leadUploads);
             return;
         }
-        // console.warn('PROGRESS', leadId, progress);
+        // FOR UPLAOD
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: progress },
-                    isCompleted: { $set: false },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+    }
+
+    handleLeadSavePreLoad = (leadId) => {
+        // FOR REST
+        this.setState((state) => {
+            const restSettings = {
+                [leadId]: { $auto: {
+                    pending: { $set: true },
+                } },
+            };
+            const leadRests = update(state.leadRests, restSettings);
+            return { leadRests };
+        });
+    }
+    handleLeadSavePostLoad = (leadId) => {
+        // FOR REST
+        this.setState((state) => {
+            const restSettings = {
+                [leadId]: { $auto: {
+                    pending: { $set: false },
+                } },
+            };
+            const leadRests = update(state.leadRests, restSettings);
+            return { leadRests };
+        });
+    }
+    handleLeadSaveSuccess = (leadId, response) => {
+        this.props.addLeadViewLeadSave({
+            leadId,
+            serverId: response.id,
+        });
+        this.formCoordinator.notifyComplete(leadId);
+    }
+    handleLeadSaveFailure = (leadId, response) => {
+        console.error('Failed lead request:', response);
+        this.formCoordinator.notifyComplete(leadId);
     }
 
     // HANDLE SELECTION
@@ -356,16 +385,7 @@ export default class LeadAdd extends React.PureComponent {
         });
         request.start();
 
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: 0 },
-                    isCompleted: { $set: false },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
-        });
+        // TODO: create rest
     }
 
     handleDropboxSelect = (leadId, doc) => {
@@ -376,16 +396,43 @@ export default class LeadAdd extends React.PureComponent {
         });
         request.start();
 
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
+        // TODO: create rest
+    }
+
+    handleFileSelect = (uploads) => {
+        uploads.forEach((upload) => {
+            const request = this.createUploaderForFileUpload(upload);
+            this.uploadCoordinator.add(upload.leadId, request);
+        });
+        this.uploadCoordinator.start();
+
+        const uploadSettings = uploads.reduce(
+            (acc, upload) => {
+                acc[upload.leadId] = { $auto: {
                     progress: { $set: 0 },
-                    isCompleted: { $set: false },
-                } },
-            };
+                } };
+                return acc;
+            },
+            {},
+        );
+        console.warn(uploadSettings);
+
+        // UPLOAD and REST
+        this.setState((state) => {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
         });
+    }
+
+    // HANDLE FORM
+
+    handleFormSubmitSuccess = (lead) => {
+        const request = this.createRequestForFormSave(lead);
+        return request;
+    }
+
+    handleFormSubmitFailure = (id) => {
+        this.formCoordinator.notifyComplete(id);
     }
 
     // UI BUTTONS
@@ -415,21 +462,12 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleBulkSave = () => {
-        // FIXME: Don't close and make new co-ordinator
-        // just add new leads (only new leads)
-        this.formCoordinator.close();
-
-        this.formCoordinator = new Coordinator();
         const leadKeys = this.props.addLeadViewLeads
             .map(this.leadDetailKeyExtractor);
         leadKeys.forEach((id) => {
             this.formCoordinator.add(id, this.leadRefs[id]);
         });
         this.formCoordinator.start();
-    }
-
-    handleFormComplete = (id) => {
-        this.formCoordinator.notifyComplete(id);
     }
 
     // UI
@@ -445,6 +483,15 @@ export default class LeadAdd extends React.PureComponent {
     renderLeadDetail = (key, lead) => {
         const leadOptions = this.props.leadFilterOptions[lead.form.values.project];
         const { activeLeadId } = this.props;
+
+        const choice = calcLeadState({
+            lead,
+            rest: this.state.leadRests[key],
+            upload: this.state.leadUploads[key],
+        });
+        const isSaveDisabled = choice !== 'nonstale';
+        const isFormDisabled = (choice === 'requesting');
+
         return (
             <LeadFormItem
                 ref={this.referenceForLeadDetail(key)}
@@ -452,17 +499,27 @@ export default class LeadAdd extends React.PureComponent {
                 leadKey={key}
                 active={key === activeLeadId}
                 lead={lead}
+                isFormDisabled={isFormDisabled}
+                isSaveDisabled={isSaveDisabled}
                 leadOptions={leadOptions}
-                notifyComplete={this.handleFormComplete}
+                onFormSubmitFailure={this.handleFormSubmitFailure}
+                onFormSubmitSuccess={this.handleFormSubmitSuccess}
             />
         );
     }
 
     render() {
-        const { leadUploads } = this.state;
+        const { leadUploads, leadRests } = this.state;
 
-        const { activeLead } = this.props;
-        const { uiState } = activeLead || {};
+        const { activeLead, activeLeadId } = this.props;
+
+        const choice = activeLead ? calcLeadState({
+            lead: activeLead,
+            rest: this.state.leadRests[activeLeadId],
+            upload: this.state.leadUploads[activeLeadId],
+        }) : undefined;
+
+        const isSaveDisabled = choice !== 'nonstale';
 
         return (
             <div styleName="add-lead">
@@ -496,14 +553,14 @@ export default class LeadAdd extends React.PureComponent {
                             </DangerButton>
                             <SuccessButton
                                 onClick={this.handleSave}
-                                disabled={uiState.pending || !uiState.stale || !uiState.ready}
+                                disabled={isSaveDisabled}
                             >
                                 Save
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
                             >
-                                Bulk Save
+                                Save All
                             </SuccessButton>
                         </div>
                     }
@@ -512,12 +569,14 @@ export default class LeadAdd extends React.PureComponent {
                     styleName="content"
                 >
                     <div styleName="left">
-                        <LeadList leadUploads={leadUploads} />
+                        <LeadList
+                            leadUploads={leadUploads}
+                            leadRests={leadRests}
+                        />
                         <LeadButtons
-                            uploadCoordinator={this.uploadCoordinator}
                             onDropboxSelect={this.handleDropboxSelect}
                             onGoogleDriveSelect={this.handleGoogleDriveSelect}
-                            onNewUploader={this.createUploaderForFileUpload}
+                            onFileSelect={this.handleFileSelect}
                         />
                     </div>
                     <List

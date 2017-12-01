@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -14,24 +13,12 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../../../public/components/Input';
-/*
-import {
-    PrimaryButton,
-    DangerButton,
-    SuccessButton,
-} from '../../../../../../public/components/Action';
-*/
 import { LoadingAnimation } from '../../../../../../public/components/View';
 
 
 import styles from './styles.scss';
 
 const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
-
-/*
-const mapStateToProps = state => ({
-});
-*/
 
 const propTypes = {
     className: PropTypes.string,
@@ -47,13 +34,22 @@ const propTypes = {
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+
+    isFormDisabled: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
-// @connect(mapStateToProps)
+const LEAD_TYPE = {
+    dropbox: 'dropbox',
+    drive: 'drive',
+    file: 'file',
+    website: 'website',
+    text: 'text',
+};
+
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -62,42 +58,69 @@ export default class LeadForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.elements = [
+        const { lead } = props;
+
+        const commonElements = [
             'project',
             'title',
             'source',
             'confidentiality',
             'user',
             'date',
-            'url',
-            'website',
-            'attachment',
-            'text',
         ];
 
-        this.validations = {
+        const commonValidations = {
             title: [requiredCondition],
             source: [requiredCondition],
             confidentiality: [requiredCondition],
             user: [requiredCondition],
             date: [requiredCondition],
-            url: [
-                requiredCondition,
-                urlCondition,
-            ],
-            website: [requiredCondition],
-            text: [requiredCondition],
-            attachment: [requiredCondition],
-            // TODO: add validation for attachment
         };
+
+        switch (lead.data.type) {
+            case LEAD_TYPE.file:
+            case LEAD_TYPE.dropbox:
+            case LEAD_TYPE.drive:
+                this.elements = [
+                    ...commonElements,
+                    'attachment',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    attachment: [requiredCondition],
+                };
+                break;
+            case LEAD_TYPE.website:
+                this.elements = [
+                    ...commonElements,
+                    'website',
+                    'url',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    url: [
+                        requiredCondition,
+                        urlCondition,
+                    ],
+                    website: [requiredCondition],
+                };
+                break;
+            case LEAD_TYPE.text:
+                this.elements = [
+                    ...commonElements,
+                    'text',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    text: [requiredCondition],
+                };
+                break;
+            default:
+                console.warn(`Unknown lead type ${lead.type}`);
+        }
     }
 
     submit = () => {
-        const { lead } = this.props;
-        const { pending, stale, ready } = lead.uiState;
-        if (pending || !stale || !ready) {
-            return;
-        }
         if (this.formRef) {
             this.formRef.submit();
         }
@@ -112,9 +135,8 @@ export default class LeadForm extends React.PureComponent {
             onChange,
             onFailure,
             onSuccess,
+            isFormDisabled,
         } = this.props;
-
-        const { pending } = lead.uiState;
 
         const {
             values,
@@ -134,19 +156,12 @@ export default class LeadForm extends React.PureComponent {
                 validations={this.validations}
             >
                 {
-                    pending && <LoadingAnimation />
+                    isFormDisabled && <LoadingAnimation />
                 }
                 <header
                     styleName="header"
                 >
                     <NonFieldErrors errors={errors} />
-                    {/*
-                    <div styleName="action-buttons">
-                        <SuccessButton disabled={pending || !stale || !ready} >
-                            Save
-                        </SuccessButton>
-                    </div>
-                    */}
                 </header>
                 <SelectInput
                     disabled
@@ -216,7 +231,7 @@ export default class LeadForm extends React.PureComponent {
                     value={values.date}
                 />
                 {
-                    lead.data.type === 'website' && [
+                    lead.data.type === LEAD_TYPE.website && [
                         <TextInput
                             error={fieldErrors.url}
                             formname="url"
@@ -238,7 +253,7 @@ export default class LeadForm extends React.PureComponent {
                     ]
                 }
                 {
-                    lead.data.type === 'text' &&
+                    lead.data.type === LEAD_TYPE.text &&
                         <TextArea
                             error={fieldErrors.text}
                             formname="text"
@@ -250,23 +265,20 @@ export default class LeadForm extends React.PureComponent {
                         />
                 }
                 {
+                    // one of drive, dropbox, or file
                     ATTACHMENT_TYPES.indexOf(lead.data.type) !== -1 && ([
                         <p
                             key="title"
                             styleName="file-title"
                         >
-                            {
-                                lead.upload.errorMessage ? (
-                                    lead.upload.errorMessage
-                                ) : (
-                                    <a
-                                        href={lead.upload.url}
-                                        target="_blank"
-                                    >
-                                        {lead.upload.title}
-                                    </a>
-                                )
-                            }
+                            { lead.upload.url && lead.upload.title && (
+                                <a
+                                    href={lead.upload.url}
+                                    target="_blank"
+                                >
+                                    {lead.upload.title}
+                                </a>
+                            ) }
                         </p>,
                         <HiddenInput
                             formname="attachment"

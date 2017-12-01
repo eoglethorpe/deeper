@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { calcLeadState } from '../../utils/leadState';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -17,15 +18,15 @@ const propTypes = {
 
     leadKey: PropTypes.string.isRequired,
 
-    upload: PropTypes.shape({
-        dummy: PropTypes.string,
-    }),
+    upload: PropTypes.object, // eslint-disable-line
+    rest: PropTypes.object, // eslint-disable-line
 };
 
 const defaultProps = {
     active: false,
     className: '',
     upload: undefined,
+    rest: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -53,66 +54,78 @@ export default class LeadListItem extends React.PureComponent {
         this.props.onClick(this.props.leadKey);
     }
 
-    renderIcon = () => {
-        const { upload, lead } = this.props;
-        const { serverId } = lead;
-        const { type } = lead.data;
-        const {
-            error,
-            stale,
-            pending,
-            ready,
-        } = lead.uiState;
-
-        if (type === 'file' && !upload && (!ready || error)) {
-            // no way to resume this upload
-            return (
-                <span
-                    styleName="warning"
-                    className="ion-alert-circled"
-                />
-            );
-        } else if (pending || !ready) {
-            return (
-                <span
-                    styleName="pending"
-                    className="ion-load-c"
-                />
-            );
-        } else if (error) {
-            return (
-                <span
-                    styleName="error"
-                    className="ion-android-alert"
-                />
-            );
-        } else if (stale) {
-            return (
-                <span
-                    styleName="stale"
-                    className="ion-code-working"
-                />
-            );
-        } else if (serverId) {
-            return (
-                <span
-                    styleName="complete"
-                    className="ion-checkmark-circled"
-                />
-            );
+    renderIcon = (choice) => {
+        switch (choice) {
+            case 'warning':
+                return (
+                    <span
+                        styleName="warning"
+                        className="ion-alert-circled"
+                    />
+                );
+            case 'requesting':
+            case 'uploading':
+                return (
+                    <span
+                        styleName="pending"
+                        className="ion-load-c"
+                    />
+                );
+            case 'invalid':
+                return (
+                    <span
+                        styleName="error"
+                        className="ion-android-alert"
+                    />
+                );
+            case 'nonstale':
+                return (
+                    <span
+                        styleName="stale"
+                        className="ion-code-working"
+                    />
+                );
+            case 'complete':
+                return (
+                    <span
+                        styleName="complete"
+                        className="ion-checkmark-circled"
+                    />
+                );
+            default:
+                return null;
         }
-        return null;
+    }
+
+    renderUploadProgress = (choice, upload) => {
+        if (choice !== 'uploading') {
+            return null;
+        }
+        return (
+            <span
+                styleName={`
+                    progress-bar
+                    ${upload.progress >= 100 ? 'completed' : ''}
+                `}
+            >
+                <span
+                    styleName="progress"
+                    style={{
+                        width: `${upload.progress}%`,
+                    }}
+                />
+            </span>
+        );
     }
 
     render() {
-        const {
-            active,
-            className,
-            lead,
-            upload,
-        } = this.props;
+        const { active, className } = this.props;
+
+        const { rest, upload, lead } = this.props;
         const { type } = lead.data;
         const { title } = lead.form.values;
+
+        const choice = calcLeadState({ lead, upload, rest });
 
         return (
             <button
@@ -127,24 +140,8 @@ export default class LeadListItem extends React.PureComponent {
                 <span styleName="title" >
                     { title }
                 </span>
-                { this.renderIcon() }
-                {
-                    upload && !upload.errorMsg && (
-                        <span
-                            styleName={`
-                                progress-bar
-                                ${upload.progress >= 100 ? 'completed' : ''}
-                            `}
-                        >
-                            <span
-                                styleName="progress"
-                                style={{
-                                    width: `${upload.progress}%`,
-                                }}
-                            />
-                        </span>
-                    )
-                }
+                { this.renderIcon(choice) }
+                { this.renderUploadProgress(choice, upload) }
             </button>
         );
     }

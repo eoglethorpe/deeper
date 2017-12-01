@@ -31,10 +31,12 @@ export const addLeadViewActiveLeadSelector = createSelector(
     (leadId, leads) => leads.find(lead => lead.data.id === leadId),
 );
 
+/*
 export const addLeadViewLeadsFilteredSelector = createSelector(
     addLeadViewLeadsSelector,
     leads => leads.filter(lead => lead.isFiltrate),
 );
+*/
 
 export const addLeadViewCanNextSelector = createSelector(
     addLeadViewLeadsSelector,

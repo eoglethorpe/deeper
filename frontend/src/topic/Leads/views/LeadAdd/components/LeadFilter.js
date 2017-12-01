@@ -38,15 +38,12 @@ const leadTypeOptions = [
 ];
 
 const leadStatusFilterOptions = [
-    { key: 'invalid', label: 'Invalid' },
-    { key: 'saved', label: 'Saved' },
-    { key: 'unsaved', label: 'Unsaved' },
+    { key: 'invalid', label: 'Invalid' }, // invalid
+    { key: 'saved', label: 'Saved' }, // complete
+    { key: 'unsaved', label: 'Unsaved' }, // stale
 ];
 
-const defaultProps = {
-};
-
-const propTypes = {
+const defaultProps = { }; const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
