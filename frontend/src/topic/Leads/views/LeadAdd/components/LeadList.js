@@ -38,18 +38,17 @@ const statusMatches = (leadStatus, status) => {
     }
 };
 
-
-const defaultProps = {
-    activeLeadId: undefined,
-};
-
 const propTypes = {
     activeLeadId: PropTypes.string,
     setActiveLeadId: PropTypes.func.isRequired,
     leads: PropTypes.array.isRequired, // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line
+    filters: PropTypes.object.isRequired, // eslint-disable-line
     leadUploads: PropTypes.object.isRequired, // eslint-disable-line
     leadRests: PropTypes.object.isRequired, // eslint-disable-line
+};
+
+const defaultProps = {
+    activeLeadId: undefined,
 };
 
 const mapStateToProps = state => ({
