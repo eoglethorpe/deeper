@@ -2,6 +2,7 @@ export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
 export const SET_ACTIVE_COUNTRY = 'domain-data/SET_ACTIVE_COUNTRY';
 
 export const SET_ADD_LEAD_VIEW_FILTERS = 'domain-data/SET_ADD_LEAD_VIEW_FILTERS ';
+export const UNSET_ADD_LEAD_VIEW_FILTERS = 'domain-data/UNSET_ADD_LEAD_VIEW_FILTERS ';
 export const SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID = 'domain-data/SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID';
 export const ADD_ADD_LEAD_VIEW_LEADS = 'domain-data/ADD_ADD_LEAD_VIEW_LEADS';
 export const ADD_LEAD_VIEW_LEAD_CHANGE = 'domain-data/ADD_LEAD_VIEW_LEAD_CHANGE';
