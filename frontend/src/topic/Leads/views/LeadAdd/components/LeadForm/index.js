@@ -231,7 +231,7 @@ export default class LeadForm extends React.PureComponent {
                     value={values.date}
                 />
                 {
-                    lead.data.type === 'website' && [
+                    lead.data.type === LEAD_TYPE.website && [
                         <TextInput
                             error={fieldErrors.url}
                             formname="url"
@@ -253,7 +253,7 @@ export default class LeadForm extends React.PureComponent {
                     ]
                 }
                 {
-                    lead.data.type === 'text' &&
+                    lead.data.type === LEAD_TYPE.text &&
                         <TextArea
                             error={fieldErrors.text}
                             formname="text"
@@ -265,6 +265,7 @@ export default class LeadForm extends React.PureComponent {
                         />
                 }
                 {
+                    // one of drive, dropbox, or file
                     ATTACHMENT_TYPES.indexOf(lead.data.type) !== -1 && ([
                         <p
                             key="title"
