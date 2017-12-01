@@ -38,12 +38,18 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     categories: PropTypes.array, // eslint-disable-line
+    selectedCategory: PropTypes.array, // eslint-disable-line
+    selectedSubCategory: PropTypes.array, // eslint-disable-line
+    selectedSubSubCategory: PropTypes.array, // eslint-disable-line
     selectedCategoryId: PropTypes.number,
 };
 
 const defaultProps = {
     className: '',
     categories: {},
+    selectedCategory: {},
+    selectedSubCategory: {},
+    selectedSubSubCategory: {},
     selectedCategoryId: undefined,
 };
 
@@ -313,9 +319,7 @@ export default class Categories extends React.PureComponent {
             addNewCategory,
             addNewSubCategory,
             addNewSubSubCategory,
-            subCategoryData,
             activeSubCategory,
-            subSubCategoryData,
             activeSubSubCategory,
             formFieldErrors,
             formValues,
@@ -326,7 +330,17 @@ export default class Categories extends React.PureComponent {
 
         const {
             className,
+            categories,
+            selectedCategory,
+            selectedSubCategory,
+            selectedSubSubCategory,
         } = this.props;
+
+        console.log(categories);
+        console.log(selectedCategory);
+        console.log(selectedSubCategory);
+        console.log(selectedSubSubCategory);
+
         return (
             <div styleName={className}>
                 <div styleName="header">
@@ -357,7 +371,7 @@ export default class Categories extends React.PureComponent {
                     <div styleName="category-group">
                         <div styleName="sub-categories">
                             {
-                                subCategoryData.map(d => (
+                                selectedCategory.subCategories.map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -368,7 +382,7 @@ export default class Categories extends React.PureComponent {
                                             onClick={() => { this.handleSubCategoryClick(d); }}
                                             styleName={`sub-category ${activeSubCategory.id === d.id ? 'active' : ''}`}
                                         >
-                                            {d.title}
+                                            {d.label}
                                         </div>
                                         <div styleName="icon-btn">
                                             <span
@@ -388,7 +402,7 @@ export default class Categories extends React.PureComponent {
                         </div>
                         <div styleName="sub-sub-categories">
                             {
-                                subSubCategoryData.map(d => (
+                                selectedSubCategory.subSubCategories.map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -399,13 +413,13 @@ export default class Categories extends React.PureComponent {
                                             onClick={() => { this.handleSubSubCategoryClick(d); }}
                                             styleName={`sub-sub-category ${activeSubSubCategory.id === d.id ? 'active' : ''}`}
                                         >
-                                            {d.title}
+                                            {d.label}
                                         </div>
                                         <div styleName="icon-btn">
                                             <Link
                                                 title="Edit Sub Category"
                                                 className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
-                                                to={`/edit/${activeSubCategory.title}/${d.title}/`}
+                                                to={`/edit/${selectedSubCategory.label}/${d.label}/`}
                                             />
                                             <span
                                                 className={`${activeSubSubCategory.id === d.id ? 'ion-android-delete' : ''}`}

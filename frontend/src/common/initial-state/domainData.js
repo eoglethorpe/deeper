@@ -60,27 +60,27 @@ const initialDomainDataState = {
             subCategories: [
                 {
                     id: 1,
-                    label: 'Wash',
+                    label: 'wash',
                     subSubCategories: [
                         {
                             id: 1,
-                            label: 'Water',
+                            label: 'water',
                             keywords: [
                                 {
                                     id: 1,
-                                    label: 'Sickness',
+                                    label: 'sickness',
                                     count: 331,
                                 },
                                 {
                                     id: 2,
-                                    label: 'Cholera',
+                                    label: 'cholera',
                                     count: 298,
                                 },
                             ],
                         },
                         {
                             id: 2,
-                            label: 'Sanitation',
+                            label: 'sanitation',
                             keywords: [
                                 {
                                     id: 1,
@@ -98,36 +98,36 @@ const initialDomainDataState = {
                 },
                 {
                     id: 2,
-                    label: 'Food',
+                    label: 'food',
                     subSubCategories: [
                         {
                             id: 1,
-                            label: 'Nutrition',
+                            label: 'nutrition',
                             keywords: [
                                 {
                                     id: 1,
-                                    label: 'Potato',
+                                    label: 'potato',
                                     count: 331,
                                 },
                                 {
                                     id: 2,
-                                    label: 'Tomato',
+                                    label: 'tomato',
                                     count: 298,
                                 },
                             ],
                         },
                         {
                             id: 2,
-                            label: 'Malnutrition',
+                            label: 'malnutrition',
                             keywords: [
                                 {
                                     id: 1,
-                                    label: 'Kwasiorkor',
+                                    label: 'kwasiorkor',
                                     count: 31,
                                 },
                                 {
                                     id: 2,
-                                    label: 'Sukenas',
+                                    label: 'sukenas',
                                     count: 125,
                                 },
                             ],
