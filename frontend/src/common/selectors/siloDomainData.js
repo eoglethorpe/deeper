@@ -7,6 +7,7 @@ import {
     projectsSelector,
     projectsOptionsSelector,
     analysisFrameworkIdFromProps,
+    categoriesSelector,
 } from './domainData';
 
 
@@ -194,5 +195,46 @@ export const afViewCurrentAnalysisFrameworkSelector = createSelector(
     afViewAnalysisFrameworkSelector,
     (id, analysisFramework) => (
         (analysisFramework && analysisFramework.id === +id) ? analysisFramework : undefined
+    ),
+);
+
+
+export const selectedCategoryIdSelector = ({ siloDomainData }) => (
+    siloDomainData.categoryEditorView.selectedCategoryId
+);
+
+export const selectedSubCategoryIdSelector = ({ siloDomainData }) => (
+    siloDomainData.categoryEditorView.selectedSubCategoryId
+);
+
+export const selectedSubSubCategoryIdSelector = ({ siloDomainData }) => (
+    siloDomainData.categoryEditorView.selectedSubSubCategoryId
+);
+
+export const selectedCategorySelector = createSelector(
+    categoriesSelector,
+    selectedCategoryIdSelector,
+    (categories, id) => (
+        categories.find(category => category.id === id) || emptyObject
+    ),
+);
+
+export const selectedSubCategorySelector = createSelector(
+    selectedCategorySelector,
+    selectedSubCategoryIdSelector,
+    (selectedCategory, id) => (
+        (selectedCategory.subCategories || emptyList).find(
+            subCategory => subCategory.id === id,
+        ) || emptyObject
+    ),
+);
+
+export const selectedSubSubCategorySelector = createSelector(
+    selectedSubCategorySelector,
+    selectedSubSubCategoryIdSelector,
+    (selectedSubCategory, id) => (
+        (selectedSubCategory.subSubCategories || emptyList).find(
+            subSubCategory => subSubCategory.id === id,
+        ) || emptyObject
     ),
 );

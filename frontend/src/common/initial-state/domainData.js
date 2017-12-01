@@ -53,6 +53,101 @@ const initialDomainDataState = {
         */
     },
 
+    categories: [
+        {
+            id: 1,
+            label: 'Affected Groups',
+            subCategories: [
+                {
+                    id: 1,
+                    label: 'Wash',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'Water',
+                            keywords: [
+                                {
+                                    id: 1,
+                                    label: 'Sickness',
+                                    count: 331,
+                                },
+                                {
+                                    id: 2,
+                                    label: 'Cholera',
+                                    count: 298,
+                                },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'Sanitation',
+                            keywords: [
+                                {
+                                    id: 1,
+                                    label: 'Pump',
+                                    count: 31,
+                                },
+                                {
+                                    id: 2,
+                                    label: 'Latrines',
+                                    count: 125,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    label: 'Food',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'Nutrition',
+                            keywords: [
+                                {
+                                    id: 1,
+                                    label: 'Potato',
+                                    count: 331,
+                                },
+                                {
+                                    id: 2,
+                                    label: 'Tomato',
+                                    count: 298,
+                                },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'Malnutrition',
+                            keywords: [
+                                {
+                                    id: 1,
+                                    label: 'Kwasiorkor',
+                                    count: 31,
+                                },
+                                {
+                                    id: 2,
+                                    label: 'Sukenas',
+                                    count: 125,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: 2,
+            label: 'Demographic Groups',
+            subCategories: [],
+        },
+        {
+            id: 3,
+            label: 'Sectors',
+            subCategories: [],
+        },
+    ],
+
     // index is project id
     leadFilterOptions: {
         1: {

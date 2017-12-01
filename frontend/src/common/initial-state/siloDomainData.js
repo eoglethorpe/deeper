@@ -90,6 +90,12 @@ const initialSiloDomainData = {
             */
         },
     },
+
+    categoryEditorView: {
+        selectedCategoryId: 1,
+        selectedSubCategoryId: 1,
+        selectedSubSubCategoryId: 1,
+    },
 };
 
 export default initialSiloDomainData;

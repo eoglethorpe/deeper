@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -20,10 +21,30 @@ import {
 } from '../../../../public/components/View';
 import { randomString } from '../../../../public/utils/common';
 
+import {
+    categoriesSelector,
+    selectedCategorySelector,
+    selectedSubCategorySelector,
+    selectedSubSubCategorySelector,
+} from '../../../../common/redux';
+
 import KeyWords from '../../components/KeyWords';
 
 import styles from './styles.scss';
 
+
+const mapStateToProps = state => ({
+    categories: categoriesSelector(state),
+    selectedCategory: selectedCategorySelector(state),
+    selectedSubCategory: selectedSubCategorySelector(state),
+    selectedSubSubCategory: selectedSubSubCategorySelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    dispatch,
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Categories extends React.PureComponent {
     constructor(props) {
