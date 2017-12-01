@@ -42,6 +42,14 @@ const defaultProps = {
     className: '',
 };
 
+const LEAD_TYPE = {
+    dropbox: 'dropbox',
+    drive: 'drive',
+    file: 'file',
+    website: 'website',
+    text: 'text',
+};
+
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -50,34 +58,66 @@ export default class LeadForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.elements = [
+        const { lead } = props;
+
+        const commonElements = [
             'project',
             'title',
             'source',
             'confidentiality',
             'user',
             'date',
-            'url',
-            'website',
-            'attachment',
-            'text',
         ];
 
-        this.validations = {
+        const commonValidations = {
             title: [requiredCondition],
             source: [requiredCondition],
             confidentiality: [requiredCondition],
             user: [requiredCondition],
             date: [requiredCondition],
-            url: [
-                requiredCondition,
-                urlCondition,
-            ],
-            website: [requiredCondition],
-            text: [requiredCondition],
-            attachment: [requiredCondition],
-            // TODO: add validation for attachment
         };
+
+        switch (lead.data.type) {
+            case LEAD_TYPE.file:
+            case LEAD_TYPE.dropbox:
+            case LEAD_TYPE.drive:
+                this.elements = [
+                    ...commonElements,
+                    'attachment',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    attachment: [requiredCondition],
+                };
+                break;
+            case LEAD_TYPE.website:
+                this.elements = [
+                    ...commonElements,
+                    'website',
+                    'url',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    url: [
+                        requiredCondition,
+                        urlCondition,
+                    ],
+                    website: [requiredCondition],
+                };
+                break;
+            case LEAD_TYPE.text:
+                this.elements = [
+                    ...commonElements,
+                    'text',
+                ];
+                this.validations = {
+                    ...commonValidations,
+                    text: [requiredCondition],
+                };
+                break;
+            default:
+                console.warn(`Unknown lead type ${lead.type}`);
+        }
     }
 
     submit = () => {
