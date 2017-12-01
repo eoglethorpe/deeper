@@ -7,6 +7,7 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 import {
+    RadioInput,
     TextInput,
 } from '../../../../public/components/Input';
 import {
@@ -14,12 +15,14 @@ import {
     ListView,
     Modal,
     ModalHeader,
+    ModalBody,
 } from '../../../../public/components/View';
 
 import {
     projectDetailsSelector,
 } from '../../../../common/redux';
 
+import AddRegion from '../../../../common/components/AddRegion';
 import ProjectRegionDetail from '../ProjectRegionDetail';
 import styles from './styles.scss';
 
@@ -54,9 +57,21 @@ export default class ProjectRegions extends React.PureComponent {
             selectedRegion = projectDetails.regions[0].id;
         }
 
+        this.addRegionOptions = [
+            {
+                key: 'new',
+                label: 'Create new region',
+            },
+            {
+                key: 'old',
+                label: 'Use existing region',
+            },
+        ];
+
         this.state = {
             displayRegionList: projectDetails.regions || emptyList,
             selectedRegion,
+            selectedAddRegionOption: 'new',
             searchInputValue: '',
             addRegionModal: false,
         };
@@ -102,6 +117,13 @@ export default class ProjectRegions extends React.PureComponent {
             searchInputValue: value,
         });
     };
+
+    handleRadioInputChange = (selectedOption) => {
+        console.log(selectedOption);
+        this.setState({
+            selectedAddRegionOption: selectedOption,
+        });
+    }
 
     handleAddRegionButtonClick = () => {
         this.setState({
@@ -162,6 +184,7 @@ export default class ProjectRegions extends React.PureComponent {
             selectedRegion,
             addRegionModal,
             searchInputValue,
+            selectedAddRegionOption,
         } = this.state;
 
         const sortedRegions = [...displayRegionList];
@@ -181,12 +204,29 @@ export default class ProjectRegions extends React.PureComponent {
                             Add
                         </PrimaryButton>
                         <Modal
-                            closeOnEscape
                             onClose={this.handleModalClose}
                             show={addRegionModal}
                             closeOnBlur
+                            closeOnEscape
                         >
                             <ModalHeader title="Add Region" />
+                            <ModalBody>
+                                <RadioInput
+                                    name="addRegionRadioInput"
+                                    options={this.addRegionOptions}
+                                    onChange={
+                                        selectedOption => this.handleRadioInputChange(
+                                            selectedOption)
+                                    }
+                                    selected="new"
+                                />
+                                {selectedAddRegionOption === 'new' &&
+                                    <AddRegion
+                                        projectId={projectDetails.id}
+                                        onModalClose={this.handleModalClose}
+                                    />
+                                }
+                            </ModalBody>
                         </Modal>
                         <TextInput
                             styleName="search-input"

@@ -26,6 +26,7 @@ export default class ProjectDetails extends React.PureComponent {
                     <TabLink
                         styleName="tab-header"
                         to="project-regions"
+                        default
                     >
                         Regions
                     </TabLink>

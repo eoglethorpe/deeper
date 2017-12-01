@@ -18,6 +18,7 @@ import {
     ListView,
     Modal,
     ModalHeader,
+    ModalBody,
 } from '../../../public/components/View';
 
 import browserHistory from '../../../common/browserHistory';
@@ -41,7 +42,7 @@ import {
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
-import AddCountry from '../components/AddCountry';
+import AddRegion from '../../../common/components/AddRegion';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -376,9 +377,11 @@ export default class CountryPanel extends React.PureComponent {
                         closeOnBlur
                     >
                         <ModalHeader title="Add new country" />
-                        <AddCountry
-                            onModalClose={this.handleModalClose}
-                        />
+                        <ModalBody>
+                            <AddRegion
+                                onModalClose={this.handleModalClose}
+                            />
+                        </ModalBody>
                     </Modal>
                 </div>
                 { this.renderCountryDetail() }

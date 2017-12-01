@@ -7,8 +7,6 @@ import { RestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForProjectPatch,
     createUrlForProject,
-    createParamsForProjectOptions,
-    createUrlForProjectOptions,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -17,7 +15,6 @@ import {
     projectDetailsSelector,
     projectOptionsSelector,
 
-    setProjectOptionsAction,
     setProjectAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
@@ -30,7 +27,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
     setProject: PropTypes.func.isRequired,
-    setProjectOptions: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -46,7 +42,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
 
@@ -63,7 +58,6 @@ export default class ProjectGeneral extends React.PureComponent {
 
         const {
             projectDetails,
-            activeProject,
             projectOptions,
         } = props;
 
@@ -82,18 +76,11 @@ export default class ProjectGeneral extends React.PureComponent {
             regionOptions: projectOptions.regions || emptyList,
             userGroupsOptions: projectOptions.userGroups || emptyList,
         };
-
-        this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
-    }
-
-    componentWillMount() {
-        this.projectOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
         const {
             projectDetails,
-            activeProject,
             projectOptions,
         } = nextProps;
 
@@ -109,17 +96,6 @@ export default class ProjectGeneral extends React.PureComponent {
                 userGroupsOptions: projectOptions.userGroups || emptyList,
             });
         }
-        if (nextProps.activeProject !== this.props.activeProject) {
-            if (this.projectOptionsRequest) {
-                this.projectOptionsRequest.stop();
-                this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
-                this.projectOptionsRequest.start();
-            }
-        }
-    }
-
-    componentWillUnmount() {
-        this.projectOptionsRequest.stop();
     }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
@@ -158,32 +134,6 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .build();
         return projectPatchRequest;
-    };
-
-    createProjectOptionsRequest = (projectId) => {
-        const projectOptionsRequest = new RestBuilder()
-            .url(createUrlForProjectOptions(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectOptions({ access });
-            })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectOptionsGetResponse');
-                    this.props.setProjectOptions({
-                        projectId,
-                        options: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return projectOptionsRequest;
     };
 
     // FORM RELATED

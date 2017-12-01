@@ -8,31 +8,39 @@ import {
     NonFieldErrors,
     TextInput,
     requiredCondition,
-} from '../../../../public/components/Input';
+} from '../../../public/components/Input';
+import {
+    LoadingAnimation,
+} from '../../../public/components/View';
 import {
     DangerButton,
     PrimaryButton,
-} from '../../../../public/components/Action';
+} from '../../../public/components/Action';
 
-import browserHistory from '../../../../common/browserHistory';
-import { RestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
+import browserHistory from '../../browserHistory';
+import { RestBuilder } from '../../../public/utils/rest';
+import schema from '../../schema';
 import {
     createParamsForRegionCreate,
     urlForRegionCreate,
-} from '../../../../common/rest';
+} from '../../rest';
 import {
     tokenSelector,
 
     addNewRegionAction,
-} from '../../../../common/redux';
+} from '../../redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    token: PropTypes.object.isRequired, // eslint-disable-line
     addNewRegion: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
+    projectId: PropTypes.number,
+    token: PropTypes.object.isRequired, // eslint-disable-line
+};
+
+const defaultProps = {
+    projectId: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -45,8 +53,9 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddCountry extends React.PureComponent {
+export default class AddRegion extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -75,6 +84,23 @@ export default class AddCountry extends React.PureComponent {
     }
 
     createRequestForRegionCreate = ({ title, code }) => {
+        const { projectId } = this.props;
+
+        let paramsBody = {
+            title,
+            code,
+            public: true,
+        };
+
+        if (projectId) {
+            paramsBody = {
+                title,
+                code,
+                public: false,
+                project: projectId,
+            };
+        }
+
         const regionCreateRequest = new RestBuilder()
             .url(urlForRegionCreate)
             .params(() => {
@@ -82,7 +108,7 @@ export default class AddCountry extends React.PureComponent {
                 const { access } = token;
                 return createParamsForRegionCreate(
                     { access },
-                    { title, code, public: true });
+                    paramsBody);
             })
             .decay(0.3)
             .maxRetryTime(3000)
@@ -93,11 +119,19 @@ export default class AddCountry extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'regionCreateResponse');
-                    this.props.addNewRegion({
-                        regionDetail: response,
-                    });
-                    this.props.onModalClose();
-                    browserHistory.push(`/countrypanel/${response.id}`);
+                    if (projectId) {
+                        this.props.addNewRegion({
+                            regionDetail: response,
+                            projectId,
+                        });
+                        this.props.onModalClose();
+                    } else {
+                        this.props.addNewRegion({
+                            regionDetail: response,
+                        });
+                        this.props.onModalClose();
+                        browserHistory.push(`/countrypanel/${response.id}`);
+                    }
                 } catch (er) {
                     console.error(er);
                 }
@@ -146,7 +180,6 @@ export default class AddCountry extends React.PureComponent {
     };
 
     successCallback = (data) => {
-        console.log(data);
         // Stop old post request
         if (this.regionCreateRequest) {
             this.regionCreateRequest.stop();
@@ -168,7 +201,7 @@ export default class AddCountry extends React.PureComponent {
 
         return (
             <Form
-                styleName="add-country-form"
+                styleName="add-region-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}
@@ -177,18 +210,10 @@ export default class AddCountry extends React.PureComponent {
                 validations={this.validations}
                 onSubmit={this.handleSubmit}
             >
-                {
-                    pending &&
-                        <div styleName="pending-overlay" >
-                            <i
-                                styleName="loading-icon"
-                                className="ion-load-c"
-                            />
-                        </div>
-                }
+                { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Country Title"
+                    label="Region Title"
                     formname="title"
                     placeholder="Nepal"
                     value={formValues.title}
@@ -209,7 +234,7 @@ export default class AddCountry extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Save changes
+                        Add Region
                     </PrimaryButton>
                 </div>
             </Form>
