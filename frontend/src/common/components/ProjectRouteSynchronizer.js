@@ -51,11 +51,12 @@ class ProjectRouteSynchronizer extends React.PureComponent {
         const { activeProject, match } = this.props;
         const projectId = parseInt(match.params.projectId, 10);
 
+        console.warn('url', projectId, 'state', activeProject);
+
         // Initially, set active project from url
         if (isTruthy(projectId) && projectId !== activeProject) {
-            this.props.setActiveProject({
-                activeProject: projectId,
-            });
+            // console.info('Setting project to:', projectId);
+            this.props.setActiveProject({ activeProject: projectId });
         }
     }
 
@@ -66,11 +67,22 @@ class ProjectRouteSynchronizer extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         // console.log('RECEIVING PROPS');
         const { match, activeProject } = nextProps;
-        const projectId = parseInt(match.params.projectId, 10);
+        const projectId = +match.params.projectId;
 
-        if (isTruthy(activeProject) && projectId !== activeProject) {
-            console.info('Redirecting to:', this.props.redirectUrl(activeProject));
-            browserHistory.push(this.props.redirectUrl(activeProject));
+        // when route has changed, set state
+        if (this.props.match.params.projectId !== nextProps.match.params.projectId) {
+            if (isTruthy(projectId) && projectId !== activeProject) {
+                // console.info('Setting project to:', projectId);
+                this.props.setActiveProject({ activeProject: projectId });
+            }
+        }
+        // when state has changed, set route
+        if (this.props.activeProject !== nextProps.activeProject) {
+            // set route
+            if (isTruthy(activeProject) && projectId !== activeProject) {
+                // console.info('Redirecting to:', this.props.redirectUrl(activeProject));
+                browserHistory.push(this.props.redirectUrl(activeProject));
+            }
         }
     }
 
