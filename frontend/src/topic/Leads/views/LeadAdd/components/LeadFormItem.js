@@ -84,12 +84,16 @@ export default class LeadFormItem extends React.PureComponent {
 
     start = () => {
         if (this.containerRef) {
-            this.containerRef.submit();
+            if (!this.props.isSaveDisabled) {
+                this.containerRef.submit();
+            } else {
+                this.props.onFormSubmitFailure(this.props.leadKey);
+            }
         }
     }
 
     close = () => {
-        console.log('Close forced');
+        // do nothing, cleanup not required
     }
 
     render() {
@@ -98,7 +102,6 @@ export default class LeadFormItem extends React.PureComponent {
             leadOptions,
             active,
             isFormDisabled,
-            isSaveDisabled,
         } = this.props;
 
         return (
@@ -112,7 +115,6 @@ export default class LeadFormItem extends React.PureComponent {
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
                     isFormDisabled={isFormDisabled}
-                    isSaveDisabled={isSaveDisabled}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW

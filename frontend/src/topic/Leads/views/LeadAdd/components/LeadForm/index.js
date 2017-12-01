@@ -36,7 +36,6 @@ const propTypes = {
     onChange: PropTypes.func.isRequired,
 
     isFormDisabled: PropTypes.bool.isRequired,
-    isSaveDisabled: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -82,8 +81,7 @@ export default class LeadForm extends React.PureComponent {
     }
 
     submit = () => {
-        const { isSaveDisabled } = this.props;
-        if (!isSaveDisabled && this.formRef) {
+        if (this.formRef) {
             this.formRef.submit();
         }
     }
@@ -98,7 +96,6 @@ export default class LeadForm extends React.PureComponent {
             onFailure,
             onSuccess,
             isFormDisabled,
-            isSaveDisabled,
         } = this.props;
 
         const {
@@ -106,8 +103,6 @@ export default class LeadForm extends React.PureComponent {
             errors,
             fieldErrors,
         } = lead.form;
-
-        console.log(isFormDisabled, isSaveDisabled);
 
         return (
             <Form
