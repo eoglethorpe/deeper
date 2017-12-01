@@ -6,20 +6,29 @@
 
     .tabs-header-container {
         display: flex;
+        flex-shrink: 0;
         width: 100%;
         color: $color-text-active-tab;
-        flex-shrink: 0;
 
         .tab-header {
             display: flex;
             align-items: center;
+            outline: none;
+            border: 0;
             border-bottom: $width-separator-normal solid $color-separator;
+            background-color: transparent;
             cursor: pointer;
             padding: $spacing-medium $spacing-large;
             text-transform: uppercase;
             color: $color-label;
+            font-family: inherit;
             font-size: $font-size-medium;
             font-weight: $font-weight-normal;
+
+            &.active {
+                border-bottom-color: $color-accent;
+                color: $color-accent;
+            }
         }
 
         .empty-tab {

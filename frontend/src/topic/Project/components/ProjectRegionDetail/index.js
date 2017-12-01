@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
+    Confirm,
+} from '../../../../public/components/View';
+import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
@@ -73,6 +76,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
         this.regionRequest = this.createRegionRequest(props.regionId);
         this.state = {
             dataLoading: true,
+            deleteConfirmModalShow: false,
+            cloneConfirmModalShow: false,
         };
     }
 
@@ -183,20 +188,46 @@ export default class ProjectRegionDetail extends React.PureComponent {
         return projectPatchRequest;
     };
 
-    handleRegionClone = (regionId, activeProject) => {
-        if (this.regionCloneRequest) {
-            this.regionCloneRequest.stop();
+    handleRegionClone = (cloneConfirm, regionId, activeProject) => {
+        if (cloneConfirm) {
+            if (this.regionCloneRequest) {
+                this.regionCloneRequest.stop();
+            }
+            this.regionCloneRequest = this.createRegionCloneRequest(regionId, activeProject);
+            this.regionCloneRequest.start();
         }
-        this.regionCloneRequest = this.createRegionCloneRequest(regionId, activeProject);
-        this.regionCloneRequest.start();
+        this.setState({
+            cloneConfirmModalShow: false,
+        });
     }
 
-    handleRegionRemove = (projectDetails, removedRegionId) => {
-        if (this.regionRemoveRequest) {
-            this.regionRemoveRequest.stop();
+    handleRegionRemove = (deleteConfirm, projectDetails, removedRegionId) => {
+        console.log(deleteConfirm);
+        if (deleteConfirm) {
+            if (this.regionRemoveRequest) {
+                this.regionRemoveRequest.stop();
+            }
+            this.regionRemoveRequest = this.createProjectPatchRequest(
+                projectDetails,
+                removedRegionId,
+            );
+            this.regionRemoveRequest.start();
         }
-        this.regionRemoveRequest = this.createProjectPatchRequest(projectDetails, removedRegionId);
-        this.regionRemoveRequest.start();
+        this.setState({
+            deleteConfirmModalShow: false,
+        });
+    }
+
+    handleRegionRemoveClick = () => {
+        this.setState({
+            deleteConfirmModalShow: true,
+        });
+    }
+
+    handleRegionCloneClick = () => {
+        this.setState({
+            cloneConfirmModalShow: true,
+        });
     }
 
     render() {
@@ -219,7 +250,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     </h2>
                     <div styleName="action-btns">
                         <DangerButton
-                            onClick={() => this.handleRegionRemove(projectDetails, regionId)}
+                            onClick={this.handleRegionRemoveClick}
                         >
                             Remove Region
                         </DangerButton>
@@ -227,13 +258,31 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             isPublic && (
                                 <PrimaryButton
                                     styleName="clone-btn"
-                                    onClick={() => this.handleRegionClone(regionId, activeProject)}
+                                    onClick={this.handleRegionCloneClick}
                                 >
                                     Clone and Edit
                                 </PrimaryButton>
                             )
                         }
                     </div>
+                    <Confirm
+                        show={this.state.deleteConfirmModalShow}
+                        closeOnEscape
+                        onClose={deleteConfirm => this.handleRegionRemove(
+                            deleteConfirm, projectDetails, regionId)}
+                    >
+                        <p>{`Are you sure you want to remove
+                            ${regionDetails.title} from project ${projectDetails.title}?`}</p>
+                    </Confirm>
+                    <Confirm
+                        show={this.state.cloneConfirmModalShow}
+                        onClose={cloneConfirm => this.handleRegionClone(
+                            cloneConfirm, regionId, activeProject)}
+                    >
+                        <p>{`Are you sure you want to clone ${regionDetails.title}?`}</p>
+                        <p>After cloning and editing this region,
+                            you will not recieve any updates in this public region.</p>
+                    </Confirm>
                 </header>
                 {
                     isPublic ? (

@@ -12,6 +12,8 @@ import {
 import {
     ListItem,
     ListView,
+    Modal,
+    ModalHeader,
 } from '../../../../public/components/View';
 
 import {
@@ -36,6 +38,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch,
 });
 
+const emptyList = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectRegions extends React.PureComponent {
@@ -51,7 +55,10 @@ export default class ProjectRegions extends React.PureComponent {
         }
 
         this.state = {
+            displayRegionList: projectDetails.regions || emptyList,
             selectedRegion,
+            searchInputValue: '',
+            addRegionModal: false,
         };
     }
 
@@ -60,6 +67,20 @@ export default class ProjectRegions extends React.PureComponent {
             if (nextProps.projectDetails.regions.length > 0) {
                 this.setState({ selectedRegion: nextProps.projectDetails.regions[0].id });
             }
+            const { searchInputValue } = this.state;
+            const caseInsensitiveSubmatch = (region) => {
+                if (region.title) {
+                    const regionTitle = region.title.toLowerCase();
+                    const searchTitle = searchInputValue.toLowerCase();
+                    return regionTitle.includes(searchTitle);
+                }
+                return null;
+            };
+
+            const displayRegionList = nextProps.projectDetails.regions.filter(
+                caseInsensitiveSubmatch);
+
+            this.setState({ displayRegionList });
         }
     }
 
@@ -67,9 +88,32 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion: regionId });
     }
 
+    handleSearchInputChange = (value) => {
+        const { projectDetails } = this.props;
+
+        const caseInsensitiveSubmatch = region => (
+            region.title.toLowerCase().includes(value.toLowerCase())
+        );
+        const displayRegionList = (projectDetails.regions || emptyList)
+            .filter(caseInsensitiveSubmatch);
+
+        this.setState({
+            displayRegionList,
+            searchInputValue: value,
+        });
+    };
+
     handleAddRegionButtonClick = () => {
-        console.log('Coming soon...');
+        this.setState({
+            addRegionModal: true,
+        });
     }
+
+    handleModalClose = () => {
+        this.setState({
+            addRegionModal: false,
+        });
+    };
 
     calcRegionKey = region => region.id;
 
@@ -92,7 +136,7 @@ export default class ProjectRegions extends React.PureComponent {
     }
 
     renderSelectedRegionDetails = (projectDetails, selectedRegion) => {
-        if ((projectDetails.regions || []).length > 0) {
+        if ((projectDetails.regions || emptyList).length > 0) {
             return (
                 <ProjectRegionDetail
                     key={selectedRegion}
@@ -113,7 +157,15 @@ export default class ProjectRegions extends React.PureComponent {
             projectDetails,
         } = this.props;
 
-        const { selectedRegion } = this.state;
+        const {
+            displayRegionList,
+            selectedRegion,
+            addRegionModal,
+            searchInputValue,
+        } = this.state;
+
+        const sortedRegions = [...displayRegionList];
+        sortedRegions.sort((a, b) => (a.title.localeCompare(b.title)));
 
         return (
             <div styleName="project-regions">
@@ -128,18 +180,26 @@ export default class ProjectRegions extends React.PureComponent {
                         >
                             Add
                         </PrimaryButton>
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            show={addRegionModal}
+                            closeOnBlur
+                        >
+                            <ModalHeader title="Add Region" />
+                        </Modal>
                         <TextInput
                             styleName="search-input"
-                            onChange={this.search}
+                            onChange={this.handleSearchInputChange}
                             placeholder="Search Regions"
                             type="search"
-                            value={this.state.searchInputValue}
+                            value={searchInputValue}
                         />
                     </div>
                     <ListView
                         styleName="list"
                         modifier={this.renderRegionList}
-                        data={projectDetails.regions || []}
+                        data={sortedRegions}
                         keyExtractor={this.calcRegionKey}
                     />
                 </div>
