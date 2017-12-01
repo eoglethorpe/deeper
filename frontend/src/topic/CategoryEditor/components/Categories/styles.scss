@@ -1,38 +1,133 @@
 @import '../../../../stylesheets/base';
 
-.categories {
+.right {
     display: flex;
+    flex-basis: 70%;
     flex-direction: column;
-    padding: $spacing-large;
+    background-color: $color-foreground;
+    height: calc(100vh - #{$height-navbar} - #{$spacing-medium-alt * 2});
 
-    .category-group {
+    .header {
         display: flex;
-        padding: $spacing-large 0;
-        overflow-y: auto;
+        flex-shrink: 0;
+        justify-content: flex-end;
+        padding: $spacing-large;
+        width: 100%;
 
-        .sub-categories,
-        .sub-sub-categories {
+        .search-category {
+            flex-basis: 30%;
+        }
+
+        .pusher {
+            flex-basis: 60%;
+        }
+
+        .add-category-btn {
+            flex-basis: 12%;
+        }
+    }
+
+    .categories {
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-large;
+
+        .category-group {
             display: flex;
-            flex-basis: 20%;
-            flex-wrap: wrap;
-            margin-right: $spacing-large;
-            border: $width-separator-medium solid $color-separator;
-            padding: $spacing-large $spacing-small;
-            padding-left: $spacing-large;
-            height: 100%;
+            padding-bottom: $spacing-large;
+            overflow-y: auto;
 
-            .sub-group {
+            .sub-categories,
+            .sub-sub-categories {
                 display: flex;
-                flex-basis: 100%;
-                margin-bottom: $spacing-small;
-                padding: $spacing-medium 0;
-                text-transform: uppercase;
+                flex-basis: 20%;
+                flex-wrap: wrap;
+                margin-right: $spacing-large;
+                border: $width-separator-medium solid $color-separator;
+                padding: $spacing-large $spacing-small;
+                padding-left: $spacing-large;
+                height: 100%;
 
-                .sub-category,
-                .not-clicked,
-                .add-button,
-                .sub-sub-category {
-                    flex-basis: 70%;
+                .sub-group {
+                    display: flex;
+                    flex-basis: 100%;
+                    margin-bottom: $spacing-small;
+                    padding: $spacing-medium 0;
+                    text-transform: uppercase;
+
+                    .sub-category,
+                    .not-clicked,
+                    .add-button,
+                    .sub-sub-category {
+                        flex-basis: 70%;
+                        border-radius: $width-separator-thick;
+                        cursor: pointer;
+                        padding: $spacing-small;
+                        text-align: center;
+                        user-select: none;
+
+                        &:hover {
+                            background-color: $color-background-hover;
+                        }
+
+                        &:focus {
+                            background-color: $color-primary;
+                        }
+
+                        &.active {
+                            @include shadow-small;
+                            background-color: $color-primary;
+                            color: $color-text-on-primary;
+                        }
+
+                    }
+
+
+                    .icon-btn {
+                        display: flex;
+                        flex-basis: 5%;
+
+                        :global .ion-chevron-right {
+                            flex-basis: 10%;
+                            margin-left: $spacing-extra-large;
+                            padding: $spacing-small;
+                        }
+
+                        :global .ion-edit {
+                            margin-left: $spacing-medium-alt;
+                            cursor: pointer;
+                            padding: $spacing-small $spacing-medium;
+
+                            &:hover {
+                                background-color: $color-background-hover;
+                            }
+
+                            &:active {
+                                @include shadow-small;
+                                transform: translateY(1px);
+                            }
+                        }
+
+                        :global .ion-android-delete {
+                            cursor: pointer;
+                            padding: $spacing-small $spacing-medium;
+                            color: $color-danger;
+
+                            &:hover {
+                                background-color: $color-background-hover;
+                            }
+
+                            &:active {
+                                @include shadow-small;
+                                transform: translateY(1px);
+                            }
+                        }
+                    }
+
+                }
+
+                .add-button {
+                    flex-basis: 80%;
                     border-radius: $width-separator-thick;
                     cursor: pointer;
                     padding: $spacing-small;
@@ -52,77 +147,12 @@
                         background-color: $color-primary;
                         color: $color-text-on-primary;
                     }
-
-                }
-
-
-                .icon-btn {
-                    display: flex;
-                    flex-basis: 5%;
-
-                    :global .ion-chevron-right {
-                        flex-basis: 10%;
-                        margin-left: $spacing-extra-large;
-                        padding: $spacing-small;
-                    }
-
-                    :global .ion-edit {
-                        margin-left: $spacing-medium-alt;
-                        cursor: pointer;
-                        padding: $spacing-small $spacing-medium;
-
-                        &:hover {
-                            background-color: $color-background-hover;
-                        }
-
-                        &:active {
-                            @include shadow-small;
-                            transform: translateY(1px);
-                        }
-                    }
-
-                    :global .ion-android-delete {
-                        cursor: pointer;
-                        padding: $spacing-small $spacing-medium;
-                        color: $color-danger;
-
-                        &:hover {
-                            background-color: $color-background-hover;
-                        }
-
-                        &:active {
-                            @include shadow-small;
-                            transform: translateY(1px);
-                        }
-                    }
-                }
-
-            }
-
-            .add-button {
-                flex-basis: 80%;
-                border-radius: $width-separator-thick;
-                cursor: pointer;
-                padding: $spacing-small;
-                text-align: center;
-                user-select: none;
-
-                &:hover {
-                    background-color: $color-background-hover;
-                }
-
-                &:focus {
-                    background-color: $color-primary;
-                }
-
-                &.active {
-                    @include shadow-small;
-                    background-color: $color-primary;
-                    color: $color-text-on-primary;
                 }
             }
         }
     }
+
+
 }
 
 .edit-modal-category {
