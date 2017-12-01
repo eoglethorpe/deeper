@@ -7,9 +7,6 @@ import { connect } from 'react-redux';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
-    Modal,
-    ModalHeader,
-    ModalBody,
     Pager,
     RawTable,
     FormattedDate,
@@ -20,6 +17,7 @@ import {
     TransparentAccentButton,
     TransparentButton,
 } from '../../../../public/components/Action';
+import { randomString } from '../../../../public/utils/common';
 
 import {
     createParamsForUser,
@@ -45,13 +43,14 @@ import {
 
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
+
+    addAddLeadViewLeadsAction,
 } from '../../../../common/redux';
 
 import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
 import { pageTitles } from '../../../../common/utils/labels';
 
-import EditLeadForm from './components/EditLeadForm';
 import FilterLeadsForm from './components/FilterLeadsForm';
 import LeadColumnHeader from './components/LeadColumnHeader';
 import styles from './styles.scss';
@@ -70,6 +69,7 @@ const propTypes = {
     setLeadPageActiveSort: PropTypes.func.isRequired,
     activePage: PropTypes.number.isRequired, // eslint-disable-line
     setLeadPageActivePage: PropTypes.func.isRequired,
+    addLeads: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -96,6 +96,8 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
+
+    addLeads: leads => dispatch(addAddLeadViewLeadsAction(leads)),
 });
 
 const MAX_LEADS_PER_REQUEST = 16;
@@ -199,11 +201,7 @@ export default class Leads extends React.PureComponent {
             },
         ];
 
-        this.state = {
-            editRow: {},
-            showEditLeadModal: false,
-            loadingLeads: false,
-        };
+        this.state = { loadingLeads: false };
     }
 
     componentWillMount() {
@@ -365,17 +363,37 @@ export default class Leads extends React.PureComponent {
     }
 
     handleEditLeadClick = (row) => {
-        this.setState({
-            editRow: row,
-            showEditLeadModal: true,
-        });
-    }
+        // TODO: while editing, set leads such that serverId is never repeated
+        const newLeads = [];
 
-    handleEditLeadModalClose = () => {
-        this.setState({
-            // editRow: {},
-            showEditLeadModal: false,
+        const type = row.type || 'text';
+        const values = {
+            title: row.title,
+            project: row.project,
+            source: row.source,
+            confidentiality: row.confidentiality,
+            assignee: row.assignee,
+            publishedOn: row.publishedOn,
+            attachment: row.attachment,
+            website: row.website,
+            url: row.url,
+            text: row.text,
+        };
+        const serverId = row.id;
+
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
+        newLeads.push({
+            id: newLeadId,
+
+            type,
+            serverId,
+            values,
+
+            stale: true,
         });
+        this.props.addLeads(newLeads);
+        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
     }
 
     handleSearchSimilarLead = (row) => {
@@ -496,24 +514,6 @@ export default class Leads extends React.PureComponent {
                         onPageClick={this.handlePageClick}
                     />
                 </footer>
-
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleEditLeadModalClose}
-                    show={this.state.showEditLeadModal}
-                >
-                    <ModalHeader
-                        title="Edit lead"
-                    />
-                    <ModalBody>
-                        <EditLeadForm
-                            onSubmit={() => {}}
-                            onCancel={this.handleEditLeadModalClose}
-                            pending={false}
-                            values={this.state.editRow}
-                        />
-                    </ModalBody>
-                </Modal>
             </div>
         );
     }

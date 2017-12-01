@@ -51,25 +51,21 @@ const leadReference = {
         error: false,
         stale: false,
     },
-    upload: {
-        title: undefined,
-        errorMessage: undefined,
-    },
 };
 
-const createLead = ({ id, type, title, projectId, stale = false }) => {
+const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
     const settings = {
         data: {
             id: { $set: id },
             type: { $set: type },
         },
-        form: { values: {
-            title: { $set: title },
-            project: { $set: projectId },
-        } },
+        form: {
+            values: { $set: values },
+        },
         uiState: {
             stale: { $set: stale },
         },
+        serverId: { $set: serverId },
     };
     return update(leadReference, settings);
 };
@@ -170,7 +166,6 @@ const addLeadViewChangeLead = (state, action) => {
         formFieldErrors = {},
 
         formErrors,
-        upload,
         uiState,
     } = action;
     const index = state.addLeadView.leads.findIndex(
@@ -188,17 +183,12 @@ const addLeadViewChangeLead = (state, action) => {
     if (uiState) {
         settings.addLeadView.leads[index].uiState = { $merge: uiState };
     }
-    if (upload) {
-        settings.addLeadView.leads[index].upload = { $merge: upload };
-    }
     const newState = update(state, settings);
 
     // set error flag for uiState
     const ld = newState.addLeadView.leads[index];
     let error = false;
-    if (ld.upload.errorMessage) {
-        error = true;
-    } else if (ld.form.errors && ld.form.errors.length > 0) {
+    if (ld.form.errors && ld.form.errors.length > 0) {
         error = true;
     } else {
         const errorList = ld.form.fieldErrors;
