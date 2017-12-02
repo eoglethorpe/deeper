@@ -51,8 +51,6 @@ class ProjectRouteSynchronizer extends React.PureComponent {
         const { activeProject, match } = this.props;
         const projectId = parseInt(match.params.projectId, 10);
 
-        console.warn('url', projectId, 'state', activeProject);
-
         // Initially, set active project from url
         if (isTruthy(projectId) && projectId !== activeProject) {
             // console.info('Setting project to:', projectId);
