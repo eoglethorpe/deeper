@@ -5,6 +5,7 @@ import {
     SET_ACTIVE_COUNTRY,
 
     SET_ADD_LEAD_VIEW_FILTERS,
+    UNSET_ADD_LEAD_VIEW_FILTERS,
     SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
     ADD_ADD_LEAD_VIEW_LEADS,
     ADD_LEAD_VIEW_LEAD_CHANGE,
@@ -41,6 +42,10 @@ export const setActiveCountryAction = ({ activeCountry }) => ({
 export const setAddLeadViewFiltersAction = filters => ({
     type: SET_ADD_LEAD_VIEW_FILTERS,
     filters,
+});
+
+export const unsetAddLeadViewFiltersAction = () => ({
+    type: UNSET_ADD_LEAD_VIEW_FILTERS,
 });
 
 export const setAddLeadViewActiveLeadIdAction = leadId => ({

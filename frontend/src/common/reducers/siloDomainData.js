@@ -5,6 +5,7 @@ import {
     SET_ACTIVE_PROJECT,
 
     SET_ADD_LEAD_VIEW_FILTERS,
+    UNSET_ADD_LEAD_VIEW_FILTERS,
     SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
     ADD_ADD_LEAD_VIEW_LEADS,
     ADD_LEAD_VIEW_LEAD_CHANGE,
@@ -147,6 +148,16 @@ const addLeadViewSetFilters = (state, action) => {
     const settings = {
         addLeadView: {
             filters: { $merge: action.filters },
+        },
+    };
+    return update(state, settings);
+};
+
+const removeLeadViewSetFilters = (state) => {
+    // remove filters
+    const settings = {
+        addLeadView: {
+            filters: { $set: {} },
         },
     };
     return update(state, settings);
@@ -470,6 +481,8 @@ const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
             return addLeadViewAddNewLeads(state, action);
         case SET_ADD_LEAD_VIEW_FILTERS:
             return addLeadViewSetFilters(state, action);
+        case UNSET_ADD_LEAD_VIEW_FILTERS:
+            return removeLeadViewSetFilters(state, action);
         case ADD_LEAD_VIEW_LEAD_CHANGE:
             return addLeadViewChangeLead(state, action);
         case ADD_LEAD_VIEW_LEAD_SAVE:

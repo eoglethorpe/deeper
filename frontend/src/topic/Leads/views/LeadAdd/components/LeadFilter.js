@@ -8,16 +8,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../../public/utils/rest';
 import {
     SelectInput,
     TextInput,
 } from '../../../../../public/components/Input';
+import { DangerButton } from '../../../../../public/components/Action';
+import { isObjectEmpty } from '../../../../../public/utils/common';
+import { RestBuilder } from '../../../../../public/utils/rest';
 
 import {
     tokenSelector,
     activeProjectSelector,
     setAddLeadViewFiltersAction,
+    unsetAddLeadViewFiltersAction,
     addLeadViewFiltersSelector,
     setLeadFilterOptionsAction,
 } from '../../../../../common/redux';
@@ -51,6 +54,7 @@ const defaultProps = { }; const propTypes = {
     filters: PropTypes.object.isRequired, // eslint-disable-line
     activeProject: PropTypes.number.isRequired,
     setLeadViewFilters: PropTypes.func.isRequired,
+    unsetLeadViewFilters: PropTypes.func.isRequired,
     setLeadFilterOptions: PropTypes.func.isRequired,
 };
 
@@ -62,6 +66,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setLeadViewFilters: filters => dispatch(setAddLeadViewFiltersAction(filters)),
+    unsetLeadViewFilters: () => dispatch(unsetAddLeadViewFiltersAction()),
     setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
 });
 
@@ -139,10 +144,16 @@ export default class LeadFilter extends React.PureComponent {
         this.props.setLeadViewFilters({ status: value });
     }
 
+    handleClearFilters = () => {
+        this.props.unsetLeadViewFilters();
+    }
+
     render() {
         const {
             filters,
         } = this.props;
+
+        const isFilterEmpty = isObjectEmpty(filters);
 
         return (
             <div
@@ -184,6 +195,13 @@ export default class LeadFilter extends React.PureComponent {
                     onChange={this.handleLeadTypeFilterChange}
                     showHintAndError={false}
                 />
+                <DangerButton
+                    type="button"
+                    disabled={isFilterEmpty}
+                    onClick={this.handleClearFilters}
+                >
+                    Clear Filter
+                </DangerButton>
             </div>
         );
     }
