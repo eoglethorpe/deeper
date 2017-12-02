@@ -332,7 +332,6 @@ const leadViewUnsetFilter = (state) => {
     return update(state, settings);
 };
 
-
 const leadViewSetActivePage = (state, action) => {
     const { activePage } = action;
     const { activeProject } = state;
@@ -458,60 +457,41 @@ const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
     return state;
 };
 
+const reducers = {
+    [SET_USER_PROJECTS]: setUserProjects,
+    [SET_ACTIVE_PROJECT]: setActiveProject,
+    [SET_ACTIVE_COUNTRY]: setActiveCountry,
+    [ADD_ADD_LEAD_VIEW_LEADS]: addLeadViewAddNewLeads,
+    [SET_ADD_LEAD_VIEW_FILTERS]: addLeadViewSetFilters,
+    [UNSET_ADD_LEAD_VIEW_FILTERS]: removeLeadViewSetFilters,
+    [ADD_LEAD_VIEW_LEAD_CHANGE]: addLeadViewChangeLead,
+    [ADD_LEAD_VIEW_LEAD_SAVE]: addLeadViewSaveLead,
+    [ADD_LEAD_VIEW_LEAD_REMOVE]: addLeadViewRemoveLead,
+    [ADD_LEAD_VIEW_LEAD_PREV]: addLeadViewPrevLead,
+    [ADD_LEAD_VIEW_LEAD_NEXT]: addLeadViewNextLead,
+    [SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
+
+    [SET_LEAD_PAGE_FILTER]: leadViewSetFilter,
+    [UNSET_LEAD_PAGE_FILTER]: leadViewUnsetFilter,
+    [SET_LEAD_PAGE_ACTIVE_PAGE]: leadViewSetActivePage,
+    [SET_LEAD_PAGE_ACTIVE_SORT]: leadViewSetActiveSort,
+    [SET_LEADS]: setLeads,
+
+    [SET_EDIT_ENTRY_VIEW_LEAD]: editEntryViewSetLead,
+
+    [AF_VIEW_SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
+    [AF_VIEW_ADD_WIDGET]: afViewAddWidget,
+    [AF_VIEW_REMOVE_WIDGET]: afViewRemoveWidget,
+    [AF_VIEW_UPDATE_WIDGET]: afViewUpdateWidget,
+};
+
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {
-    switch (action.type) {
-        case SET_USER_PROJECTS:
-            return setUserProjects(state, action);
-        case SET_ACTIVE_PROJECT:
-            return setActiveProject(state, action);
-        case SET_ACTIVE_COUNTRY:
-            return setActiveCountry(state, action);
-
-        case ADD_ADD_LEAD_VIEW_LEADS:
-            return addLeadViewAddNewLeads(state, action);
-        case SET_ADD_LEAD_VIEW_FILTERS:
-            return addLeadViewSetFilters(state, action);
-        case UNSET_ADD_LEAD_VIEW_FILTERS:
-            return removeLeadViewSetFilters(state, action);
-        case ADD_LEAD_VIEW_LEAD_CHANGE:
-            return addLeadViewChangeLead(state, action);
-        case ADD_LEAD_VIEW_LEAD_SAVE:
-            return addLeadViewSaveLead(state, action);
-        case ADD_LEAD_VIEW_LEAD_REMOVE:
-            return addLeadViewRemoveLead(state, action);
-        case ADD_LEAD_VIEW_LEAD_PREV:
-            return addLeadViewPrevLead(state);
-        case ADD_LEAD_VIEW_LEAD_NEXT:
-            return addLeadViewNextLead(state);
-        case SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID:
-            return addLeadViewSetActiveLead(state, action);
-
-        case SET_LEAD_PAGE_FILTER:
-            return leadViewSetFilter(state, action);
-        case UNSET_LEAD_PAGE_FILTER:
-            return leadViewUnsetFilter(state, action);
-        case SET_LEAD_PAGE_ACTIVE_PAGE:
-            return leadViewSetActivePage(state, action);
-        case SET_LEAD_PAGE_ACTIVE_SORT:
-            return leadViewSetActiveSort(state, action);
-        case SET_LEADS:
-            return setLeads(state, action);
-
-        case SET_EDIT_ENTRY_VIEW_LEAD:
-            return editEntryViewSetLead(state, action);
-
-        case AF_VIEW_SET_ANALYSIS_FRAMEWORK:
-            return afViewSetAnalysisFramework(state, action);
-        case AF_VIEW_ADD_WIDGET:
-            return afViewAddWidget(state, action);
-        case AF_VIEW_REMOVE_WIDGET:
-            return afViewRemoveWidget(state, action);
-        case AF_VIEW_UPDATE_WIDGET:
-            return afViewUpdateWidget(state, action);
-
-        default:
-            return state;
+    const { type } = action;
+    const reducer = reducers[type];
+    if (!reducer) {
+        return state;
     }
+    return reducer(state, action);
 };
 
 export default siloDomainDataReducer;

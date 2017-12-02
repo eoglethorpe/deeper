@@ -27,46 +27,63 @@ const decodeAccessToken = (access) => {
     }
 };
 
+// REDUCERS
+
+const login = (state, action) => {
+    const { access, refresh } = action;
+    const decodedToken = decodeAccessToken(access);
+    const settings = {
+        token: { $set: {
+            access,
+            refresh,
+        } },
+        activeUser: { $set: decodedToken },
+    };
+    return update(state, settings);
+};
+
+const authenticate = (state) => {
+    const settings = {
+        authenticated: { $set: true },
+    };
+    return update(state, settings);
+};
+
+const logout = (state) => {
+    const settings = {
+        authenticated: { $set: false },
+        token: { $set: {} },
+        activeUser: { $set: {} },
+    };
+    return update(state, settings);
+};
+
+const setAccessToken = (state, action) => {
+    const { access } = action;
+    const decodedToken = decodeAccessToken(access);
+    const settings = {
+        token: { $merge: {
+            access,
+        } },
+        activeUser: { $set: decodedToken },
+    };
+    return update(state, settings);
+};
+
+const reducers = {
+    [LOGIN_ACTION]: login,
+    [AUTHENTICATE_ACTION]: authenticate,
+    [LOGOUT_ACTION]: logout,
+    [SET_ACCESS_TOKEN_ACTION]: setAccessToken,
+};
+
 const authReducer = (state = initialAuthState, action) => {
-    switch (action.type) {
-        case LOGIN_ACTION: {
-            const decodedToken = decodeAccessToken(action.access);
-            const settings = {
-                token: { $set: {
-                    access: action.access,
-                    refresh: action.refresh,
-                } },
-                activeUser: { $set: decodedToken },
-            };
-            return update(state, settings);
-        }
-        case AUTHENTICATE_ACTION: {
-            const settings = {
-                authenticated: { $set: true },
-            };
-            return update(state, settings);
-        }
-        case LOGOUT_ACTION: {
-            const settings = {
-                authenticated: { $set: false },
-                token: { $set: {} },
-                activeUser: { $set: {} },
-            };
-            return update(state, settings);
-        }
-        case SET_ACCESS_TOKEN_ACTION: {
-            const decodedToken = decodeAccessToken(action.access);
-            const settings = {
-                token: { $merge: {
-                    access: action.access,
-                } },
-                activeUser: { $set: decodedToken },
-            };
-            return update(state, settings);
-        }
-        default:
-            return state;
+    const { type } = action;
+    const reducer = reducers[type];
+    if (!reducer) {
+        return state;
     }
+    return reducer(state, action);
 };
 
 export default authReducer;
