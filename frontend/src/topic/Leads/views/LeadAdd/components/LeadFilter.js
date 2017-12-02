@@ -8,14 +8,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../../public/utils/rest';
 import {
     SelectInput,
     TextInput,
 } from '../../../../../public/components/Input';
-import {
-    DangerButton,
-} from '../../../../../public/components/Action';
+import { DangerButton } from '../../../../../public/components/Action';
+import { isObjectEmpty } from '../../../../../public/utils/common';
+import { RestBuilder } from '../../../../../public/utils/rest';
+
 import {
     tokenSelector,
     activeProjectSelector,
@@ -28,9 +28,6 @@ import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
 } from '../../../../../common/rest';
-import {
-    isObjectEmpty,
-} from '../../../../../public/utils/common';
 
 import styles from '../styles.scss';
 
@@ -69,7 +66,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setLeadViewFilters: filters => dispatch(setAddLeadViewFiltersAction(filters)),
-    unsetLeadViewFilters: filters => dispatch(unsetAddLeadViewFiltersAction(filters)),
+    unsetLeadViewFilters: () => dispatch(unsetAddLeadViewFiltersAction()),
     setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
 });
 
@@ -148,7 +145,7 @@ export default class LeadFilter extends React.PureComponent {
     }
 
     handleClearFilters = () => {
-        this.props.unsetLeadViewFilters({});
+        this.props.unsetLeadViewFilters();
     }
 
     render() {
