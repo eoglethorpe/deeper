@@ -65,16 +65,16 @@ export default class LeadForm extends React.PureComponent {
             'title',
             'source',
             'confidentiality',
-            'user',
-            'date',
+            'assignee',
+            'publishedOn',
         ];
 
         const commonValidations = {
             title: [requiredCondition],
             source: [requiredCondition],
             confidentiality: [requiredCondition],
-            user: [requiredCondition],
-            date: [requiredCondition],
+            assignee: [requiredCondition],
+            publishedOn: [requiredCondition],
         };
 
         switch (lead.data.type) {
@@ -210,25 +210,26 @@ export default class LeadForm extends React.PureComponent {
                     value={values.confidentiality}
                 />
                 <SelectInput
-                    error={fieldErrors.user}
-                    formname="user"
+                    error={fieldErrors.assignee}
+                    multiple
+                    formname="assignee"
                     keySelector={d => (d || {}).key}
-                    label="Assign To"
                     labelSelector={d => (d || {}).value}
+                    label="Assign To"
                     options={leadOptions.assignee}
                     placeholder="Select one"
                     showHintAndError
                     showLabel
                     styleName="user"
-                    value={values.user}
+                    value={values.assignee}
                 />
                 <DateInput
-                    error={fieldErrors.date}
-                    formname="date"
-                    label="Publication Date"
+                    error={fieldErrors.publishedOn}
+                    formname="publishedOn"
+                    label="Published on"
                     placeholder="12/12/2012"
                     styleName="date"
-                    value={values.date}
+                    value={values.publishedOn}
                 />
                 {
                     lead.data.type === LEAD_TYPE.website && [
@@ -271,14 +272,7 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            { lead.upload.url && lead.upload.title && (
-                                <a
-                                    href={lead.upload.url}
-                                    target="_blank"
-                                >
-                                    {lead.upload.title}
-                                </a>
-                            ) }
+                            Gallery File: {values.attachment}
                         </p>,
                         <HiddenInput
                             formname="attachment"

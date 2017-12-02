@@ -98,9 +98,12 @@ export default class LeadButtons extends React.PureComponent {
             newLeads.unshift({
                 id: newLeadId,
                 type: 'google-drive',
-                title: doc.name,
-                projectId: activeProject,
-                // ready: true,
+
+                values: {
+                    title: doc.name,
+                    project: activeProject,
+                },
+
                 stale: false,
             });
 
@@ -127,9 +130,12 @@ export default class LeadButtons extends React.PureComponent {
             newLeads.unshift({
                 id: newLeadId,
                 type: 'dropbox',
-                title: doc.name,
-                projectId: activeProject,
-                // ready: true,
+
+                values: {
+                    title: doc.name,
+                    project: activeProject,
+                },
+
                 stale: false,
             });
 
@@ -163,9 +169,12 @@ export default class LeadButtons extends React.PureComponent {
             newLeads.unshift({
                 id: newLeadId,
                 type: 'file',
-                title: file.name,
-                projectId: activeProject,
-                // ready: false,
+
+                values: {
+                    title: file.name,
+                    project: activeProject,
+                },
+
                 stale: false,
             });
 
@@ -192,9 +201,12 @@ export default class LeadButtons extends React.PureComponent {
         newLeads.unshift({
             id: newLeadId,
             type: 'website',
-            title: `Lead ${(new Date()).toLocaleTimeString()}`,
-            projectId: activeProject,
-            // ready: true,
+
+            values: {
+                title: `Lead ${(new Date()).toLocaleTimeString()}`,
+                project: activeProject,
+            },
+
             stale: false,
         });
 
@@ -211,9 +223,12 @@ export default class LeadButtons extends React.PureComponent {
         newLeads.unshift({
             id: newLeadId,
             type: 'text',
-            title: `Lead ${(new Date()).toLocaleTimeString()}`,
-            projectId: activeProject,
-            // ready: true,
+
+            values: {
+                title: `Lead ${(new Date()).toLocaleTimeString()}`,
+                project: activeProject,
+            },
+
             stale: false,
         });
 

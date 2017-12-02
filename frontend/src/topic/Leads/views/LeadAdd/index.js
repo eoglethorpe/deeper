@@ -317,7 +317,7 @@ export default class LeadAdd extends React.PureComponent {
         addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            formErrors: [`Failed to upload file (${status})`],
+            formErrors: [`Error ${status}: Failed to upload file`],
         });
 
         // FOR UPLAOD
@@ -397,8 +397,6 @@ export default class LeadAdd extends React.PureComponent {
             mimeType: doc.mimeType,
         });
         request.start();
-
-        // TODO: create rest
     }
 
     handleDropboxSelect = (leadId, doc) => {
@@ -408,8 +406,6 @@ export default class LeadAdd extends React.PureComponent {
             fileUrl: doc.link,
         });
         request.start();
-
-        // TODO: create rest
     }
 
     handleFileSelect = (uploads) => {
@@ -428,7 +424,6 @@ export default class LeadAdd extends React.PureComponent {
             },
             {},
         );
-        console.warn(uploadSettings);
 
         // UPLOAD and REST
         this.setState((state) => {
