@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 import update from '../../../../public/utils/immutable-update';
 import { List } from '../../../../public/components/View/';
 import { RestBuilder } from '../../../../public/utils/rest';
-import { Coordinator, UploadBuilder } from '../../../../public/utils/Uploader';
+import { UploadBuilder } from '../../../../public/utils/upload';
+import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 
 import {
     PrimaryButton,
@@ -117,12 +118,24 @@ export default class LeadAdd extends React.PureComponent {
         this.state = {
             leadUploads: {},
             leadRests: {},
+            pendingSubmitAll: false,
         };
         this.leadRefs = {
         };
 
-        this.uploadCoordinator = new Coordinator();
-        this.formCoordinator = new Coordinator();
+        this.uploadCoordinator = new CoordinatorBuilder()
+            .maxActiveActors(3)
+            .build();
+
+        this.formCoordinator = new CoordinatorBuilder()
+            .maxActiveActors(1)
+            .preSession(() => {
+                this.setState({ pendingSubmitAll: true });
+            })
+            .postSession(() => {
+                this.setState({ pendingSubmitAll: false });
+            })
+            .build();
     }
 
     componentWillMount() {
@@ -520,6 +533,7 @@ export default class LeadAdd extends React.PureComponent {
         }) : undefined;
 
         const isSaveDisabled = choice !== 'nonstale';
+        const isRemoveDisabled = choice === 'requesting';
 
         return (
             <div styleName="add-lead">
@@ -548,6 +562,7 @@ export default class LeadAdd extends React.PureComponent {
                             </PrimaryButton>
                             <DangerButton
                                 onClick={this.handleRemove}
+                                disabled={isRemoveDisabled}
                             >
                                 Remove
                             </DangerButton>
@@ -559,6 +574,7 @@ export default class LeadAdd extends React.PureComponent {
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
+                                disabled={this.state.pendingSubmitAll}
                             >
                                 Save All
                             </SuccessButton>

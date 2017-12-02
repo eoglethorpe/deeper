@@ -27,7 +27,7 @@ import {
 } from '../../../../public/components/View';
 
 import { RestBuilder } from '../../../../public/utils/rest';
-import { Uploader } from '../../../../public/utils/Uploader';
+import { Uploader } from '../../../../public/utils/upload';
 
 import schema from '../../../../common/schema';
 import {
