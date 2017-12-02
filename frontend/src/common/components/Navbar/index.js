@@ -3,8 +3,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { withRouter, Link } from 'react-router-dom';
-import { List, ListView } from '../../../public/components/View';
+import {
+    withRouter,
+    Link,
+} from 'react-router-dom';
+import { List } from '../../../public/components/View';
 import {
     DropdownMenu,
     DropdownGroup,
@@ -13,9 +16,13 @@ import {
 import { SelectInput } from '../../../public/components/Input';
 import { isTruthy } from '../../../public/utils/common';
 
+import {
+    pageTitles,
+    pathNames,
+} from '../../constants';
+
 
 import LinkOutsideRouter from '../LinkOutsideRouter';
-import { pageTitles } from '../../utils/labels';
 import logo from '../../../img/black-logo.png';
 import styles from './styles.scss';
 
@@ -96,6 +103,41 @@ const defaultProps = {
 
 const getValidLinkOrEmpty = value => (value ? `${value}/` : '');
 
+const reverseRoute = (route, params) => {
+    const paths = route.split('/');
+
+    for (let i = 0; i < paths.length; i += 1) {
+        let path = paths[i];
+
+        if (path && path.length > 0 && path.charAt(0) === ':') {
+            path = path.substring(1);
+            let param;
+
+            // optional parameter
+            if (path.slice(-1) === '?') {
+                param = params[path.replace('?', '')];
+
+                // omit if value not supplied
+                if (!param) {
+                    paths.splice(i, 1);
+                } else {
+                    paths[i] = param;
+                }
+            } else {
+                param = params[path];
+
+                if (!param) {
+                    console.error(`value for param ${path} not supplied`);
+                }
+
+                paths[i] = param;
+            }
+        }
+    }
+
+    return paths.join('/');
+};
+
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -116,6 +158,12 @@ export default class Navbar extends React.PureComponent {
             activeCountry,
         );
         this.setState({ navbarItems, dropdownItems });
+
+        window.addEventListener('resize', this.handleWindowResize);
+    }
+
+    componentDidMount() {
+        this.computeMenuSize();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -133,9 +181,91 @@ export default class Navbar extends React.PureComponent {
         this.setState({ navbarItems, dropdownItems });
     }
 
+    componentDidUpdate() {
+        this.computeMenuSize();
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleWindowResize);
+    }
+
     onSelectChangeHandler = (key) => {
         if (isTruthy(key)) {
             this.props.setActiveProject({ activeProject: key });
+        }
+    }
+
+    getNavbarItem = (key, item) => {
+        const params = {
+            projectId: this.props.activeProject,
+            analysisFrameworkId: 1,
+        };
+
+        return (
+            <Link
+                to={reverseRoute(pathNames[item], params)}
+                className={styles['menu-item']}
+                key={item}
+            >
+                { pageTitles[item] }
+            </Link>
+        );
+    }
+
+    getOverflowMenuItem = item => (
+        <span
+            className={styles['menu-item']}
+            key={item}
+        >
+            { pageTitles[item] }
+        </span>
+    )
+
+    computeMenuSize = () => {
+        const menu = this.menu;
+
+        if (menu) {
+            const cr = menu.getBoundingClientRect();
+
+            const links = menu.getElementsByTagName('a');
+            const overflow = menu.getElementsByTagName('div')[0];
+
+            const linkWidths = [];
+            let totalWidth = 0;
+
+            for (let i = 0; i < links.length; i += 1) {
+                links[i].style.display = 'inline-flex';
+                const width = links[i].getBoundingClientRect().width;
+                linkWidths.push(width);
+                totalWidth += width;
+            }
+
+
+            if (menu.scrollWidth > Math.ceil(cr.width)) {
+                totalWidth += overflow.getBoundingClientRect().width;
+
+                linkWidths.reverse();
+
+                let lastVisibleLinkIndex = links.length - 1;
+                while (totalWidth > cr.width) {
+                    totalWidth -= linkWidths[0];
+                    linkWidths.shift();
+
+                    links[lastVisibleLinkIndex].style.display = 'none';
+                    lastVisibleLinkIndex -= 1;
+                    overflow.style.display = 'inline-flex';
+
+                    if (lastVisibleLinkIndex === 0) {
+                        break;
+                    }
+                }
+            } else {
+                overflow.style.display = 'none';
+
+                for (let i = 0; i < links.length; i += 1) {
+                    links[i].style.display = 'inline-flex';
+                }
+            }
         }
     }
 
@@ -233,33 +363,9 @@ export default class Navbar extends React.PureComponent {
 
     calcDropdownItemKey = item => item.name
 
-    renderNavbarItem = (key, item) => {
-        const {
-            navbarActiveLink,
-            navbarValidLinks,
-            userProjects,
-            activeUser,
-        } = this.props;
-        if (navbarValidLinks.indexOf(item.name) <= -1) {
-            return null;
-        }
-        if (item.needsProject && userProjects.length <= 0) {
-            return null;
-        }
-        if (item.private && !activeUser.userId) {
-            console.warn('here');
-            return null;
-        }
 
-        return (
-            <Link
-                className={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
-                key={key}
-                to={item.linkTo}
-            >
-                {item.name}
-            </Link>
-        );
+    handleWindowResize = () => {
+        this.computeMenuSize();
     }
 
     renderDropdownGroup = (key, group) => (
@@ -314,26 +420,33 @@ export default class Navbar extends React.PureComponent {
         );
     }
 
+
     render() {
-        console.log('Rendering Navbar');
+        const links = [
+            'projects',
+            'countries',
+            'leads',
+            'entries',
+            'ary',
+            'analysisFramework',
+        ];
+
         const {
             activeProject,
             activeUser,
-            userInformation,
             navbarVisible,
             userProjects,
+            userInformation,
         } = this.props;
-        const {
-            navbarItems,
-            dropdownItems,
-        } = this.state;
 
         if (!navbarVisible) {
             return null;
         }
 
         return (
-            <div styleName="navbar">
+            <nav
+                styleName="navbar"
+            >
                 <Link
                     to="/"
                     styleName="brand"
@@ -347,26 +460,47 @@ export default class Navbar extends React.PureComponent {
                     <span styleName="title">Deep</span>
                 </Link>
                 {
-                    userProjects.length > 0 && activeUser.userId &&
-                    <SelectInput
-                        clearable={false}
-                        keySelector={this.labelSelectorForSelectInput}
-                        labelSelector={this.keySelectorForSelectInput}
-                        onChange={this.onSelectChangeHandler}
-                        options={this.props.userProjects}
-                        placeholder="Select Event"
-                        showLabel={false}
-                        showHintAndError={false}
-                        styleName="project-select-input"
-                        value={activeProject}
-                    />
+                    userProjects.length > 0 && activeUser.userId && (
+                        <SelectInput
+                            clearable={false}
+                            keySelector={this.labelSelectorForSelectInput}
+                            labelSelector={this.keySelectorForSelectInput}
+                            onChange={this.onSelectChangeHandler}
+                            options={this.props.userProjects}
+                            placeholder="Select Event"
+                            showHintAndError={false}
+                            showLabel={false}
+                            styleName="project-select-input"
+                            value={activeProject}
+                        />
+                    )
                 }
-                <ListView
-                    data={navbarItems}
+
+                <div
+                    ref={(el) => { this.menu = el; }}
                     styleName="menu-items"
-                    keyExtractor={this.calcNavbarKey}
-                    modifier={this.renderNavbarItem}
-                />
+                >
+                    <List
+                        data={links}
+                        keyExtractor={this.calcNavbarKey}
+                        modifier={this.getNavbarItem}
+                    />
+                    <div
+                        styleName="overflow-menu"
+                    >
+                        <button
+                            styleName="overflow-button"
+                        >
+                            <span className="ion-android-more-horizontal" />
+                        </button>
+                        <div
+                            styleName="overflow-items"
+                        >
+                            <div>Hello</div>
+                        </div>
+                    </div>
+                </div>
+
                 <DropdownMenu
                     styleName="dropdown-menu"
                     className="dropdown-title"
@@ -374,7 +508,7 @@ export default class Navbar extends React.PureComponent {
                     title={userInformation.displayName || activeUser.displayName || 'Anon'}
                 >
                     <List
-                        data={dropdownItems}
+                        data={this.state.dropdownItems}
                         keyExtractor={this.calcDropdownGroupKey}
                         modifier={this.renderDropdownGroup}
                     />
@@ -392,7 +526,7 @@ export default class Navbar extends React.PureComponent {
                         </button>
                     }
                 </DropdownMenu>
-            </div>
+            </nav>
         );
     }
 }

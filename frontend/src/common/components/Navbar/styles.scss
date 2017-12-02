@@ -39,7 +39,7 @@
         margin: 0 5%;
         color: $color-text;
 
-        input::-webkit-input-placeholder {
+        input::placeholder {
             color: $color-label;
         }
     }
@@ -48,10 +48,12 @@
         display: flex;
         flex-grow: 1;
         align-self: stretch;
-        justify-content: center;
+        justify-content: flex-start;
+        overflow-x: auto;
 
-        :global .menu-item {
-            display: flex;
+        .menu-item {
+            display: inline-flex;
+            flex-shrink: 0;
             align-items: center;
             justify-content: center;
             transition: .2s all ease-in-out;
@@ -66,6 +68,30 @@
             &.active {
                 border-bottom-color: $color-accent;
                 color: $color-text-on-navbar;
+            }
+        }
+
+        .overflow-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            .overflow-button {
+                outline: 0;
+                border: 0;
+                background-color: transparent;
+                cursor: pointer;
+                padding: $spacing-small $spacing-medium;
+                font-family: inherit;
+                font-size: inherit;
+
+                &:hover {
+                    background-color: $color-hover;
+                }
+            }
+
+            .overflow-items {
+                display: none;
             }
         }
     }
@@ -86,8 +112,7 @@
     text-align: left;
     text-transform: uppercase;
     font-family: inherit;
-    font-size: $font-size-small;
-    font-weight: $font-weight-light;
+    font-size: inherit;
 
     .icon {
         display: inline-block;
