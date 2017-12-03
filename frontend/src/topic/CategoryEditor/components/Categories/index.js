@@ -29,6 +29,10 @@ import {
     selectedSubCategorySelector,
     selectedSubSubCategorySelector,
     selectedCategoryIdSelector,
+    setActiveCategoryAction,
+    setActiveSubCategoryAction,
+    setActiveSubSubCategoryAction,
+
 } from '../../../../common/redux';
 
 import KeyWords from '../../components/KeyWords';
@@ -38,10 +42,13 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     categories: PropTypes.array, // eslint-disable-line
-    selectedCategory: PropTypes.array, // eslint-disable-line
-    selectedSubCategory: PropTypes.array, // eslint-disable-line
-    selectedSubSubCategory: PropTypes.array, // eslint-disable-line
+    selectedCategory: PropTypes.object, // eslint-disable-line
+    selectedSubCategory: PropTypes.object, // eslint-disable-line
+    selectedSubSubCategory: PropTypes.object, // eslint-disable-line
     selectedCategoryId: PropTypes.number,
+    setActiveCategory: PropTypes.func.isRequired,
+    setActiveSubCategory: PropTypes.func.isRequired,
+    setActiveSubSubCategory: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -62,7 +69,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setActiveCategory: params => dispatch(setActiveCategoryAction(params)),
+    setActiveSubCategory: params => dispatch(setActiveSubCategoryAction(params)),
+    setActiveSubSubCategory: params => dispatch(setActiveSubSubCategoryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -205,9 +214,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleCategorySelectChange = (key) => {
-        this.setState({
-            activeCategory: key,
-        });
+        this.props.setActiveCategory(key);
     }
 
     // FORM success Category Data
@@ -235,7 +242,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleSubCategoryClick = (subCategory) => {
-        this.setState({ activeSubCategory: subCategory });
+        this.props.setActiveSubCategory(subCategory.id);
     }
 
     handleAddNewSubCategoryClose = () => {
@@ -288,7 +295,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleSubSubCategoryClick = (subSubCategory) => {
-        this.setState({ activeSubSubCategory: subSubCategory });
+        this.props.setActiveSubSubCategory(subSubCategory.id);
     }
 
     handleAddNewSubSubCategoryClose = () => {

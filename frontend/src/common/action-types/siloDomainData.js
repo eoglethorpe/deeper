@@ -33,3 +33,8 @@ export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRA
 export const AF__VIEW_ADD_WIDGET = 'silo-domain-data/AF__VIEW_ADD_WIDGET';
 export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
 export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
+
+// CE => CategoryEditor
+export const CE_VIEW_SET_SELECTED_CATEGORY = 'silo-domain-data/CE_VIEW_SET_SELECTED_CATEGORY';
+export const CE_VIEW_SET_SELECTED_SUB_CATEGORY = 'silo-domain-data/CE_VIEW_SET_SELECTED_SUB_CATEGORY';
+export const CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY = 'silo-domain-data/CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY';

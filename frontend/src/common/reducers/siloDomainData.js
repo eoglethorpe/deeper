@@ -1,6 +1,4 @@
 import {
-    L__SET_LEADS,
-
     SET_ACTIVE_COUNTRY,
     SET_ACTIVE_PROJECT,
 
@@ -16,6 +14,7 @@ import {
     LA__COPY_ALL,
     LA__COPY_ALL_BELOW,
 
+    L__SET_LEADS,
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
@@ -30,6 +29,10 @@ import {
     AF__VIEW_ADD_WIDGET,
     AF__REMOVE_WIDGET,
     AF__VIEW_UPDATE_WIDGET,
+
+    CE_VIEW_SET_SELECTED_CATEGORY,
+    CE_VIEW_SET_SELECTED_SUB_CATEGORY,
+    CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
 } from '../action-types/siloDomainData';
 
 import {
@@ -566,18 +569,6 @@ const editEntryViewAddEntry = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewSetActiveEntry = (state, action) => {
-    const { leadId, entryId } = action;
-    const settings = {
-        editEntryView: {
-            [leadId]: {
-                selectedEntryId: { $set: entryId },
-            },
-        },
-    };
-    return update(state, settings);
-};
-
 const editEntryViewRemoveEntry = (state, action) => {
     const { entryId, leadId } = action;
 
@@ -605,10 +596,54 @@ const editEntryViewRemoveEntry = (state, action) => {
     return update(state, settings);
 };
 
+const editEntryViewSetActiveEntry = (state, action) => {
+    const { leadId, entryId } = action;
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                selectedEntryId: { $set: entryId },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
+const ceViewSelectedCategory = (state, action) => {
+    const { selectedCategory } = action;
+    const settings = {
+        selectedCategory: {
+            $set: selectedCategory,
+        },
+    };
+    return update(state, settings);
+};
+
+const ceViewSelectedSubCategory = (state, action) => {
+    const { selectedSubCategory } = action;
+    const settings = {
+        selectedSubCategory: {
+            $set: selectedSubCategory,
+        },
+    };
+    return update(state, settings);
+};
+
+const ceViewSelectedSubSubCategory = (state, action) => {
+    const { selectedSubSubCategory } = action;
+    const settings = {
+        selectedSubSubCategory: {
+            $set: selectedSubSubCategory,
+        },
+    };
+    return update(state, settings);
+};
+
+
 const reducers = {
     [SET_USER_PROJECTS]: setUserProjects,
     [SET_ACTIVE_PROJECT]: setActiveProject,
     [SET_ACTIVE_COUNTRY]: setActiveCountry,
+
     [LA__ADD_LEADS]: addLeadViewAddNewLeads,
     [LA__SET_FILTERS]: addLeadViewSetFilters,
     [LA__UNSET_FILTERS]: removeLeadViewSetFilters,
@@ -636,6 +671,10 @@ const reducers = {
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,
     [AF__REMOVE_WIDGET]: afViewRemoveWidget,
     [AF__VIEW_UPDATE_WIDGET]: afViewUpdateWidget,
+
+    [CE_VIEW_SET_SELECTED_CATEGORY]: ceViewSelectedCategory,
+    [CE_VIEW_SET_SELECTED_SUB_CATEGORY]: ceViewSelectedSubCategory,
+    [CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY]: ceViewSelectedSubSubCategory,
 };
 
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {

@@ -21,16 +21,19 @@ import {
     L__SET_ACTIVE_PAGE,
     L__SET_ACTIVE_SORT,
 
-    EE_SET_LEAD,
-
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
     AF__REMOVE_WIDGET,
     AF__VIEW_UPDATE_WIDGET,
 
+    EE_SET_LEAD,
     EE_ADD_ENTRY,
     EE_REMOVE_ENTRY,
     EE_SET_ACTIVE_ENTRY,
+
+    CE_VIEW_SET_SELECTED_CATEGORY,
+    CE_VIEW_SET_SELECTED_SUB_CATEGORY,
+    CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
 } from '../action-types/siloDomainData';
 
 
@@ -186,4 +189,19 @@ export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
     type: AF__VIEW_UPDATE_WIDGET,
     analysisFrameworkId,
     widget,
+});
+
+export const setActiveCategoryAction = ({ selectedCategoryId }) => ({
+    type: CE_VIEW_SET_SELECTED_CATEGORY,
+    selectedCategoryId,
+});
+
+export const setActiveSubCategoryAction = ({ selectedSubCategoryId }) => ({
+    type: CE_VIEW_SET_SELECTED_SUB_CATEGORY,
+    selectedSubCategoryId,
+});
+
+export const setActiveSubSubCategoryAction = ({ selectedSubSubCategoryId }) => ({
+    type: CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
+    selectedSubSubCategoryId,
 });
