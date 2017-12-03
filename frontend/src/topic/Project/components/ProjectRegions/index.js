@@ -23,6 +23,7 @@ import {
 } from '../../../../common/redux';
 
 import AddRegion from '../../../../common/components/AddRegion';
+import AddExistingRegion from '../AddExistingRegion';
 import ProjectRegionDetail from '../ProjectRegionDetail';
 import styles from './styles.scss';
 
@@ -119,7 +120,6 @@ export default class ProjectRegions extends React.PureComponent {
     };
 
     handleRadioInputChange = (selectedOption) => {
-        console.log(selectedOption);
         this.setState({
             selectedAddRegionOption: selectedOption,
         });
@@ -134,6 +134,7 @@ export default class ProjectRegions extends React.PureComponent {
     handleModalClose = () => {
         this.setState({
             addRegionModal: false,
+            selectedAddRegionOption: 'new',
         });
     };
 
@@ -206,7 +207,6 @@ export default class ProjectRegions extends React.PureComponent {
                         <Modal
                             onClose={this.handleModalClose}
                             show={addRegionModal}
-                            closeOnBlur
                             closeOnEscape
                         >
                             <ModalHeader title="Add Region" />
@@ -222,6 +222,12 @@ export default class ProjectRegions extends React.PureComponent {
                                 />
                                 {selectedAddRegionOption === 'new' &&
                                     <AddRegion
+                                        projectId={projectDetails.id}
+                                        onModalClose={this.handleModalClose}
+                                    />
+                                }
+                                {selectedAddRegionOption === 'old' &&
+                                    <AddExistingRegion
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}
                                     />
