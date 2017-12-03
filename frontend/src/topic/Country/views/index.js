@@ -20,9 +20,13 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../public/components/View';
+import { reverseRoute } from '../../../public/utils/common';
 
 import browserHistory from '../../../common/browserHistory';
-import { pageTitles } from '../../../common/utils/labels';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
     createParamsForUser,
@@ -144,14 +148,18 @@ export default class CountryPanel extends React.PureComponent {
             setActiveCountry({ activeCountry: +countryId });
         } else if (activeCountry) {
             console.log('Redirecting to currently active country');
-            browserHistory.push(`/countrypanel/${activeCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: activeCountry }),
+            );
             // NOTE: this breaks here
         } else if (countries.length > 0) {
             console.log('Setting first country as active');
             // dont do this now
             const newActiveCountry = countries[0].id;
             setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.push(`/countrypanel/${newActiveCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
+            );
         }
 
         this.countriesRequest.start();
@@ -189,13 +197,17 @@ export default class CountryPanel extends React.PureComponent {
             setActiveCountry({ activeCountry: +countryId });
         } else if (activeCountry) {
             console.log('Redirecting to currently active country');
-            browserHistory.push(`/countrypanel/${activeCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: activeCountry }),
+            );
             // NOTE: this breaks here
         } else if (countries.length > 0) {
             console.log('Setting first country as active');
             const newActiveCountry = countries[0].id;
             setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.push(`/countrypanel/${newActiveCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
+            );
         }
     }
 
@@ -285,7 +297,7 @@ export default class CountryPanel extends React.PureComponent {
             >
                 <Link
                     className="link"
-                    to={`/countrypanel/${country.id}/`}
+                    to={`/countries/${country.id}/`}
                 >
                     {country.title}
                 </Link>

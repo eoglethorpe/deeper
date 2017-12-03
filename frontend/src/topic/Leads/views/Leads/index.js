@@ -17,7 +17,11 @@ import {
     TransparentAccentButton,
     TransparentButton,
 } from '../../../../public/components/Action';
-import { randomString } from '../../../../public/utils/common';
+
+import {
+    reverseRoute,
+    randomString,
+} from '../../../../public/utils/common';
 
 import {
     createParamsForUser,
@@ -49,7 +53,11 @@ import {
 
 import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
-import { pageTitles } from '../../../../common/utils/labels';
+
+import {
+    pathNames,
+    pageTitles,
+} from '../../../../common/constants/';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
 import LeadColumnHeader from './components/LeadColumnHeader';
@@ -355,11 +363,20 @@ export default class Leads extends React.PureComponent {
     // UI
 
     handleAddLeadClick = () => {
-        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+        const params = {
+            projectId: this.props.activeProject,
+        };
+
+        browserHistory.push(reverseRoute(pathNames.addLeads, params));
     }
 
     handleAddEntryClick = (row) => {
-        browserHistory.push(`/${this.props.activeProject}/entries/${row.id}/`);
+        const params = {
+            projectId: this.props.activeProject,
+            leadId: row.id,
+        };
+
+        browserHistory.push(reverseRoute(pathNames.editEntries, params));
     }
 
     handleEditLeadClick = (row) => {
@@ -393,7 +410,8 @@ export default class Leads extends React.PureComponent {
             stale: true,
         });
         this.props.addLeads(newLeads);
-        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+
+        this.handleAddLeadClick();
     }
 
     handleSearchSimilarLead = (row) => {

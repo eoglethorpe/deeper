@@ -2,7 +2,7 @@ const pathNames = {
     login: '/login/',
     register: '/register/',
 
-    homeScreen: '/homescreen/',
+    homeScreen: '/',
 
     dashboard: '/projects/:projectId/dashboard/',
 
@@ -24,7 +24,7 @@ const pathNames = {
     projects: '/projects/:projectId?/',
     countries: '/countries/:countryId?/',
 
-    adminPanel: '/admin-panel/',
+    adminPanel: '/admin/',
 
     analysisFramework: '/analysis-framework/:analysisFrameworkId/',
 

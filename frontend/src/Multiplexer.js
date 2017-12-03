@@ -18,7 +18,6 @@ import views from './topic';
 
 import { authenticatedSelector } from './common/selectors/auth';
 
-
 const ROUTE = {
     exclusivelyPublic: 'exclusively-public',
     public: 'public',
@@ -28,13 +27,16 @@ const ROUTE = {
 const routesOrder = [
     'login',
     'register',
+    'homeScreen',
     'dashboard',
     'projects',
     'countries',
     'leads',
     'entries',
     'ary',
+    'userProfile',
     'analysisFramework',
+    'categoryEditor',
     'export',
     'editEntries',
 ];
@@ -49,88 +51,39 @@ const routes = {
         redirectTo: '/',
     },
 
-    homeScreen: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
-    dashboard: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    homeScreen: { type: ROUTE.private },
+    dashboard: { type: ROUTE.private },
 
-    leads: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
-    addLeads: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    leads: { type: ROUTE.private },
+    addLeads: { type: ROUTE.private },
 
-    entries: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
-    editEntries: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    entries: { type: ROUTE.private },
+    editEntries: { type: ROUTE.private },
 
-    ary: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    ary: { type: ROUTE.private },
 
-    userProfile: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    userProfile: { type: ROUTE.private },
 
-    userGroup: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    userGroup: { type: ROUTE.private },
 
-    weeklySnapshot: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    weeklySnapshot: { type: ROUTE.private },
 
-    projects: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    projects: { type: ROUTE.private },
 
-    countries: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    countries: { type: ROUTE.private },
 
-    export: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    export: { type: ROUTE.private },
 
-    analysisFramework: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    analysisFramework: { type: ROUTE.private },
 
-    categoryEditor: {
-        type: ROUTE.private,
-        redirectTo: pathNames.login,
-    },
+    categoryEditor: { type: ROUTE.private },
 
-    apiDocs: {
-        type: ROUTE.public,
-    },
+    apiDocs: { type: ROUTE.public },
 
-    fourHundredFour: {
-        type: ROUTE.public,
-    },
+    fourHundredFour: { type: ROUTE.public },
 };
 
-const NavbarWithProps = withRouter(props => <Navbar {...props} />);
+// const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
@@ -171,7 +124,6 @@ export default class Multiplexer extends React.PureComponent {
 
             const redirectTo = routes[routeId].redirectTo;
 
-            console.log(routeId, path);
             switch (routes[routeId].type) {
                 case ROUTE.exclusivelyPublic:
                     return (
@@ -214,9 +166,8 @@ export default class Multiplexer extends React.PureComponent {
     render() {
         console.log('Rendering Multiplexer');
 
-        // NOTE: List component cannot be used here instead of map
         return ([
-            <NavbarWithProps key="navbar" />,
+            <Navbar key="navbar" />,
             <Switch key="switch">
                 { this.getRoutes() }
             </Switch>,

@@ -5,8 +5,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 
+import { reverseRoute } from '../../../public/utils/common';
+
 import logo from '../../../img/deep-logo-grey.png';
-import { pageTitles } from '../../../common/utils/labels';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../common/constants';
 import {
     setNavbarStateAction,
 
@@ -75,10 +80,12 @@ export default class HomeScreen extends React.PureComponent {
         } = this.props;
 
         if (currentUserProjects.length > 0) {
+            const params = { projectId: activeProject };
+            const routeTo = reverseRoute(pathNames.dashboard, params);
             return (
                 <Redirect
                     to={{
-                        pathname: `/${activeProject}/dashboard/`,
+                        pathname: routeTo,
                         from: location,
                     }}
                 />

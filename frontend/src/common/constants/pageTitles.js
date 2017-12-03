@@ -8,7 +8,7 @@ const pageTitles = {
     leads: 'Leads',
     addLeads: 'Add Leads',
     entries: 'Entries',
-    ary: 'Ary',
+    ary: 'Assessment Registry',
     export: 'Export',
 
     editLeads: 'Edit Leads',

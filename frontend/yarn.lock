@@ -5981,6 +5981,16 @@ react-error-overlay@^1.0.10:
     settle-promise "1.0.0"
     source-map "0.5.6"
 
+react-grid-layout-resize-prevent-collision@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/react-grid-layout-resize-prevent-collision/-/react-grid-layout-resize-prevent-collision-0.16.0.tgz#4d0ebc4a96c9845d1e9b596c49b87801be84c84f"
+  dependencies:
+    classnames "2.x"
+    lodash.isequal "^4.0.0"
+    prop-types "15.x"
+    react-draggable "^3.0.3"
+    react-resizable "^1.7.5"
+
 react-grid-layout@^0.16.0:
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-0.16.0.tgz#f74363cd134b2f8a763224d7b6287cbb68e6de05"

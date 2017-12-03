@@ -44,60 +44,68 @@
         }
     }
 
-    .menu-items {
-        display: flex;
+    .main-menu {
         flex-grow: 1;
         align-self: stretch;
-        justify-content: flex-start;
-        overflow-x: auto;
 
-        .menu-item {
-            display: inline-flex;
-            flex-shrink: 0;
-            align-items: center;
-            justify-content: center;
-            transition: .2s all ease-in-out;
-            border-top: $width-separator-thick solid transparent;
-            border-bottom: $width-separator-thick solid transparent;
-            padding: 0 $spacing-large;
-
-            &:hover {
-                color: $color-accent;
-            }
-
-            &.active {
-                border-bottom-color: $color-accent;
-                color: $color-text-on-navbar;
-            }
-        }
-
-        .overflow-menu {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            .overflow-button {
-                outline: 0;
-                border: 0;
-                background-color: transparent;
-                cursor: pointer;
-                padding: $spacing-small $spacing-medium;
-                font-family: inherit;
-                font-size: inherit;
-
-                &:hover {
-                    background-color: $color-hover;
-                }
-            }
-
-            .overflow-items {
-                display: none;
-            }
+        >button {
+            padding: $spacing-small;
         }
     }
 
-    .dropdown-menu {
-        width: auto;
+    .user-menu {
+        flex-shrink: 0;
+        align-self: stretch;
+    }
+
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: flex-start;
+    overflow-x: hidden;
+
+    .menu-item {
+        @include transition-medium;
+
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        border-top: $width-separator-thick solid transparent;
+        border-bottom: $width-separator-thick solid transparent;
+        padding: 0 $spacing-medium-alt;
+
+        &:hover {
+            color: $color-accent;
+        }
+
+        &.active {
+            border-bottom-color: $color-accent;
+            color: $color-text-on-navbar;
+        }
+    }
+
+    .overflow-menu {
+        flex-shrink: 0;
+
+        >button {
+            padding: $spacing-small;
+        }
+    }
+}
+
+.overflow-menu-item {
+    display: block;
+    padding: $spacing-medium $spacing-medium-alt;
+
+    &:hover {
+        background-color: $color-hover;
+    }
+
+    &.active {
+        background-color: $color-accent;
+        color: $color-text-on-accent;
     }
 }
 

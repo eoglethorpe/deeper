@@ -3,78 +3,49 @@ import {
     Bundle,
 } from '../public/components/General';
 
-const views = {
-    login: () => (
-        <Bundle load={() => import('./Authentication/views/Login')} />
-    ),
-    register: () => (
-        <Bundle load={() => import('./Authentication/views/Register')} />
-    ),
+const importers = {
+    login: () => import('./Authentication/views/Login'),
+    register: () => import('./Authentication/views/Register'),
 
-    homeScreen: () => (
-        <Bundle load={() => import('./HomeScreen/views')} />
-    ),
-    dashboard: () => (
-        <Bundle load={() => import('./Dashboard/views')} />
-    ),
+    homeScreen: () => import('./HomeScreen/views'),
+    dashboard: () => import('./Dashboard/views'),
 
-    leads: () => (
-        <Bundle load={() => import('./Leads/views/Leads')} />
-    ),
-    addLeads: () => (
-        <Bundle load={() => import('./Leads/views/LeadAdd')} />
-    ),
+    leads: () => import('./Leads/views/Leads'),
+    addLeads: () => import('./Leads/views/LeadAdd'),
 
-    entries: () => (
-        <Bundle load={() => import('./Entries/views/')} />
-    ),
-    editEntries: () => (
-        <Bundle load={() => import('./Entries/views/EditEntryView')} />
-    ),
+    entries: () => import('./Entries/views/'),
+    editEntries: () => import('./Entries/views/EditEntryView'),
 
-    ary: () => (
-        <Bundle load={() => import('./Ary/views/')} />
-    ),
+    ary: () => import('./Ary/views/'),
 
-    export: () => (
-        <Bundle load={() => import('./Export/views/')} />
-    ),
+    export: () => import('./Export/views/'),
 
-    projects: () => (
-        <Bundle load={() => import('./Project/views')} />
-    ),
+    projects: () => import('./Project/views'),
 
-    userProfile: () => (
-        <Bundle load={() => import('./UserProfile/views/')} />
-    ),
+    userProfile: () => import('./UserProfile/views/'),
 
-    userGroup: () => (
-        <Bundle load={() => import('./UserGroup/views/')} />
-    ),
+    userGroup: () => import('./UserGroup/views/'),
 
-    weeklySnapshot: () => (
-        <Bundle load={() => import('./WeeklySnapshot/views')} />
-    ),
+    weeklySnapshot: () => import('./WeeklySnapshot/views'),
 
-    countries: () => (
-        <Bundle load={() => import('./Country/views')} />
-    ),
+    countries: () => import('./Country/views'),
 
-    analysisFramework: () => (
-        <Bundle load={() => import('./AnalysisFramework/views/')} />
-    ),
+    analysisFramework: () => import('./AnalysisFramework/views/'),
 
-    categoryEditor: () => (
-        <Bundle load={() => import('./CategoryEditor/views/')} />
-    ),
+    categoryEditor: () => import('./CategoryEditor/views/'),
 
-    apiDocs: () => (
-        <Bundle load={() => import('./ApiDocs/views')} />
-    ),
+    apiDocs: () => import('./ApiDocs/views'),
 
-    fourHundredFour: () => (
-        <Bundle load={() => import('./FourHundredFour/views')} />
-    ),
+    fourHundredFour: () => import('./FourHundredFour/views'),
 };
+
+const views = Object.keys(importers).reduce(
+    (acc, key) => {
+        const importer = importers[key];
+        acc[key] = () => <Bundle load={importer} />;
+        return acc;
+    },
+    {},
+);
 
 export default views;
