@@ -1,8 +1,9 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import {
+    BrowserRouter,
+} from 'react-router-dom';
 
 import { RestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
@@ -29,7 +30,6 @@ import {
 } from './common/redux';
 
 import Multiplexer from './Multiplexer';
-import styles from './styles.scss';
 
 const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
@@ -56,8 +56,6 @@ const propTypes = {
     logout: PropTypes.func.isRequired,
 };
 
-@withRouter
-@CSSModules(styles)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class App extends React.PureComponent {
     static propTypes = propTypes;
@@ -175,7 +173,9 @@ export default class App extends React.PureComponent {
         }
 
         return (
-            <Multiplexer />
+            <BrowserRouter>
+                <Multiplexer />
+            </BrowserRouter>
         );
     }
 }

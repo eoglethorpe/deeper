@@ -25,13 +25,19 @@ import {
 } from '../../constants';
 
 const propTypes = {
-    projectId: PropTypes.number.isRequired,
-    countryId: PropTypes.number.isRequired,
+    links: PropTypes.arrayOf(
+        PropTypes.string,
+    ),
+    projectId: PropTypes.number,
+    countryId: PropTypes.number,
     className: PropTypes.string,
 };
 
 const defaultProps = {
     className: '',
+    projectId: undefined,
+    countryId: undefined,
+    links: [],
 };
 
 @withRouter
@@ -43,24 +49,12 @@ export default class NavMenu extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const navLinks = [
-            'leads',
-            'entries',
-            'ary',
-            'projects',
-            'countries',
-            'analysisFramework',
-            'export',
-        ];
-
         const overflowMenuLinks = [];
 
         this.state = {
-            navLinks,
+            navLinks: props.links,
             overflowMenuLinks,
         };
-
-        this.mounted = false;
     }
 
     componentWillMount() {
@@ -68,12 +62,16 @@ export default class NavMenu extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.mounted = true;
         this.computeSize();
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            navLinks: nextProps.links,
+        }, () => { this.computeSize(); });
+    }
+
     componentWillUnmount() {
-        this.mounted = false;
         window.removeEventListener('resize', this.handleWindowResize);
     }
 
@@ -172,9 +170,7 @@ export default class NavMenu extends React.PureComponent {
     keyExtractor = d => d
 
     handleWindowResize = () => {
-        if (this.mounted) {
-            this.computeSize();
-        }
+        this.computeSize();
     }
 
     render() {

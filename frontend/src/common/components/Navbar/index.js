@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
     withRouter,
     Link,
+    matchPath,
 } from 'react-router-dom';
 import { List } from '../../../public/components/View';
 import {
@@ -24,8 +25,8 @@ import {
     iconNames,
     pageTitles,
     pathNames,
+    validLinks,
 } from '../../constants';
-
 
 import LinkOutsideRouter from '../LinkOutsideRouter';
 import logo from '../../../img/black-logo.png';
@@ -75,7 +76,7 @@ const propTypes = {
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-    navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
+    // navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
     navbarVisible: PropTypes.bool,
     setActiveProject: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
@@ -90,6 +91,9 @@ const propTypes = {
             name: PropTypes.string,
         }),
     ),
+    location: PropTypes.shape({
+        pathname: PropTypes.string,
+    }).isRequired,
 };
 
 const defaultProps = {
@@ -102,6 +106,10 @@ const defaultProps = {
     userInformation: {},
 };
 
+const getKeyByValue = (object, value) => (
+    Object.keys(object).find(key => object[key] === value)
+);
+
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -109,7 +117,7 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    getDropdownItems = (projectId, { userId }, countryId) => {
+    getUserMenuItems = (projectId, { userId }, countryId) => {
         const params = {
             projectId,
             userId,
@@ -139,6 +147,68 @@ export default class Navbar extends React.PureComponent {
         return items;
     }
 
+    getUserMenuItem = (key, item) => (
+        <LinkOutsideRouter
+            key={key}
+            className={styles['dropdown-item']}
+            to={item.linkTo}
+        >
+            {
+                item.iconName &&
+                    <span
+                        className={`${item.iconName} ${styles.icon}`}
+                    />
+            }
+            {item.name}
+        </LinkOutsideRouter>
+    )
+
+    getUserMenuKey = item => item.name
+
+    getCurrentMatch = () => {
+        const {
+            location,
+        } = this.props;
+
+        const links = Object.keys(pathNames);
+        const paths = Object.values(pathNames);
+
+        for (let i = 0; i < links.length; i += 1) {
+            const match = matchPath(location.pathname, {
+                path: paths[i],
+                exact: true,
+            });
+
+            if (match) {
+                return match;
+            }
+        }
+
+        return null;
+    }
+
+    getValidNavLinks = () => {
+        const match = this.getCurrentMatch();
+        const currentPath = getKeyByValue(pathNames, match.path);
+        const currentValidLinks = validLinks[currentPath];
+
+        const navLinks = [
+            'leads',
+            'entries',
+            'ary',
+            'projects',
+            'countries',
+            'analysisFramework',
+            'export',
+        ];
+
+        const validNavLinks = navLinks.filter(
+            link => currentValidLinks.findIndex(d => d === link) !== -1,
+        );
+
+        return validNavLinks;
+    }
+
     handleProjectChange = (key) => {
         if (isTruthy(key)) {
             this.props.setActiveProject({ activeProject: key });
@@ -153,45 +223,6 @@ export default class Navbar extends React.PureComponent {
 
     selectProjectKey = (option = {}) => (option.id)
     selectProjectLabel = (option = {}) => (option.title)
-
-    calcNavbarKey = item => item.name
-
-    calcDropdownGroupKey = group => group.key
-    calcDropdownItemKey = item => item.name
-
-    renderDropdownItem = (key, item) => {
-        const {
-            navbarValidLinks,
-            userProjects,
-            activeUser,
-        } = this.props;
-        if (navbarValidLinks.indexOf(item.name) === -1) {
-            return null;
-        }
-        if (item.needsProject && userProjects.length <= 0) {
-            return null;
-        }
-        if (item.private && !activeUser.userId) {
-            console.warn('here');
-            return null;
-        }
-
-        return (
-            <LinkOutsideRouter
-                key={key}
-                className={styles['dropdown-item']}
-                to={item.linkTo}
-            >
-                {
-                    item.iconName &&
-                    <span
-                        className={`${item.iconName} ${styles.icon}`}
-                    />
-                }
-                {item.name}
-            </LinkOutsideRouter>
-        );
-    }
 
     render() {
         const {
@@ -244,6 +275,7 @@ export default class Navbar extends React.PureComponent {
                 }
 
                 <NavMenu
+                    links={this.getValidNavLinks()}
                     styleName="main-menu"
                     projectId={activeProject}
                     countryId={activeCountry}
@@ -256,9 +288,9 @@ export default class Navbar extends React.PureComponent {
                 >
                     <DropdownGroup>
                         <List
-                            data={this.getDropdownItems(activeProject, activeUser, activeCountry)}
-                            keyExtractor={this.calcDropdownItemKey}
-                            modifier={this.renderDropdownItem}
+                            data={this.getUserMenuItems(activeProject, activeUser, activeCountry)}
+                            keyExtractor={this.getUserMenuKey}
+                            modifier={this.getUserMenuItem}
                         />
                     </DropdownGroup>
                     {
