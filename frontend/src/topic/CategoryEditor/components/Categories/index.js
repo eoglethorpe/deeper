@@ -29,6 +29,8 @@ import {
     selectedSubCategorySelector,
     selectedSubSubCategorySelector,
     selectedCategoryIdSelector,
+    selectedSubCategoryIdSelector,
+    selectedSubSubCategoryIdSelector,
     setActiveCategoryAction,
     setActiveSubCategoryAction,
     setActiveSubSubCategoryAction,
@@ -46,6 +48,8 @@ const propTypes = {
     selectedSubCategory: PropTypes.object, // eslint-disable-line
     selectedSubSubCategory: PropTypes.object, // eslint-disable-line
     selectedCategoryId: PropTypes.number,
+    selectedSubCategoryId: PropTypes.number,
+    selectedSubSubCategoryId: PropTypes.number,
     setActiveCategory: PropTypes.func.isRequired,
     setActiveSubCategory: PropTypes.func.isRequired,
     setActiveSubSubCategory: PropTypes.func.isRequired,
@@ -58,6 +62,8 @@ const defaultProps = {
     selectedSubCategory: {},
     selectedSubSubCategory: {},
     selectedCategoryId: undefined,
+    selectedSubCategoryId: undefined,
+    selectedSubSubCategoryId: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -66,6 +72,8 @@ const mapStateToProps = state => ({
     selectedSubCategory: selectedSubCategorySelector(state),
     selectedSubSubCategory: selectedSubSubCategorySelector(state),
     selectedCategoryId: selectedCategoryIdSelector(state),
+    selectedSubCategoryId: selectedSubCategoryIdSelector(state),
+    selectedSubSubCategoryId: selectedSubSubCategoryIdSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -167,14 +175,6 @@ export default class Categories extends React.PureComponent {
                     title: 'dysentery',
                 },
             ],
-            activeSubCategory: {
-                id: 1,
-                title: 'wash',
-            },
-            activeSubSubCategory: {
-                id: 1,
-                title: 'water',
-            },
             editCategoryModal: false,
             formErrors: [],
             formFieldErrors: {},
@@ -326,8 +326,6 @@ export default class Categories extends React.PureComponent {
             addNewCategory,
             addNewSubCategory,
             addNewSubSubCategory,
-            activeSubCategory,
-            activeSubSubCategory,
             formFieldErrors,
             formValues,
             pending,
@@ -337,16 +335,17 @@ export default class Categories extends React.PureComponent {
 
         const {
             className,
-            categories,
             selectedCategory,
             selectedSubCategory,
-            selectedSubSubCategory,
+            selectedCategoryId,
+            selectedSubCategoryId,
+            selectedSubSubCategoryId,
         } = this.props;
 
-        console.log(categories);
-        console.log(selectedCategory);
-        console.log(selectedSubCategory);
-        console.log(selectedSubSubCategory);
+        // console.log(categories);
+        // console.log(selectedCategory);
+        // console.log(selectedSubCategory);
+        // console.log(selectedSubSubCategory);
 
         return (
             <div styleName={className}>
@@ -359,7 +358,7 @@ export default class Categories extends React.PureComponent {
                             options={this.props.categories}
                             keySelector={category => category.id}
                             labelSelector={category => category.label}
-                            value={this.props.selectedCategoryId}
+                            value={selectedCategoryId}
                             showLabel
                             clearable={false}
                             onChange={this.handleCategorySelectChange}
@@ -378,7 +377,7 @@ export default class Categories extends React.PureComponent {
                     <div styleName="category-group">
                         <div styleName="sub-categories">
                             {
-                                selectedCategory.subCategories.map(d => (
+                                (selectedCategory.subCategories || []).map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -387,13 +386,13 @@ export default class Categories extends React.PureComponent {
                                             role="presentation"
                                             key={d.id}
                                             onClick={() => { this.handleSubCategoryClick(d); }}
-                                            styleName={`sub-category ${activeSubCategory.id === d.id ? 'active' : ''}`}
+                                            styleName={`sub-category ${selectedSubCategoryId === d.id ? 'active' : ''}`}
                                         >
                                             {d.label}
                                         </div>
                                         <div styleName="icon-btn">
                                             <span
-                                                className={`${activeSubCategory.id === d.id ? 'ion-chevron-right' : ''}`}
+                                                className={`${selectedSubCategoryId === d.id ? 'ion-chevron-right' : ''}`}
                                             />
                                         </div>
                                     </div>
@@ -409,7 +408,7 @@ export default class Categories extends React.PureComponent {
                         </div>
                         <div styleName="sub-sub-categories">
                             {
-                                selectedSubCategory.subSubCategories.map(d => (
+                                (selectedSubCategory.subSubCategories || []).map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -418,18 +417,18 @@ export default class Categories extends React.PureComponent {
                                             role="presentation"
                                             key={d.id}
                                             onClick={() => { this.handleSubSubCategoryClick(d); }}
-                                            styleName={`sub-sub-category ${activeSubSubCategory.id === d.id ? 'active' : ''}`}
+                                            styleName={`sub-sub-category ${selectedSubSubCategoryId === d.id ? 'active' : ''}`}
                                         >
                                             {d.label}
                                         </div>
                                         <div styleName="icon-btn">
                                             <Link
                                                 title="Edit Sub Category"
-                                                className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
-                                                to={`/edit/${selectedSubCategory.label}/${d.label}/`}
+                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-edit' : ''}`}
+                                                to={`/edit/${selectedSubCategoryId}/${d.id}/`}
                                             />
                                             <span
-                                                className={`${activeSubSubCategory.id === d.id ? 'ion-android-delete' : ''}`}
+                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-android-delete' : ''}`}
                                             />
                                         </div>
                                     </div>
@@ -517,7 +516,9 @@ export default class Categories extends React.PureComponent {
                             successCallback={this.subCategorySuccessCallback}
                             validations={this.validations}
                         >
-                            <ModalHeader title="Add New Sub Category" />
+                            <ModalHeader
+                                title={`Add New Sub Category for ${selectedCategory.label}`}
+                            />
                             {
                                 pending && <LoadingAnimation />
                             }
@@ -561,7 +562,7 @@ export default class Categories extends React.PureComponent {
                             validations={this.validations}
                         >
                             <ModalHeader
-                                title={`Add Sub Category for ${activeSubCategory.title}`}
+                                title={`Add New Sub-Sub Category for ${selectedSubCategory.label}`}
                             />
                             <ModalBody>
                                 <TextInput

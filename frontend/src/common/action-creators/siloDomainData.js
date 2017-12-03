@@ -191,17 +191,17 @@ export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
     widget,
 });
 
-export const setActiveCategoryAction = ({ selectedCategoryId }) => ({
+export const setActiveCategoryAction = selectedCategoryId => ({
     type: CE_VIEW_SET_SELECTED_CATEGORY,
     selectedCategoryId,
 });
 
-export const setActiveSubCategoryAction = ({ selectedSubCategoryId }) => ({
+export const setActiveSubCategoryAction = selectedSubCategoryId => ({
     type: CE_VIEW_SET_SELECTED_SUB_CATEGORY,
     selectedSubCategoryId,
 });
 
-export const setActiveSubSubCategoryAction = ({ selectedSubSubCategoryId }) => ({
+export const setActiveSubSubCategoryAction = selectedSubSubCategoryId => ({
     type: CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
     selectedSubSubCategoryId,
 });

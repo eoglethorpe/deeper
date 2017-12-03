@@ -56,7 +56,7 @@ const initialDomainDataState = {
     categories: [
         {
             id: 1,
-            label: 'Affected Groups',
+            label: 'Sectors',
             subCategories: [
                 {
                     id: 1,
@@ -143,7 +143,7 @@ const initialDomainDataState = {
         },
         {
             id: 3,
-            label: 'Sectors',
+            label: 'Affected Groups',
             subCategories: [],
         },
     ],

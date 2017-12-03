@@ -609,30 +609,36 @@ const editEntryViewSetActiveEntry = (state, action) => {
 };
 
 const ceViewSelectedCategory = (state, action) => {
-    const { selectedCategory } = action;
+    const { selectedCategoryId } = action;
     const settings = {
-        selectedCategory: {
-            $set: selectedCategory,
+        categoryEditorView: {
+            selectedCategoryId: {
+                $set: selectedCategoryId,
+            },
         },
     };
     return update(state, settings);
 };
 
 const ceViewSelectedSubCategory = (state, action) => {
-    const { selectedSubCategory } = action;
+    const { selectedSubCategoryId } = action;
     const settings = {
-        selectedSubCategory: {
-            $set: selectedSubCategory,
+        categoryEditorView: {
+            selectedSubCategoryId: {
+                $set: selectedSubCategoryId,
+            },
         },
     };
     return update(state, settings);
 };
 
 const ceViewSelectedSubSubCategory = (state, action) => {
-    const { selectedSubSubCategory } = action;
+    const { selectedSubSubCategoryId } = action;
     const settings = {
-        selectedSubSubCategory: {
-            $set: selectedSubSubCategory,
+        categoryEditorView: {
+            selectedSubSubCategoryId: {
+                $set: selectedSubSubCategoryId,
+            },
         },
     };
     return update(state, settings);
