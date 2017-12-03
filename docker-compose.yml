@@ -2,9 +2,8 @@ version: '3'
 
 services:
     db:
-        image: postgres
+        build: ./postgres
         volumes:
-            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
             - ./postgres-data:/var/lib/postgresql/data
     redis:
         image: redis:latest
