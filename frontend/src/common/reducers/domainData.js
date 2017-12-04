@@ -27,6 +27,7 @@ import {
     SET_ANALYSIS_FRAMEWORK,
     ADD_ENTRY,
     REMOVE_ENTRY,
+    SET_ACTIVE_ENTRY,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -446,6 +447,7 @@ const dummyAction = (state) => {
 
 const addEntry = (state, action) => {
     const { entry, leadId } = action;
+    console.warn('Creating new', entry.id);
 
     const settings = {
         entries: { $auto: {
@@ -453,8 +455,18 @@ const addEntry = (state, action) => {
                 $push: [entry],
             } },
         } },
+        selectedEntryId: { $set: entry.id },
     };
 
+    return update(state, settings);
+};
+
+const setActiveEntry = (state, action) => {
+    const { entryId } = action;
+    console.warn('Setting Active', entryId);
+    const settings = {
+        selectedEntryId: { $set: entryId },
+    };
     return update(state, settings);
 };
 
@@ -462,12 +474,22 @@ const removeEntry = (state, action) => {
     const { entryId, leadId } = action;
     const entryIndex = state.entries[leadId].findIndex(d => d.id === entryId);
 
+    console.warn('Removing', entryId);
+    let newActiveId;
+    if (entryIndex - 1 >= 0) {
+        newActiveId = state.entries[leadId][entryIndex - 1].id;
+    } else if (entryIndex + 1 < state.entries[leadId].length) {
+        newActiveId = state.entries[leadId][entryIndex + 1].id;
+    }
+    console.warn('Setting new', newActiveId);
+
     const settings = {
         entries: { $auto: {
             [leadId]: { $autoArray: {
                 $splice: [[entryIndex, 1]],
             } },
         } },
+        selectedEntryId: { $set: newActiveId },
     };
 
     return update(state, settings);
@@ -504,6 +526,7 @@ const reducers = {
 
     [ADD_ENTRY]: addEntry,
     [REMOVE_ENTRY]: removeEntry,
+    [SET_ACTIVE_ENTRY]: setActiveEntry,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

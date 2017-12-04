@@ -67,6 +67,7 @@ const initialDomainDataState = {
 
     // index is project id
     // using lead id instead of project id might be more resonable here --fh
+    selectedEntryId: undefined,
     entries: {
         /*
         1: [

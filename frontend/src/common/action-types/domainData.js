@@ -26,3 +26,4 @@ export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
 
 export const ADD_ENTRY = 'domain-data/ADD_ENTRY';
 export const REMOVE_ENTRY = 'domain-data/REMOVE_ENTRY';
+export const SET_ACTIVE_ENTRY = 'domain-data/SET_ACTIVE_ENTRY';

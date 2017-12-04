@@ -76,8 +76,14 @@ const initialSiloDomainData = {
         */
     },
 
+    // TODO: leadId
     editEntryView: {
-        lead: {},
+        1: {
+            lead: {},
+            leadId: 1,
+            selectedEntryId: undefined,
+            entries: [],
+        },
     },
 
     analysisFrameworkView: {

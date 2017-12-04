@@ -155,3 +155,5 @@ export const entriesForLeadSelector = createSelector(
     (state, props) => props.leadId,
     (entries, leadId) => (entries[leadId] || emptyList),
 );
+
+export const selectedEntryIdSelector = ({ domainData }) => domainData.selectedEntryId;

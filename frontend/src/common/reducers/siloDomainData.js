@@ -482,7 +482,7 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $push: widget },
+                widgets: { $push: [widget] },
             },
         },
     };

@@ -294,7 +294,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <Button
                     styleName="filter-btn"
-                    disabled={!stale || isFilterEmpty}
+                    disabled={!stale}
                 >
                     Apply Filter
                 </Button>
