@@ -23,6 +23,7 @@ import {
     pageTitles,
     pathNames,
 } from '../../constants';
+import Cloak from '../Cloak';
 
 const propTypes = {
     links: PropTypes.arrayOf(
@@ -87,16 +88,22 @@ export default class NavMenu extends React.PureComponent {
             analysisFrameworkId: 1,
         };
 
+        // TODO: specify requireLogin and requireProject for each item
         return (
-            <NavLink
-                activeClassName={styles.active}
-                to={reverseRoute(pathNames[item], params)}
-                className={className}
+            <Cloak
                 key={item}
-                exact
+                requireLogin
+                requireProject
             >
-                { pageTitles[item] }
-            </NavLink>
+                <NavLink
+                    activeClassName={styles.active}
+                    to={reverseRoute(pathNames[item], params)}
+                    className={className}
+                    exact
+                >
+                    { pageTitles[item] }
+                </NavLink>
+            </Cloak>
         );
     }
 

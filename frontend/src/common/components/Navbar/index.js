@@ -19,19 +19,6 @@ import {
     reverseRoute,
 } from '../../../public/utils/common';
 
-import NavMenu from './NavMenu';
-
-import {
-    iconNames,
-    pageTitles,
-    pathNames,
-    validLinks,
-} from '../../constants';
-
-import LinkOutsideRouter from '../LinkOutsideRouter';
-import logo from '../../../img/black-logo.png';
-import styles from './styles.scss';
-
 import {
     stopSiloBackgroundTasksAction,
 } from '../../../common/middlewares/siloBackgroundTasks';
@@ -53,6 +40,20 @@ import {
     navbarValidLinksSelector,
     navbarVisibleSelector,
 } from '../../../common/redux';
+
+import {
+    iconNames,
+    pageTitles,
+    pathNames,
+    validLinks,
+} from '../../constants';
+
+import Cloak from '../Cloak';
+import LinkOutsideRouter from '../LinkOutsideRouter';
+import logo from '../../../img/black-logo.png';
+
+import NavMenu from './NavMenu';
+import styles from './styles.scss';
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
@@ -102,7 +103,7 @@ const defaultProps = {
     navbarValidLinks: [],
     navbarVisible: false,
     activeUser: {},
-    userProjects: {},
+    userProjects: [],
     userInformation: {},
 };
 
@@ -147,20 +148,26 @@ export default class Navbar extends React.PureComponent {
         return items;
     }
 
+    // TODO: specify requireLogin and requireProject for each item
     getUserMenuItem = (key, item) => (
-        <LinkOutsideRouter
+        <Cloak
             key={key}
-            className={styles['dropdown-item']}
-            to={item.linkTo}
+            requireLogin
+            requireProject
         >
-            {
-                item.iconName &&
-                    <span
-                        className={`${item.iconName} ${styles.icon}`}
-                    />
-            }
-            {item.name}
-        </LinkOutsideRouter>
+            <LinkOutsideRouter
+                className={styles['dropdown-item']}
+                to={item.linkTo}
+            >
+                {
+                    item.iconName &&
+                        <span
+                            className={`${item.iconName} ${styles.icon}`}
+                        />
+                }
+                {item.name}
+            </LinkOutsideRouter>
+        </Cloak>
     )
 
     getUserMenuKey = item => item.name
@@ -257,22 +264,23 @@ export default class Navbar extends React.PureComponent {
                     <span styleName="title">Deep</span>
                 </Link>
 
-                {
-                    userProjects.length > 0 && activeUser.userId && (
-                        <SelectInput
-                            clearable={false}
-                            keySelector={this.selectProjectKey}
-                            labelSelector={this.selectProjectLabel}
-                            onChange={this.handleProjectChange}
-                            options={this.props.userProjects}
-                            placeholder="Select Event"
-                            showHintAndError={false}
-                            showLabel={false}
-                            styleName="project-select-input"
-                            value={activeProject}
-                        />
-                    )
-                }
+                <Cloak
+                    requireLogin
+                    requireProject
+                >
+                    <SelectInput
+                        clearable={false}
+                        keySelector={this.selectProjectKey}
+                        labelSelector={this.selectProjectLabel}
+                        onChange={this.handleProjectChange}
+                        options={userProjects}
+                        placeholder="Select Event"
+                        showHintAndError={false}
+                        showLabel={false}
+                        styleName="project-select-input"
+                        value={activeProject}
+                    />
+                </Cloak>
 
                 <NavMenu
                     links={this.getValidNavLinks()}
@@ -293,22 +301,22 @@ export default class Navbar extends React.PureComponent {
                             modifier={this.getUserMenuItem}
                         />
                     </DropdownGroup>
-                    {
-                        activeUser.userId && (
-                            <DropdownGroup>
-                                <button
-                                    styleName="dropdown-item"
-                                    onClick={this.handleLogoutButtonClick}
-                                >
-                                    <span
-                                        className="ion-log-out"
-                                        styleName="icon"
-                                    />
-                                    Logout
-                                </button>
-                            </DropdownGroup>
-                        )
-                    }
+                    <Cloak
+                        requireLogin
+                    >
+                        <DropdownGroup>
+                            <button
+                                styleName="dropdown-item"
+                                onClick={this.handleLogoutButtonClick}
+                            >
+                                <span
+                                    className="ion-log-out"
+                                    styleName="icon"
+                                />
+                                Logout
+                            </button>
+                        </DropdownGroup>
+                    </Cloak>
                 </DropdownMenu>
             </nav>
         );
