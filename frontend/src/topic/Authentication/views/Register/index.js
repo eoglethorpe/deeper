@@ -7,7 +7,10 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+    Redirect,
+    Link,
+} from 'react-router-dom';
 
 import {
     Form,
@@ -25,7 +28,6 @@ import {
     pageTitles,
     pathNames,
 } from '../../../../common/constants';
-import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
 import {
     createParamsForUserCreate,
@@ -60,6 +62,8 @@ export default class Login extends React.PureComponent {
             formValues: {},
             pending: false,
             stale: false,
+
+            redirectTo: undefined,
         };
 
         this.elements = ['firstname', 'lastname', 'organization', 'email', 'password'];
@@ -160,7 +164,9 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'userCreateResponse');
                     // go to login
-                    browserHistory.push(reverseRoute(pathNames.login, {}));
+                    this.setState({
+                        redirectTo: reverseRoute(pathNames.login, {}),
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -197,6 +203,10 @@ export default class Login extends React.PureComponent {
             pending,
             stale,
         } = this.state;
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />;
+        }
 
         return (
             <div styleName="register">

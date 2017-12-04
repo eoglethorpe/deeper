@@ -2,8 +2,11 @@ import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {
+    Link,
+    Redirect,
+} from 'react-router-dom';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
@@ -51,7 +54,6 @@ import {
     addAddLeadViewLeadsAction,
 } from '../../../../common/redux';
 
-import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
 
 import {
@@ -209,7 +211,10 @@ export default class Leads extends React.PureComponent {
             },
         ];
 
-        this.state = { loadingLeads: false };
+        this.state = {
+            loadingLeads: false,
+            redirectTo: undefined,
+        };
     }
 
     componentWillMount() {
@@ -367,7 +372,7 @@ export default class Leads extends React.PureComponent {
             projectId: this.props.activeProject,
         };
 
-        browserHistory.push(reverseRoute(pathNames.addLeads, params));
+        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
     }
 
     handleAddEntryClick = (row) => {
@@ -376,7 +381,7 @@ export default class Leads extends React.PureComponent {
             leadId: row.id,
         };
 
-        browserHistory.push(reverseRoute(pathNames.editEntries, params));
+        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
     }
 
     handleEditLeadClick = (row) => {
@@ -487,6 +492,15 @@ export default class Leads extends React.PureComponent {
         } = this.state;
 
         const projectName = currentUserActiveProject.title;
+
+        if (this.state.redirectTo) {
+            return (
+                <Redirect
+                    to={this.state.redirectTo}
+                    push
+                />
+            );
+        }
 
         return (
             <div styleName="leads">
