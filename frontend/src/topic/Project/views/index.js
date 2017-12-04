@@ -29,8 +29,6 @@ import {
 
     tokenSelector,
 
-    setNavbarStateAction,
-
     setProjectOptionsAction,
     setActiveProjectAction,
     setProjectAction,
@@ -47,7 +45,6 @@ const propTypes = {
         }),
     }),
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    setNavbarState: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
     setActiveProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
@@ -77,7 +74,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
     setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
 
@@ -102,22 +98,6 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-
         this.projectRequest.start();
         this.projectOptionsRequest.start();
     }

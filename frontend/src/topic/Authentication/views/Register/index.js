@@ -4,9 +4,7 @@
 
 import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 import {
     Redirect,
     Link,
@@ -33,22 +31,15 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
-import { setNavbarStateAction } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
-@connect(null, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -86,14 +77,6 @@ export default class Login extends React.PureComponent {
                 lengthGreaterThanCondition(4),
             ],
         };
-    }
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: false,
-            activeLink: undefined,
-            validLinks: undefined,
-        });
     }
 
     componentWillUnmount() {

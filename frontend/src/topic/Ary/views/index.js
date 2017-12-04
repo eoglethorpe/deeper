@@ -1,51 +1,21 @@
 import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { pageTitles } from '../../../common/constants';
-import { setNavbarStateAction } from '../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    leads: [],
 };
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
-@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Ary extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.ary,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.categoryEditor,
-                pageTitles.projectPanel,
-            ],
-        });
-    }
 
     render() {
         return (

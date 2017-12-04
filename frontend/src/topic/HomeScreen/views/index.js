@@ -13,8 +13,6 @@ import {
     pathNames,
 } from '../../../common/constants';
 import {
-    setNavbarStateAction,
-
     activeProjectSelector,
     activeUserSelector,
     currentUserProjectsSelector,
@@ -29,12 +27,7 @@ const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired, // eslint-disable-line
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
@@ -46,30 +39,11 @@ const propTypes = {
 const defaultProps = {
     activeUser: {},
 };
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-    }
 
     render() {
         const {

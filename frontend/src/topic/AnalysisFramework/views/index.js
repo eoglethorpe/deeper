@@ -25,7 +25,6 @@ import {
 import {
     analysisFrameworkIdFromProps,
     setAfViewAnalysisFrameworkAction,
-    setNavbarStateAction,
 
     afViewCurrentAnalysisFrameworkSelector,
     tokenSelector,
@@ -39,7 +38,6 @@ const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line
     analysisFrameworkId: PropTypes.string.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -55,7 +53,6 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAfViewAnalysisFrameworkAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -65,23 +62,6 @@ export default class AnalysisFramework extends React.PureComponent {
     static defaultProps = defaultProps;
 
     componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-
         this.analysisFrameworkRequest = this.createRequestForAnalysisFramework(
             this.props.analysisFrameworkId,
         );

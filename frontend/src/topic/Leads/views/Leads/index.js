@@ -38,8 +38,6 @@ import {
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
 
-    setNavbarStateAction,
-
     setLeadsAction,
 
     leadPageFilterSelector,
@@ -70,7 +68,6 @@ const propTypes = {
     currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
     setLeads: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     totalLeadsCount: PropTypes.number,
     filters: PropTypes.object.isRequired, // eslint-disable-line
@@ -101,7 +98,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
@@ -219,24 +215,6 @@ export default class Leads extends React.PureComponent {
 
     componentWillMount() {
         console.log('Mounting Leads');
-
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.leads,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.categoryEditor,
-                pageTitles.projectPanel,
-            ],
-        });
 
         const {
             activeProject,

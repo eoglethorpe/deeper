@@ -37,7 +37,6 @@ import {
     tokenSelector,
     userInformationSelector,
     setUserInformationAction,
-    setNavbarStateAction,
     activeUserSelector,
 } from '../../../common/redux';
 
@@ -50,7 +49,6 @@ const propTypes = {
             userGroupId: PropTypes.string,
         }),
     }),
-    setNavbarState: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
@@ -73,7 +71,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
@@ -92,23 +89,6 @@ export default class UserProfile extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-
         const { userId } = this.props.match.params;
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();

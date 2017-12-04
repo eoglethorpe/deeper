@@ -24,7 +24,6 @@ import {
     editEntryViewCurrentAnalysisFrameworkSelector,
     tokenSelector,
 
-    setNavbarStateAction,
     setAnalysisFrameworkAction,
     setEditEntryViewLeadAction,
     setProjectAction,
@@ -48,7 +47,6 @@ const propTypes = {
     token: PropTypes.object.isRequired, // eslint-disable-line
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
 };
 
@@ -69,7 +67,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryViewLeadAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
 
@@ -80,23 +77,6 @@ export default class EditEntryView extends React.PureComponent {
     static defaultProps = defaultProps;
 
     componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.entries,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-
         this.leadRequest = this.createRequestForLead(this.props.leadId);
         this.leadRequest.start();
     }

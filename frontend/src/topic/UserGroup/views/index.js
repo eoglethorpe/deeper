@@ -22,7 +22,6 @@ import UserGroupEdit from '../components/UserGroupEdit';
 import { pageTitles } from '../../../common/constants';
 import {
     groupSelector,
-    setNavbarStateAction,
     setUserGroupAction,
     setUsersInformationAction,
 
@@ -41,7 +40,6 @@ import schema from '../../../common/schema';
 
 const propTypes = {
     match: PropTypes.object.isRequired, // eslint-disable-line
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     userGroup: PropTypes.object, // eslint-disable-line
     setUserGroup: PropTypes.func.isRequired,
@@ -61,7 +59,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setUserGroup: params => dispatch(setUserGroupAction(params)),
     setUsers: params => dispatch(setUsersInformationAction(params)),
 });
@@ -89,23 +86,6 @@ export default class UserGroup extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.userGroup,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-
         this.userGroupRequest.start();
         this.usersRequest.start();
     }

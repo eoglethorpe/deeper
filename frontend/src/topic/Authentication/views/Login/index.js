@@ -46,8 +46,6 @@ import {
 } from '../../../../common/middlewares/siloBackgroundTasks';
 
 import {
-    setNavbarStateAction,
-
     loginAction,
     authenticateAction,
 
@@ -61,7 +59,6 @@ const propTypes = {
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
 };
@@ -76,7 +73,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     authenticate: () => dispatch(authenticateAction()),
     login: params => dispatch(loginAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     startRefresh: params => dispatch(startRefreshAction(params)),
     startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
 });
@@ -129,12 +125,6 @@ export default class Login extends React.PureComponent {
 
     componentWillMount() {
         console.log('MOUNTING Login');
-
-        this.props.setNavbarState({
-            visible: false,
-            activeLink: undefined,
-            validLinks: undefined,
-        });
 
         this.checkParamsFromHid();
     }

@@ -1,28 +1,16 @@
 import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 import { pageTitles } from '../../../common/constants';
-import {
-    setNavbarStateAction,
-} from '../../../common/redux';
 
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    leads: [],
 };
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
-@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Entries extends React.PureComponent {
     static propTypes = propTypes;
@@ -57,26 +45,6 @@ export default class Entries extends React.PureComponent {
                 excerpt: 'We dont need no education, no dark sarcasm in the classroom',
             },
         ];
-    }
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.entries,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.categoryEditor,
-                pageTitles.projectPanel,
-            ],
-        });
     }
 
     render() {

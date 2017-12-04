@@ -3,7 +3,6 @@ import authReducer from './auth';
 import domainDataReducer from './domainData';
 import siloDomainDataReducer from './siloDomainData';
 import datetimeReducer from './datetime';
-import navbarReducer from './navbar';
 
 import { LOGOUT_ACTION } from '../action-types/auth';
 
@@ -12,7 +11,6 @@ const appReducer = combineReducers({
     domainData: domainDataReducer,
     datetime: datetimeReducer,
     siloDomainData: siloDomainDataReducer,
-    navbar: navbarReducer,
 });
 
 const rootReducer = (state, action) => {

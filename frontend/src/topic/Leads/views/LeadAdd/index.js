@@ -35,7 +35,6 @@ import {
 } from '../../../../common/rest';
 
 import {
-    setNavbarStateAction,
     tokenSelector,
     addLeadViewLeadChangeAction,
     addLeadViewActiveLeadIdSelector,
@@ -71,7 +70,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadNext: params => dispatch(addLeadViewLeadNextAction(params)),
@@ -80,9 +78,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
-
-
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
@@ -136,24 +131,6 @@ export default class LeadAdd extends React.PureComponent {
                 this.setState({ pendingSubmitAll: false });
             })
             .build();
-    }
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-            ],
-        });
     }
 
     componentWillUnmount() {

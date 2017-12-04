@@ -38,8 +38,6 @@ import {
     activeCountrySelector,
     countriesListSelector,
 
-    setNavbarStateAction,
-
     setActiveCountryAction,
     setRegionsAction,
     activeUserSelector,
@@ -59,7 +57,6 @@ const propTypes = {
     }),
     setRegions: PropTypes.func.isRequired,
     setActiveCountry: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -85,7 +82,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setRegions: params => dispatch(setRegionsAction(params)),
     setActiveCountry: params => dispatch(setActiveCountryAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -116,24 +112,6 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     componentWillMount() {
-        // Set navbar state
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.projectPanel,
-                pageTitles.countryPanel,
-            ],
-        });
-
         const {
             countries,
             activeCountry,
