@@ -2,8 +2,7 @@ const pathNames = {
     login: '/login/',
     register: '/register/',
 
-    homeScreen: '/',
-
+    projects: '/projects/:projectId?/',
     dashboard: '/projects/:projectId/dashboard/',
 
     leads: '/projects/:projectId/leads/',
@@ -13,16 +12,14 @@ const pathNames = {
     editEntries: '/projects/:projectId/leads/:leadId/edit-entries/',
 
     ary: '/projects/:projectId/ary/',
-    editAry: '/projects/:projectId/leads/:leadId/edit-ary/',
+    // editAry: '/projects/:projectId/leads/:leadId/edit-ary/',
 
     export: '/projects/:projectId/export/',
 
+    countries: '/countries/:countryId?/',
 
     userProfile: '/user/:userId/',
     userGroup: '/user-group/:userGroupId/',
-
-    projects: '/projects/:projectId?/',
-    countries: '/countries/:countryId?/',
 
     adminPanel: '/admin/',
 
@@ -34,7 +31,9 @@ const pathNames = {
 
     apiDocs: '/api-docs/',
 
-    fourHundredFour: '/404/',
+    homeScreen: '/',
+
+    fourHundredFour: undefined,
 };
 
 export default pathNames;

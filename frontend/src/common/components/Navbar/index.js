@@ -35,10 +35,6 @@ import {
     activeUserSelector,
     currentUserInformationSelector,
     currentUserProjectsSelector,
-
-    navbarActiveLinkSelector,
-    navbarValidLinksSelector,
-    navbarVisibleSelector,
 } from '../../../common/redux';
 
 import {
@@ -58,9 +54,6 @@ import styles from './styles.scss';
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     activeCountry: activeCountrySelector(state),
-    navbarActiveLink: navbarActiveLinkSelector(state),
-    navbarValidLinks: navbarValidLinksSelector(state),
-    navbarVisible: navbarVisibleSelector(state),
     activeUser: activeUserSelector(state),
     userInformation: currentUserInformationSelector(state),
     userProjects: currentUserProjectsSelector(state),
@@ -77,8 +70,6 @@ const propTypes = {
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-    // navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
-    navbarVisible: PropTypes.bool,
     setActiveProject: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
     stopSiloTasks: PropTypes.func.isRequired,
@@ -100,8 +91,6 @@ const propTypes = {
 const defaultProps = {
     activeProject: undefined,
     activeCountry: undefined,
-    navbarValidLinks: [],
-    navbarVisible: false,
     activeUser: {},
     userProjects: [],
     userInformation: {},
@@ -191,7 +180,7 @@ export default class Navbar extends React.PureComponent {
 
     getValidNavLinks = () => {
         const match = this.getCurrentMatch();
-        const currentPath = getKeyByValue(pathNames, match.path);
+        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
         const currentValidLinks = validLinks[currentPath];
 
         const navLinks = [
@@ -231,16 +220,11 @@ export default class Navbar extends React.PureComponent {
             activeProject,
             activeCountry,
             activeUser,
-            navbarVisible,
             userProjects,
             userInformation,
         } = this.props;
 
         const userName = userInformation.displayName || activeUser.displayName || 'Anon';
-
-        if (!navbarVisible) {
-            return null;
-        }
 
         return (
             <nav

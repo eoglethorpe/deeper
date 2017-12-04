@@ -31,18 +31,37 @@ const ROUTE = {
 const routesOrder = [
     'login',
     'register',
-    'homeScreen',
-    'dashboard',
+
     'projects',
-    'countries',
+
+    'dashboard',
+
     'leads',
+    'addLeads',
+
     'entries',
-    'ary',
-    'userProfile',
-    'analysisFramework',
-    'categoryEditor',
-    'export',
     'editEntries',
+
+    'ary',
+    // 'editAry',
+
+    'export',
+
+    'countries',
+
+    'userProfile',
+
+    'analysisFramework',
+
+    'categoryEditor',
+
+    'weeklySnapshot',
+
+    'apiDocs',
+
+    'homeScreen',
+
+    'fourHundredFour',
 ];
 
 const routes = {
@@ -65,6 +84,7 @@ const routes = {
     editEntries: { type: ROUTE.private },
 
     ary: { type: ROUTE.private },
+    // editAry: { type: ROUTE.private },
 
     userProfile: { type: ROUTE.private },
 
@@ -122,11 +142,11 @@ export default class Multiplexer extends React.PureComponent {
                 return null;
             }
 
-            const {
-                authenticated,
-            } = this.props;
+            const { authenticated } = this.props;
 
             const redirectTo = routes[routeId].redirectTo;
+
+            console.log(routeId);
 
             switch (routes[routeId].type) {
                 case ROUTE.exclusivelyPublic:

@@ -37,8 +37,8 @@ const blacklistLinks = (links, blacklist) => {
 };
 
 const validLinks = {
-    login: {},
-    register: {},
+    login: [],
+    register: [],
 
     homeScreen: allLinks,
 
@@ -71,7 +71,7 @@ const validLinks = {
 
     apiDocs: allLinks,
 
-    fourHundredFour: allLinks,
+    fourHundredFour: [],
 };
 
 export default validLinks;
