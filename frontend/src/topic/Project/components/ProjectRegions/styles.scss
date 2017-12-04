@@ -23,6 +23,7 @@
 
             .search-input {
                 padding: 0;
+                flex-basis: 100%;
 
                 :global .error {
                     display: none;
