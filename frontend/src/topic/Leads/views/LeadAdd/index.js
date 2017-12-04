@@ -489,17 +489,10 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     renderLeadDetail = (key, lead) => {
-        const leadOptions = this.props.leadFilterOptions[lead.form.values.project];
-        const { activeLeadId } = this.props;
+        const { isSaveDisabled, isFormDisabled } = this.choices[key] || {};
 
-        const choice = calcLeadState({
-            lead,
-            rest: this.state.leadRests[key],
-            upload: this.state.leadUploads[key],
-        });
-        const isSaveDisabled = choice !== 'nonstale';
-        const isFormDisabled = (choice === 'requesting');
-
+        const { activeLeadId, leadFilterOptions } = this.props;
+        const leadOptions = leadFilterOptions[lead.form.values.project];
         return (
             <LeadFormItem
                 ref={this.referenceForLeadDetail(key)}
@@ -518,17 +511,33 @@ export default class LeadAdd extends React.PureComponent {
 
     render() {
         const { leadUploads, leadRests } = this.state;
-
         const { activeLead, activeLeadId } = this.props;
 
-        const choice = activeLead ? calcLeadState({
-            lead: activeLead,
-            rest: this.state.leadRests[activeLeadId],
-            upload: this.state.leadUploads[activeLeadId],
-        }) : undefined;
+        // calculate all choices
+        this.choices = this.props.addLeadViewLeads.reduce(
+            (acc, lead) => {
+                const leadId = this.leadDetailKeyExtractor(lead);
+                const choice = calcLeadState({
+                    lead,
+                    rest: this.state.leadRests[leadId],
+                    upload: this.state.leadUploads[leadId],
+                });
+                const isSaveDisabled = choice !== 'nonstale';
+                const isRemoveDisabled = choice === 'requesting';
+                const isFormDisabled = (choice === 'requesting');
+                acc[leadId] = { isSaveDisabled, isFormDisabled, isRemoveDisabled };
+                return acc;
+            },
+            {},
+        );
 
-        const isSaveDisabled = choice !== 'nonstale';
-        const isRemoveDisabled = choice === 'requesting';
+        // get choice for activeLead
+        const { isSaveDisabled, isRemoveDisabled } = this.choices[activeLeadId] || {};
+
+        // identify if save is enabled for some leads
+        const someSaveEnabled = Object.keys(this.choices).some(
+            key => !(this.choices[key].isSaveDisabled),
+        );
 
         return (
             <div styleName="add-lead">
@@ -569,7 +578,7 @@ export default class LeadAdd extends React.PureComponent {
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
-                                disabled={this.state.pendingSubmitAll}
+                                disabled={this.state.pendingSubmitAll || !someSaveEnabled}
                             >
                                 Save All
                             </SuccessButton>
