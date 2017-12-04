@@ -15,6 +15,8 @@ import schema from '../../../common/schema';
 import {
     createParamsForUser,
     createUrlForProject,
+    createParamsForProjectOptions,
+    createUrlForProjectOptions,
 } from '../../../common/rest';
 import {
     activeProjectSelector,
@@ -25,6 +27,7 @@ import {
 
     setNavbarStateAction,
 
+    setProjectOptionsAction,
     setActiveProjectAction,
     setProjectAction,
 } from '../../../common/redux';
@@ -43,6 +46,7 @@ const propTypes = {
     setNavbarState: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
     setActiveProject: PropTypes.func.isRequired,
+    setProjectOptions: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
@@ -68,6 +72,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
+    setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
     setNavbarState: params => dispatch(setNavbarStateAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
@@ -86,8 +91,10 @@ export default class ProjectPanel extends React.PureComponent {
             isSidebarVisible: false,
             searchInputValue: '',
         };
+        const { activeProject } = props;
 
-        this.projectRequest = this.createProjectRequest(this.props.activeProject);
+        this.projectRequest = this.createProjectRequest(activeProject);
+        this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
     }
 
     componentWillMount() {
@@ -108,15 +115,23 @@ export default class ProjectPanel extends React.PureComponent {
         });
 
         this.projectRequest.start();
+        this.projectOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
 
         if (this.props.activeProject !== activeProject) {
-            this.projectRequest.stop();
-            this.projectRequest = this.createProjectRequest(activeProject);
-            this.projectRequest.start();
+            if (this.projectOptionsRequest) {
+                this.projectOptionsRequest.stop();
+                this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
+                this.projectOptionsRequest.start();
+            }
+            if (this.projectRequest) {
+                this.projectRequest.stop();
+                this.projectRequest = this.createProjectRequest(activeProject);
+                this.projectRequest.start();
+            }
         }
 
         const caseInsensitiveSubmatch = project => (
@@ -131,6 +146,7 @@ export default class ProjectPanel extends React.PureComponent {
 
     componentWillUnmount() {
         this.projectRequest.stop();
+        this.projectOptionsRequest.stop();
     }
 
     onChangeProject = (id) => {
@@ -177,6 +193,32 @@ export default class ProjectPanel extends React.PureComponent {
             })
             .build();
         return projectRequest;
+    };
+
+    createProjectOptionsRequest = (projectId) => {
+        const projectOptionsRequest = new RestBuilder()
+            .url(createUrlForProjectOptions(projectId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForProjectOptions({ access });
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectOptionsGetResponse');
+                    this.props.setProjectOptions({
+                        projectId,
+                        options: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return projectOptionsRequest;
     };
 
     showProjectList = () => {

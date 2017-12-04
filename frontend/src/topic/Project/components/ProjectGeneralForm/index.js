@@ -84,7 +84,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
             stale,
             successCallback,
         } = this.props;
-        console.log(formErrors, 'asdasdasd');
 
         return (
             <Form

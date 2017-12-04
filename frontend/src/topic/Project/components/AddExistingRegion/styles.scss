@@ -1,0 +1,16 @@
+@import '../../../../stylesheets/base';
+
+.add-region-form {
+    position: relative;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: $spacing-medium;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+}
+
