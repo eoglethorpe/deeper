@@ -57,7 +57,6 @@
 
                     .sub-category,
                     .not-clicked,
-                    .add-button,
                     .sub-sub-category {
                         flex-basis: 70%;
                         border-radius: $width-separator-thick;
@@ -127,7 +126,7 @@
                 }
 
                 .add-button {
-                    flex-basis: 80%;
+                    flex-basis: 70%;
                     border-radius: $width-separator-thick;
                     cursor: pointer;
                     padding: $spacing-small;
@@ -138,15 +137,13 @@
                         background-color: $color-background-hover;
                     }
 
-                    &:focus {
-                        background-color: $color-primary;
-                    }
-
                     &.active {
                         @include shadow-small;
-                        background-color: $color-primary;
-                        color: $color-text-on-primary;
                     }
+                }
+
+                .hidden {
+                    display: none;
                 }
             }
         }

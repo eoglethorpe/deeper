@@ -14,6 +14,7 @@ import {
 import {
     PrimaryButton,
     DangerButton,
+    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     Modal,
@@ -21,7 +22,10 @@ import {
     ModalHeader,
     LoadingAnimation,
 } from '../../../../public/components/View';
-import { randomString } from '../../../../public/utils/common';
+import {
+    randomString,
+    isFalsy,
+} from '../../../../public/utils/common';
 
 import {
     categoriesSelector,
@@ -398,13 +402,14 @@ export default class Categories extends React.PureComponent {
                                     </div>
                                 ))
                             }
-                            <div
+                            <TransparentButton
                                 styleName="add-button"
                                 onClick={this.handleAddNewSubCategoryShowModal}
-                                role="presentation"
+                                type="button"
+                                disabled={isFalsy(selectedCategoryId)}
                             >
                                 <i className="ion-plus" />
-                            </div>
+                            </TransparentButton>
                         </div>
                         <div styleName="sub-sub-categories">
                             {
@@ -434,13 +439,13 @@ export default class Categories extends React.PureComponent {
                                     </div>
                                 ))
                             }
-                            <div
-                                styleName="add-button"
+                            <TransparentButton
                                 onClick={this.handleAddNewSubSubCategoryShowModal}
-                                role="presentation"
+                                styleName={`${isFalsy(selectedSubSubCategoryId) ? 'add-button' : 'hidden'}`}
+                                type="button"
                             >
                                 <i className="ion-plus" />
-                            </div>
+                            </TransparentButton>
                         </div>
                         <KeyWords
                             className="keywords-content"
