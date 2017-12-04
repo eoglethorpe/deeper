@@ -51,6 +51,8 @@ const routesOrder = [
 
     'userProfile',
 
+    'userGroup',
+
     'analysisFramework',
 
     'categoryEditor',

@@ -45,7 +45,6 @@ import {
 } from '../../constants';
 
 import Cloak from '../Cloak';
-import LinkOutsideRouter from '../LinkOutsideRouter';
 import logo from '../../../img/black-logo.png';
 
 import NavMenu from './NavMenu';
@@ -107,59 +106,10 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    getUserMenuItems = (projectId, { userId }, countryId) => {
-        const params = {
-            projectId,
-            userId,
-            countryId,
-            analysisFrameworkId: 1,
-        };
-
-        const links = [
-            'userProfile',
-            'categoryEditor',
-            'adminPanel',
-        ];
-
-        const dropdownItemIcons = {
-            userProfile: iconNames.person,
-            categoryEditor: iconNames.text,
-            adminPanel: iconNames.locked,
-        };
-
-        const items = links.map(link => ({
-            linkTo: reverseRoute(pathNames[link], params),
-            name: pageTitles[link],
-            iconName: dropdownItemIcons[link],
-            private: true,
-        }));
-
-        return items;
-    }
-
-    // TODO: Cloak specify requireLogin and requireProject for each item
-    getUserMenuItem = (key, item) => (
-        <LinkOutsideRouter
-            key={key}
-            className={styles['dropdown-item']}
-            to={item.linkTo}
-        >
-            {
-                item.iconName &&
-                    <span
-                        className={`${item.iconName} ${styles.icon}`}
-                    />
-            }
-            {item.name}
-        </LinkOutsideRouter>
-    )
-
-    getUserMenuKey = item => item.name
+    // UTILS
 
     getCurrentMatch = () => {
-        const {
-            location,
-        } = this.props;
+        const { location } = this.props;
 
         const links = Object.keys(pathNames);
         const paths = Object.values(pathNames);
@@ -177,6 +127,8 @@ export default class Navbar extends React.PureComponent {
 
         return null;
     }
+
+    // NAV links
 
     getValidNavLinks = () => {
         const match = this.getCurrentMatch();
@@ -200,11 +152,73 @@ export default class Navbar extends React.PureComponent {
         return validNavLinks;
     }
 
-    handleProjectChange = (key) => {
-        if (isTruthy(key)) {
-            this.props.setActiveProject({ activeProject: key });
-        }
+    // DROPDOWN links
+
+    getValidDropLinks = () => {
+        const match = this.getCurrentMatch();
+        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+        const currentValidLinks = validLinks[currentPath];
+
+        const dropLinks = [
+            'userProfile',
+            'categoryEditor',
+            'adminPanel',
+        ];
+
+        const validDropLinks = dropLinks.filter(
+            link => currentValidLinks.findIndex(d => d === link) !== -1,
+        );
+
+        return validDropLinks;
     }
+
+    getDropItemKey = item => item
+
+    getDropItem = (item) => {
+        const {
+            activeProject,
+            activeCountry,
+            activeUser = {},
+        } = this.props;
+
+        const params = {
+            projectId: activeProject,
+            countryId: activeCountry,
+            userId: activeUser.userId,
+            analysisFrameworkId: 1,
+        };
+
+        const dropdownItemIcons = {
+            userProfile: iconNames.person,
+            categoryEditor: iconNames.text,
+            adminPanel: iconNames.locked,
+        };
+        const iconName = dropdownItemIcons[item];
+
+        // TODO: specify requireLogin and requireProject for each item
+        return (
+            <Cloak
+                key={item}
+                requireLogin
+                requireProject
+            >
+                <Link
+                    to={reverseRoute(pathNames[item], params)}
+                    className={styles['dropdown-item']}
+                >
+                    {
+                        iconName &&
+                        <span
+                            className={`${item.iconName} ${styles.icon}`}
+                        />
+                    }
+                    { pageTitles[item] }
+                </Link>
+            </Cloak>
+        );
+    }
+
+    // LOGOUT button
 
     handleLogoutButtonClick = () => {
         this.props.stopRefresh();
@@ -212,7 +226,16 @@ export default class Navbar extends React.PureComponent {
         this.props.logout();
     }
 
+    // SELECT input
+
+    handleProjectChange = (key) => {
+        if (isTruthy(key)) {
+            this.props.setActiveProject({ activeProject: key });
+        }
+    }
+
     selectProjectKey = (option = {}) => (option.id)
+
     selectProjectLabel = (option = {}) => (option.title)
 
     render() {
@@ -275,9 +298,9 @@ export default class Navbar extends React.PureComponent {
                 >
                     <DropdownGroup>
                         <List
-                            data={this.getUserMenuItems(activeProject, activeUser, activeCountry)}
-                            keyExtractor={this.getUserMenuKey}
-                            modifier={this.getUserMenuItem}
+                            data={this.getValidDropLinks()}
+                            keyExtractor={this.getDropItemKey}
+                            modifier={this.getDropItem}
                         />
                     </DropdownGroup>
                     <Cloak
