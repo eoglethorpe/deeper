@@ -8,7 +8,7 @@ import {
     setNavbarStateAction,
     currentUserProjectsSelector,
 } from '../../../common/redux';
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 
 import DocumentView from './DocumentView';
 import CategoryView from './CategoryView';

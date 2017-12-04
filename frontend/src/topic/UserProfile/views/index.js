@@ -28,7 +28,7 @@ import {
 import { RestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import {
     createParamsForUser,
     createUrlForUser,

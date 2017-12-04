@@ -19,7 +19,7 @@ import MembersTable from '../components/MembersTable';
 import ProjectsTable from '../components/ProjectsTable';
 import UserGroupEdit from '../components/UserGroupEdit';
 
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import {
     groupSelector,
     setNavbarStateAction,

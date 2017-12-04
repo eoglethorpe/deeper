@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import {
     setNavbarStateAction,
     currentUserActiveProjectSelector,

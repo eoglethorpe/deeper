@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import styles from './styles.scss';
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import {
     Form,
 } from '../../../public/components/Input';

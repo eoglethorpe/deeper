@@ -11,7 +11,7 @@ import {
 
 import schema from '../../../common/schema';
 import { RestBuilder } from '../../../public/utils/rest';
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 
 import {
     LoadingAnimation,

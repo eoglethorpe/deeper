@@ -9,7 +9,7 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import { setNavbarStateAction } from '../../../common/redux';
 
 import EditCategoryPage from '../components/EditCategoryPage';

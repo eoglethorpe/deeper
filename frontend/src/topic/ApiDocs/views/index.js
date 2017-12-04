@@ -11,7 +11,7 @@ import {
 import { RestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
 
-import { pageTitles } from '../../../common/utils/labels';
+import { pageTitles } from '../../../common/constants';
 import { urlForApiDocs } from '../../../common/rest';
 import { setNavbarStateAction } from '../../../common/redux';
 

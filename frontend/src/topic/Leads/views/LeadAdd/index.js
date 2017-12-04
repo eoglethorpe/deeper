@@ -20,7 +20,7 @@ import {
     DangerButton,
     SuccessButton,
 } from '../../../../public/components/Action/';
-import { pageTitles } from '../../../../common/utils/labels';
+import { pageTitles } from '../../../../common/constants';
 
 import {
     urlForGoogleDriveFileUpload,
