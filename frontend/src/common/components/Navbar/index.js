@@ -148,26 +148,21 @@ export default class Navbar extends React.PureComponent {
         return items;
     }
 
-    // TODO: specify requireLogin and requireProject for each item
+    // TODO: Cloak specify requireLogin and requireProject for each item
     getUserMenuItem = (key, item) => (
-        <Cloak
+        <LinkOutsideRouter
             key={key}
-            requireLogin
-            requireProject
+            className={styles['dropdown-item']}
+            to={item.linkTo}
         >
-            <LinkOutsideRouter
-                className={styles['dropdown-item']}
-                to={item.linkTo}
-            >
-                {
-                    item.iconName &&
-                        <span
-                            className={`${item.iconName} ${styles.icon}`}
-                        />
-                }
-                {item.name}
-            </LinkOutsideRouter>
-        </Cloak>
+            {
+                item.iconName &&
+                    <span
+                        className={`${item.iconName} ${styles.icon}`}
+                    />
+            }
+            {item.name}
+        </LinkOutsideRouter>
     )
 
     getUserMenuKey = item => item.name
