@@ -245,7 +245,7 @@ export default class Navbar extends React.PureComponent {
                 styleName="navbar"
             >
                 <Link
-                    to="/"
+                    to={reverseRoute(pathNames.homeScreen, {})}
                     styleName="brand"
                 >
                     <img

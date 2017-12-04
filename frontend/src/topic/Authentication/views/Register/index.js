@@ -19,10 +19,14 @@ import {
 } from '../../../../public/components/Input';
 import { PrimaryButton } from '../../../../public/components/Action';
 import { RestBuilder } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
 
+import {
+    pageTitles,
+    pathNames,
+} from '../../../../common/constants';
 import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
-import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForUserCreate,
     urlForUserCreate,
@@ -156,7 +160,7 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'userCreateResponse');
                     // go to login
-                    browserHistory.push('/login/');
+                    browserHistory.push(reverseRoute(pathNames.login, {}));
                 } catch (er) {
                     console.error(er);
                 }
@@ -265,7 +269,7 @@ export default class Login extends React.PureComponent {
                         Already have an account yet?
                     </p>
                     <Link
-                        to="/login/"
+                        to={reverseRoute(pathNames.login, {})}
                         styleName="login-link"
                     >
                         Login

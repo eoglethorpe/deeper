@@ -17,9 +17,12 @@ import {
     PrimaryButton,
 } from '../../../public/components/Action';
 
-import browserHistory from '../../browserHistory';
 import { RestBuilder } from '../../../public/utils/rest';
-import schema from '../../schema';
+
+
+import { pathNames } from '../../../common/constants';
+import { reverseRoute } from '../../../public/utils/common';
+
 import {
     createParamsForRegionCreate,
     urlForRegionCreate,
@@ -30,6 +33,8 @@ import {
     addNewRegionAction,
 } from '../../redux';
 
+import browserHistory from '../../browserHistory';
+import schema from '../../schema';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -130,7 +135,9 @@ export default class AddRegion extends React.PureComponent {
                             regionDetail: response,
                         });
                         this.props.onModalClose();
-                        browserHistory.push(`/countrypanel/${response.id}`);
+                        browserHistory.push(
+                            reverseRoute(pathNames.countries, { countryId: response.id }),
+                        );
                     }
                 } catch (er) {
                     console.error(er);

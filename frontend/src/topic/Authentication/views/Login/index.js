@@ -23,10 +23,14 @@ import {
     RestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
 
+import {
+    pageTitles,
+    pathNames,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
-import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForTokenCreate,
     urlForTokenCreate,
@@ -324,7 +328,7 @@ export default class Login extends React.PureComponent {
                     </p>
                     <Link
                         styleName="register-link"
-                        to="/register/"
+                        to={reverseRoute(pathNames.register, {})}
                     >
                         Register
                     </Link>

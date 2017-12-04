@@ -109,8 +109,10 @@ export default class HomeScreen extends React.PureComponent {
                     Seems like you have no projects yet.
                 </h2>
                 <h2>
-                    <Link to={`/users/${activeUser.userId}/`} >
-                      To get started, go to your profile.
+                    <Link
+                        to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })}
+                    >
+                        To get started, go to your profile.
                         <span
                             className="ion-android-person"
                             styleName="icon"

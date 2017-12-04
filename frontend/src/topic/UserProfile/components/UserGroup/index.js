@@ -21,13 +21,12 @@ import {
     ModalHeader,
     Table,
 } from '../../../../public/components/View';
+import { RestBuilder } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
 
 import {
-    UserGroupAdd,
-} from '../../components/';
-
-import { RestBuilder } from '../../../../public/utils/rest';
-
+    pathNames,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import DeletePrompt from '../../../../common/components/DeletePrompt';
 import {
@@ -43,6 +42,10 @@ import {
     activeUserSelector,
     unSetUserGroupAction,
 } from '../../../../common/redux';
+
+import {
+    UserGroupAdd,
+} from '../../components/';
 
 import styles from './styles.scss';
 
@@ -168,7 +171,7 @@ export default class UserGroup extends React.PureComponent {
                                     ${styles['link-to-usergroup']}
                                     ${styles['action-button']}
                                 `}
-                                to={`/usergroup/${d.id}/`}
+                                to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                             >
                                 <i className="ion-android-open" />
                             </Link>
@@ -184,7 +187,7 @@ export default class UserGroup extends React.PureComponent {
                                 ${styles['action-button']}
                             `}
                             key="usergroup-panel"
-                            to={`/usergroup/${d.id}/`}
+                            to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                         >
                             <span className="ion-edit" />
                         </Link>,

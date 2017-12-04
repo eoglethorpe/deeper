@@ -132,7 +132,7 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <Link
                         key={row.createdBy}
-                        to={`/users/${row.createdBy}/`}
+                        to={reverseRoute(pathNames.userProfile, { userId: row.createdBy })}
                     >
                         {row.createdByName}
                     </Link>

@@ -9,8 +9,12 @@ import { ListView, ListItem } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import { TransparentPrimaryButton } from '../../../public/components/Action';
 import { RestBuilder } from '../../../public/utils/rest';
+import { reverseRoute } from '../../../public/utils/common';
 
-import { pageTitles } from '../../../common/utils/labels';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
     createParamsForUser,
@@ -305,7 +309,7 @@ export default class ProjectPanel extends React.PureComponent {
                                 className={this.getStyleName(project.id)}
                             >
                                 <Link
-                                    to={`/${project.id}/projectpanel/`}
+                                    to={reverseRoute(pathNames.projects, { projectId: project.id })}
                                     className={styles.link}
                                     onClick={() => this.onChangeProject(project.id)}
                                 >

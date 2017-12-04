@@ -108,15 +108,6 @@ export default class Entries extends React.PureComponent {
                                     <h3>
                                         { entry.title }
                                     </h3>
-                                    <div
-                                        styleName="action-buttons"
-                                    >
-                                        <Link
-                                            to={`${entry.leadId}/`}
-                                        >
-                                            <span className="ion-edit" />
-                                        </Link>
-                                    </div>
                                 </header>
                                 <p
                                     styleName="excerpt"

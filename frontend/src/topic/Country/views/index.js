@@ -297,7 +297,7 @@ export default class CountryPanel extends React.PureComponent {
             >
                 <Link
                     className="link"
-                    to={`/countries/${country.id}/`}
+                    to={reverseRoute(pathNames.countries, { countryId: country.id })}
                 >
                     {country.title}
                 </Link>

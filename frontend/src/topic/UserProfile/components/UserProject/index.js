@@ -21,12 +21,11 @@ import {
     ModalHeader,
     Table,
 } from '../../../../public/components/View';
-
-import {
-    UserProjectAdd,
-} from '../../components/';
-
 import { RestBuilder } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
+import {
+    pathNames,
+} from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
 import DeletePrompt from '../../../../common/components/DeletePrompt';
@@ -45,6 +44,11 @@ import {
     activeUserSelector,
     unSetProjectAction,
 } from '../../../../common/redux';
+
+
+import {
+    UserProjectAdd,
+} from '../../components/';
 
 import styles from './styles.scss';
 
@@ -192,7 +196,7 @@ export default class UserProject extends React.PureComponent {
                                     ${styles['link-to-project']}
                                     ${styles['action-button']}
                                 `}
-                                to={`/${d.id}/projectpanel/`}
+                                to={reverseRoute(pathNames.projects, { projectId: d.id })}
                             >
                                 <span className="ion-android-open" />
                             </Link>
@@ -208,7 +212,7 @@ export default class UserProject extends React.PureComponent {
                                 ${styles['action-button']}
                             `}
                             key="project-panel"
-                            to={`/${d.id}/projectpanel/`}
+                            to={reverseRoute(pathNames.projects, { projectId: d.id })}
                         >
                             <i className="ion-edit" />
                         </Link>,
