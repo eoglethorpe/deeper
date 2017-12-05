@@ -5,11 +5,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 
-import logo from '../../../img/deep-logo-grey.png';
-import { pageTitles } from '../../../common/utils/labels';
-import {
-    setNavbarStateAction,
+import { reverseRoute } from '../../../public/utils/common';
 
+import logo from '../../../img/deep-logo-grey.png';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../common/constants';
+import {
     activeProjectSelector,
     activeUserSelector,
     currentUserProjectsSelector,
@@ -24,12 +27,7 @@ const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired, // eslint-disable-line
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
@@ -41,30 +39,11 @@ const propTypes = {
 const defaultProps = {
     activeUser: {},
 };
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.projectPanel,
-            ],
-        });
-    }
 
     render() {
         const {
@@ -75,10 +54,12 @@ export default class HomeScreen extends React.PureComponent {
         } = this.props;
 
         if (currentUserProjects.length > 0) {
+            const params = { projectId: activeProject };
+            const routeTo = reverseRoute(pathNames.dashboard, params);
             return (
                 <Redirect
                     to={{
-                        pathname: `/${activeProject}/dashboard/`,
+                        pathname: routeTo,
                         from: location,
                     }}
                 />
@@ -102,8 +83,10 @@ export default class HomeScreen extends React.PureComponent {
                     Seems like you have no projects yet.
                 </h2>
                 <h2>
-                    <Link to={`/users/${activeUser.userId}/`} >
-                      To get started, go to your profile.
+                    <Link
+                        to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })}
+                    >
+                        To get started, go to your profile.
                         <span
                             className="ion-android-person"
                             styleName="icon"

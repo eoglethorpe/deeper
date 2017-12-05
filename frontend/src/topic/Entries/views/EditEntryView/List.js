@@ -5,7 +5,7 @@ import React from 'react';
 import ReactGridLayout from 'react-grid-layout';
 import { connect } from 'react-redux';
 
-import { pageTitles } from '../../../../common/utils/labels';
+import { pageTitles } from '../../../../common/constants';
 
 import styles from './styles.scss';
 

@@ -18,7 +18,7 @@ import {
     SelectInput,
 } from '../../../../public/components/Input';
 
-import { pageTitles } from '../../../../common/utils/labels';
+import { pageTitles } from '../../../../common/constants';
 
 import styles from './styles.scss';
 

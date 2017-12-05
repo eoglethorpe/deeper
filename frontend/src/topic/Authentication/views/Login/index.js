@@ -23,10 +23,14 @@ import {
     RestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
 
+import {
+    pageTitles,
+    pathNames,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
-import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForTokenCreate,
     urlForTokenCreate,
@@ -42,8 +46,6 @@ import {
 } from '../../../../common/middlewares/siloBackgroundTasks';
 
 import {
-    setNavbarStateAction,
-
     loginAction,
     authenticateAction,
 
@@ -57,7 +59,6 @@ const propTypes = {
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     login: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
 };
@@ -72,7 +73,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     authenticate: () => dispatch(authenticateAction()),
     login: params => dispatch(loginAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
     startRefresh: params => dispatch(startRefreshAction(params)),
     startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
 });
@@ -125,12 +125,6 @@ export default class Login extends React.PureComponent {
 
     componentWillMount() {
         console.log('MOUNTING Login');
-
-        this.props.setNavbarState({
-            visible: false,
-            activeLink: undefined,
-            validLinks: undefined,
-        });
 
         this.checkParamsFromHid();
     }
@@ -324,7 +318,7 @@ export default class Login extends React.PureComponent {
                     </p>
                     <Link
                         styleName="register-link"
-                        to="/register/"
+                        to={reverseRoute(pathNames.register, {})}
                     >
                         Register
                     </Link>

@@ -1,110 +1,115 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import {
+    Switch,
+    Route,
+    withRouter,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    Bundle,
     ExclusivelyPublicRoute,
     PrivateRoute,
 } from './public/components/General';
 
 import Navbar from './common/components/Navbar';
-import ProjectRouteSynchronizer from './common/components/ProjectRouteSynchronizer';
-import { pageTitles } from './common/utils/labels';
+
+import {
+    pathNames,
+} from './common/constants';
+
+import views from './topic';
+
 import { authenticatedSelector } from './common/selectors/auth';
 
-const Leads = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/`} >
-        <Bundle load={() => import('./topic/Leads/views/Leads')} />
-    </ProjectRouteSynchronizer>
-);
+const ROUTE = {
+    exclusivelyPublic: 'exclusively-public',
+    public: 'public',
+    private: 'private',
+};
 
-const LeadAdd = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/leads/new`} >
-        <Bundle load={() => import('./topic/Leads/views/LeadAdd')} />
-    </ProjectRouteSynchronizer>
-);
+const routesOrder = [
+    'login',
+    'register',
 
-const Entries = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/entries/`} >
-        <Bundle load={() => import('./topic/Entries/views/')} />
-    </ProjectRouteSynchronizer>
-);
+    'projects',
 
-const EditEntry = () => (
-    <Bundle load={() => import('./topic/Entries/views/EditEntryView')} />
-);
+    'dashboard',
 
-const Ary = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/ary/`} >
-        <Bundle load={() => import('./topic/Ary/views/')} />
-    </ProjectRouteSynchronizer>
-);
+    'leads',
+    'addLeads',
 
-const Export = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/export/`} >
-        <Bundle load={() => import('./topic/Export/views/')} />
-    </ProjectRouteSynchronizer>
-);
+    'entries',
+    'editEntries',
 
-const Dashboard = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/dashboard/`} >
-        <Bundle load={() => import('./topic/Dashboard/views')} />
-    </ProjectRouteSynchronizer>
-);
+    'ary',
+    // 'editAry',
 
-const HomeScreen = () => (
-    <Bundle load={() => import('./topic/HomeScreen/views')} />
-);
+    'export',
 
-const ProjectPanel = () => (
-    <ProjectRouteSynchronizer redirectUrl={projectId => `/${projectId}/projectpanel/`} >
-        <Bundle load={() => import('./topic/Project/views')} />
-    </ProjectRouteSynchronizer>
-);
+    'countries',
 
-const Login = () => (
-    <Bundle load={() => import('./topic/Authentication/views/Login')} />
-);
+    'userProfile',
 
-const Register = () => (
-    <Bundle load={() => import('./topic/Authentication/views/Register')} />
-);
+    'userGroup',
 
-const UserProfile = () => (
-    <Bundle load={() => import('./topic/UserProfile/views/')} />
-);
+    'analysisFramework',
 
-const UserGroup = () => (
-    <Bundle load={() => import('./topic/UserGroup/views/')} />
-);
+    'categoryEditor',
 
-const WeeklySnapshot = () => (
-    <Bundle load={() => import('./topic/WeeklySnapshot/views')} />
-);
+    'weeklySnapshot',
 
-const CountryPanel = () => (
-    <Bundle load={() => import('./topic/Country/views')} />
-);
+    'apiDocs',
 
-const AnalysisFramework = () => (
-    <Bundle load={() => import('./topic/AnalysisFramework/views/')} />
-);
+    'homeScreen',
 
-const CategoryEditor = () => (
-    <Bundle load={() => import('./topic/CategoryEditor/views/')} />
-);
+    'fourHundredFour',
+];
 
-const ApiDocs = () => (
-    <Bundle load={() => import('./topic/ApiDocs/views')} />
-);
+const routes = {
+    login: {
+        type: ROUTE.exclusivelyPublic,
+        redirectTo: '/',
+    },
+    register: {
+        type: ROUTE.exclusivelyPublic,
+        redirectTo: '/',
+    },
 
-const FourHundredFour = () => (
-    <Bundle load={() => import('./topic/FourHundredFour/views')} />
-);
+    homeScreen: { type: ROUTE.private },
+    dashboard: { type: ROUTE.private },
 
-const NavbarWithProps = withRouter(props => <Navbar {...props} />);
+    leads: { type: ROUTE.private },
+    addLeads: { type: ROUTE.private },
+
+    entries: { type: ROUTE.private },
+    editEntries: { type: ROUTE.private },
+
+    ary: { type: ROUTE.private },
+    // editAry: { type: ROUTE.private },
+
+    userProfile: { type: ROUTE.private },
+
+    userGroup: { type: ROUTE.private },
+
+    weeklySnapshot: { type: ROUTE.private },
+
+    projects: { type: ROUTE.private },
+
+    countries: { type: ROUTE.private },
+
+    export: { type: ROUTE.private },
+
+    analysisFramework: { type: ROUTE.private },
+
+    categoryEditor: { type: ROUTE.private },
+
+    apiDocs: { type: ROUTE.public },
+
+    fourHundredFour: { type: ROUTE.public },
+};
+
+// const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
@@ -121,133 +126,6 @@ const mapStateToProps = state => ({
 export default class Multiplexer extends React.PureComponent {
     static propTypes = propTypes;
 
-    static pages = [
-        {
-            path: '/login/',
-            name: pageTitles.login,
-            component: Login,
-            public: true,
-            redirectLink: '/',
-        },
-        {
-            path: '/register/',
-            name: pageTitles.register,
-            component: Register,
-            public: true,
-            redirectLink: '/',
-        },
-        {
-            path: '/:projectId/leads/',
-            name: pageTitles.leads,
-            component: Leads,
-            private: true,
-        },
-        {
-            path: '/:projectId/entries/',
-            name: pageTitles.entries,
-            component: Entries,
-            private: true,
-        },
-        {
-            path: '/:projectId/ary/',
-            name: pageTitles.ary,
-            component: Ary,
-            private: true,
-        },
-        {
-            path: '/:projectId/export/',
-            name: pageTitles.export,
-            component: Export,
-            private: true,
-        },
-        {
-            path: '/:projectId/leads/:leadId/',
-            name: pageTitles.editLeads,
-            component: LeadAdd,
-            private: true,
-        },
-        {
-            path: '/:projectId/entries/:leadId/',
-            name: pageTitles.editEntries,
-            component: EditEntry,
-            private: true,
-        },
-        {
-            path: '/users/:userId/',
-            name: pageTitles.userProfile,
-            component: UserProfile,
-            private: true,
-        },
-        {
-            path: '/usergroup/:userGroupId/',
-            name: pageTitles.userGroup,
-            component: UserGroup,
-            private: true,
-        },
-        {
-            path: '/countrypanel/:countryId/',
-            name: pageTitles.countryPanel,
-            component: CountryPanel,
-            private: true,
-        },
-        {
-            path: '/countrypanel/',
-            name: pageTitles.countryPanel,
-            component: CountryPanel,
-            private: true,
-        },
-        {
-            path: '/analysis-framework/:analysisFrameworkId/',
-            name: pageTitles.analysisFramework,
-            component: AnalysisFramework,
-            private: true,
-        },
-        {
-            path: '/category-editor/*',
-            name: pageTitles.categoryEditor,
-            component: CategoryEditor,
-            private: true,
-        },
-        {
-            path: '/:projectId/projectpanel/',
-            name: pageTitles.projectPanel,
-            component: ProjectPanel,
-            private: true,
-        },
-        {
-            path: '/weekly-snapshot/*',
-            name: pageTitles.weeklySnapshot,
-            component: WeeklySnapshot,
-            private: true,
-        },
-        {
-            path: '/api-docs/',
-            name: pageTitles.apiDocs,
-            component: ApiDocs,
-            private: false,
-        },
-
-        {
-            path: '/:projectId/dashboard/',
-            name: pageTitles.dashboard,
-            component: Dashboard,
-            private: true,
-        },
-
-        // NOTE: never add new link below this comment
-        {
-            path: '/',
-            name: pageTitles.homeScreen,
-            component: HomeScreen,
-            private: true,
-        },
-        {
-            path: undefined,
-            name: pageTitles.fourHundredFour,
-            component: FourHundredFour,
-        },
-    ];
-
     componentWillMount() {
         console.log('Mounting Multiplexer');
     }
@@ -256,50 +134,68 @@ export default class Multiplexer extends React.PureComponent {
         console.log('Unmounting Multiplexer');
     }
 
-    renderRoute = (page) => {
-        // path is not defined for 404 page
-        const key = page.path || '404';
-        if (page.private) {
-            return (
-                <PrivateRoute
-                    component={page.component}
-                    exact
-                    key={key}
-                    path={page.path}
-                    authenticated={this.props.authenticated}
-                    redirectLink={page.redirectLink}
-                />
-            );
-        } else if (page.public) {
-            return (
-                <ExclusivelyPublicRoute
-                    component={page.component}
-                    exact
-                    key={key}
-                    path={page.path}
-                    authenticated={this.props.authenticated}
-                    redirectLink={page.redirectLink}
-                />
-            );
-        }
-        return (
-            <Route
-                component={page.component}
-                exact
-                key={key}
-                path={page.path}
-            />
-        );
-    }
+    getRoutes = () => (
+        routesOrder.map((routeId) => {
+            const view = views[routeId];
+            const path = pathNames[routeId];
+
+            if (!view) {
+                console.error(`Cannot find view associated with routeID: ${routeId}`);
+                return null;
+            }
+
+            const { authenticated } = this.props;
+
+            const redirectTo = routes[routeId].redirectTo;
+
+            console.log(routeId);
+
+            switch (routes[routeId].type) {
+                case ROUTE.exclusivelyPublic:
+                    return (
+                        <ExclusivelyPublicRoute
+                            component={view}
+                            key={routeId}
+                            path={path}
+                            authenticated={authenticated}
+                            redirectLink={redirectTo}
+                            exact
+                        />
+                    );
+                case ROUTE.private:
+                    return (
+                        <PrivateRoute
+                            component={view}
+                            key={routeId}
+                            path={path}
+                            authenticated={authenticated}
+                            redirectLink={redirectTo}
+                            exact
+                        />
+                    );
+                case ROUTE.public:
+                    return (
+                        <Route
+                            component={view}
+                            key={routeId}
+                            path={path}
+                            exact
+                        />
+                    );
+                default:
+                    console.error(`Invalid route type ${routes[routeId].type}`);
+                    return null;
+            }
+        })
+    )
 
     render() {
         console.log('Rendering Multiplexer');
 
-        // NOTE: List component cannot be used here instead of map
         return ([
-            <NavbarWithProps key="navbar" />,
+            <Navbar key="navbar" />,
             <Switch key="switch">
-                { Multiplexer.pages.map(this.renderRoute) }
+                { this.getRoutes() }
             </Switch>,
         ]);
     }

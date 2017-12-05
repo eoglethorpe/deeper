@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { withRouter, Link } from 'react-router-dom';
-import { List, ListView } from '../../../public/components/View';
+import {
+    withRouter,
+    Link,
+    matchPath,
+} from 'react-router-dom';
+import { List } from '../../../public/components/View';
 import {
     DropdownMenu,
     DropdownGroup,
-    DropdownGroupTitle,
 } from '../../../public/components/Action';
 import { SelectInput } from '../../../public/components/Input';
-import { isTruthy } from '../../../public/utils/common';
-
-
-import LinkOutsideRouter from '../LinkOutsideRouter';
-import { pageTitles } from '../../utils/labels';
-import logo from '../../../img/black-logo.png';
-import styles from './styles.scss';
+import {
+    isTruthy,
+    reverseRoute,
+} from '../../../public/utils/common';
 
 import {
     stopSiloBackgroundTasksAction,
@@ -35,18 +35,24 @@ import {
     activeUserSelector,
     currentUserInformationSelector,
     currentUserProjectsSelector,
-
-    navbarActiveLinkSelector,
-    navbarValidLinksSelector,
-    navbarVisibleSelector,
 } from '../../../common/redux';
+
+import {
+    iconNames,
+    pageTitles,
+    pathNames,
+    validLinks,
+} from '../../constants';
+
+import Cloak from '../Cloak';
+import logo from '../../../img/black-logo.png';
+
+import NavMenu from './NavMenu';
+import styles from './styles.scss';
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     activeCountry: activeCountrySelector(state),
-    navbarActiveLink: navbarActiveLinkSelector(state),
-    navbarValidLinks: navbarValidLinksSelector(state),
-    navbarVisible: navbarVisibleSelector(state),
     activeUser: activeUserSelector(state),
     userInformation: currentUserInformationSelector(state),
     userProjects: currentUserProjectsSelector(state),
@@ -63,11 +69,6 @@ const propTypes = {
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-    // eslint-disable-next-line
-    navbarActiveLink: PropTypes.string,
-    // eslint-disable-next-line
-    navbarValidLinks: PropTypes.arrayOf(PropTypes.string),
-    navbarVisible: PropTypes.bool,
     setActiveProject: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
     stopSiloTasks: PropTypes.func.isRequired,
@@ -81,20 +82,22 @@ const propTypes = {
             name: PropTypes.string,
         }),
     ),
+    location: PropTypes.shape({
+        pathname: PropTypes.string,
+    }).isRequired,
 };
 
 const defaultProps = {
-    navbarActiveLink: undefined,
     activeProject: undefined,
     activeCountry: undefined,
-    navbarValidLinks: [],
-    navbarVisible: false,
     activeUser: {},
-    userProjects: {},
+    userProjects: [],
     userInformation: {},
 };
 
-const getValidLinkOrEmpty = value => (value ? `${value}/` : '');
+const getKeyByValue = (object, value) => (
+    Object.keys(object).find(key => object[key] === value)
+);
 
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
@@ -103,41 +106,119 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    componentWillMount() {
-        const {
-            activeCountry,
-            activeProject,
-            activeUser,
-        } = this.props;
-        const navbarItems = this.createNavbarItems(activeProject);
-        const dropdownItems = this.createDropdownItems(
-            activeProject,
-            activeUser,
-            activeCountry,
-        );
-        this.setState({ navbarItems, dropdownItems });
-    }
+    // UTILS
 
-    componentWillReceiveProps(nextProps) {
-        const {
-            activeCountry,
-            activeProject,
-            activeUser,
-        } = nextProps;
-        const navbarItems = this.createNavbarItems(activeProject);
-        const dropdownItems = this.createDropdownItems(
-            activeProject,
-            activeUser,
-            activeCountry,
-        );
-        this.setState({ navbarItems, dropdownItems });
-    }
+    getCurrentMatch = () => {
+        const { location } = this.props;
 
-    onSelectChangeHandler = (key) => {
-        if (isTruthy(key)) {
-            this.props.setActiveProject({ activeProject: key });
+        const links = Object.keys(pathNames);
+        const paths = Object.values(pathNames);
+
+        for (let i = 0; i < links.length; i += 1) {
+            const match = matchPath(location.pathname, {
+                path: paths[i],
+                exact: true,
+            });
+
+            if (match) {
+                return match;
+            }
         }
+
+        return null;
     }
+
+    // NAV links
+
+    getValidNavLinks = () => {
+        const match = this.getCurrentMatch();
+        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+        const currentValidLinks = validLinks[currentPath];
+
+        const navLinks = [
+            'leads',
+            'entries',
+            'ary',
+            'projects',
+            'countries',
+            'analysisFramework',
+            'export',
+        ];
+
+        const validNavLinks = navLinks.filter(
+            link => currentValidLinks.findIndex(d => d === link) !== -1,
+        );
+
+        return validNavLinks;
+    }
+
+    // DROPDOWN links
+
+    getValidDropLinks = () => {
+        const match = this.getCurrentMatch();
+        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+        const currentValidLinks = validLinks[currentPath];
+
+        const dropLinks = [
+            'userProfile',
+            'categoryEditor',
+            'adminPanel',
+        ];
+
+        const validDropLinks = dropLinks.filter(
+            link => currentValidLinks.findIndex(d => d === link) !== -1,
+        );
+
+        return validDropLinks;
+    }
+
+    getDropItemKey = item => item
+
+    getDropItem = (item) => {
+        const {
+            activeProject,
+            activeCountry,
+            activeUser = {},
+        } = this.props;
+
+        const params = {
+            projectId: activeProject,
+            countryId: activeCountry,
+            userId: activeUser.userId,
+            analysisFrameworkId: 1,
+        };
+
+        const dropdownItemIcons = {
+            userProfile: iconNames.person,
+            categoryEditor: iconNames.text,
+            adminPanel: iconNames.locked,
+        };
+        const iconName = dropdownItemIcons[item];
+
+        // TODO: specify requireLogin and requireProject for each item
+        return (
+            <Cloak
+                key={item}
+                requireLogin
+                requireProject
+            >
+                <Link
+                    to={reverseRoute(pathNames[item], params)}
+                    className={styles['dropdown-item']}
+                >
+                    {
+                        iconName &&
+                        <span
+                            className={`${item.iconName} ${styles.icon}`}
+                        />
+                    }
+                    { pageTitles[item] }
+                </Link>
+            </Cloak>
+        );
+    }
+
+    // LOGOUT button
 
     handleLogoutButtonClick = () => {
         this.props.stopRefresh();
@@ -145,197 +226,35 @@ export default class Navbar extends React.PureComponent {
         this.props.logout();
     }
 
-    labelSelectorForSelectInput = (option = {}) => (option.id)
+    // SELECT input
 
-    keySelectorForSelectInput = (option = {}) => (option.title)
-
-    createNavbarItems = activeProject => [
-        {
-            linkTo: `/${activeProject}/leads/`,
-            name: pageTitles.leads,
-            needsProject: true,
-            private: true,
-        },
-        {
-            linkTo: `/${activeProject}/entries/`,
-            name: pageTitles.entries,
-            needsProject: true,
-            private: true,
-        },
-        {
-            linkTo: `/${activeProject}/ary/`,
-            name: pageTitles.ary,
-            needsProject: true,
-            private: true,
-        },
-        {
-            linkTo: '/weekly-snapshot/',
-            name: pageTitles.weeklySnapshot,
-            needsProject: true,
-            private: true,
-        },
-        {
-            linkTo: `/${activeProject}/export/`,
-            name: pageTitles.export,
-            needsProject: true,
-            private: true,
-        },
-    ]
-
-    createDropdownItems = (activeProject, activeUser, activeCountry) => [
-        {
-            key: 'first-group',
-            label: undefined,
-            items: [
-                {
-                    linkTo: `/users/${activeUser.userId}/`,
-                    name: pageTitles.userProfile,
-                    iconName: 'ion-android-person',
-                    private: true,
-                },
-                {
-                    linkTo: `/countrypanel/${getValidLinkOrEmpty(activeCountry)}`,
-                    name: pageTitles.countryPanel,
-                    iconName: 'ion-android-globe',
-                    private: true,
-                },
-                {
-                    linkTo: `/${activeProject}/projectpanel/`,
-                    name: pageTitles.projectPanel,
-                    iconName: 'ion-wrench',
-                    needsProject: true,
-                    private: true,
-                },
-                {
-                    linkTo: '/analysis-framework/',
-                    name: pageTitles.analysisFramework,
-                    iconName: 'ion-android-apps',
-                    private: true,
-                },
-                {
-                    linkTo: '/category-editor/',
-                    name: pageTitles.categoryEditor,
-                    iconName: 'ion-document-text',
-                    private: true,
-                },
-                {
-                    linkTo: '/admin/',
-                    name: pageTitles.adminPanel,
-                    iconName: 'ion-locked',
-                    private: true,
-                },
-            ],
-        },
-    ]
-    calcNavbarKey = item => item.name
-
-    calcDropdownGroupKey = group => group.key
-
-    calcDropdownItemKey = item => item.name
-
-    renderNavbarItem = (key, item) => {
-        const {
-            navbarActiveLink,
-            navbarValidLinks,
-            userProjects,
-            activeUser,
-        } = this.props;
-        if (navbarValidLinks.indexOf(item.name) <= -1) {
-            return null;
+    handleProjectChange = (key) => {
+        if (isTruthy(key)) {
+            this.props.setActiveProject({ activeProject: key });
         }
-        if (item.needsProject && userProjects.length <= 0) {
-            return null;
-        }
-        if (item.private && !activeUser.userId) {
-            console.warn('here');
-            return null;
-        }
-
-        return (
-            <Link
-                className={navbarActiveLink === item.name ? 'menu-item active' : 'menu-item'}
-                key={key}
-                to={item.linkTo}
-            >
-                {item.name}
-            </Link>
-        );
     }
 
-    renderDropdownGroup = (key, group) => (
-        <DropdownGroup key={key} >
-            {
-                group.label &&
-                <DropdownGroupTitle title={group.label} />
-            }
-            <List
-                data={group.items}
-                keyExtractor={this.calcDropdownItemKey}
-                modifier={this.renderDropdownItem}
-            />
-        </DropdownGroup>
-    )
+    selectProjectKey = (option = {}) => (option.id)
 
-    renderDropdownItem = (key, item) => {
-        const {
-            navbarValidLinks,
-            userProjects,
-            activeUser,
-        } = this.props;
-        if (navbarValidLinks.indexOf(item.name) === -1) {
-            return null;
-        }
-        if (item.needsProject && userProjects.length <= 0) {
-            return null;
-        }
-        if (item.private && !activeUser.userId) {
-            console.warn('here');
-            return null;
-        }
-
-        return (
-            <LinkOutsideRouter
-                key={key}
-                className={styles['dropdown-item']}
-                to={item.linkTo}
-            >
-                {
-                    item.iconName &&
-                    <span
-                        className={`${item.iconName} ${styles.icon}`}
-                    />
-                }
-                {
-                    (!item.iconName) &&
-                    <span className={styles.icon} />
-                }
-                {item.name}
-            </LinkOutsideRouter>
-        );
-    }
+    selectProjectLabel = (option = {}) => (option.title)
 
     render() {
-        console.log('Rendering Navbar');
         const {
             activeProject,
+            activeCountry,
             activeUser,
-            userInformation,
-            navbarVisible,
             userProjects,
+            userInformation,
         } = this.props;
-        const {
-            navbarItems,
-            dropdownItems,
-        } = this.state;
 
-        if (!navbarVisible) {
-            return null;
-        }
+        const userName = userInformation.displayName || activeUser.displayName || 'Anon';
 
         return (
-            <div styleName="navbar">
+            <nav
+                styleName="navbar"
+            >
                 <Link
-                    to="/"
+                    to={reverseRoute(pathNames.homeScreen, {})}
                     styleName="brand"
                 >
                     <img
@@ -346,53 +265,62 @@ export default class Navbar extends React.PureComponent {
                     />
                     <span styleName="title">Deep</span>
                 </Link>
-                {
-                    userProjects.length > 0 && activeUser.userId &&
+
+                <Cloak
+                    requireLogin
+                    requireProject
+                >
                     <SelectInput
                         clearable={false}
-                        keySelector={this.labelSelectorForSelectInput}
-                        labelSelector={this.keySelectorForSelectInput}
-                        onChange={this.onSelectChangeHandler}
-                        options={this.props.userProjects}
+                        keySelector={this.selectProjectKey}
+                        labelSelector={this.selectProjectLabel}
+                        onChange={this.handleProjectChange}
+                        options={userProjects}
                         placeholder="Select Event"
-                        showLabel={false}
                         showHintAndError={false}
+                        showLabel={false}
                         styleName="project-select-input"
                         value={activeProject}
                     />
-                }
-                <ListView
-                    data={navbarItems}
-                    styleName="menu-items"
-                    keyExtractor={this.calcNavbarKey}
-                    modifier={this.renderNavbarItem}
+                </Cloak>
+
+                <NavMenu
+                    links={this.getValidNavLinks()}
+                    styleName="main-menu"
+                    projectId={activeProject}
+                    countryId={activeCountry}
                 />
+
                 <DropdownMenu
-                    styleName="dropdown-menu"
-                    className="dropdown-title"
-                    iconLeft="ion-android-person"
-                    title={userInformation.displayName || activeUser.displayName || 'Anon'}
+                    styleName="user-menu"
+                    iconName={iconNames.person}
+                    title={userName}
                 >
-                    <List
-                        data={dropdownItems}
-                        keyExtractor={this.calcDropdownGroupKey}
-                        modifier={this.renderDropdownGroup}
-                    />
-                    {
-                        activeUser.userId &&
-                        <button
-                            styleName="dropdown-item"
-                            onClick={this.handleLogoutButtonClick}
-                        >
-                            <span
-                                className="ion-log-out"
-                                styleName="icon"
-                            />
-                            Logout
-                        </button>
-                    }
+                    <DropdownGroup>
+                        <List
+                            data={this.getValidDropLinks()}
+                            keyExtractor={this.getDropItemKey}
+                            modifier={this.getDropItem}
+                        />
+                    </DropdownGroup>
+                    <Cloak
+                        requireLogin
+                    >
+                        <DropdownGroup>
+                            <button
+                                styleName="dropdown-item"
+                                onClick={this.handleLogoutButtonClick}
+                            >
+                                <span
+                                    className="ion-log-out"
+                                    styleName="icon"
+                                />
+                                Logout
+                            </button>
+                        </DropdownGroup>
+                    </Cloak>
                 </DropdownMenu>
-            </div>
+            </nav>
         );
     }
 }

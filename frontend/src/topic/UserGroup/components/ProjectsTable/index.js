@@ -17,10 +17,12 @@ import {
     PrimaryButton,
     TransparentButton,
 } from '../../../../public/components/Action';
-import {
-    UserProjectAdd,
-} from '../../../UserProfile/components';
+import { reverseRoute } from '../../../../public/utils/common';
+import { RestBuilder } from '../../../../public/utils/rest';
 
+import {
+    pathNames,
+} from '../../../../common/constants';
 import {
     userGroupProjectSelector,
     tokenSelector,
@@ -35,10 +37,10 @@ import {
     createUrlForProject,
 } from '../../../../common/rest';
 
-import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import DeletePrompt from '../../../../common/components/DeletePrompt';
 
+import { UserProjectAdd } from '../../../UserProfile/components';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -156,7 +158,7 @@ export default class ProjectsTable extends React.PureComponent {
                             className="forward-btn"
                             title="View Project"
                             key={row.id}
-                            to={`/${row.id}/projectpanel/`}
+                            to={reverseRoute(pathNames.projects, { projectId: row.id })}
                         >
                             <span className="ion-android-open" />
                         </Link>

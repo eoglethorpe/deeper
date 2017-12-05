@@ -20,9 +20,13 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../public/components/View';
+import { reverseRoute } from '../../../public/utils/common';
 
 import browserHistory from '../../../common/browserHistory';
-import { pageTitles } from '../../../common/utils/labels';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
     createParamsForUser,
@@ -33,8 +37,6 @@ import {
 
     activeCountrySelector,
     countriesListSelector,
-
-    setNavbarStateAction,
 
     setActiveCountryAction,
     setRegionsAction,
@@ -55,7 +57,6 @@ const propTypes = {
     }),
     setRegions: PropTypes.func.isRequired,
     setActiveCountry: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -81,7 +82,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setRegions: params => dispatch(setRegionsAction(params)),
     setActiveCountry: params => dispatch(setActiveCountryAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -112,24 +112,6 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     componentWillMount() {
-        // Set navbar state
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: undefined,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.projectPanel,
-                pageTitles.countryPanel,
-            ],
-        });
-
         const {
             countries,
             activeCountry,
@@ -144,14 +126,18 @@ export default class CountryPanel extends React.PureComponent {
             setActiveCountry({ activeCountry: +countryId });
         } else if (activeCountry) {
             console.log('Redirecting to currently active country');
-            browserHistory.push(`/countrypanel/${activeCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: activeCountry }),
+            );
             // NOTE: this breaks here
         } else if (countries.length > 0) {
             console.log('Setting first country as active');
             // dont do this now
             const newActiveCountry = countries[0].id;
             setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.push(`/countrypanel/${newActiveCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
+            );
         }
 
         this.countriesRequest.start();
@@ -189,13 +175,17 @@ export default class CountryPanel extends React.PureComponent {
             setActiveCountry({ activeCountry: +countryId });
         } else if (activeCountry) {
             console.log('Redirecting to currently active country');
-            browserHistory.push(`/countrypanel/${activeCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: activeCountry }),
+            );
             // NOTE: this breaks here
         } else if (countries.length > 0) {
             console.log('Setting first country as active');
             const newActiveCountry = countries[0].id;
             setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.push(`/countrypanel/${newActiveCountry}/`);
+            browserHistory.replace(
+                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
+            );
         }
     }
 
@@ -285,7 +275,7 @@ export default class CountryPanel extends React.PureComponent {
             >
                 <Link
                     className="link"
-                    to={`/countrypanel/${country.id}/`}
+                    to={reverseRoute(pathNames.countries, { countryId: country.id })}
                 >
                     {country.title}
                 </Link>

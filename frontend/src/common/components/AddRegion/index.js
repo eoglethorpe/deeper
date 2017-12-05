@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import {
     Form,
@@ -17,9 +18,12 @@ import {
     PrimaryButton,
 } from '../../../public/components/Action';
 
-import browserHistory from '../../browserHistory';
 import { RestBuilder } from '../../../public/utils/rest';
-import schema from '../../schema';
+
+
+import { pathNames } from '../../../common/constants';
+import { reverseRoute } from '../../../public/utils/common';
+
 import {
     createParamsForRegionCreate,
     urlForRegionCreate,
@@ -30,6 +34,7 @@ import {
     addNewRegionAction,
 } from '../../redux';
 
+import schema from '../../schema';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -65,6 +70,8 @@ export default class AddRegion extends React.PureComponent {
             formValues: {},
             pending: false,
             stale: false,
+
+            redirectTo: undefined,
         };
 
         this.elements = [
@@ -130,7 +137,11 @@ export default class AddRegion extends React.PureComponent {
                             regionDetail: response,
                         });
                         this.props.onModalClose();
-                        browserHistory.push(`/countrypanel/${response.id}`);
+                        this.setState({
+                            redirectTo: reverseRoute(
+                                pathNames.countries, { countryId: response.id },
+                            ),
+                        });
                     }
                 } catch (er) {
                     console.error(er);
@@ -198,6 +209,15 @@ export default class AddRegion extends React.PureComponent {
             pending,
             stale,
         } = this.state;
+
+        if (this.state.redirectTo) {
+            return (
+                <Redirect
+                    to={this.state.redirectTo}
+                    push
+                />
+            );
+        }
 
         return (
             <Form

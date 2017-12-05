@@ -2,8 +2,11 @@ import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {
+    Link,
+    Redirect,
+} from 'react-router-dom';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
@@ -17,7 +20,11 @@ import {
     TransparentAccentButton,
     TransparentButton,
 } from '../../../../public/components/Action';
-import { randomString } from '../../../../public/utils/common';
+
+import {
+    reverseRoute,
+    randomString,
+} from '../../../../public/utils/common';
 
 import {
     createParamsForUser,
@@ -30,8 +37,6 @@ import {
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
-
-    setNavbarStateAction,
 
     setLeadsAction,
 
@@ -47,9 +52,12 @@ import {
     addAddLeadViewLeadsAction,
 } from '../../../../common/redux';
 
-import browserHistory from '../../../../common/browserHistory';
 import schema from '../../../../common/schema';
-import { pageTitles } from '../../../../common/utils/labels';
+
+import {
+    pathNames,
+    pageTitles,
+} from '../../../../common/constants/';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
 import LeadColumnHeader from './components/LeadColumnHeader';
@@ -60,7 +68,6 @@ const propTypes = {
     currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
     setLeads: PropTypes.func.isRequired,
-    setNavbarState: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     totalLeadsCount: PropTypes.number,
     filters: PropTypes.object.isRequired, // eslint-disable-line
@@ -91,7 +98,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
 
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
@@ -124,7 +130,7 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <Link
                         key={row.createdBy}
-                        to={`/users/${row.createdBy}/`}
+                        to={reverseRoute(pathNames.userProfile, { userId: row.createdBy })}
                     >
                         {row.createdByName}
                     </Link>
@@ -201,29 +207,14 @@ export default class Leads extends React.PureComponent {
             },
         ];
 
-        this.state = { loadingLeads: false };
+        this.state = {
+            loadingLeads: false,
+            redirectTo: undefined,
+        };
     }
 
     componentWillMount() {
         console.log('Mounting Leads');
-
-        this.props.setNavbarState({
-            visible: true,
-            activeLink: pageTitles.leads,
-            validLinks: [
-                pageTitles.leads,
-                pageTitles.entries,
-                pageTitles.ary,
-                pageTitles.weeklySnapshot,
-                pageTitles.export,
-
-                pageTitles.userProfile,
-                pageTitles.adminPanel,
-                pageTitles.countryPanel,
-                pageTitles.categoryEditor,
-                pageTitles.projectPanel,
-            ],
-        });
 
         const {
             activeProject,
@@ -355,11 +346,20 @@ export default class Leads extends React.PureComponent {
     // UI
 
     handleAddLeadClick = () => {
-        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+        const params = {
+            projectId: this.props.activeProject,
+        };
+
+        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
     }
 
     handleAddEntryClick = (row) => {
-        browserHistory.push(`/${this.props.activeProject}/entries/${row.id}/`);
+        const params = {
+            projectId: this.props.activeProject,
+            leadId: row.id,
+        };
+
+        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
     }
 
     handleEditLeadClick = (row) => {
@@ -393,7 +393,8 @@ export default class Leads extends React.PureComponent {
             stale: true,
         });
         this.props.addLeads(newLeads);
-        browserHistory.push(`/${this.props.activeProject}/leads/new/`);
+
+        this.handleAddLeadClick();
     }
 
     handleSearchSimilarLead = (row) => {
@@ -469,6 +470,15 @@ export default class Leads extends React.PureComponent {
         } = this.state;
 
         const projectName = currentUserActiveProject.title;
+
+        if (this.state.redirectTo) {
+            return (
+                <Redirect
+                    to={this.state.redirectTo}
+                    push
+                />
+            );
+        }
 
         return (
             <div styleName="leads">

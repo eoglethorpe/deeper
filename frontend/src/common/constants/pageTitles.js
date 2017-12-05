@@ -6,9 +6,9 @@ const pageTitles = {
     dashboard: 'Dashboard',
 
     leads: 'Leads',
-    addLeads: 'Add Lead',
+    addLeads: 'Add Leads',
     entries: 'Entries',
-    ary: 'Ary',
+    ary: 'Assessment Registry',
     export: 'Export',
 
     editLeads: 'Edit Leads',
@@ -19,8 +19,8 @@ const pageTitles = {
     userProfile: 'User Profile',
     userGroup: 'User Group',
     adminPanel: 'Admin Panel',
-    countryPanel: 'Country Panel',
-    projectPanel: 'Project Panel',
+    countries: 'Country Panel',
+    projects: 'Project Panel',
 
     analysisFramework: 'Analysis Framework',
 

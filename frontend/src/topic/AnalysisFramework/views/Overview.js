@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout-resize-prevent-collision';
 import update from 'immutability-helper';
 
 import { connect } from 'react-redux';
@@ -294,6 +294,7 @@ export default class Overview extends React.PureComponent {
                         width={width || 0}
                         rowHeight={rowHeight}
                         compactType={null}
+                        preventCollision
                         onLayoutChange={this.handleLayoutChange}
                         draggableHandle=".drag-handle"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}

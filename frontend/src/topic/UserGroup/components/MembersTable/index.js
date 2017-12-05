@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+
+import { RestBuilder } from '../../../../public/utils/rest';
 import {
     Table,
     Modal,
@@ -21,6 +23,11 @@ import {
     TransparentButton,
     TransparentDangerButton,
 } from '../../../../public/components/Action';
+import { reverseRoute } from '../../../../public/utils/common';
+
+import {
+    pathNames,
+} from '../../../../common/constants';
 import {
     tokenSelector,
     usersInformationListSelector,
@@ -35,8 +42,6 @@ import {
     urlForUserMembership,
     createParamsForUserMembershipRoleChange,
 } from '../../../../common/rest';
-
-import { RestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import DeletePrompt from '../../../../common/components/DeletePrompt';
 
@@ -135,7 +140,7 @@ export default class MembersTable extends React.PureComponent {
                                     title="View Member"
                                     className="forward-btn"
                                     key={row.member}
-                                    to={`/users/${row.member}/`}
+                                    to={reverseRoute(pathNames.userProfile, { userId: row.member })}
                                 >
                                     <span className="ion-android-open" />
                                 </Link>

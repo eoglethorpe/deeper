@@ -4,10 +4,11 @@
 
 import CSSModules from 'react-css-modules';
 import Helmet from 'react-helmet';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import {
+    Redirect,
+    Link,
+} from 'react-router-dom';
 
 import {
     Form,
@@ -19,30 +20,26 @@ import {
 } from '../../../../public/components/Input';
 import { PrimaryButton } from '../../../../public/components/Action';
 import { RestBuilder } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
 
-import browserHistory from '../../../../common/browserHistory';
+import {
+    pageTitles,
+    pathNames,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
-import { pageTitles } from '../../../../common/utils/labels';
 import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
-import { setNavbarStateAction } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    setNavbarState: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapDispatchToProps = dispatch => ({
-    setNavbarState: params => dispatch(setNavbarStateAction(params)),
-});
-
-@connect(null, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -56,6 +53,8 @@ export default class Login extends React.PureComponent {
             formValues: {},
             pending: false,
             stale: false,
+
+            redirectTo: undefined,
         };
 
         this.elements = ['firstname', 'lastname', 'organization', 'email', 'password'];
@@ -78,14 +77,6 @@ export default class Login extends React.PureComponent {
                 lengthGreaterThanCondition(4),
             ],
         };
-    }
-
-    componentWillMount() {
-        this.props.setNavbarState({
-            visible: false,
-            activeLink: undefined,
-            validLinks: undefined,
-        });
     }
 
     componentWillUnmount() {
@@ -156,7 +147,9 @@ export default class Login extends React.PureComponent {
                 try {
                     schema.validate(response, 'userCreateResponse');
                     // go to login
-                    browserHistory.push('/login/');
+                    this.setState({
+                        redirectTo: reverseRoute(pathNames.login, {}),
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -193,6 +186,10 @@ export default class Login extends React.PureComponent {
             pending,
             stale,
         } = this.state;
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />;
+        }
 
         return (
             <div styleName="register">
@@ -265,7 +262,7 @@ export default class Login extends React.PureComponent {
                         Already have an account yet?
                     </p>
                     <Link
-                        to="/login/"
+                        to={reverseRoute(pathNames.login, {})}
                         styleName="login-link"
                     >
                         Login
