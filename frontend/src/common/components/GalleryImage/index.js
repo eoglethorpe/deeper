@@ -24,12 +24,13 @@ import {
 
 const propTypes = {
     className: PropTypes.string,
-    galleryId: PropTypes.number.isRequired,
+    galleryId: PropTypes.number,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
     className: '',
+    galleryId: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -48,27 +49,40 @@ export default class GalleryImage extends React.PureComponent {
 
         this.state = {
             imageUrl: undefined,
-            pending: true,
+            pending: !!props.galleryId,
         };
 
-        this.galleryFileRequest = this.createRequestForGalleryFile(props.galleryId);
+        if (props.galleryId) {
+            this.galleryFileRequest = this.createRequestForGalleryFile(props.galleryId);
+        }
     }
 
     componentWillMount() {
-        this.galleryFileRequest.start();
+        if (this.galleryFileRequest) {
+            this.galleryFileRequest.start();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        this.galleryFileRequest.stop();
-        this.galleryFileRequest = this.createRequestForGalleryFile(nextProps.galleryId);
-        this.galleryFileRequest.start();
+        if (nextProps.galleryId) {
+            if (this.galleryFileRequest) {
+                this.galleryFileRequest.stop();
+            }
+
+            this.galleryFileRequest = this.createRequestForGalleryFile(nextProps.galleryId);
+            this.galleryFileRequest.start();
+        }
     }
 
     componentWillUnmount() {
-        this.galleryFileRequest.stop();
+        if (this.galleryFilterRequest) {
+            this.galleryFileRequest.stop();
+        }
     }
 
     createRequestForGalleryFile = (galleryId) => {
+        console.warn(`creating request for ${galleryId}`);
+
         const galleryFileRequest = new RestBuilder()
             .url(createUrlForGalleryFile(galleryId))
             .params(() => {
@@ -79,6 +93,13 @@ export default class GalleryImage extends React.PureComponent {
                 return createHeaderForGalleryFile(token);
             })
             .preLoad(() => {
+                console.warn('pre load');
+                this.setState({
+                    pending: true,
+                });
+            })
+            .postLoad(() => {
+                console.warn('post load');
                 this.setState({
                     pending: false,
                 });
@@ -110,6 +131,7 @@ export default class GalleryImage extends React.PureComponent {
                 });
             })
             .retryTime(1000)
+            .maxRetryAttempts(10)
             .build();
 
         return galleryFileRequest;
@@ -120,6 +142,8 @@ export default class GalleryImage extends React.PureComponent {
             pending,
             imageUrl,
         } = this.state;
+
+        console.log(this.props, pending, imageUrl);
 
         const {
             className,
