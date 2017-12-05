@@ -81,8 +81,6 @@ export default class GalleryImage extends React.PureComponent {
     }
 
     createRequestForGalleryFile = (galleryId) => {
-        console.warn(`creating request for ${galleryId}`);
-
         const galleryFileRequest = new RestBuilder()
             .url(createUrlForGalleryFile(galleryId))
             .params(() => {
@@ -93,13 +91,11 @@ export default class GalleryImage extends React.PureComponent {
                 return createHeaderForGalleryFile(token);
             })
             .preLoad(() => {
-                console.warn('pre load');
                 this.setState({
                     pending: true,
                 });
             })
             .postLoad(() => {
-                console.warn('post load');
                 this.setState({
                     pending: false,
                 });
@@ -142,8 +138,6 @@ export default class GalleryImage extends React.PureComponent {
             pending,
             imageUrl,
         } = this.state;
-
-        console.log(this.props, pending, imageUrl);
 
         const {
             className,
