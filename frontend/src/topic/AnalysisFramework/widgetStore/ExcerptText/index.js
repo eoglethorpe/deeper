@@ -14,7 +14,7 @@ import {
 
 const excerptTextWidget = {
     id: 'excerptTextWidget',
-    title: 'Excerpt',
+    title: 'Excerpt Text',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
