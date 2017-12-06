@@ -479,6 +479,7 @@ export default class LeadAdd extends React.PureComponent {
                 lead={lead}
                 isFormDisabled={isFormDisabled}
                 isSaveDisabled={isSaveDisabled}
+                isBulkActionDisabled={this.state.pendingSubmitAll}
                 leadOptions={leadOptions}
                 onFormSubmitFailure={this.handleFormSubmitFailure}
                 onFormSubmitSuccess={this.handleFormSubmitSuccess}
@@ -510,7 +511,6 @@ export default class LeadAdd extends React.PureComponent {
 
         // get choice for activeLead
         const { isSaveDisabled, isRemoveDisabled } = this.choices[activeLeadId] || {};
-
         // identify if save is enabled for some leads
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),

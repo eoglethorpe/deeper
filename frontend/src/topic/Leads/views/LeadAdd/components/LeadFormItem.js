@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 
 import {
     addLeadViewLeadChangeAction,
+    addLeadViewCopyAllBelowAction,
+    addLeadViewCopyAllAction,
 } from '../../../../../common/redux';
 
 import LeadForm from './LeadForm';
@@ -23,10 +25,14 @@ const propTypes = {
 
     onFormSubmitFailure: PropTypes.func.isRequired,
     onFormSubmitSuccess: PropTypes.func.isRequired,
+
     addLeadViewLeadChange: PropTypes.func.isRequired,
+    addLeadViewCopyAllBelow: PropTypes.func.isRequired,
+    addLeadViewCopyAll: PropTypes.func.isRequired,
 
     isFormDisabled: PropTypes.bool.isRequired,
     isSaveDisabled: PropTypes.bool.isRequired,
+    isBulkActionDisabled: PropTypes.bool.isRequired,
 };
 const defaultProps = {
     leadOptions: {},
@@ -34,6 +40,8 @@ const defaultProps = {
 
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
+    addLeadViewCopyAllBelow: params => dispatch(addLeadViewCopyAllBelowAction(params)),
+    addLeadViewCopyAll: params => dispatch(addLeadViewCopyAllAction(params)),
 });
 
 @connect(undefined, mapDispatchToProps, null, { withRef: true })
@@ -96,12 +104,23 @@ export default class LeadFormItem extends React.PureComponent {
         // do nothing, cleanup not required
     }
 
+    handleApplyAllClick = (attrName) => {
+        const { leadKey } = this.props;
+        this.props.addLeadViewCopyAll({ leadId: leadKey, attrName });
+    }
+
+    handleApplyAllBelowClick = (attrName) => {
+        const { leadKey } = this.props;
+        this.props.addLeadViewCopyAllBelow({ leadId: leadKey, attrName });
+    }
+
     render() {
         const {
             lead,
             leadOptions,
             active,
             isFormDisabled,
+            isBulkActionDisabled,
         } = this.props;
 
         return (
@@ -115,6 +134,9 @@ export default class LeadFormItem extends React.PureComponent {
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
                     isFormDisabled={isFormDisabled}
+                    isBulkActionDisabled={isBulkActionDisabled}
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 />
                 <div className={styles['lead-preview']} >
                     LEAD PREVIEW
