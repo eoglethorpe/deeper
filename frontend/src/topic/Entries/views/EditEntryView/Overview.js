@@ -27,34 +27,26 @@ import widgetStore from '../../../AnalysisFramework/widgetStore';
 import {
     addEntryAction,
     removeEntryAction,
-    entriesForLeadSelector,
-
     setActiveEntryAction,
-    selectedEntryIdSelector,
 } from '../../../../common/redux';
 
 const propTypes = {
-    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
-    addEntry: PropTypes.func.isRequired,
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
-    entries: PropTypes.array.isRequired, // eslint-disable-line
-    selectedEntryId: PropTypes.string,
+    addEntry: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
-    // eslint-disable-next-line
     removeEntry: PropTypes.func.isRequired,
+
+    selectedEntryId: PropTypes.string,
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     selectedEntryId: undefined,
 };
-
-const mapStateToProps = (state, props) => ({
-    entries: entriesForLeadSelector(state, props),
-    selectedEntryId: selectedEntryIdSelector(state, props),
-});
 
 const mapDispatchToProps = dispatch => ({
     addEntry: params => dispatch(addEntryAction(params)),
@@ -62,7 +54,7 @@ const mapDispatchToProps = dispatch => ({
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
@@ -130,9 +122,14 @@ export default class Overview extends React.PureComponent {
                 title: widget.title,
                 component: widget.analysisFramework.overviewComponent,
             }));
-        this.items = analysisFramework.widgets.filter(
-            w => this.widgets.find(w1 => w1.id === w.widgetId),
-        );
+
+        if (analysisFramework.widgets) {
+            this.items = analysisFramework.widgets.filter(
+                w => this.widgets.find(w1 => w1.id === w.widgetId),
+            );
+        } else {
+            this.items = [];
+        }
     }
 
     handleGotoListButtonClick = () => {
@@ -159,8 +156,10 @@ export default class Overview extends React.PureComponent {
     }
 
     handleEntrySelectChange = (value) => {
-        console.log(value);
-        this.props.setActiveEntry(value);
+        this.props.setActiveEntry({
+            leadId: this.props.leadId,
+            entryId: value,
+        });
     }
 
     render() {

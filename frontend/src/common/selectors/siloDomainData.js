@@ -4,7 +4,6 @@ import {
     countriesListSelector,
     currentUserProjectsSelector,
     leadFilterOptionsSelector,
-    leadIdFromProps,
     projectsSelector,
     projectsOptionsSelector,
     analysisFrameworkIdFromProps,
@@ -14,6 +13,10 @@ import {
 // NOTE: Use these to make sure reference don't change
 const emptyList = [];
 const emptyObject = {};
+
+export const leadIdFromRoute = (state, { match }) => match.params.leadId;
+
+// LEAD ADD
 
 export const addLeadViewFiltersSelector = ({ siloDomainData }) => (
     siloDomainData.addLeadView.filters || emptyObject
@@ -30,13 +33,6 @@ export const addLeadViewActiveLeadSelector = createSelector(
     addLeadViewLeadsSelector,
     (leadId, leads) => leads.find(lead => lead.data.id === leadId),
 );
-
-/*
-export const addLeadViewLeadsFilteredSelector = createSelector(
-    addLeadViewLeadsSelector,
-    leads => leads.filter(lead => lead.isFiltrate),
-);
-*/
 
 export const addLeadViewCanNextSelector = createSelector(
     addLeadViewLeadsSelector,
@@ -59,6 +55,8 @@ export const addLeadViewCanPrevSelector = createSelector(
         return index - 1 >= 0;
     },
 );
+
+// COMMON
 
 export const activeProjectSelector = ({ siloDomainData }) => (
     siloDomainData.activeProject
@@ -108,6 +106,7 @@ export const currentUserActiveProjectSelector = createSelector(
     ),
 );
 
+// LEADS
 
 export const leadPageSelector = ({ siloDomainData }) => siloDomainData.leadPage;
 
@@ -144,32 +143,41 @@ export const totalLeadsCountForProjectSelector = createSelector(
     leadPage => leadPage.totalLeadsCount || 0,
 );
 
-
-export const editEntryViewLeadSelector = ({ siloDomainData }) => (
-    siloDomainData.editEntryView.lead
+// EDIT_ENTRY
+export const editEntryViewSelector = ({ siloDomainData }) => (
+    siloDomainData.editEntryView || emptyObject
 );
-
+export const editEntryViewForLeadIdSelector = createSelector(
+    leadIdFromRoute,
+    editEntryViewSelector,
+    (leadId, editEntryView) => editEntryView[leadId] || emptyObject,
+);
 export const editEntryViewCurrentLeadSelector = createSelector(
-    editEntryViewLeadSelector,
-    leadIdFromProps,
-    (lead, leadId) => (
-        (lead.id === +leadId) ? lead : undefined
-    ),
+    editEntryViewForLeadIdSelector,
+    editEntryView => editEntryView.lead || emptyObject,
 );
-
+export const editEntryViewSelectedEntryIdSelector = createSelector(
+    editEntryViewForLeadIdSelector,
+    editEntryView => editEntryView.selectedEntryId,
+);
+export const editEntryViewEntriesSelector = createSelector(
+    editEntryViewForLeadIdSelector,
+    editEntryView => editEntryView.entries || emptyList,
+);
 export const editEntryViewCurrentProjectSelector = createSelector(
     editEntryViewCurrentLeadSelector,
     projectsSelector,
-    (lead, projects) => lead && projects[lead.project],
+    (lead, projects) => (lead.project && projects[lead.project]) || emptyObject,
 );
-
 export const editEntryViewCurrentAnalysisFrameworkSelector = createSelector(
     editEntryViewCurrentProjectSelector,
     analysisFrameworksSelector,
     (project, analysisFrameworks) => (
-        project && analysisFrameworks[project.analysisFramework]
+        (project.analysisFramework && analysisFrameworks[project.analysisFramework]) || emptyObject
     ),
 );
+
+// ANALYSIS_FRAMEWORK
 
 export const afViewAnalysisFrameworkSelector = ({ siloDomainData }) => (
     siloDomainData.analysisFrameworkView.analysisFramework

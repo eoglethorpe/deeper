@@ -23,7 +23,3 @@ export const SET_REGIONS = 'domain-data/SET_REGIONS';
 export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
 
 export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
-
-export const ADD_ENTRY = 'domain-data/ADD_ENTRY';
-export const REMOVE_ENTRY = 'domain-data/REMOVE_ENTRY';
-export const SET_ACTIVE_ENTRY = 'domain-data/SET_ACTIVE_ENTRY';

@@ -3,7 +3,6 @@ import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactGridLayout from 'react-grid-layout';
-import { connect } from 'react-redux';
 
 import { pageTitles } from '../../../../common/constants';
 
@@ -20,33 +19,24 @@ import {
     Responsive,
 } from '../../../../public/components/General';
 
-import {
-    entriesForLeadSelector,
-} from '../../../../common/redux';
-
 
 const propTypes = {
-    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
     boundingClientRect: PropTypes.shape({
         width: PropTypes.number,
         height: PropTypes.number,
     }).isRequired,
-    // leadId: PropTypes.oneOfType([
-    //     PropTypes.number,
-    //     PropTypes.string,
-    // ]).isRequired,
-    entries: PropTypes.array.isRequired, // eslint-disable-line
+
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+};
+const defaultProps = {
 };
 
-const mapStateToProps = (state, props) => ({
-    entries: entriesForLeadSelector(state, props),
-});
-
 @Responsive
-@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);

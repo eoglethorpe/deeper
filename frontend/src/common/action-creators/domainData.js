@@ -26,9 +26,6 @@ import {
 
     SET_ANALYSIS_FRAMEWORK,
 
-    ADD_ENTRY,
-    REMOVE_ENTRY,
-    SET_ACTIVE_ENTRY,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -140,23 +137,6 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
 export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
     type: SET_ANALYSIS_FRAMEWORK,
     analysisFramework,
-});
-
-export const addEntryAction = ({ leadId, entry }) => ({
-    type: ADD_ENTRY,
-    leadId,
-    entry,
-});
-
-export const removeEntryAction = ({ leadId, entryId }) => ({
-    type: REMOVE_ENTRY,
-    leadId,
-    entryId,
-});
-
-export const setActiveEntryAction = entryId => ({
-    type: SET_ACTIVE_ENTRY,
-    entryId,
 });
 
 export const dummyAction = () => ({

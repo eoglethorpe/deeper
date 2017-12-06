@@ -18,15 +18,21 @@ import {
 } from '../../../../public/components/View';
 
 import {
-    leadIdFromProps,
+    leadIdFromRoute,
+    /*
     editEntryViewCurrentLeadSelector,
     editEntryViewCurrentProjectSelector,
+    */
     editEntryViewCurrentAnalysisFrameworkSelector,
+    editEntryViewEntriesSelector,
+    editEntryViewSelectedEntryIdSelector,
+
     tokenSelector,
 
     setAnalysisFrameworkAction,
     setEditEntryViewLeadAction,
     setProjectAction,
+
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -40,28 +46,43 @@ import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
-    analysisFramework: PropTypes.object, // eslint-disable-line
-    lead: PropTypes.object, // eslint-disable-line
+    analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     leadId: PropTypes.string.isRequired,
-    project: PropTypes.object, // eslint-disable-line
-    token: PropTypes.object.isRequired, // eslint-disable-line
+    /*
+    lead: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    */
+    token: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
+
+    entries: PropTypes.array.isRequired,
+
+    selectedEntryId: PropTypes.string,
 };
 
 const defaultProps = {
+    /*
     lead: undefined,
     project: undefined,
+    */
     analysisFramework: undefined,
+    selectedEntryId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
-    lead: editEntryViewCurrentLeadSelector(state, props),
-    leadId: leadIdFromProps(state, props),
-    project: editEntryViewCurrentProjectSelector(state, props),
+    leadId: leadIdFromRoute(state, props),
     token: tokenSelector(state),
+
+    /*
+    lead: editEntryViewCurrentLeadSelector(state, props),
+    project: editEntryViewCurrentProjectSelector(state, props),
+    */
+
+    entries: editEntryViewEntriesSelector(state, props),
+    selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
+    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -182,6 +203,8 @@ export default class EditEntryView extends React.PureComponent {
         const {
             analysisFramework,
             leadId,
+            entries,
+            selectedEntryId,
         } = this.props;
 
         if (!analysisFramework) {
@@ -216,6 +239,8 @@ export default class EditEntryView extends React.PureComponent {
                             <Overview
                                 {...props}
                                 leadId={leadId}
+                                selectedEntryId={selectedEntryId}
+                                entries={entries}
                                 analysisFramework={analysisFramework}
                             />
                         )}
@@ -226,6 +251,7 @@ export default class EditEntryView extends React.PureComponent {
                             <List
                                 {...props}
                                 leadId={leadId}
+                                entries={entries}
                                 analysisFramework={analysisFramework}
                             />
                         )}

@@ -27,6 +27,10 @@ import {
     AF_VIEW_ADD_WIDGET,
     AF_VIEW_REMOVE_WIDGET,
     AF_VIEW_UPDATE_WIDGET,
+
+    ADD_ENTRY,
+    REMOVE_ENTRY,
+    SET_ACTIVE_ENTRY,
 } from '../action-types/siloDomainData';
 
 
@@ -154,4 +158,22 @@ export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
     type: AF_VIEW_UPDATE_WIDGET,
     analysisFrameworkId,
     widget,
+});
+
+export const addEntryAction = ({ leadId, entry }) => ({
+    type: ADD_ENTRY,
+    leadId,
+    entry,
+});
+
+export const removeEntryAction = ({ leadId, entryId }) => ({
+    type: REMOVE_ENTRY,
+    leadId,
+    entryId,
+});
+
+export const setActiveEntryAction = ({ leadId, entryId }) => ({
+    type: SET_ACTIVE_ENTRY,
+    leadId,
+    entryId,
 });

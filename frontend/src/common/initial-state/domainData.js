@@ -65,25 +65,12 @@ const initialDomainDataState = {
         },
     },
 
+    /* TODO: remove later
     // index is project id
     // using lead id instead of project id might be more resonable here --fh
     selectedEntryId: undefined,
-    entries: {
-        /*
-        1: [
-            entryGroup1,
-            entryGroup2,
-            {
-                leadName: 'blah blah',
-                entries: [],
-            },
-        ],
-
-        2: {
-
-        },
+    entries: { },
     */
-    },
 
     users: {
         /*

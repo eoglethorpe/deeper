@@ -1,5 +1,5 @@
 const initialSiloDomainData = {
-    activeProject: 1,
+    activeProject: undefined,
     activeCountry: undefined,
 
     addLeadView: {
@@ -9,6 +9,7 @@ const initialSiloDomainData = {
             source: '',
             status: '',
         },
+        activeLeadId: 'lead-1',
         leads: [
             /*
             {
@@ -30,60 +31,37 @@ const initialSiloDomainData = {
                 },
                 uiState: {
                     error: true,
-                    pending: false,
-                    ready: true,
                     stale: false,
                 },
-            },
-            {
-                serverId: undefined,
-                data: {
-                    id: 'lead-2',
-                    type: 'website', // dropbox, file, website, text
-                },
-                form: {
-                    values: {
-                        title: 'Lead #2',
-                        project: 2,
-                        source: 'Internet',
-                    },
-                    errors: [],
-                    fieldErrors: {},
-                },
-                uiState: {
-                    error: false,
-                    pending: false,
-                    ready: true,
-                    stale: false,
-                },
-                isFiltrate: true, // to show or not to show
             },
             */
         ],
-        activeLeadId: 'lead-1',
     },
 
-    // lead page for project i
+    // i specifies project
     leadPage: {
         /*
         1: {
             activeSort: '-created_at',
             activePage: 1,
-            filters: {},
+            filters: {
+            },
             leads: [],
-            totalLeadsCount: {},
+            totalLeadsCount: 123,
         },
         */
     },
 
-    // TODO: leadId
+    // i specifies lead
     editEntryView: {
+        /*
         1: {
-            lead: {},
             leadId: 1,
+            lead: {},
             selectedEntryId: undefined,
             entries: [],
         },
+        */
     },
 
     analysisFrameworkView: {

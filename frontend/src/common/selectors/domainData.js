@@ -11,7 +11,6 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
-export const leadIdFromProps = (state, { match }) => match.params.leadId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
 
@@ -150,6 +149,7 @@ export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
 
+/* TODO: remove later
 export const entriesForLeadSelector = createSelector(
     entriesSelector,
     (state, props) => props.leadId,
@@ -157,3 +157,4 @@ export const entriesForLeadSelector = createSelector(
 );
 
 export const selectedEntryIdSelector = ({ domainData }) => domainData.selectedEntryId;
+*/

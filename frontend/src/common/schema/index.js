@@ -34,6 +34,7 @@ const userDefinedSchemas = [];
             modifiedAt: { type: 'string', required: true }, // date
             modifiedBy: { type: 'uint' },
             modifiedByName: { type: 'string' },
+            versionId: { type: 'uint', required: true },
         },
     };
     userDefinedSchemas.push({ name, schema });

@@ -23,6 +23,10 @@ import {
 
     SET_EDIT_ENTRY_VIEW_LEAD,
 
+    ADD_ENTRY,
+    REMOVE_ENTRY,
+    SET_ACTIVE_ENTRY,
+
     AF_VIEW_SET_ANALYSIS_FRAMEWORK,
     AF_VIEW_ADD_WIDGET,
     AF_VIEW_REMOVE_WIDGET,
@@ -535,6 +539,62 @@ const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
     return state;
 };
 
+const addEntry = (state, action) => {
+    const { entry, leadId } = action;
+
+    const settings = {
+        editEntryView: {
+            [leadId]: { $auto: {
+                leadId: { $set: leadId },
+                selectedEntryId: { $set: entry.id },
+                entries: { $autoArray: {
+                    $unshift: [entry],
+                } },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const setActiveEntry = (state, action) => {
+    const { leadId, entryId } = action;
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                selectedEntryId: { $set: entryId },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
+const removeEntry = (state, action) => {
+    const { entryId, leadId } = action;
+
+    const entries = state.editEntryView[leadId].entries;
+    const entryIndex = entries.findIndex(d => d.id === entryId);
+
+    let newActiveId;
+    if (entryIndex - 1 >= 0) {
+        newActiveId = entries[entryIndex - 1].id;
+    } else if (entryIndex + 1 < entries.length) {
+        newActiveId = entries[entryIndex + 1].id;
+    }
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                selectedEntryId: { $set: newActiveId },
+                entries: {
+                    $splice: [[entryIndex, 1]],
+                },
+            },
+        },
+    };
+
+    return update(state, settings);
+};
+
 const reducers = {
     [SET_USER_PROJECTS]: setUserProjects,
     [SET_ACTIVE_PROJECT]: setActiveProject,
@@ -558,6 +618,10 @@ const reducers = {
     [SET_LEADS]: setLeads,
 
     [SET_EDIT_ENTRY_VIEW_LEAD]: editEntryViewSetLead,
+
+    [ADD_ENTRY]: addEntry,
+    [REMOVE_ENTRY]: removeEntry,
+    [SET_ACTIVE_ENTRY]: setActiveEntry,
 
     [AF_VIEW_SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF_VIEW_ADD_WIDGET]: afViewAddWidget,
