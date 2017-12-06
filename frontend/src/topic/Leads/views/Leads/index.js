@@ -49,7 +49,7 @@ import {
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
 
-    addAddLeadViewLeadsAction,
+    addLeadViewAddLeadsAction,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -103,7 +103,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
-    addLeads: leads => dispatch(addAddLeadViewLeadsAction(leads)),
+    addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
 const MAX_LEADS_PER_REQUEST = 16;

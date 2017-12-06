@@ -19,8 +19,8 @@ import { RestBuilder } from '../../../../../public/utils/rest';
 import {
     tokenSelector,
     activeProjectSelector,
-    setAddLeadViewFiltersAction,
-    unsetAddLeadViewFiltersAction,
+    addLeadViewSetFiltersAction,
+    addLeadViewUnsetFiltersAction,
     addLeadViewFiltersSelector,
     setLeadFilterOptionsAction,
 } from '../../../../../common/redux';
@@ -65,8 +65,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setLeadViewFilters: filters => dispatch(setAddLeadViewFiltersAction(filters)),
-    unsetLeadViewFilters: () => dispatch(unsetAddLeadViewFiltersAction()),
+    setLeadViewFilters: filters => dispatch(addLeadViewSetFiltersAction(filters)),
+    unsetLeadViewFilters: () => dispatch(addLeadViewUnsetFiltersAction()),
     setLeadFilterOptions: params => dispatch(setLeadFilterOptionsAction(params)),
 });
 

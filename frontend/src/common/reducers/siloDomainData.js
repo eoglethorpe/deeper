@@ -1,36 +1,35 @@
 import {
-    SET_LEADS,
+    L__SET_LEADS,
 
     SET_ACTIVE_COUNTRY,
     SET_ACTIVE_PROJECT,
 
-    SET_ADD_LEAD_VIEW_FILTERS,
-    UNSET_ADD_LEAD_VIEW_FILTERS,
-    SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID,
-    ADD_ADD_LEAD_VIEW_LEADS,
-    ADD_LEAD_VIEW_LEAD_CHANGE,
-    ADD_LEAD_VIEW_LEAD_SAVE,
-    ADD_LEAD_VIEW_LEAD_REMOVE,
-    ADD_LEAD_VIEW_LEAD_NEXT,
-    ADD_LEAD_VIEW_LEAD_PREV,
-    ADD_LEAD_VIEW_COPY_ALL,
-    ADD_LEAD_VIEW_COPY_ALL_BELOW,
+    LA__SET_FILTERS,
+    LA__UNSET_FILTERS,
+    LA__SET_ACTIVE_LEAD_ID,
+    LA__ADD_LEADS,
+    LA__LEAD_CHANGE,
+    LA__LEAD_SAVE,
+    LA__LEAD_REMOVE,
+    LA__LEAD_NEXT,
+    LA__LEAD_PREV,
+    LA__COPY_ALL,
+    LA__COPY_ALL_BELOW,
 
-    SET_LEAD_PAGE_FILTER,
-    UNSET_LEAD_PAGE_FILTER,
-    SET_LEAD_PAGE_ACTIVE_PAGE,
-    SET_LEAD_PAGE_ACTIVE_SORT,
+    L__SET_FILTER,
+    L__UNSET_FILTER,
+    L__SET_ACTIVE_PAGE,
+    L__SET_ACTIVE_SORT,
 
-    SET_EDIT_ENTRY_VIEW_LEAD,
+    EE_ADD_ENTRY,
+    EE_REMOVE_ENTRY,
+    EE_SET_ACTIVE_ENTRY,
+    EE_SET_LEAD,
 
-    ADD_ENTRY,
-    REMOVE_ENTRY,
-    SET_ACTIVE_ENTRY,
-
-    AF_VIEW_SET_ANALYSIS_FRAMEWORK,
-    AF_VIEW_ADD_WIDGET,
-    AF_VIEW_REMOVE_WIDGET,
-    AF_VIEW_UPDATE_WIDGET,
+    AF__SET_ANALYSIS_FRAMEWORK,
+    AF__VIEW_ADD_WIDGET,
+    AF__REMOVE_WIDGET,
+    AF__VIEW_UPDATE_WIDGET,
 } from '../action-types/siloDomainData';
 
 import {
@@ -454,16 +453,6 @@ const setLeads = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewSetLead = (state, action) => {
-    const settings = {
-        editEntryView: {
-            lead: {
-                $set: action.lead,
-            },
-        },
-    };
-    return update(state, settings);
-};
 
 const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
     const settings = {
@@ -539,7 +528,23 @@ const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
     return state;
 };
 
-const addEntry = (state, action) => {
+const editEntryViewSetLead = (state, action) => {
+    const { lead } = action;
+    const leadId = lead.id;
+    const settings = {
+        editEntryView: {
+            [leadId]: { $auto: {
+                lead: {
+                    $set: lead,
+                },
+            } },
+        },
+    };
+    // TODO: clear all other leads later
+    return update(state, settings);
+};
+
+const editEntryViewAddEntry = (state, action) => {
     const { entry, leadId } = action;
 
     const settings = {
@@ -556,7 +561,7 @@ const addEntry = (state, action) => {
     return update(state, settings);
 };
 
-const setActiveEntry = (state, action) => {
+const editEntryViewSetActiveEntry = (state, action) => {
     const { leadId, entryId } = action;
     const settings = {
         editEntryView: {
@@ -568,7 +573,7 @@ const setActiveEntry = (state, action) => {
     return update(state, settings);
 };
 
-const removeEntry = (state, action) => {
+const editEntryViewRemoveEntry = (state, action) => {
     const { entryId, leadId } = action;
 
     const entries = state.editEntryView[leadId].entries;
@@ -599,34 +604,33 @@ const reducers = {
     [SET_USER_PROJECTS]: setUserProjects,
     [SET_ACTIVE_PROJECT]: setActiveProject,
     [SET_ACTIVE_COUNTRY]: setActiveCountry,
-    [ADD_ADD_LEAD_VIEW_LEADS]: addLeadViewAddNewLeads,
-    [SET_ADD_LEAD_VIEW_FILTERS]: addLeadViewSetFilters,
-    [UNSET_ADD_LEAD_VIEW_FILTERS]: removeLeadViewSetFilters,
-    [ADD_LEAD_VIEW_LEAD_CHANGE]: addLeadViewChangeLead,
-    [ADD_LEAD_VIEW_LEAD_SAVE]: addLeadViewSaveLead,
-    [ADD_LEAD_VIEW_LEAD_REMOVE]: addLeadViewRemoveLead,
-    [ADD_LEAD_VIEW_LEAD_PREV]: addLeadViewPrevLead,
-    [ADD_LEAD_VIEW_LEAD_NEXT]: addLeadViewNextLead,
-    [SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
-    [ADD_LEAD_VIEW_COPY_ALL]: addLeadViewCopyAll,
-    [ADD_LEAD_VIEW_COPY_ALL_BELOW]: (state, action) => addLeadViewCopyAll(state, action, 'below'),
+    [LA__ADD_LEADS]: addLeadViewAddNewLeads,
+    [LA__SET_FILTERS]: addLeadViewSetFilters,
+    [LA__UNSET_FILTERS]: removeLeadViewSetFilters,
+    [LA__LEAD_CHANGE]: addLeadViewChangeLead,
+    [LA__LEAD_SAVE]: addLeadViewSaveLead,
+    [LA__LEAD_REMOVE]: addLeadViewRemoveLead,
+    [LA__LEAD_PREV]: addLeadViewPrevLead,
+    [LA__LEAD_NEXT]: addLeadViewNextLead,
+    [LA__SET_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
+    [LA__COPY_ALL]: addLeadViewCopyAll,
+    [LA__COPY_ALL_BELOW]: (state, action) => addLeadViewCopyAll(state, action, 'below'),
 
-    [SET_LEAD_PAGE_FILTER]: leadViewSetFilter,
-    [UNSET_LEAD_PAGE_FILTER]: leadViewUnsetFilter,
-    [SET_LEAD_PAGE_ACTIVE_PAGE]: leadViewSetActivePage,
-    [SET_LEAD_PAGE_ACTIVE_SORT]: leadViewSetActiveSort,
-    [SET_LEADS]: setLeads,
+    [L__SET_FILTER]: leadViewSetFilter,
+    [L__UNSET_FILTER]: leadViewUnsetFilter,
+    [L__SET_ACTIVE_PAGE]: leadViewSetActivePage,
+    [L__SET_ACTIVE_SORT]: leadViewSetActiveSort,
+    [L__SET_LEADS]: setLeads,
 
-    [SET_EDIT_ENTRY_VIEW_LEAD]: editEntryViewSetLead,
+    [EE_ADD_ENTRY]: editEntryViewAddEntry,
+    [EE_REMOVE_ENTRY]: editEntryViewRemoveEntry,
+    [EE_SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
+    [EE_SET_LEAD]: editEntryViewSetLead,
 
-    [ADD_ENTRY]: addEntry,
-    [REMOVE_ENTRY]: removeEntry,
-    [SET_ACTIVE_ENTRY]: setActiveEntry,
-
-    [AF_VIEW_SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
-    [AF_VIEW_ADD_WIDGET]: afViewAddWidget,
-    [AF_VIEW_REMOVE_WIDGET]: afViewRemoveWidget,
-    [AF_VIEW_UPDATE_WIDGET]: afViewUpdateWidget,
+    [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
+    [AF__VIEW_ADD_WIDGET]: afViewAddWidget,
+    [AF__REMOVE_WIDGET]: afViewRemoveWidget,
+    [AF__VIEW_UPDATE_WIDGET]: afViewUpdateWidget,
 };
 
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {

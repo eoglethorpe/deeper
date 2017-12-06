@@ -13,7 +13,7 @@ import { FileInput } from '../../../../../public/components/Input';
 import { randomString } from '../../../../../public/utils/common';
 
 import {
-    addAddLeadViewLeadsAction,
+    addLeadViewAddLeadsAction,
     activeProjectSelector,
     tokenSelector,
 } from '../../../../../common/redux';
@@ -76,7 +76,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addLeads: leads => dispatch(addAddLeadViewLeadsAction(leads)),
+    addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)

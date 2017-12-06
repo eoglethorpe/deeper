@@ -14,7 +14,7 @@ import {
 import {
     addLeadViewActiveLeadIdSelector,
     addLeadViewLeadsSelector,
-    setAddLeadViewActiveLeadIdAction,
+    addLeadViewSetActiveLeadIdAction,
     addLeadViewFiltersSelector,
 } from '../../../../../common/redux';
 
@@ -57,7 +57,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setActiveLeadId: id => dispatch(setAddLeadViewActiveLeadIdAction(id)),
+    setActiveLeadId: id => dispatch(addLeadViewSetActiveLeadIdAction(id)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)

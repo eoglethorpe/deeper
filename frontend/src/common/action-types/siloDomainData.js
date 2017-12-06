@@ -1,32 +1,35 @@
+// GLOBAL
 export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
 export const SET_ACTIVE_COUNTRY = 'domain-data/SET_ACTIVE_COUNTRY';
 
-export const SET_ADD_LEAD_VIEW_FILTERS = 'domain-data/SET_ADD_LEAD_VIEW_FILTERS ';
-export const UNSET_ADD_LEAD_VIEW_FILTERS = 'domain-data/UNSET_ADD_LEAD_VIEW_FILTERS ';
-export const SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID = 'domain-data/SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID';
-export const ADD_ADD_LEAD_VIEW_LEADS = 'domain-data/ADD_ADD_LEAD_VIEW_LEADS';
-export const ADD_LEAD_VIEW_LEAD_CHANGE = 'domain-data/ADD_LEAD_VIEW_LEAD_CHANGE';
-export const ADD_LEAD_VIEW_LEAD_SAVE = 'domain-data/ADD_LEAD_VIEW_LEAD_SAVE';
-export const ADD_LEAD_VIEW_LEAD_REMOVE = 'domain-data/ADD_LEAD_VIEW_LEAD_REMOVE';
-export const ADD_LEAD_VIEW_LEAD_NEXT = 'domain-data/ADD_LEAD_VIEW_LEAD_NEXT';
-export const ADD_LEAD_VIEW_LEAD_PREV = 'domain-data/ADD_LEAD_VIEW_LEAD_PREV';
+// LA => LeadAdd
+export const LA__SET_FILTERS = 'domain-data/LA__SET_FILTERS ';
+export const LA__UNSET_FILTERS = 'domain-data/LA__UNSET_FILTERS ';
+export const LA__SET_ACTIVE_LEAD_ID = 'domain-data/LA__SET_ACTIVE_LEAD_ID';
+export const LA__ADD_LEADS = 'domain-data/LA__ADD_LEADS';
+export const LA__LEAD_CHANGE = 'domain-data/LA__LEAD_CHANGE';
+export const LA__LEAD_SAVE = 'domain-data/LA__LEAD_SAVE';
+export const LA__LEAD_REMOVE = 'domain-data/LA__LEAD_REMOVE';
+export const LA__LEAD_NEXT = 'domain-data/LA__LEAD_NEXT';
+export const LA__LEAD_PREV = 'domain-data/LA__LEAD_PREV';
+export const LA__COPY_ALL_BELOW = 'domain-data/LA__COPY_ALL_BELOW';
+export const LA__COPY_ALL = 'domain-data/LA__COPY_ALL';
 
-export const ADD_LEAD_VIEW_COPY_ALL_BELOW = 'domain-data/ADD_LEAD_VIEW_COPY_ALL_BELOW';
-export const ADD_LEAD_VIEW_COPY_ALL = 'domain-data/ADD_LEAD_VIEW_COPY_ALL';
+// L => Leads
+export const L__SET_FILTER = 'silo-domain-data/L__SET_FILTER';
+export const L__UNSET_FILTER = 'silo-domain-data/L__UNSET_FILTER';
+export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
+export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
+export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
 
-export const SET_LEAD_PAGE_FILTER = 'silo-domain-data/SET_LEAD_PAGE_FILTER';
-export const UNSET_LEAD_PAGE_FILTER = 'silo-domain-data/UNSET_LEAD_PAGE_FILTER';
-export const SET_LEAD_PAGE_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
-export const SET_LEAD_PAGE_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
+// EE => EditEntry
+export const EE_ADD_ENTRY = 'domain-data/EE_ADD_ENTRY';
+export const EE_REMOVE_ENTRY = 'domain-data/EE_REMOVE_ENTRY';
+export const EE_SET_ACTIVE_ENTRY = 'domain-data/EE_SET_ACTIVE_ENTRY';
+export const EE_SET_LEAD = 'silo-domain-data/EE_SET_LEAD';
 
-export const SET_LEADS = 'domain-data/SET_LEADS';
-export const SET_EDIT_ENTRY_VIEW_LEAD = 'silo-domain-data/SET_EDIT_ENTRY_VIEW_LEAD';
-
-export const ADD_ENTRY = 'domain-data/ADD_ENTRY';
-export const REMOVE_ENTRY = 'domain-data/REMOVE_ENTRY';
-export const SET_ACTIVE_ENTRY = 'domain-data/SET_ACTIVE_ENTRY';
-
-export const AF_VIEW_SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF_VIEW_SET_ANALYSIS_FRAMEWORK';
-export const AF_VIEW_ADD_WIDGET = 'silo-domain-data/AF_VIEW_ADD_WIDGET';
-export const AF_VIEW_REMOVE_WIDGET = 'silo-domain-data/AF_VIEW_REMOVE_WIDGET';
-export const AF_VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
+// AF => AnalysisFramework
+export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';
+export const AF__VIEW_ADD_WIDGET = 'silo-domain-data/AF__VIEW_ADD_WIDGET';
+export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
+export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
