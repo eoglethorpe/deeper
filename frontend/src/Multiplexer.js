@@ -148,8 +148,6 @@ export default class Multiplexer extends React.PureComponent {
 
             const redirectTo = routes[routeId].redirectTo;
 
-            console.log(routeId);
-
             switch (routes[routeId].type) {
                 case ROUTE.exclusivelyPublic:
                     return (

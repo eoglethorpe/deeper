@@ -359,7 +359,7 @@ export default class Leads extends React.PureComponent {
             leadId: row.id,
         };
 
-        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
+        this.setState({ redirectTo: reverseRoute(pathNames.editEntries, params) });
     }
 
     handleEditLeadClick = (row) => {
