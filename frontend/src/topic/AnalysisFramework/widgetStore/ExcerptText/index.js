@@ -16,15 +16,15 @@ const excerptTextWidget = {
     id: 'excerptTextWidget',
     title: 'Excerpt',
     analysisFramework: {
-        overviewComponent: () => FrameworkOverviewWidget,
-        listComponent: () => FrameworkListWidget,
+        overviewComponent: FrameworkOverviewWidget,
+        listComponent: FrameworkListWidget,
     },
     tagging: {
-        overviewComponent: () => TaggingOverviewWidget,
-        listComponent: () => TaggingListWidget,
+        overviewComponent: TaggingOverviewWidget,
+        listComponent: TaggingListWidget,
     },
     view: {
-        listComponent: () => ViewListWidget,
+        listComponent: ViewListWidget,
     },
 };
 
