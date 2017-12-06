@@ -30,7 +30,6 @@ const userDefinedSchemas = [];
             createdBy: { type: 'uint' },
             createdByName: { type: 'string' },
             id: { type: 'uint', required: true },
-            versionId: { type: 'uint', required: true },
             modifiedAt: { type: 'string', required: true }, // date
             modifiedBy: { type: 'uint' },
             modifiedByName: { type: 'string' },
