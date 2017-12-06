@@ -25,8 +25,6 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
-    ADD_ENTRY,
-    REMOVE_ENTRY,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -444,35 +442,6 @@ const dummyAction = (state) => {
     return update(state, settings);
 };
 
-const addEntry = (state, action) => {
-    const { entry, leadId } = action;
-
-    const settings = {
-        entries: { $auto: {
-            [leadId]: { $autoArray: {
-                $push: [entry],
-            } },
-        } },
-    };
-
-    return update(state, settings);
-};
-
-const removeEntry = (state, action) => {
-    const { entryId, leadId } = action;
-    const entryIndex = state.entries[leadId].findIndex(d => d.id === entryId);
-
-    const settings = {
-        entries: { $auto: {
-            [leadId]: { $autoArray: {
-                $splice: [[entryIndex, 1]],
-            } },
-        } },
-    };
-
-    return update(state, settings);
-};
-
 const reducers = {
     [DUMMY_ACTION]: dummyAction,
 
@@ -501,9 +470,6 @@ const reducers = {
     [ADD_NEW_REGION]: addNewRegion,
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
-
-    [ADD_ENTRY]: addEntry,
-    [REMOVE_ENTRY]: removeEntry,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

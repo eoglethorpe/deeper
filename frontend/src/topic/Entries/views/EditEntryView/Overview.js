@@ -27,33 +27,38 @@ import widgetStore from '../../../AnalysisFramework/widgetStore';
 import {
     addEntryAction,
     removeEntryAction,
-    entriesForLeadSelector,
+    setActiveEntryAction,
 } from '../../../../common/redux';
 
 const propTypes = {
-    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
-    addEntry: PropTypes.func.isRequired,
-    removeEntry: PropTypes.func.isRequired,
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
-    entries: PropTypes.array.isRequired, // eslint-disable-line
+    addEntry: PropTypes.func.isRequired,
+    setActiveEntry: PropTypes.func.isRequired,
+    removeEntry: PropTypes.func.isRequired,
+
+    selectedEntryId: PropTypes.string,
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-const mapStateToProps = (state, props) => ({
-    entries: entriesForLeadSelector(state, props),
-});
+const defaultProps = {
+    selectedEntryId: undefined,
+};
 
 const mapDispatchToProps = dispatch => ({
     addEntry: params => dispatch(addEntryAction(params)),
     removeEntry: params => dispatch(removeEntryAction(params)),
+    setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -117,9 +122,14 @@ export default class Overview extends React.PureComponent {
                 title: widget.title,
                 component: widget.analysisFramework.overviewComponent,
             }));
-        this.items = analysisFramework.widgets.filter(
-            w => this.widgets.find(w1 => w1.id === w.widgetId),
-        );
+
+        if (analysisFramework.widgets) {
+            this.items = analysisFramework.widgets.filter(
+                w => this.widgets.find(w1 => w1.id === w.widgetId),
+            );
+        } else {
+            this.items = [];
+        }
     }
 
     handleGotoListButtonClick = () => {
@@ -132,24 +142,23 @@ export default class Overview extends React.PureComponent {
         this.props.addEntry({
             leadId: this.props.leadId,
             entry: {
-                id: randomString(),
+                id: entryId,
                 excerpt: `Entry ${entryId}`,
             },
         });
     }
 
     handleRemoveEntryButtonClick = () => {
-        if (this.state.activeEntryId) {
-            this.props.removeEntry({
-                leadId: this.props.leadId,
-                entryId: this.state.activeEntryId,
-            });
-        }
+        this.props.removeEntry({
+            leadId: this.props.leadId,
+            entryId: this.props.selectedEntryId,
+        });
     }
 
     handleEntrySelectChange = (value) => {
-        this.setState({
-            activeEntryId: value,
+        this.props.setActiveEntry({
+            leadId: this.props.leadId,
+            entryId: value,
         });
     }
 
@@ -193,7 +202,7 @@ export default class Overview extends React.PureComponent {
                                 labelSelector={d => d.excerpt}
                                 options={this.props.entries}
                                 onChange={this.handleEntrySelectChange}
-                                value={this.state.activeEntryId}
+                                value={this.props.selectedEntryId}
                             />
                             <TransparentButton
                                 title="Add entry"
@@ -204,6 +213,7 @@ export default class Overview extends React.PureComponent {
                             <TransparentButton
                                 title="Remove current entry"
                                 onClick={this.handleRemoveEntryButtonClick}
+                                disabled={!this.props.selectedEntryId}
                             >
                                 <span className="ion-android-remove" />
                             </TransparentButton>
