@@ -22,6 +22,11 @@ const propTypes = {
     multiselect: PropTypes.bool,
     extensions: PropTypes.arrayOf(PropTypes.string),
     disabled: PropTypes.bool,
+    // Callback when api is loaded successfully and ready to use
+    onApiLoad: PropTypes.func,
+    // Api load delay and limit
+    retryDelay: PropTypes.number, // in miliseconds
+    retryLimit: PropTypes.number,
 };
 
 const defaultProps = {
@@ -33,6 +38,9 @@ const defaultProps = {
     children: undefined,
     extensions: undefined,
     onClick: undefined,
+    onApiLoad: undefined,
+    retryDelay: 3000,
+    retryLimit: 10,
 };
 
 // read more
@@ -46,17 +54,30 @@ export default class DropboxChooser extends React.Component {
         super(props);
 
         this.onChoose = this.onChoose.bind(this);
+        this.retry = 0;
     }
 
     componentDidMount() {
-        if (!this.isDropboxReady() && !scriptLoadingStarted) {
-            scriptLoadingStarted = true;
-            loadScript(DROPBOX_SDK_URL, {
-                attrs: {
-                    id: SCRIPT_ID,
-                    'data-app-key': this.props.appKey,
-                },
-            });
+        this.loadDropboxApi();
+    }
+
+    onApiLoad = () => {
+        // make sure api is loaded,
+        // called by loadScript after loading is success or failure
+        // if the api is not loaded, try to load in retry delay
+        if (!this.isDropboxReady()) {
+            if (this.retry <= this.props.retryLimit) {
+                setTimeout(() => {
+                    this.retry += 1;
+                    scriptLoadingStarted = false;
+                    this.loadDropboxApi();
+                }, this.props.retryDelay);
+            } else {
+                scriptLoadingStarted = false;
+            }
+        } else if (this.isDropboxReady && this.props.onApiLoad) {
+            // call func when dropbox is ready to be used
+            this.props.onApiLoad();
         }
     }
 
@@ -82,6 +103,18 @@ export default class DropboxChooser extends React.Component {
         });
 
         if (this.props.onClick) { this.props.onClick(); }
+    }
+
+    loadDropboxApi = () => {
+        if (!this.isDropboxReady() && !scriptLoadingStarted) {
+            scriptLoadingStarted = true;
+            loadScript(DROPBOX_SDK_URL, {
+                attrs: {
+                    id: SCRIPT_ID,
+                    'data-app-key': this.props.appKey,
+                },
+            }, this.onApiLoad);
+        }
     }
 
     isDropboxReady = () => (!!window.Dropbox)

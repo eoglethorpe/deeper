@@ -27,6 +27,11 @@ const propTypes = {
     navHidden: PropTypes.bool,
     disabled: PropTypes.bool,
     mimeTypes: PropTypes.arrayOf(PropTypes.string),
+    // Callback when api is loaded successfully and ready to use
+    onApiLoad: PropTypes.func,
+    // Api load delay and limit
+    retryDelay: PropTypes.number, // in miliseconds
+    retryLimit: PropTypes.number,
 };
 
 const defaultProps = {
@@ -43,6 +48,9 @@ const defaultProps = {
     createPicker: undefined,
     mimeTypes: undefined,
     origin: undefined,
+    onApiLoad: undefined,
+    retryDelay: 3000,
+    retryLimit: 10,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -53,27 +61,38 @@ export default class GooglePicker extends React.Component {
     constructor(props) {
         super(props);
 
+        this.retry = 0;
         this.onApiLoad = this.onApiLoad.bind(this);
         this.onChoose = this.onChoose.bind(this);
     }
 
     componentDidMount() {
-        if (this.isGoogleReady()) {
-            // google api is already exists
-            // init immediately
-            this.onApiLoad();
-        } else if (!scriptLoadingStarted) {
-            // load google api and the init
-            scriptLoadingStarted = true;
-            loadScript(GOOGLE_SDK_URL, this.onApiLoad);
-        } else {
-            // is loading
-        }
+        this.loadGoogleApi();
     }
 
     onApiLoad = () => {
-        window.gapi.load('auth');
-        window.gapi.load('picker');
+        // make sure api is loaded,
+        // called by loadScript after loading is success or failure
+        // if the api is not loaded, try to load in retry delay
+        if (!this.isGoogleReady()) {
+            if (this.retry <= this.props.retryLimit) {
+                setTimeout(() => {
+                    this.retry += 1;
+                    scriptLoadingStarted = false;
+                    this.loadGoogleApi();
+                }, this.props.retryDelay);
+            } else {
+                scriptLoadingStarted = false;
+            }
+        } else if (this.isGoogleReady()) {
+            // call func when google drive is ready to be used
+            if (this.props.onApiLoad) {
+                this.props.onApiLoad();
+            }
+
+            window.gapi.load('auth');
+            window.gapi.load('picker');
+        }
     }
 
     onChoose() {
@@ -91,6 +110,21 @@ export default class GooglePicker extends React.Component {
             this.doAuth(({ access_token }) => this.createPicker(access_token));
         }
     }
+
+    loadGoogleApi = () => {
+        if (this.isGoogleReady()) {
+            // google api is already exists
+            // init immediately
+            this.onApiLoad();
+        } else if (!scriptLoadingStarted) {
+            // load google api and the init
+            scriptLoadingStarted = true;
+            loadScript(GOOGLE_SDK_URL, this.onApiLoad);
+        } else {
+            // is loading
+        }
+    }
+
 
     doAuth(callback) {
         window.gapi.auth.authorize({
