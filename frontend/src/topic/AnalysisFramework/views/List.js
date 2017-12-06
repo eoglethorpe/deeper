@@ -162,7 +162,7 @@ export default class List extends React.PureComponent {
     }
 
     handleGotoOverviewButtonClick = () => {
-        window.location.hash('/overview/');
+        window.location.hash = '/overview/';
     }
 
     update(analysisFramework) {
