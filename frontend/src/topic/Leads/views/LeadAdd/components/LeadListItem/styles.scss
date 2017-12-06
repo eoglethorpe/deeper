@@ -75,7 +75,7 @@
         opacity: 1;
         background-color: $color-background;
         width: 100%;
-        height: 3px;
+        height: $height-progress-bar;
 
         .progress {
             display: block;

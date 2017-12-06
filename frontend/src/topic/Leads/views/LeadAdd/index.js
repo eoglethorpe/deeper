@@ -279,7 +279,7 @@ export default class LeadAdd extends React.PureComponent {
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
-                    progress: { $set: 100 },
+                    progress: { $set: undefined },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -301,7 +301,7 @@ export default class LeadAdd extends React.PureComponent {
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
-                    progress: { $set: 100 },
+                    progress: { $set: undefined },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -497,13 +497,13 @@ export default class LeadAdd extends React.PureComponent {
                 const leadId = this.leadDetailKeyExtractor(lead);
                 const choice = calcLeadState({
                     lead,
-                    rest: this.state.leadRests[leadId],
-                    upload: this.state.leadUploads[leadId],
+                    rest: leadRests[leadId],
+                    upload: leadUploads[leadId],
                 });
                 const isSaveDisabled = choice !== 'nonstale';
                 const isRemoveDisabled = choice === 'requesting';
                 const isFormDisabled = (choice === 'requesting');
-                acc[leadId] = { isSaveDisabled, isFormDisabled, isRemoveDisabled };
+                acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
                 return acc;
             },
             {},
@@ -568,7 +568,7 @@ export default class LeadAdd extends React.PureComponent {
                     <div styleName="left">
                         <LeadList
                             leadUploads={leadUploads}
-                            leadRests={leadRests}
+                            choices={this.choices}
                         />
                         <LeadButtons
                             onDropboxSelect={this.handleDropboxSelect}

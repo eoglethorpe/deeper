@@ -5,10 +5,10 @@ export const calcLeadState = ({ lead, upload, rest }) => {
     const { stale, error } = uiState;
     const { type } = data;
 
-    if (type === 'file' && (values && !values.attachment)) {
-        return 'warning'; // invalid
-    } else if (type === 'file' && upload && upload.progress < 100) {
+    if (type === 'file' && upload && upload.progress <= 100) {
         return 'uploading';
+    } else if (type === 'file' && (values && !values.attachment)) {
+        return 'warning'; // invalid
     } else if (rest && rest.pending) {
         return 'requesting';
     } else if (error) {

@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { calcLeadState } from '../../utils/leadState';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -18,15 +17,15 @@ const propTypes = {
 
     leadKey: PropTypes.string.isRequired,
 
+    choice: PropTypes.object, // eslint-disable-line
     upload: PropTypes.object, // eslint-disable-line
-    rest: PropTypes.object, // eslint-disable-line
 };
 
 const defaultProps = {
     active: false,
     className: '',
     upload: undefined,
-    rest: undefined,
+    choice: {},
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -121,11 +120,9 @@ export default class LeadListItem extends React.PureComponent {
     render() {
         const { active, className } = this.props;
 
-        const { rest, upload, lead } = this.props;
+        const { choice, upload, lead } = this.props;
         const { type } = lead.data;
         const { title } = lead.form.values;
-
-        const choice = calcLeadState({ lead, upload, rest });
 
         return (
             <button
@@ -140,8 +137,8 @@ export default class LeadListItem extends React.PureComponent {
                 <span styleName="title" >
                     { title }
                 </span>
-                { this.renderIcon(choice) }
-                { this.renderUploadProgress(choice, upload) }
+                { this.renderIcon(choice.choice) }
+                { this.renderUploadProgress(choice.choice, upload) }
             </button>
         );
     }

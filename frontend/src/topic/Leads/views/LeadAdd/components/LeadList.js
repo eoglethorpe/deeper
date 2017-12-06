@@ -18,7 +18,6 @@ import {
     addLeadViewFiltersSelector,
 } from '../../../../../common/redux';
 
-import { calcLeadState } from '../utils/leadState';
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';
 
@@ -44,7 +43,7 @@ const propTypes = {
     leads: PropTypes.array.isRequired, // eslint-disable-line
     filters: PropTypes.object.isRequired, // eslint-disable-line
     leadUploads: PropTypes.object.isRequired, // eslint-disable-line
-    leadRests: PropTypes.object.isRequired, // eslint-disable-line
+    choices: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -72,33 +71,30 @@ export default class LeadList extends React.PureComponent {
     renderLeadItem = (key, lead) => {
         const {
             leadUploads,
-            leadRests,
             activeLeadId,
+            choices,
         } = this.props;
 
         return (
             <LeadListItem
-                active={activeLeadId === lead.data.id}
+                active={activeLeadId === this.calcLeadKey(lead)}
                 key={key}
                 leadKey={key}
                 lead={lead}
+                choice={choices[key]}
                 upload={leadUploads[key]}
-                rest={leadRests[key]}
                 onClick={this.props.setActiveLeadId}
             />
         );
     }
 
     render() {
-        const { filters, leads, leadUploads, leadRests } = this.props;
+        const { filters, leads, choices } = this.props;
         const { search, type, source, status } = filters;
 
         const leadsFiltered = leads.filter((lead) => {
             const id = this.calcLeadKey(lead);
-            const upload = leadUploads[id];
-            const rest = leadRests[id];
-
-            const leadStatus = calcLeadState({ lead, rest, upload });
+            const leadStatus = choices[id].choice;
             const {
                 title: leadTitle = '',
                 source: leadSource = '',
