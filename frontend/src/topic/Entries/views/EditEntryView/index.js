@@ -57,7 +57,7 @@ const propTypes = {
     setLead: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
 
-    entries: PropTypes.array.isRequired,
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 
     selectedEntryId: PropTypes.string,
 };
