@@ -70,13 +70,20 @@ export default class GooglePicker extends React.Component {
         this.loadGoogleApi();
     }
 
+    componentWillUnmount() {
+        if (this.apiLoadTimeOut) {
+            clearTimeout(this.apiLoadTimeOut);
+            scriptLoadingStarted = false;
+        }
+    }
+
     onApiLoad = () => {
         // make sure api is loaded,
         // called by loadScript after loading is success or failure
         // if the api is not loaded, try to load in retry delay
         if (!this.isGoogleReady()) {
             if (this.retry <= this.props.retryLimit) {
-                setTimeout(() => {
+                this.apiLoadTimeOut = setTimeout(() => {
                     this.retry += 1;
                     scriptLoadingStarted = false;
                     this.loadGoogleApi();

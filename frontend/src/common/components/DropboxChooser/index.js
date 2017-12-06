@@ -61,13 +61,20 @@ export default class DropboxChooser extends React.Component {
         this.loadDropboxApi();
     }
 
+    componentWillUnmount() {
+        if (this.apiLoadTimeOut) {
+            clearTimeout(this.apiLoadTimeOut);
+            scriptLoadingStarted = false;
+        }
+    }
+
     onApiLoad = () => {
         // make sure api is loaded,
         // called by loadScript after loading is success or failure
         // if the api is not loaded, try to load in retry delay
         if (!this.isDropboxReady()) {
             if (this.retry <= this.props.retryLimit) {
-                setTimeout(() => {
+                this.apiLoadTimeOut = setTimeout(() => {
                     this.retry += 1;
                     scriptLoadingStarted = false;
                     this.loadDropboxApi();
