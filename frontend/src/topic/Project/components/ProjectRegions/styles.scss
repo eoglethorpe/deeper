@@ -22,8 +22,8 @@
             padding: $spacing-medium $spacing-medium-alt;
 
             .search-input {
-                padding: 0;
                 flex-basis: 100%;
+                padding: 0;
 
                 :global .error {
                     display: none;
@@ -78,3 +78,32 @@
         height: 100%;
     }
 }
+
+.add-region-modal {
+    display: flex;
+    flex-direction: column;
+
+    :global {
+        .modal-content {
+            height: 60vh;
+
+            .modal-body {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+
+    .radio-input {
+        flex-shrink: 0;
+    }
+
+    .add-region {
+        flex-grow: 1;
+    }
+
+    .add-existing-region {
+        flex-grow: 1;
+    }
+}
+
