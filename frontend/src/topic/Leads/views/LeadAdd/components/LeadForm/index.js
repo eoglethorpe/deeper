@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+
 import {
     DateInput,
     Form,
@@ -15,10 +16,10 @@ import {
 } from '../../../../../../public/components/Input';
 import { LoadingAnimation } from '../../../../../../public/components/View';
 
+import ApplyAll from '../ApplyAll';
 
 import styles from './styles.scss';
 
-const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
 
 const propTypes = {
     className: PropTypes.string,
@@ -36,6 +37,9 @@ const propTypes = {
     onChange: PropTypes.func.isRequired,
 
     isFormDisabled: PropTypes.bool.isRequired,
+    isBulkActionDisabled: PropTypes.bool.isRequired,
+    onApplyAllClick: PropTypes.func.isRequired,
+    onApplyAllBelowClick: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,11 +48,13 @@ const defaultProps = {
 
 const LEAD_TYPE = {
     dropbox: 'dropbox',
-    drive: 'drive',
-    file: 'file',
+    drive: 'google-drive',
+    file: 'disk',
     website: 'website',
     text: 'text',
 };
+
+const ATTACHMENT_TYPES = [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive];
 
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
@@ -67,6 +73,7 @@ export default class LeadForm extends React.PureComponent {
             'confidentiality',
             'assignee',
             'publishedOn',
+            'sourceType',
         ];
 
         const commonValidations = {
@@ -75,6 +82,7 @@ export default class LeadForm extends React.PureComponent {
             confidentiality: [requiredCondition],
             assignee: [requiredCondition],
             publishedOn: [requiredCondition],
+            sourceType: [requiredCondition],
         };
 
         switch (lead.data.type) {
@@ -126,6 +134,9 @@ export default class LeadForm extends React.PureComponent {
         }
     }
 
+    handleApplyAllClick = name => this.props.onApplyAllClick(name);
+    handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
+
     render() {
         const {
             className,
@@ -136,6 +147,7 @@ export default class LeadForm extends React.PureComponent {
             onFailure,
             onSuccess,
             isFormDisabled,
+            isBulkActionDisabled,
         } = this.props;
 
         const {
@@ -143,6 +155,9 @@ export default class LeadForm extends React.PureComponent {
             errors,
             fieldErrors,
         } = lead.form;
+        const {
+            type,
+        } = lead.data;
 
         return (
             <Form
@@ -163,6 +178,10 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                 </header>
+                <HiddenInput
+                    formname="sourceType"
+                    value={type}
+                />
                 <SelectInput
                     disabled
                     error={fieldErrors.project}
@@ -180,22 +199,32 @@ export default class LeadForm extends React.PureComponent {
                 <div
                     styleName="line-break"
                 />
+
                 <TextInput
+                    styleName="title"
                     error={fieldErrors.title}
                     formname="title"
                     label="Title"
                     placeholder="Lead 12:21:00 PM"
-                    styleName="title"
                     value={values.title}
                 />
-                <TextInput
-                    error={fieldErrors.source}
-                    formname="source"
-                    label="Source"
-                    placeholder="Newspaper"
+
+                <ApplyAll
                     styleName="source"
-                    value={values.source}
-                />
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="source"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <TextInput
+                        error={fieldErrors.source}
+                        formname="source"
+                        label="Source"
+                        placeholder="Newspaper"
+                        value={values.source}
+                    />
+                </ApplyAll>
+
                 <SelectInput
                     error={fieldErrors.confidentiality}
                     formname="confidentiality"
@@ -223,14 +252,21 @@ export default class LeadForm extends React.PureComponent {
                     styleName="user"
                     value={values.assignee}
                 />
-                <DateInput
-                    error={fieldErrors.publishedOn}
-                    formname="publishedOn"
-                    label="Published on"
-                    placeholder="12/12/2012"
+                <ApplyAll
                     styleName="date"
-                    value={values.publishedOn}
-                />
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="publishedOn"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <DateInput
+                        error={fieldErrors.publishedOn}
+                        formname="publishedOn"
+                        label="Published on"
+                        placeholder="12/12/2012"
+                        value={values.publishedOn}
+                    />
+                </ApplyAll>
                 {
                     lead.data.type === LEAD_TYPE.website && [
                         <TextInput

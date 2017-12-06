@@ -34,11 +34,6 @@ const initialSiloDomainData = {
                     ready: true,
                     stale: false,
                 },
-                // upload: {
-                //    progress: 0,
-                //    uploader: UploaderObject,
-                // }
-                isFiltrate: true, // to show or not to show
             },
             {
                 serverId: undefined,

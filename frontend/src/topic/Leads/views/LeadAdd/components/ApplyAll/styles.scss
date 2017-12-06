@@ -1,0 +1,24 @@
+@import '../../../../../../stylesheets/base';
+
+.apply-input {
+    position: relative;
+
+    .apply-buttons {
+        @include transition-medium;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        .apply-button {
+            padding: $spacing-extra-small;
+            margin-right: $spacing-extra-small;
+        }
+    }
+
+    &:hover {
+        .apply-buttons {
+            opacity: 1;
+        }
+    }
+}

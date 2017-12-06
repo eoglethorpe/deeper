@@ -13,6 +13,8 @@ import {
     ADD_LEAD_VIEW_LEAD_REMOVE,
     ADD_LEAD_VIEW_LEAD_NEXT,
     ADD_LEAD_VIEW_LEAD_PREV,
+    ADD_LEAD_VIEW_COPY_ALL,
+    ADD_LEAD_VIEW_COPY_ALL_BELOW,
 
     SET_LEAD_PAGE_FILTER,
     UNSET_LEAD_PAGE_FILTER,
@@ -32,6 +34,7 @@ import {
 } from '../action-types/domainData';
 
 import initialSiloDomainData from '../initial-state/siloDomainData';
+import { getNumbers } from '../../public/utils/common';
 import update from '../../public/utils/immutable-update';
 
 const leadReference = {
@@ -69,6 +72,43 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
     };
     return update(leadReference, settings);
 };
+
+// CALCUALTE ERROR
+const setErrorForLeads = (state, leadIndices) => {
+    const newLeadIndices = !leadIndices
+        ? getNumbers(0, state.addLeadView.leads.length)
+        : leadIndices;
+
+    const hasError = (newState, leadIndex) => {
+        const ld = newState.addLeadView.leads[leadIndex];
+        if (ld.form.errors && ld.form.errors.length > 0) {
+            return true;
+        }
+        const errorList = ld.form.fieldErrors;
+        return Object.keys(errorList).some(key => !!errorList[key]);
+    };
+
+    const leadSettings = newLeadIndices.reduce(
+        (acc, leadIndex) => {
+            const error = hasError(state, leadIndex);
+            acc[leadIndex] = {
+                uiState: {
+                    error: { $set: error },
+                },
+            };
+            return acc;
+        },
+        {},
+    );
+
+    const settings = {
+        addLeadView: {
+            leads: leadSettings,
+        },
+    };
+    return update(state, settings);
+};
+
 
 // REDUCERS
 
@@ -119,12 +159,35 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const newLeads = leads.map(data => createLead(data));
 
+    const serverIdMap = leads.reduce(
+        (acc, lead) => {
+            if (lead.serverId) {
+                acc[lead.serverId] = true;
+            }
+            return acc;
+        },
+        {},
+    );
+
+    const spliceSettings = state.addLeadView.leads.reduce(
+        (acc, lead, i) => {
+            if (serverIdMap[lead.serverId]) {
+                acc.push([i, 1]);
+            }
+            return acc;
+        },
+        [],
+    );
+    spliceSettings.push([0, 0, ...newLeads]);
+
+    console.log(spliceSettings);
+
     const settings = {
         addLeadView: {
             // set first leads a new active lead
             activeLeadId: { $set: newLeads[0].data.id },
             // add new leads to start
-            leads: { $unshift: newLeads },
+            leads: { $splice: spliceSettings },
             // clear out filters
             filters: {
                 $set: {
@@ -168,6 +231,7 @@ const addLeadViewChangeLead = (state, action) => {
         formErrors,
         uiState,
     } = action;
+
     const index = state.addLeadView.leads.findIndex(
         lead => lead.data.id === leadId,
     );
@@ -185,27 +249,7 @@ const addLeadViewChangeLead = (state, action) => {
     }
     const newState = update(state, settings);
 
-    // set error flag for uiState
-    const ld = newState.addLeadView.leads[index];
-    let error = false;
-    if (ld.form.errors && ld.form.errors.length > 0) {
-        error = true;
-    } else {
-        const errorList = ld.form.fieldErrors;
-        error = Object.keys(errorList).some(key => !!errorList[key]);
-    }
-    const newSettings = {
-        addLeadView: {
-            leads: {
-                [index]: {
-                    uiState: {
-                        error: { $set: error },
-                    },
-                },
-            },
-        },
-    };
-    return update(newState, newSettings);
+    return setErrorForLeads(newState, [index]);
 };
 
 const addLeadViewSaveLead = (state, action) => {
@@ -233,6 +277,40 @@ const addLeadViewSaveLead = (state, action) => {
         },
     };
     return update(state, settings);
+};
+
+const addLeadViewCopyAll = (state, action, behavior) => {
+    const {
+        leadId,
+        attrName,
+    } = action;
+
+    const index = state.addLeadView.leads.findIndex(
+        lead => lead.data.id === leadId,
+    );
+    const start = behavior === 'below' ? (index + 1) : 0;
+
+    const valueToCopy = state.addLeadView.leads[index].form.values[attrName];
+    const leadSettings = {};
+    for (let i = start; i < state.addLeadView.leads.length; i += 1) {
+        leadSettings[i] = {
+            form: {
+                values: { [attrName]: { $set: valueToCopy } },
+                fieldErrors: { [attrName]: { $set: undefined } },
+            },
+            uiState: { stale: { $set: false } },
+        };
+    }
+
+    // put stale (remove error for that as well)
+
+    const settings = {
+        addLeadView: {
+            leads: leadSettings,
+        },
+    };
+    const newState = update(state, settings);
+    return setErrorForLeads(newState);
 };
 
 const addLeadViewSetActiveLead = (state, action) => {
@@ -470,6 +548,8 @@ const reducers = {
     [ADD_LEAD_VIEW_LEAD_PREV]: addLeadViewPrevLead,
     [ADD_LEAD_VIEW_LEAD_NEXT]: addLeadViewNextLead,
     [SET_ADD_LEAD_VIEW_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
+    [ADD_LEAD_VIEW_COPY_ALL]: addLeadViewCopyAll,
+    [ADD_LEAD_VIEW_COPY_ALL_BELOW]: (state, action) => addLeadViewCopyAll(state, action, 'below'),
 
     [SET_LEAD_PAGE_FILTER]: leadViewSetFilter,
     [UNSET_LEAD_PAGE_FILTER]: leadViewUnsetFilter,

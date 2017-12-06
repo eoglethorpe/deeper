@@ -140,24 +140,25 @@ export default class LeadAdd extends React.PureComponent {
 
     // REST REQUEST
 
-    createRequestForFormSave = (lead) => {
+    createRequestForFormSave = (lead, newValues) => {
+        const { serverId } = lead;
+        const leadId = this.leadDetailKeyExtractor(lead);
+
         let url;
         let params;
-        if (lead.serverId) {
-            url = createUrlForLeadEdit(lead.serverId);
+        if (serverId) {
+            url = createUrlForLeadEdit(serverId);
             params = () => {
                 const { access } = this.props.token;
-                return createParamsForLeadEdit({ access }, lead.form.values);
+                return createParamsForLeadEdit({ access }, newValues);
             };
         } else {
             url = urlForLead;
             params = () => {
                 const { access } = this.props.token;
-                return createParamsForLeadCreate({ access }, lead.form.values);
+                return createParamsForLeadCreate({ access }, newValues);
             };
         }
-
-        const leadId = this.leadDetailKeyExtractor(lead);
 
         const leadCreateRequest = new RestBuilder()
             .url(url)
@@ -279,7 +280,7 @@ export default class LeadAdd extends React.PureComponent {
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
-                    progress: { $set: 100 },
+                    progress: { $set: undefined },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -301,7 +302,7 @@ export default class LeadAdd extends React.PureComponent {
         this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
-                    progress: { $set: 100 },
+                    progress: { $set: undefined },
                 } },
             };
             const leadUploads = update(state.leadUploads, uploadSettings);
@@ -359,7 +360,24 @@ export default class LeadAdd extends React.PureComponent {
         this.formCoordinator.notifyComplete(leadId);
     }
     handleLeadSaveFailure = (leadId, response) => {
-        console.error('Failed lead request:', response);
+        // console.error('Failed lead request:', response);
+        const { errors } = response;
+
+        const formFieldErrors = [];
+        const { nonFieldErrors } = errors;
+        Object.keys(errors).forEach((key) => {
+            if (key !== 'nonFieldErrors') {
+                formFieldErrors[key] = errors[key].join(' ');
+            }
+        });
+
+        this.props.addLeadViewLeadChange({
+            leadId,
+            formErrors: nonFieldErrors,
+            formFieldErrors,
+            uiState: { stale: true },
+        });
+
         this.formCoordinator.notifyComplete(leadId);
     }
 
@@ -411,8 +429,8 @@ export default class LeadAdd extends React.PureComponent {
 
     // HANDLE FORM
 
-    handleFormSubmitSuccess = (lead) => {
-        const request = this.createRequestForFormSave(lead);
+    handleFormSubmitSuccess = (lead, newValues) => {
+        const request = this.createRequestForFormSave(lead, newValues);
         return request;
     }
 
@@ -479,6 +497,7 @@ export default class LeadAdd extends React.PureComponent {
                 lead={lead}
                 isFormDisabled={isFormDisabled}
                 isSaveDisabled={isSaveDisabled}
+                isBulkActionDisabled={this.state.pendingSubmitAll}
                 leadOptions={leadOptions}
                 onFormSubmitFailure={this.handleFormSubmitFailure}
                 onFormSubmitSuccess={this.handleFormSubmitSuccess}
@@ -496,13 +515,13 @@ export default class LeadAdd extends React.PureComponent {
                 const leadId = this.leadDetailKeyExtractor(lead);
                 const choice = calcLeadState({
                     lead,
-                    rest: this.state.leadRests[leadId],
-                    upload: this.state.leadUploads[leadId],
+                    rest: leadRests[leadId],
+                    upload: leadUploads[leadId],
                 });
                 const isSaveDisabled = choice !== 'nonstale';
                 const isRemoveDisabled = choice === 'requesting';
                 const isFormDisabled = (choice === 'requesting');
-                acc[leadId] = { isSaveDisabled, isFormDisabled, isRemoveDisabled };
+                acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
                 return acc;
             },
             {},
@@ -510,7 +529,6 @@ export default class LeadAdd extends React.PureComponent {
 
         // get choice for activeLead
         const { isSaveDisabled, isRemoveDisabled } = this.choices[activeLeadId] || {};
-
         // identify if save is enabled for some leads
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
@@ -568,7 +586,7 @@ export default class LeadAdd extends React.PureComponent {
                     <div styleName="left">
                         <LeadList
                             leadUploads={leadUploads}
-                            leadRests={leadRests}
+                            choices={this.choices}
                         />
                         <LeadButtons
                             onDropboxSelect={this.handleDropboxSelect}
