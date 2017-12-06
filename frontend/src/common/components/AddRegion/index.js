@@ -38,6 +38,7 @@ import schema from '../../schema';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     addNewRegion: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
@@ -45,6 +46,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     projectId: undefined,
 };
 
@@ -210,6 +212,10 @@ export default class AddRegion extends React.PureComponent {
             stale,
         } = this.state;
 
+        const {
+            className,
+        } = this.props;
+
         if (this.state.redirectTo) {
             return (
                 <Redirect
@@ -221,6 +227,7 @@ export default class AddRegion extends React.PureComponent {
 
         return (
             <Form
+                className={className}
                 styleName="add-region-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}

@@ -35,6 +35,7 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     onModalClose: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
@@ -44,6 +45,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     projectId: undefined,
 };
 
@@ -213,8 +215,13 @@ export default class AddExistingRegion extends React.PureComponent {
             regionOptions,
         } = this.state;
 
+        const {
+            className,
+        } = this.props;
+
         return (
             <Form
+                className={className}
                 styleName="add-region-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
@@ -225,9 +232,13 @@ export default class AddExistingRegion extends React.PureComponent {
                 onSubmit={this.handleSubmit}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors
+                    styleName="non-field-errors"
+                    errors={formErrors}
+                />
                 <TabularSelectInput
                     formname="regions"
+                    styleName="tabular-select"
                     blackList={formValues.regionsBlackList}
                     options={regionOptions}
                     labelSelector={AddExistingRegion.optionLabelSelector}

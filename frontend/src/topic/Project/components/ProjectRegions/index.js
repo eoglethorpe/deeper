@@ -205,6 +205,7 @@ export default class ProjectRegions extends React.PureComponent {
                             Add
                         </PrimaryButton>
                         <Modal
+                            styleName="add-region-modal"
                             onClose={this.handleModalClose}
                             show={addRegionModal}
                             closeOnEscape
@@ -212,6 +213,7 @@ export default class ProjectRegions extends React.PureComponent {
                             <ModalHeader title="Add Region" />
                             <ModalBody>
                                 <RadioInput
+                                    styleName="radio-input"
                                     name="addRegionRadioInput"
                                     options={this.addRegionOptions}
                                     onChange={
@@ -222,12 +224,14 @@ export default class ProjectRegions extends React.PureComponent {
                                 />
                                 {selectedAddRegionOption === 'new' &&
                                     <AddRegion
+                                        styleName="add-region"
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}
                                     />
                                 }
                                 {selectedAddRegionOption === 'old' &&
                                     <AddExistingRegion
+                                        styleName="add-existing-region"
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}
                                     />

@@ -250,6 +250,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     </h2>
                     <div styleName="action-btns">
                         <DangerButton
+                            disabled={dataLoading}
                             onClick={this.handleRegionRemoveClick}
                         >
                             Remove Region
@@ -257,6 +258,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         {
                             isPublic && (
                                 <PrimaryButton
+                                    disabled={dataLoading}
                                     styleName="clone-btn"
                                     onClick={this.handleRegionCloneClick}
                                 >
@@ -285,14 +287,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     </Confirm>
                 </header>
                 {
-                    isPublic ? (
-                        <div styleName="region-details-non-edit">
-                            <RegionDetailView regionId={regionId} />
-                            <div styleName="map-container-non-edit">
-                                The map
-                            </div>
-                        </div>
-                    ) : (
+                    !isPublic ? (
                         <div styleName="region-details">
                             <div styleName="detail-map-container">
                                 <RegionDetail
@@ -308,6 +303,13 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                 styleName="admin-levels"
                                 regionId={regionId}
                             />
+                        </div>
+                    ) : (
+                        <div styleName="region-details-non-edit">
+                            <RegionDetailView regionId={regionId} />
+                            <div styleName="map-container-non-edit">
+                                The map
+                            </div>
                         </div>
                     )
                 }
