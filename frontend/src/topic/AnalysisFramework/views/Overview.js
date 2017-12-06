@@ -96,14 +96,11 @@ export default class Overview extends React.PureComponent {
                     styleName="grid-item"
                 >
                     <header
+                        className="header"
                         styleName="header"
                     >
-                        <h2>{item.title}</h2>
+                        <h4 styleName="heading">{item.title}</h4>
                         <div styleName="actions">
-                            <span
-                                styleName="drag-handle"
-                                className="ion-arrow-move drag-handle"
-                            />
                             <TransparentButton
                                 styleName="close-button"
                             >
@@ -296,7 +293,7 @@ export default class Overview extends React.PureComponent {
                         compactType={null}
                         preventCollision
                         onLayoutChange={this.handleLayoutChange}
-                        draggableHandle=".drag-handle"
+                        draggableHandle=".header"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }

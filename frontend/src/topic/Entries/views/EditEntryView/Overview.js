@@ -102,7 +102,7 @@ export default class Overview extends React.PureComponent {
                     <header
                         styleName="header"
                     >
-                        <h2>{item.title}</h2>
+                        <h4 styleName="heading">{item.title}</h4>
                     </header>
                     <div
                         styleName="content"
@@ -116,11 +116,11 @@ export default class Overview extends React.PureComponent {
 
     update(analysisFramework) {
         this.widgets = widgetStore
-            .filter(widget => widget.analysisFramework.overviewComponent)
+            .filter(widget => widget.tagging.overviewComponent)
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                component: widget.analysisFramework.overviewComponent,
+                component: widget.tagging.overviewComponent,
             }));
 
         if (analysisFramework.widgets) {

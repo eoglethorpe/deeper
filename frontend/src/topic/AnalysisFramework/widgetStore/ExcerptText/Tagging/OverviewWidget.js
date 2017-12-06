@@ -14,7 +14,6 @@ export default class ExcerptTextOverview extends React.PureComponent {
     render() {
         return (
             <TextArea
-                disabled
                 showLabel={false}
                 showHintAndError={false}
             />
