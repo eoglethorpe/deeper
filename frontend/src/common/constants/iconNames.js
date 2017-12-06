@@ -1,14 +1,14 @@
 const iconNames = {
-    globe: 'ion-android-globe',
-    wrench: 'ion-wrench',
     apps: 'ion-android-apps',
-    text: 'ion-document',
+    globe: 'ion-android-globe',
+    close: 'ion-close',
     locked: 'ion-locked',
-    person: 'ion-android-person',
     overflowHorizontal: 'ion-android-more-horizontal',
-
     applyAll: 'ion-ios-world',
     applyAllBelow: 'ion-android-arrow-dropdown-circle',
+    person: 'ion-android-person',
+    text: 'ion-document',
+    wrench: 'ion-wrench',
 };
 
 export default iconNames;

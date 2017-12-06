@@ -7,7 +7,7 @@ import {
     Form,
     NonFieldErrors,
     requiredCondition,
-    SelectInput,
+    TabularSelectInput,
 } from '../../../../public/components/Input';
 import {
     LoadingAnimation,
@@ -77,7 +77,8 @@ export default class AddExistingRegion extends React.PureComponent {
         } = props;
 
         const formValues = {
-            regions: (projectDetails.regions || []).map(region => region.id),
+            regions: '',
+            regionsBlackList: (projectDetails.regions || []).map(region => region.id),
         };
 
         this.state = {
@@ -88,6 +89,23 @@ export default class AddExistingRegion extends React.PureComponent {
             stale: false,
             regionOptions: projectOptions.regions || emptyList,
         };
+
+        this.regionsHeader = [
+            {
+                key: 'value',
+                label: 'Name',
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => a.value.localeCompare(b.value),
+            },
+            {
+                key: 'key',
+                label: 'id',
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => a.key - b.key,
+            },
+        ];
 
         this.elements = [
             'regions',
@@ -160,11 +178,15 @@ export default class AddExistingRegion extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        const { projectId } = this.props;
+        const { projectId,
+            projectDetails,
+        } = this.props;
 
-        const regions = values.regions.map(region => ({
+        const regionsFromValues = values.regions.map(region => ({
             id: region,
         }));
+
+        const regions = [...new Set([...projectDetails.regions, ...regionsFromValues])];
 
         const newProjectDetails = {
             ...values,
@@ -204,16 +226,15 @@ export default class AddExistingRegion extends React.PureComponent {
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
-                <SelectInput
-                    label="Regions"
+                <TabularSelectInput
                     formname="regions"
-                    placeholder="Select regions"
-                    value={formValues.regions}
+                    blackList={formValues.regionsBlackList}
                     options={regionOptions}
                     labelSelector={AddExistingRegion.optionLabelSelector}
+                    onChange={this.handleTabularSelectInputChange}
                     keySelector={AddExistingRegion.optionKeySelector}
+                    tableHeaders={this.regionsHeader}
                     error={formFieldErrors.regions}
-                    multiple
                 />
                 <div styleName="action-buttons">
                     <DangerButton
