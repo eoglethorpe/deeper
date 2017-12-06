@@ -48,6 +48,13 @@ const supportedDropboxExtension = [
     '.jpg', '.gif', '.json', '.xml',
 ];
 
+const LEAD_TYPE = {
+    dropbox: 'dropbox',
+    drive: 'google-drive',
+    file: 'disk',
+    website: 'website',
+    text: 'text',
+};
 
 const defaultProps = {
 };
@@ -97,7 +104,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: 'google-drive',
+                type: LEAD_TYPE.drive,
 
                 values: {
                     title: doc.name,
@@ -129,7 +136,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: 'dropbox',
+                type: LEAD_TYPE.dropbox,
 
                 values: {
                     title: doc.name,
@@ -168,7 +175,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: 'file',
+                type: LEAD_TYPE.file,
 
                 values: {
                     title: file.name,
@@ -200,7 +207,7 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            type: 'website',
+            type: LEAD_TYPE.website,
 
             values: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
@@ -222,7 +229,7 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            type: 'text',
+            type: LEAD_TYPE.text,
 
             values: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,

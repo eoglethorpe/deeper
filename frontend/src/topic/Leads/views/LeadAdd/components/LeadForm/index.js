@@ -20,7 +20,6 @@ import ApplyAll from '../ApplyAll';
 
 import styles from './styles.scss';
 
-const ATTACHMENT_TYPES = ['file', 'dropbox', 'drive'];
 
 const propTypes = {
     className: PropTypes.string,
@@ -49,11 +48,13 @@ const defaultProps = {
 
 const LEAD_TYPE = {
     dropbox: 'dropbox',
-    drive: 'drive',
-    file: 'file',
+    drive: 'google-drive',
+    file: 'disk',
     website: 'website',
     text: 'text',
 };
+
+const ATTACHMENT_TYPES = [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive];
 
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
@@ -72,6 +73,7 @@ export default class LeadForm extends React.PureComponent {
             'confidentiality',
             'assignee',
             'publishedOn',
+            'sourceType',
         ];
 
         const commonValidations = {
@@ -80,6 +82,7 @@ export default class LeadForm extends React.PureComponent {
             confidentiality: [requiredCondition],
             assignee: [requiredCondition],
             publishedOn: [requiredCondition],
+            sourceType: [requiredCondition],
         };
 
         switch (lead.data.type) {
@@ -152,6 +155,9 @@ export default class LeadForm extends React.PureComponent {
             errors,
             fieldErrors,
         } = lead.form;
+        const {
+            type,
+        } = lead.data;
 
         return (
             <Form
@@ -172,6 +178,10 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                 </header>
+                <HiddenInput
+                    formname="sourceType"
+                    value={type}
+                />
                 <SelectInput
                     disabled
                     error={fieldErrors.project}

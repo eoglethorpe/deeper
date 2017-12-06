@@ -24,6 +24,8 @@ const propTypes = {
     leadOptions: PropTypes.object.isRequired, // eslint-disable-line
 
     onFormSubmitFailure: PropTypes.func.isRequired,
+    // TODO: remove disable later
+    // eslint-disable-next-line
     onFormSubmitSuccess: PropTypes.func.isRequired,
 
     addLeadViewLeadChange: PropTypes.func.isRequired,
@@ -80,11 +82,11 @@ export default class LeadFormItem extends React.PureComponent {
         this.props.onFormSubmitFailure(this.props.leadKey);
     }
 
-    handleFormSuccess = () => {
+    handleFormSuccess = (newValues) => {
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
         }
-        this.leadSaveRequest = this.props.onFormSubmitSuccess(this.props.lead);
+        this.leadSaveRequest = this.props.onFormSubmitSuccess(this.props.lead, newValues);
         this.leadSaveRequest.start();
     }
 

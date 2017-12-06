@@ -140,24 +140,25 @@ export default class LeadAdd extends React.PureComponent {
 
     // REST REQUEST
 
-    createRequestForFormSave = (lead) => {
+    createRequestForFormSave = (lead, newValues) => {
+        const { serverId } = lead;
+        const leadId = this.leadDetailKeyExtractor(lead);
+
         let url;
         let params;
-        if (lead.serverId) {
-            url = createUrlForLeadEdit(lead.serverId);
+        if (serverId) {
+            url = createUrlForLeadEdit(serverId);
             params = () => {
                 const { access } = this.props.token;
-                return createParamsForLeadEdit({ access }, lead.form.values);
+                return createParamsForLeadEdit({ access }, newValues);
             };
         } else {
             url = urlForLead;
             params = () => {
                 const { access } = this.props.token;
-                return createParamsForLeadCreate({ access }, lead.form.values);
+                return createParamsForLeadCreate({ access }, newValues);
             };
         }
-
-        const leadId = this.leadDetailKeyExtractor(lead);
 
         const leadCreateRequest = new RestBuilder()
             .url(url)
@@ -359,7 +360,24 @@ export default class LeadAdd extends React.PureComponent {
         this.formCoordinator.notifyComplete(leadId);
     }
     handleLeadSaveFailure = (leadId, response) => {
-        console.error('Failed lead request:', response);
+        // console.error('Failed lead request:', response);
+        const { errors } = response;
+
+        const formFieldErrors = [];
+        const { nonFieldErrors } = errors;
+        Object.keys(errors).forEach((key) => {
+            if (key !== 'nonFieldErrors') {
+                formFieldErrors[key] = errors[key].join(' ');
+            }
+        });
+
+        this.props.addLeadViewLeadChange({
+            leadId,
+            formErrors: nonFieldErrors,
+            formFieldErrors,
+            uiState: { stale: true },
+        });
+
         this.formCoordinator.notifyComplete(leadId);
     }
 
@@ -411,8 +429,8 @@ export default class LeadAdd extends React.PureComponent {
 
     // HANDLE FORM
 
-    handleFormSubmitSuccess = (lead) => {
-        const request = this.createRequestForFormSave(lead);
+    handleFormSubmitSuccess = (lead, newValues) => {
+        const request = this.createRequestForFormSave(lead, newValues);
         return request;
     }
 

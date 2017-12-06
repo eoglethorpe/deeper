@@ -9,6 +9,7 @@ const leadSchema = [];
         },
         extends: 'dbentity',
         fields: {
+            sourceType: { type: 'string' }, // set is required later
             assignee: { type: 'array.uint' },
             attachment: { type: 'uint' }, // file url
             confidentiality: { type: 'string', required: true },

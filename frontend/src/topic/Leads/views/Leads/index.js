@@ -366,7 +366,7 @@ export default class Leads extends React.PureComponent {
         // TODO: while editing, set leads such that serverId is never repeated
         const newLeads = [];
 
-        const type = row.type || 'text';
+        const type = row.sourceType;
         const values = {
             title: row.title,
             project: row.project,

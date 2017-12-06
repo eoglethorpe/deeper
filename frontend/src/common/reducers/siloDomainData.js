@@ -159,12 +159,35 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const newLeads = leads.map(data => createLead(data));
 
+    const serverIdMap = leads.reduce(
+        (acc, lead) => {
+            if (lead.serverId) {
+                acc[lead.serverId] = true;
+            }
+            return acc;
+        },
+        {},
+    );
+
+    const spliceSettings = state.addLeadView.leads.reduce(
+        (acc, lead, i) => {
+            if (serverIdMap[lead.serverId]) {
+                acc.push([i, 1]);
+            }
+            return acc;
+        },
+        [],
+    );
+    spliceSettings.push([0, 0, ...newLeads]);
+
+    console.log(spliceSettings);
+
     const settings = {
         addLeadView: {
             // set first leads a new active lead
             activeLeadId: { $set: newLeads[0].data.id },
             // add new leads to start
-            leads: { $unshift: newLeads },
+            leads: { $splice: spliceSettings },
             // clear out filters
             filters: {
                 $set: {
