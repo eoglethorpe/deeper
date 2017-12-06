@@ -87,9 +87,14 @@ export default class List extends React.PureComponent {
                 title: widget.title,
                 component: widget.analysisFramework.listComponent,
             }));
-        this.items = analysisFramework.widgets.filter(
-            w => this.widgets.find(w1 => w1.id === w.widgetId),
-        );
+
+        if (analysisFramework.widgets) {
+            this.items = analysisFramework.widgets.filter(
+                w => this.widgets.find(w1 => w1.id === w.widgetId),
+            );
+        } else {
+            this.items = [];
+        }
     }
 
     render() {
