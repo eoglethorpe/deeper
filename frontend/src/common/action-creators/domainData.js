@@ -25,6 +25,7 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
+    SET_ANALYSIS_FRAMEWORKS,
 
 } from '../action-types/domainData';
 
@@ -137,6 +138,11 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
 export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
     type: SET_ANALYSIS_FRAMEWORK,
     analysisFramework,
+});
+
+export const setAnalysisFrameworksAction = ({ analysisFrameworks }) => ({
+    type: SET_ANALYSIS_FRAMEWORKS,
+    analysisFrameworks,
 });
 
 export const dummyAction = () => ({

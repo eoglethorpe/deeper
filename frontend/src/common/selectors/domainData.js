@@ -28,6 +28,18 @@ export const regionsSelector = ({ domainData }) => (
     domainData.regions || emptyObject
 );
 
+export const analysisFrameworksSelector = ({ domainData }) => (
+    domainData.analysisFrameworks || emptyObject
+);
+
+export const analysisFrameworkListSelector = createSelector(
+    analysisFrameworksSelector,
+    analysisFrameworks => (
+        analysisFrameworks && Object.values(analysisFrameworks).filter(
+            analysisFramework => analysisFramework,
+        )) || emptyList,
+);
+
 export const countriesListSelector = createSelector(
     regionsSelector,
     regions => (
@@ -145,9 +157,6 @@ export const currentUserProjectsSelector = createSelector(
     ) || emptyList),
 );
 
-export const analysisFrameworksSelector = ({ domainData }) => (
-    domainData.analysisFrameworks || emptyObject
-);
 
 /* TODO: remove later
 export const entriesForLeadSelector = createSelector(

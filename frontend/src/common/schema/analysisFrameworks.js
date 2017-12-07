@@ -18,6 +18,22 @@ const analysisFrameworkSchema = [];
     analysisFrameworkSchema.push({ name, schema });
 }
 {
+    const name = 'analysisFrameworkList';
+    const schema = {
+        doc: {
+            name: 'Analysis Frameworks list',
+            description: 'One of the main entities',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.analysisFramework', required: true },
+        },
+    };
+    analysisFrameworkSchema.push({ name, schema });
+}
+{
     const name = 'Widget';
     const schema = {
         doc: {

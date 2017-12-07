@@ -25,6 +25,7 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
+    SET_ANALYSIS_FRAMEWORKS,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -421,6 +422,24 @@ const setAnalysisFramework = (state, action) => {
     return update(state, settings);
 };
 
+const setAnalysisFrameworks = (state, action) => {
+    const { analysisFrameworks } = action;
+
+    const analysisFrameworksSettings = analysisFrameworks.reduce(
+        (acc, analysisFramework) => {
+            acc[analysisFramework.id] = { $auto: {
+                $set: analysisFramework,
+            } };
+            return acc;
+        },
+        {},
+    );
+    const settings = {
+        analysisFrameworks: analysisFrameworksSettings,
+    };
+    return update(state, settings);
+};
+
 const dummyAction = (state) => {
     const dummy = {
         id: 1,
@@ -470,6 +489,7 @@ const reducers = {
     [ADD_NEW_REGION]: addNewRegion,
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
+    [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

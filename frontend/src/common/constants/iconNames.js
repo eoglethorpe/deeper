@@ -9,6 +9,7 @@ const iconNames = {
     person: 'ion-android-person',
     text: 'ion-document',
     wrench: 'ion-wrench',
+    check: 'ion-checkmark',
 };
 
 export default iconNames;
