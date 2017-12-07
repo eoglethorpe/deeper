@@ -33,6 +33,7 @@ import {
     iconNames,
 } from '../../../../common/constants';
 
+import ProjectAfDetail from '../ProjectAfDetail';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -157,7 +158,10 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         if ((displayAfList || emptyList).length > 0) {
             return (
-                <div>{selectedAf}</div>
+                <ProjectAfDetail
+                    key={selectedAf}
+                    afId={selectedAf}
+                />
             );
         }
 
@@ -186,7 +190,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             Analysis Framworks
                         </h2>
                         <PrimaryButton
-                            iconName="ion-plus"
+                            iconName={iconNames.add}
                             onClick={this.handleAddRegionButtonClick}
                         >
                             Add

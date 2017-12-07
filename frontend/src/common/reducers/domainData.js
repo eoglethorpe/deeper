@@ -26,6 +26,7 @@ import {
 
     SET_ANALYSIS_FRAMEWORK,
     SET_ANALYSIS_FRAMEWORKS,
+    SET_PROJECT_AF,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -440,6 +441,20 @@ const setAnalysisFrameworks = (state, action) => {
     return update(state, settings);
 };
 
+const setProjectAf = (state, action) => {
+    const { projectId, afId } = action;
+    const settings = {
+        projects: { $auto: {
+            [projectId]: { $auto: {
+                analysisFramework: {
+                    $set: afId,
+                },
+            } },
+        } },
+    };
+    return update(state, settings);
+};
+
 const dummyAction = (state) => {
     const dummy = {
         id: 1,
@@ -490,6 +505,7 @@ const reducers = {
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
     [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
+    [SET_PROJECT_AF]: setProjectAf,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

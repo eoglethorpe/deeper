@@ -26,6 +26,7 @@ import {
 
     SET_ANALYSIS_FRAMEWORK,
     SET_ANALYSIS_FRAMEWORKS,
+    SET_PROJECT_AF,
 
 } from '../action-types/domainData';
 
@@ -134,7 +135,6 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
     regionId,
 });
 
-
 export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
     type: SET_ANALYSIS_FRAMEWORK,
     analysisFramework,
@@ -143,6 +143,12 @@ export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
 export const setAnalysisFrameworksAction = ({ analysisFrameworks }) => ({
     type: SET_ANALYSIS_FRAMEWORKS,
     analysisFrameworks,
+});
+
+export const setProjectAfAction = ({ projectId, afId }) => ({
+    type: SET_PROJECT_AF,
+    projectId,
+    afId,
 });
 
 export const dummyAction = () => ({

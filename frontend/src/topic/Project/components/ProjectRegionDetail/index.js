@@ -193,7 +193,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     handleRegionRemove = (deleteConfirm, projectDetails, removedRegionId) => {
-        console.log(deleteConfirm);
         if (deleteConfirm) {
             if (this.regionRemoveRequest) {
                 this.regionRemoveRequest.stop();

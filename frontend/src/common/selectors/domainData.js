@@ -13,6 +13,7 @@ export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
+export const analysisFrameworkIdFromPropsForProject = (state, { afId }) => afId;
 
 // Using state
 
@@ -30,6 +31,14 @@ export const regionsSelector = ({ domainData }) => (
 
 export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
+);
+
+export const analysisFrameworkDetailSelector = createSelector(
+    analysisFrameworksSelector,
+    analysisFrameworkIdFromPropsForProject,
+    (analysisFrameworks, afId) => (
+        analysisFrameworks[afId] || emptyObject
+    ),
 );
 
 export const analysisFrameworkListSelector = createSelector(

@@ -1,0 +1,24 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
+
+.analysis-framework-detail {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-large;
+        height: $height-header;
+
+        .action-btns {
+            button {
+                margin-left: $spacing-medium-alt;
+            }
+        }
+    }
+
+}

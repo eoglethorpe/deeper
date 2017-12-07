@@ -24,3 +24,4 @@ export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
 
 export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
 export const SET_ANALYSIS_FRAMEWORKS = 'domain-data/SET_ANALYSIS_FRAMEWORKS';
+export const SET_PROJECT_AF = 'domain-data/SET_PROJECT_AF';
