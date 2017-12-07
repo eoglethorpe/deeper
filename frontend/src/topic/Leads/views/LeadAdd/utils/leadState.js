@@ -1,3 +1,5 @@
+import { LEAD_TYPE, LEAD_STATUS } from './constants';
+
 // eslint-disable-next-line import/prefer-default-export
 export const calcLeadState = ({ lead, upload, rest }) => {
     const { serverId, data, form, uiState } = lead;
@@ -5,18 +7,18 @@ export const calcLeadState = ({ lead, upload, rest }) => {
     const { stale, error } = uiState;
     const { type } = data;
 
-    if (type === 'file' && upload && upload.progress <= 100) {
-        return 'uploading';
-    } else if (type === 'file' && (values && !values.attachment)) {
-        return 'warning'; // invalid
+    if (type === LEAD_TYPE.file && upload && upload.progress <= 100) {
+        return LEAD_STATUS.uploading;
+    } else if (type === LEAD_TYPE.file && (values && !values.attachment)) {
+        return LEAD_STATUS.warning; // invalid
     } else if (rest && rest.pending) {
-        return 'requesting';
+        return LEAD_STATUS.requesting;
     } else if (error) {
-        return 'invalid';
+        return LEAD_STATUS.invalid;
     } else if (!stale) {
-        return 'nonstale';
+        return LEAD_STATUS.nonstale;
     } else if (serverId) {
-        return 'complete';
+        return LEAD_STATUS.complete;
     }
-    return 'stale';
+    return LEAD_STATUS.stale;
 };

@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { LEAD_TYPE, LEAD_STATUS } from '../../utils/constants';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -36,11 +37,11 @@ export default class LeadListItem extends React.PureComponent {
         super(props);
 
         this.leadTypeToIconClassMap = {
-            drive: 'ion-social-google',
-            dropbox: 'ion-social-dropbox',
-            file: 'ion-android-upload',
-            website: 'ion-earth',
-            text: 'ion-clipboard',
+            [LEAD_TYPE.drive]: 'ion-social-google',
+            [LEAD_TYPE.dropbox]: 'ion-social-dropbox',
+            [LEAD_TYPE.file]: 'ion-android-upload',
+            [LEAD_TYPE.website]: 'ion-earth',
+            [LEAD_TYPE.text]: 'ion-clipboard',
         };
     }
 
@@ -54,36 +55,36 @@ export default class LeadListItem extends React.PureComponent {
 
     renderIcon = (choice) => {
         switch (choice) {
-            case 'warning':
+            case LEAD_STATUS.warning:
                 return (
                     <span
                         styleName="warning"
                         className="ion-alert-circled"
                     />
                 );
-            case 'requesting':
-            case 'uploading':
+            case LEAD_STATUS.requesting:
+            case LEAD_STATUS.uploading:
                 return (
                     <span
                         styleName="pending"
                         className="ion-load-c"
                     />
                 );
-            case 'invalid':
+            case LEAD_STATUS.invalid:
                 return (
                     <span
                         styleName="error"
                         className="ion-android-alert"
                     />
                 );
-            case 'nonstale':
+            case LEAD_STATUS.nonstale:
                 return (
                     <span
                         styleName="stale"
                         className="ion-code-working"
                     />
                 );
-            case 'complete':
+            case LEAD_STATUS.complete:
                 return (
                     <span
                         styleName="complete"
@@ -96,7 +97,7 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     renderUploadProgress = (choice, upload) => {
-        if (choice !== 'uploading') {
+        if (choice !== LEAD_STATUS.uploading) {
             return null;
         }
         return (

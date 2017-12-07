@@ -18,6 +18,7 @@ import { LoadingAnimation } from '../../../../../../public/components/View';
 
 import ApplyAll from '../ApplyAll';
 
+import { LEAD_TYPE, ATTACHMENT_TYPES } from '../../utils/constants';
 import styles from './styles.scss';
 
 
@@ -45,16 +46,6 @@ const propTypes = {
 const defaultProps = {
     className: '',
 };
-
-const LEAD_TYPE = {
-    dropbox: 'dropbox',
-    drive: 'google-drive',
-    file: 'disk',
-    website: 'website',
-    text: 'text',
-};
-
-const ATTACHMENT_TYPES = [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive];
 
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
@@ -125,6 +116,8 @@ export default class LeadForm extends React.PureComponent {
                 break;
             default:
                 console.warn(`Unknown lead type ${lead.type}`);
+                this.elements = commonElements;
+                this.validations = commonValidations;
         }
     }
 
