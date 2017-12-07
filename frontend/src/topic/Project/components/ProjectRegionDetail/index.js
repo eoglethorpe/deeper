@@ -277,7 +277,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     </Confirm>
                 </header>
                 {
-                    !isPublic ? (
+                    (isPublic !== undefined && !isPublic) ? (
                         <div styleName="region-details">
                             <div styleName="detail-map-container">
                                 <RegionDetail
