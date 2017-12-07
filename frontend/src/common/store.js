@@ -1,5 +1,4 @@
 import { compose, createStore, applyMiddleware } from 'redux';
-import { autoRehydrate } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from './middlewares/logger';
 import refresher from './middlewares/refresher';
@@ -26,7 +25,6 @@ const applicableComposer = !overrideCompose
     : reduxExtensionCompose({ /* specify extention's options here */ });
 
 const enhancer = applicableComposer(
-    autoRehydrate(),
     applyMiddleware(...middleware),
 );
 

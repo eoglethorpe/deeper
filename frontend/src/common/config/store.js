@@ -1,10 +1,11 @@
 // import localforage from 'localforage';
+import localStorage from 'redux-persist/lib/storage';
 
 const storeConfig = {
-    // blacklist: ['websocket', 'datetime', 'navbar', 'domainData', 'siloDomainData'],
-    blacklist: ['websocket', 'datetime', 'navbar'],
-    keyPrefix: 'deeper-',
+    // blacklist: ['domainData', 'siloDomainData'],
+    blacklist: [],
+    key: 'deeper',
+    storage: localStorage,
     // storage: localforage,
-    // TODO: add transforms
 };
 export default storeConfig;
