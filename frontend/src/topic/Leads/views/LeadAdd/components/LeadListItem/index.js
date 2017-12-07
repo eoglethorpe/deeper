@@ -17,7 +17,7 @@ const propTypes = {
 
     leadKey: PropTypes.string.isRequired,
 
-    choice: PropTypes.object, // eslint-disable-line
+    choice: PropTypes.string.isRequired,
     upload: PropTypes.object, // eslint-disable-line
 };
 
@@ -25,7 +25,6 @@ const defaultProps = {
     active: false,
     className: '',
     upload: undefined,
-    choice: {},
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -118,6 +117,8 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering LeadListItem');
+
         const { active, className } = this.props;
 
         const { choice, upload, lead } = this.props;
@@ -137,8 +138,8 @@ export default class LeadListItem extends React.PureComponent {
                 <span styleName="title" >
                     { title }
                 </span>
-                { this.renderIcon(choice.choice) }
-                { this.renderUploadProgress(choice.choice, upload) }
+                { this.renderIcon(choice) }
+                { this.renderUploadProgress(choice, upload) }
             </button>
         );
     }

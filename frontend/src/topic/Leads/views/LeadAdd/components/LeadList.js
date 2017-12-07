@@ -66,6 +66,46 @@ export default class LeadList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+
+        this.state = { leadsFiltered: [] };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { filters, leads, choices } = nextProps;
+
+        if (
+            this.props.filters !== filters ||
+            this.props.leads !== leads ||
+            this.props.choices !== choices
+        ) {
+            console.warn('Calculating');
+            const { search, type, source, status } = filters;
+            const leadsFiltered = leads.filter((lead) => {
+                const id = this.calcLeadKey(lead);
+                const leadStatus = choices[id].choice;
+                const {
+                    title: leadTitle = '',
+                    source: leadSource = '',
+                } = lead.form.values;
+                const { type: leadType } = lead.data;
+
+                if (search && search.length > 0 && !strMatchesSub(leadTitle, search)) {
+                    return false;
+                } else if (source && source.length > 0 && !strMatchesSub(leadSource, source)) {
+                    return false;
+                } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
+                    return false;
+                } else if (status && status.length > 0 && !statusMatches(leadStatus, status)) {
+                    return false;
+                }
+                return true;
+            });
+            this.setState({ leadsFiltered });
+        }
+    }
+
     calcLeadKey = lead => lead.data.id
 
     renderLeadItem = (key, lead) => {
@@ -81,7 +121,7 @@ export default class LeadList extends React.PureComponent {
                 key={key}
                 leadKey={key}
                 lead={lead}
-                choice={choices[key]}
+                choice={choices[key].choice}
                 upload={leadUploads[key]}
                 onClick={this.props.setActiveLeadId}
             />
@@ -89,34 +129,12 @@ export default class LeadList extends React.PureComponent {
     }
 
     render() {
-        const { filters, leads, choices } = this.props;
-        const { search, type, source, status } = filters;
-
-        const leadsFiltered = leads.filter((lead) => {
-            const id = this.calcLeadKey(lead);
-            const leadStatus = choices[id].choice;
-            const {
-                title: leadTitle = '',
-                source: leadSource = '',
-            } = lead.form.values;
-            const { type: leadType } = lead.data;
-
-            if (search && search.length > 0 && !strMatchesSub(leadTitle, search)) {
-                return false;
-            } else if (source && source.length > 0 && !strMatchesSub(leadSource, source)) {
-                return false;
-            } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
-                return false;
-            } else if (status && status.length > 0 && !statusMatches(leadStatus, status)) {
-                return false;
-            }
-            return true;
-        });
+        console.log('Rendering LeadList');
 
         return (
             <ListView
                 styleName="lead-list"
-                data={leadsFiltered}
+                data={this.state.leadsFiltered}
                 keyExtractor={this.calcLeadKey}
                 modifier={this.renderLeadItem}
             />
