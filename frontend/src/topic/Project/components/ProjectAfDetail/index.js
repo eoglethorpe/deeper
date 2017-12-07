@@ -28,13 +28,14 @@ import styles from './styles.scss';
 
 const propTypes = {
     afDetails: PropTypes.object.isRequired, // eslint-disable-line
-    afId: PropTypes.number.isRequired,
+    afId: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setProjectAf: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
+    afId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -141,6 +142,8 @@ export default class ProjectAfDetail extends React.PureComponent {
             useConfirmModalShow,
         } = this.state;
 
+        const isProjectAf = afId === projectDetails.analysisFramework;
+
         return (
             <div styleName="analysis-framework-detail">
                 <header styleName="header">
@@ -148,16 +151,20 @@ export default class ProjectAfDetail extends React.PureComponent {
                         {afDetails.title}
                     </h2>
                     <div styleName="action-btns">
-                        <DangerButton
-                            onClick={this.handleAfRemoveClick}
-                        >
-                            Remove
-                        </DangerButton>
-                        <PrimaryButton
-                            onClick={this.handleAfUseClick}
-                        >
-                            Use
-                        </PrimaryButton>
+                        {isProjectAf &&
+                            <DangerButton
+                                onClick={this.handleAfRemoveClick}
+                            >
+                                Remove
+                            </DangerButton>
+                        }
+                        {!isProjectAf &&
+                            <PrimaryButton
+                                onClick={this.handleAfUseClick}
+                            >
+                                Use
+                            </PrimaryButton>
+                        }
                         <PrimaryButton
                             onClick={this.handleAfCloneClick}
                         >

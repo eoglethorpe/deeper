@@ -12,6 +12,7 @@ import {
 import {
     ListItem,
     ListView,
+    LoadingAnimation,
 } from '../../../../public/components/View';
 import { RestBuilder } from '../../../../public/utils/rest';
 
@@ -73,8 +74,14 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         const displayAfList = [...analysisFrameworkList];
 
+        let selectedAf = displayAfList[0].id;
+        if (projectDetails.analysisFramework) {
+            selectedAf = projectDetails.analysisFramework;
+        }
+
         this.state = {
-            selectedAf: projectDetails.analysisFramework,
+            selectedAf,
+            pending: false,
             searchInputValue: '',
             displayAfList,
         };
@@ -91,7 +98,15 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
             const displayAfList = [...nextProps.analysisFrameworkList];
-            this.setState({ displayAfList });
+
+            let selectedAf = displayAfList[0].id;
+            if (nextProps.projectDetails.analysisFramework) {
+                selectedAf = nextProps.projectDetails.analysisFramework;
+            }
+            this.setState({
+                selectedAf,
+                displayAfList,
+            });
         }
     }
 
@@ -105,6 +120,8 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                     access,
                 });
             })
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .decay(0.3)
             .maxRetryTime(3000)
             .maxRetryAttempts(10)
@@ -177,6 +194,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         const {
             selectedAf,
             displayAfList,
+            pending,
         } = this.state;
 
         const sortedAfs = [...displayAfList];
@@ -210,6 +228,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                     />
                 </div>
                 <div styleName="details-container">
+                    {pending && <LoadingAnimation />}
                     {this.renderSelectedAfDetails(selectedAf)}
                 </div>
             </div>
