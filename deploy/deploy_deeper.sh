@@ -1,9 +1,9 @@
 #! /bin/bash
 
+ENV_FILE=$1
 ONLY_DEPLOY=$2
 DJANGO_ONLY_DEPLOY=$3 # web/worker
 echo "::::: Gettings ENV Variables :::::"
-    ENV_FILE=$1
     if [ -f "$ENV_FILE" ]; then
         echo "  >> Gettings ENV from file $ENV_FILE "
         source $ENV_FILE
@@ -156,4 +156,21 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     aws s3 sync frontend/build/ s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC
     echo "::::::  >> Settings Configs for Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 website s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC --index-document index.html --error-document index.html
+
+    # Clear cloudflare cache
+    echo ":::::: Clear cloudflare cache"
+    # Get the zones
+    CLOUDFLARE_ZONES=($(curl -X GET "https://api.cloudflare.com/client/v4/zones" \
+         -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
+         -H "X-Auth-Key: ${CLOUDFLARE_KEY}" \
+         -H "Content-Type: application/json" | jq -r '.result[].id'))
+
+    for CLOUDFLARE_ZONE in ${CLOUDFLARE_ZONES[@]}; do
+        # Clear the cache
+        curl -X DELETE "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE}/purge_cache" \
+             -H "X-Auth-Email: ${CLOUDFLARE_EMAIL}" \
+             -H "X-Auth-Key: ${CLOUDFLARE_KEY}" \
+             -H "Content-Type: application/json" \
+             --data '{"purge_everything":true}'
+    done
 fi

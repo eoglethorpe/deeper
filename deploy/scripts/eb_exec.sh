@@ -7,6 +7,11 @@ ROOT_DIR=$(dirname "$(dirname "$BASE_DIR")")
 instid=`curl -s -o - http://169.254.169.254/latest/meta-data/instance-id`
 export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
 
+### Aws scripts
+printenv | sed 's/^\([a-zA-Z0-9_]*\)=\(.*\)$/export \1="\2"/g' > /aws-script/env_var.sh
+crontab $ROOT_DIR/deploy/cronjobs
+cron
+
 ### PAPERTRAIL CONFIGS
 cp $ROOT_DIR/deploy/configs/log_files.yml-sample /etc/log_files.yml
 sed "s/hostname:.*/hostname: $EBS_HOSTNAME/" -i /etc/log_files.yml
