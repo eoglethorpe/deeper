@@ -11,6 +11,10 @@ update-rc.d remote_syslog defaults
 
 mkdir /var/log/uwsgi
 
-# Add Cloud Watch metrics
-#curl http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip -O
-#unzip CloudWatchMonitoringScripts-1.2.1.zip
+# Add Cloud Watch metrics [Note: requires unzip, libwww-perl, libdatetime-perl]
+mkdir -p /aws-script
+
+curl -o /tmp/cloudWatchMonitoringScripts.zip http://aws-cloudwatch.s3.amazonaws.com/downloads/CloudWatchMonitoringScripts-1.2.1.zip
+unzip /tmp/cloudWatchMonitoringScripts.zip -d /aws-script
+
+touch /var/log/cron.log
