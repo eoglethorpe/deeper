@@ -8,3 +8,16 @@ export * from './token';
 export * from './userGroups';
 export * from './users';
 export * from './analysisFramework';
+
+
+export const transformResponseErrorToFormError = (errors) => {
+    const { nonFieldErrors } = errors;
+    const formFieldErrors = {};
+
+    Object.keys(errors).forEach((key) => {
+        if (key !== 'nonFieldErrors') {
+            formFieldErrors[key] = errors[key].join(' ');
+        }
+    });
+    return { formFieldErrors, formErrors: nonFieldErrors };
+};
