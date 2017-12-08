@@ -20,6 +20,7 @@ import {
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../../common/rest';
@@ -146,13 +147,20 @@ export default class AddExistingRegion extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                console.info('FAILURE:', response);
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formFieldErrors,
+                    formErrors,
                 });
             })
             .fatal((response) => {
+                console.info('FATAL:', response);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formErrors: ['Error while trying to :ave project.'],
                 });
             })
             .build();

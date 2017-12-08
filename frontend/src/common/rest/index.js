@@ -11,13 +11,14 @@ export * from './analysisFramework';
 
 
 export const transformResponseErrorToFormError = (errors) => {
-    const { nonFieldErrors } = errors;
-    const formFieldErrors = {};
+    const { nonFieldErrors: formErrors, ...formFieldErrorList } = errors;
 
-    Object.keys(errors).forEach((key) => {
-        if (key !== 'nonFieldErrors') {
-            formFieldErrors[key] = errors[key].join(' ');
-        }
-    });
-    return { formFieldErrors, formErrors: nonFieldErrors };
+    const formFieldErrors = Object.keys(formFieldErrorList).reduce(
+        (acc, key) => {
+            acc[key] = formFieldErrorList[key].join(' ');
+            return acc;
+        },
+        {},
+    );
+    return { formFieldErrors, formErrors };
 };

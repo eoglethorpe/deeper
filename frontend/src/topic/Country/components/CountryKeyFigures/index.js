@@ -18,6 +18,7 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 import {
+    transformResponseErrorToFormError,
     createParamsForRegionPatch,
     createUrlForRegion,
     createUrlForRegionWithField,
@@ -205,25 +206,22 @@ export default class CountryKeyFigures extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
+                    formErrors,
                     pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save region detail.'],
+                    pending: false,
+                });
             })
             .build();
         return regionDetailPatchRequest;

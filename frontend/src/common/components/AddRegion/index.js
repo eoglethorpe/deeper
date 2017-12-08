@@ -25,6 +25,7 @@ import { pathNames } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
+    transformResponseErrorToFormError,
     createParamsForRegionCreate,
     urlForRegionCreate,
 } from '../../rest';
@@ -148,25 +149,22 @@ export default class AddRegion extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
+                    formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save region.'],
+                    pending: true,
+                });
             })
             .build();
         return regionCreateRequest;

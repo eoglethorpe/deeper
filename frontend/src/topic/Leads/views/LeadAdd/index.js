@@ -23,6 +23,8 @@ import {
 import { pageTitles } from '../../../../common/constants';
 
 import {
+    transformResponseErrorToFormError,
+
     urlForGoogleDriveFileUpload,
     urlForDropboxFileUpload,
     createHeaderForGoogleDriveFileUpload,
@@ -168,7 +170,7 @@ export default class LeadAdd extends React.PureComponent {
             .postLoad(() => this.handleLeadSavePostLoad(leadId))
             .success(response => this.handleLeadSaveSuccess(leadId, response))
             .failure(response => this.handleLeadSaveFailure(leadId, response))
-            .fatal(response => this.handleLeadSaveFailure(leadId, response))
+            .fatal(response => this.handleLeadSaveFatal(leadId, response))
             .build();
         return leadCreateRequest;
     }
@@ -357,23 +359,27 @@ export default class LeadAdd extends React.PureComponent {
     }
     handleLeadSaveFailure = (leadId, response) => {
         // console.error('Failed lead request:', response);
-        const { errors } = response;
-
-        const formFieldErrors = [];
-        const { nonFieldErrors } = errors;
-        Object.keys(errors).forEach((key) => {
-            if (key !== 'nonFieldErrors') {
-                formFieldErrors[key] = errors[key].join(' ');
-            }
-        });
+        const {
+            formFieldErrors,
+            formErrors,
+        } = transformResponseErrorToFormError(response.errors);
 
         this.props.addLeadViewLeadChange({
             leadId,
-            formErrors: nonFieldErrors,
+            formErrors,
             formFieldErrors,
             uiState: { stale: true },
         });
+        this.formCoordinator.notifyComplete(leadId);
+    }
+    handleLeadSaveFatal = (leadId, response) => {
+        console.info('FATAL:', response);
 
+        this.props.addLeadViewLeadChange({
+            leadId,
+            formErrors: ['Error while trying to save lead.'],
+            uiState: { stale: true },
+        });
         this.formCoordinator.notifyComplete(leadId);
     }
 

@@ -25,6 +25,7 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForUserGroupsPatch,
     createUrlForUserGroup,
 } from '../../../../common/rest';
@@ -118,25 +119,22 @@ export default class UserGroupEdit extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
+                    formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save user group.'],
+                    pending: true,
+                });
             })
             .build();
         return userGroupCreateRequest;
