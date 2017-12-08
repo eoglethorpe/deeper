@@ -20,7 +20,7 @@ import {
 } from '../../../../public/components/Input';
 import { PrimaryButton } from '../../../../public/components/Action';
 import {
-    RestBuilder,
+    FgRestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
@@ -32,6 +32,7 @@ import {
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
 import {
+    transformResponseErrorToFormError,
     createParamsForTokenCreate,
     urlForTokenCreate,
     createParamsForTokenCreateHid,
@@ -195,12 +196,9 @@ export default class Login extends React.PureComponent {
     // LOGIN REST API
 
     createRequestLogin = (url, params) => {
-        const userLoginRequest = new RestBuilder()
+        const userLoginRequest = new FgRestBuilder()
             .url(url)
             .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true, stale: false });
             })
@@ -235,23 +233,20 @@ export default class Login extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
+                    formErrors,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to log in.'],
+                });
             })
             .build();
         return userLoginRequest;

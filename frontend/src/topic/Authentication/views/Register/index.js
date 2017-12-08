@@ -19,7 +19,7 @@ import {
     requiredCondition,
 } from '../../../../public/components/Input';
 import { PrimaryButton } from '../../../../public/components/Action';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
@@ -28,6 +28,7 @@ import {
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
@@ -131,12 +132,9 @@ export default class Login extends React.PureComponent {
             email,
             password,
         });
-        const userCreateRequest = new RestBuilder()
+        const userCreateRequest = new FgRestBuilder()
             .url(url)
             .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true, stale: false });
             })
@@ -156,23 +154,22 @@ export default class Login extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                const { errors } = response;
-                const { nonFieldErrors } = errors;
-                const formFieldErrors = {};
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
+                // NOTE: server uses username, client side uses email
                 formFieldErrors.email = formFieldErrors.username;
-
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
+                    formErrors,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to register.'],
+                });
             })
             .build();
         return userCreateRequest;
