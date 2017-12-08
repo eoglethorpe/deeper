@@ -11,6 +11,7 @@ const iconNames = {
     wrench: 'ion-wrench',
     check: 'ion-checkmark',
     add: 'ion-plus',
+    edit: 'ion-edit',
 };
 
 export default iconNames;

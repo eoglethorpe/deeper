@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
@@ -29,6 +30,15 @@ import {
     addNewAfAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
+
+import {
+    reverseRoute,
+} from '../../../../public/utils/common';
+
+import {
+    iconNames,
+    pathNames,
+} from '../../../../common/constants';
 
 import ProjectAfForm from '../ProjectAfForm';
 import styles from './styles.scss';
@@ -80,6 +90,8 @@ export default class ProjectAfDetail extends React.PureComponent {
             formFieldErrors: {},
             stale: false,
             pending: false,
+
+            redirectTo: undefined,
         };
     }
 
@@ -243,6 +255,19 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({ stale: false });
     };
 
+    handleAfEditClick = () => {
+        const {
+            afId,
+        } = this.props;
+
+        const params = {
+            analysisFrameworkId: afId,
+        };
+
+        this.setState({
+            redirectTo: reverseRoute(pathNames.analysisFramework, params),
+        });
+    }
 
     render() {
         const {
@@ -259,7 +284,18 @@ export default class ProjectAfDetail extends React.PureComponent {
             stale,
             pending,
             formValues,
+
+            redirectTo,
         } = this.state;
+
+        if (redirectTo) {
+            return (
+                <Redirect
+                    to={redirectTo}
+                    push
+                />
+            );
+        }
 
         const isProjectAf = afId === projectDetails.analysisFramework;
 
@@ -272,9 +308,18 @@ export default class ProjectAfDetail extends React.PureComponent {
                     <div styleName="action-btns">
                         {!isProjectAf &&
                             <PrimaryButton
+                                iconName={iconNames.check}
                                 onClick={this.handleAfUseClick}
                             >
                                 Use
+                            </PrimaryButton>
+                        }
+                        {afDetails.isAdmin &&
+                            <PrimaryButton
+                                iconName={iconNames.edit}
+                                onClick={this.handleAfEditClick}
+                            >
+                                Edit
                             </PrimaryButton>
                         }
                         <PrimaryButton
