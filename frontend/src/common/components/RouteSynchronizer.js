@@ -69,7 +69,7 @@ class RouteSynchronizer extends React.PureComponent {
         const newParams = { ...match.params };
         let changed = false;
 
-        if (projectId !== +match.params.projectId) {
+        if (match.params.projectId && projectId !== +match.params.projectId) {
             newParams.projectId = projectId;
             changed = true;
         }
@@ -101,6 +101,10 @@ class RouteSynchronizer extends React.PureComponent {
         const {
             match: newMatch,
         } = newProps;
+
+        if (!newMatch.params.projectId) {
+            return;
+        }
 
         const oldParams = {
             ...oldMatch.params,
