@@ -29,6 +29,7 @@ import {
     googleDriveDeveloperKey,
 } from '../../../../../common/config/google-drive';
 
+import { LEAD_TYPE } from '../utils/constants';
 import styles from '../styles.scss';
 
 const supportedGoogleDriveMimeTypes = [
@@ -47,14 +48,6 @@ const supportedDropboxExtension = [
     '.xls', '.xlsx', '.csv', '.png',
     '.jpg', '.gif', '.json', '.xml',
 ];
-
-const LEAD_TYPE = {
-    dropbox: 'dropbox',
-    drive: 'google-drive',
-    file: 'disk',
-    website: 'website',
-    text: 'text',
-};
 
 const defaultProps = {
 };

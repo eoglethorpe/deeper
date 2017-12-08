@@ -18,6 +18,7 @@ import {
     addLeadViewFiltersSelector,
 } from '../../../../../common/redux';
 
+import { LEAD_STATUS, LEAD_FILTER_STATUS } from '../utils/constants';
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';
 
@@ -26,12 +27,19 @@ const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase(
 
 const statusMatches = (leadStatus, status) => {
     switch (status) {
-        case 'invalid':
-            return leadStatus === 'invalid' || leadStatus === 'warning';
-        case 'saved':
-            return leadStatus === 'complete';
-        case 'unsaved':
-            return leadStatus === 'nonstale' || leadStatus === 'uploading' || leadStatus === 'requesting';
+        case LEAD_FILTER_STATUS.invalid:
+            return (
+                leadStatus === LEAD_STATUS.invalid ||
+                leadStatus === LEAD_STATUS.warning
+            );
+        case LEAD_FILTER_STATUS.saved:
+            return leadStatus === LEAD_STATUS.complete;
+        case LEAD_FILTER_STATUS.unsaved:
+            return (
+                leadStatus === LEAD_STATUS.nonstale ||
+                leadStatus === LEAD_STATUS.uploading ||
+                leadStatus === LEAD_STATUS.requesting
+            );
         default:
             return false;
     }
@@ -66,6 +74,45 @@ export default class LeadList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+
+        this.state = { leadsFiltered: [] };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { filters, leads, choices } = nextProps;
+
+        if (
+            this.props.filters !== filters ||
+            this.props.leads !== leads ||
+            this.props.choices !== choices
+        ) {
+            const { search, type, source, status } = filters;
+            const leadsFiltered = leads.filter((lead) => {
+                const id = this.calcLeadKey(lead);
+                const leadStatus = choices[id].choice;
+                const {
+                    title: leadTitle = '',
+                    source: leadSource = '',
+                } = lead.form.values;
+                const { type: leadType } = lead.data;
+
+                if (search && search.length > 0 && !strMatchesSub(leadTitle, search)) {
+                    return false;
+                } else if (source && source.length > 0 && !strMatchesSub(leadSource, source)) {
+                    return false;
+                } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
+                    return false;
+                } else if (status && status.length > 0 && !statusMatches(leadStatus, status)) {
+                    return false;
+                }
+                return true;
+            });
+            this.setState({ leadsFiltered });
+        }
+    }
+
     calcLeadKey = lead => lead.data.id
 
     renderLeadItem = (key, lead) => {
@@ -81,7 +128,7 @@ export default class LeadList extends React.PureComponent {
                 key={key}
                 leadKey={key}
                 lead={lead}
-                choice={choices[key]}
+                choice={choices[key].choice}
                 upload={leadUploads[key]}
                 onClick={this.props.setActiveLeadId}
             />
@@ -89,34 +136,10 @@ export default class LeadList extends React.PureComponent {
     }
 
     render() {
-        const { filters, leads, choices } = this.props;
-        const { search, type, source, status } = filters;
-
-        const leadsFiltered = leads.filter((lead) => {
-            const id = this.calcLeadKey(lead);
-            const leadStatus = choices[id].choice;
-            const {
-                title: leadTitle = '',
-                source: leadSource = '',
-            } = lead.form.values;
-            const { type: leadType } = lead.data;
-
-            if (search && search.length > 0 && !strMatchesSub(leadTitle, search)) {
-                return false;
-            } else if (source && source.length > 0 && !strMatchesSub(leadSource, source)) {
-                return false;
-            } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
-                return false;
-            } else if (status && status.length > 0 && !statusMatches(leadStatus, status)) {
-                return false;
-            }
-            return true;
-        });
-
         return (
             <ListView
                 styleName="lead-list"
-                data={leadsFiltered}
+                data={this.state.leadsFiltered}
                 keyExtractor={this.calcLeadKey}
                 modifier={this.renderLeadItem}
             />

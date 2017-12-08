@@ -53,6 +53,7 @@ import {
 } from '../../../../common/redux';
 
 import { calcLeadState } from './utils/leadState';
+import { LEAD_STATUS } from './utils/constants';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
@@ -518,9 +519,9 @@ export default class LeadAdd extends React.PureComponent {
                     rest: leadRests[leadId],
                     upload: leadUploads[leadId],
                 });
-                const isSaveDisabled = choice !== 'nonstale';
-                const isRemoveDisabled = choice === 'requesting';
-                const isFormDisabled = (choice === 'requesting');
+                const isSaveDisabled = (choice !== LEAD_STATUS.nonstale);
+                const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
+                const isFormDisabled = (choice === LEAD_STATUS.requesting);
                 acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
                 return acc;
             },

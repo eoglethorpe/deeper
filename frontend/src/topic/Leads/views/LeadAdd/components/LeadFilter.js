@@ -29,21 +29,22 @@ import {
     createUrlForLeadFilterOptions,
 } from '../../../../../common/rest';
 
+import { LEAD_TYPE, LEAD_FILTER_STATUS } from '../utils/constants';
 import styles from '../styles.scss';
 
 
 const leadTypeOptions = [
-    { key: 'dropbox', label: 'Dropbox' },
-    { key: 'file', label: 'Local Disk' },
-    { key: 'drive', label: 'Google Drive' },
-    { key: 'text', label: 'Text' },
-    { key: 'website', label: 'Website' },
+    { key: LEAD_TYPE.dropbox, label: 'Dropbox' },
+    { key: LEAD_TYPE.file, label: 'Local Disk' },
+    { key: LEAD_TYPE.drive, label: 'Google Drive' },
+    { key: LEAD_TYPE.text, label: 'Text' },
+    { key: LEAD_TYPE.website, label: 'Website' },
 ];
 
 const leadStatusFilterOptions = [
-    { key: 'invalid', label: 'Invalid' }, // invalid
-    { key: 'saved', label: 'Saved' }, // complete
-    { key: 'unsaved', label: 'Unsaved' }, // stale
+    { key: LEAD_FILTER_STATUS.invalid, label: 'Invalid' },
+    { key: LEAD_FILTER_STATUS.saved, label: 'Saved' },
+    { key: LEAD_FILTER_STATUS.unsaved, label: 'Unsaved' },
 ];
 
 const defaultProps = { }; const propTypes = {
