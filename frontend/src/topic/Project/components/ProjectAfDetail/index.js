@@ -13,6 +13,8 @@ import {
 
     createUrlForAfClone,
     createParamsForAfClone,
+    createParamsForAnalysisFrameworkEdit,
+    createUrlForAnalysisFramework,
 } from '../../../../common/rest';
 import {
     Confirm,
@@ -23,10 +25,12 @@ import {
     projectDetailsSelector,
 
     setProjectAfAction,
+    setAfDetailAction,
     addNewAfAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
+import ProjectAfForm from '../ProjectAfForm';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -35,6 +39,7 @@ const propTypes = {
     addNewAf: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setProjectAf: PropTypes.func.isRequired,
+    setAfDetail: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -51,6 +56,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     addNewAf: params => dispatch(addNewAfAction(params)),
     setProjectAf: params => dispatch(setProjectAfAction(params)),
+    setAfDetail: params => dispatch(setAfDetailAction(params)),
     dispatch,
 });
 
@@ -63,9 +69,17 @@ export default class ProjectAfDetail extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { afDetails } = props;
+
         this.state = {
             cloneConfirmModalShow: false,
             useConfirmModalShow: false,
+
+            formValues: { ...afDetails },
+            formErrors: [],
+            formFieldErrors: {},
+            stale: false,
+            pending: false,
         };
     }
 
@@ -127,6 +141,36 @@ export default class ProjectAfDetail extends React.PureComponent {
         return afCloneRequest;
     };
 
+    createAfPutRequest = ({ title, description }) => {
+        const { afId } = this.props;
+        const afPutRequest = new RestBuilder()
+            .url(createUrlForAnalysisFramework(afId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForAnalysisFrameworkEdit(
+                    { access },
+                    { title, description },
+                );
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.setAfDetail({
+                        afId,
+                        afDetail: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return afPutRequest;
+    };
+
     handleAfClone = (cloneConfirm, afId, projectId) => {
         if (cloneConfirm) {
             if (this.afCloneRequest) {
@@ -159,6 +203,47 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({ useConfirmModalShow: true });
     }
 
+    // FORM RELATED
+    changeCallback = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formValues: { ...this.state.formValues, ...values },
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: true,
+        });
+    };
+
+    failureCallback = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formErrors,
+            stale: false,
+        });
+    };
+
+    handleFormCancel = () => {
+        const { afDetails } = this.props;
+
+        this.setState({
+            formValues: { ...afDetails },
+            formErrors: [],
+            formFieldErrors: {},
+            stale: false,
+            pending: false,
+        });
+    };
+
+    successCallback = (values) => {
+        if (this.afPutRequest) {
+            this.afPutRequest.stop();
+        }
+
+        this.afPutRequest = this.createAfPutRequest(values);
+        this.afPutRequest.start();
+        this.setState({ stale: false });
+    };
+
+
     render() {
         const {
             afDetails,
@@ -169,6 +254,11 @@ export default class ProjectAfDetail extends React.PureComponent {
         const {
             cloneConfirmModalShow,
             useConfirmModalShow,
+            formErrors,
+            formFieldErrors,
+            stale,
+            pending,
+            formValues,
         } = this.state;
 
         const isProjectAf = afId === projectDetails.analysisFramework;
@@ -212,6 +302,19 @@ export default class ProjectAfDetail extends React.PureComponent {
                             you will not recieve any updates made by owner.</p>
                     </Confirm>
                 </header>
+                <div styleName="af-details">
+                    <ProjectAfForm
+                        formValues={formValues}
+                        formErrors={formErrors}
+                        formFieldErrors={formFieldErrors}
+                        changeCallback={this.changeCallback}
+                        failureCallback={this.failureCallback}
+                        handleFormCancel={this.handleFormCancel}
+                        successCallback={this.successCallback}
+                        stale={stale}
+                        pending={pending}
+                    />
+                </div>
             </div>
         );
     }

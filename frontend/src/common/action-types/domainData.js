@@ -26,3 +26,4 @@ export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
 export const SET_ANALYSIS_FRAMEWORKS = 'domain-data/SET_ANALYSIS_FRAMEWORKS';
 export const ADD_NEW_AF = 'domain-data/ADD_NEW_AF';
 export const SET_PROJECT_AF = 'domain-data/SET_PROJECT_AF';
+export const SET_AF_DETAIL = 'domain-data/SET_AF_DETAIL';

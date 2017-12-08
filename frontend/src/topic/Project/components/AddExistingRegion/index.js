@@ -255,6 +255,7 @@ export default class AddExistingRegion extends React.PureComponent {
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.props.onModalClose}
+                        type="button"
                         disabled={pending}
                     >
                         Cancel

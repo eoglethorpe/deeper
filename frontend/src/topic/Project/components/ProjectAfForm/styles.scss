@@ -1,0 +1,22 @@
+@import '../../../../stylesheets/base';
+
+.af-detail-form {
+    position: relative;
+    padding: $spacing-large;
+    width: 100%;
+    max-width: 540px;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+
+    .name,
+    .description {
+        flex-basis: 100%;
+    }
+}

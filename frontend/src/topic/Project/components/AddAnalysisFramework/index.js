@@ -212,6 +212,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.props.onModalClose}
+                        type="button"
                         disabled={pending}
                     >
                         Cancel

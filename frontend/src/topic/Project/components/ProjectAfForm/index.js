@@ -6,11 +6,10 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
-    DateInput,
     Form,
     NonFieldErrors,
     TextInput,
-    SelectInput,
+    TextArea,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -22,8 +21,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     changeCallback: PropTypes.func.isRequired,
-    regionOptions: PropTypes.array.isRequired, //eslint-disable-line
-    userGroupsOptions: PropTypes.array.isRequired, //eslint-disable-line
     failureCallback: PropTypes.func.isRequired,
     formErrors: PropTypes.array.isRequired, //eslint-disable-line
     formFieldErrors: PropTypes.object.isRequired, //eslint-disable-line
@@ -41,32 +38,21 @@ const defaultProps = {
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class ProjectGeneralForm extends React.PureComponent {
+export default class ProjectAfForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    static optionLabelSelector = (d = {}) => d.value;
-    static optionKeySelector = (d = {}) => d.key;
 
     constructor(props) {
         super(props);
 
         this.elements = [
             'title',
-            'startDate',
-            'endDate',
             'description',
-            'regions',
-            'userGroups',
         ];
 
         this.validations = {
-            name: [requiredCondition],
-            startDate: [requiredCondition],
-            endDate: [requiredCondition],
+            title: [requiredCondition],
             description: [requiredCondition],
-            regions: [requiredCondition],
-            userGroups: [requiredCondition],
         };
     }
 
@@ -77,8 +63,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
             formErrors,
             formFieldErrors,
             formValues,
-            regionOptions,
-            userGroupsOptions,
             handleFormCancel,
             pending,
             stale,
@@ -90,7 +74,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 changeCallback={changeCallback}
                 elements={this.elements}
                 failureCallback={failureCallback}
-                styleName="project-general-form"
+                styleName="af-detail-form"
                 successCallback={successCallback}
                 validation={this.validation}
                 validations={this.validations}
@@ -112,60 +96,21 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Name"
+                    label="Title"
                     formname="title"
-                    placeholder="Enter Project Name"
+                    placeholder="Enter Analysis Framework Name"
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
-                <DateInput
-                    label="Start Date"
-                    formname="startDate"
-                    placeholder="Enter Project Start Date"
-                    styleName="start-date"
-                    value={formValues.startDate}
-                    error={formFieldErrors.startDate}
-                />
-                <DateInput
-                    label="End Date"
-                    formname="endDate"
-                    placeholder="Enter Project End Date"
-                    styleName="end-date"
-                    value={formValues.endDate}
-                    error={formFieldErrors.endDate}
-                />
-                <TextInput
+                <TextArea
                     label="Description"
                     formname="description"
                     placeholder="Enter Project Description"
                     styleName="description"
+                    rows={4}
                     value={formValues.description}
                     error={formFieldErrors.description}
-                />
-                <SelectInput
-                    label="Regions"
-                    formname="regions"
-                    placeholder="Select regions"
-                    styleName="regions"
-                    value={formValues.regions}
-                    options={regionOptions}
-                    labelSelector={ProjectGeneralForm.optionLabelSelector}
-                    keySelector={ProjectGeneralForm.optionKeySelector}
-                    error={formFieldErrors.regions}
-                    multiple
-                />
-                <SelectInput
-                    label="User Groups"
-                    formname="userGroups"
-                    placeholder="Select user groups"
-                    styleName="user-groups"
-                    value={formValues.userGroups}
-                    options={userGroupsOptions}
-                    labelSelector={ProjectGeneralForm.optionLabelSelector}
-                    keySelector={ProjectGeneralForm.optionKeySelector}
-                    error={formFieldErrors.userGroups}
-                    multiple
                 />
             </Form>
         );

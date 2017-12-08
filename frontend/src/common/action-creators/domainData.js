@@ -28,6 +28,7 @@ import {
     SET_ANALYSIS_FRAMEWORKS,
     ADD_NEW_AF,
     SET_PROJECT_AF,
+    SET_AF_DETAIL,
 
 } from '../action-types/domainData';
 
@@ -158,7 +159,12 @@ export const setProjectAfAction = ({ projectId, afId }) => ({
     afId,
 });
 
+export const setAfDetailAction = ({ afId, afDetail }) => ({
+    type: SET_AF_DETAIL,
+    afId,
+    afDetail,
+});
+
 export const dummyAction = () => ({
     type: DUMMY_ACTION,
 });
-

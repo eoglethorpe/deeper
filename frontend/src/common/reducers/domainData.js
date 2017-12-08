@@ -28,6 +28,7 @@ import {
     SET_ANALYSIS_FRAMEWORKS,
     ADD_NEW_AF,
     SET_PROJECT_AF,
+    SET_AF_DETAIL,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -476,6 +477,18 @@ const setProjectAf = (state, action) => {
     return update(state, settings);
 };
 
+const setAfDetail = (state, action) => {
+    const { afId, afDetail } = action;
+    const settings = {
+        analysisFrameworks: {
+            [afId]: { $auto: {
+                $merge: afDetail,
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 const dummyAction = (state) => {
     const dummy = {
         id: 1,
@@ -528,6 +541,7 @@ const reducers = {
     [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
     [ADD_NEW_AF]: addNewAf,
     [SET_PROJECT_AF]: setProjectAf,
+    [SET_AF_DETAIL]: setAfDetail,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

@@ -8,6 +8,7 @@
 
     .header {
         display: flex;
+        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
@@ -21,4 +22,7 @@
         }
     }
 
+    .af-details {
+        flex-grow: 1;
+    }
 }
