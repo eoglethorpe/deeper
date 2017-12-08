@@ -82,13 +82,13 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         const displayAfList = [...analysisFrameworkList];
 
-        let selectedAf = 0;
-        if (displayAfList.length > 0) {
-            selectedAf = displayAfList[0].id;
-        }
-
+        let selectedAf;
         if (projectDetails.analysisFramework) {
+            // if there is analysisFramework in current project
             selectedAf = projectDetails.analysisFramework;
+        } else {
+            // if not, get first
+            selectedAf = displayAfList.length > 0 ? displayAfList[0].id : 0;
         }
 
         this.state = {
@@ -110,25 +110,24 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
+            const {
+                analysisFrameworkList,
+                projectDetails,
+            } = nextProps;
+
+            // why fitler again?
             const { searchInputValue } = this.state;
-            const caseInsensitiveSubmatch = (analysisFramework) => {
-                if (analysisFramework.title) {
-                    const afTitle = analysisFramework.title.toLowerCase();
-                    const searchTitle = searchInputValue.toLowerCase();
-                    return afTitle.includes(searchTitle);
-                }
-                return null;
-            };
+            const displayAfList = analysisFrameworkList.filter(
+                this.caseInsensitiveSubmatch(searchInputValue),
+            );
 
-            const displayAfList = nextProps.analysisFrameworkList.filter(
-                caseInsensitiveSubmatch);
-
-            let selectedAf = 0;
-            if (displayAfList.length > 0) {
-                selectedAf = displayAfList[0].id;
-            }
-            if (nextProps.projectDetails.analysisFramework) {
-                selectedAf = nextProps.projectDetails.analysisFramework;
+            let selectedAf;
+            if (projectDetails.analysisFramework) {
+                // if there is analysisFramework in current project
+                selectedAf = projectDetails.analysisFramework;
+            } else {
+                // if not, get first
+                selectedAf = displayAfList.length > 0 ? displayAfList[0].id : 0;
             }
 
             this.setState({
@@ -137,6 +136,15 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             });
         }
     }
+
+    caseInsensitiveSubmatch = searchInputValue => (analysisFramework) => {
+        if (analysisFramework.title) {
+            const afTitle = analysisFramework.title.toLowerCase();
+            const searchTitle = searchInputValue.toLowerCase();
+            return afTitle.includes(searchTitle);
+        }
+        return null;
+    };
 
     createAfsRequest = () => {
         const afsRequest = new RestBuilder()
