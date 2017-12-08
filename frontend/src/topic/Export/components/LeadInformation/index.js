@@ -14,14 +14,14 @@ export default class FilterSection extends React.PureComponent {
             <div styleName="lead-information">
                 <h4>Lead Information</h4>
                 <TextInput
-                    placeholder="The election in Kenya..."
+                    placeholder=""
                     label="Lead Title"
                     styleName="lead-title"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="eg: Reliefweb"
+                    placeholder=""
                     label="Source"
                     styleName="source"
                     showLabel

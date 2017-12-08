@@ -47,25 +47,31 @@ export default class Export extends React.PureComponent {
                                 styleName="word-document"
                             >
                                 <i className="ion-android-document" />
-                                Preview Docx
+                                Docx (preview)
                             </TransparentButton>
                             <TransparentButton
                                 styleName="word-document"
                             >
                                 <i className="ion-android-document" />
-                                Export Docx
+                                Docx
                             </TransparentButton>
                             <TransparentButton
                                 styleName="pdf-document"
                             >
                                 <i className="ion-android-document" />
-                                Export Pdf
+                                Pdf
                             </TransparentButton>
                             <TransparentButton
                                 styleName="excel-document"
                             >
                                 <i className="ion-android-document" />
-                                Export Excel
+                                Excel
+                            </TransparentButton>
+                            <TransparentButton
+                                styleName="json"
+                            >
+                                <i className="ion-android-document" />
+                                JSON
                             </TransparentButton>
                         </div>
                     </header>
