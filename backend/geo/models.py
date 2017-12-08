@@ -42,6 +42,10 @@ class Region(UserResource):
             media_sources=self.media_sources,
         )
 
+        region.created_by = user
+        region.modified_by = user
+        region.save()
+
         root_level = AdminLevel.objects.filter(
             region=self,
             parent=None,
@@ -52,10 +56,6 @@ class Region(UserResource):
         while admin_level:
             parent = admin_level.clone_to(self, parent)
 
-        region.created_by = user
-        region.modified_by = user
-
-        region.save()
         return region
 
     @staticmethod
@@ -118,6 +118,7 @@ class AdminLevel(models.Model):
             parent_code_prop=self.parent_code_prop,
             geo_shape=self.geo_shape,
         )
+        admin_level.save()
 
         root_area = GeoArea.objects.filter(
             admin_level=self,
@@ -129,7 +130,6 @@ class AdminLevel(models.Model):
         while area:
             parent = area.clone_to(self, parent)
 
-        admin_level.save()
         return admin_level
 
     # Admin level permissions are same as region permissions

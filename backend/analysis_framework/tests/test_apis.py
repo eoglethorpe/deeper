@@ -5,6 +5,8 @@ from analysis_framework.models import (
     AnalysisFramework, Widget,
     Filter, Exportable
 )
+from project.models import Project
+from project.tests.test_apis import ProjectMixin
 
 
 # Mixins
@@ -13,7 +15,7 @@ class AnalysisFrameworkMixin():
     """
     Analysis Framework Mixin
     """
-    def create_or_get_analysis_framework(self, public=True):
+    def create_or_get_analysis_framework(self):
         """
         Create or get  AnalysisFramework
         """
@@ -84,7 +86,8 @@ class ExportableMixin():
 
 # Tests
 
-class AnalysisFrameworkTests(AuthMixin, APITestCase):
+class AnalysisFrameworkTests(AuthMixin, ProjectMixin,
+                             AnalysisFrameworkMixin, APITestCase):
     """
     Analysis Framework Tests
     """
@@ -98,10 +101,13 @@ class AnalysisFrameworkTests(AuthMixin, APITestCase):
         """
         Create Analysis Framework Test
         """
+        project = self.create_or_get_project()
+
         old_count = AnalysisFramework.objects.count()
         url = '/api/v1/analysis-frameworks/'
         data = {
             'title': 'Test AnalysisFramework Title',
+            'project': project.id,
         }
 
         response = self.client.post(url, data,
@@ -110,6 +116,39 @@ class AnalysisFrameworkTests(AuthMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(AnalysisFramework.objects.count(), old_count + 1)
         self.assertEqual(response.data['title'], data['title'])
+
+        project = Project.objects.get(id=project.id)
+        self.assertEqual(project.analysis_framework.id, response.data['id'])
+
+    def test_clone_analysis_framework(self):
+        """
+        Test cloning
+        """
+        project = self.create_or_get_project()
+        analysis_framework = self.create_or_get_analysis_framework()
+        project.analysis_framework = analysis_framework
+        project.save()
+
+        url = '/api/v1/clone-analysis-framework/{}/'.format(
+            analysis_framework.id
+        )
+        data = {
+            'project': project.id,
+        }
+
+        response = self.client.post(url, data,
+                                    HTTP_AUTHORIZATION=self.auth,
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertNotEqual(response.data['id'], analysis_framework.id)
+        self.assertEqual(response.data['title'],
+                         analysis_framework.title + ' (cloned)')
+
+        project = Project.objects.get(id=project.id)
+        self.assertNotEqual(project.analysis_framework.id,
+                            analysis_framework.id)
+
+        self.assertEqual(project.analysis_framework.id, response.data['id'])
 
 
 class WidgetTests(AuthMixin, AnalysisFrameworkMixin, APITestCase):
