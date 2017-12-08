@@ -18,7 +18,7 @@ import {
     PrimaryButton,
 } from '../../../public/components/Action';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
 
 import { pathNames } from '../../../common/constants';
@@ -110,7 +110,7 @@ export default class AddRegion extends React.PureComponent {
             };
         }
 
-        const regionCreateRequest = new RestBuilder()
+        const regionCreateRequest = new FgRestBuilder()
             .url(urlForRegionCreate)
             .params(() => {
                 const { token } = this.props;
@@ -119,9 +119,6 @@ export default class AddRegion extends React.PureComponent {
                     { access },
                     paramsBody);
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: false });
             })

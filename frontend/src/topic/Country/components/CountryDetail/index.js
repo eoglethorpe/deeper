@@ -13,7 +13,7 @@ import {
 
 import DeletePrompt from '../../../../common/components/DeletePrompt';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForCountryDelete,
     createUrlForRegion,
@@ -83,16 +83,13 @@ export default class CountryDetail extends React.PureComponent {
 
     createRequestForRegionDelete = (regionId) => {
         const urlForRegionDelete = createUrlForRegion(regionId);
-        const regionDeleteRequest = new RestBuilder()
+        const regionDeleteRequest = new FgRestBuilder()
             .url(urlForRegionDelete)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForCountryDelete({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })

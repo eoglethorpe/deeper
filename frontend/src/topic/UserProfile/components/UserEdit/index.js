@@ -26,7 +26,7 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { Uploader } from '../../../../public/utils/upload';
 
 import schema from '../../../../common/schema';
@@ -113,7 +113,7 @@ export default class UserEdit extends React.PureComponent {
 
     createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
         const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new RestBuilder()
+        const userPatchRequest = new FgRestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
@@ -122,9 +122,6 @@ export default class UserEdit extends React.PureComponent {
                     { access },
                     { firstName, lastName, organization, displayPicture });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })

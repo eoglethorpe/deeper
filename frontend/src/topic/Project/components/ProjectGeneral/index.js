@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     createParamsForProjectPatch,
     createUrlForProject,
@@ -99,7 +99,7 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
-        const projectPatchRequest = new RestBuilder()
+        const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -109,9 +109,6 @@ export default class ProjectGeneral extends React.PureComponent {
                     newProjectDetails,
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

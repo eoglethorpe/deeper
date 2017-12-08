@@ -15,7 +15,7 @@ import {
 } from '../../../common/rest';
 
 import {
-    RestBuilder,
+    FgRestBuilder,
 } from '../../../public/utils/rest';
 
 import {
@@ -81,7 +81,7 @@ export default class GalleryImage extends React.PureComponent {
     }
 
     createRequestForGalleryFile = (galleryId) => {
-        const galleryFileRequest = new RestBuilder()
+        const galleryFileRequest = new FgRestBuilder()
             .url(createUrlForGalleryFile(galleryId))
             .params(() => {
                 const {
@@ -126,8 +126,6 @@ export default class GalleryImage extends React.PureComponent {
                     pending: false,
                 });
             })
-            .retryTime(1000)
-            .maxRetryAttempts(10)
             .build();
 
         return galleryFileRequest;

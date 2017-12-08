@@ -35,7 +35,7 @@ import {
     createUrlForUsers,
 } from '../../../common/rest';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 
 const propTypes = {
@@ -97,16 +97,13 @@ export default class UserGroup extends React.PureComponent {
 
     createRequestForUserGroup = (id) => {
         const urlForUserGroup = createUrlForUserGroup(id);
-        const userGroupRequest = new RestBuilder()
+        const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroup)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUser({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'userGroupGetResponse');
@@ -128,16 +125,13 @@ export default class UserGroup extends React.PureComponent {
     }
 
     createRequestForUsers = () => {
-        const usersRequest = new RestBuilder()
+        const usersRequest = new FgRestBuilder()
             .url(createUrlForUsers([this.usersFields]))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUser({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'usersGetResponse');

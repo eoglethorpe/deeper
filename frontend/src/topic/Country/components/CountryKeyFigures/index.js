@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import {
     LoadingAnimation,
@@ -149,7 +149,7 @@ export default class CountryKeyFigures extends React.PureComponent {
     createRegionKeyFiguresRequest = (regionId) => {
         const urlForRegionForKeyFigures = createUrlForRegionWithField(regionId, ['key_figures']);
 
-        const regionRequest = new RestBuilder()
+        const regionRequest = new FgRestBuilder()
             .url(urlForRegionForKeyFigures)
             .params(() => {
                 const { token } = this.props;
@@ -158,9 +158,6 @@ export default class CountryKeyFigures extends React.PureComponent {
                     access,
                 });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
@@ -180,7 +177,7 @@ export default class CountryKeyFigures extends React.PureComponent {
 
     createRequestForRegionDetailPatch = (regionId, data) => {
         const urlForRegion = createUrlForRegion(regionId);
-        const regionDetailPatchRequest = new RestBuilder()
+        const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
             .params(() => {
                 const { token } = this.props;
@@ -188,9 +185,6 @@ export default class CountryKeyFigures extends React.PureComponent {
                 return createParamsForRegionPatch(
                     { access }, data);
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })

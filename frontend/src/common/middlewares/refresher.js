@@ -1,4 +1,4 @@
-import { RestBuilder } from '../../public/utils/rest';
+import { FgRestBuilder } from '../../public/utils/rest';
 import schema from '../schema';
 import {
     createParamsForProjects,
@@ -32,15 +32,12 @@ class Refresher {
     }
 
     createProjectsRequest = (store) => {
-        const projectsRequest = new RestBuilder()
+        const projectsRequest = new FgRestBuilder()
             .url(urlForProjects)
             .params(() => {
                 const { access } = tokenSelector(store.getState());
                 return createParamsForProjects({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsMiniGetResponse');

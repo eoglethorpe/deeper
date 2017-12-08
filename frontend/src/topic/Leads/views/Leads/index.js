@@ -8,7 +8,7 @@ import {
     Redirect,
 } from 'react-router-dom';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     Pager,
     RawTable,
@@ -311,7 +311,7 @@ export default class Leads extends React.PureComponent {
             limit: leadRequestLimit,
         });
 
-        const leadRequest = new RestBuilder()
+        const leadRequest = new FgRestBuilder()
             .url(urlForProjectLeads)
             .params(() => {
                 const { token } = this.props;
@@ -320,7 +320,6 @@ export default class Leads extends React.PureComponent {
                     access,
                 });
             })
-            .retryTime(1000)
             .preLoad(() => {
                 this.setState({ loadingLeads: true });
             })

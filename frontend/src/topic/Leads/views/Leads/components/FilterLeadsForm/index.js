@@ -13,7 +13,7 @@ import {
     TextInput,
     DateFilter,
 } from '../../../../../../public/components/Input';
-import { RestBuilder } from '../../../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../../../public/utils/rest';
 import {
     isTruthy,
     isObjectEmpty,
@@ -133,7 +133,7 @@ export default class FilterLeadsForm extends React.PureComponent {
     createRequestForProjectLeadFilterOptions = (activeProject) => {
         const urlForProjectFilterOptions = createUrlForLeadFilterOptions(activeProject);
 
-        const leadFilterOptionsRequest = new RestBuilder()
+        const leadFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
             .params(() => {
                 const { token } = this.props;
@@ -142,7 +142,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     access,
                 });
             })
-            .retryTime(1000)
             .preLoad(() => {
                 this.setState({ loadingLeadFilters: true });
             })

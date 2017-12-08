@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 import {
     DangerButton,
@@ -127,7 +127,7 @@ export default class RegionDetail extends React.PureComponent {
 
     createRequestForRegionDetailPatch = (regionId, data) => {
         const urlForRegion = createUrlForRegion(regionId);
-        const regionDetailPatchRequest = new RestBuilder()
+        const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
             .params(() => {
                 const { token } = this.props;
@@ -135,9 +135,6 @@ export default class RegionDetail extends React.PureComponent {
                 return createParamsForRegionPatch(
                     { access }, data);
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })

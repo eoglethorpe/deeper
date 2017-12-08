@@ -21,7 +21,7 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import schema from '../../../../common/schema';
 import {
@@ -90,7 +90,7 @@ export default class UserGroupEdit extends React.PureComponent {
 
     createRequestForUserGroupPatch = (userGroupId, { title }) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
-        const userGroupCreateRequest = new RestBuilder()
+        const userGroupCreateRequest = new FgRestBuilder()
             .url(urlForUserGroup)
             .params(() => {
                 const { token } = this.props;
@@ -99,9 +99,6 @@ export default class UserGroupEdit extends React.PureComponent {
                     { access },
                     { title });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })

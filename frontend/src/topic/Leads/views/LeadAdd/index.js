@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import update from '../../../../public/utils/immutable-update';
 import { List } from '../../../../public/components/View/';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { UploadBuilder } from '../../../../public/utils/upload';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 
@@ -161,12 +161,9 @@ export default class LeadAdd extends React.PureComponent {
             };
         }
 
-        const leadCreateRequest = new RestBuilder()
+        const leadCreateRequest = new FgRestBuilder()
             .url(url)
             .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .preLoad(() => this.handleLeadSavePreLoad(leadId))
             .postLoad(() => this.handleLeadSavePostLoad(leadId))
             .success(response => this.handleLeadSaveSuccess(leadId, response))
@@ -177,7 +174,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
-        const googleDriveUploadRequest = new RestBuilder()
+        const googleDriveUploadRequest = new FgRestBuilder()
             .url(urlForGoogleDriveFileUpload)
             .params(() => {
                 const { token } = this.props;
@@ -187,13 +184,12 @@ export default class LeadAdd extends React.PureComponent {
                 );
             })
             .success(response => this.handleLeadGoogleDriveUploadSuccess(leadId, response))
-            .retryTime(1000)
             .build();
         return googleDriveUploadRequest;
     }
 
     createRequestForDropboxUpload = ({ leadId, title, fileUrl }) => {
-        const dropboxUploadRequest = new RestBuilder()
+        const dropboxUploadRequest = new FgRestBuilder()
             .url(urlForDropboxFileUpload)
             .params(() => {
                 const { token } = this.props;
@@ -203,7 +199,6 @@ export default class LeadAdd extends React.PureComponent {
                 );
             })
             .success(response => this.handleLeadDropboxUploadSuccess(leadId, response))
-            .retryTime(1000)
             .build();
         return dropboxUploadRequest;
     }

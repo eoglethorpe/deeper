@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     Confirm,
 } from '../../../../public/components/View';
@@ -92,7 +92,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     createRegionRequest = (regionId) => {
-        const regionRequest = new RestBuilder()
+        const regionRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
             .params(() => {
                 const { token } = this.props;
@@ -101,9 +101,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     access,
                 });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
@@ -122,7 +119,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     };
 
     createRegionCloneRequest = (regionId, projectId) => {
-        const regionCloneRequest = new RestBuilder()
+        const regionCloneRequest = new FgRestBuilder()
             .url(createUrlForRegionClone(regionId))
             .params(() => {
                 const { token } = this.props;
@@ -132,9 +129,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     { project: projectId },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
@@ -160,7 +154,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const index = regions.findIndex(d => (d.id === removedRegionId));
         regions.splice(index, 1);
 
-        const projectPatchRequest = new RestBuilder()
+        const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -170,9 +164,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     { regions },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

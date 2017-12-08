@@ -5,7 +5,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     TextInput,
     requiredCondition,
@@ -219,15 +219,12 @@ export default class CountryPanel extends React.PureComponent {
     createRequestforCountries = () => {
         const { token } = this.props;
 
-        const countriesRequest = new RestBuilder()
+        const countriesRequest = new FgRestBuilder()
             .url(urlForRegions)
             .params(() => {
                 const { access } = token;
                 return createParamsForUser({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'regionsGetResponse');

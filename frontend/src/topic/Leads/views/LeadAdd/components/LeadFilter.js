@@ -14,7 +14,7 @@ import {
 } from '../../../../../public/components/Input';
 import { DangerButton } from '../../../../../public/components/Action';
 import { isObjectEmpty } from '../../../../../public/utils/common';
-import { RestBuilder } from '../../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../../public/utils/rest';
 
 import {
     tokenSelector,
@@ -113,7 +113,7 @@ export default class LeadFilter extends React.PureComponent {
             return createParamsForUser({ access });
         };
 
-        const leadFilterOptionsRequest = new RestBuilder()
+        const leadFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
             .params(paramsForProjectFilterOptions)
             .success((response) => {
@@ -122,7 +122,6 @@ export default class LeadFilter extends React.PureComponent {
                     leadFilterOptions: response,
                 });
             })
-            .retryTime(1000)
             .build();
 
         return leadFilterOptionsRequest;

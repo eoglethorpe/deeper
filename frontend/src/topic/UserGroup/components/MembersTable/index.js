@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     Table,
     Modal,
@@ -241,16 +241,13 @@ export default class MembersTable extends React.PureComponent {
         const userGroupId = this.props.userGroupId;
         const urlForMembership = createUrlForUserMembership(membershipId);
 
-        const membershipDeleteRequest = new RestBuilder()
+        const membershipDeleteRequest = new FgRestBuilder()
             .url(urlForMembership)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUserMembershipDelete({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })
@@ -281,7 +278,7 @@ export default class MembersTable extends React.PureComponent {
     createRequestForMembershipCreate = (memberList) => {
         const userGroupId = this.props.userGroupId;
 
-        const membershipDeleteRequest = new RestBuilder()
+        const membershipDeleteRequest = new FgRestBuilder()
             .url(urlForUserMembership)
             .params(() => {
                 const { token } = this.props;
@@ -291,9 +288,6 @@ export default class MembersTable extends React.PureComponent {
                     { memberList },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .preLoad(() => {
                 this.setState({ addPending: true });
             })
@@ -326,7 +320,7 @@ export default class MembersTable extends React.PureComponent {
         const urlForUserMembershipPatch = createUrlForUserMembership(membershipId);
         const userGroupId = this.props.userGroupId;
 
-        const membershipRoleChangeRequest = new RestBuilder()
+        const membershipRoleChangeRequest = new FgRestBuilder()
             .url(urlForUserMembershipPatch)
             .params(() => {
                 const { token } = this.props;
@@ -336,9 +330,6 @@ export default class MembersTable extends React.PureComponent {
                     { newRole },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .preLoad(() => {
                 // TODO: use this state
                 this.setState({ roleChangPending: true });

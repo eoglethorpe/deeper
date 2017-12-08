@@ -5,7 +5,7 @@ import {
     BrowserRouter,
 } from 'react-router-dom';
 
-import { RestBuilder } from './public/utils/rest';
+import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
 
 import schema from './common/schema';
@@ -111,15 +111,12 @@ export default class App extends React.PureComponent {
     }
 
     createRequestForRefresh = () => {
-        const refreshRequest = new RestBuilder()
+        const refreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
             .params(() => {
                 const { refresh, access } = this.props.token;
                 return createParamsForTokenRefresh({ refresh, access });
             })
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenRefreshResponse');
