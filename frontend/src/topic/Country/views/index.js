@@ -34,7 +34,7 @@ import {
 
     countriesListSelector,
 
-    atRegionsAction,
+    setRegionsAction,
     activeUserSelector,
 } from '../../../common/redux';
 
@@ -59,9 +59,6 @@ const defaultProps = {
     location: {},
     countries: [],
 };
-
-// TODO:
-// Scroll to selected country
 
 const mapStateToProps = state => ({
     countries: countriesListSelector(state),
