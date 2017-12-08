@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -56,7 +55,6 @@ import schema from '../../../../common/schema';
 
 import {
     pathNames,
-    pageTitles,
 } from '../../../../common/constants/';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
@@ -459,7 +457,6 @@ export default class Leads extends React.PureComponent {
         console.log('Rendering Leads');
 
         const {
-            currentUserActiveProject,
             totalLeadsCount,
             activePage,
         } = this.props;
@@ -467,8 +464,6 @@ export default class Leads extends React.PureComponent {
         const {
             loadingLeads,
         } = this.state;
-
-        const projectName = currentUserActiveProject.title;
 
         if (this.state.redirectTo) {
             return (
@@ -481,12 +476,6 @@ export default class Leads extends React.PureComponent {
 
         return (
             <div styleName="leads">
-                <Helmet>
-                    <title>
-                        { pageTitles.leads } | { projectName}
-                    </title>
-                </Helmet>
-
                 <header styleName="header">
                     <FilterLeadsForm
                         styleName="filters"

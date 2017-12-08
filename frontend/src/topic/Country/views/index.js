@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -24,7 +23,6 @@ import { reverseRoute } from '../../../public/utils/common';
 
 import browserHistory from '../../../common/browserHistory';
 import {
-    pageTitles,
     pathNames,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -326,11 +324,6 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-panel">
-                <Helmet>
-                    <title>
-                        { pageTitles.countryPanel }
-                    </title>
-                </Helmet>
                 <div styleName="country-list">
                     <header styleName="list-header">
                         <h2>Countries</h2>
