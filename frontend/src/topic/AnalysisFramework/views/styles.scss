@@ -37,18 +37,23 @@
     %grid-item {
         .header {
             display: flex;
+            position: relative;
             flex-shrink: 0;
             align-items: center;
             justify-content: space-between;
+            background-color: $color-background;
+            cursor: grab;
             padding: $spacing-small $spacing-medium;
 
-            .actions {
-                font-size: $font-size-large;
+            .heading {
+                font-size: $font-size-small;
+            }
 
-                .drag-handle {
-                    cursor: grab;
-                    color: $color-text;
-                }
+            .actions {
+                position: absolute;
+                top: 0;
+                right: 0;
+                font-size: $font-size-large;
 
                 .close-button {
                     margin-left: $spacing-small;

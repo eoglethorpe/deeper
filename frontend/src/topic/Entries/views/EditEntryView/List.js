@@ -59,7 +59,7 @@ export default class List extends React.PureComponent {
                 <div
                     key={item.key}
                     data-af-key={item.key}
-                    data-grid={item.properties.gridData}
+                    data-grid={item.properties.listGridData}
                     styleName="grid-item"
                 >
                     <header

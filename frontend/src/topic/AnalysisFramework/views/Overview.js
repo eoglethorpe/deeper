@@ -92,18 +92,15 @@ export default class Overview extends React.PureComponent {
                 <div
                     key={item.key}
                     data-af-key={item.key}
-                    data-grid={item.properties.gridData}
+                    data-grid={item.properties.overviewGridData}
                     styleName="grid-item"
                 >
                     <header
+                        className="header"
                         styleName="header"
                     >
-                        <h2>{item.title}</h2>
+                        <h4 styleName="heading">{item.title}</h4>
                         <div styleName="actions">
-                            <span
-                                styleName="drag-handle"
-                                className="ion-arrow-move drag-handle"
-                            />
                             <TransparentButton
                                 styleName="close-button"
                             >
@@ -129,7 +126,7 @@ export default class Overview extends React.PureComponent {
             widgetId: widget.id,
             title: widget.title,
             properties: {
-                gridData: { x: 2, y: 2, w: 30, h: 20 },
+                overviewGridData: { x: 2, y: 2, w: 30, h: 20 },
             },
         };
 
@@ -158,12 +155,12 @@ export default class Overview extends React.PureComponent {
 
                     const settings = {
                         properties: {
-                            gridData: { $merge: {
+                            overviewGridData: { $auto: { $merge: {
                                 x: itemLayout.x,
                                 y: itemLayout.y,
                                 w: itemLayout.w,
                                 h: itemLayout.h,
-                            } },
+                            } } },
                         },
                     };
 
@@ -296,7 +293,7 @@ export default class Overview extends React.PureComponent {
                         compactType={null}
                         preventCollision
                         onLayoutChange={this.handleLayoutChange}
-                        draggableHandle=".drag-handle"
+                        draggableHandle=".header"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }

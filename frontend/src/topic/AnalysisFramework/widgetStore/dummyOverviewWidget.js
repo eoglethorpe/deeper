@@ -6,13 +6,17 @@ const dummyOverviewWidget = {
     analysisFramework: {
         overviewComponent: () => (
             <div>
-                Dummy Widget 1
+                Dummy Widget 1 (Overview)
             </div>
         ),
         listComponent: undefined,
     },
     tagging: {
-        overviewComponent: undefined,
+        overviewComponent: () => (
+            <div>
+                Dummy Widget 1 (Tagging)
+            </div>
+        ),
         listComponent: () => (
             <div>
                 Dummy Widget 1

@@ -17,18 +17,8 @@
             justify-content: space-between;
             padding: $spacing-small $spacing-medium;
 
-            .actions {
-                font-size: $font-size-large;
-
-                .drag-handle {
-                    cursor: grab;
-                    color: $color-text;
-                }
-
-                .close-button {
-                    margin-left: $spacing-small;
-                    color: $color-danger;
-                }
+            .heading {
+                font-size: $font-size-small;
             }
         }
 
