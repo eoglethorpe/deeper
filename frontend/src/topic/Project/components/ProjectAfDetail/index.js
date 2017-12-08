@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 
 import { RestBuilder } from '../../../../public/utils/rest';
 import {
-    DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
 import {
     createParamsForProjectPatch,
     createUrlForProject,
+
+    createUrlForAfClone,
+    createParamsForAfClone,
 } from '../../../../common/rest';
 import {
     Confirm,
@@ -21,6 +23,7 @@ import {
     projectDetailsSelector,
 
     setProjectAfAction,
+    addNewAfAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -29,6 +32,7 @@ import styles from './styles.scss';
 const propTypes = {
     afDetails: PropTypes.object.isRequired, // eslint-disable-line
     afId: PropTypes.number,
+    addNewAf: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setProjectAf: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
@@ -45,6 +49,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    addNewAf: params => dispatch(addNewAfAction(params)),
     setProjectAf: params => dispatch(setProjectAfAction(params)),
     dispatch,
 });
@@ -59,7 +64,6 @@ export default class ProjectAfDetail extends React.PureComponent {
         super(props);
 
         this.state = {
-            deleteConfirmModalShow: false,
             cloneConfirmModalShow: false,
             useConfirmModalShow: false,
         };
@@ -94,13 +98,44 @@ export default class ProjectAfDetail extends React.PureComponent {
         return projectPatchRequest;
     };
 
-    handleAfRemove = (deleteConfirm, projectDetails, afId) => {
-        console.log(deleteConfirm, projectDetails, afId, 'deleted');
-        this.setState({ deleteConfirmModalShow: false });
-    }
+    createAfCloneRequest = (afId, projectId) => {
+        const afCloneRequest = new RestBuilder()
+            .url(createUrlForAfClone(afId))
+            .params(() => {
+                const { token } = this.props;
+                const { access } = token;
+                return createParamsForAfClone(
+                    { access },
+                    { project: projectId },
+                );
+            })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'analysisFramework');
+                    this.props.addNewAf({
+                        afDetail: response,
+                        projectId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return afCloneRequest;
+    };
 
     handleAfClone = (cloneConfirm, afId, projectId) => {
-        console.log(cloneConfirm, afId, projectId, 'cloned');
+        if (cloneConfirm) {
+            if (this.afCloneRequest) {
+                this.afCloneRequest.stop();
+            }
+
+            this.afCloneRequest = this.createAfCloneRequest(afId, projectId);
+            this.afCloneRequest.start();
+        }
         this.setState({ cloneConfirmModalShow: false });
     }
 
@@ -114,10 +149,6 @@ export default class ProjectAfDetail extends React.PureComponent {
             this.projectPatchRequest.start();
         }
         this.setState({ useConfirmModalShow: false });
-    }
-
-    handleAfRemoveClick = () => {
-        this.setState({ deleteConfirmModalShow: true });
     }
 
     handleAfCloneClick = () => {
@@ -136,7 +167,6 @@ export default class ProjectAfDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            deleteConfirmModalShow,
             cloneConfirmModalShow,
             useConfirmModalShow,
         } = this.state;
@@ -150,13 +180,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                         {afDetails.title}
                     </h2>
                     <div styleName="action-btns">
-                        {isProjectAf &&
-                            <DangerButton
-                                onClick={this.handleAfRemoveClick}
-                            >
-                                Remove
-                            </DangerButton>
-                        }
                         {!isProjectAf &&
                             <PrimaryButton
                                 onClick={this.handleAfUseClick}
@@ -170,15 +193,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                             Clone and Edit
                         </PrimaryButton>
                     </div>
-                    <Confirm
-                        show={deleteConfirmModalShow}
-                        closeOnEscape
-                        onClose={deleteConfirm => this.handleAfRemove(
-                            deleteConfirm, projectDetails, afId)}
-                    >
-                        <p>{`Are you sure you want to remove
-                            ${afDetails.title} from project ${projectDetails.title}?`}</p>
-                    </Confirm>
                     <Confirm
                         show={useConfirmModalShow}
                         onClose={useConfirm => this.handleAfUse(

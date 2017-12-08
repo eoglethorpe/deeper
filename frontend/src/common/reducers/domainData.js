@@ -430,12 +430,13 @@ const setAnalysisFrameworks = (state, action) => {
     const analysisFrameworksSettings = analysisFrameworks.reduce(
         (acc, analysisFramework) => {
             acc[analysisFramework.id] = { $auto: {
-                $set: analysisFramework,
+                $merge: analysisFramework,
             } };
             return acc;
         },
         {},
     );
+
     const settings = {
         analysisFrameworks: analysisFrameworksSettings,
     };

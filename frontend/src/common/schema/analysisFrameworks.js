@@ -13,6 +13,10 @@ const analysisFrameworkSchema = [];
             widgets: { type: 'array.Widget' },
             exportables: { type: 'array.Exportable' },
             filters: { type: 'array.Filter' },
+            isAdmin: { type: 'boolean', required: true },
+            description: { type: 'string' },
+            snapshotOne: { type: 'unit' },
+            snapshotTwo: { type: 'unit' },
         },
     };
     analysisFrameworkSchema.push({ name, schema });
