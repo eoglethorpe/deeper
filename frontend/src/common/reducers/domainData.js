@@ -425,6 +425,7 @@ const setAnalysisFramework = (state, action) => {
     return update(state, settings);
 };
 
+// TODO: Change the reducer to merge new data along with deleting removed AFs
 const setAnalysisFrameworks = (state, action) => {
     const { analysisFrameworks } = action;
 

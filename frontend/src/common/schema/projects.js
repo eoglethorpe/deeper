@@ -51,6 +51,7 @@ const projectSchema = [];
         fields: {
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
+            versionId: { type: 'uint', required: true },
         },
     };
     projectSchema.push({ name, schema });

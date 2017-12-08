@@ -17,7 +17,7 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../../public/components/View';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import schema from '../../../../common/schema';
 import {
@@ -147,7 +147,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     };
 
     createAfsRequest = () => {
-        const afsRequest = new RestBuilder()
+        const afsRequest = new FgRestBuilder()
             .url(urlForAnalysisFrameworks)
             .params(() => {
                 const { token } = this.props;
@@ -158,9 +158,6 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             })
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFrameworkList');
@@ -218,12 +215,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                     onClick={() => this.handleAfClick(af.id)}
                 >
                     {af.title}
-                    {
-                        isProjectAf &&
-                            <span
-                                className={`${iconNames.check} check`}
-                            />
-                    }
+                    {isProjectAf && <span className={`${iconNames.check} check`} />}
                 </button>
             </ListItem>
         );

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     PrimaryButton,
 } from '../../../../public/components/Action';
@@ -96,7 +96,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     }
 
     createProjectPatchRequest = (afId, projectId) => {
-        const projectPatchRequest = new RestBuilder()
+        const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -106,9 +106,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                     { analysisFramework: afId },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -125,7 +122,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     };
 
     createAfCloneRequest = (afId, projectId) => {
-        const afCloneRequest = new RestBuilder()
+        const afCloneRequest = new FgRestBuilder()
             .url(createUrlForAfClone(afId))
             .params(() => {
                 const { token } = this.props;
@@ -135,9 +132,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                     { project: projectId },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -155,7 +149,7 @@ export default class ProjectAfDetail extends React.PureComponent {
 
     createAfPutRequest = ({ title, description }) => {
         const { afId } = this.props;
-        const afPutRequest = new RestBuilder()
+        const afPutRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(afId))
             .params(() => {
                 const { token } = this.props;
@@ -165,9 +159,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                     { title, description },
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
