@@ -52,7 +52,6 @@ export default class ProjectAfForm extends React.PureComponent {
 
         this.validations = {
             title: [requiredCondition],
-            description: [requiredCondition],
         };
     }
 

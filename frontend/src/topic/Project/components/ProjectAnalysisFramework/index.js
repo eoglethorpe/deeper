@@ -282,7 +282,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             show={this.state.addAfModalShow}
                             closeOnBlur
                         >
-                            <ModalHeader title="Add new country" />
+                            <ModalHeader title="Add new analysis framework" />
                             <ModalBody>
                                 <AddAnalysisFramework
                                     projectId={activeProject}

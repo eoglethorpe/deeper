@@ -203,7 +203,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Analysis Framework Title"
+                    label="Title"
                     formname="title"
                     placeholder="ACAPS framework"
                     value={formValues.title}
@@ -218,7 +218,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Add Analysis Framework
+                        Add
                     </PrimaryButton>
                 </div>
             </Form>
