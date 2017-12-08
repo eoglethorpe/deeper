@@ -92,7 +92,7 @@ export default class Overview extends React.PureComponent {
                 <div
                     key={item.key}
                     data-af-key={item.key}
-                    data-grid={item.properties.gridData}
+                    data-grid={item.properties.overviewGridData}
                     styleName="grid-item"
                 >
                     <header
@@ -126,7 +126,7 @@ export default class Overview extends React.PureComponent {
             widgetId: widget.id,
             title: widget.title,
             properties: {
-                gridData: { x: 2, y: 2, w: 30, h: 20 },
+                overviewGridData: { x: 2, y: 2, w: 30, h: 20 },
             },
         };
 
@@ -155,12 +155,12 @@ export default class Overview extends React.PureComponent {
 
                     const settings = {
                         properties: {
-                            gridData: { $merge: {
+                            overviewGridData: { $auto: { $merge: {
                                 x: itemLayout.x,
                                 y: itemLayout.y,
                                 w: itemLayout.w,
                                 h: itemLayout.h,
-                            } },
+                            } } },
                         },
                     };
 

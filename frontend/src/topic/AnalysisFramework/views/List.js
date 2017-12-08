@@ -84,7 +84,7 @@ export default class List extends React.PureComponent {
                 <div
                     key={item.key}
                     data-af-key={item.key}
-                    data-grid={item.properties.gridData}
+                    data-grid={item.properties.listGridData}
                     styleName="grid-item"
                 >
                     <header
@@ -92,10 +92,6 @@ export default class List extends React.PureComponent {
                     >
                         <h2>{item.title}</h2>
                         <div styleName="actions">
-                            <span
-                                styleName="drag-handle"
-                                className="ion-arrow-move drag-handle"
-                            />
                             <TransparentButton
                                 styleName="close-button"
                             >
@@ -121,7 +117,7 @@ export default class List extends React.PureComponent {
             widgetId: widget.id,
             title: widget.title,
             properties: {
-                gridData: { x: 2, y: 2, w: 30, h: 20 },
+                listGridData: { x: 2, y: 2, w: 30, h: 20 },
             },
         };
 
@@ -144,12 +140,12 @@ export default class List extends React.PureComponent {
 
                     const settings = {
                         properties: {
-                            gridData: { $merge: {
+                            listGridData: { $auto: { $merge: {
                                 x: itemLayout.x,
                                 y: itemLayout.y,
                                 w: itemLayout.w,
                                 h: itemLayout.h,
-                            } },
+                            } } },
                         },
                     };
 
@@ -198,7 +194,7 @@ export default class List extends React.PureComponent {
                         rowHeight={rowHeight}
                         compactType={null}
                         onLayoutChange={this.handleLayoutChange}
-                        draggableHandle=".drag-handle"
+                        draggableHandle=".header"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }

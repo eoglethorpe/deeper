@@ -96,7 +96,7 @@ export default class Overview extends React.PureComponent {
                 <div
                     key={item.key}
                     data-af-key={item.key}
-                    data-grid={item.properties.gridData}
+                    data-grid={item.properties.overviewGridData}
                     styleName="grid-item"
                 >
                     <header
