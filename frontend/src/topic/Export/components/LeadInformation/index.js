@@ -7,12 +7,16 @@ import {
     TextInput,
 } from '../../../../public/components/Input';
 
+import {
+    TransparentButton,
+} from '../../../../public/components/Action';
+
 @CSSModules(styles, { allowMultiple: true })
 export default class FilterSection extends React.PureComponent {
     render() {
         return (
             <div styleName="lead-information">
-                <h4>Lead Information</h4>
+                <h4>Leads Information</h4>
                 <TextInput
                     placeholder=""
                     label="Lead Title"
@@ -34,6 +38,16 @@ export default class FilterSection extends React.PureComponent {
                     showLabel
                     showHintAndError={false}
                 />
+                <TransparentButton
+                    styleName="apply-btn"
+                >
+                    Apply
+                </TransparentButton>
+                <TransparentButton
+                    styleName="clear-btn"
+                >
+                    Clear
+                </TransparentButton>
             </div>
         );
     }

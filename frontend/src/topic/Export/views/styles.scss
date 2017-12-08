@@ -29,11 +29,23 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
         height: $height-full-page;
 
         .header {
+            display: flex;
             flex-basis: 100%;
             padding: $spacing-large;
 
+            .export-type {
+                flex-basis: 50%;
+                padding: $spacing-small;
+                font-size: $font-size-large;
+
+                label {
+                    margin-right: $spacing-large;
+                    color: $color-primary;
+                }
+            }
+
             .action-buttons {
-                flex-basis: 100%;
+                flex-basis: 50%;
                 height: 100%;
                 text-align: right;
 
@@ -69,19 +81,19 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
             display: flex;
             flex-basis: 100%;
             flex-wrap: wrap;
-            height: calc(#{$height-full-page} - #{$height-header} - 2 * #{$spacing-medium});
+            height: calc(#{$height-full-page} - 96px);
 
             .filter-section {
-                flex-basis: 65%;
+                flex-basis: 75%;
                 border-top: $width-separator-medium solid $color-separator;
 
             }
 
             .structure-section {
-                flex-basis: 35%;
-                background-color: $color-background-alt-row;
+                flex-basis: 25%;
                 border-top: $width-separator-medium solid $color-separator;
                 border-left: $width-separator-medium solid $color-separator;
+                background-color: $color-background-alt-row;
             }
         }
     }

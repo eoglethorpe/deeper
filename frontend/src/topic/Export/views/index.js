@@ -4,11 +4,11 @@ import React from 'react';
 import styles from './styles.scss';
 import {
     Form,
+    RadioInput,
 } from '../../../public/components/Input';
 import {
     TransparentButton,
 } from '../../../public/components/Action';
-
 import FilterSection from '../components/FilterSection';
 import StructureSection from '../components/StructureSection';
 
@@ -27,6 +27,20 @@ export default class Export extends React.PureComponent {
         super(props);
 
         this.elements = [];
+        this.options = [
+            {
+                key: 1,
+                label: 'Generic',
+            },
+            {
+                key: 2,
+                label: 'GEO',
+            },
+            {
+                key: 3,
+                label: 'Briefing Note',
+            },
+        ];
     }
 
     render() {
@@ -42,6 +56,13 @@ export default class Export extends React.PureComponent {
                     <header
                         styleName="header"
                     >
+                        <div styleName="export-type">
+                            <RadioInput
+                                name="export-type"
+                                selected={1}
+                                options={this.options}
+                            />
+                        </div>
                         <div styleName="action-buttons">
                             <TransparentButton
                                 styleName="word-document"

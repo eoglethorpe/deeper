@@ -12,6 +12,7 @@
 
     .leads-table {
         flex-grow: 1;
+        margin-top: $spacing-large;
         overflow-y: auto;
 
         :global .header {
