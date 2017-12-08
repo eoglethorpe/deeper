@@ -29,6 +29,11 @@ import {
     ADD_NEW_AF,
     SET_PROJECT_AF,
     SET_AF_DETAIL,
+
+    SET_CATEGORY,
+    ADD_NEW_CATEGORY,
+    ADD_NEW_SUBCATEGORY,
+    ADD_NEW_SUBSUBCATEGORY,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -490,6 +495,122 @@ const setAfDetail = (state, action) => {
     return update(state, settings);
 };
 
+const addNewCategory = (state, action) => {
+    const settings = {
+        categories: { $auto: {
+            [action.category.id]: { $auto: {
+                $merge: action.category,
+            } },
+        } },
+    };
+    return update(state, settings);
+};
+
+const addNewSubCategory = (state, action) => {
+    const { category, subCategory } = action;
+    const index = ((state.categories[category.id] || {}).subCategories
+        || []).findIndex(sC => sC === subCategory.id);
+
+    const settings = {
+        subCategories: { $auto: {
+            [subCategory.id]: { $auto: {
+                $merge: subCategory,
+            } },
+        } },
+    };
+
+    if (category && index === -1) {
+        settings.categories = {
+            $auto: {
+                [category.id]: { $auto: {
+                    subCategories: { $autoArray: {
+                        $push: [subCategory.id],
+                    } },
+                } },
+            },
+        };
+    }
+    return update(state, settings);
+};
+
+const addNewSubSubCategory = (state, action) => {
+    const { subCategory, subSubCategory } = action;
+    const index = ((state.subCategories[subSubCategory.id] || {}).subSubCategories
+        || []).findIndex(sC => sC === subSubCategory.id);
+
+    const settings = {
+        subSubCategories: { $auto: {
+            [subSubCategory.id]: { $auto: {
+                $merge: subSubCategory,
+            } },
+        } },
+    };
+
+    if (subCategory && index === -1) {
+        settings.subCategories = {
+            $auto: {
+                [subCategory.id]: { $auto: {
+                    subSubCategories: { $autoArray: {
+                        $push: [subSubCategory.id],
+                    } },
+                } },
+            },
+        };
+    }
+    return update(state, settings);
+};
+
+const setCategory = (state, action) => {
+    const rCategory = { ...action.category };
+    const subCategories = action.category.subCategories;
+
+    const rSubSubCategories = {};
+    let rSubCategories;
+
+    if (subCategories) {
+        rCategory.subCategories = subCategories.map(sC => sC.id);
+
+        rSubCategories = subCategories.reduce((ac, sC) => {
+            const rSubCategory = { ...sC };
+            const subSubCategories = sC.subSubCategories;
+
+            if (subSubCategories) {
+                rSubCategory.subSubCategories = subSubCategories.map((ssC) => {
+                    rSubSubCategories[ssC.id] = { $auto: {
+                        $merge: ssC,
+                    } };
+                    return ssC.id;
+                });
+            }
+
+            return {
+                ...ac,
+                [sC.id]: { $auto: {
+                    $merge: rSubCategory,
+                } },
+            };
+        }, {});
+    }
+
+    const settings = {
+        categories: { $auto: {
+            [rCategory.id]: { $auto: {
+                $merge: rCategory,
+            } },
+        } },
+    };
+
+    if (subCategories) {
+        settings.subCategories = { $auto: rSubCategories };
+    }
+
+    if (Object.keys(rSubSubCategories)) {
+        settings.subSubCategories = { $auto: rSubSubCategories };
+    }
+
+    return update(state, settings);
+};
+
 const dummyAction = (state) => {
     const dummy = {
         id: 1,
@@ -543,6 +664,11 @@ const reducers = {
     [ADD_NEW_AF]: addNewAf,
     [SET_PROJECT_AF]: setProjectAf,
     [SET_AF_DETAIL]: setAfDetail,
+
+    [ADD_NEW_CATEGORY]: addNewCategory,
+    [ADD_NEW_SUBCATEGORY]: addNewSubCategory,
+    [ADD_NEW_SUBSUBCATEGORY]: addNewSubSubCategory,
+    [SET_CATEGORY]: setCategory,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

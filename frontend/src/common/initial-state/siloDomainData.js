@@ -91,10 +91,19 @@ const initialSiloDomainData = {
         },
     },
 
-    categoryEditorView: {
-        selectedCategoryId: 1,
-        selectedSubCategoryId: undefined,
-        selectedSubSubCategoryId: undefined,
+    selectedCategoryView: {
+        // selectedCategory: categoryId
+        categoryId: 3,
+
+        subCategory: {
+            // categoryId: subCategoryId
+            1: undefined,
+        },
+
+        subSubCategory: {
+            // subCategoryId: subSubCategoryId
+            12: undefined,
+        },
     },
 };
 

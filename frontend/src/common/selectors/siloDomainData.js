@@ -8,6 +8,8 @@ import {
     projectsOptionsSelector,
     analysisFrameworkIdFromProps,
     categoriesSelector,
+    subCategoriesSelector,
+    subSubCategoriesSelector,
 } from './domainData';
 
 
@@ -115,7 +117,7 @@ export const leadPageForProjectSelector = createSelector(
     leadPageSelector,
     activeProjectSelector,
     (leadPage, activeProject) => (
-        leadPage[activeProject] || {}
+        leadPage[activeProject] || emptyObject
     ),
 );
 
@@ -198,43 +200,78 @@ export const afViewCurrentAnalysisFrameworkSelector = createSelector(
     ),
 );
 
-
-export const selectedCategoryIdSelector = ({ siloDomainData }) => (
-    siloDomainData.categoryEditorView.selectedCategoryId
+export const selectedCategoryViewSelector = ({ siloDomainData }) => (
+    siloDomainData.selectedCategoryView || emptyObject
 );
 
-export const selectedSubCategoryIdSelector = ({ siloDomainData }) => (
-    siloDomainData.categoryEditorView.selectedSubCategoryId
+export const selectedCategoryIdSelector = createSelector(
+    selectedCategoryViewSelector,
+    view => view.categoryId,
 );
 
-export const selectedSubSubCategoryIdSelector = ({ siloDomainData }) => (
-    siloDomainData.categoryEditorView.selectedSubSubCategoryId
+export const selectedSubCategoryIdSelector = createSelector(
+    selectedCategoryViewSelector,
+    view => (view.subCategory || emptyObject)[view.categoryId],
+);
+
+export const selectedSubSubCategoryIdSelector = createSelector(
+    selectedCategoryViewSelector,
+    selectedSubCategoryIdSelector,
+    (view, subCategoryId) => (view.subSubCategory || emptyObject)[subCategoryId],
 );
 
 export const selectedCategorySelector = createSelector(
     categoriesSelector,
     selectedCategoryIdSelector,
-    (categories, id) => (
-        categories.find(category => category.id === id) || emptyObject
-    ),
+    (categories, id) => categories[id] || emptyObject,
 );
 
 export const selectedSubCategorySelector = createSelector(
-    selectedCategorySelector,
+    subCategoriesSelector,
     selectedSubCategoryIdSelector,
-    (selectedCategory, id) => (
-        (selectedCategory.subCategories || emptyList).find(
-            subCategory => subCategory.id === id,
-        ) || emptyObject
-    ),
+    (subCategories, id) => subCategories[id] || emptyObject,
 );
 
 export const selectedSubSubCategorySelector = createSelector(
-    selectedSubCategorySelector,
+    subSubCategoriesSelector,
     selectedSubSubCategoryIdSelector,
-    (selectedSubCategory, id) => (
-        (selectedSubCategory.subSubCategories || emptyList).find(
-            subSubCategory => subSubCategory.id === id,
-        ) || emptyObject
-    ),
+    (subSubCategories, id) => subSubCategories[id] || emptyObject,
+);
+
+export const selectedCategoryDetailSelector = createSelector(
+    selectedCategorySelector,
+    category => ({ id: category.id, label: category.label }),
+);
+
+export const selectedSubCategoryDetailSelector = createSelector(
+    selectedSubCategorySelector,
+    subCategory => ({ id: subCategory.id, label: subCategory.label }),
+);
+
+export const selectedSubSubCategoryDetailSelector = createSelector(
+    selectedSubSubCategorySelector,
+    subSubcategory => ({ id: subSubcategory.id, label: subSubcategory.label }),
+);
+
+export const subCategoriesForSelectedCategorySelector = createSelector(
+    selectedCategorySelector,
+    subCategoriesSelector,
+    (category, subCategories) => (category.subCategories || emptyList).map((sC) => {
+        const subCategory = subCategories[sC] || emptyObject;
+        return { id: subCategory.id, label: subCategory.label };
+    }),
+);
+
+export const subSubCategoriesForSelectedSubCategorySelector = createSelector(
+    selectedSubCategorySelector,
+    subSubCategoriesSelector,
+    (subCategory, subSubCategories) => (subCategory.subSubCategories || emptyList).map((ssC) => {
+        const subSubCategory = subSubCategories[ssC] || emptyObject;
+        return { id: subSubCategory.id, label: subSubCategory.label };
+    }),
+);
+
+export const keywordsForSelectedSubSubCategorySelector = createSelector(
+    selectedSubSubCategorySelector,
+    subSubCategory => subSubCategory.keywords || emptyList,
 );

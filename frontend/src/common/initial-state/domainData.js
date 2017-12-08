@@ -53,100 +53,121 @@ const initialDomainDataState = {
         */
     },
 
-    categories: [
-        {
+    categories: {
+        1: {
             id: 1,
             label: 'Sectors',
-            subCategories: [
+            subCategories: [1, 3],
+        },
+        2: {
+            id: 2,
+            label: 'Demographic Groups',
+            subCategories: [2],
+        },
+        3: {
+            id: 3,
+            label: 'Affected Groups',
+            subCategories: [4],
+        },
+    },
+
+    subCategories: {
+        1: {
+            id: 1,
+            label: 'wash',
+            subSubCategories: [1, 2],
+        },
+        2: {
+            id: 2,
+            label: 'health',
+            subSubCategories: [3, 4],
+        },
+        3: {
+            id: 3,
+            label: 'shelter',
+            subSubCategories: [],
+        },
+        4: {
+            id: 4,
+            label: 'money',
+            subSubCategories: [],
+        },
+    },
+
+    subSubCategories: {
+        1: {
+            id: 1,
+            label: 'water',
+            keywords: [
                 {
                     id: 1,
-                    label: 'wash',
-                    subSubCategories: [
-                        {
-                            id: 1,
-                            label: 'water',
-                            keywords: [
-                                {
-                                    id: 1,
-                                    label: 'sickness',
-                                    count: 331,
-                                },
-                                {
-                                    id: 2,
-                                    label: 'cholera',
-                                    count: 298,
-                                },
-                            ],
-                        },
-                        {
-                            id: 2,
-                            label: 'sanitation',
-                            keywords: [
-                                {
-                                    id: 1,
-                                    label: 'Pump',
-                                    count: 31,
-                                },
-                                {
-                                    id: 2,
-                                    label: 'Latrines',
-                                    count: 125,
-                                },
-                            ],
-                        },
-                    ],
+                    label: 'sickness',
+                    type: 'green',
+                    count: 331,
                 },
                 {
                     id: 2,
-                    label: 'food',
-                    subSubCategories: [
-                        {
-                            id: 1,
-                            label: 'nutrition',
-                            keywords: [
-                                {
-                                    id: 1,
-                                    label: 'potato',
-                                    count: 331,
-                                },
-                                {
-                                    id: 2,
-                                    label: 'tomato',
-                                    count: 298,
-                                },
-                            ],
-                        },
-                        {
-                            id: 2,
-                            label: 'malnutrition',
-                            keywords: [
-                                {
-                                    id: 1,
-                                    label: 'kwasiorkor',
-                                    count: 31,
-                                },
-                                {
-                                    id: 2,
-                                    label: 'sukenas',
-                                    count: 125,
-                                },
-                            ],
-                        },
-                    ],
+                    label: 'cholera',
+                    type: 'grey',
+                    count: 298,
                 },
             ],
         },
-        {
+        2: {
             id: 2,
-            label: 'Demographic Groups',
-            subCategories: [],
+            label: 'sanitation',
+            keywords: [
+                {
+                    id: 1,
+                    label: 'Pump',
+                    type: 'grey',
+                    count: 31,
+                },
+                {
+                    id: 2,
+                    label: 'Latrines',
+                    type: 'green',
+                    count: 125,
+                },
+            ],
         },
-        {
+        3: {
             id: 3,
-            label: 'Affected Groups',
-            subCategories: [],
+            label: 'nutrition',
+            keywords: [
+                {
+                    id: 1,
+                    label: 'potato',
+                    type: 'green',
+                    count: 331,
+                },
+                {
+                    id: 2,
+                    label: 'tomato',
+                    type: 'green',
+                    count: 298,
+                },
+            ],
         },
-    ],
+        4: {
+            id: 4,
+            label: 'malnutrition',
+            keywords: [
+                {
+                    id: 1,
+                    label: 'kwasiorkor',
+                    type: 'green',
+                    count: 31,
+                },
+                {
+                    id: 2,
+                    label: 'sukenas',
+                    type: 'grey',
+                    count: 125,
+                },
+            ],
+        },
+    },
 
     // index is project id
     leadFilterOptions: {

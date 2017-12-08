@@ -168,5 +168,19 @@ export const currentUserProjectsSelector = createSelector(
 
 
 export const categoriesSelector = ({ domainData }) => (
-    domainData.categories || emptyList
+    domainData.categories || emptyObject
+);
+
+export const categoriesListSelector = createSelector(
+    categoriesSelector,
+    categories => Object.values(categories),
+);
+
+
+export const subCategoriesSelector = ({ domainData }) => (
+    domainData.subCategories || emptyObject
+);
+
+export const subSubCategoriesSelector = ({ domainData }) => (
+    domainData.subSubCategories || emptyObject
 );

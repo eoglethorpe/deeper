@@ -609,11 +609,10 @@ const editEntryViewSetActiveEntry = (state, action) => {
 };
 
 const ceViewSelectedCategory = (state, action) => {
-    const { selectedCategoryId } = action;
     const settings = {
-        categoryEditorView: {
-            selectedCategoryId: {
-                $set: selectedCategoryId,
+        selectedCategoryView: {
+            categoryId: {
+                $set: action.selectedCategoryId,
             },
         },
     };
@@ -621,11 +620,15 @@ const ceViewSelectedCategory = (state, action) => {
 };
 
 const ceViewSelectedSubCategory = (state, action) => {
-    const { selectedSubCategoryId } = action;
+    const view = state.selectedCategoryView;
+    const selectedCategory = view.categoryId;
+
     const settings = {
-        categoryEditorView: {
-            selectedSubCategoryId: {
-                $set: selectedSubCategoryId,
+        selectedCategoryView: {
+            subCategory: {
+                [selectedCategory]: {
+                    $set: action.selectedSubCategoryId,
+                },
             },
         },
     };
@@ -633,11 +636,16 @@ const ceViewSelectedSubCategory = (state, action) => {
 };
 
 const ceViewSelectedSubSubCategory = (state, action) => {
-    const { selectedSubSubCategoryId } = action;
+    const view = state.selectedCategoryView;
+    const selectedCategory = view.categoryId;
+    const selectedSubCategory = view.subCategory[selectedCategory];
+
     const settings = {
-        categoryEditorView: {
-            selectedSubSubCategoryId: {
-                $set: selectedSubSubCategoryId,
+        selectedCategoryView: {
+            subSubCategory: {
+                [selectedSubCategory]: {
+                    $set: action.selectedSubSubCategoryId,
+                },
             },
         },
     };

@@ -2,16 +2,27 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+import { connect } from 'react-redux';
 import styles from './styles.scss';
+
+import {
+    keywordsForSelectedSubSubCategorySelector,
+} from '../../../../common/redux';
 
 const propTypes = {
     className: PropTypes.string,
+    keywords: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
+const mapStateToProps = state => ({
+    keywords: keywordsForSelectedSubSubCategorySelector(state),
+});
+
+@connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class KeyWords extends React.PureComponent {
     static propTypes = propTypes;
@@ -22,7 +33,9 @@ export default class KeyWords extends React.PureComponent {
     render() {
         const {
             className,
+            keywords,
         } = this.props;
+
         return (
             <div styleName={className}>
                 <Tabs
@@ -55,6 +68,23 @@ export default class KeyWords extends React.PureComponent {
                         for="keywords"
                         styleName="tab"
                     >
+                        {
+                            keywords.map(keyword => (
+                                <div key={keyword.id}>
+                                    <p
+                                        draggable
+                                        readOnly
+                                        styleName={
+                                            keyword.type ? `keywords-words-${keyword.type}`
+                                                : 'keywords-words-grey'
+                                        }
+                                    >
+                                        {keyword.label}
+                                        <span> ({keyword.count}) </span>
+                                    </p>
+                                </div>
+                            ))
+                        }
                         <p
                             draggable
                             readOnly

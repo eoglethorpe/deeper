@@ -28,17 +28,23 @@ import {
 } from '../../../../public/utils/common';
 
 import {
-    categoriesSelector,
+    categoriesListSelector,
     selectedCategorySelector,
-    selectedSubCategorySelector,
-    selectedSubSubCategorySelector,
+    selectedSubCategoryDetailSelector,
+    // selectedSubSubCategorySelector,
+    subCategoriesForSelectedCategorySelector,
+    subSubCategoriesForSelectedSubCategorySelector,
     selectedCategoryIdSelector,
     selectedSubCategoryIdSelector,
     selectedSubSubCategoryIdSelector,
+
     setActiveCategoryAction,
     setActiveSubCategoryAction,
     setActiveSubSubCategoryAction,
-
+    setCategoryAction,
+    addNewCategoryAction,
+    addNewSubCategoryAction,
+    addNewSubSubCategoryAction,
 } from '../../../../common/redux';
 
 import KeyWords from '../../components/KeyWords';
@@ -47,16 +53,23 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    categories: PropTypes.array, // eslint-disable-line
-    selectedCategory: PropTypes.object, // eslint-disable-line
-    selectedSubCategory: PropTypes.object, // eslint-disable-line
-    selectedSubSubCategory: PropTypes.object, // eslint-disable-line
+    categories: PropTypes.arrayOf(PropTypes.shape({})),
+    selectedCategory: PropTypes.shape({}),
+    selectedSubCategory: PropTypes.shape({}),
+    // selectedSubSubCategory: PropTypes.shape({}),
+
+    subCategoriesForSelectedCategory: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    subSubCategoriesForSelectedSubCategory: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     selectedCategoryId: PropTypes.number,
     selectedSubCategoryId: PropTypes.number,
     selectedSubSubCategoryId: PropTypes.number,
     setActiveCategory: PropTypes.func.isRequired,
     setActiveSubCategory: PropTypes.func.isRequired,
     setActiveSubSubCategory: PropTypes.func.isRequired,
+    setCategory: PropTypes.func.isRequired,
+    addNewCategory: PropTypes.func.isRequired,
+    addNewSubCategory: PropTypes.func.isRequired,
+    addNewSubSubCategory: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -64,17 +77,21 @@ const defaultProps = {
     categories: {},
     selectedCategory: {},
     selectedSubCategory: {},
-    selectedSubSubCategory: {},
+    // selectedSubSubCategory: {},
     selectedCategoryId: undefined,
     selectedSubCategoryId: undefined,
     selectedSubSubCategoryId: undefined,
 };
 
 const mapStateToProps = state => ({
-    categories: categoriesSelector(state),
+    categories: categoriesListSelector(state),
     selectedCategory: selectedCategorySelector(state),
-    selectedSubCategory: selectedSubCategorySelector(state),
-    selectedSubSubCategory: selectedSubSubCategorySelector(state),
+    selectedSubCategory: selectedSubCategoryDetailSelector(state),
+    // selectedSubSubCategory: selectedSubSubCategorySelector(state),
+
+    subCategoriesForSelectedCategory: subCategoriesForSelectedCategorySelector(state),
+    subSubCategoriesForSelectedSubCategory: subSubCategoriesForSelectedSubCategorySelector(state),
+
     selectedCategoryId: selectedCategoryIdSelector(state),
     selectedSubCategoryId: selectedSubCategoryIdSelector(state),
     selectedSubSubCategoryId: selectedSubSubCategoryIdSelector(state),
@@ -84,6 +101,10 @@ const mapDispatchToProps = dispatch => ({
     setActiveCategory: params => dispatch(setActiveCategoryAction(params)),
     setActiveSubCategory: params => dispatch(setActiveSubCategoryAction(params)),
     setActiveSubSubCategory: params => dispatch(setActiveSubSubCategoryAction(params)),
+    setCategory: params => dispatch(setCategoryAction(params)),
+    addNewCategory: params => dispatch(addNewCategoryAction(params)),
+    addNewSubCategory: params => dispatch(addNewSubCategoryAction(params)),
+    addNewSubSubCategory: params => dispatch(addNewSubSubCategoryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -99,86 +120,6 @@ export default class Categories extends React.PureComponent {
             addNewCategory: false,
             addNewSubCategory: false,
             addNewSubSubCategory: false,
-            categoryData: [
-                {
-                    key: 1,
-                    label: 'Sectors',
-                    description: 'WaduHek',
-                    owner: 'Jacky',
-                },
-                {
-                    key: 2,
-                    label: 'Affected Groups',
-                    description: 'WaduHek',
-                    owner: 'Jacky',
-                },
-                {
-                    key: 3,
-                    label: 'Demographic Groups',
-                    description: 'WaduHek',
-                    owner: 'Jacky',
-                },
-            ],
-            subCategoryData: [
-                {
-                    id: 1,
-                    title: 'wash',
-                },
-                {
-                    id: 2,
-                    title: 'food',
-                },
-                {
-                    id: 3,
-                    title: 'shelter',
-                },
-                {
-                    id: 4,
-                    title: 'nfi',
-                },
-                {
-                    id: 5,
-                    title: 'protection',
-                },
-            ],
-            subSubCategoryData: [
-                {
-                    id: 1,
-                    title: 'water',
-                },
-                {
-                    id: 2,
-                    title: 'sanitation',
-                },
-                {
-                    id: 3,
-                    title: 'hygiene',
-                },
-                {
-                    id: 4,
-                    title: 'vector control',
-                },
-                {
-                    id: 5,
-                    title: 'waste management',
-                },
-                {
-                    id: 6,
-                    title: 'diseases',
-                },
-                {
-                    id: 7,
-                    title: 'bad water',
-                },
-                {
-                    id: 8,
-                    title: 'sanitation',
-                },
-                {
-                    id: 9,
-                    title: 'dysentery',
-                },
-            ],
             editCategoryModal: false,
             formErrors: [],
             formFieldErrors: {},
@@ -202,6 +143,8 @@ export default class Categories extends React.PureComponent {
             subLabel: [requiredCondition],
             subSubLabel: [requiredCondition],
         };
+
+        // this.createRequestForCategory();
     }
 
     // For Category Data
@@ -224,16 +167,14 @@ export default class Categories extends React.PureComponent {
     // FORM success Category Data
 
     successCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewCategory({
+            category: {
+                ...values,
+                id: (this.props.categories || []).length + 1,
+            },
+        });
         this.setState({
-            categoryData: [
-                ...this.state.categoryData,
-                {
-                    key: randomString(),
-                    label: values.label,
-                    description: values.description,
-                    owner: values.owner,
-                },
-            ],
             addNewCategory: false,
             formValues: [],
         });
@@ -257,6 +198,60 @@ export default class Categories extends React.PureComponent {
         });
     }
 
+    createRequestForCategory = () => {
+        // TODO: remove this and pull data from api
+        const data = {
+            id: 1,
+            label: 'Sectors',
+            subCategories: [
+                {
+                    id: 1,
+                    label: 'wash',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'water',
+                            keywords: [
+                                { id: 1, label: 'sickness', count: 331 },
+                                { id: 2, label: 'cholera', count: 298 },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'sanitation',
+                            keywords: [
+                                { id: 1, label: 'Pump', count: 31 },
+                                { id: 2, label: 'Latrines', count: 125 },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    label: 'food',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'nutrition',
+                            keywords: [
+                                { id: 1, label: 'potato', count: 331 },
+                                { id: 2, label: 'tomato', count: 298 },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'malnutrition',
+                            keywords: [
+                                { id: 1, label: 'kwasiorkor', count: 31 },
+                                { id: 2, label: 'sukenas', count: 125 },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+        this.props.setCategory({ category: data });
+    }
 
     // Common FORM functions
 
@@ -279,14 +274,15 @@ export default class Categories extends React.PureComponent {
     // FORM success Sub-Category
 
     subCategorySuccessCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewSubCategory({
+            category: { id: this.props.selectedCategoryId },
+            subCategory: {
+                label: values.subLabel,
+                id: randomString(5),
+            },
+        });
         this.setState({
-            subCategoryData: [
-                ...this.state.subCategoryData,
-                {
-                    id: randomString(),
-                    title: values.subLabel,
-                },
-            ],
             addNewSubCategory: false,
             formValues: [],
         });
@@ -312,14 +308,15 @@ export default class Categories extends React.PureComponent {
     // FORM success Sub-Sub-Category
 
     subSubCategorySuccessCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewSubSubCategory({
+            subCategory: { id: this.props.selectedSubCategoryId },
+            subSubCategory: {
+                label: values.subSubLabel,
+                id: randomString(5),
+            },
+        });
         this.setState({
-            subSubCategoryData: [
-                ...this.state.subSubCategoryData,
-                {
-                    id: randomString(),
-                    title: values.subSubLabel,
-                },
-            ],
             addNewSubSubCategory: false,
             formValues: [],
         });
@@ -339,17 +336,18 @@ export default class Categories extends React.PureComponent {
 
         const {
             className,
+            categories,
+
             selectedCategory,
             selectedSubCategory,
+
+            subCategoriesForSelectedCategory,
+            subSubCategoriesForSelectedSubCategory,
+
             selectedCategoryId,
             selectedSubCategoryId,
             selectedSubSubCategoryId,
         } = this.props;
-
-        // console.log(categories);
-        // console.log(selectedCategory);
-        // console.log(selectedSubCategory);
-        // console.log(selectedSubSubCategory);
 
         return (
             <div styleName={className}>
@@ -359,7 +357,7 @@ export default class Categories extends React.PureComponent {
                             placeholder="Select a Category"
                             label="Category"
                             showHintAndError={false}
-                            options={this.props.categories}
+                            options={categories}
                             keySelector={category => category.id}
                             labelSelector={category => category.label}
                             value={selectedCategoryId}
@@ -381,7 +379,7 @@ export default class Categories extends React.PureComponent {
                     <div styleName="category-group">
                         <div styleName="sub-categories">
                             {
-                                (selectedCategory.subCategories || []).map(d => (
+                                subCategoriesForSelectedCategory.map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -413,7 +411,7 @@ export default class Categories extends React.PureComponent {
                         </div>
                         <div styleName="sub-sub-categories">
                             {
-                                (selectedSubCategory.subSubCategories || []).map(d => (
+                                subSubCategoriesForSelectedSubCategory.map(d => (
                                     <div
                                         styleName="sub-group"
                                         key={d.id}
@@ -441,7 +439,7 @@ export default class Categories extends React.PureComponent {
                             }
                             <TransparentButton
                                 onClick={this.handleAddNewSubSubCategoryShowModal}
-                                styleName={`${isFalsy(selectedSubSubCategoryId) ? 'add-button' : 'hidden'}`}
+                                styleName={`${isFalsy(selectedSubCategoryId) ? 'hidden' : 'add-button'}`}
                                 type="button"
                             >
                                 <i className="ion-plus" />
