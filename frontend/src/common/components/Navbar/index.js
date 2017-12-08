@@ -209,7 +209,7 @@ export default class Navbar extends React.PureComponent {
                     {
                         iconName &&
                         <span
-                            className={`${item.iconName} ${styles.icon}`}
+                            className={`${iconName} ${styles.icon}`}
                         />
                     }
                     { pageTitles[item] }

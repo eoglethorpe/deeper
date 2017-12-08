@@ -3,6 +3,8 @@ import {
     Bundle,
 } from '../public/components/General';
 
+import RouteSynchronizer from '../common/components/RouteSynchronizer';
+
 const importers = {
     login: () => import('./Authentication/views/Login'),
     register: () => import('./Authentication/views/Register'),
@@ -43,7 +45,12 @@ const importers = {
 const views = Object.keys(importers).reduce(
     (acc, key) => {
         const importer = importers[key];
-        acc[key] = () => <Bundle load={importer} />;
+        acc[key] = props => (
+            <RouteSynchronizer
+                {...props}
+                component={() => <Bundle load={importer} />}
+            />
+        );
         return acc;
     },
     {},

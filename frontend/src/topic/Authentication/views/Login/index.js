@@ -3,7 +3,6 @@
  */
 
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -26,7 +25,6 @@ import {
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
-    pageTitles,
     pathNames,
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
@@ -262,9 +260,6 @@ export default class Login extends React.PureComponent {
         } = this.state;
         return (
             <div styleName="login">
-                <Helmet>
-                    <title>{ pageTitles.login }</title>
-                </Helmet>
                 <Form
                     styleName="login-form"
                     changeCallback={this.changeCallback}

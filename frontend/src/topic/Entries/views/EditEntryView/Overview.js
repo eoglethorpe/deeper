@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactGridLayout from 'react-grid-layout';
@@ -17,8 +16,6 @@ import {
 import {
     SelectInput,
 } from '../../../../public/components/Input';
-
-import { pageTitles } from '../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -177,9 +174,6 @@ export default class Overview extends React.PureComponent {
             <div
                 styleName="overview"
             >
-                <Helmet>
-                    <title>{ `${pageTitles.editEntry} | Overview` }</title>
-                </Helmet>
                 <div
                     styleName="left"
                 >

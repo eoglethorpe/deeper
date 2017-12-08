@@ -3,7 +3,6 @@
  */
 
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 import {
     Redirect,
@@ -23,7 +22,6 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
-    pageTitles,
     pathNames,
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
@@ -190,9 +188,6 @@ export default class Login extends React.PureComponent {
 
         return (
             <div styleName="register">
-                <Helmet>
-                    <title>{ pageTitles.register }</title>
-                </Helmet>
                 <Form
                     styleName="register-form"
                     changeCallback={this.changeCallback}

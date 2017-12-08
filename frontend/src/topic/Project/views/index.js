@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -12,7 +11,6 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
-    pageTitles,
     pathNames,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -224,9 +222,6 @@ export default class ProjectPanel extends React.PureComponent {
 
         return (
             <div styleName="project-panel">
-                <Helmet>
-                    <title>{ pageTitles.projectPanel }</title>
-                </Helmet>
                 <div
                     styleName={isSidebarVisible ? 'content side-bar-shown' : 'content'}
                 >

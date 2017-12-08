@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 
 import {
@@ -9,7 +8,6 @@ import {
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
 
-import { pageTitles } from '../../../common/constants';
 import { urlForApiDocs } from '../../../common/rest';
 
 import styles from './styles.scss';
@@ -216,9 +214,6 @@ export default class ApiDocs extends React.PureComponent {
 
         return (
             <div>
-                <Helmet>
-                    <title>{ pageTitles.apiDocs }</title>
-                </Helmet>
                 { content }
             </div>
         );

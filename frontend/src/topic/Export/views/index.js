@@ -1,9 +1,7 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 
 import styles from './styles.scss';
-import { pageTitles } from '../../../common/constants';
 import {
     Form,
 } from '../../../public/components/Input';
@@ -34,9 +32,6 @@ export default class Export extends React.PureComponent {
     render() {
         return (
             <div styleName="export">
-                <Helmet>
-                    <title>{ pageTitles.export }</title>
-                </Helmet>
                 <div styleName="preview-container">
                     <div><h1>No Preview Available</h1></div>
                 </div>

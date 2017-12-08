@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 
 import styles from './styles.scss';
@@ -19,9 +18,6 @@ export default class FourHundredFour extends React.PureComponent {
     render() {
         return (
             <div>
-                <Helmet>
-                    <title>{ pageTitles.fourHundredFour }</title>
-                </Helmet>
                 { pageTitles.fourHundredFour }
             </div>
         );
