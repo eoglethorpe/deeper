@@ -133,7 +133,6 @@ const setUserProjects = (state, action) => {
         return state;
     }
 
-    // XXX: Verify this
     const { activeProject } = state;
     let activeIndex = action.projects.findIndex(project => project.id === activeProject);
     if (activeIndex < 0) {

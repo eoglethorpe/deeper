@@ -110,34 +110,6 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     componentWillMount() {
-        const {
-            countries,
-            activeCountry,
-            match,
-            setActiveCountry,
-        } = this.props;
-        const { countryId } = match.params;
-
-        // Override activeCountry by url value
-        if (countryId) {
-            console.log('Id from browser found');
-            setActiveCountry({ activeCountry: +countryId });
-        } else if (activeCountry) {
-            console.log('Redirecting to currently active country');
-            browserHistory.replace(
-                reverseRoute(pathNames.countries, { countryId: activeCountry }),
-            );
-            // NOTE: this breaks here
-        } else if (countries.length > 0) {
-            console.log('Setting first country as active');
-            // dont do this now
-            const newActiveCountry = countries[0].id;
-            setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.replace(
-                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
-            );
-        }
-
         this.countriesRequest.start();
     }
 
@@ -157,33 +129,6 @@ export default class CountryPanel extends React.PureComponent {
             const displayCountryList = nextProps.countries.filter(caseInsensitiveSubmatch);
 
             this.setState({ displayCountryList });
-        }
-
-        const {
-            countries,
-            activeCountry,
-            match,
-            setActiveCountry,
-        } = nextProps;
-        const { countryId } = match.params;
-
-        // Override activeCountry by url value
-        if (countryId) {
-            console.log('Id from browser found');
-            setActiveCountry({ activeCountry: +countryId });
-        } else if (activeCountry) {
-            console.log('Redirecting to currently active country');
-            browserHistory.replace(
-                reverseRoute(pathNames.countries, { countryId: activeCountry }),
-            );
-            // NOTE: this breaks here
-        } else if (countries.length > 0) {
-            console.log('Setting first country as active');
-            const newActiveCountry = countries[0].id;
-            setActiveCountry({ activeCountry: newActiveCountry });
-            browserHistory.replace(
-                reverseRoute(pathNames.countries, { countryId: newActiveCountry }),
-            );
         }
     }
 
