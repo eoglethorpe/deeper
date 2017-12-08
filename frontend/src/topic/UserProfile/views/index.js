@@ -4,7 +4,6 @@
  */
 
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -28,7 +27,6 @@ import {
 import { FgRestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
-import { pageTitles } from '../../../common/constants';
 import {
     createParamsForUser,
     createUrlForUser,
@@ -159,11 +157,6 @@ export default class UserProfile extends React.PureComponent {
 
         return (
             <div styleName="user-profile">
-                <Helmet>
-                    <title>
-                        { pageTitles.userProfile }
-                    </title>
-                </Helmet>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
                     <GalleryImage

@@ -4,7 +4,6 @@
  */
 
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -20,7 +19,6 @@ import {
     DangerButton,
     SuccessButton,
 } from '../../../../public/components/Action/';
-import { pageTitles } from '../../../../common/constants';
 
 import {
     transformResponseErrorToFormError,
@@ -538,11 +536,6 @@ export default class LeadAdd extends React.PureComponent {
 
         return (
             <div styleName="add-lead">
-                <Helmet>
-                    <title>
-                        { pageTitles.addLeads }
-                    </title>
-                </Helmet>
                 <header
                     styleName="header"
                 >

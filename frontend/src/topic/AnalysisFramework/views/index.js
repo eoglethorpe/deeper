@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -11,7 +10,6 @@ import {
 
 import schema from '../../../common/schema';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { pageTitles } from '../../../common/constants';
 
 import {
     LoadingAnimation,
@@ -142,9 +140,6 @@ export default class AnalysisFramework extends React.PureComponent {
         if (!analysisFramework) {
             return (
                 <div styleName="analysis-framework">
-                    <Helmet>
-                        <title>{ pageTitles.analysisFramework }</title>
-                    </Helmet>
                     <LoadingAnimation />
                 </div>
             );
@@ -153,9 +148,6 @@ export default class AnalysisFramework extends React.PureComponent {
         return (
             <HashRouter>
                 <div styleName="analysis-framework">
-                    <Helmet>
-                        <title>{ pageTitles.analysisFramework }</title>
-                    </Helmet>
                     <Route
                         exact
                         path="/"

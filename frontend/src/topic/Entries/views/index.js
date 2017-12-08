@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 
 import styles from './styles.scss';
@@ -50,11 +49,6 @@ export default class Entries extends React.PureComponent {
     render() {
         return (
             <div styleName="entries">
-                <Helmet>
-                    <title>
-                        { pageTitles.entries }
-                    </title>
-                </Helmet>
                 <header>
                     <h2>
                         { pageTitles.entries }

@@ -1,10 +1,7 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactGridLayout from 'react-grid-layout';
-
-import { pageTitles } from '../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -110,9 +107,6 @@ export default class List extends React.PureComponent {
             <div
                 styleName="list"
             >
-                <Helmet>
-                    <title>{ `${pageTitles.editEntry} | Overview` }</title>
-                </Helmet>
                 <header
                     styleName="header"
                 >

@@ -1,13 +1,10 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 import {
     Redirect,
     Route,
     HashRouter,
 } from 'react-router-dom';
-
-import { pageTitles } from '../../../common/constants';
 
 import EditCategoryPage from '../components/EditCategoryPage';
 
@@ -29,9 +26,6 @@ export default class CategoryEditor extends React.PureComponent {
         return (
             <HashRouter>
                 <div styleName="category-editor">
-                    <Helmet>
-                        <title>{ pageTitles.categoryEditor }</title>
-                    </Helmet>
                     <Route
                         exact
                         path="/"

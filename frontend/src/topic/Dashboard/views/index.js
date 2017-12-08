@@ -1,10 +1,8 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { pageTitles } from '../../../common/constants';
 import {
     currentUserActiveProjectSelector,
 } from '../../../common/redux';
@@ -26,16 +24,10 @@ export default class Dashboard extends React.PureComponent {
 
     render() {
         const { currentUserActiveProject } = this.props;
-        const projectName = currentUserActiveProject.title;
         return (
             <div styleName="dashboard">
-                <Helmet>
-                    <title>
-                        { pageTitles.dashboard } | { projectName}
-                    </title>
-                </Helmet>
                 <p>
-                    Dashboard
+                    Dashboard of {currentUserActiveProject}
                 </p>
             </div>
         );

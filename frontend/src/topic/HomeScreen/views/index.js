@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -9,7 +8,6 @@ import { reverseRoute } from '../../../public/utils/common';
 
 import logo from '../../../img/deep-logo-grey.png';
 import {
-    pageTitles,
     pathNames,
 } from '../../../common/constants';
 import {
@@ -68,9 +66,6 @@ export default class HomeScreen extends React.PureComponent {
 
         return (
             <div styleName="home-screen">
-                <Helmet>
-                    <title>{ pageTitles.homeScreen }</title>
-                </Helmet>
                 <p>
                     Welcome to DEEP
                 </p>

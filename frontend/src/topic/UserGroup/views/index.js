@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -19,7 +18,6 @@ import MembersTable from '../components/MembersTable';
 import ProjectsTable from '../components/ProjectsTable';
 import UserGroupEdit from '../components/UserGroupEdit';
 
-import { pageTitles } from '../../../common/constants';
 import {
     groupSelector,
     setUserGroupAction,
@@ -175,9 +173,6 @@ export default class UserGroup extends React.PureComponent {
         return (
             <div styleName="usergroup">
                 <div styleName="left">
-                    <Helmet>
-                        <title>{ pageTitles.userGroup }</title>
-                    </Helmet>
                     <div styleName="title">
                         <h1>{ userGroup.title }</h1>
                         {

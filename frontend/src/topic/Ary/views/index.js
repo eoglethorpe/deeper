@@ -1,5 +1,4 @@
 import CSSModules from 'react-css-modules';
-import Helmet from 'react-helmet';
 import React from 'react';
 
 import { pageTitles } from '../../../common/constants';
@@ -20,9 +19,6 @@ export default class Ary extends React.PureComponent {
     render() {
         return (
             <div>
-                <Helmet>
-                    <title>{ pageTitles.ary }</title>
-                </Helmet>
                 { pageTitles.ary }
             </div>
         );
