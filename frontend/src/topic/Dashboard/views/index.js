@@ -27,7 +27,7 @@ export default class Dashboard extends React.PureComponent {
         return (
             <div styleName="dashboard">
                 <p>
-                    Dashboard of {currentUserActiveProject}
+                    Dashboard of {currentUserActiveProject.title}
                 </p>
             </div>
         );

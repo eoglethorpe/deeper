@@ -32,11 +32,9 @@ import {
 import {
     tokenSelector,
 
-    activeCountrySelector,
     countriesListSelector,
 
-    setActiveCountryAction,
-    setRegionsAction,
+    atRegionsAction,
     activeUserSelector,
 } from '../../../common/redux';
 
@@ -45,23 +43,19 @@ import AddRegion from '../../../common/components/AddRegion';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeCountry: PropTypes.number,
     countries: PropTypes.array, // eslint-disable-line
     match: PropTypes.shape({
         params: PropTypes.shape({
             countryId: PropTypes.string,
         }),
-    }),
+    }).isRequired,
     setRegions: PropTypes.func.isRequired,
-    setActiveCountry: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
-    activeCountry: undefined,
-    match: undefined,
     location: {},
     countries: [],
 };
@@ -70,7 +64,6 @@ const defaultProps = {
 // Scroll to selected country
 
 const mapStateToProps = state => ({
-    activeCountry: activeCountrySelector(state),
     countries: countriesListSelector(state),
     token: tokenSelector(state),
     activeUser: activeUserSelector(state),
@@ -78,7 +71,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setRegions: params => dispatch(setRegionsAction(params)),
-    setActiveCountry: params => dispatch(setActiveCountryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -133,10 +125,6 @@ export default class CountryPanel extends React.PureComponent {
 
     componentWillUnmount() {
         this.countriesRequest.stop();
-    }
-
-    onSelectCountry = (countryId) => {
-        this.props.setActiveCountry({ activeCountry: countryId });
     }
 
     onAddCountry = () => {
@@ -204,8 +192,13 @@ export default class CountryPanel extends React.PureComponent {
     calcCountryListItemKey = country => country.id;
 
     renderCountryListItem = (key, country) => {
-        const { activeCountry } = this.props;
-        const isActive = country.id === activeCountry;
+        const {
+            match,
+        } = this.props;
+
+        const activeCountryId = +match.params.countryId;
+        const isActive = country.id === activeCountryId;
+
         return (
             <ListItem
                 active={isActive}
@@ -224,9 +217,11 @@ export default class CountryPanel extends React.PureComponent {
 
     renderCountryDetail = () => {
         const {
-            activeCountry,
+            match,
             countries,
         } = this.props;
+
+        const activeCountryId = +match.params.countryId;
 
         if (countries.length <= 0) {
             return (
@@ -236,15 +231,23 @@ export default class CountryPanel extends React.PureComponent {
             );
         }
 
+        if (!activeCountryId) {
+            return (
+                <div styleName="country-detail-alt">
+                    Select a country to view its detail.
+                </div>
+            );
+        }
+
         const activeCountryIndex = countries.findIndex(
-            country => country.id === activeCountry,
+            country => country.id === activeCountryId,
         );
 
         if (activeCountryIndex >= 0) {
             return (
                 <CountryDetail
-                    countryId={activeCountry}
-                    key={activeCountry}
+                    countryId={activeCountryId}
+                    key={activeCountryId}
                     styleName="country-detail"
                 />
             );
@@ -252,7 +255,7 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-detail-alt">
-                The country you previously selected was deleted or does not exist.
+                Selected county is not found.
             </div>
         );
     }
