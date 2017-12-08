@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom';
 
 import schema from '../../../common/schema';
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import { pageTitles } from '../../../common/constants';
 
 import {
@@ -81,13 +81,12 @@ export default class AnalysisFramework extends React.PureComponent {
         const urlForAnalysisFramework = createUrlForAnalysisFramework(
             analysisFrameworkId,
         );
-        const analysisFrameworkRequest = new RestBuilder()
+        const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
             .params(() => {
                 const { token } = this.props;
                 return createParamsForUser(token);
             })
-            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -106,14 +105,12 @@ export default class AnalysisFramework extends React.PureComponent {
         const urlForAnalysisFramework = createUrlForAnalysisFramework(
             analysisFramework.id,
         );
-        const analysisFrameworkSaveRequest = new RestBuilder()
+        const analysisFrameworkSaveRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
             .params(() => {
                 const { token } = this.props;
                 return createParamsForAnalysisFrameworkEdit(token, analysisFramework);
             })
-            .retryTime(2000)
-            .maxRetryAttempts(3)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

@@ -21,7 +21,7 @@ import {
     ModalHeader,
     Table,
 } from '../../../../public/components/View';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 import {
     pathNames,
@@ -279,16 +279,13 @@ export default class UserProject extends React.PureComponent {
         const urlForProject = createUrlForProject(projectId);
         const userId = this.props.activeUser.userId;
 
-        const projectDeleteRequest = new RestBuilder()
+        const projectDeleteRequest = new FgRestBuilder()
             .url(urlForProject)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForProjectDelete({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success(() => {
                 try {
                     this.props.unSetProject({
@@ -317,16 +314,13 @@ export default class UserProject extends React.PureComponent {
     }
 
     createRequestForProjects = (userId) => {
-        const projectsRequest = new RestBuilder()
+        const projectsRequest = new FgRestBuilder()
             .url(createUrlForProjectsOfUser(userId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForProjects({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');

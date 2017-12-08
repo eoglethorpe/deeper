@@ -21,7 +21,7 @@ import {
     ModalHeader,
     Table,
 } from '../../../../public/components/View';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
@@ -252,16 +252,13 @@ export default class UserGroup extends React.PureComponent {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userId = this.props.activeUser.userId;
 
-        const userGroupDeletRequest = new RestBuilder()
+        const userGroupDeletRequest = new FgRestBuilder()
             .url(urlForUserGroup)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUserGroupsDelete({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success(() => {
                 try {
                     this.props.unSetUserGroup({
@@ -290,16 +287,13 @@ export default class UserGroup extends React.PureComponent {
     }
 
     createRequestForUserGroups = (userId) => {
-        const userGroupsRequest = new RestBuilder()
+        const userGroupsRequest = new FgRestBuilder()
             .url(createUrlForUserGroupsOfUser(userId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUserGroups({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'userGroupsGetResponse');

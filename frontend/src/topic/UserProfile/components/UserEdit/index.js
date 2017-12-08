@@ -26,11 +26,12 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { Uploader } from '../../../../public/utils/upload';
 
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForFileUpload,
     createParamsForUserPatch,
     createUrlForUserPatch,
@@ -113,7 +114,7 @@ export default class UserEdit extends React.PureComponent {
 
     createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
         const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new RestBuilder()
+        const userPatchRequest = new FgRestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
@@ -122,9 +123,6 @@ export default class UserEdit extends React.PureComponent {
                     { access },
                     { firstName, lastName, organization, displayPicture });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -145,25 +143,21 @@ export default class UserEdit extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
+                    formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save user.'],
+                });
             })
             .build();
         return userPatchRequest;

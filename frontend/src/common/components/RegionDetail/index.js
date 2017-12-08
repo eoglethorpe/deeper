@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 import {
     DangerButton,
@@ -20,6 +20,7 @@ import {
 } from '../../../public/components/View';
 
 import {
+    transformResponseErrorToFormError,
     createParamsForRegionPatch,
     createUrlForRegion,
 } from '../../../common/rest';
@@ -127,7 +128,7 @@ export default class RegionDetail extends React.PureComponent {
 
     createRequestForRegionDetailPatch = (regionId, data) => {
         const urlForRegion = createUrlForRegion(regionId);
-        const regionDetailPatchRequest = new RestBuilder()
+        const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
             .params(() => {
                 const { token } = this.props;
@@ -135,9 +136,6 @@ export default class RegionDetail extends React.PureComponent {
                 return createParamsForRegionPatch(
                     { access }, data);
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -158,25 +156,22 @@ export default class RegionDetail extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
+                    formErrors,
                     pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save region detail.'],
+                    pending: false,
+                });
             })
             .build();
         return regionDetailPatchRequest;

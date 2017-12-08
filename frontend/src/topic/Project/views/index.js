@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { ListView, ListItem } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import { TransparentPrimaryButton } from '../../../public/components/Action';
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
@@ -150,7 +150,7 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     createProjectRequest = (activeProject) => {
-        const projectRequest = new RestBuilder()
+        const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(activeProject))
             .params(() => {
                 const { token } = this.props;
@@ -159,9 +159,6 @@ export default class ProjectPanel extends React.PureComponent {
                     access,
                 });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -180,16 +177,13 @@ export default class ProjectPanel extends React.PureComponent {
     };
 
     createProjectOptionsRequest = (projectId) => {
-        const projectOptionsRequest = new RestBuilder()
+        const projectOptionsRequest = new FgRestBuilder()
             .url(createUrlForProjectOptions(projectId))
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForProjectOptions({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectOptionsGetResponse');

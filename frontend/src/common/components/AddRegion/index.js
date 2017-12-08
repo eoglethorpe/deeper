@@ -18,13 +18,14 @@ import {
     PrimaryButton,
 } from '../../../public/components/Action';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
 
 import { pathNames } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
+    transformResponseErrorToFormError,
     createParamsForRegionCreate,
     urlForRegionCreate,
 } from '../../rest';
@@ -110,7 +111,7 @@ export default class AddRegion extends React.PureComponent {
             };
         }
 
-        const regionCreateRequest = new RestBuilder()
+        const regionCreateRequest = new FgRestBuilder()
             .url(urlForRegionCreate)
             .params(() => {
                 const { token } = this.props;
@@ -119,9 +120,6 @@ export default class AddRegion extends React.PureComponent {
                     { access },
                     paramsBody);
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: false });
             })
@@ -151,25 +149,22 @@ export default class AddRegion extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
+                    formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save region.'],
+                    pending: true,
+                });
             })
             .build();
         return regionCreateRequest;

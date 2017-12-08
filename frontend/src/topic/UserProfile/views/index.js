@@ -25,7 +25,7 @@ import {
     UserEdit,
 } from '../components/';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
 import { pageTitles } from '../../../common/constants';
@@ -109,16 +109,13 @@ export default class UserProfile extends React.PureComponent {
 
     createRequestForUser = (userId) => {
         const urlForUser = createUrlForUser(userId);
-        const userRequest = new RestBuilder()
+        const userRequest = new FgRestBuilder()
             .url(urlForUser)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUser({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'userGetResponse');

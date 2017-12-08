@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import {
     createParamsForUser,
@@ -67,7 +67,7 @@ export default class CountryGeneral extends React.PureComponent {
     createRegionRequest = (regionId) => {
         const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
 
-        const regionRequest = new RestBuilder()
+        const regionRequest = new FgRestBuilder()
             .url(urlForRegionForRegionalGroups)
             .params(() => {
                 const { token } = this.props;
@@ -76,9 +76,6 @@ export default class CountryGeneral extends React.PureComponent {
                     access,
                 });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {

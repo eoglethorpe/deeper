@@ -18,7 +18,7 @@ import {
     TransparentButton,
 } from '../../../../public/components/Action';
 import { reverseRoute } from '../../../../public/utils/common';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import {
     pathNames,
@@ -189,16 +189,13 @@ export default class ProjectsTable extends React.PureComponent {
 
     createRequestForUserGroupProjects = (id) => {
         const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
-        const userGroupRequest = new RestBuilder()
+        const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroupProjects)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForUser({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');
@@ -222,16 +219,13 @@ export default class ProjectsTable extends React.PureComponent {
     createRequestForProjectDelete = (projectId) => {
         const urlForProject = createUrlForProject(projectId);
 
-        const projectDeleteRequest = new RestBuilder()
+        const projectDeleteRequest = new FgRestBuilder()
             .url(urlForProject)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
                 return createParamsForProjectDelete({ access });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(1)
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })

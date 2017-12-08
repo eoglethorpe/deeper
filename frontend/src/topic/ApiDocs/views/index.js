@@ -6,7 +6,7 @@ import {
     List,
     ListView,
 } from '../../../public/components/View';
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
 
 import { pageTitles } from '../../../common/constants';
@@ -45,11 +45,8 @@ export default class ApiDocs extends React.PureComponent {
             this.apiDocsRequest.stop();
         }
 
-        this.apiDocsRequest = new RestBuilder()
+        this.apiDocsRequest = new FgRestBuilder()
             .url(url)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })

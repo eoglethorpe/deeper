@@ -10,7 +10,7 @@ import {
 } from 'react-router-dom';
 
 import schema from '../../../../common/schema';
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { pageTitles } from '../../../../common/constants';
 
 import {
@@ -117,7 +117,7 @@ export default class EditEntryView extends React.PureComponent {
     }
 
     createRequestForLead = (leadId) => {
-        const leadRequest = new RestBuilder()
+        const leadRequest = new FgRestBuilder()
             .url(createUrlForLead(leadId))
             .params(() => {
                 const { token } = this.props;
@@ -126,7 +126,6 @@ export default class EditEntryView extends React.PureComponent {
                     access,
                 });
             })
-            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'lead');
@@ -145,7 +144,7 @@ export default class EditEntryView extends React.PureComponent {
     }
 
     createRequestForProject = (projectId) => {
-        const projectRequest = new RestBuilder()
+        const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -154,7 +153,6 @@ export default class EditEntryView extends React.PureComponent {
                     access,
                 });
             })
-            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -178,13 +176,12 @@ export default class EditEntryView extends React.PureComponent {
         const urlForAnalysisFramework = createUrlForAnalysisFramework(
             analysisFrameworkId,
         );
-        const analysisFrameworkRequest = new RestBuilder()
+        const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
             .params(() => {
                 const { token } = this.props;
                 return createParamsForUser(token);
             })
-            .retryTime(1000)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

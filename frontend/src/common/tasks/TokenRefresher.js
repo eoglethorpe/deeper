@@ -1,6 +1,6 @@
 import AbstractTask from './AbstractTask';
 
-import { RestBuilder } from '../../public/utils/rest';
+import { FgRestBuilder } from '../../public/utils/rest';
 import {
     setAccessTokenAction,
 } from '../action-creators/auth';
@@ -45,15 +45,12 @@ export default class TokenRefresher extends AbstractTask {
     }
 
     createRefreshRequest = (store) => {
-        const refreshRequest = new RestBuilder()
+        const refreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
             .params(() => {
                 const { refresh, access } = tokenSelector(store.getState());
                 return createParamsForTokenRefresh({ refresh, access });
             })
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenRefreshResponse');

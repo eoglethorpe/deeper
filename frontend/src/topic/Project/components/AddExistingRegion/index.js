@@ -17,9 +17,10 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../../common/rest';
@@ -124,7 +125,7 @@ export default class AddExistingRegion extends React.PureComponent {
     }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
-        const projectPatchRequest = new RestBuilder()
+        const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -134,9 +135,6 @@ export default class AddExistingRegion extends React.PureComponent {
                     newProjectDetails,
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -149,13 +147,20 @@ export default class AddExistingRegion extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                console.info('FAILURE:', response);
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formFieldErrors,
+                    formErrors,
                 });
             })
             .fatal((response) => {
+                console.info('FATAL:', response);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formErrors: ['Error while trying to :ave project.'],
                 });
             })
             .build();

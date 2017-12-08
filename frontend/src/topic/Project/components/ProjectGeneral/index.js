@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
+    transformResponseErrorToFormError,
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../../common/rest';
@@ -99,7 +100,7 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
-        const projectPatchRequest = new RestBuilder()
+        const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => {
                 const { token } = this.props;
@@ -109,9 +110,6 @@ export default class ProjectGeneral extends React.PureComponent {
                     newProjectDetails,
                 );
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -123,13 +121,20 @@ export default class ProjectGeneral extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                console.info('FAILURE:', response);
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formFieldErrors,
+                    formErrors,
                 });
             })
             .fatal((response) => {
+                console.info('FATAL:', response);
                 this.setState({
-                    formErrors: response.errors.nonFieldErrors,
+                    formErrors: ['Error while trying to save jroject.'],
                 });
             })
             .build();

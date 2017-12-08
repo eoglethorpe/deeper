@@ -21,10 +21,11 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 
-import { RestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import schema from '../../../../common/schema';
 import {
+    transformResponseErrorToFormError,
     createParamsForUserGroupsCreate,
     urlForUserGroups,
 } from '../../../../common/rest';
@@ -92,7 +93,7 @@ export default class UserGroupAdd extends React.PureComponent {
     }
 
     createRequestForUserGroupCreate = ({ title }) => {
-        const userGroupCreateRequest = new RestBuilder()
+        const userGroupCreateRequest = new FgRestBuilder()
             .url(urlForUserGroups)
             .params(() => {
                 const { token } = this.props;
@@ -101,9 +102,6 @@ export default class UserGroupAdd extends React.PureComponent {
                     { access },
                     { title });
             })
-            .decay(0.3)
-            .maxRetryTime(3000)
-            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -124,25 +122,22 @@ export default class UserGroupAdd extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-
-                const { errors } = response;
-                const formFieldErrors = {};
-                const { nonFieldErrors } = errors;
-
-                Object.keys(errors).forEach((key) => {
-                    if (key !== 'nonFieldErrors') {
-                        formFieldErrors[key] = errors[key].join(' ');
-                    }
-                });
-
+                const {
+                    formFieldErrors,
+                    formErrors,
+                } = transformResponseErrorToFormError(response.errors);
                 this.setState({
                     formFieldErrors,
-                    formErrors: nonFieldErrors,
-                    pending: false,
+                    formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({
+                    formErrors: ['Error while trying to save user group.'],
+                    pending: true,
+                });
             })
             .build();
         return userGroupCreateRequest;
