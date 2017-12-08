@@ -4610,6 +4610,13 @@ loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0:
     emojis-list "^2.0.0"
     json5 "^0.5.0"
 
+localforage-observable@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/localforage-observable/-/localforage-observable-1.4.0.tgz#cbe14e7a36b59b2239c1c64990a75c89b2bf41d7"
+  dependencies:
+    localforage "^1.5.0"
+    zen-observable "^0.2.1"
+
 localforage@^1.5.0:
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/localforage/-/localforage-1.5.5.tgz#55fc1c3a88a47f67f5fac6f1231b25ff13556423"
@@ -7789,3 +7796,11 @@ yargs@~3.10.0:
     cliui "^2.1.0"
     decamelize "^1.0.0"
     window-size "0.1.0"
+
+zen-observable@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.2.1.tgz#c47676a64132b8475a61aa49e514755b5b9663f3"
+
+zen-observable@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.6.0.tgz#8a6157ed15348d185d948cfc4a59d90a2c0f70ee"

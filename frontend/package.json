@@ -47,6 +47,7 @@
     "jwt-decode": "^2.2.0",
     "load-script": "^1.0.0",
     "localforage": "^1.5.0",
+    "localforage-observable": "^1.4.0",
     "node-sass": "^4.7.2",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
@@ -79,7 +80,8 @@
     "webpack-babel-jest": "^1.0.4",
     "webpack-dev-server": "2.7.1",
     "webpack-manifest-plugin": "1.2.1",
-    "whatwg-fetch": "2.0.3"
+    "whatwg-fetch": "2.0.3",
+    "zen-observable": "^0.6.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

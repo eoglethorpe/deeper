@@ -22,14 +22,14 @@ export default class Root extends React.Component {
     }
 
     componentWillMount() {
-        console.log('Mounting Root');
         const afterRehydrateCallback = () => this.setState({ rehydrated: true });
         // NOTE: We can also use PersistGate instead of callback to wait for rehydration
         const persistor = persistStore(this.store, undefined, afterRehydrateCallback);
         reduxSync(
+            this.store,
             persistor,
             ['siloDomainData'],
-            storeConfig.keyPrefix,
+            storeConfig.key,
         );
     }
 
