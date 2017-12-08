@@ -16,7 +16,9 @@ import {
 import browserHistory from '../browserHistory';
 import {
     activeProjectSelector,
+    activeCountrySelector,
     setActiveProjectAction,
+    setActiveCountryAction,
 } from '../redux';
 
 const propTypes = {
@@ -27,21 +29,26 @@ const propTypes = {
         }),
     }).isRequired,
 
-    activeProject: PropTypes.number,
+    activeProjectId: PropTypes.number,
+
+    activeCountryId: PropTypes.number,
 
     component: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    activeProject: undefined,
+    activeProjectId: undefined,
+    activeCountryId: undefined,
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
+    activeProjectId: activeProjectSelector(state),
+    activeCountryId: activeCountrySelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
+    setActiveCountry: params => dispatch(setActiveCountryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -62,24 +69,32 @@ class RouteSynchronizer extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const {
             match,
-            activeProject: projectId,
-            // activeCountry: countryId,
+            activeProjectId: newProjectId,
+            activeCountryId: newCountryId,
         } = nextProps;
+
+        const {
+            activeProjectId: oldProjectId,
+            activeCountryId: oldCountryId,
+        } = this.props;
+
+        const {
+            projectId,
+            countryId,
+        } = match.params;
 
         const newParams = { ...match.params };
         let changed = false;
 
-        if (match.params.projectId && projectId !== +match.params.projectId) {
-            newParams.projectId = projectId;
+        if (projectId && oldProjectId !== newProjectId) {
+            newParams.projectId = newProjectId;
             changed = true;
         }
 
-        /*
-        if (countryId !== match.params.countryId) {
-            newParams.projectId = projectId;
+        if (countryId && oldCountryId !== newCountryId) {
+            newParams.countryId = countryId;
             changed = true;
         }
-        */
 
         if (changed) {
             browserHistory.push(reverseRoute(match.path, newParams));
@@ -95,28 +110,34 @@ class RouteSynchronizer extends React.PureComponent {
     synchronizeLocation = (newProps) => {
         const {
             match: oldMatch,
-            activeProject: oldActiveProject,
+            activeProjectId: oldActiveProjectId,
+            activeCountryId: oldActiveCountryId,
         } = this.props;
 
         const {
             match: newMatch,
         } = newProps;
 
-        if (!newMatch.params.projectId) {
-            return;
-        }
-
         const oldParams = {
             ...oldMatch.params,
-            projectId: oldActiveProject,
+            projectId: oldActiveProjectId,
+            countryId: oldActiveCountryId,
         };
 
         const oldLocation = reverseRoute(newMatch.path, oldParams);
 
         if (oldLocation !== newMatch.url) {
-            newProps.setActiveProject({
-                activeProject: +newMatch.params.projectId,
-            });
+            if (newMatch.params.projectId && oldActiveProjectId !== +newMatch.params.projectId) {
+                newProps.setActiveProject({
+                    activeProject: +newMatch.params.projectId,
+                });
+            }
+
+            if (newMatch.params.countryId && oldActiveCountryId !== +newMatch.params.countryId) {
+                newProps.setActiveCountry({
+                    activeCountry: +newMatch.params.countryId,
+                });
+            }
         }
     }
 

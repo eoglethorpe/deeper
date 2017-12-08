@@ -21,7 +21,6 @@ import {
 } from '../../../public/components/View';
 import { reverseRoute } from '../../../public/utils/common';
 
-import browserHistory from '../../../common/browserHistory';
 import {
     pathNames,
 } from '../../../common/constants';
