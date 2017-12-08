@@ -26,6 +26,7 @@ import {
 
     SET_ANALYSIS_FRAMEWORK,
     SET_ANALYSIS_FRAMEWORKS,
+    ADD_NEW_AF,
     SET_PROJECT_AF,
 
 } from '../action-types/domainData';
@@ -143,6 +144,12 @@ export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
 export const setAnalysisFrameworksAction = ({ analysisFrameworks }) => ({
     type: SET_ANALYSIS_FRAMEWORKS,
     analysisFrameworks,
+});
+
+export const addNewAfAction = ({ afDetail, projectId }) => ({
+    type: ADD_NEW_AF,
+    afDetail,
+    projectId,
 });
 
 export const setProjectAfAction = ({ projectId, afId }) => ({

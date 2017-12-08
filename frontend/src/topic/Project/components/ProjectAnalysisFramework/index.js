@@ -13,6 +13,9 @@ import {
     ListItem,
     ListView,
     LoadingAnimation,
+    Modal,
+    ModalHeader,
+    ModalBody,
 } from '../../../../public/components/View';
 import { RestBuilder } from '../../../../public/utils/rest';
 
@@ -22,6 +25,7 @@ import {
     createParamsForUser,
 } from '../../../../common/rest';
 import {
+    activeProjectSelector,
     analysisFrameworkListSelector,
     projectDetailsSelector,
 
@@ -35,9 +39,11 @@ import {
 } from '../../../../common/constants';
 
 import ProjectAfDetail from '../ProjectAfDetail';
+import AddAnalysisFramework from '../AddAnalysisFramework';
 import styles from './styles.scss';
 
 const propTypes = {
+    activeProject: PropTypes.number,
     token: PropTypes.object.isRequired, // eslint-disable-line
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setAnalysisFrameworks: PropTypes.func.isRequired,
@@ -45,10 +51,12 @@ const propTypes = {
 };
 
 const defaultProps = {
+    activeProject: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     token: tokenSelector(state),
+    activeProject: activeProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
 });
@@ -74,7 +82,11 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         const displayAfList = [...analysisFrameworkList];
 
-        let selectedAf = displayAfList[0].id;
+        let selectedAf = 0;
+        if (displayAfList.length > 0) {
+            selectedAf = displayAfList[0].id;
+        }
+
         if (projectDetails.analysisFramework) {
             selectedAf = projectDetails.analysisFramework;
         }
@@ -82,6 +94,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         this.state = {
             selectedAf,
             pending: false,
+            addAfModalShow: false,
             searchInputValue: '',
             displayAfList,
         };
@@ -97,12 +110,27 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props) {
-            const displayAfList = [...nextProps.analysisFrameworkList];
+            const { searchInputValue } = this.state;
+            const caseInsensitiveSubmatch = (analysisFramework) => {
+                if (analysisFramework.title) {
+                    const afTitle = analysisFramework.title.toLowerCase();
+                    const searchTitle = searchInputValue.toLowerCase();
+                    return afTitle.includes(searchTitle);
+                }
+                return null;
+            };
 
-            let selectedAf = displayAfList[0].id;
+            const displayAfList = nextProps.analysisFrameworkList.filter(
+                caseInsensitiveSubmatch);
+
+            let selectedAf = 0;
+            if (displayAfList.length > 0) {
+                selectedAf = displayAfList[0].id;
+            }
             if (nextProps.projectDetails.analysisFramework) {
                 selectedAf = nextProps.projectDetails.analysisFramework;
             }
+
             this.setState({
                 selectedAf,
                 displayAfList,
@@ -140,6 +168,29 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     };
     handleAfClick = (afId) => {
         this.setState({ selectedAf: afId });
+    }
+
+    handleSearchInputChange = (value) => {
+        const { analysisFrameworkList } = this.props;
+
+        const caseInsensitiveSubmatch = af => (
+            af.title.toLowerCase().includes(value.toLowerCase())
+        );
+        const displayAfList = (analysisFrameworkList || emptyList)
+            .filter(caseInsensitiveSubmatch);
+
+        this.setState({
+            displayAfList,
+            searchInputValue: value,
+        });
+    };
+
+    handleAddAfButtonClick = () => {
+        this.setState({ addAfModalShow: true });
+    }
+
+    handleModalClose = () => {
+        this.setState({ addAfModalShow: false });
     }
 
     calcAfKey = af => af.id;
@@ -195,7 +246,12 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             selectedAf,
             displayAfList,
             pending,
+            searchInputValue,
         } = this.state;
+
+        const {
+            activeProject,
+        } = this.props;
 
         const sortedAfs = [...displayAfList];
         sortedAfs.sort((a, b) => (a.title.localeCompare(b.title)));
@@ -209,16 +265,31 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                         </h2>
                         <PrimaryButton
                             iconName={iconNames.add}
-                            onClick={this.handleAddRegionButtonClick}
+                            onClick={this.handleAddAfButtonClick}
                         >
                             Add
                         </PrimaryButton>
                         <TextInput
                             styleName="search-input"
+                            value={searchInputValue}
                             onChange={this.handleSearchInputChange}
                             placeholder="Search Analysis Frameworks"
                             type="search"
                         />
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            show={this.state.addAfModalShow}
+                            closeOnBlur
+                        >
+                            <ModalHeader title="Add new country" />
+                            <ModalBody>
+                                <AddAnalysisFramework
+                                    projectId={activeProject}
+                                    onModalClose={this.handleModalClose}
+                                />
+                            </ModalBody>
+                        </Modal>
                     </div>
                     <ListView
                         styleName="list"

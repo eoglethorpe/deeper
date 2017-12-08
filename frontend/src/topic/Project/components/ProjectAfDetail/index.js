@@ -86,7 +86,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                         projectId,
                         afId,
                     });
-                    console.log(response);
                 } catch (er) {
                     console.error(er);
                 }

@@ -26,6 +26,7 @@ import {
 
     SET_ANALYSIS_FRAMEWORK,
     SET_ANALYSIS_FRAMEWORKS,
+    ADD_NEW_AF,
     SET_PROJECT_AF,
 } from '../action-types/domainData';
 
@@ -441,6 +442,25 @@ const setAnalysisFrameworks = (state, action) => {
     return update(state, settings);
 };
 
+const addNewAf = (state, action) => {
+    const { afDetail, projectId } = action;
+    const settings = {
+        analysisFrameworks: { $auto: {
+            [afDetail.id]: { $auto: {
+                $merge: afDetail,
+            } },
+        } },
+    };
+    settings.projects = {
+        [projectId]: { $auto: {
+            analysisFramework: {
+                $set: afDetail.id,
+            },
+        } },
+    };
+    return update(state, settings);
+};
+
 const setProjectAf = (state, action) => {
     const { projectId, afId } = action;
     const settings = {
@@ -505,6 +525,7 @@ const reducers = {
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
     [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
+    [ADD_NEW_AF]: addNewAf,
     [SET_PROJECT_AF]: setProjectAf,
 };
 

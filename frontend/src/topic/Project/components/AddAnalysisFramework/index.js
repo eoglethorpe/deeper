@@ -2,45 +2,39 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import {
     Form,
     NonFieldErrors,
     TextInput,
     requiredCondition,
-} from '../../../public/components/Input';
+} from '../../../../public/components/Input';
 import {
     LoadingAnimation,
-} from '../../../public/components/View';
+} from '../../../../public/components/View';
 import {
     DangerButton,
     PrimaryButton,
-} from '../../../public/components/Action';
+} from '../../../../public/components/Action';
 
-import { FgRestBuilder } from '../../../public/utils/rest';
-
-
-import { pathNames } from '../../../common/constants';
-import { reverseRoute } from '../../../public/utils/common';
+import { RestBuilder } from '../../../../public/utils/rest';
 
 import {
-    transformResponseErrorToFormError,
-    createParamsForRegionCreate,
-    urlForRegionCreate,
-} from '../../rest';
+    createParamsForAfCreate,
+    urlForAfCreate,
+} from '../../../../common/rest';
 import {
     tokenSelector,
 
-    addNewRegionAction,
-} from '../../redux';
+    addNewAfAction,
+} from '../../../../common/redux';
 
-import schema from '../../schema';
+import schema from '../../../../common/schema';
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    addNewRegion: PropTypes.func.isRequired,
+    addNewAf: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
     token: PropTypes.object.isRequired, // eslint-disable-line
@@ -56,70 +50,59 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    addNewRegion: params => dispatch(addNewRegionAction(params)),
+    addNewAf: params => dispatch(addNewAfAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddRegion extends React.PureComponent {
+export default class AddAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
+
         this.state = {
             formErrors: [],
             formFieldErrors: {},
             formValues: {},
             pending: false,
             stale: false,
-
-            redirectTo: undefined,
         };
 
         this.elements = [
             'title',
-            'code',
         ];
         this.validations = {
-            name: [requiredCondition],
-            code: [requiredCondition],
+            title: [requiredCondition],
         };
     }
 
     componentWillUnmount() {
-        if (this.regionCreateRequest) {
-            this.regionCreateRequest.stop();
+        if (this.afCreateRequest) {
+            this.afCreateRequest.stop();
         }
     }
 
-    createRequestForRegionCreate = ({ title, code }) => {
+    createRequestForAfCreate = ({ title }) => {
         const { projectId } = this.props;
 
-        let paramsBody = {
-            title,
-            code,
-            public: true,
-        };
-
-        if (projectId) {
-            paramsBody = {
-                title,
-                code,
-                public: false,
-                project: projectId,
-            };
-        }
-
-        const regionCreateRequest = new FgRestBuilder()
-            .url(urlForRegionCreate)
+        const afCreateRequest = new RestBuilder()
+            .url(urlForAfCreate)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForRegionCreate(
+                return createParamsForAfCreate(
                     { access },
-                    paramsBody);
+                    {
+                        projectId,
+                        title,
+                    },
+                );
             })
+            .decay(0.3)
+            .maxRetryTime(3000)
+            .maxRetryAttempts(10)
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -128,49 +111,39 @@ export default class AddRegion extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    schema.validate(response, 'regionCreateResponse');
-                    if (projectId) {
-                        this.props.addNewRegion({
-                            regionDetail: response,
-                            projectId,
-                        });
-                        this.props.onModalClose();
-                    } else {
-                        this.props.addNewRegion({
-                            regionDetail: response,
-                        });
-                        this.props.onModalClose();
-                        this.setState({
-                            redirectTo: reverseRoute(
-                                pathNames.countries, { countryId: response.id },
-                            ),
-                        });
-                    }
+                    schema.validate(response, 'analysisFramework');
+                    this.props.addNewAf({
+                        analysisFramework: response,
+                    });
+                    this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
+
+                const { errors } = response;
+                const formFieldErrors = {};
+                const { nonFieldErrors } = errors;
+
+                Object.keys(errors).forEach((key) => {
+                    if (key !== 'nonFieldErrors') {
+                        formFieldErrors[key] = errors[key].join(' ');
+                    }
+                });
+
                 this.setState({
                     formFieldErrors,
-                    formErrors,
-                    pending: true,
+                    formErrors: nonFieldErrors,
+                    pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                this.setState({
-                    formErrors: ['Error while trying to save region.'],
-                    pending: true,
-                });
             })
             .build();
-        return regionCreateRequest;
+        return afCreateRequest;
     }
 
     // FORM RELATED
@@ -192,13 +165,13 @@ export default class AddRegion extends React.PureComponent {
 
     successCallback = (data) => {
         // Stop old post request
-        if (this.regionCreateRequest) {
-            this.regionCreateRequest.stop();
+        if (this.afCreateRequest) {
+            this.afCreateRequest.stop();
         }
 
         // Create new post request
-        this.regionCreateRequest = this.createRequestForRegionCreate(data);
-        this.regionCreateRequest.start();
+        this.afCreateRequest = this.createRequestForAfCreate(data);
+        this.afCreateRequest.start();
     };
 
     render() {
@@ -214,19 +187,10 @@ export default class AddRegion extends React.PureComponent {
             className,
         } = this.props;
 
-        if (this.state.redirectTo) {
-            return (
-                <Redirect
-                    to={this.state.redirectTo}
-                    push
-                />
-            );
-        }
-
         return (
             <Form
                 className={className}
-                styleName="add-region-form"
+                styleName="add-analysis-framework-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}
@@ -238,18 +202,11 @@ export default class AddRegion extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Region Title"
+                    label="Analysis Framework Title"
                     formname="title"
-                    placeholder="Nepal"
+                    placeholder="ACAPS framework"
                     value={formValues.title}
-                    error={formFieldErrors.name}
-                />
-                <TextInput
-                    label="Code"
-                    formname="code"
-                    placeholder="NPL"
-                    value={formValues.code}
-                    error={formFieldErrors.code}
+                    error={formFieldErrors.title}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
@@ -259,7 +216,7 @@ export default class AddRegion extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Add Region
+                        Add Analysis Framework
                     </PrimaryButton>
                 </div>
             </Form>
