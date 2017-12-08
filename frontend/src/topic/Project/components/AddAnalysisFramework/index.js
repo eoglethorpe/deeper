@@ -95,7 +95,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 return createParamsForAfCreate(
                     { access },
                     {
-                        projectId,
+                        project: projectId,
                         title,
                     },
                 );
@@ -113,7 +113,8 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 try {
                     schema.validate(response, 'analysisFramework');
                     this.props.addNewAf({
-                        analysisFramework: response,
+                        afDetail: response,
+                        projectId,
                     });
                     this.props.onModalClose();
                 } catch (er) {
