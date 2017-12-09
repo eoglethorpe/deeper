@@ -222,34 +222,49 @@ export default class LeadForm extends React.PureComponent {
                         value={values.source}
                     />
                 </ApplyAll>
-
-                <SelectInput
-                    error={fieldErrors.confidentiality}
-                    formname="confidentiality"
-                    keySelector={this.keySelector}
-                    label="Confidentiality"
-                    labelSelector={this.labelSelector}
-                    options={leadOptions.confidentiality}
-                    placeholder="Select one"
-                    showHintAndError
-                    showLabel
+                <ApplyAll
                     styleName="confidentiality"
-                    value={values.confidentiality}
-                />
-                <SelectInput
-                    error={fieldErrors.assignee}
-                    formname="assignee"
-                    keySelector={this.keySelector}
-                    label="Assign To"
-                    labelSelector={this.labelSelector}
-                    multiple
-                    options={leadOptions.assignee}
-                    placeholder="Select one"
-                    showHintAndError
-                    showLabel
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="confidentiality"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <SelectInput
+                        error={fieldErrors.confidentiality}
+                        formname="confidentiality"
+                        keySelector={this.keySelector}
+                        label="Confidentiality"
+                        labelSelector={this.labelSelector}
+                        options={leadOptions.confidentiality}
+                        placeholder="Select one"
+                        showHintAndError
+                        showLabel
+                        value={values.confidentiality}
+                    />
+                </ApplyAll>
+
+                <ApplyAll
                     styleName="user"
-                    value={values.assignee}
-                />
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="assignee"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <SelectInput
+                        error={fieldErrors.assignee}
+                        formname="assignee"
+                        keySelector={this.keySelector}
+                        label="Assign To"
+                        labelSelector={this.labelSelector}
+                        multiple
+                        options={leadOptions.assignee}
+                        placeholder="Select one"
+                        showHintAndError
+                        showLabel
+                        value={values.assignee}
+                    />
+                </ApplyAll>
+
                 <ApplyAll
                     styleName="date"
                     disabled={isFormDisabled || isBulkActionDisabled}

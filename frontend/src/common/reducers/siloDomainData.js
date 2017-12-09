@@ -182,8 +182,6 @@ const addLeadViewAddNewLeads = (state, action) => {
     );
     spliceSettings.push([0, 0, ...newLeads]);
 
-    console.log(spliceSettings);
-
     const settings = {
         addLeadView: {
             // set first leads a new active lead
@@ -290,11 +288,19 @@ const addLeadViewCopyAll = (state, action, behavior) => {
     const index = state.addLeadView.leads.findIndex(
         lead => lead.data.id === leadId,
     );
+
+    const leadProjectId = state.addLeadView.leads[index].form.values.project;
+
     const start = behavior === 'below' ? (index + 1) : 0;
 
     const valueToCopy = state.addLeadView.leads[index].form.values[attrName];
     const leadSettings = {};
     for (let i = start; i < state.addLeadView.leads.length; i += 1) {
+        const currLeadProjectId = state.addLeadView.leads[i].form.values.project;
+        if (attrName === 'assignee' && currLeadProjectId !== leadProjectId) {
+            continue; // eslint-disable-line no-continue
+        }
+
         leadSettings[i] = {
             form: {
                 values: { [attrName]: { $set: valueToCopy } },
