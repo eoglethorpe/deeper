@@ -66,8 +66,6 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFrameworks: params => dispatch(setAnalysisFrameworksAction(params)),
 });
 
-const emptyList = [];
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectAnalysisFramework extends React.PureComponent {
@@ -169,6 +167,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             .build();
         return afsRequest;
     };
+
     handleAfClick = (afId) => {
         this.setState({ selectedAf: afId });
     }
@@ -216,29 +215,29 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         );
     }
 
-    renderSelectedAfDetails = (selectedAf) => {
-        const { displayAfList } = this.state;
+    renderSelectedAfDetails = () => {
+        const { selectedAf } = this.state;
+        const { analysisFrameworkList } = this.props;
 
-        if ((displayAfList || emptyList).length > 0) {
+        if (analysisFrameworkList.length <= 0) {
             return (
-                <ProjectAfDetail
-                    key={selectedAf}
-                    afId={selectedAf}
-                />
+                <h1 styleName="no-analysis-framework">
+                    There are no analysis frameworks.
+                </h1>
             );
         }
 
         return (
-            <h1 styleName="no-analysis-framework">
-                There are no analysis frameworks.
-            </h1>
+            <ProjectAfDetail
+                key={selectedAf}
+                afId={selectedAf}
+            />
         );
     }
 
 
     render() {
         const {
-            selectedAf,
             displayAfList,
             pending,
             searchInputValue,
@@ -295,7 +294,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                 </div>
                 <div styleName="details-container">
                     {pending && <LoadingAnimation />}
-                    {this.renderSelectedAfDetails(selectedAf)}
+                    {this.renderSelectedAfDetails()}
                 </div>
             </div>
         );
