@@ -2,33 +2,29 @@
 
 .project-general-form {
     position: relative;
-    padding: $spacing-large;
     width: 100%;
     max-width: 540px;
 
     .action-buttons {
         display: flex;
         justify-content: flex-end;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-medium-alt;
 
         button {
             margin-left: $spacing-medium;
         }
     }
 
-    .start-date,
-    .end-date {
-        flex-basis: calc(50% - #{$spacing-large});
-    }
-
     .name,
     .description,
+    .start-date,
+    .end-date,
     .other-members,
-    .admins {
-        flex-basis: 100%;
-    }
-
+    .admins,
     .regions,
     .user-groups {
-        padding: $spacing-medium 0;
+        flex-basis: 100%;
+        margin: 0 $spacing-large;
     }
 }

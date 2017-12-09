@@ -1,9 +1,58 @@
 @import '../../../../stylesheets/base';
+@import '../../../../stylesheets/modal';
 
 .project-general {
+    display: flex;
     flex-grow: 1;
 
     .project-general-form {
+        flex-shrink: 0;
         min-width: 720px;
+    }
+
+    .members {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        border-left: $width-separator-thin solid $color-separator;
+
+        .header {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+            padding: $spacing-small $spacing-medium-alt;
+
+            .action-btns {
+                button {
+                    margin-left: $spacing-small;
+                }
+            }
+        }
+
+        .table-container {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+    }
+}
+
+.add-member-modal {
+    display: flex;
+    flex-direction: column;
+
+    :global {
+        .modal-content {
+            height: 60vh;
+
+            .modal-body {
+                display: flex;
+                flex-direction: column;
+            }
+        }
+    }
+
+    .add-member {
+        flex-grow: 1;
     }
 }

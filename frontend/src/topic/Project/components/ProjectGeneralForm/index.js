@@ -100,9 +100,9 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     <DangerButton
                         onClick={handleFormCancel}
                         type="button"
-                        disabled={pending}
+                        disabled={pending || !stale}
                     >
-                        Cancel
+                        Revert
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !stale}

@@ -32,7 +32,6 @@ export default class ProjectDetails extends React.PureComponent {
                     <TabLink
                         styleName="tab-header"
                         to="analysis-framework"
-                        default
                     >
                         Analysis Framework
                     </TabLink>
