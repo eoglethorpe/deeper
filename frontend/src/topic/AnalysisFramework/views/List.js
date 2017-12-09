@@ -96,6 +96,7 @@ export default class List extends React.PureComponent {
                         <h2>{item.title}</h2>
                         <div styleName="actions">
                             <TransparentButton
+                                className="remove"
                                 onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
                                 styleName="close-button"
                             >
@@ -215,6 +216,7 @@ export default class List extends React.PureComponent {
                         compactType={null}
                         onLayoutChange={this.handleLayoutChange}
                         draggableHandle=".header"
+                        draggableCancel=".remove"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }

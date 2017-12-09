@@ -37,6 +37,7 @@ const propTypes = {
 const defaultProps = {
     activeUser: {},
 };
+
 @connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {

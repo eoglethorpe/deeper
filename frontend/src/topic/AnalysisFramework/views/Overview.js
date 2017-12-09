@@ -104,6 +104,7 @@ export default class Overview extends React.PureComponent {
                         <h4 styleName="heading">{item.title}</h4>
                         <div styleName="actions">
                             <TransparentButton
+                                className="remove"
                                 styleName="close-button"
                                 onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
                             >
@@ -312,6 +313,7 @@ export default class Overview extends React.PureComponent {
                         preventCollision
                         onLayoutChange={this.handleLayoutChange}
                         draggableHandle=".header"
+                        draggableCancel=".remove"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }
