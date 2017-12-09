@@ -128,7 +128,12 @@ export default class LeadForm extends React.PureComponent {
     }
 
     handleApplyAllClick = name => this.props.onApplyAllClick(name);
+
     handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
+
+    keySelector = d => (d || {}).key
+
+    labelSelector = d => (d || {}).value
 
     render() {
         const {
@@ -179,9 +184,9 @@ export default class LeadForm extends React.PureComponent {
                     disabled
                     error={fieldErrors.project}
                     formname="project"
-                    keySelector={d => (d || {}).key}
+                    keySelector={this.keySelector}
                     label="Project"
-                    labelSelector={d => (d || {}).value}
+                    labelSelector={this.labelSelector}
                     options={leadOptions.project}
                     placeholder="Project Deep"
                     showHintAndError
@@ -217,34 +222,49 @@ export default class LeadForm extends React.PureComponent {
                         value={values.source}
                     />
                 </ApplyAll>
-
-                <SelectInput
-                    error={fieldErrors.confidentiality}
-                    formname="confidentiality"
-                    keySelector={d => (d || {}).key}
-                    label="Confidentiality"
-                    labelSelector={d => (d || {}).value}
-                    options={leadOptions.confidentiality}
-                    placeholder="Select one"
-                    showHintAndError
-                    showLabel
+                <ApplyAll
                     styleName="confidentiality"
-                    value={values.confidentiality}
-                />
-                <SelectInput
-                    error={fieldErrors.assignee}
-                    multiple
-                    formname="assignee"
-                    keySelector={d => (d || {}).key}
-                    labelSelector={d => (d || {}).value}
-                    label="Assign To"
-                    options={leadOptions.assignee}
-                    placeholder="Select one"
-                    showHintAndError
-                    showLabel
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="confidentiality"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <SelectInput
+                        error={fieldErrors.confidentiality}
+                        formname="confidentiality"
+                        keySelector={this.keySelector}
+                        label="Confidentiality"
+                        labelSelector={this.labelSelector}
+                        options={leadOptions.confidentiality}
+                        placeholder="Select one"
+                        showHintAndError
+                        showLabel
+                        value={values.confidentiality}
+                    />
+                </ApplyAll>
+
+                <ApplyAll
                     styleName="user"
-                    value={values.assignee}
-                />
+                    disabled={isFormDisabled || isBulkActionDisabled}
+                    identiferName="assignee"
+                    onApplyAllClick={this.handleApplyAllClick}
+                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                >
+                    <SelectInput
+                        error={fieldErrors.assignee}
+                        formname="assignee"
+                        keySelector={this.keySelector}
+                        label="Assign To"
+                        labelSelector={this.labelSelector}
+                        multiple
+                        options={leadOptions.assignee}
+                        placeholder="Select one"
+                        showHintAndError
+                        showLabel
+                        value={values.assignee}
+                    />
+                </ApplyAll>
+
                 <ApplyAll
                     styleName="date"
                     disabled={isFormDisabled || isBulkActionDisabled}

@@ -13,6 +13,7 @@ export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
+export const analysisFrameworkIdFromPropsForProject = (state, { afId }) => afId;
 
 // Using state
 
@@ -26,6 +27,26 @@ export const entriesSelector = ({ domainData }) => (
 
 export const regionsSelector = ({ domainData }) => (
     domainData.regions || emptyObject
+);
+
+export const analysisFrameworksSelector = ({ domainData }) => (
+    domainData.analysisFrameworks || emptyObject
+);
+
+export const analysisFrameworkDetailSelector = createSelector(
+    analysisFrameworksSelector,
+    analysisFrameworkIdFromPropsForProject,
+    (analysisFrameworks, afId) => (
+        analysisFrameworks[afId] || emptyObject
+    ),
+);
+
+export const analysisFrameworkListSelector = createSelector(
+    analysisFrameworksSelector,
+    analysisFrameworks => (
+        analysisFrameworks && Object.values(analysisFrameworks).filter(
+            analysisFramework => analysisFramework,
+        )) || emptyList,
 );
 
 export const countriesListSelector = createSelector(
@@ -145,9 +166,6 @@ export const currentUserProjectsSelector = createSelector(
     ) || emptyList),
 );
 
-export const analysisFrameworksSelector = ({ domainData }) => (
-    domainData.analysisFrameworks || emptyObject
-);
 
 /* TODO: remove later
 export const entriesForLeadSelector = createSelector(

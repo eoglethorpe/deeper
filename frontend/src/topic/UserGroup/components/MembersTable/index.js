@@ -23,7 +23,10 @@ import {
     TransparentButton,
     TransparentDangerButton,
 } from '../../../../public/components/Action';
-import { reverseRoute } from '../../../../public/utils/common';
+import {
+    reverseRoute,
+    caseInsensitiveSubmatch,
+} from '../../../../public/utils/common';
 
 import {
     pathNames,
@@ -438,28 +441,14 @@ export default class MembersTable extends React.PureComponent {
         this.membershipDeleteRequest.start();
     }
 
-    applySearch = (memberData, searchInputValue) => {
-        const caseInsensitiveSubmatch = (str, value) => (
-            !value || (str || '').toLowerCase().includes(
-                (value || '').toLowerCase(),
-            )
-        );
-
-        const newMemberData = memberData.filter(
-            memberDatum => (
-                caseInsensitiveSubmatch(
-                    memberDatum.memberName,
-                    searchInputValue,
-                )
-            ),
-        );
-        return newMemberData;
-    };
-
     handleSearchMemberChange = (value) => {
+        const { memberData } = this.props;
+        const filteredMemberData = memberData.filter(
+            member => caseInsensitiveSubmatch(member.memberName, value),
+        );
         this.setState({
             searchMemberInputValue: value,
-            memberData: this.applySearch(this.props.memberData, value),
+            memberData: filteredMemberData,
         });
     }
 

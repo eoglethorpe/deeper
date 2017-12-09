@@ -13,6 +13,26 @@ const analysisFrameworkSchema = [];
             widgets: { type: 'array.Widget' },
             exportables: { type: 'array.Exportable' },
             filters: { type: 'array.Filter' },
+            isAdmin: { type: 'boolean', required: true },
+            description: { type: 'string' },
+            snapshotOne: { type: 'unit' },
+            snapshotTwo: { type: 'unit' },
+        },
+    };
+    analysisFrameworkSchema.push({ name, schema });
+}
+{
+    const name = 'analysisFrameworkList';
+    const schema = {
+        doc: {
+            name: 'Analysis Frameworks list',
+            description: 'One of the main entities',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.analysisFramework', required: true },
         },
     };
     analysisFrameworkSchema.push({ name, schema });

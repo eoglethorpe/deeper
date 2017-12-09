@@ -121,6 +121,9 @@ export default class AddRegion extends React.PureComponent {
                     paramsBody);
             })
             .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
                 this.setState({ pending: false });
             })
             .success((response) => {
@@ -251,6 +254,7 @@ export default class AddRegion extends React.PureComponent {
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.props.onModalClose}
+                        type="button"
                         disabled={pending}
                     >
                         Cancel

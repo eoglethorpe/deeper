@@ -25,6 +25,10 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
+    SET_ANALYSIS_FRAMEWORKS,
+    ADD_NEW_AF,
+    SET_PROJECT_AF,
+    SET_AF_DETAIL,
 } from '../action-types/domainData';
 
 import initialDomainDataState from '../initial-state/domainData';
@@ -421,6 +425,71 @@ const setAnalysisFramework = (state, action) => {
     return update(state, settings);
 };
 
+// TODO: Change the reducer to merge new data along with deleting removed AFs
+const setAnalysisFrameworks = (state, action) => {
+    const { analysisFrameworks } = action;
+
+    const analysisFrameworksSettings = analysisFrameworks.reduce(
+        (acc, analysisFramework) => {
+            acc[analysisFramework.id] = { $auto: {
+                $merge: analysisFramework,
+            } };
+            return acc;
+        },
+        {},
+    );
+
+    const settings = {
+        analysisFrameworks: analysisFrameworksSettings,
+    };
+    return update(state, settings);
+};
+
+const addNewAf = (state, action) => {
+    const { afDetail, projectId } = action;
+    const settings = {
+        analysisFrameworks: { $auto: {
+            [afDetail.id]: { $auto: {
+                $merge: afDetail,
+            } },
+        } },
+    };
+    settings.projects = {
+        [projectId]: { $auto: {
+            analysisFramework: {
+                $set: afDetail.id,
+            },
+        } },
+    };
+    return update(state, settings);
+};
+
+const setProjectAf = (state, action) => {
+    const { projectId, afId } = action;
+    const settings = {
+        projects: { $auto: {
+            [projectId]: { $auto: {
+                analysisFramework: {
+                    $set: afId,
+                },
+            } },
+        } },
+    };
+    return update(state, settings);
+};
+
+const setAfDetail = (state, action) => {
+    const { afId, afDetail } = action;
+    const settings = {
+        analysisFrameworks: {
+            [afId]: { $auto: {
+                $merge: afDetail,
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 const dummyAction = (state) => {
     const dummy = {
         id: 1,
@@ -470,6 +539,10 @@ const reducers = {
     [ADD_NEW_REGION]: addNewRegion,
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
+    [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
+    [ADD_NEW_AF]: addNewAf,
+    [SET_PROJECT_AF]: setProjectAf,
+    [SET_AF_DETAIL]: setAfDetail,
 };
 
 const domainDataReducer = (state = initialDomainDataState, action) => {

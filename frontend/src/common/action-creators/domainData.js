@@ -25,6 +25,10 @@ import {
     SET_LEAD_FILTER_OPTIONS,
 
     SET_ANALYSIS_FRAMEWORK,
+    SET_ANALYSIS_FRAMEWORKS,
+    ADD_NEW_AF,
+    SET_PROJECT_AF,
+    SET_AF_DETAIL,
 
 } from '../action-types/domainData';
 
@@ -133,13 +137,34 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
     regionId,
 });
 
-
 export const setAnalysisFrameworkAction = ({ analysisFramework }) => ({
     type: SET_ANALYSIS_FRAMEWORK,
     analysisFramework,
 });
 
+export const setAnalysisFrameworksAction = ({ analysisFrameworks }) => ({
+    type: SET_ANALYSIS_FRAMEWORKS,
+    analysisFrameworks,
+});
+
+export const addNewAfAction = ({ afDetail, projectId }) => ({
+    type: ADD_NEW_AF,
+    afDetail,
+    projectId,
+});
+
+export const setProjectAfAction = ({ projectId, afId }) => ({
+    type: SET_PROJECT_AF,
+    projectId,
+    afId,
+});
+
+export const setAfDetailAction = ({ afId, afDetail }) => ({
+    type: SET_AF_DETAIL,
+    afId,
+    afDetail,
+});
+
 export const dummyAction = () => ({
     type: DUMMY_ACTION,
 });
-

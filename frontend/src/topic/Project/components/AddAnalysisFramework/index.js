@@ -6,8 +6,8 @@ import { connect } from 'react-redux';
 import {
     Form,
     NonFieldErrors,
+    TextInput,
     requiredCondition,
-    TabularSelectInput,
 } from '../../../../public/components/Input';
 import {
     LoadingAnimation,
@@ -18,30 +18,26 @@ import {
 } from '../../../../public/components/Action';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
+
 import {
     transformResponseErrorToFormError,
-    createParamsForProjectPatch,
-    createUrlForProject,
+    createParamsForAfCreate,
+    urlForAfCreate,
 } from '../../../../common/rest';
 import {
     tokenSelector,
 
-    projectDetailsSelector,
-    projectOptionsSelector,
-
-    setProjectAction,
+    addNewAfAction,
 } from '../../../../common/redux';
 
+import schema from '../../../../common/schema';
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    addNewAf: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    projectOptions: PropTypes.object.isRequired, // eslint-disable-line
     projectId: PropTypes.number,
-    setProject: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -50,96 +46,73 @@ const defaultProps = {
     projectId: undefined,
 };
 
-const mapStateToProps = (state, props) => ({
-    projectDetails: projectDetailsSelector(state, props),
-    projectOptions: projectOptionsSelector(state, props),
+const mapStateToProps = state => ({
     token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setProject: params => dispatch(setProjectAction(params)),
+    addNewAf: params => dispatch(addNewAfAction(params)),
 });
-
-const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddExistingRegion extends React.PureComponent {
+export default class AddAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    static optionLabelSelector = (d = {}) => d.value;
-    static optionKeySelector = (d = {}) => d.key;
 
     constructor(props) {
         super(props);
 
-        const {
-            projectDetails,
-            projectOptions,
-        } = props;
-
-        const formValues = {
-            regions: '',
-            regionsBlackList: (projectDetails.regions || []).map(region => region.id),
-        };
-
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues,
+            formValues: {},
             pending: false,
             stale: false,
-            regionOptions: projectOptions.regions || emptyList,
         };
 
-        this.regionsHeader = [
-            {
-                key: 'value',
-                label: 'Name',
-                order: 1,
-                sortable: true,
-                comparator: (a, b) => a.value.localeCompare(b.value),
-            },
-            {
-                key: 'key',
-                label: 'id',
-                order: 2,
-                sortable: true,
-                comparator: (a, b) => a.key - b.key,
-            },
-        ];
-
         this.elements = [
-            'regions',
+            'title',
         ];
         this.validations = {
-            regions: [requiredCondition],
+            title: [requiredCondition],
         };
     }
 
     componentWillUnmount() {
-        if (this.projectPatchRequest) {
-            this.projectPatchRequest.stop();
+        if (this.afCreateRequest) {
+            this.afCreateRequest.stop();
         }
     }
 
-    createProjectPatchRequest = (newProjectDetails, projectId) => {
-        const projectPatchRequest = new FgRestBuilder()
-            .url(createUrlForProject(projectId))
+    createRequestForAfCreate = ({ title }) => {
+        const { projectId } = this.props;
+
+        const afCreateRequest = new FgRestBuilder()
+            .url(urlForAfCreate)
             .params(() => {
                 const { token } = this.props;
                 const { access } = token;
-                return createParamsForProjectPatch(
+                return createParamsForAfCreate(
                     { access },
-                    newProjectDetails,
+                    {
+                        project: projectId,
+                        title,
+                    },
                 );
+            })
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
             })
             .success((response) => {
                 try {
-                    schema.validate(response, 'project');
-                    this.props.setProject({
-                        project: response,
+                    schema.validate(response, 'analysisFramework');
+                    this.props.addNewAf({
+                        afDetail: response,
+                        projectId,
                     });
                     this.props.onModalClose();
                 } catch (er) {
@@ -155,17 +128,19 @@ export default class AddExistingRegion extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
+                    pending: true,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to :ave project.'],
+                    formErrors: ['Error while trying to save region.'],
+                    pending: true,
                 });
             })
             .build();
-        return projectPatchRequest;
-    };
+        return afCreateRequest;
+    }
 
     // FORM RELATED
     changeCallback = (values, { formErrors, formFieldErrors }) => {
@@ -184,30 +159,15 @@ export default class AddExistingRegion extends React.PureComponent {
         });
     };
 
-    successCallback = (values) => {
-        const { projectId,
-            projectDetails,
-        } = this.props;
-
-        const regionsFromValues = values.regions.map(region => ({
-            id: region,
-        }));
-
-        const regions = [...new Set([...projectDetails.regions, ...regionsFromValues])];
-
-        const newProjectDetails = {
-            ...values,
-            regions,
-        };
-
-        if (this.projectPatchRequest) {
-            this.projectPatchRequest.stop();
+    successCallback = (data) => {
+        // Stop old post request
+        if (this.afCreateRequest) {
+            this.afCreateRequest.stop();
         }
 
-        this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, projectId);
-        this.projectPatchRequest.start();
-
-        this.setState({ stale: false });
+        // Create new post request
+        this.afCreateRequest = this.createRequestForAfCreate(data);
+        this.afCreateRequest.start();
     };
 
     render() {
@@ -217,7 +177,6 @@ export default class AddExistingRegion extends React.PureComponent {
             formValues,
             pending,
             stale,
-            regionOptions,
         } = this.state;
 
         const {
@@ -227,7 +186,7 @@ export default class AddExistingRegion extends React.PureComponent {
         return (
             <Form
                 className={className}
-                styleName="add-region-form"
+                styleName="add-analysis-framework-form"
                 changeCallback={this.changeCallback}
                 elements={this.elements}
                 failureCallback={this.failureCallback}
@@ -237,20 +196,13 @@ export default class AddExistingRegion extends React.PureComponent {
                 onSubmit={this.handleSubmit}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors
-                    styleName="non-field-errors"
-                    errors={formErrors}
-                />
-                <TabularSelectInput
-                    formname="regions"
-                    styleName="tabular-select"
-                    blackList={formValues.regionsBlackList}
-                    options={regionOptions}
-                    labelSelector={AddExistingRegion.optionLabelSelector}
-                    onChange={this.handleTabularSelectInputChange}
-                    keySelector={AddExistingRegion.optionKeySelector}
-                    tableHeaders={this.regionsHeader}
-                    error={formFieldErrors.regions}
+                <NonFieldErrors errors={formErrors} />
+                <TextInput
+                    label="Title"
+                    formname="title"
+                    placeholder="ACAPS framework"
+                    value={formValues.title}
+                    error={formFieldErrors.title}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
@@ -261,7 +213,7 @@ export default class AddExistingRegion extends React.PureComponent {
                         Cancel
                     </DangerButton>
                     <PrimaryButton disabled={pending || !stale} >
-                        Update
+                        Add
                     </PrimaryButton>
                 </div>
             </Form>
