@@ -137,6 +137,12 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        if (this.afsRequest) {
+            this.afsRequest.stop();
+        }
+    }
+
     caseInsensitiveSubmatch = searchInputValue => (analysisFramework) => {
         if (analysisFramework.title) {
             const afTitle = analysisFramework.title.toLowerCase();

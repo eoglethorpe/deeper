@@ -83,9 +83,9 @@ export default class ProjectAfForm extends React.PureComponent {
                     <DangerButton
                         onClick={handleFormCancel}
                         type="button"
-                        disabled={pending}
+                        disabled={pending || !stale}
                     >
-                        Cancel
+                        Revert
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !stale}
@@ -101,6 +101,7 @@ export default class ProjectAfForm extends React.PureComponent {
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}
+                    disabled={pending}
                 />
                 <TextArea
                     label="Description"
@@ -110,6 +111,7 @@ export default class ProjectAfForm extends React.PureComponent {
                     rows={4}
                     value={formValues.description}
                     error={formFieldErrors.description}
+                    disabled={pending}
                 />
             </Form>
         );

@@ -95,6 +95,18 @@ export default class ProjectAfDetail extends React.PureComponent {
         };
     }
 
+    componentWillUnmount() {
+        if (this.projectPatchRequest) {
+            this.projectPatchRequest.stop();
+        }
+        if (this.afPutRequest) {
+            this.afPutRequest.stop();
+        }
+        if (this.afCloneRequest) {
+            this.afCloneRequest.stop();
+        }
+    }
+
     createProjectPatchRequest = (afId, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
