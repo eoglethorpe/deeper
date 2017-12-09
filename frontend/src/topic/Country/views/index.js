@@ -19,7 +19,10 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../public/components/View';
-import { reverseRoute } from '../../../public/utils/common';
+import {
+    reverseRoute,
+    caseInsensitiveSubmatch,
+} from '../../../public/utils/common';
 
 import {
     pathNames,
@@ -102,20 +105,12 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.countries !== nextProps.countries) {
-            // Re-sorting logic
-            const { searchInputValue } = this.state;
-            const caseInsensitiveSubmatch = (country) => {
-                if (country.title) {
-                    const countryTitle = country.title.toLowerCase();
-                    const searchTitle = searchInputValue.toLowerCase();
-                    return countryTitle.includes(searchTitle);
-                }
-                return null;
-            };
-
-            const displayCountryList = nextProps.countries.filter(caseInsensitiveSubmatch);
-
+        const { countries } = nextProps;
+        const { searchInputValue } = this.state;
+        if (this.props.countries !== countries) {
+            const displayCountryList = countries.filter(
+                country => caseInsensitiveSubmatch(country.title, searchInputValue),
+            );
             this.setState({ displayCountryList });
         }
     }
@@ -166,15 +161,14 @@ export default class CountryPanel extends React.PureComponent {
         return countriesRequest;
     }
 
-    handleSearchInputChange = (value) => {
-        const caseInsensitiveSubmatch = country => (
-            country.title.toLowerCase().includes(value.toLowerCase())
+    handleSearchInputChange = (searchInputValue) => {
+        const displayCountryList = this.props.countries.filter(
+            country => caseInsensitiveSubmatch(country.title, searchInputValue),
         );
-        const displayCountryList = this.props.countries.filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayCountryList,
-            searchInputValue: value,
+            searchInputValue,
         });
     };
 

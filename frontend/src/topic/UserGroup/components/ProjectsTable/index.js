@@ -17,8 +17,11 @@ import {
     PrimaryButton,
     TransparentButton,
 } from '../../../../public/components/Action';
-import { reverseRoute } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import {
+    reverseRoute,
+    caseInsensitiveSubmatch,
+} from '../../../../public/utils/common';
 
 import {
     pathNames,
@@ -290,28 +293,14 @@ export default class ProjectsTable extends React.PureComponent {
         });
     }
 
-    applySearch = (projects, searchInputValue) => {
-        const caseInsensitiveSubmatch = (str, value) => (
-            !value || (str || '').toLowerCase().includes(
-                (value || '').toLowerCase(),
-            )
-        );
-
-        const newProjects = projects.filter(
-            project => (
-                caseInsensitiveSubmatch(
-                    project.title,
-                    searchInputValue,
-                )
-            ),
-        );
-        return newProjects;
-    };
-
     handleSearchProjectChange = (value) => {
+        const { projects } = this.props;
+        const newProjects = projects.filter(
+            project => caseInsensitiveSubmatch(project.title, value),
+        );
         this.setState({
             searchProjectInputValue: value,
-            projects: this.applySearch(this.props.projects, value),
+            projects: newProjects,
         });
     }
 

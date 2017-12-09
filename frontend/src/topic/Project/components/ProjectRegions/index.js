@@ -17,6 +17,7 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../../public/components/View';
+import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
 import {
     projectDetailsSelector,
@@ -79,24 +80,22 @@ export default class ProjectRegions extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props !== nextProps && nextProps.projectDetails.regions) {
-            if (nextProps.projectDetails.regions.length > 0) {
-                this.setState({ selectedRegion: nextProps.projectDetails.regions[0].id });
-            }
-            const { searchInputValue } = this.state;
-            const caseInsensitiveSubmatch = (region) => {
-                if (region.title) {
-                    const regionTitle = region.title.toLowerCase();
-                    const searchTitle = searchInputValue.toLowerCase();
-                    return regionTitle.includes(searchTitle);
-                }
-                return null;
-            };
+        const { projectDetails } = nextProps;
+        const {
+            searchInputValue,
+            selectedRegion,
+        } = this.state;
 
-            const displayRegionList = nextProps.projectDetails.regions.filter(
-                caseInsensitiveSubmatch);
+        if (this.props.projectDetails !== projectDetails) {
+            const { regions = [] } = projectDetails;
+            const displayRegionList = regions.filter(
+                region => caseInsensitiveSubmatch(region.title, searchInputValue),
+            );
 
-            this.setState({ displayRegionList });
+            this.setState({
+                displayRegionList,
+                selectedRegion: regions.length > 0 ? regions[0].id : selectedRegion,
+            });
         }
     }
 
@@ -104,18 +103,16 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion: regionId });
     }
 
-    handleSearchInputChange = (value) => {
+    handleSearchInputChange = (searchInputValue) => {
         const { projectDetails } = this.props;
-
-        const caseInsensitiveSubmatch = region => (
-            region.title.toLowerCase().includes(value.toLowerCase())
+        const { regions = [] } = projectDetails;
+        const displayRegionList = regions.filter(
+            region => caseInsensitiveSubmatch(region.title, searchInputValue),
         );
-        const displayRegionList = (projectDetails.regions || emptyList)
-            .filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayRegionList,
-            searchInputValue: value,
+            searchInputValue,
         });
     };
 

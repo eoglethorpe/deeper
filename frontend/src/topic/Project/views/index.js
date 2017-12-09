@@ -8,7 +8,10 @@ import { ListView, ListItem } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import { TransparentPrimaryButton } from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { reverseRoute } from '../../../public/utils/common';
+import {
+    reverseRoute,
+    caseInsensitiveSubmatch,
+} from '../../../public/utils/common';
 
 import {
     pathNames,
@@ -101,7 +104,8 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { activeProject } = nextProps;
+        const { activeProject, userProjects } = nextProps;
+        const { searchInputValue } = this.state;
 
         if (this.props.activeProject !== activeProject) {
             if (this.projectOptionsRequest) {
@@ -116,14 +120,12 @@ export default class ProjectPanel extends React.PureComponent {
             }
         }
 
-        const caseInsensitiveSubmatch = project => (
-            project.title.toLowerCase().includes(this.state.searchInputValue.toLowerCase())
-        );
-        const displayUserProjects = nextProps.userProjects.filter(caseInsensitiveSubmatch);
-
-        this.setState({
-            displayUserProjects,
-        });
+        if (this.props.userProjects !== userProjects) {
+            const displayUserProjects = userProjects.filter(
+                project => caseInsensitiveSubmatch(project.title, searchInputValue),
+            );
+            this.setState({ displayUserProjects });
+        }
     }
 
     componentWillUnmount() {
@@ -205,15 +207,14 @@ export default class ProjectPanel extends React.PureComponent {
         this.setState({ isSidebarVisible: false });
     };
 
-    handleSearchInputChange = (value) => {
-        const caseInsensitiveSubmatch = project => (
-            project.title.toLowerCase().includes(value.toLowerCase())
+    handleSearchInputChange = (searchInputValue) => {
+        const displayUserProjects = this.props.userProjects.filter(
+            project => caseInsensitiveSubmatch(project.title, searchInputValue),
         );
-        const displayUserProjects = this.props.userProjects.filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayUserProjects,
-            searchInputValue: value,
+            searchInputValue,
         });
     };
     render() {

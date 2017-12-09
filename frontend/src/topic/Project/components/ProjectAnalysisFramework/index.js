@@ -18,6 +18,7 @@ import {
     ModalBody,
 } from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
 import schema from '../../../../common/schema';
 import {
@@ -118,7 +119,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             // why fitler again?
             const { searchInputValue } = this.state;
             const displayAfList = analysisFrameworkList.filter(
-                this.caseInsensitiveSubmatch(searchInputValue),
+                af => caseInsensitiveSubmatch(af.title, searchInputValue),
             );
 
             let selectedAf;
@@ -142,15 +143,6 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             this.afsRequest.stop();
         }
     }
-
-    caseInsensitiveSubmatch = searchInputValue => (analysisFramework) => {
-        if (analysisFramework.title) {
-            const afTitle = analysisFramework.title.toLowerCase();
-            const searchTitle = searchInputValue.toLowerCase();
-            return afTitle.includes(searchTitle);
-        }
-        return null;
-    };
 
     createAfsRequest = () => {
         const afsRequest = new FgRestBuilder()
@@ -181,18 +173,15 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         this.setState({ selectedAf: afId });
     }
 
-    handleSearchInputChange = (value) => {
+    handleSearchInputChange = (searchInputValue) => {
         const { analysisFrameworkList } = this.props;
-
-        const caseInsensitiveSubmatch = af => (
-            af.title.toLowerCase().includes(value.toLowerCase())
+        const displayAfList = analysisFrameworkList.filter(
+            af => caseInsensitiveSubmatch(af.title, searchInputValue),
         );
-        const displayAfList = (analysisFrameworkList || emptyList)
-            .filter(caseInsensitiveSubmatch);
 
         this.setState({
             displayAfList,
-            searchInputValue: value,
+            searchInputValue,
         });
     };
 
