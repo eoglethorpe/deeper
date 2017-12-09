@@ -128,7 +128,12 @@ export default class LeadForm extends React.PureComponent {
     }
 
     handleApplyAllClick = name => this.props.onApplyAllClick(name);
+
     handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
+
+    keySelector = d => (d || {}).key
+
+    labelSelector = d => (d || {}).value
 
     render() {
         const {
@@ -179,9 +184,9 @@ export default class LeadForm extends React.PureComponent {
                     disabled
                     error={fieldErrors.project}
                     formname="project"
-                    keySelector={d => (d || {}).key}
+                    keySelector={this.keySelector}
                     label="Project"
-                    labelSelector={d => (d || {}).value}
+                    labelSelector={this.labelSelector}
                     options={leadOptions.project}
                     placeholder="Project Deep"
                     showHintAndError
@@ -221,9 +226,9 @@ export default class LeadForm extends React.PureComponent {
                 <SelectInput
                     error={fieldErrors.confidentiality}
                     formname="confidentiality"
-                    keySelector={d => (d || {}).key}
+                    keySelector={this.keySelector}
                     label="Confidentiality"
-                    labelSelector={d => (d || {}).value}
+                    labelSelector={this.labelSelector}
                     options={leadOptions.confidentiality}
                     placeholder="Select one"
                     showHintAndError
@@ -233,11 +238,11 @@ export default class LeadForm extends React.PureComponent {
                 />
                 <SelectInput
                     error={fieldErrors.assignee}
-                    multiple
                     formname="assignee"
-                    keySelector={d => (d || {}).key}
-                    labelSelector={d => (d || {}).value}
+                    keySelector={this.keySelector}
                     label="Assign To"
+                    labelSelector={this.labelSelector}
+                    multiple
                     options={leadOptions.assignee}
                     placeholder="Select one"
                     showHintAndError
