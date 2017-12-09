@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout-resize-prevent-collision';
 import update from 'immutability-helper';
 
 import { connect } from 'react-redux';
@@ -22,7 +22,7 @@ import {
 
 import {
     addAfViewWidgetAction,
-    // removeAfViewWidgetAction,
+    removeAfViewWidgetAction,
     updateAfViewWidgetAction,
 } from '../../../common/redux';
 
@@ -38,11 +38,13 @@ const propTypes = {
     analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
     addWidget: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
+    removeWidget: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
     addWidget: params => dispatch(addAfViewWidgetAction(params)),
+    removeWidget: params => dispatch(removeAfViewWidgetAction(params)),
     updateWidget: params => dispatch(updateAfViewWidgetAction(params)),
 });
 
@@ -88,11 +90,13 @@ export default class List extends React.PureComponent {
                     styleName="grid-item"
                 >
                     <header
+                        className="header"
                         styleName="header"
                     >
                         <h2>{item.title}</h2>
                         <div styleName="actions">
                             <TransparentButton
+                                onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
                                 styleName="close-button"
                             >
                                 <span className="ion-android-close" />
@@ -106,6 +110,21 @@ export default class List extends React.PureComponent {
             );
         });
     }
+
+    handleWidgetRemoveButtonClick = (id) => {
+        const {
+            analysisFramework,
+            removeWidget,
+        } = this.props;
+
+        const widgetData = {
+            analysisFrameworkId: analysisFramework.id,
+            widgetId: id,
+        };
+
+        removeWidget(widgetData);
+    }
+
 
     handleAddWidgetButtonClick = (id) => {
         const analysisFrameworkId = this.props.analysisFramework.id;
@@ -188,6 +207,7 @@ export default class List extends React.PureComponent {
                 <div styleName="top">
                     <ReactGridLayout
                         styleName="grid-layout"
+                        preventCollision
                         cols={numOfColumns}
                         margin={margin}
                         width={width || 0}

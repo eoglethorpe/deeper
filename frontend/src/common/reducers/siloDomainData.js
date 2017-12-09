@@ -490,7 +490,8 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
     return update(state, settings);
 };
 
-const afViewRemoveWidget = (state, { analysisFrameworkId, widgetKey }) => {
+const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
+    console.log(analysisFrameworkId, widgetId);
     if (!state.analysisFrameworkView.analysisFramework ||
         !state.analysisFrameworkView.analysisFramework.widgets ||
         state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
@@ -498,7 +499,7 @@ const afViewRemoveWidget = (state, { analysisFrameworkId, widgetKey }) => {
     }
 
     const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
-    const index = existingWidgets.findIndex(w => w.key === widgetKey);
+    const index = existingWidgets.findIndex(w => w.key === widgetId);
 
     if (index !== -1) {
         const settings = {
