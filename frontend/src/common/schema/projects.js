@@ -124,5 +124,17 @@ const projectSchema = [];
     };
     projectSchema.push({ name, schema });
 }
-
+{
+    const name = 'projectMembershipCreateResponse';
+    const schema = {
+        doc: {
+            name: 'Project Membership POST Response',
+            description: 'Response for POST /project-memberships/',
+        },
+        fields: {
+            results: { type: 'array.projectMembership', required: true },
+        },
+    };
+    projectSchema.push({ name, schema });
+}
 export default projectSchema;

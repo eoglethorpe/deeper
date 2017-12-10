@@ -13,6 +13,7 @@ export const createUrlForUserGroupProjects = id => (
 
 export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title,version_id`;
 export const urlForProjectCreate = `${wsEndpoint}/projects/`;
+export const urlForProjectMembership = `${wsEndpoint}/project-memberships/`;
 
 export const createParamsForProjects = () => ({
     method: GET,
@@ -36,6 +37,14 @@ export const createParamsForProjectCreate = ({ title, userGroups }) => ({
     body: JSON.stringify({
         title,
         userGroups,
+    }),
+});
+
+export const createParamsForProjectMembershipCreate = ({ memberList }) => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        list: memberList,
     }),
 });
 

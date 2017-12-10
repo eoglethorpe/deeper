@@ -34,6 +34,7 @@ import {
 } from '../../../../common/constants';
 
 import ProjectGeneralForm from '../ProjectGeneralForm';
+import AddProjectMembers from '../AddProjectMembers';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -265,7 +266,10 @@ export default class ProjectGeneral extends React.PureComponent {
             userGroupsOptions,
         } = this.state;
 
-        const { projectDetails } = this.props;
+        const {
+            projectDetails,
+            activeProject,
+        } = this.props;
 
         return (
             <div styleName="project-general">
@@ -312,7 +316,11 @@ export default class ProjectGeneral extends React.PureComponent {
                             }
                         />
                         <ModalBody>
-                            asdasd
+                            <AddProjectMembers
+                                styleName="add-member"
+                                projectId={activeProject}
+                                onModalClose={this.handleModalClose}
+                            />
                         </ModalBody>
                     </Modal>
                     <div styleName="table-container">
