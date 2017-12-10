@@ -121,18 +121,16 @@ export default class Login extends React.PureComponent {
     // REGISTER REST API
 
     createRequestRegister = ({ firstname, lastname, organization, country, email, password }) => {
-        const url = urlForUserCreate;
-        const params = createParamsForUserCreate({
-            firstName: firstname,
-            lastName: lastname,
-            organization,
-            country,
-            email,
-            password,
-        });
         const userCreateRequest = new FgRestBuilder()
-            .url(url)
-            .params(params)
+            .url(urlForUserCreate)
+            .params(() => createParamsForUserCreate({
+                firstName: firstname,
+                lastName: lastname,
+                organization,
+                country,
+                email,
+                password,
+            }))
             .preLoad(() => {
                 this.setState({ pending: true, stale: false });
             })

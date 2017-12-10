@@ -20,7 +20,6 @@ import {
 } from '../../../../common/rest';
 
 import {
-    tokenSelector,
     countryDetailSelector,
     unSetRegionAction,
     activeUserSelector,
@@ -39,7 +38,6 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string,
     }).isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     unSetRegion: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
@@ -51,7 +49,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -85,11 +82,7 @@ export default class CountryDetail extends React.PureComponent {
         const urlForRegionDelete = createUrlForRegion(regionId);
         const regionDeleteRequest = new FgRestBuilder()
             .url(urlForRegionDelete)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForCountryDelete({ access });
-            })
+            .params(() => createParamsForCountryDelete())
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })

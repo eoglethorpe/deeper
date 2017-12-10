@@ -25,8 +25,6 @@ import {
     editEntryViewEntriesSelector,
     editEntryViewSelectedEntryIdSelector,
 
-    tokenSelector,
-
     setAnalysisFrameworkAction,
     setEditEntryViewLeadAction,
     setProjectAction,
@@ -50,7 +48,6 @@ const propTypes = {
     lead: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     */
-    token: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
@@ -71,7 +68,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     leadId: leadIdFromRoute(state, props),
-    token: tokenSelector(state),
 
     /*
     lead: editEntryViewCurrentLeadSelector(state, props),
@@ -117,13 +113,7 @@ export default class EditEntryView extends React.PureComponent {
     createRequestForLead = (leadId) => {
         const leadRequest = new FgRestBuilder()
             .url(createUrlForLead(leadId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'lead');
@@ -144,13 +134,7 @@ export default class EditEntryView extends React.PureComponent {
     createRequestForProject = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -176,10 +160,7 @@ export default class EditEntryView extends React.PureComponent {
         );
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => {
-                const { token } = this.props;
-                return createParamsForUser(token);
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

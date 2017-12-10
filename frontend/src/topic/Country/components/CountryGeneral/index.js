@@ -12,7 +12,6 @@ import {
 
 import {
     countryDetailSelector,
-    tokenSelector,
     setRegionDetailsAction,
     activeUserSelector,
 } from '../../../../common/redux';
@@ -30,14 +29,12 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
     }).isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -69,13 +66,7 @@ export default class CountryGeneral extends React.PureComponent {
 
         const regionRequest = new FgRestBuilder()
             .url(urlForRegionForRegionalGroups)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {

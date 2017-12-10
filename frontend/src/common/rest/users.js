@@ -26,26 +26,20 @@ export const createParamsForUserCreate = ({
 });
 
 export const createUrlForUser = userId => `${wsEndpoint}/users/${userId}/`;
-export const createParamsForUser = ({ access }) => ({
+export const createParamsForUser = () => ({
     method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
 export const createUrlForUserPatch = userId => `${wsEndpoint}/users/${userId}/`;
-export const createParamsForUserPatch = ({ access }, {
+export const createParamsForUserPatch = ({
     firstName,
     lastName,
     organization,
     displayPicture,
 }) => ({
     method: PATCH,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         firstName,
         lastName,

@@ -17,7 +17,6 @@ import { isObjectEmpty } from '../../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../../public/utils/rest';
 
 import {
-    tokenSelector,
     activeProjectSelector,
     addLeadViewSetFiltersAction,
     addLeadViewUnsetFiltersAction,
@@ -48,10 +47,6 @@ const leadStatusFilterOptions = [
 ];
 
 const defaultProps = { }; const propTypes = {
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
-
     filters: PropTypes.object.isRequired, // eslint-disable-line
     activeProject: PropTypes.number.isRequired,
     setLeadViewFilters: PropTypes.func.isRequired,
@@ -60,7 +55,6 @@ const defaultProps = { }; const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    token: tokenSelector(state),
     activeProject: activeProjectSelector(state),
     filters: addLeadViewFiltersSelector(state),
 });
@@ -106,16 +100,9 @@ export default class LeadFilter extends React.PureComponent {
     }
 
     createRequestForProjectLeadFilterOptions = (activeProject) => {
-        const urlForProjectFilterOptions = createUrlForLeadFilterOptions(activeProject);
-        const paramsForProjectFilterOptions = () => {
-            const { token } = this.props;
-            const { access } = token;
-            return createParamsForUser({ access });
-        };
-
         const leadFilterOptionsRequest = new FgRestBuilder()
-            .url(urlForProjectFilterOptions)
-            .params(paramsForProjectFilterOptions)
+            .url(createUrlForLeadFilterOptions(activeProject))
+            .params(() => createParamsForUser())
             .success((response) => {
                 this.props.setLeadFilterOptions({
                     projectId: activeProject,

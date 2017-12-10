@@ -30,8 +30,6 @@ import {
     analysisFrameworkListSelector,
     projectDetailsSelector,
 
-    tokenSelector,
-
     setAnalysisFrameworksAction,
 } from '../../../../common/redux';
 
@@ -45,7 +43,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setAnalysisFrameworks: PropTypes.func.isRequired,
     analysisFrameworkList: PropTypes.array.isRequired, // eslint-disable-line
@@ -56,7 +53,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    token: tokenSelector(state),
     activeProject: activeProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
@@ -145,13 +141,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     createAfsRequest = () => {
         const afsRequest = new FgRestBuilder()
             .url(urlForAnalysisFrameworks)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {

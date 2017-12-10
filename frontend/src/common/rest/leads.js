@@ -11,21 +11,15 @@ export const urlForLeadCreate = `${wsEndpoint}/leads/`;
 export const urlForLead = `${wsEndpoint}/leads/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
 
-export const createParamsForLeadCreate = ({ access }, data) => ({
+export const createParamsForLeadCreate = data => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForLeadEdit = ({ access }, data) => ({
+export const createParamsForLeadEdit = data => ({
     method: PUT,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 

@@ -15,7 +15,6 @@ import { randomString } from '../../../../../public/utils/common';
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
-    tokenSelector,
 } from '../../../../../common/redux';
 import {
     urlForUpload,
@@ -58,14 +57,10 @@ const propTypes = {
     onFileSelect: PropTypes.func.isRequired,
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -158,10 +153,7 @@ export default class LeadButtons extends React.PureComponent {
         const { activeProject } = this.props;
         const newLeads = [];
 
-        const {
-            onFileSelect,
-            token,
-        } = this.props;
+        const { onFileSelect } = this.props;
 
         const uploads = [];
         files.forEach((file) => {
@@ -183,7 +175,7 @@ export default class LeadButtons extends React.PureComponent {
             uploads.unshift({
                 file,
                 url: urlForUpload,
-                params: createParamsForFileUpload(token),
+                params: () => createParamsForFileUpload(),
                 leadId: newLeadId,
             });
         });
@@ -269,7 +261,7 @@ export default class LeadButtons extends React.PureComponent {
                     multiselect
                     navHidden
                 >
-                    <span className="ion-social-google" />
+                    <span className="ion-social-googleplus-outline" />
                     <p>Drive</p>
                 </GooglePicker>
                 <DropboxChooser

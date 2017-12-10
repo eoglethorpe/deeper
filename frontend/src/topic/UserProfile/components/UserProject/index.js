@@ -38,7 +38,6 @@ import {
 } from '../../../../common/rest';
 
 import {
-    tokenSelector,
     userProjectsSelector,
     setUserProjectsAction,
     activeUserSelector,
@@ -60,7 +59,6 @@ const propTypes = {
     }),
     setUserProjects: PropTypes.func.isRequired,
     unSetProject: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
@@ -74,7 +72,6 @@ const defaultProps = {
 
 
 const mapStateToProps = (state, props) => ({
-    token: tokenSelector(state),
     userProjects: userProjectsSelector(state, props),
     activeUser: activeUserSelector(state),
 });
@@ -281,11 +278,7 @@ export default class UserProject extends React.PureComponent {
 
         const projectDeleteRequest = new FgRestBuilder()
             .url(urlForProject)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectDelete({ access });
-            })
+            .params(() => createParamsForProjectDelete())
             .success(() => {
                 try {
                     this.props.unSetProject({
@@ -316,11 +309,7 @@ export default class UserProject extends React.PureComponent {
     createRequestForProjects = (userId) => {
         const projectsRequest = new FgRestBuilder()
             .url(createUrlForProjectsOfUser(userId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjects({ access });
-            })
+            .params(() => createParamsForProjects())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');

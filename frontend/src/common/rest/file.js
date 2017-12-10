@@ -3,6 +3,7 @@ import {
     POST,
     wsEndpoint,
     commonHeaderForPost,
+    authorizationHeaderForPost,
 } from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
@@ -10,23 +11,18 @@ export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
 export const createUrlForGalleryFile = fileId => `${wsEndpoint}/files/${fileId}/`;
 
-export const createParamsForFileUpload = ({ access }) => ({
-    headers: {
-        Authorization: `Bearer ${access}`,
-    },
+export const createParamsForFileUpload = () => ({
+    headers: authorizationHeaderForPost,
 });
 
-export const createHeaderForGoogleDriveFileUpload = ({ access }, {
+export const createHeaderForGoogleDriveFileUpload = ({
     title,
     accessToken,
     fileId,
     mimeType,
 }) => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
         accessToken,
@@ -36,25 +32,16 @@ export const createHeaderForGoogleDriveFileUpload = ({ access }, {
 });
 
 
-export const createHeaderForDropboxUpload = ({ access }, {
-    title,
-    fileUrl,
-}) => ({
+export const createHeaderForDropboxUpload = ({ title, fileUrl }) => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
         fileUrl,
     }),
 });
 
-export const createHeaderForGalleryFile = ({ access }) => ({
+export const createHeaderForGalleryFile = () => ({
     method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });

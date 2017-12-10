@@ -18,9 +18,9 @@ export default class TokenRefresher extends AbstractTask {
     constructor(store, refreshTime) {
         super();
 
+        this.store = store;
         this.refreshTime = refreshTime;
         this.refreshId = undefined;
-        this.refreshRequest = this.createRefreshRequest(store);
     }
 
     start() {
@@ -34,6 +34,10 @@ export default class TokenRefresher extends AbstractTask {
         }
 
         this.refreshId = setTimeout(() => {
+            if (this.refreshRequest) {
+                this.refreshRequest.stop();
+            }
+            this.refreshRequest = this.createRefreshRequest(this.store);
             this.refreshRequest.start();
             this.refreshId = undefined;
         }, this.refreshTime);
@@ -45,12 +49,10 @@ export default class TokenRefresher extends AbstractTask {
     }
 
     createRefreshRequest = (store) => {
+        const { refresh } = tokenSelector(store.getState());
         const refreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
-            .params(() => {
-                const { refresh, access } = tokenSelector(store.getState());
-                return createParamsForTokenRefresh({ refresh, access });
-            })
+            .params(() => createParamsForTokenRefresh({ refresh }))
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenRefreshResponse');

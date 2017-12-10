@@ -30,8 +30,6 @@ import {
     createUrlForLeadsOfProject,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
-
     activeProjectSelector,
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
@@ -66,7 +64,6 @@ const propTypes = {
     currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
     setLeads: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     totalLeadsCount: PropTypes.number,
     filters: PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageFilter: PropTypes.func.isRequired,
@@ -87,7 +84,6 @@ const mapStateToProps = state => ({
     currentUserActiveProject: currentUserActiveProjectSelector(state),
     leads: leadsForProjectSelector(state),
     totalLeadsCount: totalLeadsCountForProjectSelector(state),
-    token: tokenSelector(state),
 
     activePage: leadPageActivePageSelector(state),
     activeSort: leadPageActiveSortSelector(state),
@@ -311,13 +307,7 @@ export default class Leads extends React.PureComponent {
 
         const leadRequest = new FgRestBuilder()
             .url(urlForProjectLeads)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => {
                 this.setState({ loadingLeads: true });
             })

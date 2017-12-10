@@ -32,7 +32,6 @@ import {
 import {
     activeUserSelector,
     setUserGroupAction,
-    tokenSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -40,7 +39,6 @@ import styles from './styles.scss';
 const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setUserGroup: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -48,7 +46,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -95,13 +92,7 @@ export default class UserGroupAdd extends React.PureComponent {
     createRequestForUserGroupCreate = ({ title }) => {
         const userGroupCreateRequest = new FgRestBuilder()
             .url(urlForUserGroups)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserGroupsCreate(
-                    { access },
-                    { title });
-            })
+            .params(() => createParamsForUserGroupsCreate({ title }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

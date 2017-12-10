@@ -37,7 +37,7 @@ export default class LeadListItem extends React.PureComponent {
         super(props);
 
         this.leadTypeToIconClassMap = {
-            [LEAD_TYPE.drive]: 'ion-social-google',
+            [LEAD_TYPE.drive]: 'ion-social-googleplus-outline',
             [LEAD_TYPE.dropbox]: 'ion-social-dropbox',
             [LEAD_TYPE.file]: 'ion-android-upload',
             [LEAD_TYPE.website]: 'ion-earth',

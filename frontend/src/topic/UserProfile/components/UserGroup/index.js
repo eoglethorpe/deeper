@@ -36,7 +36,6 @@ import {
     createUrlForUserGroupsOfUser,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
     userGroupsSelector,
     setUserGroupsAction,
     activeUserSelector,
@@ -56,7 +55,6 @@ const propTypes = {
         }),
     }),
     setUserGroups: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     userGroups: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
     unSetUserGroup: PropTypes.func.isRequired,
@@ -71,7 +69,6 @@ const defaultProps = {
 
 
 const mapStateToProps = (state, props) => ({
-    token: tokenSelector(state),
     userGroups: userGroupsSelector(state, props),
     activeUser: activeUserSelector(state),
 });
@@ -254,11 +251,7 @@ export default class UserGroup extends React.PureComponent {
 
         const userGroupDeletRequest = new FgRestBuilder()
             .url(urlForUserGroup)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserGroupsDelete({ access });
-            })
+            .params(() => createParamsForUserGroupsDelete())
             .success(() => {
                 try {
                     this.props.unSetUserGroup({
@@ -289,11 +282,7 @@ export default class UserGroup extends React.PureComponent {
     createRequestForUserGroups = (userId) => {
         const userGroupsRequest = new FgRestBuilder()
             .url(createUrlForUserGroupsOfUser(userId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserGroups({ access });
-            })
+            .params(() => createParamsForUserGroups())
             .success((response) => {
                 try {
                     schema.validate(response, 'userGroupsGetResponse');

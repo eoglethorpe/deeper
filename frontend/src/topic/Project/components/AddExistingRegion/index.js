@@ -25,8 +25,6 @@ import {
     createUrlForProject,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
-
     projectDetailsSelector,
     projectOptionsSelector,
 
@@ -42,7 +40,6 @@ const propTypes = {
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -53,7 +50,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -127,14 +123,7 @@ export default class AddExistingRegion extends React.PureComponent {
     createProjectPatchRequest = (newProjectDetails, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectPatch(
-                    { access },
-                    newProjectDetails,
-                );
-            })
+            .params(() => createParamsForProjectPatch(newProjectDetails))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

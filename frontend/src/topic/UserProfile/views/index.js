@@ -32,7 +32,6 @@ import {
     createUrlForUser,
 } from '../../../common/rest';
 import {
-    tokenSelector,
     userInformationSelector,
     setUserInformationAction,
     activeUserSelector,
@@ -48,7 +47,6 @@ const propTypes = {
         }),
     }),
     setUserInformation: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -63,7 +61,6 @@ const defaultProps = {
 
 
 const mapStateToProps = (state, props) => ({
-    token: tokenSelector(state),
     userInformation: userInformationSelector(state, props), // uses props.match
     activeUser: activeUserSelector(state),
 });
@@ -109,11 +106,7 @@ export default class UserProfile extends React.PureComponent {
         const urlForUser = createUrlForUser(userId);
         const userRequest = new FgRestBuilder()
             .url(urlForUser)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'userGetResponse');

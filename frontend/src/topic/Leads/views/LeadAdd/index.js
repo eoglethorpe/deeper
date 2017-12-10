@@ -35,7 +35,6 @@ import {
 } from '../../../../common/rest';
 
 import {
-    tokenSelector,
     addLeadViewLeadChangeAction,
     addLeadViewActiveLeadIdSelector,
     addLeadViewActiveLeadSelector,
@@ -61,7 +60,6 @@ import LeadFormItem from './components/LeadFormItem';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
-    token: tokenSelector(state),
     activeLeadId: addLeadViewActiveLeadIdSelector(state),
     activeLead: addLeadViewActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
@@ -79,10 +77,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
-
     activeLeadId: PropTypes.string,
     activeLead: PropTypes.object, // eslint-disable-line
     addLeadViewLeadChange: PropTypes.func.isRequired,
@@ -101,6 +95,7 @@ const defaultProps = {
     activeLeadId: undefined,
     activeLead: undefined,
 };
+
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -149,16 +144,10 @@ export default class LeadAdd extends React.PureComponent {
         let params;
         if (serverId) {
             url = createUrlForLeadEdit(serverId);
-            params = () => {
-                const { access } = this.props.token;
-                return createParamsForLeadEdit({ access }, newValues);
-            };
+            params = () => createParamsForLeadEdit(newValues);
         } else {
             url = urlForLead;
-            params = () => {
-                const { access } = this.props.token;
-                return createParamsForLeadCreate({ access }, newValues);
-            };
+            params = () => createParamsForLeadCreate(newValues);
         }
 
         const leadCreateRequest = new FgRestBuilder()
@@ -176,13 +165,9 @@ export default class LeadAdd extends React.PureComponent {
     createRequestForGoogleDriveUpload = ({ leadId, title, accessToken, fileId, mimeType }) => {
         const googleDriveUploadRequest = new FgRestBuilder()
             .url(urlForGoogleDriveFileUpload)
-            .params(() => {
-                const { token } = this.props;
-                return createHeaderForGoogleDriveFileUpload(
-                    token,
-                    { title, accessToken, fileId, mimeType },
-                );
-            })
+            .params(createHeaderForGoogleDriveFileUpload({
+                title, accessToken, fileId, mimeType,
+            }))
             .success(response => this.handleLeadGoogleDriveUploadSuccess(leadId, response))
             .build();
         return googleDriveUploadRequest;
@@ -191,13 +176,7 @@ export default class LeadAdd extends React.PureComponent {
     createRequestForDropboxUpload = ({ leadId, title, fileUrl }) => {
         const dropboxUploadRequest = new FgRestBuilder()
             .url(urlForDropboxFileUpload)
-            .params(() => {
-                const { token } = this.props;
-                return createHeaderForDropboxUpload(
-                    token,
-                    { title, fileUrl },
-                );
-            })
+            .params(createHeaderForDropboxUpload({ title, fileUrl }))
             .success(response => this.handleLeadDropboxUploadSuccess(leadId, response))
             .build();
         return dropboxUploadRequest;

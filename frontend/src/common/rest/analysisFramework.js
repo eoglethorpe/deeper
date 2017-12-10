@@ -21,29 +21,20 @@ export const createUrlForAnalysisFramework = analysisFrameworkId => (
     `${wsEndpoint}/analysis-frameworks/${analysisFrameworkId}/`
 );
 
-export const createParamsForAfCreate = ({ access }, data) => ({
+export const createParamsForAfCreate = data => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForAfClone = ({ access }, data) => ({
+export const createParamsForAfClone = data => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForAnalysisFrameworkEdit = ({ access }, data) => ({
+export const createParamsForAnalysisFrameworkEdit = data => ({
     method: PUT,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });

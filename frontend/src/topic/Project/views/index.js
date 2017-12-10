@@ -28,8 +28,6 @@ import {
     currentUserProjectsSelector,
     projectDetailsSelector,
 
-    tokenSelector,
-
     setProjectOptionsAction,
     setActiveProjectAction,
     setProjectAction,
@@ -49,7 +47,6 @@ const propTypes = {
     setProject: PropTypes.func.isRequired,
     setActiveProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.number,
@@ -68,7 +65,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
-    token: tokenSelector(state),
     userProjects: currentUserProjectsSelector(state, props),
 });
 
@@ -152,13 +148,7 @@ export default class ProjectPanel extends React.PureComponent {
     createProjectRequest = (activeProject) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(activeProject))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -179,11 +169,7 @@ export default class ProjectPanel extends React.PureComponent {
     createProjectOptionsRequest = (projectId) => {
         const projectOptionsRequest = new FgRestBuilder()
             .url(createUrlForProjectOptions(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectOptions({ access });
-            })
+            .params(() => createParamsForProjectOptions())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectOptionsGetResponse');

@@ -14,47 +14,32 @@ export const createUrlForUserGroupProjects = id => (
 export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title,version_id`;
 export const urlForProjectCreate = `${wsEndpoint}/projects/`;
 
-export const createParamsForProjects = ({ access }) => ({
+export const createParamsForProjects = () => ({
     method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
-export const createParamsForProjectOptions = ({ access }) => ({
+export const createParamsForProjectOptions = () => ({
     method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
-export const createParamsForProjectPatch = ({ access }, data) => ({
+export const createParamsForProjectPatch = data => ({
     method: PATCH,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForProjectCreate = ({ access }, { title, userGroups }) => ({
+export const createParamsForProjectCreate = ({ title, userGroups }) => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
         userGroups,
     }),
 });
 
-export const createParamsForProjectDelete = ({ access }) => ({
+export const createParamsForProjectDelete = () => ({
     method: DELETE,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
