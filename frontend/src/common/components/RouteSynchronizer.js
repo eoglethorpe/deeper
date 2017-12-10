@@ -16,7 +16,6 @@ import {
     pageTitles,
 } from '../../common/constants';
 
-import browserHistory from '../browserHistory';
 import {
     activeProjectSelector,
     activeCountrySelector,
@@ -30,6 +29,10 @@ const propTypes = {
         params: PropTypes.shape({
             dummy: PropTypes.string,
         }),
+    }).isRequired,
+
+    history: PropTypes.shape({
+        push: PropTypes.func,
     }).isRequired,
 
     activeProjectId: PropTypes.number,
@@ -72,6 +75,7 @@ class RouteSynchronizer extends React.PureComponent {
             match,
             activeProjectId: newProjectId,
             activeCountryId: newCountryId,
+            history,
         } = nextProps;
 
         const {
@@ -98,7 +102,7 @@ class RouteSynchronizer extends React.PureComponent {
         }
 
         if (changed) {
-            browserHistory.push(reverseRoute(match.path, newParams));
+            history.push(reverseRoute(match.path, newParams));
         } else {
             this.synchronizeLocation(nextProps);
         }

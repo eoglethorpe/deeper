@@ -1,15 +1,12 @@
 import React from 'react';
-import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
-import browserHistory from './common/browserHistory';
 
 import App from './App';
 import store from './common/store';
 import storeConfig from './common/config/store';
 
 import reduxSync from './public/utils/redux-sync';
-
 
 export default class Root extends React.Component {
     constructor(props) {
@@ -43,9 +40,7 @@ export default class Root extends React.Component {
 
         return (
             <Provider store={this.store}>
-                <Router history={browserHistory}>
-                    <App />
-                </Router>
+                <App />
             </Provider>
         );
     }
