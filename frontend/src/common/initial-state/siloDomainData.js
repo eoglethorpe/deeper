@@ -90,6 +90,21 @@ const initialSiloDomainData = {
             */
         },
     },
+
+    selectedCategoryView: {
+        // selectedCategory: categoryId
+        categoryId: 3,
+
+        subCategory: {
+            // categoryId: subCategoryId
+            1: undefined,
+        },
+
+        subSubCategory: {
+            // subCategoryId: subSubCategoryId
+            12: undefined,
+        },
+    },
 };
 
 export default initialSiloDomainData;

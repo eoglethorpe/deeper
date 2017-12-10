@@ -30,6 +30,10 @@ import {
     SET_PROJECT_AF,
     SET_AF_DETAIL,
 
+    SET_CATEGORY,
+    ADD_NEW_CATEGORY,
+    ADD_NEW_SUBCATEGORY,
+    ADD_NEW_SUBSUBCATEGORY,
 } from '../action-types/domainData';
 
 export const setUserInformationAction = ({ userId, information }) => ({
@@ -163,6 +167,28 @@ export const setAfDetailAction = ({ afId, afDetail }) => ({
     type: SET_AF_DETAIL,
     afId,
     afDetail,
+});
+
+export const addNewCategoryAction = ({ category }) => ({
+    type: ADD_NEW_CATEGORY,
+    category,
+});
+
+export const addNewSubCategoryAction = ({ category, subCategory }) => ({
+    type: ADD_NEW_SUBCATEGORY,
+    category,
+    subCategory,
+});
+
+export const addNewSubSubCategoryAction = ({ subCategory, subSubCategory }) => ({
+    type: ADD_NEW_SUBSUBCATEGORY,
+    subCategory,
+    subSubCategory,
+});
+
+export const setCategoryAction = ({ category }) => ({
+    type: SET_CATEGORY,
+    category,
 });
 
 export const dummyAction = () => ({

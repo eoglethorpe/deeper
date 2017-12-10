@@ -1,8 +1,11 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
+    SelectInput,
     TextInput,
     Form,
     requiredCondition,
@@ -11,6 +14,7 @@ import {
 import {
     PrimaryButton,
     DangerButton,
+    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     Modal,
@@ -18,89 +22,104 @@ import {
     ModalHeader,
     LoadingAnimation,
 } from '../../../../public/components/View';
-import { randomString } from '../../../../public/utils/common';
+import {
+    randomString,
+    isFalsy,
+} from '../../../../public/utils/common';
+
+import {
+    categoriesListSelector,
+    selectedCategorySelector,
+    selectedSubCategoryDetailSelector,
+    // selectedSubSubCategorySelector,
+    subCategoriesForSelectedCategorySelector,
+    subSubCategoriesForSelectedSubCategorySelector,
+    selectedCategoryIdSelector,
+    selectedSubCategoryIdSelector,
+    selectedSubSubCategoryIdSelector,
+
+    setActiveCategoryAction,
+    setActiveSubCategoryAction,
+    setActiveSubSubCategoryAction,
+    setCategoryAction,
+    addNewCategoryAction,
+    addNewSubCategoryAction,
+    addNewSubSubCategoryAction,
+} from '../../../../common/redux';
 
 import KeyWords from '../../components/KeyWords';
 
 import styles from './styles.scss';
 
+const propTypes = {
+    className: PropTypes.string,
+    categories: PropTypes.arrayOf(PropTypes.shape({})),
+    selectedCategory: PropTypes.shape({}),
+    selectedSubCategory: PropTypes.shape({}),
+    // selectedSubSubCategory: PropTypes.shape({}),
+
+    subCategoriesForSelectedCategory: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    subSubCategoriesForSelectedSubCategory: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+    selectedCategoryId: PropTypes.number,
+    selectedSubCategoryId: PropTypes.number,
+    selectedSubSubCategoryId: PropTypes.number,
+    setActiveCategory: PropTypes.func.isRequired,
+    setActiveSubCategory: PropTypes.func.isRequired,
+    setActiveSubSubCategory: PropTypes.func.isRequired,
+    setCategory: PropTypes.func.isRequired,
+    addNewCategory: PropTypes.func.isRequired,
+    addNewSubCategory: PropTypes.func.isRequired,
+    addNewSubSubCategory: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+    className: '',
+    categories: {},
+    selectedCategory: {},
+    selectedSubCategory: {},
+    // selectedSubSubCategory: {},
+    selectedCategoryId: undefined,
+    selectedSubCategoryId: undefined,
+    selectedSubSubCategoryId: undefined,
+};
+
+const mapStateToProps = state => ({
+    categories: categoriesListSelector(state),
+    selectedCategory: selectedCategorySelector(state),
+    selectedSubCategory: selectedSubCategoryDetailSelector(state),
+    // selectedSubSubCategory: selectedSubSubCategorySelector(state),
+
+    subCategoriesForSelectedCategory: subCategoriesForSelectedCategorySelector(state),
+    subSubCategoriesForSelectedSubCategory: subSubCategoriesForSelectedSubCategorySelector(state),
+
+    selectedCategoryId: selectedCategoryIdSelector(state),
+    selectedSubCategoryId: selectedSubCategoryIdSelector(state),
+    selectedSubSubCategoryId: selectedSubSubCategoryIdSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    setActiveCategory: params => dispatch(setActiveCategoryAction(params)),
+    setActiveSubCategory: params => dispatch(setActiveSubCategoryAction(params)),
+    setActiveSubSubCategory: params => dispatch(setActiveSubSubCategoryAction(params)),
+    setCategory: params => dispatch(setCategoryAction(params)),
+    addNewCategory: params => dispatch(addNewCategoryAction(params)),
+    addNewSubCategory: params => dispatch(addNewSubCategoryAction(params)),
+    addNewSubSubCategory: params => dispatch(addNewSubSubCategoryAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Categories extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
     constructor(props) {
         super(props);
 
         this.state = {
             // Add Modal state
+            addNewCategory: false,
             addNewSubCategory: false,
             addNewSubSubCategory: false,
-            subCategoryData: [
-                {
-                    id: 1,
-                    title: 'wash',
-                },
-                {
-                    id: 2,
-                    title: 'food',
-                },
-                {
-                    id: 3,
-                    title: 'shelter',
-                },
-                {
-                    id: 4,
-                    title: 'nfi',
-                },
-                {
-                    id: 5,
-                    title: 'protection',
-                },
-            ],
-            subSubCategoryData: [
-                {
-                    id: 1,
-                    title: 'water',
-                },
-                {
-                    id: 2,
-                    title: 'sanitation',
-                },
-                {
-                    id: 3,
-                    title: 'hygiene',
-                },
-                {
-                    id: 4,
-                    title: 'vector control',
-                },
-                {
-                    id: 5,
-                    title: 'waste management',
-                },
-                {
-                    id: 6,
-                    title: 'diseases',
-                },
-                {
-                    id: 7,
-                    title: 'bad water',
-                },
-                {
-                    id: 8,
-                    title: 'sanitation',
-                },
-                {
-                    id: 9,
-                    title: 'dysentery',
-                },
-            ],
-            activeSubCategory: {
-                id: 1,
-                title: 'wash',
-            },
-            activeSubSubCategory: {
-                id: 1,
-                title: 'water',
-            },
             editCategoryModal: false,
             formErrors: [],
             formFieldErrors: {},
@@ -112,12 +131,53 @@ export default class Categories extends React.PureComponent {
         this.elements = [
             'subLabel',
             'subSubLabel',
+            'label',
+            'description',
+            'owner',
         ];
 
         this.validations = {
+            label: [requiredCondition],
+            description: [requiredCondition],
+            owner: [requiredCondition],
             subLabel: [requiredCondition],
             subSubLabel: [requiredCondition],
         };
+
+        // this.createRequestForCategory();
+    }
+
+    // For Category Data
+
+    handleAddNewCategoryClick = () => {
+        this.setState({ addNewCategory: true });
+    }
+
+    handleAddNewCategoryClose = () => {
+        this.setState({
+            addNewCategory: false,
+            formValues: [],
+        });
+    }
+
+    handleCategorySelectChange = (key) => {
+        this.props.setActiveCategory(key);
+    }
+
+    // FORM success Category Data
+
+    successCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewCategory({
+            category: {
+                ...values,
+                id: (this.props.categories || []).length + 1,
+            },
+        });
+        this.setState({
+            addNewCategory: false,
+            formValues: [],
+        });
     }
 
     // For SUB Category Data
@@ -127,7 +187,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleSubCategoryClick = (subCategory) => {
-        this.setState({ activeSubCategory: subCategory });
+        this.props.setActiveSubCategory(subCategory.id);
     }
 
     handleAddNewSubCategoryClose = () => {
@@ -138,6 +198,60 @@ export default class Categories extends React.PureComponent {
         });
     }
 
+    createRequestForCategory = () => {
+        // TODO: remove this and pull data from api
+        const data = {
+            id: 1,
+            label: 'Sectors',
+            subCategories: [
+                {
+                    id: 1,
+                    label: 'wash',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'water',
+                            keywords: [
+                                { id: 1, label: 'sickness', count: 331 },
+                                { id: 2, label: 'cholera', count: 298 },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'sanitation',
+                            keywords: [
+                                { id: 1, label: 'Pump', count: 31 },
+                                { id: 2, label: 'Latrines', count: 125 },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    id: 2,
+                    label: 'food',
+                    subSubCategories: [
+                        {
+                            id: 1,
+                            label: 'nutrition',
+                            keywords: [
+                                { id: 1, label: 'potato', count: 331 },
+                                { id: 2, label: 'tomato', count: 298 },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            label: 'malnutrition',
+                            keywords: [
+                                { id: 1, label: 'kwasiorkor', count: 31 },
+                                { id: 2, label: 'sukenas', count: 125 },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        };
+        this.props.setCategory({ category: data });
+    }
 
     // Common FORM functions
 
@@ -160,14 +274,15 @@ export default class Categories extends React.PureComponent {
     // FORM success Sub-Category
 
     subCategorySuccessCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewSubCategory({
+            category: { id: this.props.selectedCategoryId },
+            subCategory: {
+                label: values.subLabel,
+                id: randomString(5),
+            },
+        });
         this.setState({
-            subCategoryData: [
-                ...this.state.subCategoryData,
-                {
-                    id: randomString(),
-                    title: values.subLabel,
-                },
-            ],
             addNewSubCategory: false,
             formValues: [],
         });
@@ -180,7 +295,7 @@ export default class Categories extends React.PureComponent {
     }
 
     handleSubSubCategoryClick = (subSubCategory) => {
-        this.setState({ activeSubSubCategory: subSubCategory });
+        this.props.setActiveSubSubCategory(subSubCategory.id);
     }
 
     handleAddNewSubSubCategoryClose = () => {
@@ -193,14 +308,15 @@ export default class Categories extends React.PureComponent {
     // FORM success Sub-Sub-Category
 
     subSubCategorySuccessCallback = (values) => {
+        // TODO: add rest
+        this.props.addNewSubSubCategory({
+            subCategory: { id: this.props.selectedSubCategoryId },
+            subSubCategory: {
+                label: values.subSubLabel,
+                id: randomString(5),
+            },
+        });
         this.setState({
-            subSubCategoryData: [
-                ...this.state.subSubCategoryData,
-                {
-                    id: randomString(),
-                    title: values.subSubLabel,
-                },
-            ],
             addNewSubSubCategory: false,
             formValues: [],
         });
@@ -208,12 +324,9 @@ export default class Categories extends React.PureComponent {
 
     render() {
         const {
+            addNewCategory,
             addNewSubCategory,
             addNewSubSubCategory,
-            subCategoryData,
-            activeSubCategory,
-            subSubCategoryData,
-            activeSubSubCategory,
             formFieldErrors,
             formValues,
             pending,
@@ -221,162 +334,265 @@ export default class Categories extends React.PureComponent {
             formErrors = [],
         } = this.state;
 
+        const {
+            className,
+            categories,
+
+            selectedCategory,
+            selectedSubCategory,
+
+            subCategoriesForSelectedCategory,
+            subSubCategoriesForSelectedSubCategory,
+
+            selectedCategoryId,
+            selectedSubCategoryId,
+            selectedSubSubCategoryId,
+        } = this.props;
+
         return (
-            <div styleName="categories">
-                <div styleName="category-group">
-                    <div styleName="sub-categories">
-                        {
-                            subCategoryData.map(d => (
-                                <div
-                                    styleName="sub-group"
-                                    key={d.id}
-                                >
-                                    <div
-                                        role="presentation"
-                                        key={d.id}
-                                        onClick={() => { this.handleSubCategoryClick(d); }}
-                                        styleName={`sub-category ${activeSubCategory.id === d.id ? 'active' : ''}`}
-                                    >
-                                        {d.title}
-                                    </div>
-                                    <div styleName="icon-btn">
-                                        <span
-                                            className={`${activeSubCategory.id === d.id ? 'ion-chevron-right' : ''}`}
-                                        />
-                                    </div>
-                                </div>
-                            ))
-                        }
-                        <div
-                            styleName="add-button"
-                            onClick={this.handleAddNewSubCategoryShowModal}
-                            role="presentation"
-                        >
-                            <i className="ion-plus" />
-                        </div>
-                    </div>
-                    <div styleName="sub-sub-categories">
-                        {
-                            subSubCategoryData.map(d => (
-                                <div
-                                    styleName="sub-group"
-                                    key={d.id}
-                                >
-                                    <div
-                                        role="presentation"
-                                        key={d.id}
-                                        onClick={() => { this.handleSubSubCategoryClick(d); }}
-                                        styleName={`sub-sub-category ${activeSubSubCategory.id === d.id ? 'active' : ''}`}
-                                    >
-                                        {d.title}
-                                    </div>
-                                    <div styleName="icon-btn">
-                                        <Link
-                                            title="Edit Sub Category"
-                                            className={`${activeSubSubCategory.id === d.id ? 'ion-edit' : ''}`}
-                                            to={`/edit/${activeSubCategory.title}/${d.title}/`}
-                                        />
-                                        <span
-                                            className={`${activeSubSubCategory.id === d.id ? 'ion-android-delete' : ''}`}
-                                        />
-                                    </div>
-                                </div>
-                            ))
-                        }
-                        <div
-                            styleName="add-button"
-                            onClick={this.handleAddNewSubSubCategoryShowModal}
-                            role="presentation"
-                        >
-                            <i className="ion-plus" />
-                        </div>
-                    </div>
-                    <KeyWords
-                        className="keywords-content"
-                    />
-                </div>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleAddNewSubCategoryClose}
-                    show={addNewSubCategory}
-                >
-                    <Form
-                        changeCallback={this.changeCallback}
-                        elements={this.elements}
-                        failureCallback={this.failureCallback}
-                        successCallback={this.subCategorySuccessCallback}
-                        validations={this.validations}
-                    >
-                        <ModalHeader title="Add New Sub Category" />
-                        {
-                            pending && <LoadingAnimation />
-                        }
-                        <NonFieldErrors errors={formErrors} />
-                        <ModalBody>
-                            <TextInput
-                                formname="subLabel"
-                                placeholder="Enter Subss Category Name"
-                                label="Name"
-                                value={formValues.subLabel}
-                                error={formFieldErrors.subLabel}
-                            />
-                        </ModalBody>
-                        <div styleName="action-buttons">
-                            <DangerButton
-                                onClick={this.handleAddNewSubCategoryClose}
-                                type="button"
-                                disabled={pending}
-                            >
-                                Cancel
-                            </DangerButton>
-                            <PrimaryButton
-                                disabled={pending || !stale}
-                            >
-                                Add
-                            </PrimaryButton>
-                        </div>
-                    </Form>
-                </Modal>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleAddNewSubSubCategoryClose}
-                    show={addNewSubSubCategory}
-                >
-                    <Form
-                        changeCallback={this.changeCallback}
-                        elements={this.elements}
-                        failureCallback={this.failureCallback}
-                        successCallback={this.subSubCategorySuccessCallback}
-                        validations={this.validations}
-                    >
-                        <ModalHeader
-                            title={`Add Sub Category for ${activeSubCategory.title}`}
+            <div styleName={className}>
+                <div styleName="header">
+                    <div styleName="search-category">
+                        <SelectInput
+                            placeholder="Select a Category"
+                            label="Category"
+                            showHintAndError={false}
+                            options={categories}
+                            keySelector={category => category.id}
+                            labelSelector={category => category.label}
+                            value={selectedCategoryId}
+                            showLabel
+                            clearable={false}
+                            onChange={this.handleCategorySelectChange}
                         />
-                        <ModalBody>
-                            <TextInput
-                                formname="subSubLabel"
-                                placeholder="Enter Sub Sub Category Name"
-                                label="Name"
-                                value={formValues.subSubLabel}
-                                error={formFieldErrors.subSubLabel}
-                            />
-                        </ModalBody>
-                        <div styleName="action-buttons">
-                            <DangerButton
-                                onClick={this.handleAddNewSubSubCategoryClose}
+                    </div>
+                    <div styleName="pusher" />
+                    <div styleName="add-category-btn">
+                        <PrimaryButton
+                            onClick={this.handleAddNewCategoryClick}
+                        >
+                            Add New Category
+                        </PrimaryButton>
+                    </div>
+                </div>
+                <div styleName="categories">
+                    <div styleName="category-group">
+                        <div styleName="sub-categories">
+                            {
+                                subCategoriesForSelectedCategory.map(d => (
+                                    <div
+                                        styleName="sub-group"
+                                        key={d.id}
+                                    >
+                                        <div
+                                            role="presentation"
+                                            key={d.id}
+                                            onClick={() => { this.handleSubCategoryClick(d); }}
+                                            styleName={`sub-category ${selectedSubCategoryId === d.id ? 'active' : ''}`}
+                                        >
+                                            {d.label}
+                                        </div>
+                                        <div styleName="icon-btn">
+                                            <span
+                                                className={`${selectedSubCategoryId === d.id ? 'ion-chevron-right' : ''}`}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                            <TransparentButton
+                                styleName="add-button"
+                                onClick={this.handleAddNewSubCategoryShowModal}
                                 type="button"
-                                disabled={pending}
+                                disabled={isFalsy(selectedCategoryId)}
                             >
-                                Cancel
-                            </DangerButton>
-                            <PrimaryButton
-                                disabled={pending || !stale}
-                            >
-                                Add
-                            </PrimaryButton>
+                                <i className="ion-plus" />
+                            </TransparentButton>
                         </div>
-                    </Form>
-                </Modal>
+                        <div styleName="sub-sub-categories">
+                            {
+                                subSubCategoriesForSelectedSubCategory.map(d => (
+                                    <div
+                                        styleName="sub-group"
+                                        key={d.id}
+                                    >
+                                        <div
+                                            role="presentation"
+                                            key={d.id}
+                                            onClick={() => { this.handleSubSubCategoryClick(d); }}
+                                            styleName={`sub-sub-category ${selectedSubSubCategoryId === d.id ? 'active' : ''}`}
+                                        >
+                                            {d.label}
+                                        </div>
+                                        <div styleName="icon-btn">
+                                            <Link
+                                                title="Edit Sub Category"
+                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-edit' : ''}`}
+                                                to={`/edit/${selectedSubCategoryId}/${d.id}/`}
+                                            />
+                                            <span
+                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-android-delete' : ''}`}
+                                            />
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                            <TransparentButton
+                                onClick={this.handleAddNewSubSubCategoryShowModal}
+                                styleName={`${isFalsy(selectedSubCategoryId) ? 'hidden' : 'add-button'}`}
+                                type="button"
+                            >
+                                <i className="ion-plus" />
+                            </TransparentButton>
+                        </div>
+                        <KeyWords
+                            className="keywords-content"
+                        />
+                    </div>
+                    {/* For Category Data */}
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddNewCategoryClose}
+                        show={addNewCategory}
+                    >
+                        <Form
+                            changeCallback={this.changeCallback}
+                            elements={this.elements}
+                            failureCallback={this.failureCallback}
+                            successCallback={this.successCallback}
+                            validations={this.validations}
+                        >
+                            <ModalHeader title="Add New Category" />
+                            {
+                                pending && <LoadingAnimation />
+                            }
+                            <NonFieldErrors errors={formErrors} />
+                            <ModalBody>
+                                <TextInput
+                                    formname="label"
+                                    placeholder="Enter Category Name"
+                                    label="Name"
+                                    value={formValues.label}
+                                    error={formFieldErrors.label}
+                                />
+                                <TextInput
+                                    formname="description"
+                                    placeholder="Enter Description"
+                                    label="Description"
+                                    value={formValues.description}
+                                    error={formFieldErrors.description}
+                                />
+                                <TextInput
+                                    formname="owner"
+                                    placeholder="Enter Owner's Name"
+                                    label="Owner"
+                                    value={formValues.owner}
+                                    error={formFieldErrors.owner}
+                                />
+                            </ModalBody>
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    onClick={this.handleAddNewCategoryClose}
+                                    type="button"
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <PrimaryButton
+                                    disabled={pending || !stale}
+                                >
+                                    Save
+                                </PrimaryButton>
+                            </div>
+                        </Form>
+                    </Modal>
+                    {/* For Sub-Category Data */}
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddNewSubCategoryClose}
+                        show={addNewSubCategory}
+                    >
+                        <Form
+                            changeCallback={this.changeCallback}
+                            elements={this.elements}
+                            failureCallback={this.failureCallback}
+                            successCallback={this.subCategorySuccessCallback}
+                            validations={this.validations}
+                        >
+                            <ModalHeader
+                                title={`Add New Sub Category for ${selectedCategory.label}`}
+                            />
+                            {
+                                pending && <LoadingAnimation />
+                            }
+                            <NonFieldErrors errors={formErrors} />
+                            <ModalBody>
+                                <TextInput
+                                    formname="subLabel"
+                                    placeholder="Enter Subss Category Name"
+                                    label="Name"
+                                    value={formValues.subLabel}
+                                    error={formFieldErrors.subLabel}
+                                />
+                            </ModalBody>
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    onClick={this.handleAddNewSubCategoryClose}
+                                    type="button"
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <PrimaryButton
+                                    disabled={pending || !stale}
+                                >
+                                    Add
+                                </PrimaryButton>
+                            </div>
+                        </Form>
+                    </Modal>
+                    {/* For Sub-Sub-Category Data */}
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddNewSubSubCategoryClose}
+                        show={addNewSubSubCategory}
+                    >
+                        <Form
+                            changeCallback={this.changeCallback}
+                            elements={this.elements}
+                            failureCallback={this.failureCallback}
+                            successCallback={this.subSubCategorySuccessCallback}
+                            validations={this.validations}
+                        >
+                            <ModalHeader
+                                title={`Add New Sub-Sub Category for ${selectedSubCategory.label}`}
+                            />
+                            <ModalBody>
+                                <TextInput
+                                    formname="subSubLabel"
+                                    placeholder="Enter Sub Sub Category Name"
+                                    label="Name"
+                                    value={formValues.subSubLabel}
+                                    error={formFieldErrors.subSubLabel}
+                                />
+                            </ModalBody>
+                            <div styleName="action-buttons">
+                                <DangerButton
+                                    onClick={this.handleAddNewSubSubCategoryClose}
+                                    type="button"
+                                    disabled={pending}
+                                >
+                                    Cancel
+                                </DangerButton>
+                                <PrimaryButton
+                                    disabled={pending || !stale}
+                                >
+                                    Add
+                                </PrimaryButton>
+                            </div>
+                        </Form>
+                    </Modal>
+                </div>
             </div>
         );
     }

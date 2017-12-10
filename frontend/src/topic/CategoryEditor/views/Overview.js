@@ -8,7 +8,7 @@ import {
 } from '../../../common/redux';
 
 import DocumentView from './DocumentView';
-import CategoryView from './CategoryView';
+import Categories from '../components/Categories';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -28,7 +28,7 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="overview">
                 <DocumentView className="left" />
-                <CategoryView className="right" />
+                <Categories className="right" />
             </div>
         );
     }

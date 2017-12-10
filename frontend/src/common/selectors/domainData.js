@@ -167,12 +167,20 @@ export const currentUserProjectsSelector = createSelector(
 );
 
 
-/* TODO: remove later
-export const entriesForLeadSelector = createSelector(
-    entriesSelector,
-    (state, props) => props.leadId,
-    (entries, leadId) => (entries[leadId] || emptyList),
+export const categoriesSelector = ({ domainData }) => (
+    domainData.categories || emptyObject
 );
 
-export const selectedEntryIdSelector = ({ domainData }) => domainData.selectedEntryId;
-*/
+export const categoriesListSelector = createSelector(
+    categoriesSelector,
+    categories => Object.values(categories),
+);
+
+
+export const subCategoriesSelector = ({ domainData }) => (
+    domainData.subCategories || emptyObject
+);
+
+export const subSubCategoriesSelector = ({ domainData }) => (
+    domainData.subSubCategories || emptyObject
+);
