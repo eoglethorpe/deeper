@@ -77,8 +77,8 @@
 
             .list-item {
                 display: block;
+                border-right: $width-separator-thick solid transparent;
                 border-bottom: $width-separator-thin solid $color-separator;
-                border-left: $width-separator-thick solid transparent;
 
                 .link {
                     display: block;
@@ -89,7 +89,8 @@
             }
 
             .active {
-                border-left: $width-separator-thick solid $color-accent;
+                border-right: $width-separator-thick solid $color-accent;
+                background-color: $color-hover;
             }
         }
     }

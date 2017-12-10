@@ -504,10 +504,17 @@ const setAnalysisFramework = (state, action) => {
     return update(state, settings);
 };
 
-// TODO: Change the reducer to merge new data along with deleting removed AFs
 const setAnalysisFrameworks = (state, action) => {
     const { analysisFrameworks } = action;
 
+    const keysOfState = Object.keys(state.analysisFrameworks);
+    // Get keys to be removed
+    // NOTE: Remove all keys except those to be merged
+    const keysToRemove = keysOfState.filter(
+        key => analysisFrameworks.findIndex(f => f.id === +key) < 0,
+    );
+
+    // Merge
     const analysisFrameworksSettings = analysisFrameworks.reduce(
         (acc, analysisFramework) => {
             acc[analysisFramework.id] = { $auto: {
@@ -518,8 +525,17 @@ const setAnalysisFrameworks = (state, action) => {
         {},
     );
 
+    // Remove
+    const analysisFrameworksSettings2 = keysToRemove.reduce(
+        (acc, key) => {
+            acc[key] = { $set: undefined };
+            return acc;
+        },
+        { ...analysisFrameworksSettings },
+    );
+
     const settings = {
-        analysisFrameworks: analysisFrameworksSettings,
+        analysisFrameworks: analysisFrameworksSettings2,
     };
     return update(state, settings);
 };
