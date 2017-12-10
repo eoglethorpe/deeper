@@ -145,6 +145,8 @@ export default class LeadButtons extends React.PureComponent {
             );
         });
         this.props.addLeads(newLeads);
+
+        this.setState({ dropboxDisabled: false });
     }
 
     handleAddLeadFromDisk = (e) => {
@@ -237,7 +239,7 @@ export default class LeadButtons extends React.PureComponent {
 
     handleGoogleDriveOnAuthenticated = (accessToken) => {
         // TODO: use this token will uploading
-        // console.log(accessToken);
+        console.warn(accessToken);
         if (accessToken) {
             this.googleDriveAccessToken = accessToken;
         }
@@ -261,7 +263,7 @@ export default class LeadButtons extends React.PureComponent {
                     styleName="add-lead-btn"
                     clientId={googleDriveClientId}
                     developerKey={googleDriveDeveloperKey}
-                    onAuthenticate={this.handleGoogleDriveOnAuthenticate}
+                    onAuthenticate={this.handleGoogleDriveOnAuthenticated}
                     onChange={this.handleAddLeadFromGoogleDrive}
                     mimeTypes={supportedGoogleDriveMimeTypes}
                     multiselect

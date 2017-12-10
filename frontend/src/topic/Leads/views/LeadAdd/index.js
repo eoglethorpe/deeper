@@ -384,6 +384,7 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE SELECTION
 
     handleGoogleDriveSelect = (leadId, accessToken, doc) => {
+        console.log(accessToken);
         const request = this.createRequestForGoogleDriveUpload({
             leadId,
             accessToken,
