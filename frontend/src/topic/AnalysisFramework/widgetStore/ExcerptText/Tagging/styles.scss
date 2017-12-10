@@ -1,0 +1,37 @@
+@import '../../../../../stylesheets/base';
+
+.excerpt-overview {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+
+    .radio-input {
+        flex-shrink: 0;
+    }
+
+    .textarea {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+
+        :global .input {
+            flex-grow: 1;
+            resize: none;
+        }
+    }
+
+    .image {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.excerpt-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
