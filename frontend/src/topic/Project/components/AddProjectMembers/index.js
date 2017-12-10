@@ -15,8 +15,11 @@ import {
 import {
     DangerButton,
     PrimaryButton,
-    TransparentButton,
+    TransparentPrimaryButton,
 } from '../../../../public/components/Action';
+import {
+    iconNames,
+} from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
@@ -127,9 +130,8 @@ export default class AddProjectMembers extends React.PureComponent {
                     const isAdmin = row.role === 'admin';
                     return (
                         <div className="actions">
-                            <TransparentButton
+                            <TransparentPrimaryButton
                                 title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
-                                className="admin-btn"
                                 type="button"
                                 onClick={() =>
                                     this.handleRoleChangeForNewMember({
@@ -139,10 +141,10 @@ export default class AddProjectMembers extends React.PureComponent {
                                 }
                             >
                                 {
-                                    isAdmin ? <i className="ion-locked" />
-                                        : <i className="ion-android-person" />
+                                    isAdmin ? <i className={iconNames.locked} />
+                                        : <i className={iconNames.person} />
                                 }
-                            </TransparentButton>
+                            </TransparentPrimaryButton>
                         </div>
                     );
                 },

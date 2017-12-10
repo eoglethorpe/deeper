@@ -5,6 +5,8 @@ import {
     SET_USER_PROJECT,
     SET_USER_PROJECT_OPTIONS,
     SET_USERS_PROJECT_MEMBERSHIP,
+    SET_USER_PROJECT_MEMBERSHIP,
+    UNSET_USER_PROJECT_MEMBERSHIP,
     UNSET_USER_PROJECT,
 
     SET_USER_GROUPS,
@@ -69,6 +71,18 @@ export const setProjectOptionsAction = ({ projectId, options }) => ({
 export const setUsersProjectMembershipAction = ({ projectMembership, projectId }) => ({
     type: SET_USERS_PROJECT_MEMBERSHIP,
     projectMembership,
+    projectId,
+});
+
+export const setUserProjectMembershipAction = ({ memberDetails, projectId }) => ({
+    type: SET_USER_PROJECT_MEMBERSHIP,
+    memberDetails,
+    projectId,
+});
+
+export const unsetUserProjectMembershipAction = ({ memberId, projectId }) => ({
+    type: UNSET_USER_PROJECT_MEMBERSHIP,
+    memberId,
     projectId,
 });
 

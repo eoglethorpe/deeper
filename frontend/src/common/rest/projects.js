@@ -14,6 +14,8 @@ export const createUrlForUserGroupProjects = id => (
 export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title,version_id`;
 export const urlForProjectCreate = `${wsEndpoint}/projects/`;
 export const urlForProjectMembership = `${wsEndpoint}/project-memberships/`;
+export const createUrlForUserProjectMembership = membershipId =>
+    `${wsEndpoint}/project-memberships/${membershipId}/`;
 
 export const createParamsForProjects = () => ({
     method: GET,
@@ -26,6 +28,12 @@ export const createParamsForProjectOptions = () => ({
 });
 
 export const createParamsForProjectPatch = data => ({
+    method: PATCH,
+    headers: commonHeaderForPost,
+    body: JSON.stringify(data),
+});
+
+export const createParamsForUserProjectMembershipPatch = (data) => ({
     method: PATCH,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
@@ -49,6 +57,11 @@ export const createParamsForProjectMembershipCreate = ({ memberList }) => ({
 });
 
 export const createParamsForProjectDelete = () => ({
+    method: DELETE,
+    headers: commonHeaderForPost,
+});
+
+export const createParamsForUserProjectMembershipDelete = () => ({
     method: DELETE,
     headers: commonHeaderForPost,
 });

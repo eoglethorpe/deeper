@@ -14,6 +14,8 @@ const iconNames = {
     remove: 'ion-android-remove',
     edit: 'ion-edit',
     list: 'ion-ios-list-outline',
+    openLink: 'ion-android-open',
+    delete: 'ion-android-delete',
 };
 
 export default iconNames;

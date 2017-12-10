@@ -5,6 +5,8 @@ import {
     SET_USER_PROJECT_OPTIONS,
     SET_USER_PROJECT,
     SET_USERS_PROJECT_MEMBERSHIP,
+    SET_USER_PROJECT_MEMBERSHIP,
+    UNSET_USER_PROJECT_MEMBERSHIP,
     UNSET_USER_PROJECT,
 
     SET_USER_GROUPS,
@@ -138,6 +140,50 @@ const setUsersProjectMembership = (state, action) => {
         },
     };
     return update(state, settings);
+};
+
+const setUserProjectMembership = (state, action) => {
+    const { projectId, memberDetails } = action;
+
+    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const updatedMemberShipIndex = memberships.findIndex(
+        membership => (memberDetails.id === membership.id),
+    );
+
+    const settings = {
+        projects: {
+            [projectId]: { $auto: {
+                memberships: { $autoArray: {
+                    [updatedMemberShipIndex]: { $auto: {
+                        $merge: memberDetails,
+                    } },
+                } },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const unsetUserProjectMembership = (state, action) => {
+    const { memberId, projectId } = action;
+
+    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const membershipArrayIndex = memberships.findIndex(
+        membership => (membership.id === memberId));
+
+    if (membershipArrayIndex !== -1) {
+        const settings = {
+            projects: {
+                [projectId]: { $auto: {
+                    memberships: { $autoArray: {
+                        $splice: [[membershipArrayIndex, 1]],
+                    } },
+                } },
+            },
+        };
+        return update(state, settings);
+    }
+    return state;
 };
 
 const unsetUserProject = (state, action) => {
@@ -673,6 +719,8 @@ const reducers = {
     [UNSET_USER_PROJECT]: unsetUserProject,
     [SET_USER_PROJECT_OPTIONS]: setUserProjectOptions,
     [SET_USERS_PROJECT_MEMBERSHIP]: setUsersProjectMembership,
+    [SET_USER_PROJECT_MEMBERSHIP]: setUserProjectMembership,
+    [UNSET_USER_PROJECT_MEMBERSHIP]: unsetUserProjectMembership,
 
     [SET_USER_GROUP]: setUserGroup,
     [SET_USER_GROUPS]: setUserGroups,
