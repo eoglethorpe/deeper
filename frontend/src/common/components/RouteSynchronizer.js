@@ -4,6 +4,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    Bundle,
+} from '../../public/components/General';
+import {
     getKeyByValue,
     reverseRoute,
 } from '../../public/utils/common';
@@ -32,8 +35,6 @@ const propTypes = {
     activeProjectId: PropTypes.number,
 
     activeCountryId: PropTypes.number,
-
-    component: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -143,7 +144,6 @@ class RouteSynchronizer extends React.PureComponent {
 
     render() {
         const {
-            component: Component,
             match,
             ...otherProps
         } = this.props;
@@ -157,7 +157,7 @@ class RouteSynchronizer extends React.PureComponent {
                     { title }
                 </title>
             </Helmet>,
-            <Component
+            <Bundle
                 key="component"
                 match={match}
                 {...otherProps}

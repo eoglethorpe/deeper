@@ -1,7 +1,4 @@
 import React from 'react';
-import {
-    Bundle,
-} from '../public/components/General';
 
 import RouteSynchronizer from '../common/components/RouteSynchronizer';
 
@@ -48,7 +45,7 @@ const views = Object.keys(importers).reduce(
         acc[key] = props => (
             <RouteSynchronizer
                 {...props}
-                component={() => <Bundle load={importer} />}
+                load={importer}
             />
         );
         return acc;

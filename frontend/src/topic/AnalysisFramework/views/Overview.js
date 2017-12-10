@@ -22,7 +22,7 @@ import {
 
 import {
     addAfViewWidgetAction,
-    // removeAfViewWidgetAction,
+    removeAfViewWidgetAction,
     updateAfViewWidgetAction,
 } from '../../../common/redux';
 
@@ -34,10 +34,12 @@ const propTypes = {
     addWidget: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
+    removeWidget: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
     addWidget: params => dispatch(addAfViewWidgetAction(params)),
+    removeWidget: params => dispatch(removeAfViewWidgetAction(params)),
     updateWidget: params => dispatch(updateAfViewWidgetAction(params)),
 });
 
@@ -102,7 +104,9 @@ export default class Overview extends React.PureComponent {
                         <h4 styleName="heading">{item.title}</h4>
                         <div styleName="actions">
                             <TransparentButton
+                                className="remove"
                                 styleName="close-button"
+                                onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
                             >
                                 <span className="ion-android-close" />
                             </TransparentButton>
@@ -116,6 +120,20 @@ export default class Overview extends React.PureComponent {
         });
     }
 
+    handleWidgetRemoveButtonClick = (id) => {
+        const {
+            analysisFramework,
+            removeWidget,
+        } = this.props;
+
+        const widgetData = {
+            analysisFrameworkId: analysisFramework.id,
+            widgetId: id,
+        };
+
+        removeWidget(widgetData);
+    }
+
     handleAddWidgetButtonClick = (id) => {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = this.widgets.find(w => w.id === id);
@@ -125,6 +143,7 @@ export default class Overview extends React.PureComponent {
             key: `overview-${this.getUniqueKey()}`,
             widgetId: widget.id,
             title: widget.title,
+            // TODO: calculate new position appropriately
             properties: {
                 overviewGridData: { x: 2, y: 2, w: 30, h: 20 },
             },
@@ -294,6 +313,7 @@ export default class Overview extends React.PureComponent {
                         preventCollision
                         onLayoutChange={this.handleLayoutChange}
                         draggableHandle=".header"
+                        draggableCancel=".remove"
                         ref={(gridLayout) => { this.gridLayout = gridLayout; }}
                     >
                         { this.getGridItems() }
