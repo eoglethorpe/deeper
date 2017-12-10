@@ -11,7 +11,9 @@ const iconNames = {
     wrench: 'ion-wrench',
     check: 'ion-checkmark',
     add: 'ion-plus',
+    remove: 'ion-android-remove',
     edit: 'ion-edit',
+    list: 'ion-ios-list-outline',
 };
 
 export default iconNames;

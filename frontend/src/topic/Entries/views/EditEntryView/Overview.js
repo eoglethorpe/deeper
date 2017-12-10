@@ -10,12 +10,21 @@ import {
 } from '../../../../public/components/Action';
 
 import {
+    ListView,
+    ListItem,
+} from '../../../../public/components/View';
+
+import {
     randomString,
 } from '../../../../public/utils/common';
 
 import {
     SelectInput,
 } from '../../../../public/components/Input';
+
+import {
+    iconNames,
+} from '../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -62,6 +71,7 @@ export default class Overview extends React.PureComponent {
         this.update(props.analysisFramework);
 
         this.state = {
+            entriesListViewShow: false,
             gridLayoutBoundingRect: {},
             currentEntryId: undefined,
         };
@@ -79,6 +89,17 @@ export default class Overview extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         this.update(nextProps.analysisFramework);
+    }
+
+    getStyleNameWithState = (style) => {
+        const { entriesListViewShow } = this.state;
+        const styleNames = [style];
+
+        if (entriesListViewShow) {
+            styleNames.push('active');
+        }
+
+        return styleNames.join(' ');
     }
 
     getGridItems = () => {
@@ -145,6 +166,10 @@ export default class Overview extends React.PureComponent {
         });
     }
 
+    handleEntriesListToggleClick = () => {
+        this.setState({ entriesListViewShow: !this.state.entriesListViewShow });
+    }
+
     handleRemoveEntryButtonClick = () => {
         this.props.removeEntry({
             leadId: this.props.leadId,
@@ -159,6 +184,26 @@ export default class Overview extends React.PureComponent {
         });
     }
 
+    renderEntriesList = (key, entry) => {
+        const { selectedEntryId } = this.props;
+        const isActive = entry.id === selectedEntryId;
+
+        return (
+            <ListItem
+                active={isActive}
+                key={key}
+                scrollIntoView={isActive}
+            >
+                <button
+                    className="button"
+                    onClick={() => this.handleEntrySelectChange(entry.id)}
+                >
+                    {entry.excerpt}
+                </button>
+            </ListItem>
+        );
+    }
+
     render() {
         const {
             width,
@@ -171,75 +216,84 @@ export default class Overview extends React.PureComponent {
         const rowHeight = parseInt((height || 0) / numOfRows, 10);
 
         return (
-            <div
-                styleName="overview"
-            >
-                <div
-                    styleName="left"
-                >
-                    Lead preview
-                </div>
-                <div
-                    ref={(el) => { this.gridLayoutContainer = el; }}
-                    styleName="right"
-                >
-                    <header
-                        styleName="header"
-                    >
-                        <div
-                            styleName="entry-actions"
+            <div styleName="overview">
+                <header styleName="header">
+                    <div styleName="entry-actions">
+                        <SelectInput
+                            showHintAndError={false}
+                            showLabel={false}
+                            keySelector={d => d.id}
+                            labelSelector={d => d.excerpt}
+                            options={this.props.entries}
+                            onChange={this.handleEntrySelectChange}
+                            value={this.props.selectedEntryId}
+                        />
+                        <TransparentButton
+                            title="Add entry"
+                            onClick={this.handleAddEntryButtonClick}
                         >
-                            <SelectInput
-                                showHintAndError={false}
-                                showLabel={false}
-                                keySelector={d => d.id}
-                                labelSelector={d => d.excerpt}
-                                options={this.props.entries}
-                                onChange={this.handleEntrySelectChange}
-                                value={this.props.selectedEntryId}
+                            <span className={iconNames.add} />
+                        </TransparentButton>
+                        <TransparentButton
+                            title="Remove current entry"
+                            onClick={this.handleRemoveEntryButtonClick}
+                            disabled={!this.props.selectedEntryId}
+                        >
+                            <span className={iconNames.remove} />
+                        </TransparentButton>
+                        <TransparentButton
+                            title="List entries"
+                            styleName={this.getStyleNameWithState('entries-list-btn')}
+                            onClick={this.handleEntriesListToggleClick}
+                        >
+                            <span className={iconNames.list} />
+                        </TransparentButton>
+                    </div>
+                    <div styleName="action-buttons">
+                        <Button
+                            onClick={this.handleGotoListButtonClick}
+                        >
+                            Goto list
+                        </Button>
+                        <Button
+                            styleName="save-button"
+                            disabled
+                        >
+                            Save
+                        </Button>
+                    </div>
+                </header>
+                <div styleName="container">
+                    <div styleName="left">
+                        Lead preview
+                        <div
+                            styleName={this.getStyleNameWithState('entries-list-container')}
+                        >
+                            <ListView
+                                styleName="entries-list"
+                                modifier={this.renderEntriesList}
+                                data={this.props.entries}
+                                keyExtractor={d => d.id}
                             />
-                            <TransparentButton
-                                title="Add entry"
-                                onClick={this.handleAddEntryButtonClick}
-                            >
-                                <span className="ion-android-add" />
-                            </TransparentButton>
-                            <TransparentButton
-                                title="Remove current entry"
-                                onClick={this.handleRemoveEntryButtonClick}
-                                disabled={!this.props.selectedEntryId}
-                            >
-                                <span className="ion-android-remove" />
-                            </TransparentButton>
                         </div>
-                        <div
-                            styleName="action-buttons"
-                        >
-                            <Button
-                                onClick={this.handleGotoListButtonClick}
-                            >
-                                Goto list
-                            </Button>
-                            <Button
-                                styleName="save-button"
-                                disabled
-                            >
-                                Save
-                            </Button>
-                        </div>
-                    </header>
-                    <ReactGridLayout
-                        styleName="grid-layout"
-                        cols={numOfColumns}
-                        margin={margin}
-                        width={width || 0}
-                        rowHeight={rowHeight}
-                        isResizable={false}
-                        isDraggable={false}
-                        compactType={null}
+                    </div>
+                    <div
+                        ref={(el) => { this.gridLayoutContainer = el; }}
+                        styleName="right"
                     >
-                        { this.getGridItems() }
-                    </ReactGridLayout>
+                        <ReactGridLayout
+                            styleName="grid-layout"
+                            cols={numOfColumns}
+                            margin={margin}
+                            width={width || 0}
+                            rowHeight={rowHeight}
+                            isResizable={false}
+                            isDraggable={false}
+                            compactType={null}
+                        >
+                            { this.getGridItems() }
+                        </ReactGridLayout>
+                    </div>
                 </div>
             </div>
         );
