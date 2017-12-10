@@ -4,7 +4,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { ListView, ListItem } from '../../../public/components/View';
+import {
+    ListView,
+    ListItem,
+    LoadingAnimation,
+} from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import { TransparentPrimaryButton } from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
@@ -84,6 +88,7 @@ export default class ProjectPanel extends React.PureComponent {
         super(props);
 
         this.state = {
+            pending: false,
             displayUserProjects: this.props.userProjects,
             isSidebarVisible: false,
             searchInputValue: '',
@@ -149,6 +154,8 @@ export default class ProjectPanel extends React.PureComponent {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(activeProject))
             .params(() => createParamsForUser())
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -203,12 +210,18 @@ export default class ProjectPanel extends React.PureComponent {
             searchInputValue,
         });
     };
+
     render() {
-        const { isSidebarVisible, displayUserProjects } = this.state;
+        const {
+            isSidebarVisible,
+            displayUserProjects,
+            pending,
+        } = this.state;
         const { projectDetails } = this.props;
 
         return (
             <div styleName="project-panel">
+                {pending && <LoadingAnimation />}
                 <div
                     styleName={isSidebarVisible ? 'content side-bar-shown' : 'content'}
                 >

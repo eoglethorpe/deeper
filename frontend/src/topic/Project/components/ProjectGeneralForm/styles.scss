@@ -8,7 +8,6 @@
     .action-buttons {
         display: flex;
         justify-content: flex-end;
-        border-bottom: $width-separator-thin solid $color-separator;
         padding: $spacing-small $spacing-medium-alt;
 
         button {

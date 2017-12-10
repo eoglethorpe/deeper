@@ -218,6 +218,8 @@ export default class ProjectGeneral extends React.PureComponent {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForProjectPatch(newProjectDetails))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

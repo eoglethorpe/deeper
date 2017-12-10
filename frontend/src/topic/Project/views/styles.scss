@@ -4,6 +4,7 @@
 .project-panel {
     @include shadow-medium;
     display: flex;
+    position: relative;
     margin: $spacing-medium-alt;
     background-color: $color-foreground;
     height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});

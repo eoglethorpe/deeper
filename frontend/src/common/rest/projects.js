@@ -33,7 +33,7 @@ export const createParamsForProjectPatch = data => ({
     body: JSON.stringify(data),
 });
 
-export const createParamsForUserProjectMembershipPatch = (data) => ({
+export const createParamsForUserProjectMembershipPatch = data => ({
     method: PATCH,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),

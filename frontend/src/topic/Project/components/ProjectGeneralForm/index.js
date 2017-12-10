@@ -10,6 +10,7 @@ import {
     Form,
     NonFieldErrors,
     TextInput,
+    TextArea,
     SelectInput,
     requiredCondition,
 } from '../../../../public/components/Input';
@@ -119,6 +120,15 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
+                <TextArea
+                    label="Description"
+                    formname="description"
+                    placeholder="Enter Project Description"
+                    styleName="description"
+                    rows={3}
+                    value={formValues.description}
+                    error={formFieldErrors.description}
+                />
                 <DateInput
                     label="Start Date"
                     formname="startDate"
@@ -134,14 +144,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     styleName="end-date"
                     value={formValues.endDate}
                     error={formFieldErrors.endDate}
-                />
-                <TextInput
-                    label="Description"
-                    formname="description"
-                    placeholder="Enter Project Description"
-                    styleName="description"
-                    value={formValues.description}
-                    error={formFieldErrors.description}
                 />
                 <SelectInput
                     label="Regions"
