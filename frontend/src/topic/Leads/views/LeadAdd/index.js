@@ -228,11 +228,11 @@ export default class LeadAdd extends React.PureComponent {
         // FOR UPLAOD
         this.setState((state) => {
             const uploadSettings = {
-                [leadId]: {
+                [leadId]: { $auto: {
                     pending: { $set: undefined },
-                },
+                } },
             };
-            const leadDropboxRests = update(state.leadDriveRests, uploadSettings);
+            const leadDropboxRests = update(state.leadDropboxRests, uploadSettings);
             return { leadDropboxRests };
         });
 
@@ -255,9 +255,9 @@ export default class LeadAdd extends React.PureComponent {
         // FOR UPLAOD
         this.setState((state) => {
             const uploadSettings = {
-                [leadId]: {
+                [leadId]: { $auto: {
                     pending: { $set: undefined },
-                },
+                } },
             };
             const leadDriveRests = update(state.leadDriveRests, uploadSettings);
             return { leadDriveRests };
@@ -430,7 +430,7 @@ export default class LeadAdd extends React.PureComponent {
             const request = this.createRequestForDropboxUpload(upload);
             this.dropboxUploadCoordinator.add(upload.leadId, request);
         });
-        this.dropboxCoordinator.start();
+        this.dropboxUploadCoordinator.start();
 
         // UPLOAD
         const uploadSettings = uploads.reduce(
