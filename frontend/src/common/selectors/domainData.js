@@ -166,6 +166,11 @@ export const currentUserProjectsSelector = createSelector(
     ) || emptyList),
 );
 
+export const currentUserAdminProjectsSelector = createSelector(
+    currentUserProjectsSelector,
+    projects => projects.filter(project => (project.role === 'admin')),
+);
+
 
 export const categoriesSelector = ({ domainData }) => (
     domainData.categories || emptyObject

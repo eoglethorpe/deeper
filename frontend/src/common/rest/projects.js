@@ -11,7 +11,7 @@ export const createUrlForUserGroupProjects = id => (
     `${wsEndpoint}/projects/?${p({ userGroup: id })}`
 );
 
-export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title,version_id`;
+export const urlForProjects = `${wsEndpoint}/projects/?fields=id,title,version_id,role`;
 export const urlForProjectCreate = `${wsEndpoint}/projects/`;
 export const urlForProjectMembership = `${wsEndpoint}/project-memberships/`;
 export const createUrlForUserProjectMembership = membershipId =>
