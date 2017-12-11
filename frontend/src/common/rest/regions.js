@@ -15,37 +15,25 @@ export const createUrlForRegionWithField = (regionId, fields) => {
     return `${wsEndpoint}/regions/${regionId}/`;
 };
 
-export const createParamsForRegionCreate = ({ access }, data) => ({
+export const createParamsForRegionCreate = data => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForRegionClone = ({ access }, data) => ({
+export const createParamsForRegionClone = data => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForRegionPatch = ({ access }, data) => ({
+export const createParamsForRegionPatch = data => ({
     method: PATCH,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
 
-export const createParamsForCountryDelete = ({ access }) => ({
+export const createParamsForCountryDelete = () => ({
     method: DELETE,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });

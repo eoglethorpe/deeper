@@ -32,7 +32,6 @@ import {
     pathNames,
 } from '../../../../common/constants';
 import {
-    tokenSelector,
     usersInformationListSelector,
     unSetMembershipAction,
     setUsersMembershipAction,
@@ -53,7 +52,6 @@ import styles from './styles.scss';
 const propTypes = {
     memberData: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
-    token: PropTypes.object.isRequired, // eslint-disable-line
     unSetMembership: PropTypes.func.isRequired, // eslint-disable-line
     userGroupId: PropTypes.number.isRequired,
     setUsersMembership: PropTypes.func.isRequired,
@@ -67,7 +65,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -246,11 +243,7 @@ export default class MembersTable extends React.PureComponent {
 
         const membershipDeleteRequest = new FgRestBuilder()
             .url(urlForMembership)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserMembershipDelete({ access });
-            })
+            .params(() => createParamsForUserMembershipDelete())
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })
@@ -283,14 +276,7 @@ export default class MembersTable extends React.PureComponent {
 
         const membershipDeleteRequest = new FgRestBuilder()
             .url(urlForUserMembership)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserMembershipCreate(
-                    { access },
-                    { memberList },
-                );
-            })
+            .params(() => createParamsForUserMembershipCreate({ memberList }))
             .preLoad(() => {
                 this.setState({ addPending: true });
             })
@@ -325,14 +311,7 @@ export default class MembersTable extends React.PureComponent {
 
         const membershipRoleChangeRequest = new FgRestBuilder()
             .url(urlForUserMembershipPatch)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserMembershipRoleChange(
-                    { access },
-                    { newRole },
-                );
-            })
+            .params(() => createParamsForUserMembershipRoleChange({ newRole }))
             .preLoad(() => {
                 // TODO: use this state
                 this.setState({ roleChangPending: true });

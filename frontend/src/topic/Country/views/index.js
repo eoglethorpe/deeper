@@ -33,8 +33,6 @@ import {
     urlForRegions,
 } from '../../../common/rest';
 import {
-    tokenSelector,
-
     countriesListSelector,
 
     setRegionsAction,
@@ -53,7 +51,6 @@ const propTypes = {
         }),
     }).isRequired,
     setRegions: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
@@ -65,7 +62,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     countries: countriesListSelector(state),
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -139,14 +135,9 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     createRequestforCountries = () => {
-        const { token } = this.props;
-
         const countriesRequest = new FgRestBuilder()
             .url(urlForRegions)
-            .params(() => {
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'regionsGetResponse');

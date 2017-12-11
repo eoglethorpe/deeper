@@ -17,14 +17,12 @@ describe('<AddLeadListItem />', () => {
             store={store}
         >
             <AddLeadListItem
-                active
+                active={false}
                 onClick={() => {}}
-                stale={false}
-                error={false}
-                title={'Lead #1'}
-                type={'URL'}
-                lead={{ dummy: 'dummy' }}
+                lead={{ data: { type: 'dropbox' }, form: { values: {} } }}
+                choice="error"
                 leadKey="key"
+                upload={{ progress: 1 }}
             />
         </Provider>,
     );

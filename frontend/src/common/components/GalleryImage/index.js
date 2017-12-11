@@ -1,13 +1,8 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import styles from './styles.scss';
-
-import {
-    tokenSelector,
-} from '../../../common/redux';
 
 import {
     createUrlForGalleryFile,
@@ -25,7 +20,6 @@ import {
 const propTypes = {
     className: PropTypes.string,
     galleryId: PropTypes.number,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -33,12 +27,6 @@ const defaultProps = {
     galleryId: undefined,
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
-
-@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GalleryImage extends React.PureComponent {
     static propTypes = propTypes;
@@ -83,13 +71,7 @@ export default class GalleryImage extends React.PureComponent {
     createRequestForGalleryFile = (galleryId) => {
         const galleryFileRequest = new FgRestBuilder()
             .url(createUrlForGalleryFile(galleryId))
-            .params(() => {
-                const {
-                    token,
-                } = this.props;
-
-                return createHeaderForGalleryFile(token);
-            })
+            .params(createHeaderForGalleryFile())
             .preLoad(() => {
                 this.setState({
                     pending: true,

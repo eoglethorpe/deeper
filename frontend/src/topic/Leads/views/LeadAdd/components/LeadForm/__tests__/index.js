@@ -11,24 +11,20 @@ describe('<AddLeadForm />', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    const data = {};
-
     const wrapper = shallow(
         <Provider
             store={store}
         >
             <AddLeadForm
-                leadId={'id'}
-                leadType={'URL'}
-                ready
-                pending
-                stale={false}
-                data={data}
                 leadOptions={{ dummy: 'dummy' }}
                 lead={{ dummy: 'dummy' }}
-                onChange={() => {}}
                 onSuccess={() => {}}
+                onChange={() => {}}
                 onFailure={() => {}}
+                isFormDisabled
+                isBulkActionDisabled
+                onApplyAllClick={() => {}}
+                onApplyAllBelowClick={() => {}}
             />
         </Provider>,
     );

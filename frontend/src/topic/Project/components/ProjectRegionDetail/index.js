@@ -21,7 +21,6 @@ import {
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
-    tokenSelector,
 
     regionDetailForRegionSelector,
     projectDetailsSelector,
@@ -41,7 +40,6 @@ const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     regionId: PropTypes.number.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     regionDetails: PropTypes.object.isRequired, // eslint-disable-line
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
@@ -56,7 +54,6 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     regionDetails: regionDetailForRegionSelector(state, props),
-    token: tokenSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
@@ -94,13 +91,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     createRegionRequest = (regionId) => {
         const regionRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
@@ -121,14 +112,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     createRegionCloneRequest = (regionId, projectId) => {
         const regionCloneRequest = new FgRestBuilder()
             .url(createUrlForRegionClone(regionId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForRegionClone(
-                    { access },
-                    { project: projectId },
-                );
-            })
+            .params(() => createParamsForRegionClone({ project: projectId }))
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
@@ -147,7 +131,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
             .build();
         return regionCloneRequest;
     };
-
     createProjectPatchRequest = (projectDetails, removedRegionId) => {
         const projectId = projectDetails.id;
         const regions = [...projectDetails.regions];
@@ -156,14 +139,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectPatch(
-                    { access },
-                    { regions },
-                );
-            })
+            .params(() => createParamsForProjectPatch({ regions }))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

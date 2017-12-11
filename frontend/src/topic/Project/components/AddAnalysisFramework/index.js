@@ -25,8 +25,6 @@ import {
     urlForAfCreate,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
-
     addNewAfAction,
 } from '../../../../common/redux';
 
@@ -38,7 +36,6 @@ const propTypes = {
     addNewAf: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -46,15 +43,11 @@ const defaultProps = {
     projectId: undefined,
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     addNewAf: params => dispatch(addNewAfAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
@@ -90,17 +83,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
 
         const afCreateRequest = new FgRestBuilder()
             .url(urlForAfCreate)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForAfCreate(
-                    { access },
-                    {
-                        project: projectId,
-                        title,
-                    },
-                );
-            })
+            .params(() => createParamsForAfCreate({ project: projectId, title }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

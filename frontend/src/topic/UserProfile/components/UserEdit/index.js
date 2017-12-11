@@ -38,7 +38,6 @@ import {
     urlForUpload,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
     setUserInformationAction,
 } from '../../../../common/redux';
 
@@ -51,22 +50,17 @@ const propTypes = {
     ]).isRequired,
     handleModalClose: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserEdit extends React.PureComponent {
     static propTypes = propTypes;
@@ -116,13 +110,11 @@ export default class UserEdit extends React.PureComponent {
         const urlForUser = createUrlForUserPatch(userId);
         const userPatchRequest = new FgRestBuilder()
             .url(urlForUser)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserPatch(
-                    { access },
-                    { firstName, lastName, organization, displayPicture });
-            })
+            .params(
+                () => createParamsForUserPatch({
+                    firstName, lastName, organization, displayPicture,
+                }),
+            )
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -207,7 +199,7 @@ export default class UserEdit extends React.PureComponent {
         const uploader = new Uploader(
             files[0],
             urlForUpload,
-            createParamsForFileUpload(this.props.token),
+            () => createParamsForFileUpload(),
         );
 
         uploader.success = (response) => {

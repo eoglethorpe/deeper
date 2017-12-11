@@ -27,7 +27,6 @@ import {
 import {
     countryDetailSelector,
     setRegionDetailsAction,
-    tokenSelector,
 } from '../../../../common/redux';
 import styles from './styles.scss';
 
@@ -38,7 +37,6 @@ const propTypes = {
         title: PropTypes.string.isRequired,
         keyFigures: PropTypes.shape({}),
     }).isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
 };
 
@@ -48,7 +46,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: countryDetailSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -152,13 +149,7 @@ export default class CountryKeyFigures extends React.PureComponent {
 
         const regionRequest = new FgRestBuilder()
             .url(urlForRegionForKeyFigures)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })
             .success((response) => {
@@ -180,12 +171,7 @@ export default class CountryKeyFigures extends React.PureComponent {
         const urlForRegion = createUrlForRegion(regionId);
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForRegionPatch(
-                    { access }, data);
-            })
+            .params(() => createParamsForRegionPatch(data))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

@@ -5,7 +5,6 @@ import {
     urlForProjects,
 } from '../rest';
 import {
-    tokenSelector,
     activeUserSelector,
 } from '../../common/selectors/auth';
 import {
@@ -28,16 +27,13 @@ export const stopRefreshAction = () => ({
 
 class Refresher {
     constructor(store) {
-        this.projectsRequest = this.createProjectsRequest(store);
+        this.store = store;
     }
 
     createProjectsRequest = (store) => {
         const projectsRequest = new FgRestBuilder()
             .url(urlForProjects)
-            .params(() => {
-                const { access } = tokenSelector(store.getState());
-                return createParamsForProjects({ access });
-            })
+            .params(() => createParamsForProjects())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsMiniGetResponse');
@@ -67,11 +63,10 @@ class Refresher {
     }
 
     load = (loadCallback) => {
-        if (this.projectsRequest) {
-            this.stop();
-            this.loadCallback = loadCallback;
-            this.projectsRequest.start();
-        }
+        this.stop();
+        this.loadCallback = loadCallback;
+        this.projectsRequest = this.createProjectsRequest(this.store);
+        this.projectsRequest.start();
     }
 
     stop = () => {

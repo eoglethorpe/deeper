@@ -25,7 +25,6 @@ import {
     setAfViewAnalysisFrameworkAction,
 
     afViewCurrentAnalysisFrameworkSelector,
-    tokenSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -36,7 +35,6 @@ const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line
     analysisFrameworkId: PropTypes.string.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -46,7 +44,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     analysisFramework: afViewCurrentAnalysisFrameworkSelector(state, props),
     analysisFrameworkId: analysisFrameworkIdFromProps(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -81,10 +78,7 @@ export default class AnalysisFramework extends React.PureComponent {
         );
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => {
-                const { token } = this.props;
-                return createParamsForUser(token);
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -105,10 +99,7 @@ export default class AnalysisFramework extends React.PureComponent {
         );
         const analysisFrameworkSaveRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => {
-                const { token } = this.props;
-                return createParamsForAnalysisFrameworkEdit(token, analysisFramework);
-            })
+            .params(() => createParamsForAnalysisFrameworkEdit(analysisFramework))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

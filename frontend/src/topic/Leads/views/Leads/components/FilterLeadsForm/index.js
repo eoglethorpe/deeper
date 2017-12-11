@@ -29,8 +29,6 @@ import {
 
     setLeadPageFilterAction,
 
-    tokenSelector,
-
     setLeadFilterOptionsAction,
     unsetLeadPageFilterAction,
 } from '../../../../../../common/redux';
@@ -41,9 +39,6 @@ const propTypes = {
     activeProject: PropTypes.number.isRequired,
     className: PropTypes.string,
     setLeadFilterOptions: PropTypes.func.isRequired,
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line 
     value:  PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageFilter: PropTypes.func.isRequired,
@@ -57,7 +52,6 @@ const defaultProps = {
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     leadFilterOptions: leadFilterOptionsForProjectSelector(state),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -135,13 +129,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
         const leadFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({
-                    access,
-                });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => {
                 this.setState({ loadingLeadFilters: true });
             })

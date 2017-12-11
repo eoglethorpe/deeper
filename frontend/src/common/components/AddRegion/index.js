@@ -30,8 +30,6 @@ import {
     urlForRegionCreate,
 } from '../../rest';
 import {
-    tokenSelector,
-
     addNewRegionAction,
 } from '../../redux';
 
@@ -43,7 +41,6 @@ const propTypes = {
     addNewRegion: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -51,15 +48,11 @@ const defaultProps = {
     projectId: undefined,
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddRegion extends React.PureComponent {
     static propTypes = propTypes;
@@ -113,13 +106,7 @@ export default class AddRegion extends React.PureComponent {
 
         const regionCreateRequest = new FgRestBuilder()
             .url(urlForRegionCreate)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForRegionCreate(
-                    { access },
-                    paramsBody);
-            })
+            .params(() => createParamsForRegionCreate(paramsBody))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

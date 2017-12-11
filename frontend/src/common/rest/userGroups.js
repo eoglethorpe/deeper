@@ -13,70 +13,48 @@ export const createUrlForUserGroupsOfUser = userId => (
 
 export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
 
-export const createParamsForUserGroups = ({ access }) => ({
+export const createParamsForUserGroups = () => ({
     method: GET,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
-export const createParamsForUserGroupsCreate = ({ access }, { title }) => ({
+export const createParamsForUserGroupsCreate = ({ title }) => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
     }),
 });
 
-export const createParamsForUserGroupsPatch = ({ access }, { title }) => ({
+export const createParamsForUserGroupsPatch = ({ title }) => ({
     method: PATCH,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
     }),
 });
 
-
-export const createParamsForUserGroupsDelete = ({ access }) => ({
+export const createParamsForUserGroupsDelete = () => ({
     method: DELETE,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
-export const createParamsForUserMembershipDelete = ({ access }) => ({
+export const createParamsForUserMembershipDelete = () => ({
     method: DELETE,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
 });
 
-export const createParamsForUserMembershipCreate = ({ access }, { memberList }) => ({
+export const createParamsForUserMembershipCreate = ({ memberList }) => ({
     method: POST,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         list: memberList,
     }),
 });
 
-export const createParamsForUserMembershipRoleChange = ({ access }, { newRole }) => ({
+export const createParamsForUserMembershipRoleChange = ({ newRole }) => ({
     method: PATCH,
-    headers: {
-        Authorization: `Bearer ${access}`,
-        ...commonHeaderForPost,
-    },
+    headers: commonHeaderForPost,
     body: JSON.stringify({
         role: newRole,
     }),

@@ -111,12 +111,10 @@ export default class App extends React.PureComponent {
     }
 
     createRequestForRefresh = () => {
+        const { refresh } = this.props.token;
         const refreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
-            .params(() => {
-                const { refresh, access } = this.props.token;
-                return createParamsForTokenRefresh({ refresh, access });
-            })
+            .params(() => createParamsForTokenRefresh({ refresh }))
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenRefreshResponse');

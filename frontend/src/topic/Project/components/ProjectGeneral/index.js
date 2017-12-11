@@ -11,7 +11,6 @@ import {
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
-    tokenSelector,
 
     projectDetailsSelector,
     projectOptionsSelector,
@@ -28,7 +27,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
     setProject: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -39,7 +37,6 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -102,14 +99,7 @@ export default class ProjectGeneral extends React.PureComponent {
     createProjectPatchRequest = (newProjectDetails, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectPatch(
-                    { access },
-                    newProjectDetails,
-                );
-            })
+            .params(() => createParamsForProjectPatch(newProjectDetails))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');

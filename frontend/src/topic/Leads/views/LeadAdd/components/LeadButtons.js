@@ -15,12 +15,7 @@ import { randomString } from '../../../../../public/utils/common';
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
-    tokenSelector,
 } from '../../../../../common/redux';
-import {
-    urlForUpload,
-    createParamsForFileUpload,
-} from '../../../../../common/rest';
 import DropboxChooser from '../../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../../common/components/GooglePicker';
 import { dropboxAppKey } from '../../../../../common/config/dropbox';
@@ -58,14 +53,10 @@ const propTypes = {
     onFileSelect: PropTypes.func.isRequired,
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
-    token: PropTypes.shape({
-        access: PropTypes.string,
-    }).isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,7 +81,9 @@ export default class LeadButtons extends React.PureComponent {
         }
 
         const { activeProject } = this.props;
+
         const newLeads = [];
+        const uploads = [];
         docs.forEach((doc) => {
             const uid = randomString();
             const newLeadId = `lead-${uid}`;
@@ -107,14 +100,17 @@ export default class LeadButtons extends React.PureComponent {
                 stale: false,
             });
 
-            this.props.onGoogleDriveSelect(
-                newLeadId,
-                this.googleDriveAccessToken,
-                doc,
-            );
+            uploads.unshift({
+                leadId: newLeadId,
+                accessToken: this.googleDriveAccessToken,
+                title: doc.name,
+                fileId: doc.id,
+                mimeType: doc.mimeType,
+            });
         });
 
         this.props.addLeads(newLeads);
+        this.props.onGoogleDriveSelect(uploads);
     }
 
     handleAddLeadFromDropbox = (response) => {
@@ -122,7 +118,9 @@ export default class LeadButtons extends React.PureComponent {
             return;
         }
         const { activeProject } = this.props;
+
         const newLeads = [];
+        const uploads = [];
         response.forEach((doc) => {
             const uid = randomString();
             const newLeadId = `lead-${uid}`;
@@ -139,12 +137,17 @@ export default class LeadButtons extends React.PureComponent {
                 stale: false,
             });
 
-            this.props.onDropboxSelect(
-                newLeadId,
-                doc,
-            );
+            uploads.unshift({
+                leadId: newLeadId,
+                title: doc.name,
+                fileUrl: doc.link,
+            });
         });
+
         this.props.addLeads(newLeads);
+        this.props.onDropboxSelect(uploads);
+
+        this.setState({ dropboxDisabled: false });
     }
 
     handleAddLeadFromDisk = (e) => {
@@ -154,13 +157,8 @@ export default class LeadButtons extends React.PureComponent {
         }
 
         const { activeProject } = this.props;
+
         const newLeads = [];
-
-        const {
-            onFileSelect,
-            token,
-        } = this.props;
-
         const uploads = [];
         files.forEach((file) => {
             const uid = randomString();
@@ -180,14 +178,13 @@ export default class LeadButtons extends React.PureComponent {
 
             uploads.unshift({
                 file,
-                url: urlForUpload,
-                params: createParamsForFileUpload(token),
                 leadId: newLeadId,
             });
         });
 
         this.props.addLeads(newLeads);
 
+        const { onFileSelect } = this.props;
         onFileSelect(uploads);
     }
 
@@ -237,7 +234,7 @@ export default class LeadButtons extends React.PureComponent {
 
     handleGoogleDriveOnAuthenticated = (accessToken) => {
         // TODO: use this token will uploading
-        // console.log(accessToken);
+        console.warn(accessToken);
         if (accessToken) {
             this.googleDriveAccessToken = accessToken;
         }
@@ -261,13 +258,13 @@ export default class LeadButtons extends React.PureComponent {
                     styleName="add-lead-btn"
                     clientId={googleDriveClientId}
                     developerKey={googleDriveDeveloperKey}
-                    onAuthenticate={this.handleGoogleDriveOnAuthenticate}
+                    onAuthenticate={this.handleGoogleDriveOnAuthenticated}
                     onChange={this.handleAddLeadFromGoogleDrive}
                     mimeTypes={supportedGoogleDriveMimeTypes}
                     multiselect
                     navHidden
                 >
-                    <span className="ion-social-google" />
+                    <span className="ion-social-googleplus-outline" />
                     <p>Drive</p>
                 </GooglePicker>
                 <DropboxChooser

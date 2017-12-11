@@ -22,7 +22,6 @@ import {
 } from '../../../../public/components/View';
 import {
     analysisFrameworkDetailSelector,
-    tokenSelector,
     projectDetailsSelector,
 
     setProjectAfAction,
@@ -50,7 +49,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     setProjectAf: PropTypes.func.isRequired,
     setAfDetail: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -59,7 +57,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     afDetails: analysisFrameworkDetailSelector(state, props),
-    token: tokenSelector(state),
     projectDetails: projectDetailsSelector(state, props),
 });
 
@@ -110,14 +107,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     createProjectPatchRequest = (afId, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectPatch(
-                    { access },
-                    { analysisFramework: afId },
-                );
-            })
+            .params(() => createParamsForProjectPatch({ analysisFramework: afId }))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -136,14 +126,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     createAfCloneRequest = (afId, projectId) => {
         const afCloneRequest = new FgRestBuilder()
             .url(createUrlForAfClone(afId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForAfClone(
-                    { access },
-                    { project: projectId },
-                );
-            })
+            .params(() => createParamsForAfClone({ project: projectId }))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -163,14 +146,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         const { afId } = this.props;
         const afPutRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(afId))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForAnalysisFrameworkEdit(
-                    { access },
-                    { title, description },
-                );
-            })
+            .params(() => createParamsForAnalysisFrameworkEdit({ title, description }))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

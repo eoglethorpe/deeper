@@ -23,7 +23,6 @@ import {
     setUserGroupAction,
     setUsersInformationAction,
 
-    tokenSelector,
     activeUserSelector,
 } from '../../../common/redux';
 
@@ -38,7 +37,6 @@ import schema from '../../../common/schema';
 
 const propTypes = {
     match: PropTypes.object.isRequired, // eslint-disable-line
-    token: PropTypes.object.isRequired, // eslint-disable-line
     userGroup: PropTypes.object, // eslint-disable-line
     setUserGroup: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
@@ -51,7 +49,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    token: tokenSelector(state),
     userGroup: groupSelector(state, props),
     activeUser: activeUserSelector(state),
 });
@@ -97,11 +94,7 @@ export default class UserGroup extends React.PureComponent {
         const urlForUserGroup = createUrlForUserGroup(id);
         const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroup)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'userGroupGetResponse');
@@ -125,11 +118,7 @@ export default class UserGroup extends React.PureComponent {
     createRequestForUsers = () => {
         const usersRequest = new FgRestBuilder()
             .url(createUrlForUsers([this.usersFields]))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'usersGetResponse');

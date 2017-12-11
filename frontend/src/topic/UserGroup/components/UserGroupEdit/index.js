@@ -31,7 +31,6 @@ import {
 } from '../../../../common/rest';
 import {
     setUserGroupAction,
-    tokenSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -43,21 +42,16 @@ const propTypes = {
         title: PropTypes.string.isRequired,
     }).isRequired,
     setUserGroup: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    token: tokenSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserGroupEdit extends React.PureComponent {
     static propTypes = propTypes;
@@ -93,13 +87,7 @@ export default class UserGroupEdit extends React.PureComponent {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userGroupCreateRequest = new FgRestBuilder()
             .url(urlForUserGroup)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUserGroupsPatch(
-                    { access },
-                    { title });
-            })
+            .params(() => createParamsForUserGroupsPatch({ title }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

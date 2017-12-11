@@ -27,7 +27,6 @@ import {
 import {
     regionDetailForRegionSelector,
     setRegionDetailsAction,
-    tokenSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -40,7 +39,6 @@ const propTypes = {
         title: PropTypes.string,
         regionalGroups: PropTypes.shape({}),
     }),
-    token: PropTypes.object.isRequired, // eslint-disable-line
     setRegionDetails: PropTypes.func.isRequired,
     dataLoading: PropTypes.bool,
 };
@@ -53,7 +51,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: regionDetailForRegionSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -130,12 +127,7 @@ export default class RegionDetail extends React.PureComponent {
         const urlForRegion = createUrlForRegion(regionId);
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForRegionPatch(
-                    { access }, data);
-            })
+            .params(() => createParamsForRegionPatch(data))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

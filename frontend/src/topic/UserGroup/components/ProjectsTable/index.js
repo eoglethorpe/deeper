@@ -28,7 +28,6 @@ import {
 } from '../../../../common/constants';
 import {
     userGroupProjectSelector,
-    tokenSelector,
     setUserProjectsAction,
     unSetProjectAction,
     activeUserSelector,
@@ -51,7 +50,6 @@ const propTypes = {
     match: PropTypes.object.isRequired, // eslint-disable-line
     userGroup: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array.isRequired,// eslint-disable-line
-    token: PropTypes.object.isRequired, // eslint-disable-line
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
     unSetProject: PropTypes.func.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -63,7 +61,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     projects: userGroupProjectSelector(state, props),
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -194,11 +191,7 @@ export default class ProjectsTable extends React.PureComponent {
         const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
         const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroupProjects)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');
@@ -224,11 +217,7 @@ export default class ProjectsTable extends React.PureComponent {
 
         const projectDeleteRequest = new FgRestBuilder()
             .url(urlForProject)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectDelete({ access });
-            })
+            .params(() => createParamsForProjectDelete())
             .preLoad(() => {
                 this.setState({ deletePending: true });
             })

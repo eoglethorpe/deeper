@@ -30,7 +30,6 @@ import {
     urlForProjectCreate,
 } from '../../../../common/rest';
 import {
-    tokenSelector,
     setProjectAction,
     activeUserSelector,
 } from '../../../../common/redux';
@@ -40,7 +39,6 @@ import styles from './styles.scss';
 const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
     userGroups: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -52,7 +50,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    token: tokenSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -97,13 +94,7 @@ export default class UserProjectAdd extends React.PureComponent {
 
         const projectCreateRequest = new FgRestBuilder()
             .url(urlForProjectCreate)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectCreate(
-                    { access },
-                    { title, userGroups });
-            })
+            .params(() => createParamsForProjectCreate({ title, userGroups }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })
