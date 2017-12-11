@@ -157,6 +157,7 @@ export default class Navbar extends React.PureComponent {
         const currentValidLinks = validLinks[currentPath];
 
         const dropLinks = [
+            'apiDocs',
             'userProfile',
             'categoryEditor',
             'adminPanel',
@@ -186,6 +187,7 @@ export default class Navbar extends React.PureComponent {
         };
 
         const dropdownItemIcons = {
+            apiDocs: iconNames.code,
             userProfile: iconNames.person,
             categoryEditor: iconNames.text,
             adminPanel: iconNames.locked,
