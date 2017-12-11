@@ -1,6 +1,7 @@
 const iconNames = {
     apps: 'ion-android-apps',
     globe: 'ion-android-globe',
+    code: 'ion-code',
     close: 'ion-close',
     locked: 'ion-locked',
     overflowHorizontal: 'ion-android-more-horizontal',

@@ -42,6 +42,7 @@ import {
     pageTitles,
     pathNames,
     validLinks,
+    hideNavbar,
 } from '../../constants';
 
 import Cloak from '../Cloak';
@@ -130,9 +131,7 @@ export default class Navbar extends React.PureComponent {
 
     // NAV links
 
-    getValidNavLinks = () => {
-        const match = this.getCurrentMatch();
-        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+    getValidNavLinks = (currentPath) => {
         const currentValidLinks = validLinks[currentPath];
 
         const navLinks = [
@@ -154,12 +153,11 @@ export default class Navbar extends React.PureComponent {
 
     // DROPDOWN links
 
-    getValidDropLinks = () => {
-        const match = this.getCurrentMatch();
-        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+    getValidDropLinks = (currentPath) => {
         const currentValidLinks = validLinks[currentPath];
 
         const dropLinks = [
+            'apiDocs',
             'userProfile',
             'categoryEditor',
             'adminPanel',
@@ -189,6 +187,7 @@ export default class Navbar extends React.PureComponent {
         };
 
         const dropdownItemIcons = {
+            apiDocs: iconNames.code,
             userProfile: iconNames.person,
             categoryEditor: iconNames.text,
             adminPanel: iconNames.locked,
@@ -247,8 +246,15 @@ export default class Navbar extends React.PureComponent {
             userInformation,
         } = this.props;
 
-        const userName = userInformation.displayName || activeUser.displayName || 'Anon';
 
+        const match = this.getCurrentMatch();
+        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
+        console.log(currentPath);
+        if (hideNavbar[currentPath]) {
+            return null;
+        }
+
+        const userName = userInformation.displayName || activeUser.displayName || 'Anon';
         return (
             <nav
                 styleName="navbar"
@@ -285,7 +291,7 @@ export default class Navbar extends React.PureComponent {
                 </Cloak>
 
                 <NavMenu
-                    links={this.getValidNavLinks()}
+                    links={this.getValidNavLinks(currentPath)}
                     styleName="main-menu"
                     projectId={activeProject}
                     countryId={activeCountry}
@@ -298,7 +304,7 @@ export default class Navbar extends React.PureComponent {
                 >
                     <DropdownGroup>
                         <List
-                            data={this.getValidDropLinks()}
+                            data={this.getValidDropLinks(currentPath)}
                             keyExtractor={this.getDropItemKey}
                             modifier={this.getDropItem}
                         />
