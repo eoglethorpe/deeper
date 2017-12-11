@@ -1,1 +1,33 @@
 @import '../../../stylesheets/base';
+
+.four-hundred-four {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to top, darken($color-accent, 15%), lighten($color-accent, 15%));
+    height: calc(100vh - #{$height-navbar});
+
+    .error-msg {
+        margin: $spacing-extra-large;
+        color: $color-text-on-primary;
+        font-size: 50px;
+    }
+
+    .error-404 {
+        text-transform: uppercase;
+        color: $color-text-on-primary;
+        font-size: 70px;
+    }
+
+    .icon {
+        width: 480px;
+        height: 480px;
+    }
+
+    .link {
+        border-bottom: $width-separator-thin solid $color-text-on-primary;
+        color: $color-text-on-primary;
+        font-size: 20px;
+    }
+}
