@@ -184,6 +184,8 @@ export default class Overview extends React.PureComponent {
         });
     }
 
+    calcEntryKey = entry => entry.id;
+
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
         const isActive = entry.id === selectedEntryId;
@@ -199,6 +201,7 @@ export default class Overview extends React.PureComponent {
                     onClick={() => this.handleEntrySelectChange(entry.id)}
                 >
                     {entry.excerpt}
+                    <span>Status</span>
                 </button>
             </ListItem>
         );
@@ -218,6 +221,14 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="overview">
                 <header styleName="header">
+                    <TransparentButton
+                        title="List entries"
+                        iconName={iconNames.list}
+                        styleName={this.getStyleNameWithState('entries-list-btn')}
+                        onClick={this.handleEntriesListToggleClick}
+                    >
+                        List Entries
+                    </TransparentButton>
                     <div styleName="entry-actions">
                         <SelectInput
                             showHintAndError={false}
@@ -240,13 +251,6 @@ export default class Overview extends React.PureComponent {
                             disabled={!this.props.selectedEntryId}
                         >
                             <span className={iconNames.remove} />
-                        </TransparentButton>
-                        <TransparentButton
-                            title="List entries"
-                            styleName={this.getStyleNameWithState('entries-list-btn')}
-                            onClick={this.handleEntriesListToggleClick}
-                        >
-                            <span className={iconNames.list} />
                         </TransparentButton>
                     </div>
                     <div styleName="action-buttons">
@@ -273,7 +277,7 @@ export default class Overview extends React.PureComponent {
                                 styleName="entries-list"
                                 modifier={this.renderEntriesList}
                                 data={this.props.entries}
-                                keyExtractor={d => d.id}
+                                keyExtractor={this.calcEntryKey}
                             />
                         </div>
                     </div>

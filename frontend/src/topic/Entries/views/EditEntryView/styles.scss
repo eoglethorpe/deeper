@@ -45,17 +45,17 @@
             padding: $spacing-small $spacing-medium;
             width: 100%;
 
+            .entries-list-btn {
+                &.active {
+                    color: $color-accent;
+                }
+            }
+
             .entry-actions {
                 display: flex;
 
                 >* {
                     margin-right: $spacing-small;
-                }
-
-                .entries-list-btn {
-                    &.active {
-                        color: $color-accent;
-                    }
                 }
             }
 
