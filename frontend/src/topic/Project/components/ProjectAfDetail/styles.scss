@@ -23,6 +23,18 @@
     }
 
     .af-details {
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: column;
         flex-grow: 1;
+
+        .project-af-form {
+            flex-shrink: 0;
+        }
+
+        .images-container {
+            flex-grow: 1;
+            margin: $spacing-medium-alt;
+        }
     }
 }

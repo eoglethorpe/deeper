@@ -52,7 +52,7 @@ export default class GalleryImage extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.galleryId) {
+        if (this.props.galleryId !== nextProps.galleryId) {
             if (this.galleryFileRequest) {
                 this.galleryFileRequest.stop();
             }

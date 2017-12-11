@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import ImagesSlider from '../../../../common/components/ImagesSlider';
+
 import {
     PrimaryButton,
 } from '../../../../public/components/Action';
@@ -284,6 +286,13 @@ export default class ProjectAfDetail extends React.PureComponent {
         }
 
         const isProjectAf = afId === projectDetails.analysisFramework;
+        const snapshots = [];
+        if (afDetails.snapshotOne) {
+            snapshots.push(afDetails.snapshotOne);
+        }
+        if (afDetails.snapshotTwo) {
+            snapshots.push(afDetails.snapshotTwo);
+        }
 
         return (
             <div styleName="analysis-framework-detail">
@@ -346,8 +355,13 @@ export default class ProjectAfDetail extends React.PureComponent {
                         failureCallback={this.failureCallback}
                         handleFormCancel={this.handleFormCancel}
                         successCallback={this.successCallback}
+                        styleName="project-af-form"
                         stale={stale}
                         pending={pending}
+                    />
+                    <ImagesSlider
+                        styleName="images-container"
+                        galleryIds={snapshots}
                     />
                 </div>
             </div>

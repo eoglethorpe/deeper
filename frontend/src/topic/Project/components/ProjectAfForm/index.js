@@ -104,7 +104,7 @@ export default class ProjectAfForm extends React.PureComponent {
                     formname="description"
                     placeholder="Enter Project Description"
                     styleName="description"
-                    rows={4}
+                    rows={3}
                     value={formValues.description}
                     error={formFieldErrors.description}
                     disabled={pending}
