@@ -13,8 +13,8 @@ import {
 } from './View';
 
 const excerptTextWidget = {
-    id: 'excerptTextWidget',
-    title: 'Excerpt Text',
+    id: 'excerptWidget',
+    title: 'Excerpt',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,

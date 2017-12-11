@@ -1,13 +1,13 @@
 import dummyOverviewWidget from './dummyOverviewWidget';
 import dummyListWidget from './dummyListWidget';
 
-import excerptTextWidget from './ExcerptText';
+import excerptWidget from './Excerpt';
 
 // Using list to maintain ordering
 const widgetStore = [
     dummyOverviewWidget,
     dummyListWidget,
-    excerptTextWidget,
+    excerptWidget,
 ];
 
 export default widgetStore;
