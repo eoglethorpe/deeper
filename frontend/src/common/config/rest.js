@@ -1,8 +1,5 @@
 import { RestRequest } from '../../public/utils/rest';
 
-import { tokenSelector } from '../selectors/auth';
-import store from '../store';
-
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
 
@@ -33,18 +30,25 @@ export const commonHeaderForPost = {
     'Content-Type': 'application/json',
 };
 
-let currentAccess;
-store.subscribe(() => {
-    const prevAccess = currentAccess;
-    const token = tokenSelector(store.getState());
-    currentAccess = token.access;
-    if (prevAccess !== currentAccess) {
-        if (currentAccess) {
-            commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
-            authorizationHeaderForPost.Authorization = `Bearer ${currentAccess}`;
-        } else {
-            commonHeaderForPost.Authorization = undefined;
-            authorizationHeaderForPost.Authorization = undefined;
+if (process.env.NODE_ENV !== 'test') {
+    // eslint-disable-next-line global-require
+    const store = require('../store').default;
+    // eslint-disable-next-line global-require
+    const tokenSelector = require('../selectors/auth').tokenSelector;
+
+    let currentAccess;
+    store.subscribe(() => {
+        const prevAccess = currentAccess;
+        const token = tokenSelector(store.getState());
+        currentAccess = token.access;
+        if (prevAccess !== currentAccess) {
+            if (currentAccess) {
+                commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
+                authorizationHeaderForPost.Authorization = `Bearer ${currentAccess}`;
+            } else {
+                commonHeaderForPost.Authorization = undefined;
+                authorizationHeaderForPost.Authorization = undefined;
+            }
         }
-    }
-});
+    });
+}
