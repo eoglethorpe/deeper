@@ -35,9 +35,14 @@ import {
     ADD_NEW_SUBCATEGORY,
     ADD_NEW_SUBSUBCATEGORY,
 } from '../action-types/domainData';
+import {
+    LOGOUT_ACTION,
+} from '../action-types/auth';
 
 import initialDomainDataState from '../initial-state/domainData';
 import update from '../../public/utils/immutable-update';
+
+const logout = () => initialDomainDataState;
 
 const setUserInformation = (state, action) => {
     const { userId, information } = action;
@@ -633,6 +638,8 @@ const dummyAction = (state) => {
 };
 
 const reducers = {
+    [LOGOUT_ACTION]: logout,
+
     [DUMMY_ACTION]: dummyAction,
 
     [SET_USER_INFORMATION]: setUserInformation,

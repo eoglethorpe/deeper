@@ -34,7 +34,9 @@ import {
     CE_VIEW_SET_SELECTED_SUB_CATEGORY,
     CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
 } from '../action-types/siloDomainData';
-
+import {
+    LOGOUT_ACTION,
+} from '../action-types/auth';
 import {
     SET_USER_PROJECTS,
 } from '../action-types/domainData';
@@ -117,6 +119,7 @@ const setErrorForLeads = (state, leadIndices) => {
 
 
 // REDUCERS
+const logout = () => initialSiloDomainData;
 
 const setActiveProject = (state, action) => {
     const { activeProject } = action;
@@ -655,6 +658,8 @@ const ceViewSelectedSubSubCategory = (state, action) => {
 
 
 const reducers = {
+    [LOGOUT_ACTION]: logout,
+
     [SET_USER_PROJECTS]: setUserProjects,
     [SET_ACTIVE_PROJECT]: setActiveProject,
     [SET_ACTIVE_COUNTRY]: setActiveCountry,
