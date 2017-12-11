@@ -17,6 +17,10 @@ const iconNames = {
     list: 'ion-ios-list-outline',
     openLink: 'ion-android-open',
     delete: 'ion-android-delete',
+    chevronLeft: 'ion-chevron-left',
+    chevronRight: 'ion-chevron-right',
+    chevronUp: 'ion-chevron-up',
+    chevronDown: 'ion-chevron-down',
 };
 
 export default iconNames;
