@@ -4,6 +4,9 @@ import {
     SET_USER_PROJECTS,
     SET_USER_PROJECT_OPTIONS,
     SET_USER_PROJECT,
+    SET_USERS_PROJECT_MEMBERSHIP,
+    SET_USER_PROJECT_MEMBERSHIP,
+    UNSET_USER_PROJECT_MEMBERSHIP,
     UNSET_USER_PROJECT,
 
     SET_USER_GROUPS,
@@ -115,6 +118,72 @@ const setUserProjectOptions = (state, action) => {
         },
     };
     return update(state, settings);
+};
+
+const setUsersProjectMembership = (state, action) => {
+    const { projectId, projectMembership } = action;
+
+    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const newMembers = projectMembership.filter(
+        projectMember => (
+            memberships.findIndex(member => (member.id === projectMember.id)) === -1
+        ),
+    );
+
+    const settings = {
+        projects: {
+            [projectId]: { $auto: {
+                memberships: { $autoArray: {
+                    $push: newMembers,
+                } },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const setUserProjectMembership = (state, action) => {
+    const { projectId, memberDetails } = action;
+
+    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const updatedMemberShipIndex = memberships.findIndex(
+        membership => (memberDetails.id === membership.id),
+    );
+
+    const settings = {
+        projects: {
+            [projectId]: { $auto: {
+                memberships: { $autoArray: {
+                    [updatedMemberShipIndex]: { $auto: {
+                        $merge: memberDetails,
+                    } },
+                } },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const unsetUserProjectMembership = (state, action) => {
+    const { memberId, projectId } = action;
+
+    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const membershipArrayIndex = memberships.findIndex(
+        membership => (membership.id === memberId));
+
+    if (membershipArrayIndex !== -1) {
+        const settings = {
+            projects: {
+                [projectId]: { $auto: {
+                    memberships: { $autoArray: {
+                        $splice: [[membershipArrayIndex, 1]],
+                    } },
+                } },
+            },
+        };
+        return update(state, settings);
+    }
+    return state;
 };
 
 const unsetUserProject = (state, action) => {
@@ -277,7 +346,7 @@ const setUsersMembership = (state, action) => {
     return update(state, settings);
 };
 
-const setUserMemebership = (state, action) => {
+const setUserMembership = (state, action) => {
     const { userGroupId, userMembership } = action;
 
     const memberships = ((state.userGroups[userGroupId] || {}).memberships || []);
@@ -435,10 +504,17 @@ const setAnalysisFramework = (state, action) => {
     return update(state, settings);
 };
 
-// TODO: Change the reducer to merge new data along with deleting removed AFs
 const setAnalysisFrameworks = (state, action) => {
     const { analysisFrameworks } = action;
 
+    const keysOfState = Object.keys(state.analysisFrameworks);
+    // Get keys to be removed
+    // NOTE: Remove all keys except those to be merged
+    const keysToRemove = keysOfState.filter(
+        key => analysisFrameworks.findIndex(f => f.id === +key) < 0,
+    );
+
+    // Merge
     const analysisFrameworksSettings = analysisFrameworks.reduce(
         (acc, analysisFramework) => {
             acc[analysisFramework.id] = { $auto: {
@@ -449,8 +525,17 @@ const setAnalysisFrameworks = (state, action) => {
         {},
     );
 
+    // Remove
+    const analysisFrameworksSettings2 = keysToRemove.reduce(
+        (acc, key) => {
+            acc[key] = { $set: undefined };
+            return acc;
+        },
+        { ...analysisFrameworksSettings },
+    );
+
     const settings = {
-        analysisFrameworks: analysisFrameworksSettings,
+        analysisFrameworks: analysisFrameworksSettings2,
     };
     return update(state, settings);
 };
@@ -649,13 +734,16 @@ const reducers = {
     [SET_USER_PROJECT]: setUserProject,
     [UNSET_USER_PROJECT]: unsetUserProject,
     [SET_USER_PROJECT_OPTIONS]: setUserProjectOptions,
+    [SET_USERS_PROJECT_MEMBERSHIP]: setUsersProjectMembership,
+    [SET_USER_PROJECT_MEMBERSHIP]: setUserProjectMembership,
+    [UNSET_USER_PROJECT_MEMBERSHIP]: unsetUserProjectMembership,
 
     [SET_USER_GROUP]: setUserGroup,
     [SET_USER_GROUPS]: setUserGroups,
     [UNSET_USER_GROUP]: unsetUserGroup,
 
     [SET_USERS_MEMBERSHIP]: setUsersMembership,
-    [SET_USER_MEMBERSHIP]: setUserMemebership,
+    [SET_USER_MEMBERSHIP]: setUserMembership,
     [UNSET_USER_MEMBERSHIP]: unsetUserMembership,
 
     [SET_LEAD_FILTER_OPTIONS]: setLeadFilterOptions,

@@ -18,6 +18,7 @@ import {
     createUrlForAnalysisFramework,
 } from '../../../../common/rest';
 import {
+    LoadingAnimation,
     Confirm,
 } from '../../../../public/components/View';
 import {
@@ -108,6 +109,8 @@ export default class ProjectAfDetail extends React.PureComponent {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForProjectPatch({ analysisFramework: afId }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -127,6 +130,8 @@ export default class ProjectAfDetail extends React.PureComponent {
         const afCloneRequest = new FgRestBuilder()
             .url(createUrlForAfClone(afId))
             .params(() => createParamsForAfClone({ project: projectId }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -147,6 +152,8 @@ export default class ProjectAfDetail extends React.PureComponent {
         const afPutRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(afId))
             .params(() => createParamsForAnalysisFrameworkEdit({ title, description }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -280,6 +287,7 @@ export default class ProjectAfDetail extends React.PureComponent {
 
         return (
             <div styleName="analysis-framework-detail">
+                { pending && <LoadingAnimation /> }
                 <header styleName="header">
                     <h2>
                         {afDetails.title}
@@ -289,6 +297,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                             <PrimaryButton
                                 iconName={iconNames.check}
                                 onClick={this.handleAfUseClick}
+                                disabled={pending}
                             >
                                 Use
                             </PrimaryButton>
@@ -297,14 +306,16 @@ export default class ProjectAfDetail extends React.PureComponent {
                             <PrimaryButton
                                 iconName={iconNames.edit}
                                 onClick={this.handleAfEditClick}
+                                disabled={pending}
                             >
                                 Edit
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleAfCloneClick}
+                            disabled={pending}
                         >
-                            Clone and Edit
+                            {'Clone & Edit'}
                         </PrimaryButton>
                     </div>
                     <Confirm

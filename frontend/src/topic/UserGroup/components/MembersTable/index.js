@@ -274,7 +274,7 @@ export default class MembersTable extends React.PureComponent {
     createRequestForMembershipCreate = (memberList) => {
         const userGroupId = this.props.userGroupId;
 
-        const membershipDeleteRequest = new FgRestBuilder()
+        const membershipCreateRequest = new FgRestBuilder()
             .url(urlForUserMembership)
             .params(() => createParamsForUserMembershipCreate({ memberList }))
             .preLoad(() => {
@@ -302,7 +302,7 @@ export default class MembersTable extends React.PureComponent {
                 console.info('FATAL:', response);
             })
             .build();
-        return membershipDeleteRequest;
+        return membershipCreateRequest;
     }
 
     createRequestForMembershipRoleChange = ({ membershipId, newRole }) => {

@@ -5,7 +5,6 @@ import domainDataReducer from './domainData';
 import siloDomainDataReducer from './siloDomainData';
 import datetimeReducer from './datetime';
 
-import { LOGOUT_ACTION } from '../action-types/auth';
 import storeConfig from '../config/store';
 
 const reducers = {

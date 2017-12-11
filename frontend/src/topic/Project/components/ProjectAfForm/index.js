@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
     Form,
     NonFieldErrors,
     TextInput,
@@ -78,7 +75,6 @@ export default class ProjectAfForm extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
             >
-                { pending && <LoadingAnimation /> }
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={handleFormCancel}

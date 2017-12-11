@@ -17,6 +17,9 @@ import {
     ModalHeader,
     ModalBody,
 } from '../../../../public/components/View';
+import {
+    iconNames,
+} from '../../../../common/constants';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
 import {
@@ -192,11 +195,16 @@ export default class ProjectRegions extends React.PureComponent {
             <div styleName="project-regions">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <h2>
-                            Regions
-                        </h2>
+                        <TextInput
+                            styleName="search-input"
+                            onChange={this.handleSearchInputChange}
+                            placeholder="Search Regions"
+                            type="search"
+                            value={searchInputValue}
+                        />
                         <PrimaryButton
-                            iconName="ion-plus"
+                            iconName={iconNames.add}
+                            styleName="add-btn"
                             onClick={this.handleAddRegionButtonClick}
                         >
                             Add
@@ -235,13 +243,6 @@ export default class ProjectRegions extends React.PureComponent {
                                 }
                             </ModalBody>
                         </Modal>
-                        <TextInput
-                            styleName="search-input"
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Regions"
-                            type="search"
-                            value={searchInputValue}
-                        />
                     </div>
                     <ListView
                         styleName="list"

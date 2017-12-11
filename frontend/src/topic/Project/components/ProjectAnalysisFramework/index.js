@@ -244,22 +244,20 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <div styleName="project-analysis-framework">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <h2>
-                            Analysis Framworks
-                        </h2>
+                        <TextInput
+                            styleName="search-input"
+                            value={searchInputValue}
+                            onChange={this.handleSearchInputChange}
+                            placeholder="Search Analysis Framework"
+                            type="search"
+                        />
                         <PrimaryButton
+                            styleName="add-btn"
                             iconName={iconNames.add}
                             onClick={this.handleAddAfButtonClick}
                         >
                             Add
                         </PrimaryButton>
-                        <TextInput
-                            styleName="search-input"
-                            value={searchInputValue}
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Analysis Frameworks"
-                            type="search"
-                        />
                         <Modal
                             closeOnEscape
                             onClose={this.handleModalClose}
