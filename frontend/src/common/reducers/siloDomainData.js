@@ -69,6 +69,7 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
         data: {
             id: { $set: id },
             type: { $set: type },
+            serverId: { $set: serverId },
         },
         form: {
             values: { $set: values },
@@ -76,7 +77,6 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
         uiState: {
             stale: { $set: stale },
         },
-        serverId: { $set: serverId },
     };
     return update(leadReference, settings);
 };
@@ -169,8 +169,8 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const serverIdMap = leads.reduce(
         (acc, lead) => {
-            if (lead.serverId) {
-                acc[lead.serverId] = true;
+            if (lead.data && lead.data.serverId) {
+                acc[lead.data.serverId] = true;
             }
             return acc;
         },
@@ -179,7 +179,7 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const spliceSettings = state.addLeadView.leads.reduce(
         (acc, lead, i) => {
-            if (serverIdMap[lead.serverId]) {
+            if (lead.data && lead.data.serverId && serverIdMap[lead.data.serverId]) {
                 acc.push([i, 1]);
             }
             return acc;
@@ -272,12 +272,14 @@ const addLeadViewSaveLead = (state, action) => {
         addLeadView: {
             leads: {
                 [index]: {
+                    data: { $auto: {
+                        serverId: { $set: serverId },
+                    } },
                     uiState: {
                         $merge: {
                             stale: true,
                         },
                     },
-                    serverId: { $set: serverId },
                 },
             },
         },
