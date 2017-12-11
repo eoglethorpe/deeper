@@ -5,6 +5,7 @@ import styles from './styles.scss';
 import {
     Form,
     RadioInput,
+    Checkbox,
 } from '../../../public/components/Input';
 import {
     TransparentButton,
@@ -139,6 +140,12 @@ export default class Export extends React.PureComponent {
                             keyExtractor={Export.exportButtonKeyExtractor}
                         />
                     </header>
+                    <div styleName="check-btn">
+                        <Checkbox
+                            label="Include de-coupled data"
+                        />
+                        <i className="ion-help-circled" />
+                    </div>
                     <div styleName="content">
                         <FilterSection
                             styleName="filter-section"

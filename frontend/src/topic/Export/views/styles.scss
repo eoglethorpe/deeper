@@ -86,11 +86,22 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
             }
         }
 
+        .check-btn {
+            display: flex;
+            padding: $spacing-medium;
+
+            label {
+                align-items: flex-end;
+                justify-content: flex-end;
+                margin-right: $spacing-large;
+            }
+        }
+
         .content {
             display: flex;
             flex-basis: 100%;
             flex-wrap: wrap;
-            height: calc(#{$height-full-page} - 96px);
+            height: calc(#{$height-full-page} - 145px);
 
             .filter-section {
                 flex-basis: 75%;
