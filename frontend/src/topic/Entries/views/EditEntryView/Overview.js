@@ -71,7 +71,7 @@ export default class Overview extends React.PureComponent {
         this.update(props.analysisFramework);
 
         this.state = {
-            entriesListViewShow: false,
+            entriesListViewShow: true,
             gridLayoutBoundingRect: {},
             currentEntryId: undefined,
         };
@@ -161,7 +161,7 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entry: {
                 id: entryId,
-                excerpt: `Entry ${entryId}`,
+                excerpt: `Excerpt ${entryId.toLowerCase()}`,
             },
         });
     }
@@ -189,11 +189,12 @@ export default class Overview extends React.PureComponent {
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
         const isActive = entry.id === selectedEntryId;
+        console.log(entry.id, isActive);
 
         return (
             <ListItem
-                active={isActive}
                 key={key}
+                active={isActive}
                 scrollIntoView={isActive}
             >
                 <button
@@ -231,6 +232,7 @@ export default class Overview extends React.PureComponent {
                     </TransparentButton>
                     <div styleName="entry-actions">
                         <SelectInput
+                            placeholder="Select an excerpt"
                             showHintAndError={false}
                             showLabel={false}
                             keySelector={d => d.id}
