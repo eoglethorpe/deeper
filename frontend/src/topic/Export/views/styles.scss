@@ -34,7 +34,10 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
             padding: $spacing-large;
 
             .export-type {
-                flex-basis: 50%;
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: center;
                 padding: $spacing-small;
                 font-size: $font-size-large;
 
@@ -44,36 +47,42 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
                 }
             }
 
-            .action-buttons {
-                flex-basis: 50%;
-                height: 100%;
-                text-align: right;
+            .export-buttons {
+                display: flex;
+                flex-grow: 1;
+                justify-content: flex-end;
 
-                button {
-                    margin-left: $spacing-medium;
-                    padding: $spacing-small $spacing-medium-alt;
-                    color: $color-foreground;
+                .export-button {
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    padding: $spacing-small;
+
+                    img {
+                        width: $width-icon-super-large;
+                        height: $width-icon-super-large;
+                    }
+
+                    .action-buttons {
+                        @include transition-medium;
+                        visibility: hidden;
+                        opacity: 0;
+
+                        button {
+                            display: block;
+                            margin: $spacing-extra-small $spacing-small;
+                            padding: $spacing-extra-small $spacing-small;
+                        }
+                    }
+
+                    &:hover {
+                        .action-buttons {
+                            visibility: visible;
+                            opacity: 1;
+                        }
+                    }
                 }
 
-                .word-document {
-                    background-color: $color-docx;
-                }
-
-                .excel-document {
-                    background-color: $color-excel;
-                }
-
-                .pdf-document {
-                    background-color: $color-pdf;
-                }
-
-                .json {
-                    background-color: $color-background-modal;
-                }
-
-                :global .ion-android-document {
-                    margin-right: $spacing-medium;
-                }
             }
         }
 

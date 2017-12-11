@@ -9,8 +9,16 @@ import {
 import {
     TransparentButton,
 } from '../../../public/components/Action';
+import {
+    ListView,
+} from '../../../public/components/View';
+
 import FilterSection from '../components/FilterSection';
 import StructureSection from '../components/StructureSection';
+import wordLogo from '../../../img/ms-word.svg';
+import excelLogo from '../../../img/ms-excel.svg';
+import pdfLogo from '../../../img/pdf-logo.svg';
+import jsonLogo from '../../../img/json-logo.svg';
 
 const propTypes = {
 };
@@ -22,25 +30,86 @@ const defaultProps = {
 export default class Export extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static exportButtonKeyExtractor = d => d.key;
 
     constructor(props) {
         super(props);
 
+        this.state = {
+            buttonIsHovered: false,
+        };
+
         this.elements = [];
         this.options = [
             {
-                key: 1,
+                key: 'generic',
                 label: 'Generic',
             },
             {
-                key: 2,
+                key: 'geo',
                 label: 'GEO',
             },
             {
-                key: 3,
+                key: 'briefingNote',
                 label: 'Briefing Note',
             },
         ];
+
+        this.exports = [
+            {
+                key: 'word',
+                img: wordLogo,
+                preview: true,
+            },
+            {
+                key: 'excel',
+                img: excelLogo,
+            },
+            {
+                key: 'pdf',
+                img: pdfLogo,
+                preview: true,
+            },
+            {
+                key: 'json',
+                img: jsonLogo,
+            },
+        ];
+    }
+
+    getExportButton = (key, data) => (
+        <div
+            key={key}
+            className={styles['export-button']}
+        >
+            <img src={data.img} alt={key} />
+            <div
+                className={styles['action-buttons']}
+            >
+                <TransparentButton
+                    onClick={() => { this.handleExportButtonClick(key); }}
+                >
+                    Export
+                </TransparentButton>
+                {
+                    data.preview && (
+                        <TransparentButton
+                            onClick={() => { this.handlePreviewButtonClick(key); }}
+                        >
+                            Preview
+                        </TransparentButton>
+                    )
+                }
+            </div>
+        </div>
+    )
+
+    handleExportButtonClick = (key) => {
+        console.log('exporting', key);
+    }
+
+    handlePreviewButtonClick = (key) => {
+        console.log('previewing', key);
     }
 
     render() {
@@ -59,42 +128,16 @@ export default class Export extends React.PureComponent {
                         <div styleName="export-type">
                             <RadioInput
                                 name="export-type"
-                                selected={1}
+                                selected={'geo'}
                                 options={this.options}
                             />
                         </div>
-                        <div styleName="action-buttons">
-                            <TransparentButton
-                                styleName="word-document"
-                            >
-                                <i className="ion-android-document" />
-                                Docx (preview)
-                            </TransparentButton>
-                            <TransparentButton
-                                styleName="word-document"
-                            >
-                                <i className="ion-android-document" />
-                                Docx
-                            </TransparentButton>
-                            <TransparentButton
-                                styleName="pdf-document"
-                            >
-                                <i className="ion-android-document" />
-                                Pdf
-                            </TransparentButton>
-                            <TransparentButton
-                                styleName="excel-document"
-                            >
-                                <i className="ion-android-document" />
-                                Excel
-                            </TransparentButton>
-                            <TransparentButton
-                                styleName="json"
-                            >
-                                <i className="ion-android-document" />
-                                JSON
-                            </TransparentButton>
-                        </div>
+                        <ListView
+                            styleName="export-buttons"
+                            data={this.exports}
+                            modifier={this.getExportButton}
+                            keyExtractor={Export.exportButtonKeyExtractor}
+                        />
                     </header>
                     <div styleName="content">
                         <FilterSection
