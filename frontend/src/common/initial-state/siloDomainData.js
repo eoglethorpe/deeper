@@ -59,7 +59,8 @@ const initialSiloDomainData = {
             leadId: 1,
             lead: {},
             selectedEntryId: undefined,
-            entries: [],
+            entries: [
+            ],
         },
         */
     },

@@ -150,7 +150,7 @@ export default class LeadAdd extends React.PureComponent {
     // REST REQUEST
 
     createRequestForFormSave = (lead, newValues) => {
-        const { serverId } = lead;
+        const { serverId } = lead.data;
         const leadId = this.leadDetailKeyExtractor(lead);
 
         let url;

@@ -161,7 +161,16 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entry: {
                 id: entryId,
-                excerpt: `Excerpt ${entryId.toLowerCase()}`,
+                serverId: undefined,
+                values: {
+                    excerpt: `Excerpt ${entryId.toLowerCase()}`,
+                    image: undefined,
+                    lead: this.props.leadId,
+                    analysisFramework: this.props.analysisFramework.id,
+                    attribues: [],
+                    exportData: [],
+                    fitlerData: [],
+                },
             },
         });
     }
@@ -184,12 +193,15 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    calcEntryKey = entry => entry.id;
+    calcEntryKey = entry => entry.data.id;
+
+    calcEntryLabel = entry => entry.widget.values.excerpt;
 
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
-        const isActive = entry.id === selectedEntryId;
-        console.log(entry.id, isActive);
+
+        const currentEntryId = this.calcEntryKey(entry);
+        const isActive = currentEntryId === selectedEntryId;
 
         return (
             <ListItem
@@ -199,9 +211,9 @@ export default class Overview extends React.PureComponent {
             >
                 <button
                     className="button"
-                    onClick={() => this.handleEntrySelectChange(entry.id)}
+                    onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    {entry.excerpt}
+                    {entry.widget.values.excerpt}
                     <span>Status</span>
                 </button>
             </ListItem>
@@ -235,8 +247,8 @@ export default class Overview extends React.PureComponent {
                             placeholder="Select an excerpt"
                             showHintAndError={false}
                             showLabel={false}
-                            keySelector={d => d.id}
-                            labelSelector={d => d.excerpt}
+                            keySelector={this.calcEntryKey}
+                            labelSelector={this.calcEntryLabel}
                             options={this.props.entries}
                             onChange={this.handleEntrySelectChange}
                             value={this.props.selectedEntryId}

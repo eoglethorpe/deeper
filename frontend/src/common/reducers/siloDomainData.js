@@ -49,6 +49,7 @@ const leadReference = {
     data: {
         id: 'lead-0',
         type: 'void',
+        serverId: undefined,
     },
     form: {
         values: {
@@ -80,6 +81,40 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
     };
     return update(leadReference, settings);
 };
+
+const entryReference = {
+    data: {
+        id: 'lead-0',
+        serverId: undefined,
+    },
+    widget: {
+        values: {
+            title: 'Lead #0',
+            project: 0,
+        },
+    },
+    uiState: {
+        error: false,
+        stale: false,
+    },
+};
+
+const createEntry = ({ id, serverId, values = {}, stale = false }) => {
+    const settings = {
+        data: {
+            id: { $set: id },
+            serverId: { $set: serverId },
+        },
+        widget: {
+            values: { $set: values },
+        },
+        uiState: {
+            stale: { $set: stale },
+        },
+    };
+    return update(entryReference, settings);
+};
+
 
 // CALCUALTE ERROR
 const setErrorForLeads = (state, leadIndices) => {
@@ -382,10 +417,10 @@ const addLeadViewRemoveLead = (state, action) => {
     );
 
     let newActiveId;
-    if (index - 1 >= 0) {
-        newActiveId = state.addLeadView.leads[index - 1].data.id;
-    } else if (index + 1 < state.addLeadView.leads.length) {
+    if (index + 1 < state.addLeadView.leads.length) {
         newActiveId = state.addLeadView.leads[index + 1].data.id;
+    } else if (index - 1 >= 0) {
+        newActiveId = state.addLeadView.leads[index - 1].data.id;
     }
 
     const settings = {
@@ -561,13 +596,15 @@ const editEntryViewSetLead = (state, action) => {
 const editEntryViewAddEntry = (state, action) => {
     const { entry, leadId } = action;
 
+    const newEntry = createEntry(entry);
+
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
                 leadId: { $set: leadId },
-                selectedEntryId: { $set: entry.id },
+                selectedEntryId: { $set: newEntry.data.id },
                 entries: { $autoArray: {
-                    $unshift: [entry],
+                    $unshift: [newEntry],
                 } },
             } },
         },
@@ -579,13 +616,13 @@ const editEntryViewRemoveEntry = (state, action) => {
     const { entryId, leadId } = action;
 
     const entries = state.editEntryView[leadId].entries;
-    const entryIndex = entries.findIndex(d => d.id === entryId);
+    const entryIndex = entries.findIndex(d => d.data.id === entryId);
 
     let newActiveId;
-    if (entryIndex - 1 >= 0) {
-        newActiveId = entries[entryIndex - 1].id;
-    } else if (entryIndex + 1 < entries.length) {
-        newActiveId = entries[entryIndex + 1].id;
+    if (entryIndex + 1 < entries.length) {
+        newActiveId = entries[entryIndex + 1].data.id;
+    } else if (entryIndex - 1 >= 0) {
+        newActiveId = entries[entryIndex - 1].data.id;
     }
 
     const settings = {
