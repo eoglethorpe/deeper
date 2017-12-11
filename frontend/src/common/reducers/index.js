@@ -16,14 +16,4 @@ const reducers = {
 };
 
 const appReducer = persistCombineReducers(storeConfig, reducers);
-
-const rootReducer = (state, action) => {
-    if (action.type === LOGOUT_ACTION) {
-        // const { nav, auth } = state;
-        // state = { nav, auth: { isLoggedIn: false, username: auth.username } };
-        return appReducer({}, action);
-    }
-    return appReducer(state, action);
-};
-
-export default rootReducer;
+export default appReducer;

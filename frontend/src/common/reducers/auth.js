@@ -49,14 +49,7 @@ const authenticate = (state) => {
     return update(state, settings);
 };
 
-const logout = (state) => {
-    const settings = {
-        authenticated: { $set: false },
-        token: { $set: {} },
-        activeUser: { $set: {} },
-    };
-    return update(state, settings);
-};
+const logout = () => initialAuthState;
 
 const setAccessToken = (state, action) => {
     const { access } = action;
