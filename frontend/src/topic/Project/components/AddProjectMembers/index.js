@@ -33,7 +33,6 @@ import {
 import {
     usersInformationListSelector,
     setUsersInformationAction,
-    tokenSelector,
 
     projectDetailsSelector,
     setUsersProjectMembershipAction,
@@ -49,7 +48,6 @@ const propTypes = {
     users: PropTypes.array.isRequired, // eslint-disable-line
     setUsers: PropTypes.func.isRequired,
     setUsersProjectMembership: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -60,7 +58,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
-    token: tokenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -204,11 +201,7 @@ export default class AddProjectMembers extends React.PureComponent {
     createRequestForUsers = () => {
         const usersRequest = new FgRestBuilder()
             .url(createUrlForUsers([this.usersFields]))
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForUser({ access });
-            })
+            .params(() => createParamsForUser())
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
@@ -235,14 +228,7 @@ export default class AddProjectMembers extends React.PureComponent {
         const { projectId } = this.props;
         const membershipCreateRequest = new FgRestBuilder()
             .url(urlForProjectMembership)
-            .params(() => {
-                const { token } = this.props;
-                const { access } = token;
-                return createParamsForProjectMembershipCreate(
-                    { access },
-                    { memberList },
-                );
-            })
+            .params(() => createParamsForProjectMembershipCreate({ memberList }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })
