@@ -7,6 +7,16 @@
     }
 }
 
+.delete-confirm-modal {
+    width: 400px;
+
+    :global .modal-header {
+        .heading {
+            font-size: $font-size-medium-alt;
+        }
+    }
+}
+
 .admin-levels {
     display: flex;
     flex-direction: column;

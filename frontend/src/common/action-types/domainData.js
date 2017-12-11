@@ -24,6 +24,9 @@ export const SET_LEAD_FILTER_OPTIONS = 'domain-data/SET_LEAD_FILTER_OPTIONS';
 
 export const SET_REGIONS = 'domain-data/SET_REGIONS';
 export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
+export const SET_ADMIN_LEVELS_FOR_REGION = 'domain-data/SET_ADMIN_LEVELS_FOR_REGION';
+export const ADD_ADMIN_LEVEL_FOR_REGION = 'domain-data/ADD_ADMIN_LEVEL_FOR_REGION';
+export const UNSET_ADMIN_LEVEL_FOR_REGION = 'domain-data/UNSET_ADMIN_LEVEL_FOR_REGION';
 
 export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
 export const SET_ANALYSIS_FRAMEWORKS = 'domain-data/SET_ANALYSIS_FRAMEWORKS';

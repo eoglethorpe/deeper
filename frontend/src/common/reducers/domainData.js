@@ -24,6 +24,9 @@ import {
     REMOVE_PROJECT_REGION,
     SET_REGIONS,
     SET_REGION_DETAILS,
+    SET_ADMIN_LEVELS_FOR_REGION,
+    ADD_ADMIN_LEVEL_FOR_REGION,
+    UNSET_ADMIN_LEVEL_FOR_REGION,
 
     SET_LEAD_FILTER_OPTIONS,
 
@@ -492,6 +495,62 @@ const addNewRegion = (state, action) => {
     return update(state, settings);
 };
 
+const setAdminLevelsForRegion = (state, action) => {
+    const { adminLevels, regionId } = action;
+    const settings = {
+        adminLevels: { $auto: {
+            [regionId]: { $autoArray: {
+                $set: adminLevels,
+            } },
+        } },
+    };
+    return update(state, settings);
+};
+
+const addAdminLevelForRegion = (state, action) => {
+    const { adminLevel, regionId } = action;
+    const index = (state.adminLevels[regionId]
+        || []).findIndex(d => (d.id === adminLevel.id));
+
+    let settings = {};
+    if (index === -1) {
+        settings = {
+            adminLevels: { $auto: {
+                [regionId]: { $autoArray: {
+                    $push: [adminLevel],
+                } },
+            } },
+        };
+    } else {
+        settings = {
+            adminLevels: { $auto: {
+                [regionId]: { $autoArray: {
+                    $splice: [[index, 1, adminLevel]],
+                } },
+            } },
+        };
+    }
+    return update(state, settings);
+};
+
+const removeAdminLevelForRegion = (state, action) => {
+    const { adminLevelId, regionId } = action;
+    const index = (state.adminLevels[regionId]
+        || []).findIndex(d => (d.id === adminLevelId));
+
+    let settings = {};
+    if (index !== -1) {
+        settings = {
+            adminLevels: { $auto: {
+                [regionId]: { $autoArray: {
+                    $splice: [[index, 1]],
+                } },
+            } },
+        };
+    }
+    return update(state, settings);
+};
+
 const setAnalysisFramework = (state, action) => {
     const { analysisFramework } = action;
     const settings = {
@@ -750,9 +809,13 @@ const reducers = {
 
     [SET_REGIONS]: setRegions,
     [SET_REGION_DETAILS]: setRegionDetails,
+
     [UNSET_REGION]: unsetRegion,
     [REMOVE_PROJECT_REGION]: removeProjectRegion,
     [ADD_NEW_REGION]: addNewRegion,
+    [SET_ADMIN_LEVELS_FOR_REGION]: setAdminLevelsForRegion,
+    [ADD_ADMIN_LEVEL_FOR_REGION]: addAdminLevelForRegion,
+    [UNSET_ADMIN_LEVEL_FOR_REGION]: removeAdminLevelForRegion,
 
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
     [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,

@@ -13,9 +13,20 @@ import {
     ModalHeader,
     Table,
 } from '../../../public/components/View';
+import DeletePrompt from '../../../common/components/DeletePrompt';
 
+import { BgRestBuilder } from '../../../public/utils/rest';
+import schema from '../../../common/schema';
+import {
+    createUrlForAdminLevelsForRegion,
+    createParamsForAdminLevelsForRegionGET,
+    createParamsForAdminLevelDelete,
+    createUrlForAdminLevel,
+} from '../../../common/rest';
 import {
     adminLevelForRegionSelector,
+    setAdminLevelsForRegionAction,
+    unsetAdminLevelForRegionAction,
 } from '../../../common/redux';
 
 import EditAdminLevel from '../EditAdminLevel';
@@ -23,6 +34,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    regionId: PropTypes.number.isRequired,
     adminLevelList: PropTypes.arrayOf(
         PropTypes.shape({
             adminLevelId: PropTypes.number,
@@ -34,6 +46,9 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
+
+    setAdminLevelsForRegion: PropTypes.func.isRequired,
+    unsetAdminLevelForRegion: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -46,7 +61,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setAdminLevelsForRegion: params => dispatch(setAdminLevelsForRegionAction(params)),
+    unsetAdminLevelForRegion: params => dispatch(unsetAdminLevelForRegionAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -65,27 +81,27 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 1,
             },
             {
-                key: 'name',
+                key: 'title',
                 label: 'Admin Level Name',
                 order: 2,
             },
             {
-                key: 'nameProperty',
+                key: 'nameProp',
                 label: 'Name Property',
                 order: 3,
             },
             {
-                key: 'pcodeProperty',
+                key: 'codeProp',
                 label: 'Pcode Property',
                 order: 4,
             },
             {
-                key: 'parentNameProperty',
+                key: 'parentNameProp',
                 label: 'Parent Name Property',
                 order: 5,
             },
             {
-                key: 'parentPcodeProperty',
+                key: 'parentCodeProp',
                 label: 'Parent Pcode Property',
                 order: 6,
             },
@@ -100,7 +116,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                                 className="ion-edit edit"
                             />
                         </TransparentButton>
-                        <TransparentButton onClick={() => this.deleteAdminLevel(row)}>
+                        <TransparentButton onClick={() => this.handleDeleteAdminLevel(row)}>
                             <i
                                 className="ion-ios-trash delete"
                             />
@@ -113,9 +129,77 @@ export default class RegionAdminLevel extends React.PureComponent {
         this.state = {
             addAdminLevel: false,
             clickedAdminLevel: {},
-            displayAdminLevelList: this.props.adminLevelList,
             editAdminLevel: false,
+            deletePending: false,
+            showDeleteModal: false,
+            activeAdminLevelDelete: {},
         };
+
+        this.requestForAdminLevelsForRegion = this.createAlsForRegionRequest(props.regionId);
+    }
+
+    componentWillMount() {
+        this.requestForAdminLevelsForRegion.start();
+    }
+
+    componentWillUnmount() {
+        this.requestForAdminLevelsForRegion.stop();
+    }
+
+    createAlsForRegionRequest = (regionId) => {
+        const urlForAdminLevelsForRegion = createUrlForAdminLevelsForRegion(regionId);
+        const requestForAdminLevelsForRegion = new BgRestBuilder()
+            .url(urlForAdminLevelsForRegion)
+            .params(() => createParamsForAdminLevelsForRegionGET())
+            .preLoad(() => {})
+            .postLoad(() => {})
+            .success((response) => {
+                try {
+                    schema.validate(response, 'adminLevelsGetResponse');
+                    this.props.setAdminLevelsForRegion({
+                        adminLevels: response.results,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return requestForAdminLevelsForRegion;
+    }
+
+    createAlDeleteRequest = (adminLevelId, regionId) => {
+        const urlForAdminLevel = createUrlForAdminLevel(adminLevelId);
+        const requestForAdminLevelDelete = new BgRestBuilder()
+            .url(urlForAdminLevel)
+            .params(() => createParamsForAdminLevelDelete())
+            .preLoad(() => { this.setState({ deletePending: true }); })
+            .postLoad(() => { this.setState({ deletePending: false }); })
+            .success(() => {
+                try {
+                    this.props.unsetAdminLevelForRegion({
+                        adminLevelId,
+                        regionId,
+                    });
+                    this.handleDeleteModalClose();
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return requestForAdminLevelDelete;
     }
 
     addAdminLevel = () => {
@@ -136,11 +220,36 @@ export default class RegionAdminLevel extends React.PureComponent {
         });
     };
 
+    handleDeleteAdminLevel = (row) => {
+        this.setState({
+            showDeleteModal: true,
+            activeAdminLevelDelete: row,
+        });
+    }
+
+    handleDeleteModalClose = () => {
+        this.setState({
+            showDeleteModal: false,
+            activeAdminLevelDelete: {},
+        });
+    }
+
+    deleteActiveAdminLevel = () => {
+        if (this.requestForAlDelete) {
+            this.requestForAlDelete.stop();
+        }
+
+        const { activeAdminLevelDelete } = this.state;
+        this.requestForAlDelete = this.createAlDeleteRequest(
+            activeAdminLevelDelete.id, this.props.regionId);
+        this.requestForAlDelete.start();
+    }
+
+    keyExtractor = rowData => rowData.id
+
     render() {
-        const {
-            displayAdminLevelList,
-        } = this.state;
-        const { className } = this.props;
+        const { className, adminLevelList, regionId } = this.props;
+        const { activeAdminLevelDelete, showDeleteModal, deletePending } = this.state;
 
         return (
             <div
@@ -162,15 +271,19 @@ export default class RegionAdminLevel extends React.PureComponent {
                     >
                         <ModalHeader title="Add admin level" />
                         <ModalBody>
-                            <EditAdminLevel onClose={this.handleModalClose} />
+                            <EditAdminLevel
+                                regionId={regionId}
+                                onClose={this.handleModalClose}
+                                adminLevelsOfRegion={adminLevelList}
+                            />
                         </ModalBody>
                     </Modal>
                 </div>
                 <div styleName="admin-levels-list">
                     <Table
-                        data={displayAdminLevelList}
+                        data={adminLevelList}
                         headers={this.adminLevelHeaders}
-                        keyExtractor={rowData => rowData.adminLevelId}
+                        keyExtractor={this.keyExtractor}
                     />
                     <Modal
                         styleName="edit-admin-modal"
@@ -184,10 +297,29 @@ export default class RegionAdminLevel extends React.PureComponent {
                             <EditAdminLevel
                                 adminLevelDetail={this.state.clickedAdminLevel}
                                 onClose={this.handleModalClose}
+                                adminLevelsOfRegion={adminLevelList}
                             />
                         </ModalBody>
                     </Modal>
                 </div>
+                <Modal
+                    styleName="delete-confirm-modal"
+                    closeOnEscape
+                    onClose={this.handleDeleteModalClose}
+                    show={showDeleteModal}
+                    closeOnBlur
+                >
+                    <ModalHeader title="Delete Admin Level" />
+                    <ModalBody>
+                        <DeletePrompt
+                            handleCancel={this.handleDeleteModalClose}
+                            handleDelete={this.deleteActiveAdminLevel}
+                            getName={() => activeAdminLevelDelete.title}
+                            getType={() => 'Admin Level'}
+                            pending={deletePending}
+                        />
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
