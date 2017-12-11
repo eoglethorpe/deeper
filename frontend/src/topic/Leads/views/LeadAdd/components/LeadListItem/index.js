@@ -97,7 +97,7 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     renderUploadProgress = (choice, upload) => {
-        if (choice !== LEAD_STATUS.uploading) {
+        if (choice !== LEAD_STATUS.uploading || !upload) {
             return null;
         }
         return (

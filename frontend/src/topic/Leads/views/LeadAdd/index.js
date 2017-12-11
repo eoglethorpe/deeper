@@ -28,6 +28,9 @@ import {
     createHeaderForGoogleDriveFileUpload,
     createHeaderForDropboxUpload,
 
+    urlForUpload,
+    createParamsForFileUpload,
+
     createParamsForLeadEdit,
     createParamsForLeadCreate,
     urlForLead,
@@ -109,6 +112,8 @@ export default class LeadAdd extends React.PureComponent {
         this.state = {
             leadUploads: {},
             leadRests: {},
+            leadDriveRests: {},
+            leadDropboxRests: {},
             pendingSubmitAll: false,
         };
         this.leadRefs = {
@@ -116,6 +121,12 @@ export default class LeadAdd extends React.PureComponent {
 
         this.uploadCoordinator = new CoordinatorBuilder()
             .maxActiveActors(3)
+            .build();
+        this.driveUploadCoordinator = new CoordinatorBuilder()
+            .maxActiveActors(2)
+            .build();
+        this.dropboxUploadCoordinator = new CoordinatorBuilder()
+            .maxActiveActors(2)
             .build();
 
         this.formCoordinator = new CoordinatorBuilder()
@@ -131,6 +142,8 @@ export default class LeadAdd extends React.PureComponent {
 
     componentWillUnmount() {
         this.uploadCoordinator.close();
+        this.driveUploadCoordinator.close();
+        this.dropboxUploadCoordinator.close();
         this.formCoordinator.close();
     }
 
@@ -182,11 +195,11 @@ export default class LeadAdd extends React.PureComponent {
         return dropboxUploadRequest;
     }
 
-    createUploaderForFileUpload = ({ file, url, params, leadId }) => {
+    createUploaderForFileUpload = ({ file, leadId }) => {
         const uploader = new UploadBuilder()
             .file(file)
-            .url(url)
-            .params(params)
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload())
             .preLoad(() => this.handleLeadUploadPreLoad(leadId))
             .progress(percent => this.handleLeadUploadProgress(leadId, percent))
             .success(response => this.handleLeadUploadSuccess(leadId, response))
@@ -211,6 +224,19 @@ export default class LeadAdd extends React.PureComponent {
             },
             uiState: { stale: false },
         });
+
+        // FOR UPLAOD
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: {
+                    pending: { $set: undefined },
+                },
+            };
+            const leadDropboxRests = update(state.leadDriveRests, uploadSettings);
+            return { leadDropboxRests };
+        });
+
+        this.dropboxUploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadGoogleDriveUploadSuccess = (leadId, response) => {
@@ -225,6 +251,19 @@ export default class LeadAdd extends React.PureComponent {
             },
             uiState: { stale: false },
         });
+
+        // FOR UPLAOD
+        this.setState((state) => {
+            const uploadSettings = {
+                [leadId]: {
+                    pending: { $set: undefined },
+                },
+            };
+            const leadDriveRests = update(state.leadDriveRests, uploadSettings);
+            return { leadDriveRests };
+        });
+
+        this.driveUploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadPreLoad = (leadId) => {
@@ -362,25 +401,51 @@ export default class LeadAdd extends React.PureComponent {
 
     // HANDLE SELECTION
 
-    handleGoogleDriveSelect = (leadId, accessToken, doc) => {
-        console.log(accessToken);
-        const request = this.createRequestForGoogleDriveUpload({
-            leadId,
-            accessToken,
-            title: doc.name,
-            fileId: doc.id,
-            mimeType: doc.mimeType,
+    handleGoogleDriveSelect = (uploads) => {
+        uploads.forEach((upload) => {
+            const request = this.createRequestForGoogleDriveUpload(upload);
+            this.driveUploadCoordinator.add(upload.leadId, request);
         });
-        request.start();
+        this.driveUploadCoordinator.start();
+
+
+        // UPLOAD
+        const uploadSettings = uploads.reduce(
+            (acc, upload) => {
+                acc[upload.leadId] = { $auto: {
+                    pending: { $set: true },
+                } };
+                return acc;
+            },
+            {},
+        );
+        this.setState((state) => {
+            const leadDriveRests = update(state.leadDriveRests, uploadSettings);
+            return { leadDriveRests };
+        });
     }
 
-    handleDropboxSelect = (leadId, doc) => {
-        const request = this.createRequestForDropboxUpload({
-            leadId,
-            title: doc.name,
-            fileUrl: doc.link,
+    handleDropboxSelect = (uploads) => {
+        uploads.forEach((upload) => {
+            const request = this.createRequestForDropboxUpload(upload);
+            this.dropboxUploadCoordinator.add(upload.leadId, request);
         });
-        request.start();
+        this.dropboxCoordinator.start();
+
+        // UPLOAD
+        const uploadSettings = uploads.reduce(
+            (acc, upload) => {
+                acc[upload.leadId] = { $auto: {
+                    pending: { $set: true },
+                } };
+                return acc;
+            },
+            {},
+        );
+        this.setState((state) => {
+            const leadDropboxRests = update(state.leadDropboxRests, uploadSettings);
+            return { leadDropboxRests };
+        });
     }
 
     handleFileSelect = (uploads) => {
@@ -390,6 +455,7 @@ export default class LeadAdd extends React.PureComponent {
         });
         this.uploadCoordinator.start();
 
+        // UPLOAD
         const uploadSettings = uploads.reduce(
             (acc, upload) => {
                 acc[upload.leadId] = { $auto: {
@@ -399,8 +465,6 @@ export default class LeadAdd extends React.PureComponent {
             },
             {},
         );
-
-        // UPLOAD and REST
         this.setState((state) => {
             const leadUploads = update(state.leadUploads, uploadSettings);
             return { leadUploads };
@@ -486,8 +550,16 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     render() {
-        const { leadUploads, leadRests } = this.state;
-        const { activeLead, activeLeadId } = this.props;
+        const {
+            leadUploads,
+            leadRests,
+            leadDriveRests,
+            leadDropboxRests,
+        } = this.state;
+        const {
+            activeLead,
+            activeLeadId,
+        } = this.props;
 
         // calculate all choices
         this.choices = this.props.addLeadViewLeads.reduce(
@@ -497,6 +569,8 @@ export default class LeadAdd extends React.PureComponent {
                     lead,
                     rest: leadRests[leadId],
                     upload: leadUploads[leadId],
+                    drive: leadDriveRests[leadId],
+                    dropbox: leadDropboxRests[leadId],
                 });
                 const isSaveDisabled = (choice !== LEAD_STATUS.nonstale);
                 const isRemoveDisabled = (choice === LEAD_STATUS.requesting);

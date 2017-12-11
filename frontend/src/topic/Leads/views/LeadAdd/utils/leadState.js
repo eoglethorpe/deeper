@@ -1,15 +1,30 @@
 import { LEAD_TYPE, LEAD_STATUS } from './constants';
 
 // eslint-disable-next-line import/prefer-default-export
-export const calcLeadState = ({ lead, upload, rest }) => {
+export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     const { serverId, data, form, uiState } = lead;
     const { values } = form;
     const { stale, error } = uiState;
     const { type } = data;
 
-    if (type === LEAD_TYPE.file && upload && upload.progress <= 100) {
+    const isFileUploading = () => upload && upload.progress <= 100;
+    const isDriveUploading = () => drive && drive.pending;
+    const isDropboxUploading = () => dropbox && dropbox.pending;
+    const noAttachment = () => values && !values.attachment;
+
+    if (
+        (type === LEAD_TYPE.file && isFileUploading()) ||
+        (type === LEAD_TYPE.drive && isDriveUploading()) ||
+        (type === LEAD_TYPE.dropbox && isDropboxUploading())
+    ) {
         return LEAD_STATUS.uploading;
-    } else if (type === LEAD_TYPE.file && (values && !values.attachment)) {
+    } else if (
+        (
+            type === LEAD_TYPE.file ||
+            type === LEAD_TYPE.drive ||
+            type === LEAD_TYPE.dropbox
+        ) && noAttachment()
+    ) {
         return LEAD_STATUS.warning; // invalid
     } else if (rest && rest.pending) {
         return LEAD_STATUS.requesting;
