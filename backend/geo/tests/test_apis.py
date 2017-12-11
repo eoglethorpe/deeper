@@ -1,8 +1,5 @@
-from os.path import join
-
 from rest_framework import status
 from rest_framework.test import APITestCase
-from django.conf import settings
 
 from user.tests.test_apis import AuthMixin
 from geo.models import Region, AdminLevel
@@ -129,20 +126,3 @@ class AdminLevelTests(AuthMixin, RegionMixin, APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(AdminLevel.objects.count(), 1)
         self.assertEqual(response.data['title'], data['title'])
-
-    def test_upload_admin_level(self):
-        """
-        Upload Admin Level GeoShape Test
-        """
-        admin_level = self.create_or_get_admin_level()
-        url = '/api/v1/admin-levels-upload/' + str(admin_level.pk) + '/'
-        with open(join(settings.TEST_DIR, 'geo.json'),
-                  'rb') as fp:
-            data = {
-                'geo_shape': fp,
-            }
-
-            response = self.client.put(url, data,
-                                       HTTP_AUTHORIZATION=self.super_auth,
-                                       format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_200_OK)

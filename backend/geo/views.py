@@ -2,7 +2,6 @@ from django.db import models
 from rest_framework import (
     exceptions,
     filters,
-    mixins,
     permissions,
     response,
     status,
@@ -17,8 +16,8 @@ from user_resource.filters import UserResourceFilterSet
 from project.models import Project
 from .models import Region, AdminLevel  # , GeoShape
 from .serializers import (
-    RegionSerializer, AdminLevelSerializer,
-    AdminLevelUploadSerializer,
+    AdminLevelSerializer,
+    RegionSerializer,
 )
 
 
@@ -109,19 +108,6 @@ class AdminLevelViewSet(viewsets.ModelViewSet):
                        filters.SearchFilter, filters.OrderingFilter)
     filter_class = AdminLevelFilterSet
     search_fields = ('title')
-
-    def get_queryset(self):
-        return AdminLevel.get_for(self.request.user)
-
-
-class AdminLevelUploadViewSet(mixins.UpdateModelMixin,
-                              viewsets.GenericViewSet):
-    """
-    Admin Level Upload API Point [Geo file]
-    """
-    serializer_class = AdminLevelUploadSerializer
-    permission_classes = [permissions.IsAuthenticated,
-                          ModifyPermission]
 
     def get_queryset(self):
         return AdminLevel.get_for(self.request.user)
