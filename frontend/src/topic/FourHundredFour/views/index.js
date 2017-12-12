@@ -20,21 +20,21 @@ export default class FourHundredFour extends React.PureComponent {
     render() {
         return (
             <div styleName="four-hundred-four">
-                <div styleName="error-404">Error - 404</div>
-                <div styleName="error-msg">Oops!! You have come too DEEP..</div>
-                <Link
-                    title="Go back to DEEP"
-                    to={pathNames.homeScreen}
-                    styleName="link"
-                >
-                Click here to go back to DEEP
-                </Link>
+                <div styleName="error-404">~~ERROR 404~~</div>
                 <img
                     styleName="icon"
                     src={logo}
                     alt="DEEP"
                     draggable="false"
                 />
+                <div styleName="error-msg">Oops!! You have come too DEEP. This is where the DEEP Kraken rests.</div>
+                <Link
+                    title="Go back to DEEP"
+                    to={pathNames.homeScreen}
+                    styleName="link"
+                >
+                Quick, Go back to DEEP
+                </Link>
             </div>
         );
     }
