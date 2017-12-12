@@ -6,12 +6,7 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-large});
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    padding: $spacing-large;
-
-    h2 {
-        margin: $spacing-large 0;
-        font-weight: $font-weight-medium;
-    }
+    padding: 0 $spacing-medium;
 
     .basic-information,
     .entry-attributes,

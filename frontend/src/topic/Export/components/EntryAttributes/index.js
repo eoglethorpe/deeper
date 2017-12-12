@@ -14,21 +14,21 @@ export default class EntryAttributes extends React.PureComponent {
             <div styleName="entry-attributes">
                 <h4>Entry Attributes</h4>
                 <SelectInput
-                    placeholder="Pillars"
+                    placeholder=""
                     styleName="pillars"
                     label="Pillars"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Sub-Pillars"
+                    placeholder=""
                     styleName="sub-pillars"
                     label="Sub-Pillars"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Sectors and Subsectors"
+                    placeholder=""
                     styleName="sector-and-subsectors"
                     label="Sectors and Sub-sectors"
                     showLabel
@@ -49,21 +49,21 @@ export default class EntryAttributes extends React.PureComponent {
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Location"
+                    placeholder=""
                     styleName="location"
                     label="Location"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Affected Groups"
+                    placeholder=""
                     styleName="affected-groups"
                     label="Affected Groups"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="Demographic Groups"
+                    placeholder=""
                     styleName="demographic-groups"
                     label="Demographic Groups"
                     showLabel

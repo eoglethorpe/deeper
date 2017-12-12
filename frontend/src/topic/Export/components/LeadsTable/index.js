@@ -119,7 +119,6 @@ export default class FilterSection extends React.PureComponent {
                 className={this.props.className}
                 styleName="leads-overview"
             >
-                <h4>Leads Overview</h4>
                 <div styleName="leads-table">
                     <Table
                         data={this.data}

@@ -2,6 +2,7 @@
 
 .lead-information {
     display: flex;
+    flex-basis: 100%;
     flex-wrap: wrap;
 
     h4 {
@@ -13,7 +14,16 @@
     .lead-title,
     .source,
     .date-published {
-        flex-basis: 33%;
-        padding: $spacing-small;
+        flex-basis: 28%;
+        padding: 0 $spacing-small;
+    }
+
+    .apply-btn,
+    .clear-btn {
+        flex-basis: 6%;
+        margin: $spacing-small;
+        background-color: $color-background-disabled;
+        padding: 0 $spacing-small;
+        color: $color-text-disabled;
     }
 }

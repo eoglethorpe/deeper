@@ -14,14 +14,14 @@ export default class BasicInformation extends React.PureComponent {
             <div styleName="basic-information">
                 <h4>Basic Information</h4>
                 <TextInput
-                    placeholder="eg: The conflict in Syria..."
+                    placeholder=""
                     styleName="search-excerpt"
                     label="Search Excerpt"
                     showLabel
                     showHintAndError={false}
                 />
                 <SelectInput
-                    placeholder="eg: John Doe"
+                    placeholder=""
                     styleName="imported-by"
                     label="Imported By"
                     showLabel
