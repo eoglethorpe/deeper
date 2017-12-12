@@ -1,1 +1,35 @@
 @import '../../../stylesheets/base';
+
+.four-hundred-four {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: $color-primary;
+    // background: linear-gradient(to top, darken($color-accent, 15%), lighten($color-accent, 15%));
+    height: 100vh;
+
+    .error-msg {
+        margin: $spacing-large 0;
+        color: $color-text-on-primary;
+        font-size: $font-size-super-large;
+    }
+
+    .error-404 {
+        text-transform: uppercase;
+        color: $color-text-on-primary;
+        font-size: 48px;
+    }
+
+    .icon {
+        opacity: .8;
+        width: 360px;
+        height: 360px;
+    }
+
+    .link {
+        border-bottom: $width-separator-thin solid $color-text-on-primary;
+        color: $color-text-on-primary;
+        font-size: $font-size-super-large;
+    }
+}
