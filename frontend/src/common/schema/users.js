@@ -46,16 +46,6 @@ const userSchema = [];
             note: 'This is the first schema',
         },
         extends: 'user',
-        /*
-        validator: (self, context) => {
-            if (isFalsy(self.token)) {
-                return;
-            }
-            if (self.token.length <= 5) {
-                throw new RavlError('Length must be greater than 5', context);
-            }
-        },
-        */
     };
     userSchema.push({ name, schema });
 }

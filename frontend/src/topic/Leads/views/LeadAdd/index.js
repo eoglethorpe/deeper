@@ -116,8 +116,8 @@ export default class LeadAdd extends React.PureComponent {
             leadDropboxRests: {},
             pendingSubmitAll: false,
         };
-        this.leadRefs = {
-        };
+        // Store references to lead forms
+        this.leadRefs = { };
 
         this.uploadCoordinator = new CoordinatorBuilder()
             .maxActiveActors(3)

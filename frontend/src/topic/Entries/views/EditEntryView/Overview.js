@@ -48,6 +48,9 @@ const propTypes = {
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    onSaveAll: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -169,7 +172,7 @@ export default class Overview extends React.PureComponent {
                     analysisFramework: this.props.analysisFramework.id,
                     attribues: [],
                     exportData: [],
-                    fitlerData: [],
+                    filterData: [],
                 },
             },
         });
@@ -275,7 +278,8 @@ export default class Overview extends React.PureComponent {
                         </Button>
                         <Button
                             styleName="save-button"
-                            disabled
+                            onClick={this.props.onSaveAll}
+                            disabled={this.props.saveAllDisabled}
                         >
                             Save
                         </Button>

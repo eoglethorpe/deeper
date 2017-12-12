@@ -27,6 +27,7 @@ export const EE_ADD_ENTRY = 'domain-data/EE_ADD_ENTRY';
 export const EE_REMOVE_ENTRY = 'domain-data/EE_REMOVE_ENTRY';
 export const EE_SET_ACTIVE_ENTRY = 'domain-data/EE_SET_ACTIVE_ENTRY';
 export const EE_SET_LEAD = 'silo-domain-data/EE_SET_LEAD';
+export const EE_ENTRY_CHANGE = 'domain-data/EE_ENTRY_CHANGE';
 
 // AF => AnalysisFramework
 export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';

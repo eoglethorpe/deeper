@@ -10,6 +10,7 @@ import {
 
 import schema from '../../../../common/schema';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 
 import {
     LoadingAnimation,
@@ -29,12 +30,19 @@ import {
     setEditEntryViewLeadAction,
     setProjectAction,
 
+    changeEntryAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
     createUrlForAnalysisFramework,
     createUrlForLead,
     createUrlForProject,
+
+    createParamsForEntryCreate,
+    createParamsForEntryEdit,
+
+    createUrlForEntryEdit,
+    urlForEntryCreate,
 } from '../../../../common/rest';
 
 import styles from './styles.scss';
@@ -55,6 +63,8 @@ const propTypes = {
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 
     selectedEntryId: PropTypes.string,
+
+    changeEntry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -80,6 +90,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    changeEntry: params => dispatch(changeEntryAction(params)),
+
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryViewLeadAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
@@ -90,6 +102,28 @@ const mapDispatchToProps = dispatch => ({
 export default class EditEntryView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            entryRests: {
+                /*
+                1: { pending: true },
+                */
+            },
+            pendingSubmitAll: false,
+        };
+        this.saveCoordinator = new CoordinatorBuilder()
+            .maxActiveActors(3)
+            .preSession(() => {
+                this.setState({ pendingSubmitAll: true });
+            })
+            .postSession(() => {
+                this.setState({ pendingSubmitAll: false });
+            })
+            .build();
+    }
 
     componentWillMount() {
         this.leadRequest = this.createRequestForLead(this.props.leadId);
@@ -108,6 +142,8 @@ export default class EditEntryView extends React.PureComponent {
         if (this.analysisFrameworkRequest) {
             this.analysisFrameworkRequest.stop();
         }
+
+        this.formCoordinator.close();
     }
 
     createRequestForLead = (leadId) => {
@@ -175,6 +211,69 @@ export default class EditEntryView extends React.PureComponent {
         return analysisFrameworkRequest;
     }
 
+    createRequestForEntrySave = (entryId) => {
+        const { leadId } = this.props;
+        const entry = this.props.entries.find(
+            e => this.entryKeyExtractor(e) === entryId,
+        );
+
+        let urlForEntry;
+        let paramsForEntry;
+        const { serverId } = entry.data;
+        if (serverId) {
+            console.warn('editing');
+            urlForEntry = createUrlForEntryEdit(serverId);
+            paramsForEntry = createParamsForEntryEdit(entry.widget.values);
+        } else {
+            console.warn('creating');
+            urlForEntry = urlForEntryCreate;
+            paramsForEntry = createParamsForEntryCreate(entry.widget.values);
+        }
+        console.log(entry.widget.values);
+
+        const analysisFrameworkRequest = new FgRestBuilder()
+            .url(urlForEntry)
+            .params(paramsForEntry)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'entry');
+
+                    const data = {
+                        versionId: response.versionId,
+                        serverId: response.id,
+                    };
+                    this.props.changeEntry({ leadId, entryId, data });
+                } catch (er) {
+                    console.error(er);
+                }
+
+                this.saveCoordinator.notifyComplete(entryId);
+            })
+            .failure((response) => {
+                console.warn('FAILURE:', response);
+                this.saveCoordinator.notifyComplete(entryId);
+            })
+            .fatal((response) => {
+                console.warn('FATAL:', response);
+                this.saveCoordinator.notifyComplete(entryId);
+            })
+            .build();
+
+        return analysisFrameworkRequest;
+    };
+
+    handleSaveAll = () => {
+        const entryKeys = this.props.entries
+            .map(this.entryKeyExtractor);
+        entryKeys.forEach((id) => {
+            const request = this.createRequestForEntrySave(id);
+            this.saveCoordinator.add(id, request);
+        });
+        this.saveCoordinator.start();
+    }
+
+    entryKeyExtractor = entry => entry.data.id;
+
     render() {
         const {
             analysisFramework,
@@ -212,6 +311,8 @@ export default class EditEntryView extends React.PureComponent {
                                 selectedEntryId={selectedEntryId}
                                 entries={entries}
                                 analysisFramework={analysisFramework}
+                                onSaveAll={this.handleSaveAll}
+                                saveAllDisabled={this.state.pendingSubmitAll}
                             />
                         )}
                     />

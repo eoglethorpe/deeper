@@ -24,6 +24,7 @@ import {
     EE_REMOVE_ENTRY,
     EE_SET_ACTIVE_ENTRY,
     EE_SET_LEAD,
+    EE_ENTRY_CHANGE,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -84,13 +85,12 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
 
 const entryReference = {
     data: {
-        id: 'lead-0',
+        id: 'entry-0',
         serverId: undefined,
     },
     widget: {
         values: {
-            title: 'Lead #0',
-            project: 0,
+            title: 'Entry #0',
         },
     },
     uiState: {
@@ -531,7 +531,6 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
 };
 
 const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
-    console.log(analysisFrameworkId, widgetId);
     if (!state.analysisFrameworkView.analysisFramework ||
         !state.analysisFrameworkView.analysisFramework.widgets ||
         state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
@@ -607,6 +606,38 @@ const editEntryViewAddEntry = (state, action) => {
                     $unshift: [newEntry],
                 } },
             } },
+        },
+    };
+    return update(state, settings);
+};
+
+const editEntryViewChangeEntry = (state, action) => {
+    const {
+        leadId,
+        entryId,
+
+        data = {},
+        values = {},
+    } = action;
+
+    const index = state.editEntryView[leadId].entries.findIndex(
+        e => e.data.id === entryId,
+    );
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                entries: {
+                    [index]: {
+                        data: {
+                            $merge: data,
+                        },
+                        widget: {
+                            values: { $merge: values },
+                        },
+                    },
+                },
+            },
         },
     };
     return update(state, settings);
@@ -725,6 +756,7 @@ const reducers = {
     [EE_REMOVE_ENTRY]: editEntryViewRemoveEntry,
     [EE_SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
     [EE_SET_LEAD]: editEntryViewSetLead,
+    [EE_ENTRY_CHANGE]: editEntryViewChangeEntry,
 
     [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,
