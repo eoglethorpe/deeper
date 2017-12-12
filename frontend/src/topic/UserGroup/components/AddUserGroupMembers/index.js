@@ -25,8 +25,8 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
-    urlForProjectMembership,
-    createParamsForProjectMembershipCreate,
+    urlForUserMembership,
+    createParamsForUserMembershipCreate,
     createParamsForUser,
     createUrlForUsers,
 } from '../../../../common/rest';
@@ -34,8 +34,8 @@ import {
     usersInformationListSelector,
     setUsersInformationAction,
 
-    projectDetailsSelector,
-    setUsersProjectMembershipAction,
+    userGroupDetailsSelector,
+    setUsersMembershipAction,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -43,33 +43,33 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     onModalClose: PropTypes.func.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    projectId: PropTypes.number, // eslint-disable-line
+    userGroupDetails: PropTypes.object.isRequired, // eslint-disable-line
+    userGroupId: PropTypes.number, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
     setUsers: PropTypes.func.isRequired,
-    setUsersProjectMembership: PropTypes.func.isRequired,
+    setUsersMembership: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    projectId: undefined,
+    userGroupId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
-    projectDetails: projectDetailsSelector(state, props),
+    userGroupDetails: userGroupDetailsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setUsers: params => dispatch(setUsersInformationAction(params)),
-    setUsersProjectMembership: params => dispatch(setUsersProjectMembershipAction(params)),
+    setUsersMembership: params => dispatch(setUsersMembershipAction(params)),
 });
 
 const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class AddProjectMembers extends React.PureComponent {
+export default class AddUserGroupMembers extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -80,14 +80,14 @@ export default class AddProjectMembers extends React.PureComponent {
         super(props);
 
         const {
-            projectDetails,
+            userGroupDetails,
             users,
         } = props;
 
         const formValues = {
-            ...projectDetails,
+            ...userGroupDetails,
             memberships: [],
-            membersBlackList: (projectDetails.memberships || emptyList).map(d => d.member),
+            membersBlackList: (userGroupDetails.memberships || emptyList).map(d => d.member),
         };
 
         const usersWithRole = users.map(user => ({
@@ -180,12 +180,11 @@ export default class AddProjectMembers extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.usersRequest) {
-            this.usersRequest.stop();
-        }
-
         if (this.membershipCreateRequest) {
             this.membershipCreateRequest.stop();
+        }
+        if (this.usersRequest) {
+            this.usersRequest.stop();
         }
     }
 
@@ -226,22 +225,19 @@ export default class AddProjectMembers extends React.PureComponent {
     }
 
     createRequestForMembershipCreate = (memberList) => {
-        const { projectId } = this.props;
+        const { userGroupId } = this.props;
+
         const membershipCreateRequest = new FgRestBuilder()
-            .url(urlForProjectMembership)
-            .params(() => createParamsForProjectMembershipCreate({ memberList }))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
+            .url(urlForUserMembership)
+            .params(() => createParamsForUserMembershipCreate({ memberList }))
+            .preLoad(() => { this.setState({ addPending: true }); })
+            .postLoad(() => { this.setState({ addPending: false }); })
             .success((response) => {
                 try {
-                    schema.validate(response, 'projectMembershipCreateResponse');
-                    this.props.setUsersProjectMembership({
-                        projectId,
-                        projectMembership: response.results,
+                    schema.validate(response, 'userMembershipCreateResponse');
+                    this.props.setUsersMembership({
+                        usersMembership: response.results,
+                        userGroupId,
                     });
                     this.props.onModalClose();
                 } catch (er) {
@@ -249,6 +245,7 @@ export default class AddProjectMembers extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                // TODO: Validate error response with schema
                 console.info('FAILURE:', response);
                 const {
                     formFieldErrors,
@@ -262,7 +259,7 @@ export default class AddProjectMembers extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to :ave project.'],
+                    formErrors: ['Error while trying to add members.'],
                 });
             })
             .build();
@@ -288,14 +285,15 @@ export default class AddProjectMembers extends React.PureComponent {
 
     successCallback = (values) => {
         const { usersWithRole } = this.state;
-        const { projectId } = this.props;
+        const { userGroupId } = this.props;
         let newMembersList = usersWithRole.filter(user => (
             values.memberships.findIndex(d => (d === user.id)) !== -1
         ));
+
         newMembersList = newMembersList.map(member => ({
             member: member.id,
             role: member.role,
-            project: projectId,
+            group: userGroupId,
         }));
 
         if (this.membershipCreateRequest) {
@@ -342,9 +340,9 @@ export default class AddProjectMembers extends React.PureComponent {
                     styleName="tabular-select"
                     blackList={formValues.membersBlackList}
                     options={usersWithRole}
-                    labelSelector={AddProjectMembers.optionLabelSelector}
+                    labelSelector={AddUserGroupMembers.optionLabelSelector}
                     onChange={this.handleTabularSelectInputChange}
-                    keySelector={AddProjectMembers.optionKeySelector}
+                    keySelector={AddUserGroupMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
                     error={formFieldErrors.memberships}
                 />

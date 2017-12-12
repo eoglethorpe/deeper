@@ -158,7 +158,6 @@ export default class UserGroup extends React.PureComponent {
         const { showUserGroupEditModal } = this.state;
 
         const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || []);
-        console.log(userGroup.memberships);
 
         return (
             <div styleName="usergroup">

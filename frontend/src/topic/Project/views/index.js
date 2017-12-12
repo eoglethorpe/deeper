@@ -245,7 +245,9 @@ export default class ProjectPanel extends React.PureComponent {
                 >
                     <header styleName="header">
                         <h1 styleName="heading">
-                            { projectDetails.title }
+                            {projectDetails.role === 'admin' &&
+                                projectDetails.title
+                            }
                         </h1>
                         {
                             !isSidebarVisible && (

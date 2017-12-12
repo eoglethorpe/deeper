@@ -13,6 +13,7 @@ export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
+export const userGroupIdFromProps = (state, { userGroupId }) => userGroupId;
 export const analysisFrameworkIdFromPropsForProject = (state, { afId }) => afId;
 
 // Using state
@@ -141,6 +142,12 @@ export const userGroupProjectSelector = createSelector(
 export const groupSelector = createSelector(
     groupsSelector,
     groupIdFromRoute,
+    (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
+);
+
+export const userGroupDetailsSelector = createSelector(
+    groupsSelector,
+    userGroupIdFromProps,
     (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
 );
 // Selector depending on user id from state (logged-in user)

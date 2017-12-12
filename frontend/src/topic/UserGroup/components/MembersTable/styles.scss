@@ -19,10 +19,6 @@
         .pusher {
             flex-grow: 1;
         }
-
-        .add-button {
-            // margin-right: $spacing-medium-alt;
-        }
     }
 
     .content {
@@ -52,124 +48,19 @@
 .add-member-modal {
     display: flex;
     flex-direction: column;
-    padding: $spacing-medium;
-    height: 70vh;
 
-    .modal-search-input {
-        flex-shrink: 0;
-        margin-bottom: $spacing-small;
-        padding: $spacing-medium;
-    }
+    :global {
+        .modal-content {
+            height: 60vh;
 
-    .new-member-table {
-        flex-basis: 100%;
-        flex-grow: 1;
-        overflow-y: auto;
-
-        .pending-overlay {
-            display: flex;
-            position: absolute;
-            top: 0;
-            left: 0;
-            align-items: center;
-            justify-content: center;
-            background-color: $color-background-overlay;
-            width: 100%;
-            height: 100%;
-
-            .loading-icon {
+            .modal-body {
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                animation: spin 1s linear infinite;
-                width: $width-icon-super-large;
-                height: $width-icon-super-large;
-                color: $color-accent;
-                font-size: $width-icon-super-large;
-            }
-
-        }
-
-        :global .header {
-            position: sticky;
-            top: 0;
-            border-bottom: $width-separator-medium solid $color-separator;
-            padding: $spacing-small $spacing-medium-alt;
-            text-align: left;
-            user-select: none;
-
-            &:not(.actions) {
-                cursor: pointer;
-
-                &:hover {
-                    background-color: $color-background-hover;
-                }
+                flex-direction: column;
             }
         }
     }
-}
 
-.action-buttons {
-    display: flex;
-    flex-basis: 100%;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-:global .admin-btn {
-    padding: $spacing-small;
-
-    .ion-locked,
-    .ion-android-person {
-        margin: 0 $spacing-small;
-        color: $color-primary;
-
+    .add-member {
+        flex-grow: 1;
     }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-}
-
-:global .member-add-btn {
-    padding: $spacing-small;
-
-    .ion-close {
-        margin: 0 $spacing-small;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-}
-
-:global .forward-btn {
-    padding: $spacing-small;
-
-    .ion-android-open {
-        margin: 0 $spacing-small;
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-}
-
-:global .delete-btn {
-    padding: $spacing-small;
-
-    .ion-android-delete {
-        margin: 0 $spacing-small;
-        color: $color-danger;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
 }
