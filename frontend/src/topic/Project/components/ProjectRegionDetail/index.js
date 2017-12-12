@@ -15,9 +15,9 @@ import {
     createParamsForUser,
     createParamsForRegionClone,
     createParamsForProjectPatch,
-    createUrlForRegion,
     createUrlForProject,
     createUrlForRegionClone,
+    createUrlForRegionWithField,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -89,8 +89,10 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     createRegionRequest = (regionId) => {
+        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
+
         const regionRequest = new FgRestBuilder()
-            .url(createUrlForRegion(regionId))
+            .url(urlForRegionForRegionalGroups)
             .params(() => createParamsForUser())
             .preLoad(() => { this.setState({ dataLoading: true }); })
             .postLoad(() => { this.setState({ dataLoading: false }); })

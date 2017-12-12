@@ -4,8 +4,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    TransparentButton,
     PrimaryButton,
+    TransparentPrimaryButton,
+    TransparentDangerButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -29,6 +30,9 @@ import {
     setAdminLevelsForRegionAction,
     unsetAdminLevelForRegionAction,
 } from '../../../common/redux';
+import {
+    iconNames,
+} from '../../../common/constants';
 
 import EditAdminLevel from '../EditAdminLevel';
 import styles from './styles.scss';
@@ -112,16 +116,12 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <TransparentButton onClick={() => this.editAdminLevel(row)}>
-                            <i
-                                className="ion-edit edit"
-                            />
-                        </TransparentButton>
-                        <TransparentButton onClick={() => this.handleDeleteAdminLevel(row)}>
-                            <i
-                                className="ion-ios-trash delete"
-                            />
-                        </TransparentButton>
+                        <TransparentPrimaryButton onClick={() => this.editAdminLevel(row)}>
+                            <span className={iconNames.edit} />
+                        </TransparentPrimaryButton>
+                        <TransparentDangerButton onClick={() => this.handleDeleteAdminLevel(row)}>
+                            <span className={iconNames.delete} />
+                        </TransparentDangerButton>
                     </div>
                 ),
             },
@@ -257,9 +257,10 @@ export default class RegionAdminLevel extends React.PureComponent {
             >
                 { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
-                    Admin Levels
+                    <h5>Admin Levels</h5>
                     <PrimaryButton
-                        iconName="ion-plus"
+                        iconName={iconNames.add}
+                        disabled={deletePending}
                         onClick={this.addAdminLevel}
                     >
                         Add admin level
@@ -269,7 +270,16 @@ export default class RegionAdminLevel extends React.PureComponent {
                         onClose={this.handleModalClose}
                         show={this.state.addAdminLevel}
                     >
-                        <ModalHeader title="Add admin level" />
+                        <ModalHeader
+                            title="Add admin level"
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
+                        />
                         <ModalBody>
                             <EditAdminLevel
                                 regionId={regionId}
@@ -290,7 +300,16 @@ export default class RegionAdminLevel extends React.PureComponent {
                         onClose={this.handleModalClose}
                         show={this.state.editAdminLevel}
                     >
-                        <ModalHeader title="Edit admin level" />
+                        <ModalHeader
+                            title="Edit admin level"
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
+                        />
                         <ModalBody>
                             <EditAdminLevel
                                 adminLevelDetail={this.state.clickedAdminLevel}

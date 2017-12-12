@@ -1,16 +1,6 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/modal';
 
-.delete-confirm-modal {
-    width: 400px;
-
-    :global .modal-header {
-        .heading {
-            font-size: $font-size-medium-alt;
-        }
-    }
-}
-
 .admin-levels {
     display: flex;
     flex-direction: column;
@@ -33,15 +23,6 @@
     }
 
     :global {
-        .edit {
-            color: $color-primary;
-        }
-
-        .delete {
-            color: $color-danger;
-            font-size: $font-size-large;
-        }
-
         .raw-table {
             .headers {
                 .level {
