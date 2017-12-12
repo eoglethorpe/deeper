@@ -11,9 +11,10 @@ import {
     Modal,
     ModalBody,
     ModalHeader,
+    Confirm,
     Table,
+    LoadingAnimation,
 } from '../../../public/components/View';
-import DeletePrompt from '../../../common/components/DeletePrompt';
 
 import { BgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
@@ -187,7 +188,6 @@ export default class RegionAdminLevel extends React.PureComponent {
                         adminLevelId,
                         regionId,
                     });
-                    this.handleDeleteModalClose();
                 } catch (er) {
                     console.error(er);
                 }
@@ -227,22 +227,21 @@ export default class RegionAdminLevel extends React.PureComponent {
         });
     }
 
-    handleDeleteModalClose = () => {
+    deleteActiveAdminLevel = (confirm) => {
+        if (confirm) {
+            if (this.requestForAlDelete) {
+                this.requestForAlDelete.stop();
+            }
+            const { activeAdminLevelDelete } = this.state;
+            this.requestForAlDelete = this.createAlDeleteRequest(
+                activeAdminLevelDelete.id, this.props.regionId);
+            this.requestForAlDelete.start();
+        }
+
         this.setState({
             showDeleteModal: false,
             activeAdminLevelDelete: {},
         });
-    }
-
-    deleteActiveAdminLevel = () => {
-        if (this.requestForAlDelete) {
-            this.requestForAlDelete.stop();
-        }
-
-        const { activeAdminLevelDelete } = this.state;
-        this.requestForAlDelete = this.createAlDeleteRequest(
-            activeAdminLevelDelete.id, this.props.regionId);
-        this.requestForAlDelete.start();
     }
 
     keyExtractor = rowData => rowData.id
@@ -256,6 +255,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                 className={className}
                 styleName="admin-levels"
             >
+                { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     Admin Levels
                     <PrimaryButton
@@ -286,11 +286,9 @@ export default class RegionAdminLevel extends React.PureComponent {
                         keyExtractor={this.keyExtractor}
                     />
                     <Modal
-                        styleName="edit-admin-modal"
                         closeOnEscape
                         onClose={this.handleModalClose}
                         show={this.state.editAdminLevel}
-                        closeOnBlur
                     >
                         <ModalHeader title="Edit admin level" />
                         <ModalBody>
@@ -302,24 +300,14 @@ export default class RegionAdminLevel extends React.PureComponent {
                         </ModalBody>
                     </Modal>
                 </div>
-                <Modal
-                    styleName="delete-confirm-modal"
-                    closeOnEscape
-                    onClose={this.handleDeleteModalClose}
+                <Confirm
                     show={showDeleteModal}
-                    closeOnBlur
+                    closeOnEscape
+                    onClose={this.deleteActiveAdminLevel}
                 >
-                    <ModalHeader title="Delete Admin Level" />
-                    <ModalBody>
-                        <DeletePrompt
-                            handleCancel={this.handleDeleteModalClose}
-                            handleDelete={this.deleteActiveAdminLevel}
-                            getName={() => activeAdminLevelDelete.title}
-                            getType={() => 'Admin Level'}
-                            pending={deletePending}
-                        />
-                    </ModalBody>
-                </Modal>
+                    <p>{`Are you sure you want to remove admin level
+                        ${activeAdminLevelDelete.title}?`}</p>
+                </Confirm>
             </div>
         );
     }

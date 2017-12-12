@@ -116,7 +116,8 @@ export default class EditAdminLevel extends React.PureComponent {
     }
 
     otherAdminLevels = adminLevels => adminLevels.filter(adminLevel => (
-        adminLevel.id !== this.props.adminLevelDetail.id
+        adminLevel.id !== this.props.adminLevelDetail.id &&
+        adminLevel.parent !== this.props.adminLevelDetail.id
     ))
 
     createAlForRegionUpdateRequest = (data, adminLevelId) => {
@@ -395,6 +396,7 @@ export default class EditAdminLevel extends React.PureComponent {
                         <DangerButton
                             disabled={pending}
                             onClick={onClose}
+                            type="button"
                         >
                             Cancel
                         </DangerButton>

@@ -1,12 +1,6 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/modal';
 
-.edit-admin-modal {
-    :global .modal-content {
-        width: 720px;
-    }
-}
-
 .delete-confirm-modal {
     width: 400px;
 
