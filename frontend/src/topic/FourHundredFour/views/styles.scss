@@ -12,13 +12,13 @@
     .error-msg {
         margin: $spacing-large 0;
         color: $color-text-on-primary;
-        font-size: 30px;
+        font-size: $font-size-super-large;
     }
 
     .error-404 {
         text-transform: uppercase;
         color: $color-text-on-primary;
-        font-size: 50px;
+        font-size: 48px;
     }
 
     .icon {
@@ -30,6 +30,6 @@
     .link {
         border-bottom: $width-separator-thin solid $color-text-on-primary;
         color: $color-text-on-primary;
-        font-size: 25px;
+        font-size: $font-size-super-large;
     }
 }
