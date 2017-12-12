@@ -30,6 +30,7 @@ import {
     EE_ADD_ENTRY,
     EE_REMOVE_ENTRY,
     EE_SET_ACTIVE_ENTRY,
+    EE_ENTRY_SAVE,
     EE_ENTRY_CHANGE,
 
     CE_VIEW_SET_SELECTED_CATEGORY,
@@ -161,12 +162,21 @@ export const removeEntryAction = ({ leadId, entryId }) => ({
     entryId,
 });
 
-export const changeEntryAction = ({ leadId, entryId, data, values }) => ({
+export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
+    type: EE_ENTRY_SAVE,
+    leadId,
+    entryId,
+    data,
+    values,
+});
+
+export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) => ({
     type: EE_ENTRY_CHANGE,
     leadId,
     entryId,
     data,
     values,
+    uiState,
 });
 
 export const setActiveEntryAction = ({ leadId, entryId }) => ({

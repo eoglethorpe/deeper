@@ -8,9 +8,9 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
-import schema from '../../../../common/schema';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
+import update from '../../../../public/utils/immutable-update';
 
 import {
     LoadingAnimation,
@@ -30,6 +30,7 @@ import {
     setEditEntryViewLeadAction,
     setProjectAction,
 
+    saveEntryAction,
     changeEntryAction,
 } from '../../../../common/redux';
 import {
@@ -44,6 +45,10 @@ import {
     createUrlForEntryEdit,
     urlForEntryCreate,
 } from '../../../../common/rest';
+import schema from '../../../../common/schema';
+
+import { ENTRY_STATUS } from './utils/constants';
+import { calcEntryState } from './utils/entryState';
 
 import styles from './styles.scss';
 import Overview from './Overview';
@@ -64,6 +69,7 @@ const propTypes = {
 
     selectedEntryId: PropTypes.string,
 
+    saveEntry: PropTypes.func.isRequired,
     changeEntry: PropTypes.func.isRequired,
 };
 
@@ -90,6 +96,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    saveEntry: params => dispatch(saveEntryAction(params)),
     changeEntry: params => dispatch(changeEntryAction(params)),
 
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
@@ -143,7 +150,7 @@ export default class EditEntryView extends React.PureComponent {
             this.analysisFrameworkRequest.stop();
         }
 
-        this.formCoordinator.close();
+        this.saveCoordinator.close();
     }
 
     createRequestForLead = (leadId) => {
@@ -229,11 +236,32 @@ export default class EditEntryView extends React.PureComponent {
             urlForEntry = urlForEntryCreate;
             paramsForEntry = createParamsForEntryCreate(entry.widget.values);
         }
-        console.log(entry.widget.values);
 
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForEntry)
             .params(paramsForEntry)
+            .preLoad(() => {
+                this.setState((state) => {
+                    const requestSettings = {
+                        [entryId]: { $auto: {
+                            pending: { $set: true },
+                        } },
+                    };
+                    const entryRests = update(state.entryRests, requestSettings);
+                    return { entryRests };
+                });
+            })
+            .postLoad(() => {
+                this.setState((state) => {
+                    const requestSettings = {
+                        [entryId]: { $auto: {
+                            pending: { $set: undefined },
+                        } },
+                    };
+                    const entryRests = update(state.entryRests, requestSettings);
+                    return { entryRests };
+                });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'entry');
@@ -242,24 +270,41 @@ export default class EditEntryView extends React.PureComponent {
                         versionId: response.versionId,
                         serverId: response.id,
                     };
-                    this.props.changeEntry({ leadId, entryId, data });
+                    this.props.saveEntry({ leadId, entryId, data });
                 } catch (er) {
                     console.error(er);
+                    const uiState = { error: true };
+                    this.props.changeEntry({ leadId, entryId, uiState });
                 }
 
                 this.saveCoordinator.notifyComplete(entryId);
             })
             .failure((response) => {
                 console.warn('FAILURE:', response);
+                const uiState = { error: true };
+                this.props.changeEntry({ leadId, entryId, uiState });
                 this.saveCoordinator.notifyComplete(entryId);
             })
             .fatal((response) => {
                 console.warn('FATAL:', response);
+                const uiState = { error: true };
+                this.props.changeEntry({ leadId, entryId, uiState });
                 this.saveCoordinator.notifyComplete(entryId);
             })
             .build();
 
-        return analysisFrameworkRequest;
+        const interceptor = {
+            start: () => {
+                if (this.choices[entryId].isSaveDisabled) {
+                    this.saveCoordinator.notifyComplete(entryId);
+                } else {
+                    analysisFrameworkRequest.start();
+                }
+            },
+            stop: analysisFrameworkRequest.stop,
+        };
+
+        return interceptor;
     };
 
     handleSaveAll = () => {
@@ -290,6 +335,25 @@ export default class EditEntryView extends React.PureComponent {
             );
         }
 
+        this.choices = this.props.entries.reduce(
+            (acc, entry) => {
+                const entryId = this.entryKeyExtractor(entry);
+                const choice = calcEntryState({
+                    entry,
+                    rest: this.state.entryRests[entryId],
+                });
+                const isRemoveDisabled = (choice === ENTRY_STATUS.requesting);
+                const isSaveDisabled = (choice !== ENTRY_STATUS.nonstale);
+                acc[entryId] = { choice, isSaveDisabled, isRemoveDisabled };
+                return acc;
+            },
+            {},
+        );
+
+        const someSaveEnabled = Object.keys(this.choices).some(
+            key => !(this.choices[key].isSaveDisabled),
+        );
+
         return (
             <HashRouter>
                 <div styleName="edit-entry">
@@ -312,7 +376,8 @@ export default class EditEntryView extends React.PureComponent {
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                saveAllDisabled={this.state.pendingSubmitAll}
+                                saveAllDisabled={this.state.pendingSubmitAll || !someSaveEnabled}
+                                choices={this.choices}
                             />
                         )}
                     />

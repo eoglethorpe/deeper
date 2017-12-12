@@ -22,7 +22,7 @@ import { LEAD_STATUS, LEAD_FILTER_STATUS } from '../utils/constants';
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';
 
-// TODO move this
+// TODO: use from common
 const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase()));
 
 const statusMatches = (leadStatus, status) => {
