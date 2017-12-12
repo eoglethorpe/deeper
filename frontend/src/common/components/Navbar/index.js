@@ -25,6 +25,9 @@ import {
 import {
     stopRefreshAction,
 } from '../../../common/middlewares/refresher';
+import {
+    adminEndpoint,
+} from '../../../common/config/rest';
 
 import {
     logoutAction,
@@ -157,11 +160,13 @@ export default class Navbar extends React.PureComponent {
         const currentValidLinks = validLinks[currentPath];
 
         const dropLinks = [
-            'apiDocs',
             'userProfile',
             'categoryEditor',
-            'adminPanel',
         ];
+        // Don't show apiDocs in production
+        if (process.env.NODE_ENV === 'development') {
+            dropLinks.push('apiDocs');
+        }
 
         const validDropLinks = dropLinks.filter(
             link => currentValidLinks.findIndex(d => d === link) !== -1,
@@ -190,7 +195,6 @@ export default class Navbar extends React.PureComponent {
             apiDocs: iconNames.code,
             userProfile: iconNames.person,
             categoryEditor: iconNames.text,
-            adminPanel: iconNames.locked,
         };
         const iconName = dropdownItemIcons[item];
 
@@ -308,6 +312,27 @@ export default class Navbar extends React.PureComponent {
                             keyExtractor={this.getDropItemKey}
                             modifier={this.getDropItem}
                         />
+                        <Cloak
+                            requireLogin
+                        >
+                            {/*
+                            <button
+                                onClick={this.handleLogoutButtonClick}
+                            >
+                            </button>
+                            */}
+                            <a
+                                styleName="dropdown-item"
+                                href={adminEndpoint}
+                                target="_blank"
+                            >
+                                <span
+                                    className={iconNames.locked}
+                                    styleName="icon"
+                                />
+                                Admin Panel
+                            </a>
+                        </Cloak>
                     </DropdownGroup>
                     <Cloak
                         requireLogin
