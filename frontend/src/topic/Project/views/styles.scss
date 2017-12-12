@@ -36,6 +36,15 @@
         &.side-bar-shown {
             flex-grow: 1;
         }
+
+        .no-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: $color-label;
+            font-size: $font-size-extra-large;
+        }
     }
 
     .side-bar {

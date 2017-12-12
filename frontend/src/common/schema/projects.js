@@ -18,6 +18,7 @@ const projectSchema = [];
             userGroups: { type: 'array.userGroupBase' },
             startDate: { type: 'string' }, // date
             endDate: { type: 'string' }, // date
+            role: { type: 'string', required: true },
         },
     };
     projectSchema.push({ name, schema });
@@ -51,6 +52,7 @@ const projectSchema = [];
         fields: {
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
+            role: { type: 'string', required: true },
             versionId: { type: 'uint', required: true },
         },
     };

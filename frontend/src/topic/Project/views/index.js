@@ -29,7 +29,7 @@ import {
 } from '../../../common/rest';
 import {
     activeProjectSelector,
-    currentUserProjectsSelector,
+    currentUserAdminProjectsSelector,
     projectDetailsSelector,
 
     setProjectOptionsAction,
@@ -69,7 +69,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
-    userProjects: currentUserProjectsSelector(state, props),
+    userProjects: currentUserAdminProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -200,6 +200,7 @@ export default class ProjectPanel extends React.PureComponent {
         this.setState({ isSidebarVisible: false });
     };
 
+
     handleSearchInputChange = (searchInputValue) => {
         const displayUserProjects = this.props.userProjects.filter(
             project => caseInsensitiveSubmatch(project.title, searchInputValue),
@@ -210,6 +211,23 @@ export default class ProjectPanel extends React.PureComponent {
             searchInputValue,
         });
     };
+
+    renderProjectDetails = (projectDetails) => {
+        if (projectDetails.role === 'admin') {
+            return (
+                <ProjectDetails
+                    key={projectDetails.id}
+                    project={projectDetails}
+                />
+            );
+        }
+
+        return (
+            <div styleName="no-right">
+                You do not have the rights to edit this project.
+            </div>
+        );
+    }
 
     render() {
         const {
@@ -240,10 +258,7 @@ export default class ProjectPanel extends React.PureComponent {
                             )
                         }
                     </header>
-                    <ProjectDetails
-                        key={projectDetails}
-                        project={projectDetails}
-                    />
+                    {this.renderProjectDetails(projectDetails)}
                 </div>
                 <div
                     styleName={isSidebarVisible ? 'side-bar show' : 'side-bar'}
