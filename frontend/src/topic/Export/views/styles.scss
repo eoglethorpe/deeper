@@ -24,96 +24,133 @@ $height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
     }
 
     .form-container {
+        display: flex;
         flex-basis: 70%;
         background-color: $color-foreground;
         height: $height-full-page;
 
-        .header {
+        .left {
             display: flex;
-            flex-basis: 100%;
-            padding: $spacing-large;
+            flex-basis: 2%;
+            flex-wrap: wrap;
 
-            .export-type {
+            .export-text {
                 display: flex;
-                flex-shrink: 0;
                 align-items: center;
                 justify-content: center;
-                padding: $spacing-small;
-                font-size: $font-size-large;
+                height: 12%;
+            }
+
+            .filters-text {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 85%;
+            }
+
+            h2 {
+                transform: rotate(-90deg);
+                font-weight: $font-weight-medium;
+            }
+        }
+
+        .right {
+            flex-basis: 98%;
+            border-left: $width-separator-medium solid $color-separator;
+
+            .header {
+                display: flex;
+                flex-basis: 100%;
+                padding: $spacing-small $spacing-large;
+
+                .export-type {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: center;
+                    justify-content: center;
+                    padding: $spacing-small;
+                    font-size: $font-size-large;
+
+                    label {
+                        margin-right: $spacing-large;
+                        color: $color-primary;
+                    }
+                }
+
+                .export-buttons {
+                    display: flex;
+                    flex-grow: 1;
+                    justify-content: flex-end;
+
+                    .export-button {
+                        display: flex;
+                        align-items: center;
+                        cursor: pointer;
+                        padding: $spacing-small;
+
+                        img {
+                            width: 55px;
+                            height: 55px;
+                        }
+
+                        .action-buttons {
+                            @include transition-medium;
+                            visibility: hidden;
+                            opacity: 0;
+
+                            button {
+                                display: block;
+                                margin: $spacing-small;
+                                padding: $spacing-extra-small $spacing-small;
+                            }
+                        }
+
+                        &:hover {
+                            .action-buttons {
+                                visibility: visible;
+                                opacity: 1;
+
+                                button {
+                                    background-color: $color-hover;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .check-btn {
+                display: flex;
+                padding: $spacing-small $spacing-large;
 
                 label {
+                    align-items: flex-end;
+                    justify-content: flex-end;
                     margin-right: $spacing-large;
-                    color: $color-primary;
                 }
-            }
 
-            .export-buttons {
-                display: flex;
-                flex-grow: 1;
-                justify-content: flex-end;
-
-                .export-button {
-                    display: flex;
-                    align-items: center;
+                :global .ion-help-circled {
                     cursor: pointer;
-                    padding: $spacing-small;
+                }
+            }
 
-                    img {
-                        width: $width-icon-super-large;
-                        height: $width-icon-super-large;
-                    }
+            .content {
+                display: flex;
+                flex-basis: 100%;
+                flex-wrap: wrap;
+                height: calc(#{$height-full-page} - 120px);
 
-                    .action-buttons {
-                        @include transition-medium;
-                        visibility: hidden;
-                        opacity: 0;
-
-                        button {
-                            display: block;
-                            margin: $spacing-extra-small $spacing-small;
-                            padding: $spacing-extra-small $spacing-small;
-                        }
-                    }
-
-                    &:hover {
-                        .action-buttons {
-                            visibility: visible;
-                            opacity: 1;
-                        }
-                    }
+                .filter-section {
+                    flex-basis: 75%;
+                    border-top: $width-separator-medium solid $color-separator;
                 }
 
-            }
-        }
-
-        .check-btn {
-            display: flex;
-            padding: $spacing-medium;
-
-            label {
-                align-items: flex-end;
-                justify-content: flex-end;
-                margin-right: $spacing-large;
-            }
-        }
-
-        .content {
-            display: flex;
-            flex-basis: 100%;
-            flex-wrap: wrap;
-            height: calc(#{$height-full-page} - 145px);
-
-            .filter-section {
-                flex-basis: 75%;
-                border-top: $width-separator-medium solid $color-separator;
-
-            }
-
-            .structure-section {
-                flex-basis: 25%;
-                border-top: $width-separator-medium solid $color-separator;
-                border-left: $width-separator-medium solid $color-separator;
-                background-color: $color-background-alt-row;
+                .structure-section {
+                    flex-basis: 25%;
+                    border-top: $width-separator-medium solid $color-separator;
+                    border-left: $width-separator-medium solid $color-separator;
+                    background-color: $color-background-alt-row;
+                }
             }
         }
     }

@@ -123,36 +123,49 @@ export default class Export extends React.PureComponent {
                     styleName="form-container"
                     elements={this.elements}
                 >
-                    <header
-                        styleName="header"
-                    >
-                        <div styleName="export-type">
-                            <RadioInput
-                                name="export-type"
-                                selected={'geo'}
-                                options={this.options}
+                    <div styleName="left">
+                        <div styleName="export-text">
+                            <h2>Export</h2>
+                        </div>
+                        <div styleName="filters-text">
+                            <h2>Filters</h2>
+                        </div>
+                    </div>
+                    <div styleName="right">
+                        <header
+                            styleName="header"
+                        >
+                            <div styleName="export-type">
+                                <RadioInput
+                                    name="export-type"
+                                    selected={'geo'}
+                                    options={this.options}
+                                />
+                            </div>
+                            <ListView
+                                styleName="export-buttons"
+                                data={this.exports}
+                                modifier={this.getExportButton}
+                                keyExtractor={Export.exportButtonKeyExtractor}
+                            />
+                        </header>
+                        <div styleName="check-btn">
+                            <Checkbox
+                                label="Include de-coupled data"
+                            />
+                            <i
+                                className="ion-help-circled"
+                                title="Note that by selecting this option it can greaty increase the amount of time to export"
                             />
                         </div>
-                        <ListView
-                            styleName="export-buttons"
-                            data={this.exports}
-                            modifier={this.getExportButton}
-                            keyExtractor={Export.exportButtonKeyExtractor}
-                        />
-                    </header>
-                    <div styleName="check-btn">
-                        <Checkbox
-                            label="Include de-coupled data"
-                        />
-                        <i className="ion-help-circled" />
-                    </div>
-                    <div styleName="content">
-                        <FilterSection
-                            styleName="filter-section"
-                        />
-                        <StructureSection
-                            styleName="structure-section"
-                        />
+                        <div styleName="content">
+                            <FilterSection
+                                styleName="filter-section"
+                            />
+                            <StructureSection
+                                styleName="structure-section"
+                            />
+                        </div>
                     </div>
                 </Form>
             </div>

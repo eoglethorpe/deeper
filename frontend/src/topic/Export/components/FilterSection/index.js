@@ -25,7 +25,6 @@ export default class FilterSection extends React.PureComponent {
                 className={this.props.className}
                 styleName="filters"
             >
-                <h2>Filters</h2>
                 <div styleName="basic-information">
                     <BasicInformation />
                 </div>
