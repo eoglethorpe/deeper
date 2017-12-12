@@ -14,7 +14,6 @@ const allLinks = [
     'userGroup',
     'projects',
     'countries',
-    'adminPanel',
     'analysisFramework',
     'categoryEditor',
     'weeklySnapshot',
@@ -60,8 +59,6 @@ const validLinks = {
 
     projects: allLinks,
     countries: allLinks,
-
-    adminPanel: allLinks,
 
     analysisFramework: allLinks,
 

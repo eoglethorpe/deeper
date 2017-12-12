@@ -24,6 +24,9 @@ import {
     ADD_NEW_REGION,
     REMOVE_PROJECT_REGION,
     UNSET_REGION,
+    SET_ADMIN_LEVELS_FOR_REGION,
+    ADD_ADMIN_LEVEL_FOR_REGION,
+    UNSET_ADMIN_LEVEL_FOR_REGION,
 
     SET_LEAD_FILTER_OPTIONS,
 
@@ -130,6 +133,24 @@ export const unSetMembershipAction = ({ membershipId, userGroupId }) => ({
 
 export const unSetRegionAction = ({ regionId }) => ({
     type: UNSET_REGION,
+    regionId,
+});
+
+export const setAdminLevelsForRegionAction = ({ adminLevels, regionId }) => ({
+    type: SET_ADMIN_LEVELS_FOR_REGION,
+    adminLevels,
+    regionId,
+});
+
+export const addAdminLevelForRegionAction = ({ adminLevel, regionId }) => ({
+    type: ADD_ADMIN_LEVEL_FOR_REGION,
+    adminLevel,
+    regionId,
+});
+
+export const unsetAdminLevelForRegionAction = ({ adminLevelId, regionId }) => ({
+    type: UNSET_ADMIN_LEVEL_FOR_REGION,
+    adminLevelId,
     regionId,
 });
 

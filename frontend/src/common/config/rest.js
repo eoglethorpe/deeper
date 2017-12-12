@@ -3,14 +3,22 @@ import { RestRequest } from '../../public/utils/rest';
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
 
+const reactAppApiHttps = location.protocol === 'https:'
+    ? 'https'
+    : process.env.REACT_APP_API_HTTPS;
+
 export const wsEndpoint = (() => {
     if (!process.env.REACT_APP_API_END) {
         return 'http://localhost:8000/api/v1';
     }
-    const reactAppApiHttps = location.protocol === 'https:'
-        ? 'https'
-        : process.env.REACT_APP_API_HTTPS;
     return `${reactAppApiHttps}://${process.env.REACT_APP_API_END}/api/v1`;
+})();
+
+export const adminEndpoint = (() => {
+    if (!process.env.REACT_APP_ADMIN_END) {
+        return 'http://localhost:8000/admin/';
+    }
+    return `${reactAppApiHttps}://${process.env.REACT_APP_ADMIN_END}/admin/`;
 })();
 
 export const POST = 'POST';

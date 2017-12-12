@@ -6,12 +6,9 @@ import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import { DangerButton } from '../../../../public/components/Action';
 import {
-    Modal,
-    ModalBody,
-    ModalHeader,
+    Confirm,
+    LoadingAnimation,
 } from '../../../../public/components/View';
-
-import DeletePrompt from '../../../../common/components/DeletePrompt';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
@@ -106,20 +103,18 @@ export default class CountryDetail extends React.PureComponent {
         return regionDeleteRequest;
     }
 
-    deleteActiveCountry = () => {
-        const { countryDetail } = this.props;
+    deleteActiveCountry = (confirm) => {
+        if (confirm) {
+            const { countryDetail } = this.props;
 
-        if (this.regionDeleteRequest) {
-            this.regionDeleteRequest.stop();
+            if (this.regionDeleteRequest) {
+                this.regionDeleteRequest.stop();
+            }
+            this.regionDeleteRequest = this.createRequestForRegionDelete(
+                countryDetail.id);
+
+            this.regionDeleteRequest.start();
         }
-        this.regionDeleteRequest = this.createRequestForRegionDelete(
-            countryDetail.id);
-
-        this.regionDeleteRequest.start();
-    }
-
-    // Delete Close
-    handleDeleteCountryClose = () => {
         this.setState({ deleteCountry: false });
     }
 
@@ -140,6 +135,7 @@ export default class CountryDetail extends React.PureComponent {
                 className={className}
                 styleName="country-detail"
             >
+                { deletePending && <LoadingAnimation /> }
                 <header styleName="header">
                     <h2>
                         {countryDetail.title}
@@ -150,24 +146,14 @@ export default class CountryDetail extends React.PureComponent {
                                 Delete Country
                             </DangerButton>
                     }
-                    <Modal
-                        styleName="delete-confirm-modal"
-                        closeOnEscape
-                        onClose={this.handleDeleteCountryClose}
+                    <Confirm
                         show={deleteCountry}
-                        closeOnBlur
+                        closeOnEscape
+                        onClose={this.deleteActiveCountry}
                     >
-                        <ModalHeader title="Delete Country" />
-                        <ModalBody>
-                            <DeletePrompt
-                                handleCancel={this.handleDeleteCountryClose}
-                                handleDelete={this.deleteActiveCountry}
-                                getName={() => countryDetail.title}
-                                getType={() => 'Country'}
-                                pending={deletePending}
-                            />
-                        </ModalBody>
-                    </Modal>
+                        <p>{`Are you sure you want to remove Country
+                            ${countryDetail.title}?`}</p>
+                    </Confirm>
                 </header>
                 <Tabs
                     activeLinkStyle={{ none: 'none' }}

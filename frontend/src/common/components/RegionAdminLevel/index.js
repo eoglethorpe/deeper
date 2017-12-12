@@ -4,25 +4,42 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    TransparentButton,
     PrimaryButton,
+    TransparentPrimaryButton,
+    TransparentDangerButton,
 } from '../../../public/components/Action';
 import {
     Modal,
     ModalBody,
     ModalHeader,
+    Confirm,
     Table,
+    LoadingAnimation,
 } from '../../../public/components/View';
 
+import { BgRestBuilder } from '../../../public/utils/rest';
+import schema from '../../../common/schema';
+import {
+    createUrlForAdminLevelsForRegion,
+    createParamsForAdminLevelsForRegionGET,
+    createParamsForAdminLevelDelete,
+    createUrlForAdminLevel,
+} from '../../../common/rest';
 import {
     adminLevelForRegionSelector,
+    setAdminLevelsForRegionAction,
+    unsetAdminLevelForRegionAction,
 } from '../../../common/redux';
+import {
+    iconNames,
+} from '../../../common/constants';
 
 import EditAdminLevel from '../EditAdminLevel';
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    regionId: PropTypes.number.isRequired,
     adminLevelList: PropTypes.arrayOf(
         PropTypes.shape({
             adminLevelId: PropTypes.number,
@@ -34,6 +51,9 @@ const propTypes = {
             podeProperty: PropTypes.string,
         }),
     ),
+
+    setAdminLevelsForRegion: PropTypes.func.isRequired,
+    unsetAdminLevelForRegion: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -46,7 +66,8 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    dispatch,
+    setAdminLevelsForRegion: params => dispatch(setAdminLevelsForRegionAction(params)),
+    unsetAdminLevelForRegion: params => dispatch(unsetAdminLevelForRegionAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -65,27 +86,27 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 1,
             },
             {
-                key: 'name',
+                key: 'title',
                 label: 'Admin Level Name',
                 order: 2,
             },
             {
-                key: 'nameProperty',
+                key: 'nameProp',
                 label: 'Name Property',
                 order: 3,
             },
             {
-                key: 'pcodeProperty',
+                key: 'codeProp',
                 label: 'Pcode Property',
                 order: 4,
             },
             {
-                key: 'parentNameProperty',
+                key: 'parentNameProp',
                 label: 'Parent Name Property',
                 order: 5,
             },
             {
-                key: 'parentPcodeProperty',
+                key: 'parentCodeProp',
                 label: 'Parent Pcode Property',
                 order: 6,
             },
@@ -95,16 +116,12 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <TransparentButton onClick={() => this.editAdminLevel(row)}>
-                            <i
-                                className="ion-edit edit"
-                            />
-                        </TransparentButton>
-                        <TransparentButton onClick={() => this.deleteAdminLevel(row)}>
-                            <i
-                                className="ion-ios-trash delete"
-                            />
-                        </TransparentButton>
+                        <TransparentPrimaryButton onClick={() => this.editAdminLevel(row)}>
+                            <span className={iconNames.edit} />
+                        </TransparentPrimaryButton>
+                        <TransparentDangerButton onClick={() => this.handleDeleteAdminLevel(row)}>
+                            <span className={iconNames.delete} />
+                        </TransparentDangerButton>
                     </div>
                 ),
             },
@@ -113,9 +130,76 @@ export default class RegionAdminLevel extends React.PureComponent {
         this.state = {
             addAdminLevel: false,
             clickedAdminLevel: {},
-            displayAdminLevelList: this.props.adminLevelList,
             editAdminLevel: false,
+            deletePending: false,
+            showDeleteModal: false,
+            activeAdminLevelDelete: {},
         };
+
+        this.requestForAdminLevelsForRegion = this.createAlsForRegionRequest(props.regionId);
+    }
+
+    componentWillMount() {
+        this.requestForAdminLevelsForRegion.start();
+    }
+
+    componentWillUnmount() {
+        this.requestForAdminLevelsForRegion.stop();
+    }
+
+    createAlsForRegionRequest = (regionId) => {
+        const urlForAdminLevelsForRegion = createUrlForAdminLevelsForRegion(regionId);
+        const requestForAdminLevelsForRegion = new BgRestBuilder()
+            .url(urlForAdminLevelsForRegion)
+            .params(() => createParamsForAdminLevelsForRegionGET())
+            .preLoad(() => {})
+            .postLoad(() => {})
+            .success((response) => {
+                try {
+                    schema.validate(response, 'adminLevelsGetResponse');
+                    this.props.setAdminLevelsForRegion({
+                        adminLevels: response.results,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return requestForAdminLevelsForRegion;
+    }
+
+    createAlDeleteRequest = (adminLevelId, regionId) => {
+        const urlForAdminLevel = createUrlForAdminLevel(adminLevelId);
+        const requestForAdminLevelDelete = new BgRestBuilder()
+            .url(urlForAdminLevel)
+            .params(() => createParamsForAdminLevelDelete())
+            .preLoad(() => { this.setState({ deletePending: true }); })
+            .postLoad(() => { this.setState({ deletePending: false }); })
+            .success(() => {
+                try {
+                    this.props.unsetAdminLevelForRegion({
+                        adminLevelId,
+                        regionId,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                console.info('FAILURE:', response);
+            })
+            .fatal((response) => {
+                console.info('FATAL:', response);
+            })
+            .build();
+        return requestForAdminLevelDelete;
     }
 
     addAdminLevel = () => {
@@ -136,21 +220,47 @@ export default class RegionAdminLevel extends React.PureComponent {
         });
     };
 
+    handleDeleteAdminLevel = (row) => {
+        this.setState({
+            showDeleteModal: true,
+            activeAdminLevelDelete: row,
+        });
+    }
+
+    deleteActiveAdminLevel = (confirm) => {
+        if (confirm) {
+            if (this.requestForAlDelete) {
+                this.requestForAlDelete.stop();
+            }
+            const { activeAdminLevelDelete } = this.state;
+            this.requestForAlDelete = this.createAlDeleteRequest(
+                activeAdminLevelDelete.id, this.props.regionId);
+            this.requestForAlDelete.start();
+        }
+
+        this.setState({
+            showDeleteModal: false,
+            activeAdminLevelDelete: {},
+        });
+    }
+
+    keyExtractor = rowData => rowData.id
+
     render() {
-        const {
-            displayAdminLevelList,
-        } = this.state;
-        const { className } = this.props;
+        const { className, adminLevelList, regionId } = this.props;
+        const { activeAdminLevelDelete, showDeleteModal, deletePending } = this.state;
 
         return (
             <div
                 className={className}
                 styleName="admin-levels"
             >
+                { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
-                    Admin Levels
+                    <h5>Admin Levels</h5>
                     <PrimaryButton
-                        iconName="ion-plus"
+                        iconName={iconNames.add}
+                        disabled={deletePending}
                         onClick={this.addAdminLevel}
                     >
                         Add admin level
@@ -160,34 +270,63 @@ export default class RegionAdminLevel extends React.PureComponent {
                         onClose={this.handleModalClose}
                         show={this.state.addAdminLevel}
                     >
-                        <ModalHeader title="Add admin level" />
+                        <ModalHeader
+                            title="Add admin level"
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
+                        />
                         <ModalBody>
-                            <EditAdminLevel onClose={this.handleModalClose} />
+                            <EditAdminLevel
+                                regionId={regionId}
+                                onClose={this.handleModalClose}
+                                adminLevelsOfRegion={adminLevelList}
+                            />
                         </ModalBody>
                     </Modal>
                 </div>
                 <div styleName="admin-levels-list">
                     <Table
-                        data={displayAdminLevelList}
+                        data={adminLevelList}
                         headers={this.adminLevelHeaders}
-                        keyExtractor={rowData => rowData.adminLevelId}
+                        keyExtractor={this.keyExtractor}
                     />
                     <Modal
-                        styleName="edit-admin-modal"
                         closeOnEscape
                         onClose={this.handleModalClose}
                         show={this.state.editAdminLevel}
-                        closeOnBlur
                     >
-                        <ModalHeader title="Edit admin level" />
+                        <ModalHeader
+                            title="Edit admin level"
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
+                        />
                         <ModalBody>
                             <EditAdminLevel
                                 adminLevelDetail={this.state.clickedAdminLevel}
                                 onClose={this.handleModalClose}
+                                adminLevelsOfRegion={adminLevelList}
                             />
                         </ModalBody>
                     </Modal>
                 </div>
+                <Confirm
+                    show={showDeleteModal}
+                    closeOnEscape
+                    onClose={this.deleteActiveAdminLevel}
+                >
+                    <p>{`Are you sure you want to remove admin level
+                        ${activeAdminLevelDelete.title}?`}</p>
+                </Confirm>
             </div>
         );
     }

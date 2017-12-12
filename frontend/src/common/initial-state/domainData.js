@@ -462,6 +462,7 @@ const initialDomainDataState = {
     },
 
     adminLevels: {
+        // index is project id
         1: [
             {
                 adminLevelId: 1,

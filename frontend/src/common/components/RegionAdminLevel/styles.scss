@@ -1,12 +1,6 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/modal';
 
-.edit-admin-modal {
-    :global .modal-content {
-        width: 720px;
-    }
-}
-
 .admin-levels {
     display: flex;
     flex-direction: column;
@@ -29,15 +23,6 @@
     }
 
     :global {
-        .edit {
-            color: $color-primary;
-        }
-
-        .delete {
-            color: $color-danger;
-            font-size: $font-size-large;
-        }
-
         .raw-table {
             .headers {
                 .level {
