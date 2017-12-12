@@ -1,4 +1,41 @@
-engines:
+version: "2"
+checks:
+  complex-logic:
+    enabled: true
+    config:
+        threshold: 4
+  file-lines:
+    enabled: true
+    config:
+        threshold: 500
+  method-complexity:
+    enabled: true
+    config:
+        threshold: 5
+  method-count:
+    enabled: true
+    config:
+        threshold: 20
+  method-lines:
+    enabled: true
+    config:
+        threshold: 100
+  nested-control-flow:
+    enabled: true
+    config:
+        threshold: 4
+  return-statements:
+    enabled: true
+    config:
+        threshold: 5
+  argument-count:
+    enabled: false
+  similar-code:
+    enabled: false
+  identical-code:
+    enabled: false
+
+plugins:
   eslint:
     enabled: true
     channel: "eslint-4"
@@ -15,21 +52,17 @@ engines:
   scss-lint:
     enabled: true
     config: frontend/.scss-lint.yml
-  duplication:
-    enabled: false
-    config:
-      languages:
-      - javascript: 
-      - python: 
-ratings:
-  paths:
-  - "**.py"
-  - "**.js"
-  - "**.scss"
-exclude_paths:
-- backend/*/migrations/*
-- backend/*/tests/*
-- backend/*/wsgi.py
-- backend/manage.py
-- frontend/config/
-- frontend/scripts/
+
+exclude_patterns:
+- "backend/*/migrations/*"
+- "backend/*/tests/*"
+- "backend/*/wsgi.py"
+- "backend/manage.py"
+- "frontend/config/"
+- "frontend/scripts/"
+- "**/node_modules/"
+- "script/"
+- "**/spec/"
+- "**/test/"
+- "**/tests/"
+- "**/vendor/"
