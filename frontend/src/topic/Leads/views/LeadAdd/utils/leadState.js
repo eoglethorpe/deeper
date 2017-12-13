@@ -42,8 +42,8 @@ export const leadAccessor = {
     getKey: lead => lead.data.id,
     getServerId: lead => lead.data.serverId,
     getType: lead => lead.data.type,
-    getValues: lead => lead.data.form.values,
-    getErrors: lead => lead.data.form.errors,
-    getFieldErrors: lead => lead.data.form.fieldErrors,
+    getValues: lead => lead.form.values,
+    getErrors: lead => lead.form.errors,
+    getFieldErrors: lead => lead.form.fieldErrors,
     getUiState: lead => lead.uiState,
 };
