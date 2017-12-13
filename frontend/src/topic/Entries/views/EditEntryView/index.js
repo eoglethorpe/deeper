@@ -44,6 +44,9 @@ import {
 
     createUrlForEntryEdit,
     urlForEntryCreate,
+
+    createUrlForEntriesOfLead,
+    createParamsForEntriesOfLead,
 } from '../../../../common/rest';
 import schema from '../../../../common/schema';
 
@@ -120,7 +123,10 @@ export default class EditEntryView extends React.PureComponent {
                 */
             },
             pendingSubmitAll: false,
+            pendingLeadAndEntries: false,
+            pendingProjectAndAf: true,
         };
+
         this.saveCoordinator = new CoordinatorBuilder()
             .maxActiveActors(3)
             .preSession(() => {
@@ -142,6 +148,10 @@ export default class EditEntryView extends React.PureComponent {
             this.leadRequest.stop();
         }
 
+        if (this.entriesRequest) {
+            this.entriesRequest.stop();
+        }
+
         if (this.projectRequest) {
             this.projectRequest.stop();
         }
@@ -160,12 +170,21 @@ export default class EditEntryView extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'lead');
-                    this.props.setLead({
-                        lead: response,
-                    });
+                    this.props.setLead({ lead: response });
 
-                    this.projectRequest = this.createRequestForProject(response.project);
+                    const {
+                        id,
+                        project,
+                    } = response;
+
+                    // Load project
+                    this.projectRequest = this.createRequestForProject(project);
                     this.projectRequest.start();
+
+                    // Load entries
+                    // NOTE: could be loaded along with lead
+                    this.entriesRequest = this.createRequestForEntriesOfLead(id);
+                    this.entriesRequest.start();
                 } catch (er) {
                     console.error(er);
                 }
@@ -173,6 +192,29 @@ export default class EditEntryView extends React.PureComponent {
             .build();
         return leadRequest;
     }
+
+    createRequestForEntriesOfLead = (leadId) => {
+        const entriesRequest = new FgRestBuilder()
+            .url(createUrlForEntriesOfLead(leadId))
+            .params(() => createParamsForEntriesOfLead())
+            .postLoad(() => {
+                this.setState({ pendingEntries: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'entriesGetResponse');
+
+                    // For all leads with serverId
+                    // if versionId is older, replace or not
+                    // if versionId is same, leave
+                    // if entry is not in list, remove or not
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return entriesRequest;
+    };
 
     createRequestForProject = (projectId) => {
         const projectRequest = new FgRestBuilder()
@@ -185,6 +227,7 @@ export default class EditEntryView extends React.PureComponent {
                         project: response,
                     });
 
+                    // Load analysisFramework
                     this.analysisFramework = this.createRequestForAnalysisFramework(
                         response.analysisFramework,
                     );
@@ -204,6 +247,9 @@ export default class EditEntryView extends React.PureComponent {
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
             .params(() => createParamsForUser())
+            .postLoad(() => {
+                this.setState({ pendingProjectAndAf: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -326,8 +372,14 @@ export default class EditEntryView extends React.PureComponent {
             entries,
             selectedEntryId,
         } = this.props;
+        const {
+            entryRests,
+            pendingSubmitAll,
+            pendingEntries,
+            pendingProjectAndAf,
+        } = this.state;
 
-        if (!analysisFramework) {
+        if (pendingEntries || pendingProjectAndAf) {
             return (
                 <div styleName="edit-entry">
                     <LoadingAnimation />
@@ -340,7 +392,7 @@ export default class EditEntryView extends React.PureComponent {
                 const entryId = this.entryKeyExtractor(entry);
                 const choice = calcEntryState({
                     entry,
-                    rest: this.state.entryRests[entryId],
+                    rest: entryRests[entryId],
                 });
                 const isRemoveDisabled = (choice === ENTRY_STATUS.requesting);
                 const isSaveDisabled = (choice !== ENTRY_STATUS.nonstale);
@@ -376,7 +428,7 @@ export default class EditEntryView extends React.PureComponent {
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                saveAllDisabled={this.state.pendingSubmitAll || !someSaveEnabled}
+                                saveAllDisabled={pendingSubmitAll || !someSaveEnabled}
                                 choices={this.choices}
                             />
                         )}

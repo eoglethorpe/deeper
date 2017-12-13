@@ -3,6 +3,7 @@ import {
     GET,
     POST,
     PUT,
+    p,
     commonHeaderForPost,
 } from '../config/rest';
 
@@ -30,4 +31,13 @@ export const createParamsForEntryEdit = data => ({
     method: PUT,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
+});
+
+export const createUrlForEntriesOfLead = leadId => (
+    `${wsEndpoint}/entries/?${p({ lead: leadId })}`
+);
+
+export const createParamsForEntriesOfLead = () => ({
+    method: GET,
+    headers: commonHeaderForPost,
 });
