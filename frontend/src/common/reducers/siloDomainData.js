@@ -24,6 +24,8 @@ import {
     EE_REMOVE_ENTRY,
     EE_SET_ACTIVE_ENTRY,
     EE_SET_LEAD,
+    EE_ENTRY_SAVE,
+    EE_ENTRY_CHANGE,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -49,6 +51,7 @@ const leadReference = {
     data: {
         id: 'lead-0',
         type: 'void',
+        serverId: undefined,
     },
     form: {
         values: {
@@ -69,6 +72,7 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
         data: {
             id: { $set: id },
             type: { $set: type },
+            serverId: { $set: serverId },
         },
         form: {
             values: { $set: values },
@@ -76,10 +80,42 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
         uiState: {
             stale: { $set: stale },
         },
-        serverId: { $set: serverId },
     };
     return update(leadReference, settings);
 };
+
+const entryReference = {
+    data: {
+        id: 'entry-0',
+        serverId: undefined,
+    },
+    widget: {
+        values: {
+            title: 'Entry #0',
+        },
+    },
+    uiState: {
+        error: false,
+        stale: false,
+    },
+};
+
+const createEntry = ({ id, serverId, values = {}, stale = false }) => {
+    const settings = {
+        data: {
+            id: { $set: id },
+            serverId: { $set: serverId },
+        },
+        widget: {
+            values: { $set: values },
+        },
+        uiState: {
+            stale: { $set: stale },
+        },
+    };
+    return update(entryReference, settings);
+};
+
 
 // CALCUALTE ERROR
 const setErrorForLeads = (state, leadIndices) => {
@@ -169,8 +205,8 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const serverIdMap = leads.reduce(
         (acc, lead) => {
-            if (lead.serverId) {
-                acc[lead.serverId] = true;
+            if (lead.data && lead.data.serverId) {
+                acc[lead.data.serverId] = true;
             }
             return acc;
         },
@@ -179,7 +215,7 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const spliceSettings = state.addLeadView.leads.reduce(
         (acc, lead, i) => {
-            if (serverIdMap[lead.serverId]) {
+            if (lead.data && lead.data.serverId && serverIdMap[lead.data.serverId]) {
                 acc.push([i, 1]);
             }
             return acc;
@@ -272,12 +308,14 @@ const addLeadViewSaveLead = (state, action) => {
         addLeadView: {
             leads: {
                 [index]: {
+                    data: { $auto: {
+                        serverId: { $set: serverId },
+                    } },
                     uiState: {
                         $merge: {
                             stale: true,
                         },
                     },
-                    serverId: { $set: serverId },
                 },
             },
         },
@@ -380,10 +418,10 @@ const addLeadViewRemoveLead = (state, action) => {
     );
 
     let newActiveId;
-    if (index - 1 >= 0) {
-        newActiveId = state.addLeadView.leads[index - 1].data.id;
-    } else if (index + 1 < state.addLeadView.leads.length) {
+    if (index + 1 < state.addLeadView.leads.length) {
         newActiveId = state.addLeadView.leads[index + 1].data.id;
+    } else if (index - 1 >= 0) {
+        newActiveId = state.addLeadView.leads[index - 1].data.id;
     }
 
     const settings = {
@@ -494,7 +532,6 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
 };
 
 const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
-    console.log(analysisFrameworkId, widgetId);
     if (!state.analysisFrameworkView.analysisFramework ||
         !state.analysisFrameworkView.analysisFramework.widgets ||
         state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
@@ -559,15 +596,89 @@ const editEntryViewSetLead = (state, action) => {
 const editEntryViewAddEntry = (state, action) => {
     const { entry, leadId } = action;
 
+    const newEntry = createEntry(entry);
+
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
                 leadId: { $set: leadId },
-                selectedEntryId: { $set: entry.id },
+                selectedEntryId: { $set: newEntry.data.id },
                 entries: { $autoArray: {
-                    $unshift: [entry],
+                    $unshift: [newEntry],
                 } },
             } },
+        },
+    };
+    return update(state, settings);
+};
+
+const editEntryViewSaveEntry = (state, action) => {
+    const {
+        leadId,
+        entryId,
+
+        data = {},
+        values = {},
+    } = action;
+
+    const index = state.editEntryView[leadId].entries.findIndex(
+        e => e.data.id === entryId,
+    );
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                entries: {
+                    [index]: {
+                        data: {
+                            $merge: data,
+                        },
+                        widget: {
+                            values: { $merge: values },
+                        },
+                        uiState: {
+                            stale: { $set: true },
+                            error: { $set: false },
+                        },
+                    },
+                },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
+const changeEntryViewSaveEntry = (state, action) => {
+    const {
+        leadId,
+        entryId,
+
+        data = {},
+        values = {},
+        uiState = {},
+    } = action;
+
+    const index = state.editEntryView[leadId].entries.findIndex(
+        e => e.data.id === entryId,
+    );
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                entries: {
+                    [index]: {
+                        data: {
+                            $merge: data,
+                        },
+                        widget: {
+                            values: { $merge: values },
+                        },
+                        uiState: {
+                            $merge: uiState,
+                        },
+                    },
+                },
+            },
         },
     };
     return update(state, settings);
@@ -577,13 +688,13 @@ const editEntryViewRemoveEntry = (state, action) => {
     const { entryId, leadId } = action;
 
     const entries = state.editEntryView[leadId].entries;
-    const entryIndex = entries.findIndex(d => d.id === entryId);
+    const entryIndex = entries.findIndex(d => d.data.id === entryId);
 
     let newActiveId;
-    if (entryIndex - 1 >= 0) {
-        newActiveId = entries[entryIndex - 1].id;
-    } else if (entryIndex + 1 < entries.length) {
-        newActiveId = entries[entryIndex + 1].id;
+    if (entryIndex + 1 < entries.length) {
+        newActiveId = entries[entryIndex + 1].data.id;
+    } else if (entryIndex - 1 >= 0) {
+        newActiveId = entries[entryIndex - 1].data.id;
     }
 
     const settings = {
@@ -686,6 +797,8 @@ const reducers = {
     [EE_REMOVE_ENTRY]: editEntryViewRemoveEntry,
     [EE_SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
     [EE_SET_LEAD]: editEntryViewSetLead,
+    [EE_ENTRY_SAVE]: editEntryViewSaveEntry,
+    [EE_ENTRY_CHANGE]: changeEntryViewSaveEntry,
 
     [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,

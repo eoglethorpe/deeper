@@ -13,10 +13,10 @@ const initialSiloDomainData = {
         leads: [
             /*
             {
-                serverId: undefined,
                 data: {
                     id: 'lead-1',
                     type: 'text', // dropbox, file, website, text
+                    serverId: undefined,
                 },
                 form: {
                     values: {
@@ -59,7 +59,8 @@ const initialSiloDomainData = {
             leadId: 1,
             lead: {},
             selectedEntryId: undefined,
-            entries: [],
+            entries: [
+            ],
         },
         */
     },

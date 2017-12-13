@@ -110,7 +110,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                 projectDetails,
             } = nextProps;
 
-            // why fitler again?
+            // why filter again?
             const { searchInputValue } = this.state;
             const displayAfList = analysisFrameworkList.filter(
                 af => caseInsensitiveSubmatch(af.title, searchInputValue),

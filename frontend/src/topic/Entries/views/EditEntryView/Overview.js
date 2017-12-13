@@ -8,16 +8,13 @@ import {
     TransparentButton,
     Button,
 } from '../../../../public/components/Action';
-
 import {
     ListView,
     ListItem,
 } from '../../../../public/components/View';
-
 import {
     randomString,
 } from '../../../../public/utils/common';
-
 import {
     SelectInput,
 } from '../../../../public/components/Input';
@@ -25,16 +22,15 @@ import {
 import {
     iconNames,
 } from '../../../../common/constants';
-
-import styles from './styles.scss';
-
-import widgetStore from '../../../AnalysisFramework/widgetStore';
-
 import {
     addEntryAction,
     removeEntryAction,
     setActiveEntryAction,
 } from '../../../../common/redux';
+
+import { ENTRY_STATUS } from './utils/constants';
+import widgetStore from '../../../AnalysisFramework/widgetStore';
+import styles from './styles.scss';
 
 const propTypes = {
     leadId: PropTypes.oneOfType([
@@ -48,6 +44,10 @@ const propTypes = {
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    onSaveAll: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
+    choices: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -161,7 +161,16 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entry: {
                 id: entryId,
-                excerpt: `Excerpt ${entryId.toLowerCase()}`,
+                serverId: undefined,
+                values: {
+                    excerpt: `Excerpt ${entryId.toLowerCase()}`,
+                    image: undefined,
+                    lead: this.props.leadId,
+                    analysisFramework: this.props.analysisFramework.id,
+                    attribues: [],
+                    exportData: [],
+                    filterData: [],
+                },
             },
         });
     }
@@ -184,12 +193,16 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    calcEntryKey = entry => entry.id;
+    calcEntryKey = entry => entry.data.id;
+
+    calcEntryLabel = entry => entry.widget.values.excerpt;
 
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
-        const isActive = entry.id === selectedEntryId;
-        console.log(entry.id, isActive);
+
+        const currentEntryId = this.calcEntryKey(entry);
+        const isActive = currentEntryId === selectedEntryId;
+        const status = this.props.choices[key].choice;
 
         return (
             <ListItem
@@ -199,25 +212,66 @@ export default class Overview extends React.PureComponent {
             >
                 <button
                     className="button"
-                    onClick={() => this.handleEntrySelectChange(entry.id)}
+                    onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    {entry.excerpt}
-                    <span>Status</span>
+                    {entry.widget.values.excerpt}
+                    {this.renderIcon(status)}
                 </button>
             </ListItem>
         );
     }
+
+    renderIcon = (status) => {
+        switch (status) {
+            case ENTRY_STATUS.requesting:
+                return (
+                    <span
+                        className={`ion-load-c ${styles.pending}`}
+                    />
+                );
+            case ENTRY_STATUS.invalid:
+                return (
+                    <span
+                        className={`ion-android-alert ${styles.error}`}
+                    />
+                );
+            case ENTRY_STATUS.nonstale:
+                return (
+                    <span
+                        className={`ion-code-working ${styles.stale}`}
+                    />
+                );
+            case ENTRY_STATUS.complete:
+                return (
+                    <span
+                        className={`ion-checkmark-circled ${styles.complete}`}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
 
     render() {
         const {
             width,
             height,
         } = this.state.gridLayoutBoundingRect;
+        const {
+            selectedEntryId,
+            choices,
+            entries,
+
+            onSaveAll,
+            saveAllDisabled,
+        } = this.props;
 
         const numOfRows = 100;
         const numOfColumns = 100;
         const margin = [0, 0];
         const rowHeight = parseInt((height || 0) / numOfRows, 10);
+
+        const isRemoveDisabled = !selectedEntryId || choices[selectedEntryId].isRemoveDisabled;
 
         return (
             <div styleName="overview">
@@ -235,11 +289,11 @@ export default class Overview extends React.PureComponent {
                             placeholder="Select an excerpt"
                             showHintAndError={false}
                             showLabel={false}
-                            keySelector={d => d.id}
-                            labelSelector={d => d.excerpt}
-                            options={this.props.entries}
+                            keySelector={this.calcEntryKey}
+                            labelSelector={this.calcEntryLabel}
+                            options={entries}
                             onChange={this.handleEntrySelectChange}
-                            value={this.props.selectedEntryId}
+                            value={selectedEntryId}
                         />
                         <TransparentButton
                             title="Add entry"
@@ -250,7 +304,7 @@ export default class Overview extends React.PureComponent {
                         <TransparentButton
                             title="Remove current entry"
                             onClick={this.handleRemoveEntryButtonClick}
-                            disabled={!this.props.selectedEntryId}
+                            disabled={isRemoveDisabled}
                         >
                             <span className={iconNames.remove} />
                         </TransparentButton>
@@ -263,7 +317,8 @@ export default class Overview extends React.PureComponent {
                         </Button>
                         <Button
                             styleName="save-button"
-                            disabled
+                            onClick={onSaveAll}
+                            disabled={saveAllDisabled}
                         >
                             Save
                         </Button>
@@ -278,7 +333,7 @@ export default class Overview extends React.PureComponent {
                             <ListView
                                 styleName="entries-list"
                                 modifier={this.renderEntriesList}
-                                data={this.props.entries}
+                                data={entries}
                                 keyExtractor={this.calcEntryKey}
                             />
                         </div>

@@ -14,7 +14,7 @@ import {
 } from '../../../../../public/components/Input';
 import { DangerButton } from '../../../../../public/components/Action';
 import { isObjectEmpty } from '../../../../../public/utils/common';
-import { FgRestBuilder } from '../../../../../public/utils/rest';
+import { BgRestBuilder } from '../../../../../public/utils/rest';
 
 import {
     activeProjectSelector,
@@ -100,7 +100,7 @@ export default class LeadFilter extends React.PureComponent {
     }
 
     createRequestForProjectLeadFilterOptions = (activeProject) => {
-        const leadFilterOptionsRequest = new FgRestBuilder()
+        const leadFilterOptionsRequest = new BgRestBuilder()
             .url(createUrlForLeadFilterOptions(activeProject))
             .params(() => createParamsForUser())
             .success((response) => {

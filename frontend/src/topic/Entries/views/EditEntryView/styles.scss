@@ -92,6 +92,31 @@
                     .entries-list {
                         flex-grow: 1;
 
+                        .pending,
+                        .error,
+                        .complete,
+                        .stale {
+                            flex-shrink: 0;
+                            margin: 0;
+                            padding: 0;
+                            color: $color-label;
+                            font-size: $font-size-medium-alt;
+                        }
+
+                        .pending {
+                            animation: spin 1s linear infinite;
+                        }
+
+                        .error {
+                            color: $color-danger;
+                        }
+
+                        .complete {
+                            color: $color-success;
+                        }
+
+
+
                         :global .list-item {
                             transition: .2s all ease-in-out;
                             border-bottom: $width-separator-thin solid $color-separator;
@@ -110,6 +135,7 @@
                                 text-align: left;
                                 font-family: inherit;
                                 font-size: inherit;
+
                             }
 
                             &.active {
@@ -121,6 +147,7 @@
                                 background-color: $color-hover;
                             }
                         }
+
                     }
                 }
             }

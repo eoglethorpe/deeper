@@ -2,10 +2,10 @@ import { LEAD_TYPE, LEAD_STATUS } from './constants';
 
 // eslint-disable-next-line import/prefer-default-export
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
-    const { serverId, data, form, uiState } = lead;
+    const { data, form, uiState } = lead;
     const { values } = form;
     const { stale, error } = uiState;
-    const { type } = data;
+    const { type, serverId } = data;
 
     const isFileUploading = () => upload && upload.progress <= 100;
     const isDriveUploading = () => drive && drive.pending;
@@ -36,4 +36,14 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
         return LEAD_STATUS.complete;
     }
     return LEAD_STATUS.stale;
+};
+
+export const leadAccessor = {
+    getKey: lead => lead.data.id,
+    getServerId: lead => lead.data.serverId,
+    getType: lead => lead.data.type,
+    getValues: lead => lead.form.values,
+    getErrors: lead => lead.form.errors,
+    getFieldErrors: lead => lead.form.fieldErrors,
+    getUiState: lead => lead.uiState,
 };
