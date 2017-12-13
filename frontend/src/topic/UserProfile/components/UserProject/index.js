@@ -12,23 +12,27 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentButton,
+    TransparentPrimaryButton,
+    TransparentDangerButton,
 } from '../../../../public/components/Action';
 import {
+    Confirm,
     FormattedDate,
     Modal,
     ModalBody,
     ModalHeader,
     Table,
+    LoadingAnimation,
 } from '../../../../public/components/View';
+
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 import {
+    iconNames,
     pathNames,
 } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
-import DeletePrompt from '../../../../common/components/DeletePrompt';
 
 import {
     createParamsForProjectDelete,
@@ -111,9 +115,10 @@ export default class UserProject extends React.PureComponent {
             // Delete Modal state
             deleteProject: false,
             deletePending: false,
+            confirmText: '',
 
             // Active Delete state
-            activeProjectDelete: null,
+            selectedProject: null,
         };
 
         // TABLE component
@@ -129,12 +134,9 @@ export default class UserProject extends React.PureComponent {
                 key: 'rights',
                 label: 'Rights',
                 order: 2,
-                modifier: (row) => {
-                    const { userId } = this.props.match.params;
-                    const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
-                    return membership && membership.role ? membership.role : '-';
-                },
+                sortable: true,
+                comparator: (a, b) => a.role.localeCompare(b.role),
+                modifier: row => row.role,
             },
             {
                 key: 'createdAt',
@@ -189,41 +191,32 @@ export default class UserProject extends React.PureComponent {
                         return (
                             <Link
                                 title="View Project"
-                                className={`
-                                    ${styles['link-to-project']}
-                                    ${styles['action-button']}
-                                `}
                                 to={reverseRoute(pathNames.projects, { projectId: d.id })}
                             >
-                                <span className="ion-android-open" />
+                                <TransparentPrimaryButton>
+                                    <span className={iconNames.openLink} />
+                                </TransparentPrimaryButton>
                             </Link>
                         );
                     }
 
-                    const onDeleteClick = () => this.handleDeleteProjectClick(d.id);
                     return ([
                         <Link
                             title="Edit Project"
-                            className={`
-                                ${styles['link-to-project']}
-                                ${styles['action-button']}
-                            `}
                             key="project-panel"
                             to={reverseRoute(pathNames.projects, { projectId: d.id })}
                         >
-                            <i className="ion-edit" />
+                            <TransparentPrimaryButton>
+                                <span className={iconNames.edit} />
+                            </TransparentPrimaryButton>
                         </Link>,
-                        <TransparentButton
+                        <TransparentDangerButton
                             key="delete"
                             title="Delete Project"
-                            className={`
-                                ${styles['delete-btn']}
-                                ${styles['action-button']}
-                            `}
-                            onClick={onDeleteClick}
+                            onClick={() => this.handleDeleteProjectClick(d)}
                         >
-                            <i className="ion-android-delete" />
-                        </TransparentButton>,
+                            <i className={iconNames.delete} />
+                        </TransparentDangerButton>,
                     ]);
                 },
             },
@@ -250,28 +243,6 @@ export default class UserProject extends React.PureComponent {
         this.projectsRequest.stop();
     }
 
-    getActiveDeleteProjectType = () => 'Project'
-
-    getActiveDeleteProjectName = () => {
-        const { userProjects } = this.props;
-        const project = userProjects.find(e => (
-            e.id === this.state.activeProjectDelete
-        ));
-        return project ? project.title : null;
-    }
-
-    deleteActiveProject = () => {
-        if (this.projectDeleteRequest) {
-            this.projectDeleteRequest.stop();
-        }
-
-        const { activeProjectDelete } = this.state;
-        this.projectDeleteRequest = this.createRequestForProjectDelete(
-            activeProjectDelete,
-        );
-        this.projectDeleteRequest.start();
-    }
-
     createRequestForProjectDelete = (projectId) => {
         const urlForProject = createUrlForProject(projectId);
         const userId = this.props.activeUser.userId;
@@ -285,7 +256,6 @@ export default class UserProject extends React.PureComponent {
                         userId,
                         projectId,
                     });
-                    this.setState({ deleteProject: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -344,15 +314,30 @@ export default class UserProject extends React.PureComponent {
     // Table Actions
 
     // Delete Click
-    handleDeleteProjectClick = (id) => {
+    handleDeleteProjectClick = (project) => {
+        const confirmText = `Are you sure you want to delete the project
+            ${project.title}?`;
+
         this.setState({
             deleteProject: true,
-            activeProjectDelete: id,
+            selectedProject: project,
+            confirmText,
         });
     }
 
     // Delete Close
-    handleDeleteProjectClose = () => {
+    handleDeleteProjectClose = (confirm) => {
+        if (confirm) {
+            if (this.projectDeleteRequest) {
+                this.projectDeleteRequest.stop();
+            }
+
+            const { selectedProject } = this.state;
+            this.projectDeleteRequest = this.createRequestForProjectDelete(
+                selectedProject.id,
+            );
+            this.projectDeleteRequest.start();
+        }
         this.setState({ deleteProject: false });
     }
 
@@ -363,12 +348,14 @@ export default class UserProject extends React.PureComponent {
             addProject,
             deleteProject,
             deletePending,
+            confirmText,
         } = this.state;
 
         const isCurrentUser = +match.params.userId === activeUser.userId;
 
         return (
             <div styleName="projects">
+                {deletePending && <LoadingAnimation />}
                 <div styleName="header">
                     <h2>
                         Projects
@@ -389,28 +376,26 @@ export default class UserProject extends React.PureComponent {
                     onClose={this.handleAddProjectClose}
                     show={addProject}
                 >
-                    <ModalHeader title="Add Project" />
+                    <ModalHeader
+                        title="Add Project"
+                        rightComponent={
+                            <TransparentPrimaryButton
+                                onClick={this.handleAddProjectClose}
+                            >
+                                <span className={iconNames.close} />
+                            </TransparentPrimaryButton>
+                        }
+                    />
                     <ModalBody>
                         <UserProjectAdd handleModalClose={this.handleAddProjectClose} />
                     </ModalBody>
                 </Modal>
-                <Modal
-                    styleName="delete-confirm-modal"
-                    closeOnEscape
+                <Confirm
                     onClose={this.handleDeleteProjectClose}
                     show={deleteProject}
                 >
-                    <ModalHeader title="Delete Project" />
-                    <ModalBody>
-                        <DeletePrompt
-                            handleCancel={this.handleDeleteProjectClose}
-                            handleDelete={this.deleteActiveProject}
-                            getName={this.getActiveDeleteProjectName}
-                            getType={this.getActiveDeleteProjectType}
-                            pending={deletePending}
-                        />
-                    </ModalBody>
-                </Modal>
+                    <p>{confirmText}</p>
+                </Confirm>
                 <div styleName="projects-table">
                     <Table
                         data={userProjects}

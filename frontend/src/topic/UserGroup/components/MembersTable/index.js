@@ -19,7 +19,6 @@ import {
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
-    TransparentButton,
     TransparentPrimaryButton,
     TransparentDangerButton,
 } from '../../../../public/components/Action';
@@ -374,11 +373,11 @@ export default class MembersTable extends React.PureComponent {
                     <ModalHeader
                         title="Add New Member"
                         rightComponent={
-                            <TransparentButton
+                            <TransparentPrimaryButton
                                 onClick={this.handleAddMemberModalClose}
                             >
                                 <span className={iconNames.close} />
-                            </TransparentButton>
+                            </TransparentPrimaryButton>
                         }
                     />
                     <ModalBody>

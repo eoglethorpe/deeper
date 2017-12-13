@@ -93,10 +93,6 @@ export default class UserEdit extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        console.warn('Mounting UserEdit');
-    }
-
     componentWillUnmount() {
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
@@ -247,9 +243,7 @@ export default class UserEdit extends React.PureComponent {
                 successCallback={this.successCallback}
                 validations={this.validations}
             >
-                {
-                    pending && <LoadingAnimation />
-                }
+                { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 {/*
                     TODO: Pass image src to ImageInput using advanced File Component

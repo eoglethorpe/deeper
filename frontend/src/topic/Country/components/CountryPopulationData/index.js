@@ -3,6 +3,9 @@ import React from 'react';
 
 import styles from './styles.scss';
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+import {
     Form,
     TextInput,
 } from '../../../../public/components/Input';
@@ -71,15 +74,7 @@ export default class CountryPopulationData extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
             >
-                {
-                    pending &&
-                    <div styleName="pending-overlay">
-                        <i
-                            className="ion-load-c"
-                            styleName="loading-icon"
-                        />
-                    </div>
-                }
+                { pending && <LoadingAnimation /> }
                 <div styleName="action-buttons">
                     <DangerButton
                         type="button"

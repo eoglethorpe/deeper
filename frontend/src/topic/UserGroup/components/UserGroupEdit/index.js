@@ -181,10 +181,7 @@ export default class UserGroupEdit extends React.PureComponent {
                 successCallback={this.successCallback}
                 validations={this.validations}
             >
-                {
-                    pending &&
-                    <LoadingAnimation />
-                }
+                { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Title"

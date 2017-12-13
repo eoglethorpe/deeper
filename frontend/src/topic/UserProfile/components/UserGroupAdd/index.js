@@ -79,10 +79,6 @@ export default class UserGroupAdd extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        console.warn('Mounting User Group Add');
-    }
-
     componentWillUnmount() {
         if (this.userGroupCreateRequest) {
             this.userGroupCreateRequest.stop();
@@ -184,10 +180,7 @@ export default class UserGroupAdd extends React.PureComponent {
                 successCallback={this.successCallback}
                 validations={this.validations}
             >
-                {
-                    pending &&
-                    <LoadingAnimation />
-                }
+                { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Title"

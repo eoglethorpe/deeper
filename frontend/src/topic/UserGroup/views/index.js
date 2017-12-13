@@ -27,6 +27,10 @@ import {
 } from '../../../common/redux';
 
 import {
+    iconNames,
+} from '../../../common/constants';
+
+import {
     createParamsForUser,
     createUrlForUserGroup,
     createUrlForUsers,
@@ -57,6 +61,8 @@ const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
     setUsers: params => dispatch(setUsersInformationAction(params)),
 });
+
+const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -157,7 +163,7 @@ export default class UserGroup extends React.PureComponent {
         const { userGroup, match } = this.props;
         const { showUserGroupEditModal } = this.state;
 
-        const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || []);
+        const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || emptyList);
 
         return (
             <div styleName="usergroup">
@@ -167,7 +173,7 @@ export default class UserGroup extends React.PureComponent {
                         {
                             isCurrentUserAdmin &&
                             <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
-                                <span className="ion-edit" />
+                                <span className={iconNames.edit} />
                             </TransparentPrimaryButton>
                         }
                     </div>
@@ -196,7 +202,7 @@ export default class UserGroup extends React.PureComponent {
                             styleName="tab"
                         >
                             <MembersTable
-                                memberData={userGroup.memberships || []}
+                                memberData={userGroup.memberships || emptyList}
                                 userGroupId={+match.params.userGroupId}
                                 isCurrentUserAdmin={isCurrentUserAdmin}
                                 activeUser={this.props.activeUser}
@@ -225,6 +231,13 @@ export default class UserGroup extends React.PureComponent {
                 >
                     <ModalHeader
                         title={`Edit User Group: ${userGroup.title}`}
+                        rightComponent={
+                            <TransparentPrimaryButton
+                                onClick={this.handleUserGroupEditModalClose}
+                            >
+                                <span className={iconNames.close} />
+                            </TransparentPrimaryButton>
+                        }
                     />
                     <ModalBody>
                         <UserGroupEdit
