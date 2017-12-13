@@ -10,6 +10,9 @@ import {
 import {
     TransparentButton,
 } from '../../../../public/components/Action';
+import {
+    iconNames,
+} from '../../../../common/constants';
 
 const propTypes = {
     className: PropTypes.string,
@@ -101,7 +104,7 @@ export default class FilterSection extends React.PureComponent {
                             onClick={() => this.handleLeadsSelect(row)}
                             disabled
                         >
-                            <i className="ion-checkmark" />
+                            <span className={iconNames.check} />
                         </TransparentButton>
                     </div>
                 ),

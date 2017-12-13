@@ -8,6 +8,7 @@ import { reverseRoute } from '../../../public/utils/common';
 
 import logo from '../../../img/deep-logo-grey.png';
 import {
+    iconNames,
     pathNames,
 } from '../../../common/constants';
 import {
@@ -84,7 +85,7 @@ export default class HomeScreen extends React.PureComponent {
                     >
                         To get started, go to your profile.
                         <span
-                            className="ion-android-person"
+                            className={iconNames.person}
                             styleName="icon"
                         />
                     </Link>

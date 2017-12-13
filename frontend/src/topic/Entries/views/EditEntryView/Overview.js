@@ -226,25 +226,25 @@ export default class Overview extends React.PureComponent {
             case ENTRY_STATUS.requesting:
                 return (
                     <span
-                        className={`ion-load-c ${styles.pending}`}
+                        className={`${iconNames.loading} ${styles.pending}`}
                     />
                 );
             case ENTRY_STATUS.invalid:
                 return (
                     <span
-                        className={`ion-android-alert ${styles.error}`}
+                        className={`${iconNames.error} ${styles.error}`}
                     />
                 );
             case ENTRY_STATUS.nonstale:
                 return (
                     <span
-                        className={`ion-code-working ${styles.stale}`}
+                        className={`${iconNames.codeWorking} ${styles.stale}`}
                     />
                 );
             case ENTRY_STATUS.complete:
                 return (
                     <span
-                        className={`ion-checkmark-circled ${styles.complete}`}
+                        className={`${iconNames.checkCircle} ${styles.complete}`}
                     />
                 );
             default:

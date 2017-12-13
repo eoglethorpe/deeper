@@ -14,6 +14,10 @@ import {
 } from '../../../public/utils/rest';
 
 import {
+    iconNames,
+} from '../../../common/constants';
+
+import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
@@ -144,7 +148,7 @@ export default class GalleryImage extends React.PureComponent {
                     ) : (
                         <span
                             styleName="image-alt"
-                            className="image-alt ion-android-contact"
+                            className={`image-alt ${iconNames.user}`}
                         />
                     )
                 }

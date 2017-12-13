@@ -23,6 +23,9 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
+    iconNames,
+} from '../../../../common/constants';
+import {
     randomString,
     isFalsy,
 } from '../../../../public/utils/common';
@@ -394,7 +397,7 @@ export default class Categories extends React.PureComponent {
                                         </div>
                                         <div styleName="icon-btn">
                                             <span
-                                                className={`${selectedSubCategoryId === d.id ? 'ion-chevron-right' : ''}`}
+                                                className={`${selectedSubCategoryId === d.id ? iconNames.chevronRight : ''}`}
                                             />
                                         </div>
                                     </div>
@@ -406,7 +409,7 @@ export default class Categories extends React.PureComponent {
                                 type="button"
                                 disabled={isFalsy(selectedCategoryId)}
                             >
-                                <i className="ion-plus" />
+                                <i className={iconNames.add} />
                             </TransparentButton>
                         </div>
                         <div styleName="sub-sub-categories">
@@ -427,11 +430,11 @@ export default class Categories extends React.PureComponent {
                                         <div styleName="icon-btn">
                                             <Link
                                                 title="Edit Sub Category"
-                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-edit' : ''}`}
+                                                className={`${selectedSubSubCategoryId === d.id ? iconNames.edit : ''}`}
                                                 to={`/edit/${selectedSubCategoryId}/${d.id}/`}
                                             />
                                             <span
-                                                className={`${selectedSubSubCategoryId === d.id ? 'ion-android-delete' : ''}`}
+                                                className={`${selectedSubSubCategoryId === d.id ? iconNames.delete : ''}`}
                                             />
                                         </div>
                                     </div>
@@ -442,7 +445,7 @@ export default class Categories extends React.PureComponent {
                                 styleName={`${isFalsy(selectedSubCategoryId) ? 'hidden' : 'add-button'}`}
                                 type="button"
                             >
-                                <i className="ion-plus" />
+                                <i className={iconNames.add} />
                             </TransparentButton>
                         </div>
                         <KeyWords

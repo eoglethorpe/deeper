@@ -4,6 +4,9 @@ import React from 'react';
 import {
     TransparentButton,
 } from '../../../public/components/Action';
+import {
+    iconNames,
+} from '../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -16,23 +19,23 @@ export default class AddLeadFilter extends React.PureComponent {
                     Add new document from:
                 </h3>
                 <TransparentButton styleName="add-lead-btn" >
-                    <span className="ion-social-google" />
+                    <span className={iconNames.googleDrive} />
                     <p>Drive</p>
                 </TransparentButton>
                 <TransparentButton styleName="add-lead-btn" >
-                    <span className="ion-social-dropbox" />
+                    <span className={iconNames.dropbox} />
                     <p>Dropbox</p>
                 </TransparentButton>
                 <TransparentButton styleName="add-lead-btn" >
-                    <span className="ion-earth" />
+                    <span className={iconNames.globe} />
                     <p>DEEP</p>
                 </TransparentButton>
                 <TransparentButton styleName="add-lead-btn" >
-                    <span className="ion-clipboard" />
+                    <span className={iconNames.clipboard} />
                     <p>ARY</p>
                 </TransparentButton>
                 <TransparentButton styleName="add-lead-btn" >
-                    <span className="ion-android-upload" />
+                    <span className={iconNames.upload} />
                     <p>Local disk</p>
                 </TransparentButton>
             </div>

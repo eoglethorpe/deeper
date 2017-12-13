@@ -4,6 +4,10 @@ import React from 'react';
 
 import { LEAD_TYPE, LEAD_STATUS } from '../../utils/constants';
 import { leadAccessor } from '../../utils/leadState';
+import {
+    iconNames,
+} from '../../../../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -38,11 +42,11 @@ export default class LeadListItem extends React.PureComponent {
         super(props);
 
         this.leadTypeToIconClassMap = {
-            [LEAD_TYPE.drive]: 'ion-social-googleplus-outline',
-            [LEAD_TYPE.dropbox]: 'ion-social-dropbox',
-            [LEAD_TYPE.file]: 'ion-android-upload',
-            [LEAD_TYPE.website]: 'ion-earth',
-            [LEAD_TYPE.text]: 'ion-clipboard',
+            [LEAD_TYPE.drive]: iconNames.googleDrive,
+            [LEAD_TYPE.dropbox]: iconNames.dropbox,
+            [LEAD_TYPE.file]: iconNames.upload,
+            [LEAD_TYPE.website]: iconNames.globe,
+            [LEAD_TYPE.text]: iconNames.clipboard,
         };
     }
 
@@ -60,7 +64,7 @@ export default class LeadListItem extends React.PureComponent {
                 return (
                     <span
                         styleName="warning"
-                        className="ion-alert-circled"
+                        className={iconNames.warning}
                     />
                 );
             case LEAD_STATUS.requesting:
@@ -68,28 +72,28 @@ export default class LeadListItem extends React.PureComponent {
                 return (
                     <span
                         styleName="pending"
-                        className="ion-load-c"
+                        className={iconNames.loading}
                     />
                 );
             case LEAD_STATUS.invalid:
                 return (
                     <span
                         styleName="error"
-                        className="ion-android-alert"
+                        className={iconNames.error}
                     />
                 );
             case LEAD_STATUS.nonstale:
                 return (
                     <span
                         styleName="stale"
-                        className="ion-code-working"
+                        className={iconNames.codeWorking}
                     />
                 );
             case LEAD_STATUS.complete:
                 return (
                     <span
                         styleName="complete"
-                        className="ion-checkmark-circled"
+                        className={iconNames.checkCircle}
                     />
                 );
             default:

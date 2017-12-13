@@ -18,6 +18,7 @@ import {
 } from '../../../public/utils/common';
 
 import {
+    iconNames,
     pathNames,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -255,7 +256,7 @@ export default class ProjectPanel extends React.PureComponent {
                                     styleName="sidebar-toggle-button"
                                     onClick={this.showProjectList}
                                 >
-                                    <span className="ion-android-menu" />
+                                    <span className={iconNames.hamburger} />
                                 </TransparentPrimaryButton>
                             )
                         }
@@ -273,7 +274,7 @@ export default class ProjectPanel extends React.PureComponent {
                             styleName="close-sidebar-button"
                             onClick={this.closeProjectList}
                         >
-                            <span className="ion-android-close" />
+                            <span className={iconNames.close} />
                         </TransparentPrimaryButton>
                         <TextInput
                             onChange={this.handleSearchInputChange}

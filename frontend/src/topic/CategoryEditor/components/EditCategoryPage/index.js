@@ -20,6 +20,9 @@ import {
     FormattedDate,
     LoadingAnimation,
 } from '../../../../public/components/View';
+import {
+    iconNames,
+} from '../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -97,14 +100,14 @@ export default class EditCategoryPage extends React.PureComponent {
                             onClick={() => this.handleKeywordSelect(row)}
                             disabled
                         >
-                            <i className="ion-android-delete" />
+                            <span className={iconNames.delete} />
                         </TransparentButton>
                         <TransparentButton
                             className="select-btn"
                             onClick={() => this.handleKeywordSelect(row)}
                             disabled
                         >
-                            <i className="ion-edit" />
+                            <span className={iconNames.edit} />
                         </TransparentButton>
                     </div>
                 ),
