@@ -143,7 +143,6 @@ export default class Navbar extends React.PureComponent {
             'ary',
             'projects',
             'countries',
-            'analysisFramework',
             'export',
         ];
 
