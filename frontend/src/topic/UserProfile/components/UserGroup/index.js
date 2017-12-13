@@ -221,16 +221,6 @@ export default class UserGroup extends React.PureComponent {
         this.userGroupsRequest.stop();
     }
 
-    getActiveDeleteUserGroupType = () => 'User Group'
-
-    getActiveDeleteUserGroupName = () => {
-        const { userGroups } = this.props;
-        const userGroup = userGroups.find(e => (
-            e.id === this.state.activeUserGroupDelete
-        ));
-        return userGroup ? userGroup.title : null;
-    }
-
     createRequestForUserGroupDelete = (userGroupId) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userId = this.props.activeUser.userId;
