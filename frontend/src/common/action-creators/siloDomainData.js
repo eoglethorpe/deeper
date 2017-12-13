@@ -1,6 +1,4 @@
 import {
-    L__SET_LEADS,
-
     SET_ACTIVE_PROJECT,
     SET_ACTIVE_COUNTRY,
 
@@ -16,22 +14,25 @@ import {
     LA__COPY_ALL_BELOW,
     LA__COPY_ALL,
 
+    L__SET_LEADS,
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
     L__SET_ACTIVE_SORT,
+
+    E__SET_ENTRIES,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
     AF__REMOVE_WIDGET,
     AF__VIEW_UPDATE_WIDGET,
 
-    EE_SET_LEAD,
-    EE_ADD_ENTRY,
-    EE_REMOVE_ENTRY,
-    EE_SET_ACTIVE_ENTRY,
-    EE_ENTRY_SAVE,
-    EE_ENTRY_CHANGE,
+    EE__SET_LEAD,
+    EE__ADD_ENTRY,
+    EE__REMOVE_ENTRY,
+    EE__SET_ACTIVE_ENTRY,
+    EE__ENTRY_SAVE,
+    EE__ENTRY_CHANGE,
 
     CE_VIEW_SET_SELECTED_CATEGORY,
     CE_VIEW_SET_SELECTED_SUB_CATEGORY,
@@ -143,27 +144,36 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
     totalLeadsCount,
 });
 
+// ENTRIES
+
+export const setEntriesAction = ({ projectId, entries, totalEntriesCount }) => ({
+    type: E__SET_ENTRIES,
+    projectId,
+    entries,
+    totalEntriesCount,
+});
+
 // EDIT ENTRIES
 
 export const setEditEntryViewLeadAction = ({ lead }) => ({
-    type: EE_SET_LEAD,
+    type: EE__SET_LEAD,
     lead,
 });
 
 export const addEntryAction = ({ leadId, entry }) => ({
-    type: EE_ADD_ENTRY,
+    type: EE__ADD_ENTRY,
     leadId,
     entry,
 });
 
 export const removeEntryAction = ({ leadId, entryId }) => ({
-    type: EE_REMOVE_ENTRY,
+    type: EE__REMOVE_ENTRY,
     leadId,
     entryId,
 });
 
 export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
-    type: EE_ENTRY_SAVE,
+    type: EE__ENTRY_SAVE,
     leadId,
     entryId,
     data,
@@ -171,7 +181,7 @@ export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
 });
 
 export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) => ({
-    type: EE_ENTRY_CHANGE,
+    type: EE__ENTRY_CHANGE,
     leadId,
     entryId,
     data,
@@ -180,7 +190,7 @@ export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) =>
 });
 
 export const setActiveEntryAction = ({ leadId, entryId }) => ({
-    type: EE_SET_ACTIVE_ENTRY,
+    type: EE__SET_ACTIVE_ENTRY,
     leadId,
     entryId,
 });

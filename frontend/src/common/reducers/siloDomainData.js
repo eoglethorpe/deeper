@@ -20,12 +20,14 @@ import {
     L__SET_ACTIVE_PAGE,
     L__SET_ACTIVE_SORT,
 
-    EE_ADD_ENTRY,
-    EE_REMOVE_ENTRY,
-    EE_SET_ACTIVE_ENTRY,
-    EE_SET_LEAD,
-    EE_ENTRY_SAVE,
-    EE_ENTRY_CHANGE,
+    E__SET_ENTRIES,
+
+    EE__ADD_ENTRY,
+    EE__REMOVE_ENTRY,
+    EE__SET_ACTIVE_ENTRY,
+    EE__SET_LEAD,
+    EE__ENTRY_SAVE,
+    EE__ENTRY_CHANGE,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -502,6 +504,18 @@ const setLeads = (state, action) => {
     return update(state, settings);
 };
 
+const setEntries = (state, action) => {
+    const { entries, totalEntriesCount, projectId } = action;
+    const settings = {
+        entriesView: {
+            [projectId]: { $auto: {
+                entries: { $set: entries },
+                totalEntiresCount: { $set: totalEntriesCount },
+            } },
+        },
+    };
+    return update(state, settings);
+};
 
 const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
     const settings = {
@@ -793,12 +807,14 @@ const reducers = {
     [L__SET_ACTIVE_SORT]: leadViewSetActiveSort,
     [L__SET_LEADS]: setLeads,
 
-    [EE_ADD_ENTRY]: editEntryViewAddEntry,
-    [EE_REMOVE_ENTRY]: editEntryViewRemoveEntry,
-    [EE_SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
-    [EE_SET_LEAD]: editEntryViewSetLead,
-    [EE_ENTRY_SAVE]: editEntryViewSaveEntry,
-    [EE_ENTRY_CHANGE]: changeEntryViewSaveEntry,
+    [E__SET_ENTRIES]: setEntries,
+
+    [EE__ADD_ENTRY]: editEntryViewAddEntry,
+    [EE__REMOVE_ENTRY]: editEntryViewRemoveEntry,
+    [EE__SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
+    [EE__SET_LEAD]: editEntryViewSetLead,
+    [EE__ENTRY_SAVE]: editEntryViewSaveEntry,
+    [EE__ENTRY_CHANGE]: changeEntryViewSaveEntry,
 
     [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,

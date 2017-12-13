@@ -11,6 +11,9 @@ export const urlForEntryCreate = `${wsEndpoint}/entries/`;
 export const createUrlForEntryEdit = entryId => (
     `${wsEndpoint}/entries/${entryId}/`
 );
+export const createUrlForEntries = projectId => (
+    `${wsEndpoint}/entries/?projectId=${projectId}/`
+);
 
 export const createParamsForEntry = () => ({
     method: GET,
