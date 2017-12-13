@@ -95,6 +95,7 @@
     }
 
     .user-detail-alt {
+        grid-area: info / info / groups / groups;
         @include shadow-medium;
         display: flex;
         flex-direction: column;
