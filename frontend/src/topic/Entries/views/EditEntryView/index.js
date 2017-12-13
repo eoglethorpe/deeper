@@ -8,13 +8,11 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
+import { randomString } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 import update from '../../../../public/utils/immutable-update';
-
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
+import { LoadingAnimation } from '../../../../public/components/View';
 
 import {
     leadIdFromRoute,
@@ -32,6 +30,7 @@ import {
 
     saveEntryAction,
     changeEntryAction,
+    diffEntriesAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -50,7 +49,7 @@ import {
 } from '../../../../common/rest';
 import schema from '../../../../common/schema';
 
-import { ENTRY_STATUS } from './utils/constants';
+import { ENTRY_STATUS, DIFF_ACTION } from './utils/constants';
 import { calcEntryState } from './utils/entryState';
 
 import styles from './styles.scss';
@@ -74,6 +73,7 @@ const propTypes = {
 
     saveEntry: PropTypes.func.isRequired,
     changeEntry: PropTypes.func.isRequired,
+    diffEntries: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -105,6 +105,8 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryViewLeadAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
+
+    diffEntries: params => dispatch(diffEntriesAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -193,6 +195,93 @@ export default class EditEntryView extends React.PureComponent {
         return leadRequest;
     }
 
+    calcEntriesDiff = (locals, remotes) => {
+        const remoteEntriesMap = remotes.reduce(
+            (acc, entry) => {
+                acc[entry.id] = entry;
+                return acc;
+            },
+            {},
+        );
+        const actions = locals.reduce(
+            (arr, localEntry) => {
+                const serverId = localEntry.data.serverId;
+                const id = localEntry.data.id;
+                const remoteEntry = remoteEntriesMap[serverId];
+                if (!serverId) {
+                    // this localEntry hasn't been saved
+                    arr.push({ id, action: DIFF_ACTION.noop });
+                } else if (!remoteEntry) {
+                    // this entry is removed from server
+                    arr.push({ id, serverId, action: DIFF_ACTION.remove });
+                    // OK: remove
+                    // SKIP: nothing
+                } else if (localEntry.data.versionId < remoteEntry.versionId) {
+                    // this entry is updated on server
+                    const entry = remoteEntry;
+                    const newEntry = {
+                        id: localEntry.data.id,
+                        serverId: entry.id, // here
+                        versionId: entry.versionId,
+                        values: {
+                            exceprt: entry.excerpt,
+                            image: entry.image,
+                            lead: entry.lead,
+                            analysisFramework: entry.analysisFramework,
+                            attribues: entry.attribues,
+                            exportData: entry.exportData,
+                            filterData: entry.filterData,
+                        },
+                    };
+                    arr.push({ id, serverId, action: DIFF_ACTION.replace, entry: newEntry });
+                    // OK: set versionId, generate id, clear uiState
+                    // SKIP: set versionId
+                } else {
+                    arr.push({ id, serverId, action: DIFF_ACTION.noop });
+                }
+                return arr;
+            },
+            [],
+        );
+
+        const localEntriesMap = locals.reduce(
+            (acc, entry) => {
+                if (entry.data.serverId) {
+                    acc[entry.data.serverId] = true;
+                }
+                return acc;
+            },
+            {},
+        );
+        const actions2 = remotes.reduce(
+            (acc, entry) => {
+                const serverId = entry.id;
+                const localEntry = localEntriesMap[serverId];
+                if (!localEntry) {
+                    const newEntry = {
+                        id: randomString(),
+                        serverId: entry.id, // here
+                        values: {
+                            excerpt: entry.excerpt,
+                            image: entry.image,
+                            lead: entry.lead,
+                            analysisFramework: entry.analysisFramework,
+                            attribues: entry.attribues,
+                            exportData: entry.exportData,
+                            filterData: entry.filterData,
+                        },
+                        stale: true,
+                    };
+                    acc.push({ serverId, action: DIFF_ACTION.add, entry: newEntry });
+                }
+                return acc;
+            },
+            [],
+        );
+
+        return [...actions2, ...actions];
+    }
+
     createRequestForEntriesOfLead = (leadId) => {
         const entriesRequest = new FgRestBuilder()
             .url(createUrlForEntriesOfLead(leadId))
@@ -203,37 +292,9 @@ export default class EditEntryView extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
-
-                    const entriesMap = response.results.reduce(
-                        (acc, entry) => {
-                            acc[entry.id] = entry;
-                            return acc;
-                        },
-                        {},
-                    );
-
-                    this.props.entries.forEach((entry) => {
-                        if (!entry.data.serverId) {
-                            // NOTE: this entry hasn't been saved
-                            return;
-                        }
-                        const key = entry.data.serverId;
-                        const entryFromServer = entriesMap[key];
-                        if (!entryFromServer) {
-                            // NOTE: this entry is removed from server
-                            console.warn('remove', key);
-                        }
-                        if (entry.data.versionId < entryFromServer.versionId) {
-                            // NOTE: this entry is updated on server
-                            console.warn('replace', key, entry.data.versionId, entryFromServer.versionId);
-                        }
-                    });
-                    console.warn('complete');
-
-                    // For all leads with serverId
-                    // if versionId is older, replace or not
-                    // if versionId is same, leave
-                    // if entry is not in list, remove or not
+                    const entries = response.results;
+                    const diffs = this.calcEntriesDiff(this.props.entries, entries);
+                    this.props.diffEntries({ leadId, diffs });
                 } catch (er) {
                     console.error(er);
                 }
@@ -307,7 +368,7 @@ export default class EditEntryView extends React.PureComponent {
             paramsForEntry = createParamsForEntryCreate(entry.widget.values);
         }
 
-        const analysisFrameworkRequest = new FgRestBuilder()
+        const entrySaveRequest = new FgRestBuilder()
             .url(urlForEntry)
             .params(paramsForEntry)
             .preLoad(() => {
@@ -368,10 +429,10 @@ export default class EditEntryView extends React.PureComponent {
                 if (this.choices[entryId].isSaveDisabled) {
                     this.saveCoordinator.notifyComplete(entryId);
                 } else {
-                    analysisFrameworkRequest.start();
+                    entrySaveRequest.start();
                 }
             },
-            stop: analysisFrameworkRequest.stop,
+            stop: entrySaveRequest.stop,
         };
 
         return interceptor;

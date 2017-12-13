@@ -28,6 +28,7 @@ import {
     EE__SET_LEAD,
     EE__ENTRY_SAVE,
     EE__ENTRY_CHANGE,
+    EE__ENTRY_DIFF,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -118,6 +119,56 @@ const createEntry = ({ id, serverId, values = {}, stale = false }) => {
     return update(entryReference, settings);
 };
 
+const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
+    (acc, diff) => {
+        const index = localEntries.findIndex(e => e.data.id === diff.id);
+        switch (diff.action) {
+            case 'add': {
+                // acc.push create
+                const remoteEntry = diff.entry;
+                acc.push(createEntry(remoteEntry));
+                break;
+            }
+            case 'remove':
+                // don't push
+                break;
+            case 'replace': {
+                // set uiState = {}
+                // set versionId
+                const localEntry = { ...localEntries[index] };
+                const remoteEntry = diff.entry;
+                localEntry.data.versionId = remoteEntry.versionId;
+                localEntry.uiState = {};
+                localEntry.widget = {
+                    values: remoteEntry.values,
+                    errors: [],
+                    fieldErors: {},
+                };
+                acc.push(localEntry);
+                break;
+            }
+            case 'replace-skip': {
+                // set versionId
+                const localEntry = { ...localEntries[index] };
+                const remoteEntry = diff.entry;
+                localEntry.data.versionId = remoteEntry.versionId;
+                acc.push(localEntry);
+                break;
+            }
+            case 'noop': {
+                // just push
+                const localEntry = { ...localEntries[index] };
+                acc.push(localEntry);
+                break;
+            }
+            default:
+                console.warn(`Error: diff.action not valid ${diff.action}`);
+                break;
+        }
+        return acc;
+    },
+    [],
+);
 
 // CALCUALTE ERROR
 const setErrorForLeads = (state, leadIndices) => {
@@ -662,7 +713,7 @@ const editEntryViewSaveEntry = (state, action) => {
     return update(state, settings);
 };
 
-const changeEntryViewSaveEntry = (state, action) => {
+const editEntryViewChangeEntry = (state, action) => {
     const {
         leadId,
         entryId,
@@ -695,6 +746,27 @@ const changeEntryViewSaveEntry = (state, action) => {
             },
         },
     };
+    return update(state, settings);
+};
+
+
+const editEntryViewDiffEntries = (state, action) => {
+    const {
+        leadId,
+        diffs,
+    } = action;
+
+    const localEntries = state.editEntryView[leadId].entries;
+    const newEntries = calcNewEntries(localEntries, diffs);
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                entries: { $set: newEntries },
+            },
+        },
+    };
+
     return update(state, settings);
 };
 
@@ -814,7 +886,8 @@ const reducers = {
     [EE__SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
     [EE__SET_LEAD]: editEntryViewSetLead,
     [EE__ENTRY_SAVE]: editEntryViewSaveEntry,
-    [EE__ENTRY_CHANGE]: changeEntryViewSaveEntry,
+    [EE__ENTRY_CHANGE]: editEntryViewChangeEntry,
+    [EE__ENTRY_DIFF]: editEntryViewDiffEntries,
 
     [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,

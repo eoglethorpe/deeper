@@ -32,6 +32,7 @@ export const EE__SET_ACTIVE_ENTRY = 'domain-data/EE__SET_ACTIVE_ENTRY';
 export const EE__SET_LEAD = 'silo-domain-data/EE__SET_LEAD';
 export const EE__ENTRY_SAVE = 'domain-data/EE__ENTRY_SAVE';
 export const EE__ENTRY_CHANGE = 'domain-data/EE__ENTRY_CHANGE';
+export const EE__ENTRY_DIFF = 'domain-data/EE__ENTRY_DIFF';
 
 // AF => AnalysisFramework
 export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';
