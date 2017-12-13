@@ -759,10 +759,19 @@ const editEntryViewDiffEntries = (state, action) => {
     const localEntries = state.editEntryView[leadId].entries;
     const newEntries = calcNewEntries(localEntries, diffs);
 
+    // If last selected was deleted in newEntries, then set the first item as
+    // selected
+    let newActiveId = state.editEntryView[leadId].selectedEntryId;
+    const oldSelected = newEntries.find(entry => entry.data.id === newActiveId);
+    if (!oldSelected && newEntries.length > 0) {
+        newActiveId = newEntries[0].data.id;
+    }
+
     const settings = {
         editEntryView: {
             [leadId]: {
                 entries: { $set: newEntries },
+                selectedEntryId: { $set: newActiveId },
             },
         },
     };

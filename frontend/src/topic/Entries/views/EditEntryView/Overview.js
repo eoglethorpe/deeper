@@ -29,6 +29,12 @@ import {
     setActiveEntryAction,
 } from '../../../../common/redux';
 
+
+/*
+createUrlForDeleteEntry,
+createParamsForDeleteEntry,
+*/
+
 import { ENTRY_STATUS } from './utils/constants';
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';
@@ -152,10 +158,20 @@ export default class Overview extends React.PureComponent {
     }
 
     handleRemoveEntryButtonClick = () => {
-        this.props.removeEntry({
-            leadId: this.props.leadId,
-            entryId: this.props.selectedEntryId,
-        });
+        const {
+            entries,
+            selectedEntryId,
+        } = this.props;
+        const selectedEntry = entries.find(entry => entry.data.id === selectedEntryId);
+        // console.log(entries[selectedEntryId] && entries[selectedEntryId].data.serverId);
+        if (selectedEntry && selectedEntry.data.serverId) {
+            console.warn('TODO: Should send request');
+        } else {
+            this.props.removeEntry({
+                leadId: this.props.leadId,
+                entryId: this.props.selectedEntryId,
+            });
+        }
     }
 
     handleEntrySelectChange = (value) => {
@@ -257,6 +273,7 @@ export default class Overview extends React.PureComponent {
                             options={entries}
                             onChange={this.handleEntrySelectChange}
                             value={selectedEntryId}
+                            clearable={false}
                         />
                         <TransparentButton
                             title="Add entry"
