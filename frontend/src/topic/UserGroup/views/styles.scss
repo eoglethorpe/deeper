@@ -56,6 +56,19 @@
         background-color: $color-foreground;
         padding: $spacing-small;
     }
+
+    .usergroup-alt {
+        @include shadow-medium;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-foreground;
+        padding: $spacing-medium-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+    }
 }
 
 .user-group-edit-modal {

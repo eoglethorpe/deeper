@@ -1,5 +1,6 @@
 import {
     SET_USER_INFORMATION,
+    UNSET_USER,
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT,
@@ -46,6 +47,11 @@ export const setUserInformationAction = ({ userId, information }) => ({
     type: SET_USER_INFORMATION,
     userId,
     information,
+});
+
+export const unsetUserAction = ({ userId }) => ({
+    type: UNSET_USER,
+    userId,
 });
 
 export const setUsersInformationAction = ({ users }) => ({

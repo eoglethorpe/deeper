@@ -8,6 +8,7 @@ import {
     Modal,
     ModalHeader,
     ModalBody,
+    LoadingAnimation,
 } from '../../../public/components/View';
 import {
     TransparentPrimaryButton,
@@ -22,6 +23,7 @@ import {
     groupSelector,
     setUserGroupAction,
     setUsersInformationAction,
+    unSetUserGroupAction,
 
     activeUserSelector,
 } from '../../../common/redux';
@@ -44,6 +46,7 @@ const propTypes = {
     userGroup: PropTypes.object, // eslint-disable-line
     setUserGroup: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
+    unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
@@ -60,6 +63,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
     setUsers: params => dispatch(setUsersInformationAction(params)),
+    unSetUserGroup: params => dispatch(unSetUserGroupAction(params)),
 });
 
 const emptyList = [];
@@ -78,6 +82,7 @@ export default class UserGroup extends React.PureComponent {
 
         this.state = {
             showUserGroupEditModal: false,
+            pending: true,
         };
 
         this.usersFields = ['display_name', 'email', 'id'];
@@ -101,6 +106,8 @@ export default class UserGroup extends React.PureComponent {
         const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroup)
             .params(() => createParamsForUser())
+            .preLoad(() => { this.setState({ pending: true }); })
+            .postLoad(() => { this.setState({ pending: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'userGroupGetResponse');
@@ -112,7 +119,11 @@ export default class UserGroup extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                if (response.errorCode === 404) {
+                    this.props.unSetUserGroup({ userGroupId: id });
+                } else {
+                    console.info('FAILURE:', response);
+                }
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -161,9 +172,27 @@ export default class UserGroup extends React.PureComponent {
 
     render() {
         const { userGroup, match } = this.props;
-        const { showUserGroupEditModal } = this.state;
+        const { showUserGroupEditModal, pending } = this.state;
 
         const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || emptyList);
+
+        if (pending) {
+            return (
+                <div styleName="usergroup">
+                    <LoadingAnimation />
+                </div>
+            );
+        }
+
+        if (!userGroup.id) {
+            return (
+                <div styleName="usergroup">
+                    <div styleName="usergroup-alt">
+                        User Group Not Found....
+                    </div>
+                </div>
+            );
+        }
 
         return (
             <div styleName="usergroup">
