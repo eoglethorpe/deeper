@@ -3,8 +3,11 @@ import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
 import UserProfile from '../';
-import Form, { requiredCondition } from '../../../../public/components/Form';
-import TextInput from '../../../../public/components/TextInput';
+import {
+    Form,
+    requiredCondition,
+    TextInput,
+} from '../../../../public/components/Input/Form';
 
 const initialState = {
 };
