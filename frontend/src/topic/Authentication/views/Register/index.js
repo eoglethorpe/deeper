@@ -10,6 +10,10 @@ import {
 } from 'react-router-dom';
 
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+
+import {
     Form,
     NonFieldErrors,
     TextInput,
@@ -186,77 +190,74 @@ export default class Login extends React.PureComponent {
 
         return (
             <div styleName="register">
-                <Form
-                    styleName="register-form"
-                    changeCallback={this.changeCallback}
-                    elements={this.elements}
-                    failureCallback={this.failureCallback}
-                    successCallback={this.successCallback}
-                    validation={this.validation}
-                    validations={this.validations}
-                >
-                    {
-                        pending &&
-                        <div styleName="pending-overlay">
-                            <i className="ion-load-c" styleName="loading-icon" />
-                        </div>
-                    }
-                    <NonFieldErrors errors={formErrors} />
-                    <TextInput
-                        error={formFieldErrors.firstname}
-                        formname="firstname"
-                        value={formValues.firstname}
-                        label="First name"
-                        placeholder="John"
-                    />
-                    <TextInput
-                        error={formFieldErrors.lastname}
-                        formname="lastname"
-                        value={formValues.lastname}
-                        label="Last name"
-                        placeholder="Doe"
-                    />
-                    <TextInput
-                        error={formFieldErrors.organization}
-                        formname="organization"
-                        value={formValues.organization}
-                        label="Organization"
-                        placeholder="Togglecorp"
-                    />
-                    <TextInput
-                        error={formFieldErrors.email}
-                        formname="email"
-                        value={formValues.email}
-                        label="Email"
-                        placeholder="john.doe@mail.com"
-                    />
-                    <TextInput
-                        error={formFieldErrors.password}
-                        formname="password"
-                        hint="Password should be more than four characters long."
-                        value={formValues.password}
-                        label="Password"
-                        required
-                        type="password"
-                    />
-                    <div styleName="action-buttons">
-                        <PrimaryButton
-                            disabled={pending}
-                        >
-                            { stale ? 'Register*' : 'Register' }
-                        </PrimaryButton>
-                    </div>
-                </Form>
-                <div styleName="login-link-container">
-                    <p>
-                        Already have an account yet?
-                    </p>
-                    <Link
-                        to={reverseRoute(pathNames.login, {})}
-                        styleName="login-link"
+                <div styleName="register-box">
+                    <Form
+                        styleName="register-form"
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.successCallback}
+                        validation={this.validation}
+                        validations={this.validations}
                     >
-                        Login
-                    </Link>
+                        { pending && <LoadingAnimation /> }
+                        <NonFieldErrors errors={formErrors} />
+                        <TextInput
+                            error={formFieldErrors.firstname}
+                            formname="firstname"
+                            value={formValues.firstname}
+                            label="First name"
+                            placeholder="John"
+                        />
+                        <TextInput
+                            error={formFieldErrors.lastname}
+                            formname="lastname"
+                            value={formValues.lastname}
+                            label="Last name"
+                            placeholder="Doe"
+                        />
+                        <TextInput
+                            error={formFieldErrors.organization}
+                            formname="organization"
+                            value={formValues.organization}
+                            label="Organization"
+                            placeholder="Togglecorp"
+                        />
+                        <TextInput
+                            error={formFieldErrors.email}
+                            formname="email"
+                            value={formValues.email}
+                            label="Email"
+                            placeholder="john.doe@mail.com"
+                        />
+                        <TextInput
+                            error={formFieldErrors.password}
+                            formname="password"
+                            hint="Password should be more than four characters long."
+                            value={formValues.password}
+                            label="Password"
+                            required
+                            type="password"
+                        />
+                        <div styleName="action-buttons">
+                            <PrimaryButton
+                                disabled={pending}
+                            >
+                                { stale ? 'Register*' : 'Register' }
+                            </PrimaryButton>
+                        </div>
+                    </Form>
+                    <div styleName="login-link-container">
+                        <p>
+                            Already have an account yet?
+                        </p>
+                        <Link
+                            to={reverseRoute(pathNames.login, {})}
+                            styleName="login-link"
+                        >
+                            Login
+                        </Link>
+                    </div>
                 </div>
             </div>
         );

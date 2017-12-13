@@ -3,83 +3,114 @@
 .login {
     display: flex;
     flex-wrap: wrap;
-    align-content: center;
     align-items: center;
     justify-content: center;
+    background-color: $color-primary;
     width: 100%;
     height: 100vh;
 
-    .login-form {
-        max-width: $width-login-form;
-        width: 100%;
-        position: relative;
-        background-color: $color-foreground;
-        padding: $spacing-small $spacing-large $spacing-large;
+    .deep-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 12vw;
 
-        .non-field-errors {
+        .logo {
+            width: 20vw;
+        }
+
+        .heading {
+            color: $color-text-on-primary;
+        }
+    }
+
+    .login-box {
+        display: flex;
+        flex-direction: column;
+        width: $width-login-form;
+
+        .hid-link-container {
+            display: flex;
             flex-basis: 100%;
-            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            background-color: $color-foreground;
+            padding: $spacing-large;
 
-            .error {
-                padding: $spacing-medium $spacing-large;
-                color: $color-danger;
+            .hid-link {
+                display: flex;
+                flex-basis: 100%;
+                align-items: center;
+                margin-bottom: $spacing-large;
+                border: $width-separator-thin solid $color-separator-alt;
+                border-radius: 3px;
+                padding: $spacing-small $spacing-large;
+                font-size: $font-size-normal-alt;
 
-                &.empty {
-                    color: transparent;
-                    user-select: none;
+                .logo {
+                    margin-right: $spacing-small;
+                    height: $font-size-normal-alt;
+                }
+            }
+
+            .or-container {
+                position: relative;
+                width: 100%;
+                vertical-align: baseline;
+
+                hr {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    border: $width-separator-thin solid $color-separator;
+                    width: 100%;
                 }
 
-                &:not(:last-child) {
-                    &::after {
-                        content: ', ';
-                    }
+                .or {
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50%);
+                    background-color: $color-foreground;
+                    padding: 0 $spacing-extra-small;
+                    text-transform: uppercase;
+                    color: $color-label;
+                    font-size: $font-size-small;
                 }
             }
         }
 
-        .action-buttons {
-            margin-top: $spacing-medium;
+        .login-form {
+            position: relative;
+            background-color: $color-foreground;
+            padding: $spacing-small $spacing-large $spacing-large;
+            width: 100%;
+
+            .action-buttons {
+                display: flex;
+                justify-content: flex-end;
+            }
         }
 
-
-        .pending-overlay {
+        .register-link-container {
             display: flex;
-            position: absolute;
-            top: 0;
-            left: 0;
+            flex-basis: 100%;
             align-items: center;
             justify-content: center;
-            background-color: $color-background-overlay;
-            width: 100%;
-            height: 100%;
+            margin-top: $spacing-extra-small;
+            background-color: $color-foreground;
+            padding: $spacing-large;
 
-            .loading-icon {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                animation: spin 1s linear infinite;
-                width: $width-icon-super-large;
-                height: $width-icon-super-large;
+            p {
+                margin: $spacing-small;
+            }
+
+            .register-link {
+                text-transform: capitalize;
                 color: $color-accent;
-                font-size: $width-icon-super-large;
+                font-size: $font-size-medium-alt;
+                font-weight: $font-weight-medium;
             }
         }
-
     }
-
-    .register-link-container {
-        display: flex;
-        flex-basis: 100%;
-        align-items: center;
-        justify-content: center;
-        padding: $spacing-medium;
-
-        .register-link {
-            margin: $spacing-medium;
-            color: $color-accent;
-            font-weight: $font-weight-medium;
-        }
-    }
-
-
 }

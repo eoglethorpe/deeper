@@ -4,42 +4,16 @@
     display: flex;
     position: relative;
     flex-wrap: wrap;
-    padding: $spacing-large;
+    padding: $spacing-medium-alt;
 
     .action-buttons {
         display: flex;
         flex-basis: 100%;
         justify-content: flex-end;
-        margin-top: $spacing-medium;
-        margin-bottom: $spacing-large;
 
         button {
-            margin-right: $spacing-large;
+            margin-right: $spacing-medium-alt;
         }
-    }
-
-    .pending-overlay {
-        display: flex;
-        position: absolute;
-        top: 0;
-        left: 0;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-background-overlay;
-        width: 100%;
-        height: 100%;
-
-        .loading-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: spin 1s linear infinite;
-            width: $width-icon-super-large;
-            height: $width-icon-super-large;
-            color: $color-accent;
-            font-size: $width-icon-super-large;
-        }
-
     }
 
     .population-container {
@@ -52,10 +26,5 @@
             flex-basis: 40%;
             margin-right: $spacing-super-large;
         }
-    }
-
-    .icon {
-        margin-left: $spacing-large;
-        font-size: $font-size-extra-large;
     }
 }

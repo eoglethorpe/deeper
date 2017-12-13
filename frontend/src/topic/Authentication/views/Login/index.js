@@ -9,6 +9,9 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
+    LoadingAnimation,
+} from '../../../../public/components/View';
+import {
     Form,
     NonFieldErrors,
     TextInput,
@@ -43,6 +46,8 @@ import {
 import {
     startSiloBackgroundTasksAction,
 } from '../../../../common/middlewares/siloBackgroundTasks';
+import logo from '../../../../img/deep-logo-white.png';
+import hidLogo from '../../../../img/hid-logo.png';
 
 import {
     loginAction,
@@ -260,67 +265,83 @@ export default class Login extends React.PureComponent {
         } = this.state;
         return (
             <div styleName="login">
-                <Form
-                    styleName="login-form"
-                    changeCallback={this.changeCallback}
-                    elements={this.elements}
-                    failureCallback={this.failureCallback}
-                    successCallback={this.successCallback}
-                    validation={this.validation}
-                    validations={this.validations}
-                >
-                    {
-                        pending &&
-                        <div styleName="pending-overlay">
-                            <i className="ion-load-c" styleName="loading-icon" />
-                        </div>
-                    }
-                    <NonFieldErrors errors={formErrors} />
-                    <TextInput
-                        disabled={pending}
-                        error={formFieldErrors.email}
-                        formname="email"
-                        value={formValues.email}
-                        label="Email"
-                        placeholder="john.doe@mail.com"
+                <div styleName="deep-container">
+                    <img
+                        styleName="logo"
+                        src={logo}
+                        alt="DEEP"
+                        draggable="false"
                     />
-                    <TextInput
-                        disabled={pending}
-                        error={formFieldErrors.password}
-                        formname="password"
-                        value={formValues.password}
-                        label="Password"
-                        placeholder="**********"
-                        required
-                        type="password"
-                    />
-                    <div styleName="action-buttons">
-                        <PrimaryButton
-                            disabled={pending}
-                        >
-                            { stale ? 'Login*' : 'Login' }
-                        </PrimaryButton>
-                    </div>
-                </Form>
-                <div styleName="register-link-container">
-                    <p>
-                        Do not have an account yet?
-                    </p>
-                    <Link
-                        styleName="register-link"
-                        to={reverseRoute(pathNames.register, {})}
-                    >
-                        Register
-                    </Link>
+                    <h2 styleName="heading">Data entry and exploration platform</h2>
                 </div>
-                <div styleName="register-link-container">
-                    <a
-                        href={hidUrl}
-                        onClick={this.onHidLoginClick}
-                        styleName="register-link"
+                <div styleName="login-box">
+                    <div styleName="hid-link-container">
+                        <a
+                            styleName="hid-link"
+                            href={hidUrl}
+                            onClick={this.onHidLoginClick}
+                        >
+                            <img
+                                styleName="logo"
+                                src={hidLogo}
+                                alt="Login with HID"
+                                draggable="false"
+                            />
+                            <span>Login with HID</span>
+                        </a>
+                        <div styleName="or-container">
+                            <hr />
+                            <span styleName="or">Or</span>
+                        </div>
+                    </div>
+                    <Form
+                        styleName="login-form"
+                        changeCallback={this.changeCallback}
+                        elements={this.elements}
+                        failureCallback={this.failureCallback}
+                        successCallback={this.successCallback}
+                        validation={this.validation}
+                        validations={this.validations}
                     >
-                        Login With HID
-                    </a>
+                        { pending && <LoadingAnimation /> }
+                        <NonFieldErrors errors={formErrors} />
+                        <TextInput
+                            disabled={pending}
+                            error={formFieldErrors.email}
+                            formname="email"
+                            value={formValues.email}
+                            label="Email"
+                            placeholder="john.doe@mail.com"
+                        />
+                        <TextInput
+                            disabled={pending}
+                            error={formFieldErrors.password}
+                            formname="password"
+                            value={formValues.password}
+                            label="Password"
+                            placeholder="**********"
+                            required
+                            type="password"
+                        />
+                        <div styleName="action-buttons">
+                            <PrimaryButton
+                                disabled={pending}
+                            >
+                                { stale ? 'Login*' : 'Login' }
+                            </PrimaryButton>
+                        </div>
+                    </Form>
+                    <div styleName="register-link-container">
+                        <p>
+                            Do not have an account yet?
+                        </p>
+                        <Link
+                            styleName="register-link"
+                            to={reverseRoute(pathNames.register, {})}
+                        >
+                            Register
+                        </Link>
+                    </div>
                 </div>
             </div>
         );
