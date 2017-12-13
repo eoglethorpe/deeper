@@ -4,8 +4,7 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-import {
-} from '../../../../../public/components/View';
+import { iconNames } from '../../../../../common/constants';
 
 export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig'];
 
@@ -46,7 +45,7 @@ export default class GalleryImage extends React.PureComponent {
                     ) : (
                         <span
                             styleName="image-alt"
-                            className="image-alt ion-android-contact"
+                            className={`image-alt ${iconNames.user}`}
                         />
                     )
                 }

@@ -11,9 +11,7 @@ import {
 
 import { iconNames } from '../../../common/constants';
 
-import {
-    FgRestBuilder,
-} from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
 import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './components/GalleryImage';
 import GalleryDocs, { supportedMimeType as GalleryDocsMimeType } from './components/GalleryDocs';
@@ -175,17 +173,27 @@ export default class DeepGallery extends React.PureComponent {
             onlyFileName,
         } = this.props;
 
-        if (pending) {
-            return (
-                <span
-                    className={iconNames.loading}
-                    styleName="loading-animation"
-                />
-            );
+        if (onlyFileName) {
+            if (pending) {
+                return (
+                    <span
+                        className={iconNames.loading}
+                        styleName="loading-animation"
+                    />
+                );
+            }
+            return this.renderFileName({ fileName, fileUrl });
         }
 
-        if (onlyFileName) {
-            return this.renderFileName({ fileName, fileUrl });
+        if (pending) {
+            return (
+                <div styleName="pending-container">
+                    <span
+                        className={iconNames.loading}
+                        styleName="loading-animation"
+                    />
+                </div>
+            );
         }
 
         return this.renderPreview({ className, pending, fileUrl, fileName, mimeType });

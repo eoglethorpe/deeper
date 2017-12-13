@@ -5,5 +5,13 @@
 }
 
 .loading-animation {
+    display: inline-block;
     animation: spin 1s linear infinite;
+}
+
+.pending-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
 }

@@ -146,8 +146,8 @@
 
             .lead-preview {
                 display: flex;
-                flex-direction: column;
                 flex-grow: 1;
+                flex-direction: column;
                 border-top: $width-separator-medium solid $color-separator;
                 overflow-y: auto;
 
@@ -158,7 +158,6 @@
 
                     iframe {
                         flex-grow: 1;
-                        width: 100%;
                     }
                 }
 
