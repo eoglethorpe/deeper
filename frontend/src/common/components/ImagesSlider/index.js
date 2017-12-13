@@ -9,7 +9,7 @@ import {
     iconNames,
 } from '../../constants';
 
-import GalleryImage from '../GalleryImage';
+import DeepGallery from '../DeepGallery';
 
 import styles from './styles.scss';
 
@@ -86,7 +86,7 @@ export default class ImagesSlider extends React.PureComponent {
                 {
                     galleryIds.map((galleryId, key) => (
                         galleryId && (
-                            <GalleryImage
+                            <DeepGallery
                                 key={galleryId}
                                 galleryId={galleryId}
                                 styleName={this.getStyleName(key)}
