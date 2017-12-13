@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
-import MultiCheckboxCollection from '../../../../public/components/MultiCheckboxCollection';
+import MultiCheckboxCollection from '../../../../public/components/Input/MultiCheckboxCollection';
 
 const propTypes = {
     className: PropTypes.string,
