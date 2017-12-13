@@ -1,0 +1,51 @@
+@import '../../../../stylesheets/base';
+
+.matrix-cell {
+    flex-shrink: 0;
+    margin: $spacing-extra-small;
+    background-color: $color-background;
+    padding: $spacing-small;
+    user-select: none;
+}
+
+.matrix-row {
+    display: flex;
+    align-items: center;
+    border: $width-separator-thin solid $color-separator;
+
+    .title {
+        flex-shrink: 0;
+        padding: $spacing-small;
+    }
+
+    .cells {
+        display: flex;
+        flex-basis: 100%;
+        flex-grow: 1;
+        flex-wrap: wrap;
+    }
+
+    .action-buttons {
+        flex-shrink: 0;
+    }
+}
+
+.tagging-matrix-1d {
+    width: 100%;
+}
+
+.edit-cell-modal {
+    width: 400px;
+
+    .edit-cell {
+        display: flex;
+    }
+}
+
+.edit-row-modal {
+    width: 400px;
+
+    .edit-row {
+        display: flex;
+    }
+}
