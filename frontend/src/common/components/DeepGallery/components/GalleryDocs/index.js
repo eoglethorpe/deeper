@@ -4,10 +4,6 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-import {
-    LoadingAnimation,
-} from '../../../../../public/components/View';
-
 export const supportedMimeType = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/pdf', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'application/vnd.ms-powerpoint', 'application/vnd.ms-excel', 'application/xml',
@@ -15,14 +11,12 @@ export const supportedMimeType = ['application/vnd.openxmlformats-officedocument
 
 const propTypes = {
     className: PropTypes.string,
-    pending: PropTypes.bool,
     docUrl: PropTypes.string,
     mimeType: PropTypes.string,
 };
 
 const defaultProps = {
     className: '',
-    pending: true,
     docUrl: undefined,
     mimeType: undefined,
 };
@@ -35,7 +29,6 @@ export default class GalleryDocs extends React.PureComponent {
     render() {
         const {
             className,
-            pending,
             docUrl,
             mimeType,
         } = this.props;
@@ -48,11 +41,6 @@ export default class GalleryDocs extends React.PureComponent {
                 styleName="gallery-docs"
                 className={`gallery-docs ${className}`}
             >
-                {
-                    pending && (
-                        <LoadingAnimation />
-                    )
-                }
                 {
                     mimeType === 'application/pdf' ?
                         <iframe

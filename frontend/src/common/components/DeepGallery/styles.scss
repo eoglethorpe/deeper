@@ -1,5 +1,9 @@
 @import '../../../stylesheets/base';
 
 .gallery-file-name {
-    color: blue;
+    color: $color-accent;
+}
+
+.loading-animation {
+    animation: spin 1s linear infinite;
 }

@@ -9,6 +9,8 @@ import {
     createHeaderForGalleryFile,
 } from '../../../common/rest';
 
+import { iconNames } from '../../../common/constants';
+
 import {
     FgRestBuilder,
 } from '../../../public/utils/rest';
@@ -22,8 +24,8 @@ const componentType = {
 };
 
 const galleryMapping = {};
-GalleryDocsMimeType.forEach((type) => { galleryMapping[type] = componentType.IMAGE; });
-GalleryImageMimeType.forEach((type) => { galleryMapping[type] = componentType.DOC; });
+GalleryImageMimeType.forEach((type) => { galleryMapping[type] = componentType.IMAGE; });
+GalleryDocsMimeType.forEach((type) => { galleryMapping[type] = componentType.DOC; });
 
 const propTypes = {
     className: PropTypes.string,
@@ -172,6 +174,15 @@ export default class DeepGallery extends React.PureComponent {
             className,
             onlyFileName,
         } = this.props;
+
+        if (pending) {
+            return (
+                <span
+                    className={iconNames.loading}
+                    styleName="loading-animation"
+                />
+            );
+        }
 
         if (onlyFileName) {
             return this.renderFileName({ fileName, fileUrl });

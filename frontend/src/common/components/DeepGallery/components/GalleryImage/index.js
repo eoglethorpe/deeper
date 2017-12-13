@@ -5,20 +5,17 @@ import React from 'react';
 import styles from './styles.scss';
 
 import {
-    LoadingAnimation,
 } from '../../../../../public/components/View';
 
 export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig'];
 
 const propTypes = {
     className: PropTypes.string,
-    pending: PropTypes.bool,
     imageUrl: PropTypes.string,
 };
 
 const defaultProps = {
     className: '',
-    pending: true,
     imageUrl: undefined,
 };
 
@@ -30,7 +27,6 @@ export default class GalleryImage extends React.PureComponent {
     render() {
         const {
             className,
-            pending,
             imageUrl,
         } = this.props;
 
@@ -39,11 +35,6 @@ export default class GalleryImage extends React.PureComponent {
                 styleName="gallery-image"
                 className={`gallery-image ${className}`}
             >
-                {
-                    pending && (
-                        <LoadingAnimation />
-                    )
-                }
                 {
                     imageUrl ? (
                         <img
