@@ -18,6 +18,8 @@ const excerptTextWidget = {
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
+        overviewMinSize: { width: 200, height: 50 },
+        listMinSize: { width: 200, height: 50 },
     },
     tagging: {
         overviewComponent: TaggingOverviewWidget,

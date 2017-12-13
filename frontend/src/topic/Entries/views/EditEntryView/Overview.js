@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout';
+
 import { connect } from 'react-redux';
 
 import {
@@ -9,6 +9,7 @@ import {
     Button,
 } from '../../../../public/components/Action';
 import {
+    GridLayout,
     ListView,
     ListItem,
 } from '../../../../public/components/View';
@@ -72,19 +73,8 @@ export default class Overview extends React.PureComponent {
 
         this.state = {
             entriesListViewShow: true,
-            gridLayoutBoundingRect: {},
             currentEntryId: undefined,
         };
-    }
-
-    componentDidMount() {
-        setTimeout(() => {
-            if (this.gridLayoutContainer) {
-                this.setState({
-                    gridLayoutBoundingRect: this.gridLayoutContainer.getBoundingClientRect(),
-                });
-            }
-        }, 0);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -102,34 +92,16 @@ export default class Overview extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getGridItems = () => {
-        const {
-            widgets,
-            items,
-        } = this;
+    getGridItems = () => this.items.map(item => ({
+        key: item.key,
+        widgetId: item.widgetId,
+        title: item.title,
+        layout: item.properties.overviewGridLayout,
+    }))
 
-        return items.map((item) => {
-            const Component = widgets.find(w => w.id === item.widgetId).component;
-            return (
-                <div
-                    key={item.key}
-                    data-af-key={item.key}
-                    data-grid={item.properties.overviewGridData}
-                    styleName="grid-item"
-                >
-                    <header
-                        styleName="header"
-                    >
-                        <h4 styleName="heading">{item.title}</h4>
-                    </header>
-                    <div
-                        styleName="content"
-                    >
-                        <Component />
-                    </div>
-                </div>
-            );
-        });
+    getItemView = (item) => {
+        const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
+        return <Component />;
     }
 
     update(analysisFramework) {
@@ -138,7 +110,7 @@ export default class Overview extends React.PureComponent {
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                component: widget.tagging.overviewComponent,
+                overviewComponent: widget.tagging.overviewComponent,
             }));
 
         if (analysisFramework.widgets) {
@@ -254,10 +226,6 @@ export default class Overview extends React.PureComponent {
 
     render() {
         const {
-            width,
-            height,
-        } = this.state.gridLayoutBoundingRect;
-        const {
             selectedEntryId,
             choices,
             entries,
@@ -265,11 +233,6 @@ export default class Overview extends React.PureComponent {
             onSaveAll,
             saveAllDisabled,
         } = this.props;
-
-        const numOfRows = 100;
-        const numOfColumns = 100;
-        const margin = [0, 0];
-        const rowHeight = parseInt((height || 0) / numOfRows, 10);
 
         const isRemoveDisabled = !selectedEntryId || choices[selectedEntryId].isRemoveDisabled;
 
@@ -342,18 +305,12 @@ export default class Overview extends React.PureComponent {
                         ref={(el) => { this.gridLayoutContainer = el; }}
                         styleName="right"
                     >
-                        <ReactGridLayout
+                        <GridLayout
                             styleName="grid-layout"
-                            cols={numOfColumns}
-                            margin={margin}
-                            width={width || 0}
-                            rowHeight={rowHeight}
-                            isResizable={false}
-                            isDraggable={false}
-                            compactType={null}
-                        >
-                            { this.getGridItems() }
-                        </ReactGridLayout>
+                            modifier={this.getItemView}
+                            items={this.getGridItems()}
+                            viewOnly
+                        />
                     </div>
                 </div>
             </div>
