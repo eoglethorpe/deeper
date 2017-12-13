@@ -18,7 +18,8 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
-import GalleryImage from '../../../common/components/GalleryImage';
+import DeepGallery from '../../../common/components/DeepGallery';
+
 import {
     UserProject,
     UserGroup,
@@ -186,7 +187,7 @@ export default class UserProfile extends React.PureComponent {
             <div styleName="user-profile">
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
-                    <GalleryImage
+                    <DeepGallery
                         galleryId={userInformation.displayPicture}
                         styleName="display-picture"
                     />

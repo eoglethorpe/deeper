@@ -1,0 +1,17 @@
+@import '../../../stylesheets/base';
+
+.gallery-file-name {
+    color: $color-accent;
+}
+
+.loading-animation {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+.pending-container {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+}

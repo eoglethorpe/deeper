@@ -15,6 +15,7 @@ import {
     urlCondition,
 } from '../../../../../../public/components/Input';
 import { LoadingAnimation } from '../../../../../../public/components/View';
+import DeepGallery from '../../../../../../common/components/DeepGallery';
 
 import ApplyAll from '../ApplyAll';
 
@@ -319,7 +320,9 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            Gallery File: {values.attachment}
+
+                            {'Attachment File: '}
+                            <DeepGallery onlyFileName galleryId={values.attachment} />
                         </p>,
                         <HiddenInput
                             formname="attachment"

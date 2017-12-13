@@ -14,6 +14,7 @@ import {
 } from '../../../../../common/redux';
 
 import LeadForm from './LeadForm';
+import DeepGallery from '../../../../../common/components/DeepGallery';
 
 import styles from '../styles.scss';
 
@@ -141,7 +142,17 @@ export default class LeadFormItem extends React.PureComponent {
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 />
                 <div className={styles['lead-preview']} >
-                    LEAD PREVIEW
+                    {
+                        lead.form.values.attachment ? (
+                            <DeepGallery
+                                styleName="gallery-file"
+                                galleryId={lead.form.values.attachment}
+                            />
+                        ) :
+                            <div styleName="preview-text">
+                                <h1>Preview Not Available</h1>
+                            </div>
+                    }
                 </div>
             </div>
         );

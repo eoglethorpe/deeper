@@ -23,6 +23,8 @@ import {
 import {
     LoadingAnimation,
 } from '../../../public/components/View';
+import DeepGallery from '../../../common/components/DeepGallery';
+
 import {
     transformResponseErrorToFormError,
     createParamsForAdminLevelsForRegionPOST,
@@ -380,12 +382,14 @@ export default class EditAdminLevel extends React.PureComponent {
                             disabled={pending}
                         />
                         <FileInput
+                            // TODO: only shape files
                             styleName="geo-file"
                             onChange={this.handleGeoFileInputChange}
                             error={formFieldErrors.geoShapeFile}
                             disabled={pending}
                         >
-                            {'GEO Shape File'} {formValues.geoShapeFile}
+                            {formValues.geoShapeFile ? 'GEO Shape File: ' : 'Load GEO Shape File'}
+                            <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
                         </FileInput>
                         <HiddenInput
                             value={formValues.geoShapeFile || undefined}

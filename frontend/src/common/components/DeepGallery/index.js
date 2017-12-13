@@ -9,30 +9,36 @@ import {
     createHeaderForGalleryFile,
 } from '../../../common/rest';
 
-import {
-    FgRestBuilder,
-} from '../../../public/utils/rest';
+import { iconNames } from '../../../common/constants';
 
-import {
-    iconNames,
-} from '../../../common/constants';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
+import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './components/GalleryImage';
+import GalleryDocs, { supportedMimeType as GalleryDocsMimeType } from './components/GalleryDocs';
+
+const componentType = {
+    IMAGE: 'image',
+    DOC: 'doc',
+};
+
+const galleryMapping = {};
+GalleryImageMimeType.forEach((type) => { galleryMapping[type] = componentType.IMAGE; });
+GalleryDocsMimeType.forEach((type) => { galleryMapping[type] = componentType.DOC; });
 
 const propTypes = {
     className: PropTypes.string,
     galleryId: PropTypes.number,
+    onlyFileName: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     galleryId: undefined,
+    onlyFileName: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class GalleryImage extends React.PureComponent {
+export default class DeepGallery extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -40,8 +46,9 @@ export default class GalleryImage extends React.PureComponent {
         super(props);
 
         this.state = {
-            imageUrl: undefined,
+            fileUrl: undefined,
             pending: !!props.galleryId,
+            fileName: undefined,
         };
 
         if (props.galleryId) {
@@ -90,7 +97,9 @@ export default class GalleryImage extends React.PureComponent {
                 try {
                     // TODO: validate schema
                     this.setState({
-                        imageUrl: response.file,
+                        fileUrl: response.file,
+                        fileName: response.title,
+                        mimeType: response.mimeType,
                         pending: false,
                     });
                 } catch (err) {
@@ -117,42 +126,76 @@ export default class GalleryImage extends React.PureComponent {
         return galleryFileRequest;
     }
 
+    renderPreview = ({ className, pending, fileUrl, fileName, mimeType }) => {
+        if (galleryMapping[mimeType] === componentType.IMAGE) {
+            return (
+                <GalleryImage
+                    className={className}
+                    imageUrl={fileUrl}
+                    pending={pending}
+                />
+            );
+        } else if (galleryMapping[mimeType] === componentType.DOC) {
+            return (
+                <GalleryDocs
+                    className={className}
+                    docUrl={fileUrl}
+                    pending={pending}
+                    mimeType={mimeType}
+                />
+            );
+        }
+        return this.renderFileName({ fileName, fileUrl });
+    }
+
+    renderFileName = ({ fileName, fileUrl }) => (
+        fileUrl ?
+            <a
+                styleName="gallery-file-name"
+                href={fileUrl}
+                target="_blank"
+            >
+                {fileName}
+            </a>
+            : <span />
+    )
+
     render() {
         const {
             pending,
-            imageUrl,
+            fileUrl,
+            fileName,
+            mimeType,
         } = this.state;
 
         const {
             className,
+            onlyFileName,
         } = this.props;
 
-        return (
-            <div
-                styleName="gallery-image"
-                className={`gallery-image ${className}`}
-            >
-                {
-                    pending && (
-                        <LoadingAnimation />
-                    )
-                }
-                {
-                    imageUrl ? (
-                        <img
-                            alt="user"
-                            className="image"
-                            styleName="image"
-                            src={imageUrl}
-                        />
-                    ) : (
-                        <span
-                            styleName="image-alt"
-                            className={`image-alt ${iconNames.user}`}
-                        />
-                    )
-                }
-            </div>
-        );
+        if (onlyFileName) {
+            if (pending) {
+                return (
+                    <span
+                        className={iconNames.loading}
+                        styleName="loading-animation"
+                    />
+                );
+            }
+            return this.renderFileName({ fileName, fileUrl });
+        }
+
+        if (pending) {
+            return (
+                <div styleName="pending-container">
+                    <span
+                        className={iconNames.loading}
+                        styleName="loading-animation"
+                    />
+                </div>
+            );
+        }
+
+        return this.renderPreview({ className, pending, fileUrl, fileName, mimeType });
     }
 }

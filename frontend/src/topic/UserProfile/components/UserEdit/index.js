@@ -8,7 +8,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import GalleryImage from '../../../../common/components/GalleryImage';
+import DeepGallery from '../../../../common/components/DeepGallery';
 
 import {
     Form,
@@ -255,7 +255,7 @@ export default class UserEdit extends React.PureComponent {
                 />
                 {
                     showGalleryImage && (
-                        <GalleryImage
+                        <DeepGallery
                             styleName="gallery-image"
                             galleryId={formValues.displayPicture}
                         />

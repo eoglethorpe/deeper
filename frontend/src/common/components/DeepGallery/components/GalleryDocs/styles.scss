@@ -1,0 +1,14 @@
+@import '../../../../../stylesheets/base';
+
+.gallery-docs {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    .doc {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center center;
+    }
+}
