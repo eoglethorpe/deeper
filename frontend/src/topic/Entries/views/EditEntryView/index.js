@@ -204,6 +204,32 @@ export default class EditEntryView extends React.PureComponent {
                 try {
                     schema.validate(response, 'entriesGetResponse');
 
+                    const entriesMap = response.results.reduce(
+                        (acc, entry) => {
+                            acc[entry.id] = entry;
+                            return acc;
+                        },
+                        {},
+                    );
+
+                    this.props.entries.forEach((entry) => {
+                        if (!entry.data.serverId) {
+                            // NOTE: this entry hasn't been saved
+                            return;
+                        }
+                        const key = entry.data.serverId;
+                        const entryFromServer = entriesMap[key];
+                        if (!entryFromServer) {
+                            // NOTE: this entry is removed from server
+                            console.warn('remove', key);
+                        }
+                        if (entry.data.versionId < entryFromServer.versionId) {
+                            // NOTE: this entry is updated on server
+                            console.warn('replace', key, entry.data.versionId, entryFromServer.versionId);
+                        }
+                    });
+                    console.warn('complete');
+
                     // For all leads with serverId
                     // if versionId is older, replace or not
                     // if versionId is same, leave
@@ -274,11 +300,9 @@ export default class EditEntryView extends React.PureComponent {
         let paramsForEntry;
         const { serverId } = entry.data;
         if (serverId) {
-            console.warn('editing');
             urlForEntry = createUrlForEntryEdit(serverId);
             paramsForEntry = createParamsForEntryEdit(entry.widget.values);
         } else {
-            console.warn('creating');
             urlForEntry = urlForEntryCreate;
             paramsForEntry = createParamsForEntryCreate(entry.widget.values);
         }
