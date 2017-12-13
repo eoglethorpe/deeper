@@ -1,6 +1,7 @@
 export const DUMMY_ACTION = 'domain-data/DUMMY_ACTION';
 
 export const SET_USER_INFORMATION = 'domain-data/SET_USER_INFORMATION';
+export const UNSET_USER = 'domain-data/UNSET_USER';
 export const SET_USERS_INFORMATION = 'domain-data/SET_USERS_INFORMATION';
 export const SET_USER_PROJECTS = 'domain-data/SET_USER_PROJECTS';
 export const SET_USER_PROJECT = 'domain-data/SET_USER_PROJECT';

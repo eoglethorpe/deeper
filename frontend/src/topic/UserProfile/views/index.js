@@ -15,6 +15,7 @@ import {
     Modal,
     ModalBody,
     ModalHeader,
+    LoadingAnimation,
 } from '../../../public/components/View';
 
 import GalleryImage from '../../../common/components/GalleryImage';
@@ -38,6 +39,7 @@ import {
 import {
     userInformationSelector,
     setUserInformationAction,
+    unsetUserAction,
     activeUserSelector,
 } from '../../../common/redux';
 
@@ -51,6 +53,7 @@ const propTypes = {
         }),
     }),
     setUserInformation: PropTypes.func.isRequired,
+    unsetUser: PropTypes.func.isRequired,
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -71,6 +74,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setUserInformation: params => dispatch(setUserInformationAction(params)),
+    unsetUser: params => dispatch(unsetUserAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -84,6 +88,7 @@ export default class UserProfile extends React.PureComponent {
 
         this.state = {
             editProfile: false,
+            pending: false,
         };
     }
 
@@ -111,6 +116,8 @@ export default class UserProfile extends React.PureComponent {
         const userRequest = new FgRestBuilder()
             .url(urlForUser)
             .params(() => createParamsForUser())
+            .preLoad(() => { this.setState({ pending: true }); })
+            .postLoad(() => { this.setState({ pending: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'userGetResponse');
@@ -123,7 +130,11 @@ export default class UserProfile extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                if (response.errorCode === 404) {
+                    this.props.unsetUser({ userId });
+                } else {
+                    console.info('FAILURE:', response);
+                }
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -148,9 +159,28 @@ export default class UserProfile extends React.PureComponent {
             activeUser,
         } = this.props;
 
+        const { pending } = this.state;
         const { userId } = match.params;
 
         const isCurrentUser = +match.params.userId === activeUser.userId;
+
+        if (pending) {
+            return (
+                <div styleName="user-profile">
+                    <LoadingAnimation />
+                </div>
+            );
+        }
+
+        if (!userInformation.id) {
+            return (
+                <div styleName="user-profile">
+                    <div styleName="user-detail-alt">
+                        User Not Found....
+                    </div>
+                </div>
+            );
+        }
 
         return (
             <div styleName="user-profile">

@@ -1,5 +1,6 @@
 import {
     SET_USER_INFORMATION,
+    UNSET_USER,
     SET_USERS_INFORMATION,
     SET_USER_PROJECTS,
     SET_USER_PROJECT_OPTIONS,
@@ -59,6 +60,15 @@ const setUserInformation = (state, action) => {
                     $merge: information,
                 } },
             } },
+        },
+    };
+    return update(state, settings);
+};
+
+const unsetUserInformation = (state, action) => {
+    const settings = {
+        users: {
+            [action.userId]: { $set: undefined },
         },
     };
     return update(state, settings);
@@ -787,6 +797,7 @@ const reducers = {
     [DUMMY_ACTION]: dummyAction,
 
     [SET_USER_INFORMATION]: setUserInformation,
+    [UNSET_USER]: unsetUserInformation,
     [SET_USERS_INFORMATION]: setUsersInformation,
 
     [SET_USER_PROJECTS]: setUserProjects,
