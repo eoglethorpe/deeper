@@ -146,8 +146,8 @@
 
             .lead-preview {
                 display: flex;
-                flex-grow: 1;
                 flex-direction: column;
+                flex-grow: 1;
                 border-top: $width-separator-medium solid $color-separator;
                 overflow-y: auto;
 
