@@ -177,7 +177,7 @@ export default class DeepGallery extends React.PureComponent {
             if (pending) {
                 return (
                     <span
-                        className={iconNames.loading}
+                        className={`${iconNames.loading} ${className}`}
                         styleName="loading-animation"
                     />
                 );
@@ -187,7 +187,10 @@ export default class DeepGallery extends React.PureComponent {
 
         if (pending) {
             return (
-                <div styleName="pending-container">
+                <div
+                    styleName="pending-container"
+                    className={className}
+                >
                     <span
                         className={iconNames.loading}
                         styleName="loading-animation"

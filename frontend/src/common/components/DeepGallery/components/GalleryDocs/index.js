@@ -47,11 +47,13 @@ export default class GalleryDocs extends React.PureComponent {
                             styleName="doc"
                             title={docUrl}
                             src={docUrl}
+                            sandbox="allow-scripts allow-same-origin"
                         />
                         : <iframe
                             styleName="doc"
                             title={docUrl}
                             src={googleDriveViewerUrl}
+                            sandbox="allow-scripts allow-same-origin"
                         />
                 }
             </div>
