@@ -54,7 +54,7 @@ import {
 
 } from '../../../../common/redux';
 
-import { calcLeadState } from './utils/leadState';
+import { calcLeadState, leadAccessor } from './utils/leadState';
 import { LEAD_STATUS } from './utils/constants';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
@@ -150,8 +150,8 @@ export default class LeadAdd extends React.PureComponent {
     // REST REQUEST
 
     createRequestForFormSave = (lead, newValues) => {
-        const { serverId } = lead.data;
-        const leadId = this.leadDetailKeyExtractor(lead);
+        const serverId = leadAccessor.getServerId(lead);
+        const leadId = leadAccessor.getKey(lead);
 
         let url;
         let params;
@@ -510,7 +510,7 @@ export default class LeadAdd extends React.PureComponent {
 
     handleBulkSave = () => {
         const leadKeys = this.props.addLeadViewLeads
-            .map(this.leadDetailKeyExtractor);
+            .map(leadAccessor.getKey);
         leadKeys.forEach((id) => {
             this.formCoordinator.add(id, this.leadRefs[id]);
         });
@@ -518,8 +518,6 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     // UI
-
-    leadDetailKeyExtractor = lead => lead.data.id;
 
     referenceForLeadDetail = key => (elem) => {
         if (elem) {
@@ -531,7 +529,8 @@ export default class LeadAdd extends React.PureComponent {
         const { isSaveDisabled, isFormDisabled } = this.choices[key] || {};
 
         const { activeLeadId, leadFilterOptions } = this.props;
-        const leadOptions = leadFilterOptions[lead.form.values.project];
+        const { project } = leadAccessor.getValues(lead);
+        const leadOptions = leadFilterOptions[project];
         return (
             <LeadFormItem
                 ref={this.referenceForLeadDetail(key)}
@@ -564,7 +563,7 @@ export default class LeadAdd extends React.PureComponent {
         // calculate all choices
         this.choices = this.props.addLeadViewLeads.reduce(
             (acc, lead) => {
-                const leadId = this.leadDetailKeyExtractor(lead);
+                const leadId = leadAccessor.getKey(lead);
                 const choice = calcLeadState({
                     lead,
                     rest: leadRests[leadId],
@@ -646,7 +645,7 @@ export default class LeadAdd extends React.PureComponent {
                     <List
                         data={this.props.addLeadViewLeads}
                         modifier={this.renderLeadDetail}
-                        keyExtractor={this.leadDetailKeyExtractor}
+                        keyExtractor={leadAccessor.getKey}
                     />
                 </div>
             </div>

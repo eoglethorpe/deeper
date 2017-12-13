@@ -10,6 +10,9 @@ import { connect } from 'react-redux';
 import {
     ListView,
 } from '../../../../../public/components/View';
+import {
+    caseInsensitiveSubmatch,
+} from '../../../../../public/utils/common';
 
 import {
     addLeadViewActiveLeadIdSelector,
@@ -19,11 +22,10 @@ import {
 } from '../../../../../common/redux';
 
 import { LEAD_STATUS, LEAD_FILTER_STATUS } from '../utils/constants';
+import { leadAccessor } from '../utils/leadState';
+
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';
-
-// TODO: use from common
-const strMatchesSub = (str, sub) => (str.toLowerCase().includes(sub.toLowerCase()));
 
 const statusMatches = (leadStatus, status) => {
     switch (status) {
@@ -90,17 +92,18 @@ export default class LeadList extends React.PureComponent {
         ) {
             const { search, type, source, status } = filters;
             const leadsFiltered = leads.filter((lead) => {
-                const id = this.calcLeadKey(lead);
-                const leadStatus = choices[id].choice;
+                const id = leadAccessor.getKey(lead);
+                const leadType = leadAccessor.getType(lead);
                 const {
                     title: leadTitle = '',
                     source: leadSource = '',
-                } = lead.form.values;
-                const { type: leadType } = lead.data;
+                } = leadAccessor.getValues(lead);
 
-                if (search && search.length > 0 && !strMatchesSub(leadTitle, search)) {
+                const leadStatus = choices[id].choice;
+
+                if (!caseInsensitiveSubmatch(leadTitle, search)) {
                     return false;
-                } else if (source && source.length > 0 && !strMatchesSub(leadSource, source)) {
+                } else if (!caseInsensitiveSubmatch(leadSource, source)) {
                     return false;
                 } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
                     return false;
@@ -113,34 +116,34 @@ export default class LeadList extends React.PureComponent {
         }
     }
 
-    calcLeadKey = lead => lead.data.id
-
     renderLeadItem = (key, lead) => {
         const {
             leadUploads,
             activeLeadId,
             choices,
+            setActiveLeadId,
         } = this.props;
 
         return (
             <LeadListItem
-                active={activeLeadId === this.calcLeadKey(lead)}
+                active={activeLeadId === leadAccessor.getKey(lead)}
                 key={key}
                 leadKey={key}
                 lead={lead}
                 choice={choices[key].choice}
                 upload={leadUploads[key]}
-                onClick={this.props.setActiveLeadId}
+                onClick={setActiveLeadId}
             />
         );
     }
 
     render() {
+        const { leadsFiltered } = this.state;
         return (
             <ListView
                 styleName="lead-list"
-                data={this.state.leadsFiltered}
-                keyExtractor={this.calcLeadKey}
+                data={leadsFiltered}
+                keyExtractor={leadAccessor.getKey}
                 modifier={this.renderLeadItem}
             />
         );

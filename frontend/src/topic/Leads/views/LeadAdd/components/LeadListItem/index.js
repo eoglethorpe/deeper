@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { LEAD_TYPE, LEAD_STATUS } from '../../utils/constants';
+import { leadAccessor } from '../../utils/leadState';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -122,8 +123,8 @@ export default class LeadListItem extends React.PureComponent {
         const { active, className } = this.props;
 
         const { choice, upload, lead } = this.props;
-        const { type } = lead.data;
-        const { title } = lead.form.values;
+        const type = leadAccessor.getType(lead);
+        const { title } = leadAccessor.getValues(lead);
 
         return (
             <button

@@ -115,6 +115,7 @@ export default class LeadButtons extends React.PureComponent {
 
     handleAddLeadFromDropbox = (response) => {
         if (response.length <= 0) {
+            console.warn('Empty response from dropbox');
             return;
         }
         const { activeProject } = this.props;
@@ -183,9 +184,7 @@ export default class LeadButtons extends React.PureComponent {
         });
 
         this.props.addLeads(newLeads);
-
-        const { onFileSelect } = this.props;
-        onFileSelect(uploads);
+        this.props.onFileSelect(uploads);
     }
 
     handleAddLeadFromWebsite = () => {
@@ -233,9 +232,8 @@ export default class LeadButtons extends React.PureComponent {
     }
 
     handleGoogleDriveOnAuthenticated = (accessToken) => {
-        // TODO: use this token will uploading
-        console.warn(accessToken);
         if (accessToken) {
+            // NOTE: use this token later during upload
             this.googleDriveAccessToken = accessToken;
         }
     }

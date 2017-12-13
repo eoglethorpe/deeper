@@ -19,6 +19,7 @@ import { LoadingAnimation } from '../../../../../../public/components/View';
 import ApplyAll from '../ApplyAll';
 
 import { LEAD_TYPE, ATTACHMENT_TYPES } from '../../utils/constants';
+import { leadAccessor } from '../../utils/leadState';
 import styles from './styles.scss';
 
 
@@ -76,7 +77,8 @@ export default class LeadForm extends React.PureComponent {
             sourceType: [requiredCondition],
         };
 
-        switch (lead.data.type) {
+        const leadType = leadAccessor.getType(lead);
+        switch (leadType) {
             case LEAD_TYPE.file:
             case LEAD_TYPE.dropbox:
             case LEAD_TYPE.drive:
@@ -115,7 +117,7 @@ export default class LeadForm extends React.PureComponent {
                 };
                 break;
             default:
-                console.warn(`Unknown lead type ${lead.type}`);
+                console.warn(`Unknown lead type ${leadType}`);
                 this.elements = commonElements;
                 this.validations = commonValidations;
         }
@@ -148,14 +150,10 @@ export default class LeadForm extends React.PureComponent {
             isBulkActionDisabled,
         } = this.props;
 
-        const {
-            values,
-            errors,
-            fieldErrors,
-        } = lead.form;
-        const {
-            type,
-        } = lead.data;
+        const values = leadAccessor.getValues(lead);
+        const type = leadAccessor.getType(lead);
+        const errors = leadAccessor.getErrors(lead);
+        const fieldErrors = leadAccessor.getFieldErrors(lead);
 
         return (
             <Form
@@ -281,7 +279,7 @@ export default class LeadForm extends React.PureComponent {
                     />
                 </ApplyAll>
                 {
-                    lead.data.type === LEAD_TYPE.website && [
+                    type === LEAD_TYPE.website && [
                         <TextInput
                             error={fieldErrors.url}
                             formname="url"
@@ -303,7 +301,7 @@ export default class LeadForm extends React.PureComponent {
                     ]
                 }
                 {
-                    lead.data.type === LEAD_TYPE.text &&
+                    type === LEAD_TYPE.text &&
                         <TextArea
                             error={fieldErrors.text}
                             formname="text"
@@ -316,7 +314,7 @@ export default class LeadForm extends React.PureComponent {
                 }
                 {
                     // one of drive, dropbox, or file
-                    ATTACHMENT_TYPES.indexOf(lead.data.type) !== -1 && ([
+                    ATTACHMENT_TYPES.indexOf(type) !== -1 && ([
                         <p
                             key="title"
                             styleName="file-title"

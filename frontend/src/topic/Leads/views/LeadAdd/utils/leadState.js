@@ -37,3 +37,13 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     }
     return LEAD_STATUS.stale;
 };
+
+export const leadAccessor = {
+    getKey: lead => lead.data.id,
+    getServerId: lead => lead.data.serverId,
+    getType: lead => lead.data.type,
+    getValues: lead => lead.data.form.values,
+    getErrors: lead => lead.data.form.errors,
+    getFieldErrors: lead => lead.data.form.fieldErrors,
+    getUiState: lead => lead.uiState,
+};
