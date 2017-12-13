@@ -143,12 +143,15 @@ export default class LeadFormItem extends React.PureComponent {
                 />
                 <div className={styles['lead-preview']} >
                     {
-                        lead.form.values.attachment && (
+                        lead.form.values.attachment ? (
                             <DeepGallery
                                 styleName="gallery-file"
                                 galleryId={lead.form.values.attachment}
                             />
-                        )
+                        ) :
+                            <div styleName="preview-text">
+                                <h1>Preview Not Available</h1>
+                            </div>
                     }
                 </div>
             </div>

@@ -161,6 +161,16 @@
                         width: 100%;
                     }
                 }
+
+                .preview-text {
+                    display: flex;
+                    margin: auto;
+
+                    h1 {
+                        color: $color-text-disabled;
+                        font-weight: $font-weight-medium;
+                    }
+                }
             }
 
             &.hidden {
