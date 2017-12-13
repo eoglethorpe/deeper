@@ -24,6 +24,10 @@ import {
     UserEdit,
 } from '../components/';
 
+import {
+    iconNames,
+} from '../../../common/constants';
+
 import { FgRestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
@@ -169,7 +173,7 @@ export default class UserProfile extends React.PureComponent {
                             {
                                 isCurrentUser &&
                                 <TransparentPrimaryButton onClick={this.handleEditProfileClick}>
-                                    <span className="ion-edit" />
+                                    <span className={iconNames.edit} />
                                 </TransparentPrimaryButton>
                             }
                             <Modal
@@ -178,7 +182,16 @@ export default class UserProfile extends React.PureComponent {
                                 show={this.state.editProfile}
                                 styleName="user-profile-edit-modal"
                             >
-                                <ModalHeader title="Edit profile" />
+                                <ModalHeader
+                                    title="Edit profile"
+                                    rightComponent={
+                                        <TransparentPrimaryButton
+                                            onClick={this.handleEditProfileClose}
+                                        >
+                                            <span className={iconNames.close} />
+                                        </TransparentPrimaryButton>
+                                    }
+                                />
                                 <ModalBody>
                                     <UserEdit
                                         userId={userId}

@@ -19,10 +19,6 @@
         .pusher {
             flex-grow: 1;
         }
-
-        .add-button {
-            // margin-right: $spacing-medium-alt;
-        }
     }
 
     .content {
@@ -48,33 +44,4 @@
             }
         }
     }
-}
-
-:global .forward-btn {
-    padding: $spacing-small;
-
-    .ion-forward {
-        margin: 0 $spacing-small;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-}
-
-:global .delete-btn {
-    padding: $spacing-small;
-
-    .ion-android-delete {
-        margin: 0 $spacing-small;
-        color: $color-danger;
-
-    }
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
 }

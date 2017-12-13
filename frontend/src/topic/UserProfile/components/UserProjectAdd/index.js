@@ -186,10 +186,7 @@ export default class UserProjectAdd extends React.PureComponent {
                 successCallback={this.successCallback}
                 validations={this.validations}
             >
-                {
-                    pending &&
-                    <LoadingAnimation />
-                }
+                { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label="Project Title"

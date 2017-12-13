@@ -12,23 +12,28 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentButton,
+    TransparentPrimaryButton,
+    TransparentDangerButton,
 } from '../../../../public/components/Action';
 import {
+    Confirm,
     FormattedDate,
     Modal,
     ModalBody,
     ModalHeader,
     Table,
+    LoadingAnimation,
 } from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
+    iconNames,
     pathNames,
 } from '../../../../common/constants';
+
 import schema from '../../../../common/schema';
-import DeletePrompt from '../../../../common/components/DeletePrompt';
+
 import {
     createParamsForUserGroups,
     createParamsForUserGroupsDelete,
@@ -110,7 +115,8 @@ export default class UserGroup extends React.PureComponent {
             deletePending: false,
 
             // Active Delete state
-            activeUserGroupDelete: null,
+            activeUserGroup: {},
+            confirmText: '',
         };
 
         this.userGroupsTableHeaders = [
@@ -164,41 +170,31 @@ export default class UserGroup extends React.PureComponent {
                         return (
                             <Link
                                 title="View UserGroup"
-                                className={`
-                                    ${styles['link-to-usergroup']}
-                                    ${styles['action-button']}
-                                `}
                                 to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                             >
-                                <i className="ion-android-open" />
+                                <TransparentPrimaryButton>
+                                    <span className={iconNames.openLink} />
+                                </TransparentPrimaryButton>
                             </Link>
                         );
                     }
-
-                    const onDeleteClick = () => this.handleDeleteUserGroupClick(d.id);
                     return ([
                         <Link
                             title="Edit UserGroup"
-                            className={`
-                                ${styles['link-to-usergroup']}
-                                ${styles['action-button']}
-                            `}
                             key="usergroup-panel"
                             to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                         >
-                            <span className="ion-edit" />
+                            <TransparentPrimaryButton>
+                                <span className={iconNames.edit} />
+                            </TransparentPrimaryButton>
                         </Link>,
-                        <TransparentButton
+                        <TransparentDangerButton
                             key="delete"
                             title="Delete UserGroup"
-                            className={`
-                                ${styles['delete-btn']}
-                                ${styles['action-button']}
-                            `}
-                            onClick={onDeleteClick}
+                            onClick={() => this.handleDeleteUserGroupClick(d)}
                         >
-                            <span className="ion-android-delete" />
-                        </TransparentButton>,
+                            <span className={iconNames.delete} />
+                        </TransparentDangerButton>,
                     ]);
                 },
             },
@@ -235,16 +231,6 @@ export default class UserGroup extends React.PureComponent {
         return userGroup ? userGroup.title : null;
     }
 
-    deleteActiveUserGroup = () => {
-        if (this.userGroupDeleteRequest) {
-            this.userGroupDeleteRequest.stop();
-        }
-        this.userGroupDeleteRequest = this.createRequestForUserGroupDelete(
-            this.state.activeUserGroupDelete,
-        );
-        this.userGroupDeleteRequest.start();
-    }
-
     createRequestForUserGroupDelete = (userGroupId) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userId = this.props.activeUser.userId;
@@ -258,7 +244,6 @@ export default class UserGroup extends React.PureComponent {
                         userGroupId,
                         userId,
                     });
-                    this.setState({ deleteUserGroup: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -311,15 +296,28 @@ export default class UserGroup extends React.PureComponent {
     // Table Actions
 
     // Delete Click
-    handleDeleteUserGroupClick = (id) => {
+    handleDeleteUserGroupClick = (userGroup) => {
+        const confirmText = `Are you sure you want to delete the usergroup
+            ${userGroup.title}?`;
+
         this.setState({
             deleteUserGroup: true,
-            activeUserGroupDelete: id,
+            activeUserGroup: userGroup,
+            confirmText,
         });
     }
 
     // Delete Close
-    handleDeleteUserGroupClose = () => {
+    handleDeleteUserGroupClose = (confirm) => {
+        if (confirm) {
+            if (this.userGroupDeleteRequest) {
+                this.userGroupDeleteRequest.stop();
+            }
+            this.userGroupDeleteRequest = this.createRequestForUserGroupDelete(
+                this.state.activeUserGroup.id,
+            );
+            this.userGroupDeleteRequest.start();
+        }
         this.setState({ deleteUserGroup: false });
     }
 
@@ -330,16 +328,16 @@ export default class UserGroup extends React.PureComponent {
             addUserGroup,
             deleteUserGroup,
             deletePending,
+            confirmText,
         } = this.state;
 
         const isCurrentUser = +match.params.userId === activeUser.userId;
 
         return (
             <div styleName="groups">
+                {deletePending && <LoadingAnimation />}
                 <div styleName="header">
-                    <h2>
-                        Groups
-                    </h2>
+                    <h2>Groups</h2>
                     <div styleName="pusher" />
                     {
                         isCurrentUser &&
@@ -357,29 +355,28 @@ export default class UserGroup extends React.PureComponent {
                     onClose={this.handleAddUserGroupClose}
                     show={addUserGroup}
                 >
-                    <ModalHeader title="Add User Group" />
+                    <ModalHeader
+                        title="Add User Group"
+                        rightComponent={
+                            <TransparentPrimaryButton
+                                onClick={this.handleAddUserGroupClose}
+                            >
+                                <span className={iconNames.close} />
+                            </TransparentPrimaryButton>
+                        }
+                    />
                     <ModalBody>
                         <UserGroupAdd
                             handleModalClose={this.handleAddUserGroupClose}
                         />
                     </ModalBody>
                 </Modal>
-                <Modal
-                    closeOnEscape
+                <Confirm
                     onClose={this.handleDeleteUserGroupClose}
                     show={deleteUserGroup}
                 >
-                    <ModalHeader title="Delete User Group" />
-                    <ModalBody>
-                        <DeletePrompt
-                            handleCancel={this.handleDeleteUserGroupClose}
-                            handleDelete={this.deleteActiveUserGroup}
-                            getName={this.getActiveDeleteUserGroupName}
-                            getType={this.getActiveDeleteUserGroupType}
-                            pending={deletePending}
-                        />
-                    </ModalBody>
-                </Modal>
+                    <p>{confirmText}</p>
+                </Confirm>
                 <div styleName="usergroup-table">
                     <Table
                         data={userGroups}

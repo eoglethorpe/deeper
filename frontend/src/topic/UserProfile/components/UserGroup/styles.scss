@@ -40,39 +40,6 @@
                     background-color: $color-background-hover;
                 }
             }
-                }
-    }
-}
-
-.action-button {
-    margin: $spacing-extra-small;
-    padding: $spacing-extra-small $spacing-small;
-    min-width: $width-icon-large;
-
-    &:hover {
-        background-color: $color-hover;
-    }
-}
-
-.link-to-usergroup {
-    padding: $spacing-small;
-    color: $color-primary;
-
-    :global .ion-android-open {
-        margin: 0 $spacing-small;
-    }
-
-    :global .ion-edit {
-        margin: 0 $spacing-small;
-    }
-}
-
-
-.delete-btn {
-    padding: $spacing-small;
-    color: $color-danger;
-
-    :global .ion-android-delete {
-        margin: 0 $spacing-small;
+        }
     }
 }
