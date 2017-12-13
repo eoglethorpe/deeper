@@ -146,10 +146,21 @@
 
             .lead-preview {
                 display: flex;
+                flex-direction: column;
                 flex-grow: 1;
-                align-items: center;
-                justify-content: center;
                 border-top: $width-separator-medium solid $color-separator;
+                overflow-y: auto;
+
+                .gallery-file {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+
+                    iframe {
+                        flex-grow: 1;
+                        width: 100%;
+                    }
+                }
             }
 
             &.hidden {
