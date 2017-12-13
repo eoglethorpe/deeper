@@ -143,7 +143,6 @@ export default class Navbar extends React.PureComponent {
             'ary',
             'projects',
             'countries',
-            'analysisFramework',
             'export',
         ];
 
@@ -343,7 +342,7 @@ export default class Navbar extends React.PureComponent {
                                 onClick={this.handleLogoutButtonClick}
                             >
                                 <span
-                                    className="ion-log-out"
+                                    className={iconNames.logout}
                                     styleName="icon"
                                 />
                                 Logout

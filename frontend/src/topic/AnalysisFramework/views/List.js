@@ -17,6 +17,9 @@ import {
 } from '../../../public/components/General';
 
 import {
+    iconNames,
+} from '../../../common/constants';
+import {
     randomString,
 } from '../../../public/utils/common';
 
@@ -100,7 +103,7 @@ export default class List extends React.PureComponent {
                                 onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
                                 styleName="close-button"
                             >
-                                <span className="ion-android-close" />
+                                <span className={iconNames.close} />
                             </TransparentButton>
                         </div>
                     </header>
@@ -264,7 +267,7 @@ export default class List extends React.PureComponent {
                                                 }
                                             }
                                         >
-                                            <span className="ion-plus" />
+                                            <span className={iconNames.add} />
                                         </TransparentButton>
                                     </div>
                                 </div>

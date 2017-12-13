@@ -52,6 +52,7 @@ import {
 import schema from '../../../../common/schema';
 
 import {
+    iconNames,
     pathNames,
 } from '../../../../common/constants/';
 
@@ -182,19 +183,19 @@ export default class Leads extends React.PureComponent {
                             title="Search similar lead"
                             onClick={() => this.handleSearchSimilarLead(row)}
                         >
-                            <i className="ion-search" />
+                            <i className={iconNames.search} />
                         </TransparentButton>
                         <TransparentButton
                             title="Edit lead"
                             onClick={() => this.handleEditLeadClick(row)}
                         >
-                            <i className="ion-edit" />
+                            <i className={iconNames.edit} />
                         </TransparentButton>
                         <TransparentAccentButton
                             title="Add entry from this lead"
                             onClick={() => this.handleAddEntryClick(row)}
                         >
-                            <i className="ion-forward" />
+                            <i className={iconNames.forward} />
                         </TransparentAccentButton>
                     </div>
                 ),
@@ -474,7 +475,7 @@ export default class Leads extends React.PureComponent {
                     <PrimaryButton
                         styleName="add-lead-button"
                         onClick={this.handleAddLeadClick}
-                        iconName="ion-android-add"
+                        iconName={iconNames.add}
                     >
                         Add leads
                     </PrimaryButton>

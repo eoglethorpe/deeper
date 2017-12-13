@@ -25,6 +25,9 @@ import {
     createParamsForUser,
 } from '../../../../common/rest';
 import {
+    iconNames,
+} from '../../../../common/constants';
+import {
     countryDetailSelector,
     setRegionDetailsAction,
 } from '../../../../common/redux';
@@ -289,7 +292,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className="ion-link"
+                                className={iconNames.link}
                                 styleName="icon"
                                 title="Click to open"
                             />
@@ -339,7 +342,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className="ion-link"
+                                className={iconNames.link}
                                 styleName="icon"
                                 title="Click to open"
                             />
@@ -371,7 +374,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className="ion-link"
+                                className={iconNames.link}
                                 styleName="icon"
                                 title="Click to open"
                             />
@@ -424,7 +427,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className="ion-link"
+                                className={iconNames.link}
                                 styleName="icon"
                                 title="Click to open"
                             />

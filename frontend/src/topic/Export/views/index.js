@@ -13,6 +13,9 @@ import {
 import {
     ListView,
 } from '../../../public/components/View';
+import {
+    iconNames,
+} from '../../../common/constants';
 
 import FilterSection from '../components/FilterSection';
 import StructureSection from '../components/StructureSection';
@@ -154,7 +157,7 @@ export default class Export extends React.PureComponent {
                                 label="Include de-coupled data"
                             />
                             <i
-                                className="ion-help-circled"
+                                className={iconNames.help}
                                 title="Note that by selecting this option it can greaty increase the amount of time to export"
                             />
                         </div>

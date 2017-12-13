@@ -25,6 +25,7 @@ import {
 } from '../../../public/utils/common';
 
 import {
+    iconNames,
     pathNames,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -259,7 +260,7 @@ export default class CountryPanel extends React.PureComponent {
                         {
                             activeUser.isSuperuser &&
                             <PrimaryButton
-                                iconName="ion-plus"
+                                iconName={iconNames.add}
                                 onClick={this.onAddCountry}
                             >
                                 Add country

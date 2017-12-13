@@ -23,6 +23,9 @@ import {
     googleDriveClientId,
     googleDriveDeveloperKey,
 } from '../../../../../common/config/google-drive';
+import {
+    iconNames,
+} from '../../../../../common/constants';
 
 import { LEAD_TYPE } from '../utils/constants';
 import styles from '../styles.scss';
@@ -262,7 +265,7 @@ export default class LeadButtons extends React.PureComponent {
                     multiselect
                     navHidden
                 >
-                    <span className="ion-social-googleplus-outline" />
+                    <span className={iconNames.googleDrive} />
                     <p>Drive</p>
                 </GooglePicker>
                 <DropboxChooser
@@ -275,7 +278,7 @@ export default class LeadButtons extends React.PureComponent {
                     cancel={this.handleDropboxChooserCancel}
                     disabled={dropboxDisabled}
                 >
-                    <span className="ion-social-dropbox" />
+                    <span className={iconNames.dropbox} />
                     <p>Dropbox</p>
                 </DropboxChooser>
                 <FileInput
@@ -284,21 +287,21 @@ export default class LeadButtons extends React.PureComponent {
                     showStatus={false}
                     multiple
                 >
-                    <span className="ion-android-upload" />
+                    <span className={iconNames.upload} />
                     <p>Local disk</p>
                 </FileInput>
                 <TransparentButton
                     styleName="add-lead-btn"
                     onClick={this.handleAddLeadFromWebsite}
                 >
-                    <span className="ion-earth" />
+                    <span className={iconNames.globe} />
                     <p>Website</p>
                 </TransparentButton>
                 <TransparentButton
                     styleName="add-lead-btn"
                     onClick={this.handleAddLeadFromText}
                 >
-                    <span className="ion-clipboard" />
+                    <span className={iconNames.clipboard} />
                     <p>Text</p>
                 </TransparentButton>
             </div>
