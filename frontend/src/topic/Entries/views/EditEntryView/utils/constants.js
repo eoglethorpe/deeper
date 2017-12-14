@@ -6,3 +6,11 @@ export const ENTRY_STATUS = {
     complete: 'complete',
     stale: 'stale',
 };
+
+export const DIFF_ACTION = {
+    noop: 'noop',
+    add: 'add',
+    remove: 'remove',
+    replace: 'replace',
+    replaceSkip: 'replace-skip',
+};

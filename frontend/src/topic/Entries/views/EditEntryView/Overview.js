@@ -12,10 +12,8 @@ import {
     GridLayout,
     ListView,
     ListItem,
+    LoadingAnimation,
 } from '../../../../public/components/View';
-import {
-    randomString,
-} from '../../../../public/utils/common';
 import {
     SelectInput,
 } from '../../../../public/components/Input';
@@ -24,8 +22,6 @@ import {
     iconNames,
 } from '../../../../common/constants';
 import {
-    addEntryAction,
-    removeEntryAction,
     setActiveEntryAction,
 } from '../../../../common/redux';
 
@@ -38,26 +34,30 @@ const propTypes = {
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
-    addEntry: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
-    removeEntry: PropTypes.func.isRequired,
 
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
-    onSaveAll: PropTypes.func.isRequired,
-    saveAllDisabled: PropTypes.bool.isRequired,
     choices: PropTypes.object.isRequired, // eslint-disable-line
+
+    saveAllDisabled: PropTypes.bool.isRequired,
+    widgetDisabled: PropTypes.bool,
+    removeDisabled: PropTypes.bool,
+
+    onEntryAdd: PropTypes.func.isRequired,
+    onEntryDelete: PropTypes.func.isRequired,
+    onSaveAll: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     selectedEntryId: undefined,
+    widgetDisabled: false,
+    removeDisabled: false,
 };
 
 const mapDispatchToProps = dispatch => ({
-    addEntry: params => dispatch(addEntryAction(params)),
-    removeEntry: params => dispatch(removeEntryAction(params)),
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
@@ -69,7 +69,7 @@ export default class Overview extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.update(props.analysisFramework);
+        this.updateItems(props.analysisFramework);
 
         this.state = {
             entriesListViewShow: true,
@@ -78,18 +78,9 @@ export default class Overview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.update(nextProps.analysisFramework);
-    }
-
-    getStyleNameWithState = (style) => {
-        const { entriesListViewShow } = this.state;
-        const styleNames = [style];
-
-        if (entriesListViewShow) {
-            styleNames.push('active');
+        if (this.props.analysisFramework !== nextProps.analysisFramework) {
+            this.updateItems(nextProps.analysisFramework);
         }
-
-        return styleNames.join(' ');
     }
 
     getGridItems = () => this.items.map(item => ({
@@ -104,7 +95,7 @@ export default class Overview extends React.PureComponent {
         return <Component />;
     }
 
-    update(analysisFramework) {
+    updateItems(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.overviewComponent)
             .map(widget => ({
@@ -126,36 +117,8 @@ export default class Overview extends React.PureComponent {
         window.location.hash = '/list/';
     }
 
-    handleAddEntryButtonClick = () => {
-        const entryId = randomString();
-
-        this.props.addEntry({
-            leadId: this.props.leadId,
-            entry: {
-                id: entryId,
-                serverId: undefined,
-                values: {
-                    excerpt: `Excerpt ${entryId.toLowerCase()}`,
-                    image: undefined,
-                    lead: this.props.leadId,
-                    analysisFramework: this.props.analysisFramework.id,
-                    attribues: [],
-                    exportData: [],
-                    filterData: [],
-                },
-            },
-        });
-    }
-
     handleEntriesListToggleClick = () => {
         this.setState({ entriesListViewShow: !this.state.entriesListViewShow });
-    }
-
-    handleRemoveEntryButtonClick = () => {
-        this.props.removeEntry({
-            leadId: this.props.leadId,
-            entryId: this.props.selectedEntryId,
-        });
     }
 
     handleEntrySelectChange = (value) => {
@@ -163,6 +126,17 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entryId: value,
         });
+    }
+
+    calcStyleNameWithState = (style) => {
+        const { entriesListViewShow } = this.state;
+        const styleNames = [style];
+
+        if (entriesListViewShow) {
+            styleNames.push('active');
+        }
+
+        return styleNames.join(' ');
     }
 
     calcEntryKey = entry => entry.data.id;
@@ -197,27 +171,19 @@ export default class Overview extends React.PureComponent {
         switch (status) {
             case ENTRY_STATUS.requesting:
                 return (
-                    <span
-                        className={`${iconNames.loading} ${styles.pending}`}
-                    />
+                    <span className={`${iconNames.loading} ${styles.pending}`} />
                 );
             case ENTRY_STATUS.invalid:
                 return (
-                    <span
-                        className={`${iconNames.error} ${styles.error}`}
-                    />
+                    <span className={`${iconNames.error} ${styles.error}`} />
                 );
             case ENTRY_STATUS.nonstale:
                 return (
-                    <span
-                        className={`${iconNames.codeWorking} ${styles.stale}`}
-                    />
+                    <span className={`${iconNames.codeWorking} ${styles.stale}`} />
                 );
             case ENTRY_STATUS.complete:
                 return (
-                    <span
-                        className={`${iconNames.checkCircle} ${styles.complete}`}
-                    />
+                    <span className={`${iconNames.checkCircle} ${styles.complete}`} />
                 );
             default:
                 return null;
@@ -227,14 +193,14 @@ export default class Overview extends React.PureComponent {
     render() {
         const {
             selectedEntryId,
-            choices,
             entries,
 
             onSaveAll,
-            saveAllDisabled,
-        } = this.props;
 
-        const isRemoveDisabled = !selectedEntryId || choices[selectedEntryId].isRemoveDisabled;
+            saveAllDisabled,
+            widgetDisabled,
+            removeDisabled,
+        } = this.props;
 
         return (
             <div styleName="overview">
@@ -242,7 +208,7 @@ export default class Overview extends React.PureComponent {
                     <TransparentButton
                         title="List entries"
                         iconName={iconNames.list}
-                        styleName={this.getStyleNameWithState('entries-list-btn')}
+                        styleName={this.calcStyleNameWithState('entries-list-btn')}
                         onClick={this.handleEntriesListToggleClick}
                     >
                         List Entries
@@ -252,22 +218,23 @@ export default class Overview extends React.PureComponent {
                             placeholder="Select an excerpt"
                             showHintAndError={false}
                             showLabel={false}
+                            clearable={false}
                             keySelector={this.calcEntryKey}
                             labelSelector={this.calcEntryLabel}
                             options={entries}
-                            onChange={this.handleEntrySelectChange}
                             value={selectedEntryId}
+                            onChange={this.handleEntrySelectChange}
                         />
                         <TransparentButton
                             title="Add entry"
-                            onClick={this.handleAddEntryButtonClick}
+                            onClick={this.props.onEntryAdd}
                         >
                             <span className={iconNames.add} />
                         </TransparentButton>
                         <TransparentButton
                             title="Remove current entry"
-                            onClick={this.handleRemoveEntryButtonClick}
-                            disabled={isRemoveDisabled}
+                            onClick={this.props.onEntryDelete}
+                            disabled={removeDisabled}
                         >
                             <span className={iconNames.remove} />
                         </TransparentButton>
@@ -291,7 +258,7 @@ export default class Overview extends React.PureComponent {
                     <div styleName="left">
                         Lead preview
                         <div
-                            styleName={this.getStyleNameWithState('entries-list-container')}
+                            styleName={this.calcStyleNameWithState('entries-list-container')}
                         >
                             <ListView
                                 styleName="entries-list"
@@ -305,6 +272,7 @@ export default class Overview extends React.PureComponent {
                         ref={(el) => { this.gridLayoutContainer = el; }}
                         styleName="right"
                     >
+                        { widgetDisabled && <LoadingAnimation /> }
                         <GridLayout
                             styleName="grid-layout"
                             modifier={this.getItemView}

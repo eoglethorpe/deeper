@@ -21,8 +21,6 @@ const pathNames = {
     userProfile: '/user/:userId/',
     userGroup: '/user-group/:userGroupId/',
 
-    adminPanel: '/admin/',
-
     analysisFramework: '/analysis-framework/:analysisFrameworkId/',
 
     categoryEditor: '/category-editor/',

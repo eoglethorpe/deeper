@@ -98,4 +98,21 @@ const entrySchema = [];
     entrySchema.push({ name, schema });
 }
 
+{
+    const name = 'entriesGetResponse';
+    const schema = {
+        doc: {
+            name: 'Entries',
+            description: 'List of entry',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.entry', required: true },
+        },
+    };
+    entrySchema.push({ name, schema });
+}
+
 export default entrySchema;

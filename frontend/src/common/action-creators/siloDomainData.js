@@ -33,6 +33,7 @@ import {
     EE__SET_ACTIVE_ENTRY,
     EE__ENTRY_SAVE,
     EE__ENTRY_CHANGE,
+    EE__ENTRY_DIFF,
 
     CE_VIEW_SET_SELECTED_CATEGORY,
     CE_VIEW_SET_SELECTED_SUB_CATEGORY,
@@ -187,6 +188,12 @@ export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) =>
     data,
     values,
     uiState,
+});
+
+export const diffEntriesAction = ({ leadId, diffs }) => ({
+    type: EE__ENTRY_DIFF,
+    leadId,
+    diffs,
 });
 
 export const setActiveEntryAction = ({ leadId, entryId }) => ({
