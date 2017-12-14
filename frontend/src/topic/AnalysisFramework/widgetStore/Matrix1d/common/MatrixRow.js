@@ -24,15 +24,23 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
+import {
+    MODE_EDIT,
+    MODE_VIEW,
+} from './constants';
+
 const propTypes = {
     title: PropTypes.string,
     cells: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     onChange: PropTypes.func.isRequired,
+    mode: PropTypes.string,
 };
 
 const defaultProps = {
     title: undefined,
+    mode: MODE_VIEW,
 };
+
 
 @CSSModules(styles)
 export default class MatrixRow extends React.PureComponent {
@@ -76,11 +84,16 @@ export default class MatrixRow extends React.PureComponent {
 
     getCell = (key, data) => (
         <MatrixCell
+            onDrop={(text) => { this.handleCellDrop(key, text); }}
             key={key}
         >
             { data.value }
         </MatrixCell>
     )
+
+    handleCellDrop = (key, text) => {
+        console.log(key, text);
+    }
 
     handleCellRemoveButtonClick = (key) => {
         const newCells = [...this.state.cells];
@@ -131,11 +144,6 @@ export default class MatrixRow extends React.PureComponent {
         this.props.onChange(this.state.cells);
     }
 
-    handleModalMouseDown = (e) => {
-        e.preventDefault();
-        console.log('yo ho hohohohohohohoohohohoh');
-    }
-
     addCell = () => {
         const newCell = {
             key: randomString(),
@@ -156,6 +164,10 @@ export default class MatrixRow extends React.PureComponent {
             showEditModal,
         } = this.state;
 
+        const {
+            mode,
+        } = this.props;
+
         return (
             <div
                 styleName="matrix-row"
@@ -169,50 +181,58 @@ export default class MatrixRow extends React.PureComponent {
                     keyExtractor={MatrixRow.cellKeyExtractor}
                     modifier={this.getCell}
                 />
-                <div styleName="action-buttons">
-                    <TransparentButton
-                        onClick={this.handleEditButtonClick}
-                    >
-                        <span className={iconNames.edit} />
-                    </TransparentButton>
-                </div>
-                <Modal
-                    onMouseDown={this.handleModalMouseDown}
-                    styleName="edit-cell-modal"
-                    show={showEditModal}
-                    onClose={this.handleEditModalClose}
-                >
-                    <ModalHeader
-                        title="Add / edit cell"
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddCellButtonClick}
+                {
+                    mode === MODE_EDIT && ([
+                        <div
+                            key="action-buttons"
+                            styleName="action-buttons"
+                        >
+                            <TransparentButton
+                                onClick={this.handleEditButtonClick}
                             >
-                                Add cell
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody>
-                        <ListView
-                            data={cells}
-                            className={styles['cell-list']}
-                            keyExtractor={MatrixRow.cellKeyExtractor}
-                            modifier={this.getEditCell}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
+                                <span className={iconNames.edit} />
+                            </TransparentButton>
+                        </div>,
+                        <Modal
+                            key="modal"
+                            onMouseDown={this.handleModalMouseDown}
+                            styleName="edit-cell-modal"
+                            show={showEditModal}
+                            onClose={this.handleEditModalClose}
                         >
-                            Cancel
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            Save
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                            <ModalHeader
+                                title="Add / edit cell"
+                                rightComponent={
+                                    <TransparentPrimaryButton
+                                        onClick={this.handleAddCellButtonClick}
+                                    >
+                                        Add cell
+                                    </TransparentPrimaryButton>
+                                }
+                            />
+                            <ModalBody>
+                                <ListView
+                                    data={cells}
+                                    className={styles['cell-list']}
+                                    keyExtractor={MatrixRow.cellKeyExtractor}
+                                    modifier={this.getEditCell}
+                                />
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button
+                                    onClick={this.handleModalCancelButtonClick}
+                                >
+                                    Cancel
+                                </Button>
+                                <PrimaryButton
+                                    onClick={this.handleModalSaveButtonClick}
+                                >
+                                    Save
+                                </PrimaryButton>
+                            </ModalFooter>
+                        </Modal>,
+                    ])
+                }
             </div>
         );
     }

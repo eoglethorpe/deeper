@@ -171,7 +171,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="tagging-matrix-1d">
+            <div styleName="framework-matrix-1d">
                 <ListView
                     data={rows}
                     className={styles.rows}

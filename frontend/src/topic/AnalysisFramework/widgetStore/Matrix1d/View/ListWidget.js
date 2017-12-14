@@ -1,12 +1,7 @@
 import React from 'react';
 
+// eslint-disable-next-line react/prefer-stateless-function
 export default class Matrix1dList extends React.PureComponent {
-    constructor(props) {
-        super(props);
-
-        console.log(props);
-    }
-
     render() {
         return (
             <div>

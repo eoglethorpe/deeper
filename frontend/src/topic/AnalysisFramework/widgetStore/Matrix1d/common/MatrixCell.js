@@ -11,6 +11,7 @@ const propTypes = {
     mode: PropTypes.string,
     active: PropTypes.bool,
     onClick: PropTypes.func,
+    onDrop: PropTypes.func,
 };
 
 const defaultProps = {
@@ -18,6 +19,7 @@ const defaultProps = {
     mode: MODE_VIEW,
     active: false,
     onClick: undefined,
+    onDrop: undefined,
 };
 
 @CSSModules(styles)
@@ -47,11 +49,15 @@ export default class MatrixCell extends React.PureComponent {
 
     handleDrop = (e) => {
         e.preventDefault();
-        console.log(e.dataTransfer.getData('text'));
+        if (this.props.onDrop) {
+            const data = e.dataTransfer.getData('text');
+            this.props.onDrop(data);
+        }
     }
 
     render() {
         const {
+            onDrop, // eslint-disable-line no-unused-vars
             children,
             onClick,
             mode,
