@@ -31,6 +31,7 @@ const iconNames = {
     overflowHorizontal: 'ion-android-more-horizontal',
     person: 'ion-android-person',
     remove: 'ion-android-remove',
+    removeCircle: 'ion-android-remove-circle',
     search: 'ion-search',
     text: 'ion-document',
     upload: 'ion-android-upload',
