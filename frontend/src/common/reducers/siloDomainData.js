@@ -256,7 +256,7 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const newLeads = leads.map(data => createLead(data));
 
-    const serverIdMap = leads.reduce(
+    const serverIdMap = newLeads.reduce(
         (acc, lead) => {
             if (lead.data && lead.data.serverId) {
                 acc[lead.data.serverId] = true;
@@ -266,6 +266,7 @@ const addLeadViewAddNewLeads = (state, action) => {
         {},
     );
 
+    // TODO: splice works only on when on lead is added (that has serverId)
     const spliceSettings = state.addLeadView.leads.reduce(
         (acc, lead, i) => {
             if (lead.data && lead.data.serverId && serverIdMap[lead.data.serverId]) {
