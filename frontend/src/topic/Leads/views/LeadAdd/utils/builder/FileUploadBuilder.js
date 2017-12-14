@@ -64,13 +64,13 @@ export default class FileUploadBuilder {
 
         this.parent.uploadCoordinator.notifyComplete(leadId);
     }
-    handleLeadUploadFailure = leadId => (response, status = 0) => {
+    handleLeadUploadFailure = leadId => (response) => {
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
         addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            formErrors: [`Error ${status}: Failed to upload file`],
+            formErrors: [`Failed to upload file: ${response.errors.file[0]}`],
         });
 
         // FOR UPLAOD

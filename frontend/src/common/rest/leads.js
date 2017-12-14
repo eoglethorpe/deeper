@@ -9,6 +9,7 @@ import {
 // do no use this, use urlForLead instead
 export const urlForLeadCreate = `${wsEndpoint}/leads/`;
 export const urlForLead = `${wsEndpoint}/leads/`;
+export const urlForWebsiteFetch = `${wsEndpoint}/lead-webiste-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
 
 export const createParamsForLeadCreate = data => ({
@@ -30,3 +31,9 @@ export const createUrlForLeadsOfProject = params => (
 export const createUrlForLeadEdit = leadId => (
     `${wsEndpoint}/leads/${leadId}/`
 );
+
+export const createParamsForWebsiteFetch = url => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({ url }),
+});

@@ -1,0 +1,32 @@
+@import '../../../stylesheets/base';
+
+
+.error-website-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    color: $color-danger;
+
+    .url {
+        display: inline-block;
+        color: $color-accent;
+        text-transform: lowercase;
+    }
+}
+
+.loading-animation {
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+.waiting-text {
+    color: $color-text-disabled;
+}
+
+.pending-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

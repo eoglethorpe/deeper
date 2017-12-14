@@ -13,12 +13,14 @@ const propTypes = {
     className: PropTypes.string,
     docUrl: PropTypes.string,
     mimeType: PropTypes.string,
+    isSameOrigin: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     docUrl: undefined,
     mimeType: undefined,
+    isSameOrigin: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -31,6 +33,7 @@ export default class GalleryDocs extends React.PureComponent {
             className,
             docUrl,
             mimeType,
+            isSameOrigin,
         } = this.props;
 
         const googleDriveViewerUrl = 'https://drive.google.com/viewerng/viewer' +
@@ -42,7 +45,7 @@ export default class GalleryDocs extends React.PureComponent {
                 className={`gallery-docs ${className}`}
             >
                 {
-                    mimeType === 'application/pdf' ?
+                    mimeType === 'application/pdf' && !isSameOrigin ?
                         <iframe
                             styleName="doc"
                             title={docUrl}
@@ -52,6 +55,7 @@ export default class GalleryDocs extends React.PureComponent {
                             styleName="doc"
                             title={docUrl}
                             src={googleDriveViewerUrl}
+                            sandbox="allow-scripts allow-same-origin"
                         />
                 }
             </div>

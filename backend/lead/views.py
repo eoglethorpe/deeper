@@ -1,3 +1,5 @@
+import requests
+import re
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.postgres.search import TrigramSimilarity
@@ -9,6 +11,7 @@ from rest_framework import (
     viewsets,
 )
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 import django_filters
 
@@ -20,6 +23,26 @@ from lead.models import Lead
 from lead.serializers import LeadSerializer
 
 from .tasks import extract_from_lead
+from utils.common import USER_AGENT
+
+headers = {
+    'User-Agent': USER_AGENT
+}
+
+valid_lead_url_regex = re.compile(
+    # http:// or https://
+    r'^(?:http)s?://'
+    # domain...
+    r'(?:(?:[A-Z0-9]'
+    r'(?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+'
+    r'(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'
+    # localhost...
+    r'localhost|'
+    # ...or ip
+    r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+    # optional port
+    r'(?::\d+)?'
+    r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 class LeadFilterSet(UserResourceFilterSet):
@@ -180,4 +203,52 @@ class LeadExtractionTriggerView(APIView):
 
         return Response({
             'extraction_triggered': lead_id,
+        })
+
+
+class LeadWebsiteFetch(APIView):
+    """
+    Get Information about the website
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        url = request.data.get('url')
+        https_url = url
+        http_url = url
+
+        if not valid_lead_url_regex.match(url):
+            return Response({
+                'error': 'Url is not valid'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if url.find('http://') >= 0:
+            https_url = url.replace('http://', 'https://', 1)
+        else:
+            http_url = url.replace('https://', 'http://', 1)
+
+        try:
+            # Try with https
+            r = requests.head(
+                https_url, headers=headers,
+                timeout=settings.LEAD_WEBSITE_FETCH_TIMEOUT
+            )
+        except requests.exceptions.RequestException:
+            https_url = None
+            # Try with http
+            try:
+                r = requests.head(
+                    http_url, headers=headers,
+                    timeout=settings.LEAD_WEBSITE_FETCH_TIMEOUT
+                )
+            except requests.exceptions.RequestException:
+                # doesn't work
+                return Response({
+                    'error': 'can\'t fetch url'
+                })
+
+        return Response({
+            'headers': r.headers,
+            'httpsUrl': https_url,
+            'httpUrl': http_url
         })
