@@ -33,7 +33,7 @@ export default class DeepGallery extends React.PureComponent {
         super(props);
 
         this.state = {
-            pending: true,
+            pending: false,
             canShow: false,
             mimeType: undefined,
         };
@@ -129,6 +129,7 @@ export default class DeepGallery extends React.PureComponent {
                         className={iconNames.loading}
                         styleName="loading-animation"
                     />
+                    <span styleName="waiting-text">Gathering Website Information to Preview</span>
                 </div>
             );
         }
@@ -153,7 +154,7 @@ export default class DeepGallery extends React.PureComponent {
                     src={supportedUrl}
                 /> :
                 <div className={className}>
-                    <span>This website doesnot allow view in other webiste, Open in new tab
+                    <span styleName="error-website-msg">Oops!! This website prevents the preview. Please open in a new tab.
                         {
                             supportedUrl ?
                                 <a

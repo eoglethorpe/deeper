@@ -4,9 +4,21 @@
     color: $color-accent;
 }
 
+.error-website-msg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    color: $color-danger;
+}
+
 .loading-animation {
     display: inline-block;
     animation: spin 1s linear infinite;
+}
+
+.waiting-text {
+    color: $color-text-disabled;
 }
 
 .pending-container {
