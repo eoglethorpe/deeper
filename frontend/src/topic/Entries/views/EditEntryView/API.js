@@ -27,7 +27,7 @@ export default class API {
 
     getEntry(id = undefined) {
         const selectedId = id || this.selectedId;
-        return selectedId && this.entries.find(e => e.id === selectedId);
+        return selectedId && this.entries.find(e => e.data.id === selectedId);
     }
 
     setEntryData(data, id = undefined) {

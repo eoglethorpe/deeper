@@ -14,6 +14,8 @@ import {
 } from '../../../../public/components/Action';
 
 const propTypes = {
+    api: PropTypes.object.isRequired, // eslint-disable-line
+
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
@@ -35,6 +37,7 @@ export default class List extends React.PureComponent {
     }
 
     getGridItems = () => this.items.map(item => ({
+        id: item.id,
         key: item.key,
         widgetId: item.widgetId,
         title: item.title,
@@ -47,7 +50,12 @@ export default class List extends React.PureComponent {
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
-        return <Component />;
+        return (
+            <Component
+                api={this.props.api}
+                attribute={this.props.api.getEntryAttribute(item.id)}
+            />
+        );
     }
 
     handleGotoOverviewButtonClick = () => {

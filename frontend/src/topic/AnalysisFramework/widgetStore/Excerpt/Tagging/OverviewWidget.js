@@ -28,7 +28,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         };
     }
 
-    handleProjectTypeChange = (value) => {
+    handleEntryTypeChange = (value) => {
         this.setState({
             excerptType: value,
         });
@@ -43,7 +43,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
             <div styleName="excerpt-overview">
                 <RadioInput
                     options={this.options}
-                    onChange={this.handleProjectTypeChange}
+                    onChange={this.handleEntryTypeChange}
                     styleName="radio-input"
                     value={excerptType}
                     name="lead-type"
