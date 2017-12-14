@@ -29,6 +29,7 @@ import {
     EE__ENTRY_SAVE,
     EE__ENTRY_CHANGE,
     EE__ENTRY_DIFF,
+    EE__ENTRY_MARK_FOR_DELETE,
 
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -780,6 +781,34 @@ const editEntryViewDiffEntries = (state, action) => {
     return update(state, settings);
 };
 
+const entryMarkForDelete = (state, action) => {
+    const {
+        leadId,
+        entryId,
+    } = action;
+
+    const index = state.editEntryView[leadId].entries.findIndex(
+        e => e.data.id === entryId,
+    );
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                entries: {
+                    [index]: {
+                        markedForDelete: { $set: true },
+                        uiState: {
+                            stale: { $set: false },
+                            error: { $set: false },
+                        },
+                    },
+                },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
 const editEntryViewRemoveEntry = (state, action) => {
     const { entryId, leadId } = action;
 
@@ -898,6 +927,7 @@ const reducers = {
     [EE__ENTRY_SAVE]: editEntryViewSaveEntry,
     [EE__ENTRY_CHANGE]: editEntryViewChangeEntry,
     [EE__ENTRY_DIFF]: editEntryViewDiffEntries,
+    [EE__ENTRY_MARK_FOR_DELETE]: entryMarkForDelete,
 
     [AF__SET_ANALYSIS_FRAMEWORK]: afViewSetAnalysisFramework,
     [AF__VIEW_ADD_WIDGET]: afViewAddWidget,

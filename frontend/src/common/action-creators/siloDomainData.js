@@ -34,6 +34,7 @@ import {
     EE__ENTRY_SAVE,
     EE__ENTRY_CHANGE,
     EE__ENTRY_DIFF,
+    EE__ENTRY_MARK_FOR_DELETE,
 
     CE_VIEW_SET_SELECTED_CATEGORY,
     CE_VIEW_SET_SELECTED_SUB_CATEGORY,
@@ -194,6 +195,12 @@ export const diffEntriesAction = ({ leadId, diffs }) => ({
     type: EE__ENTRY_DIFF,
     leadId,
     diffs,
+});
+
+export const markForDeleteEntryAction = ({ leadId, entryId }) => ({
+    type: EE__ENTRY_MARK_FOR_DELETE,
+    leadId,
+    entryId,
 });
 
 export const setActiveEntryAction = ({ leadId, entryId }) => ({

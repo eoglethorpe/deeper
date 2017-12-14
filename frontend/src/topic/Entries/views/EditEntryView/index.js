@@ -30,6 +30,7 @@ import {
 
     addEntryAction,
     removeEntryAction,
+    markForDeleteEntryAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -74,6 +75,7 @@ const propTypes = {
     removeEntry: PropTypes.func.isRequired,
     changeEntry: PropTypes.func.isRequired,
     diffEntries: PropTypes.func.isRequired,
+    markForDeleteEntry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -99,6 +101,7 @@ const mapDispatchToProps = dispatch => ({
     diffEntries: params => dispatch(diffEntriesAction(params)),
     addEntry: params => dispatch(addEntryAction(params)),
     removeEntry: params => dispatch(removeEntryAction(params)),
+    markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
 });
 
 
@@ -130,7 +133,7 @@ export default class EditEntryView extends React.PureComponent {
         };
 
         this.saveRequestCoordinator = new CoordinatorBuilder()
-            .maxActiveActors(3)
+            .maxActiveActors(1)
             .preSession(() => {
                 this.setState({ pendingSaveAll: true });
             })
@@ -372,11 +375,20 @@ export default class EditEntryView extends React.PureComponent {
                     return { entryDeleteRests };
                 });
             })
+            .failure((response) => {
+                console.warn('FAILURE:', response);
+                this.saveRequestCoordinator.notifyComplete(entry.data.id);
+            })
+            .fatal((response) => {
+                console.warn('FATAL:', response);
+                this.saveRequestCoordinator.notifyComplete(entry.data.id);
+            })
             .success(() => {
                 this.props.removeEntry({
                     leadId,
                     entryId: entry.data.id,
                 });
+                this.saveRequestCoordinator.notifyComplete(entry.data.id);
             })
             .build();
         return entriesRequest;
@@ -408,29 +420,37 @@ export default class EditEntryView extends React.PureComponent {
         const {
             leadId,
             selectedEntryId,
-            entries,
+            // entries,
         } = this.props;
 
-        const selectedEntry = entries.find(entry => entry.data.id === selectedEntryId);
-
-        // If lead has serverId then deletion must be done in the server
-        if (selectedEntry && selectedEntry.data.serverId) {
-            // TODO: cleanup delete rest call
-            this.entryDeleteRequest = this.createRequestForEntryDelete(leadId, selectedEntry);
-            this.entryDeleteRequest.start();
-        } else {
-            this.props.removeEntry({
-                leadId,
-                entryId: selectedEntryId,
-            });
-        }
+        this.props.markForDeleteEntry({
+            leadId,
+            entryId: selectedEntryId,
+        });
     }
 
     handleSaveAll = () => {
-        const entryKeys = this.props.entries
-            .map(this.entryKeyExtractor);
-        entryKeys.forEach((id) => {
-            const request = this.createRequestForEntrySave(id);
+        const { leadId, entries } = this.props;
+        const entryKeys = entries.map(this.entryKeyExtractor);
+
+        entryKeys.forEach((id, i) => {
+            let request;
+            const entry = entries[i];
+            if (entry.markedForDelete) {
+                if (entry.data.serverId) {
+                    request = this.createRequestForEntryDelete(leadId, entry);
+                } else {
+                    request = {
+                        start: () => {
+                            this.props.removeEntry({ leadId, entryId: id });
+                            this.saveRequestCoordinator.notifyComplete(id);
+                        },
+                        stop: () => {},
+                    };
+                }
+            } else {
+                request = this.createRequestForEntrySave(id);
+            }
             this.saveRequestCoordinator.add(id, request);
         });
         this.saveRequestCoordinator.start();

@@ -170,7 +170,13 @@ export default class Overview extends React.PureComponent {
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
                     {entry.widget.values.excerpt}
-                    {this.renderIcon(status)}
+                    {
+                        entry.markedForDelete &&
+                        <span className={`${iconNames.removeCircle} ${styles.error}`} />
+                    }
+                    {
+                        this.renderIcon(status)
+                    }
                 </button>
             </ListItem>
         );
