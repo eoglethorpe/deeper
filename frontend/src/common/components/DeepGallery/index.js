@@ -16,14 +16,14 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './components/GalleryImage';
 import GalleryDocs, { supportedMimeType as GalleryDocsMimeType } from './components/GalleryDocs';
 
-const componentType = {
+export const ComponentType = {
     IMAGE: 'image',
     DOC: 'doc',
 };
 
-const galleryMapping = {};
-GalleryImageMimeType.forEach((type) => { galleryMapping[type] = componentType.IMAGE; });
-GalleryDocsMimeType.forEach((type) => { galleryMapping[type] = componentType.DOC; });
+export const GalleryMapping = {};
+GalleryImageMimeType.forEach((type) => { GalleryMapping[type] = ComponentType.IMAGE; });
+GalleryDocsMimeType.forEach((type) => { GalleryMapping[type] = ComponentType.DOC; });
 
 const propTypes = {
     className: PropTypes.string,
@@ -127,7 +127,7 @@ export default class DeepGallery extends React.PureComponent {
     }
 
     renderPreview = ({ className, pending, fileUrl, fileName, mimeType }) => {
-        if (galleryMapping[mimeType] === componentType.IMAGE) {
+        if (GalleryMapping[mimeType] === ComponentType.IMAGE) {
             return (
                 <GalleryImage
                     className={className}
@@ -135,7 +135,7 @@ export default class DeepGallery extends React.PureComponent {
                     pending={pending}
                 />
             );
-        } else if (galleryMapping[mimeType] === componentType.DOC) {
+        } else if (GalleryMapping[mimeType] === ComponentType.DOC) {
             return (
                 <GalleryDocs
                     className={className}

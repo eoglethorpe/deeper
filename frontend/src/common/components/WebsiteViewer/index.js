@@ -5,6 +5,8 @@ import React from 'react';
 import styles from './styles.scss';
 
 import { iconNames } from '../../../common/constants';
+import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
+import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
@@ -33,6 +35,7 @@ export default class DeepGallery extends React.PureComponent {
         this.state = {
             pending: true,
             canShow: false,
+            mimeType: undefined,
         };
 
         if (props.url) {
@@ -71,21 +74,30 @@ export default class DeepGallery extends React.PureComponent {
             .params(() => createParamsForWebsiteFetch(url))
             .success((response) => {
                 try {
-                    if (response.headers['X-Frame-Options'] === 'SAMEORIGIN' &&
-                        (!(response.headers['Set-Cookie'] || '').match('SECURE'))) {
-                        this.setState({ canShow: false });
+                    const isSameOrigin = (response.headers['X-Frame-Options'] || '').toLowerCase().match('sameorigin');
+                    const isSecure = (response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
+
+                    if (isSameOrigin && !isSecure) {
+                        // can't display in our website
+                        this.setState({ canShow: false, supportedUrl: response.httpUrl });
                     } else {
-                        this.setState({ canShow: true, supportedUrl: response.url });
+                        this.setState({
+                            canShow: true,
+                            supportedUrl: response.url,
+                            mimeType: response.headers['Content-Type'],
+                        });
                     }
                 } catch (err) {
                     this.setState({ canShow: false });
                 }
             })
             .failure((response) => {
+                // server can't fetch the url
                 console.error('Failure: ', response);
                 this.setState({ canShow: false });
             })
             .fatal((response) => {
+                // server can't fetch the url
                 console.error('Fatal: ', response);
                 this.setState({ canShow: false });
             })
@@ -99,6 +111,7 @@ export default class DeepGallery extends React.PureComponent {
             pending,
             canShow,
             supportedUrl,
+            mimeType,
         } = this.state;
 
         const {
@@ -120,26 +133,45 @@ export default class DeepGallery extends React.PureComponent {
             );
         }
 
+        if (GalleryMapping[mimeType] === ComponentType.DOC) {
+            return (
+                <GalleryDocs
+                    className={className}
+                    docUrl={url}
+                    // mimeType={mimeType}
+                />
+            );
+        }
+
         return (
             canShow ?
                 <iframe
                     // styleName="doc"
-                    ref={(iframe) => { this.iframe = iframe; }}
                     sandbox="allow-scripts allow-same-origin"
                     className={className}
                     title={supportedUrl}
                     src={supportedUrl}
-                    onLoad={this.onLoad}
                 /> :
                 <div className={className}>
-                    This website doesnot allow view in other webiste, Open in new tab
-                    <a
-                        styleName="gallery-file-name"
-                        href={url}
-                        target="_blank"
-                    >
-                        {url}
-                    </a>
+                    <span>This website doesnot allow view in other webiste, Open in new tab
+                        {
+                            supportedUrl ?
+                                <a
+                                    styleName="gallery-file-name"
+                                    href={supportedUrl}
+                                    target="_blank"
+                                >
+                                    {supportedUrl}
+                                </a> :
+                                <a
+                                    styleName="gallery-file-name"
+                                    href={url}
+                                    target="_blank"
+                                >
+                                    {url}
+                                </a>
+                        }
+                    </span>
                 </div>
         );
     }
