@@ -80,6 +80,7 @@ export default class Overview extends React.PureComponent {
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.overviewGridLayout,
+        minSize: this.widgets.find(w => w.id === item.widgetId).overviewMinSize,
         data: item.properties.data,
         headerRightComponent: (
             <div

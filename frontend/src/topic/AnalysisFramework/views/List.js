@@ -75,6 +75,7 @@ export default class List extends React.PureComponent {
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.listGridLayout,
+        minSize: this.widgets.find(w => w.id === item.widgetId).listMinSize,
         data: item.properties.data,
         headerRightComponent: (
             <div
