@@ -105,7 +105,16 @@
             overflow-y: auto;
 
             .grid-layout {
-                height: 100%;
+                overflow: auto;
+
+                .action-buttons {
+                    display: flex;
+
+                    button {
+                        margin-left: $spacing-small;
+                        padding: $spacing-small;
+                    }
+                }
             }
         }
 
