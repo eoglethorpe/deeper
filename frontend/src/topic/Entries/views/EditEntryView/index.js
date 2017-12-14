@@ -401,7 +401,7 @@ export default class EditEntryView extends React.PureComponent {
         return entriesRequest;
     }
 
-    handleAddEntry = () => {
+    handleAddEntry = (excerpt = undefined, image = undefined) => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
@@ -411,8 +411,8 @@ export default class EditEntryView extends React.PureComponent {
                 id: entryId,
                 serverId: undefined,
                 values: {
-                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
-                    image: undefined,
+                    excerpt: excerpt || (!image && `Excerpt ${entryId.toUpperCase()}`),
+                    image,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
                     attribues: [],
