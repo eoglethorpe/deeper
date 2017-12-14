@@ -1,14 +1,29 @@
 @import '../../../stylesheets/base';
 
 .entries {
+    display: flex;
+    flex-direction: column;
     padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
 
-    .entry-list {
-        .entry {
-            .grid-layout {
-                min-height: 100%;
-                overflow-y: hidden;
-                overflow-x: auto;
+    .filters {
+        flex-shrink: 0;
+        padding: $spacing-large;
+    }
+
+    .lead-entries-list {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .lead-entries {
+            border-bottom: $width-separator-medium solid $color-accent;
+
+            .entry {
+                .grid-layout {
+                    min-height: 100%;
+                    overflow-y: hidden;
+                    overflow-x: auto;
+                }
             }
         }
     }
