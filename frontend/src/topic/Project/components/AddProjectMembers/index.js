@@ -342,6 +342,7 @@ export default class AddProjectMembers extends React.PureComponent {
                     styleName="tabular-select"
                     blackList={formValues.membersBlackList}
                     options={usersWithRole}
+                    optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddProjectMembers.optionLabelSelector}
                     onChange={this.handleTabularSelectInputChange}
                     keySelector={AddProjectMembers.optionKeySelector}

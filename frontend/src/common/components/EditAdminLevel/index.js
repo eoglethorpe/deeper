@@ -372,6 +372,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             keySelector={this.keySelector}
                             labelSelector={this.labelSelector}
                             options={adminLevelsOfRegion}
+                            optionsIdentifier="select-input-inside-modal"
                             showHintAndError={false}
                             value={formValues.parent || undefined}
                             formname="parent"

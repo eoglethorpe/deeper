@@ -30,3 +30,7 @@
         }
     }
 }
+
+:global #select-input-inside-modal {
+    z-index: 1001;
+}
