@@ -29,6 +29,34 @@ import {
     createUrlForProject,
 } from '../../../common/rest';
 
+/*
+const listToMap = (list = [], keySelector) => (
+    list.reduce(
+        (acc, elem) => {
+            const key = keySelector(elem);
+            acc[key] = elem;
+            return acc;
+        },
+        {},
+    )
+);
+*/
+
+const groupList = (list = [], keySelector) => (
+    list.reduce(
+        (acc, elem) => {
+            const key = keySelector(elem);
+            if (acc[key]) {
+                acc[key].push(elem);
+            } else {
+                acc[key] = [elem];
+            }
+            return acc;
+        },
+        {},
+    )
+);
+
 const mapStateToProps = (state, props) => ({
     projectId: projectIdFromRoute(state, props),
     entries: entriesForProjectSelector(state, props),
@@ -67,6 +95,11 @@ export default class Entries extends React.PureComponent {
         };
 
         this.items = [];
+
+        this.leadGroupedEntries = [];
+        if (props.entries) {
+            this.leadGroupedEntries = groupList(props.entries, e => e.lead);
+        }
     }
 
     componentWillMount() {
@@ -84,6 +117,10 @@ export default class Entries extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         if (nextProps.analysisFramework) {
             this.update(nextProps.analysisFramework);
+
+            if (nextProps.entries) {
+                this.leadGroupedEntries = groupList(nextProps.entries, e => e.lead);
+            }
         }
     }
 
@@ -182,11 +219,11 @@ export default class Entries extends React.PureComponent {
 
     update(analysisFramework) {
         this.widgets = widgetStore
-            .filter(widget => widget.analysisFramework.listComponent)
+            .filter(widget => widget.view.listComponent)
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                listComponent: widget.analysisFramework.listComponent,
+                listComponent: widget.view.listComponent,
             }));
 
         if (analysisFramework.widgets) {
@@ -196,36 +233,45 @@ export default class Entries extends React.PureComponent {
         } else {
             this.items = [];
         }
-
-        console.log(this.items);
     }
 
     render() {
-        console.warn(this.props.entries, this.props.analysisFramework);
+        const leadIds = Object.keys(this.leadGroupedEntries);
+        console.warn(this.leadGroupedEntries);
 
         return (
             <div styleName="entries">
-                <header>
+                <div
+                    styleName="filters"
+                >
                     <h2>
                         { pageTitles.entries }
                     </h2>
-                </header>
+                </div>
                 <div
-                    styleName="entry-list"
+                    styleName="lead-entries-list"
                 >
                     {
-                        this.props.entries.map(entry => (
+                        leadIds.map(leadId => (
                             <div
-                                key={entry.id}
-                                styleName="entry"
-                                style={{ height: this.getMaxHeight() + 16 }}
+                                key={this.leadGroupedEntries[leadId].id}
+                                styleName="lead-entries"
                             >
-                                <GridLayout
-                                    styleName="grid-layout"
-                                    modifier={this.getItemView}
-                                    items={this.getGridItems()}
-                                    viewOnly
-                                />
+                                {
+                                    this.leadGroupedEntries[leadId].map(entry => (
+                                        <div
+                                            key={entry.id}
+                                            style={{ height: this.getMaxHeight() }}
+                                        >
+                                            <GridLayout
+                                                styleName="grid-layout"
+                                                modifier={this.getItemView}
+                                                items={this.getGridItems()}
+                                                viewOnly
+                                            />
+                                        </div>
+                                    ))
+                                }
                             </div>
                         ))
                     }
