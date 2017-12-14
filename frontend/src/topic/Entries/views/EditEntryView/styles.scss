@@ -153,6 +153,7 @@
             }
 
             .right {
+                position: relative;
                 flex-basis: 70%;
                 background-color: $color-foreground-alt;
                 overflow-y: auto;

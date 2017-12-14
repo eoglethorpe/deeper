@@ -124,7 +124,7 @@ const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
         const index = localEntries.findIndex(e => e.data.id === diff.id);
         switch (diff.action) {
             case 'add': {
-                // acc.push create
+                // create new
                 const remoteEntry = diff.entry;
                 acc.push(createEntry(remoteEntry));
                 break;

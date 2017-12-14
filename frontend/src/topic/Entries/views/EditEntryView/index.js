@@ -8,18 +8,14 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
-import { randomString } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 import update from '../../../../public/utils/immutable-update';
 import { LoadingAnimation } from '../../../../public/components/View';
+import { randomString } from '../../../../public/utils/common';
 
 import {
     leadIdFromRoute,
-    /*
-    editEntryViewCurrentLeadSelector,
-    editEntryViewCurrentProjectSelector,
-    */
     editEntryViewCurrentAnalysisFrameworkSelector,
     editEntryViewEntriesSelector,
     editEntryViewSelectedEntryIdSelector,
@@ -31,6 +27,9 @@ import {
     saveEntryAction,
     changeEntryAction,
     diffEntriesAction,
+
+    addEntryAction,
+    removeEntryAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -46,56 +45,46 @@ import {
 
     createUrlForEntriesOfLead,
     createParamsForEntriesOfLead,
+
+    createUrlForDeleteEntry,
+    createParamsForDeleteEntry,
 } from '../../../../common/rest';
 import schema from '../../../../common/schema';
 
-import { ENTRY_STATUS, DIFF_ACTION } from './utils/constants';
-import { calcEntryState } from './utils/entryState';
+import { ENTRY_STATUS } from './utils/constants';
+import { calcEntryState, calcEntriesDiff } from './utils/entryState';
 
 import styles from './styles.scss';
 import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
-    analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     leadId: PropTypes.string.isRequired,
-    /*
-    lead: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    */
+    analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    selectedEntryId: PropTypes.string,
+
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
 
-    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    selectedEntryId: PropTypes.string,
-
+    addEntry: PropTypes.func.isRequired,
     saveEntry: PropTypes.func.isRequired,
+    removeEntry: PropTypes.func.isRequired,
     changeEntry: PropTypes.func.isRequired,
     diffEntries: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    /*
-    lead: undefined,
-    project: undefined,
-    */
     analysisFramework: undefined,
     selectedEntryId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     leadId: leadIdFromRoute(state, props),
-
-    /*
-    lead: editEntryViewCurrentLeadSelector(state, props),
-    project: editEntryViewCurrentProjectSelector(state, props),
-    */
-
+    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
     entries: editEntryViewEntriesSelector(state, props),
     selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
-    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -107,7 +96,10 @@ const mapDispatchToProps = dispatch => ({
     setProject: params => dispatch(setProjectAction(params)),
 
     diffEntries: params => dispatch(diffEntriesAction(params)),
+    addEntry: params => dispatch(addEntryAction(params)),
+    removeEntry: params => dispatch(removeEntryAction(params)),
 });
+
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -124,18 +116,25 @@ export default class EditEntryView extends React.PureComponent {
                 1: { pending: true },
                 */
             },
-            pendingSubmitAll: false,
-            pendingLeadAndEntries: false,
+            entryDeleteRests: {
+                /*
+                1: { pending: true },
+                */
+            },
+
+            pendingEntries: true,
             pendingProjectAndAf: true,
+
+            pendingSaveAll: false,
         };
 
-        this.saveCoordinator = new CoordinatorBuilder()
+        this.saveRequestCoordinator = new CoordinatorBuilder()
             .maxActiveActors(3)
             .preSession(() => {
-                this.setState({ pendingSubmitAll: true });
+                this.setState({ pendingSaveAll: true });
             })
             .postSession(() => {
-                this.setState({ pendingSubmitAll: false });
+                this.setState({ pendingSaveAll: false });
             })
             .build();
     }
@@ -146,9 +145,7 @@ export default class EditEntryView extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.leadRequest) {
-            this.leadRequest.stop();
-        }
+        this.leadRequest.stop();
 
         if (this.entriesRequest) {
             this.entriesRequest.stop();
@@ -162,7 +159,7 @@ export default class EditEntryView extends React.PureComponent {
             this.analysisFrameworkRequest.stop();
         }
 
-        this.saveCoordinator.close();
+        this.saveRequestCoordinator.close();
     }
 
     createRequestForLead = (leadId) => {
@@ -195,114 +192,6 @@ export default class EditEntryView extends React.PureComponent {
         return leadRequest;
     }
 
-    calcEntriesDiff = (locals, remotes) => {
-        const remoteEntriesMap = remotes.reduce(
-            (acc, entry) => {
-                acc[entry.id] = entry;
-                return acc;
-            },
-            {},
-        );
-        const actions = locals.reduce(
-            (arr, localEntry) => {
-                const serverId = localEntry.data.serverId;
-                const id = localEntry.data.id;
-                const remoteEntry = remoteEntriesMap[serverId];
-                if (!serverId) {
-                    // this localEntry hasn't been saved
-                    arr.push({ id, action: DIFF_ACTION.noop });
-                } else if (!remoteEntry) {
-                    // this entry is removed from server
-                    arr.push({ id, serverId, action: DIFF_ACTION.remove });
-                    // OK: remove
-                    // SKIP: nothing
-                } else if (localEntry.data.versionId < remoteEntry.versionId) {
-                    // this entry is updated on server
-                    const entry = remoteEntry;
-                    const newEntry = {
-                        id: localEntry.data.id,
-                        serverId: entry.id, // here
-                        versionId: entry.versionId,
-                        values: {
-                            exceprt: entry.excerpt,
-                            image: entry.image,
-                            lead: entry.lead,
-                            analysisFramework: entry.analysisFramework,
-                            attribues: entry.attribues,
-                            exportData: entry.exportData,
-                            filterData: entry.filterData,
-                        },
-                    };
-                    arr.push({ id, serverId, action: DIFF_ACTION.replace, entry: newEntry });
-                    // OK: set versionId, generate id, clear uiState
-                    // SKIP: set versionId
-                } else {
-                    arr.push({ id, serverId, action: DIFF_ACTION.noop });
-                }
-                return arr;
-            },
-            [],
-        );
-
-        const localEntriesMap = locals.reduce(
-            (acc, entry) => {
-                if (entry.data.serverId) {
-                    acc[entry.data.serverId] = true;
-                }
-                return acc;
-            },
-            {},
-        );
-        const actions2 = remotes.reduce(
-            (acc, entry) => {
-                const serverId = entry.id;
-                const localEntry = localEntriesMap[serverId];
-                if (!localEntry) {
-                    const newEntry = {
-                        id: randomString(),
-                        serverId: entry.id, // here
-                        values: {
-                            excerpt: entry.excerpt,
-                            image: entry.image,
-                            lead: entry.lead,
-                            analysisFramework: entry.analysisFramework,
-                            attribues: entry.attribues,
-                            exportData: entry.exportData,
-                            filterData: entry.filterData,
-                        },
-                        stale: true,
-                    };
-                    acc.push({ serverId, action: DIFF_ACTION.add, entry: newEntry });
-                }
-                return acc;
-            },
-            [],
-        );
-
-        return [...actions2, ...actions];
-    }
-
-    createRequestForEntriesOfLead = (leadId) => {
-        const entriesRequest = new FgRestBuilder()
-            .url(createUrlForEntriesOfLead(leadId))
-            .params(() => createParamsForEntriesOfLead())
-            .postLoad(() => {
-                this.setState({ pendingEntries: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'entriesGetResponse');
-                    const entries = response.results;
-                    const diffs = this.calcEntriesDiff(this.props.entries, entries);
-                    this.props.diffEntries({ leadId, diffs });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return entriesRequest;
-    };
-
     createRequestForProject = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
@@ -328,11 +217,8 @@ export default class EditEntryView extends React.PureComponent {
     };
 
     createRequestForAnalysisFramework = (analysisFrameworkId) => {
-        const urlForAnalysisFramework = createUrlForAnalysisFramework(
-            analysisFrameworkId,
-        );
         const analysisFrameworkRequest = new FgRestBuilder()
-            .url(urlForAnalysisFramework)
+            .url(createUrlForAnalysisFramework(analysisFrameworkId))
             .params(() => createParamsForUser())
             .postLoad(() => {
                 this.setState({ pendingProjectAndAf: false });
@@ -350,6 +236,27 @@ export default class EditEntryView extends React.PureComponent {
             .build();
         return analysisFrameworkRequest;
     }
+
+    createRequestForEntriesOfLead = (leadId) => {
+        const entriesRequest = new FgRestBuilder()
+            .url(createUrlForEntriesOfLead(leadId))
+            .params(() => createParamsForEntriesOfLead())
+            .postLoad(() => {
+                this.setState({ pendingEntries: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'entriesGetResponse');
+                    const entries = response.results;
+                    const diffs = calcEntriesDiff(this.props.entries, entries);
+                    this.props.diffEntries({ leadId, diffs });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return entriesRequest;
+    };
 
     createRequestForEntrySave = (entryId) => {
         const { leadId } = this.props;
@@ -408,26 +315,26 @@ export default class EditEntryView extends React.PureComponent {
                     this.props.changeEntry({ leadId, entryId, uiState });
                 }
 
-                this.saveCoordinator.notifyComplete(entryId);
+                this.saveRequestCoordinator.notifyComplete(entryId);
             })
             .failure((response) => {
                 console.warn('FAILURE:', response);
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveCoordinator.notifyComplete(entryId);
+                this.saveRequestCoordinator.notifyComplete(entryId);
             })
             .fatal((response) => {
                 console.warn('FATAL:', response);
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveCoordinator.notifyComplete(entryId);
+                this.saveRequestCoordinator.notifyComplete(entryId);
             })
             .build();
 
         const interceptor = {
             start: () => {
                 if (this.choices[entryId].isSaveDisabled) {
-                    this.saveCoordinator.notifyComplete(entryId);
+                    this.saveRequestCoordinator.notifyComplete(entryId);
                 } else {
                     entrySaveRequest.start();
                 }
@@ -438,14 +345,97 @@ export default class EditEntryView extends React.PureComponent {
         return interceptor;
     };
 
+    createRequestForEntryDelete = (leadId, entry) => {
+        const entriesRequest = new FgRestBuilder()
+            .url(createUrlForDeleteEntry(entry.data.serverId))
+            .params(() => createParamsForDeleteEntry())
+            .preLoad(() => {
+                console.warn('Pending', entry.data.id);
+                this.setState((state) => {
+                    const requestSettings = {
+                        [entry.data.id]: { $auto: {
+                            pending: { $set: true },
+                        } },
+                    };
+                    const entryDeleteRests = update(state.entryDeleteRests, requestSettings);
+                    return { entryDeleteRests };
+                });
+            })
+            .postLoad(() => {
+                console.warn('Not pending', entry.data.id);
+                this.setState((state) => {
+                    const requestSettings = {
+                        [entry.data.id]: { $auto: {
+                            pending: { $set: false },
+                        } },
+                    };
+                    const entryDeleteRests = update(state.entryDeleteRests, requestSettings);
+                    return { entryDeleteRests };
+                });
+            })
+            .success(() => {
+                console.warn('Removing', entry.data.id);
+                this.props.removeEntry({
+                    leadId,
+                    entryId: entry.data.id,
+                });
+            })
+            .build();
+        return entriesRequest;
+    }
+
+    handleAddEntry = () => {
+        const entryId = randomString();
+        const { leadId, analysisFramework } = this.props;
+
+        this.props.addEntry({
+            leadId,
+            entry: {
+                id: entryId,
+                serverId: undefined,
+                values: {
+                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
+                    image: undefined,
+                    lead: leadId,
+                    analysisFramework: analysisFramework.id,
+                    attribues: [],
+                    exportData: [],
+                    filterData: [],
+                },
+            },
+        });
+    }
+
+    handleDeleteEntry = () => {
+        const {
+            leadId,
+            selectedEntryId,
+            entries,
+        } = this.props;
+
+        const selectedEntry = entries.find(entry => entry.data.id === selectedEntryId);
+
+        // If lead has serverId then deletion must be done in the server
+        if (selectedEntry && selectedEntry.data.serverId) {
+            // TODO: cleanup delete rest call
+            this.entryDeleteRequest = this.createRequestForEntryDelete(leadId, selectedEntry);
+            this.entryDeleteRequest.start();
+        } else {
+            this.props.removeEntry({
+                leadId,
+                entryId: selectedEntryId,
+            });
+        }
+    }
+
     handleSaveAll = () => {
         const entryKeys = this.props.entries
             .map(this.entryKeyExtractor);
         entryKeys.forEach((id) => {
             const request = this.createRequestForEntrySave(id);
-            this.saveCoordinator.add(id, request);
+            this.saveRequestCoordinator.add(id, request);
         });
-        this.saveCoordinator.start();
+        this.saveRequestCoordinator.start();
     }
 
     entryKeyExtractor = entry => entry.data.id;
@@ -459,7 +449,8 @@ export default class EditEntryView extends React.PureComponent {
         } = this.props;
         const {
             entryRests,
-            pendingSubmitAll,
+            entryDeleteRests,
+            pendingSaveAll,
             pendingEntries,
             pendingProjectAndAf,
         } = this.state;
@@ -478,18 +469,28 @@ export default class EditEntryView extends React.PureComponent {
                 const choice = calcEntryState({
                     entry,
                     rest: entryRests[entryId],
+                    deleteRest: entryDeleteRests[entryId],
                 });
                 const isRemoveDisabled = (choice === ENTRY_STATUS.requesting);
                 const isSaveDisabled = (choice !== ENTRY_STATUS.nonstale);
-                acc[entryId] = { choice, isSaveDisabled, isRemoveDisabled };
+                const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
+                acc[entryId] = {
+                    choice,
+                    isSaveDisabled,
+                    isRemoveDisabled,
+                    isWidgetDisabled,
+                };
                 return acc;
             },
             {},
         );
 
+        const { isRemoveDisabled, isWidgetDisabled } = this.choices[selectedEntryId] || {};
+
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
         );
+        const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
         return (
             <HashRouter>
@@ -497,11 +498,7 @@ export default class EditEntryView extends React.PureComponent {
                     <Route
                         exact
                         path="/"
-                        component={
-                            () => (
-                                <Redirect to="/overview" />
-                            )
-                        }
+                        component={() => <Redirect to="/overview" />}
                     />
                     <Route
                         path="/overview"
@@ -513,7 +510,13 @@ export default class EditEntryView extends React.PureComponent {
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                saveAllDisabled={pendingSubmitAll || !someSaveEnabled}
+                                onEntryAdd={this.handleAddEntry}
+                                onEntryDelete={this.handleDeleteEntry}
+
+                                removeDisabled={isRemoveDisabled}
+                                widgetDisabled={isWidgetDisabled}
+                                saveAllDisabled={isSaveAllDisabled}
+
                                 choices={this.choices}
                             />
                         )}

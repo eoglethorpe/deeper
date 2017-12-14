@@ -43,7 +43,7 @@ export const createParamsForEntriesOfLead = () => ({
 });
 
 export const createUrlForDeleteEntry = entryId => (
-    `${wsEndpoint}/entries/${entryId}`
+    `${wsEndpoint}/entries/${entryId}/`
 );
 export const createParamsForDeleteEntry = () => ({
     method: DELETE,
