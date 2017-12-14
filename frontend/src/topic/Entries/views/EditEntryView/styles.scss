@@ -75,6 +75,37 @@
                 flex-basis: 30%;
                 background-color: $color-foreground;
 
+
+                .lead-preview {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    border-top: $width-separator-medium solid $color-separator;
+                    overflow-y: auto;
+                    width: 100%;
+                    height: 100%;
+
+                    .gallery-file {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+
+                        iframe {
+                            flex-grow: 1;
+                        }
+                    }
+
+                    .preview-text {
+                        display: flex;
+                        margin: auto;
+
+                        h1 {
+                            color: $color-text-disabled;
+                            font-weight: $font-weight-medium;
+                        }
+                    }
+                }
+
                 .entries-list-container {
                     display: none;
                     position: absolute;

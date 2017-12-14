@@ -23,10 +23,14 @@ import {
 } from '../../../../common/constants';
 import {
     setActiveEntryAction,
+    editEntryViewCurrentLeadSelector,
 } from '../../../../common/redux';
 
 import { ENTRY_STATUS } from './utils/constants';
+import { LEAD_TYPE } from '../../../Leads/views/LeadAdd/utils/constants.js';
 import widgetStore from '../../../AnalysisFramework/widgetStore';
+import WebsiteViewer from '../../../../common/components/WebsiteViewer';
+import DeepGallery from '../../../../common/components/DeepGallery';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -34,6 +38,7 @@ const propTypes = {
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
+    lead: PropTypes.object, // eslint-disable-line
     setActiveEntry: PropTypes.func.isRequired,
 
     selectedEntryId: PropTypes.string,
@@ -57,11 +62,15 @@ const defaultProps = {
     removeDisabled: false,
 };
 
+const mapStateToProps = (state, props) => ({
+    lead: editEntryViewCurrentLeadSelector(state, props),
+});
+
 const mapDispatchToProps = dispatch => ({
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
@@ -190,10 +199,50 @@ export default class Overview extends React.PureComponent {
         }
     };
 
+    renderLeadPreview = (lead) => {
+        const type = lead.sourceType;
+
+        if (type === LEAD_TYPE.website) {
+            if (lead.url) {
+                return (
+                    <div className={styles['lead-preview']} >
+                        <WebsiteViewer styleName="gallery-file" url={lead.url} />
+                    </div>
+                );
+            }
+            return (
+                <div className={styles['lead-preview']} >
+                    <div styleName="preview-text">
+                        <h1>Preview Not Available</h1>
+                    </div>
+                </div>
+            );
+        } else if (type === LEAD_TYPE.text) {
+            return undefined;
+        }
+
+        return (
+            <div className={styles['lead-preview']} >
+                {
+                    lead.attachment ? (
+                        <DeepGallery
+                            styleName="gallery-file"
+                            galleryId={lead.attachment}
+                        />
+                    ) :
+                        <div styleName="preview-text">
+                            <h1>Preview Not Available</h1>
+                        </div>
+                }
+            </div>
+        );
+    }
+
     render() {
         const {
             selectedEntryId,
             entries,
+            lead,
 
             onSaveAll,
 
@@ -256,7 +305,7 @@ export default class Overview extends React.PureComponent {
                 </header>
                 <div styleName="container">
                     <div styleName="left">
-                        Lead preview
+                        {this.renderLeadPreview(lead)}
                         <div
                             styleName={this.calcStyleNameWithState('entries-list-container')}
                         >

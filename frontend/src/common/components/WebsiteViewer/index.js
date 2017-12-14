@@ -158,8 +158,6 @@ export default class DeepGallery extends React.PureComponent {
             );
         }
 
-        console.warn(canShow && !isSameOrigin && isSecure);
-        console.warn(canShow, !isSameOrigin, isSecure);
         return (
             (canShow && !isSameOrigin && isSecure) ?
                 <iframe
