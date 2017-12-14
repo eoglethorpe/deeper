@@ -59,14 +59,29 @@
         }
     }
 
+    .viz-container {
+        position: relative;
+        flex-grow: 1;
+        background-color: $color-foreground;
+        overflow-y: auto;
+    }
+
     .footer {
+        display: flex;
         flex-shrink: 0;
+        justify-content: space-between;
         background-color: $color-foreground-alt;
         padding: $spacing-small $spacing-medium-alt;
 
         .pager {
             display: flex;
             justify-content: center;
+        }
+
+        .view-mode-button {
+            display: flex;
+            height: 32px;
+            text-transform: uppercase;
         }
     }
 }

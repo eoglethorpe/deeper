@@ -18,6 +18,7 @@ import {
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
+    L__SET_VIEW_MODE,
     L__SET_ACTIVE_SORT,
 
     E__SET_ENTRIES,
@@ -446,6 +447,19 @@ const leadViewSetActivePage = (state, action) => {
         leadPage: {
             [activeProject]: { $auto: {
                 activePage: { $set: activePage },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const leadViewSetViewMode = (state, action) => {
+    const { viewMode } = action;
+    const { activeProject } = state;
+    const settings = {
+        leadPage: {
+            [activeProject]: { $auto: {
+                viewMode: { $set: viewMode },
             } },
         },
     };
@@ -916,6 +930,7 @@ const reducers = {
     [L__SET_FILTER]: leadViewSetFilter,
     [L__UNSET_FILTER]: leadViewUnsetFilter,
     [L__SET_ACTIVE_PAGE]: leadViewSetActivePage,
+    [L__SET_VIEW_MODE]: leadViewSetViewMode,
     [L__SET_ACTIVE_SORT]: leadViewSetActiveSort,
     [L__SET_LEADS]: setLeads,
 

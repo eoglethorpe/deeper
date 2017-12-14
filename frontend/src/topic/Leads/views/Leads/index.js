@@ -18,6 +18,7 @@ import {
     PrimaryButton,
     TransparentAccentButton,
     TransparentButton,
+    SegmentButton,
 } from '../../../../public/components/Action';
 
 import {
@@ -42,6 +43,9 @@ import {
 
     leadPageActiveSortSelector,
     setLeadPageActiveSortAction,
+
+    leadPageViewModeSelector,
+    setLeadPageViewModeAction,
 
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
@@ -71,6 +75,8 @@ const propTypes = {
     setLeadPageFilter: PropTypes.func.isRequired,
     activeSort: PropTypes.string.isRequired, // eslint-disable-line
     setLeadPageActiveSort: PropTypes.func.isRequired,
+    setLeadPageViewMode: PropTypes.func.isRequired,
+    viewMode: PropTypes.string.isRequired,
     activePage: PropTypes.number.isRequired, // eslint-disable-line
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
@@ -89,6 +95,7 @@ const mapStateToProps = state => ({
 
     activePage: leadPageActivePageSelector(state),
     activeSort: leadPageActiveSortSelector(state),
+    viewMode: leadPageViewModeSelector(state),
     filters: leadPageFilterSelector(state),
 });
 
@@ -96,6 +103,7 @@ const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
 
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
+    setLeadPageViewMode: params => dispatch(setLeadPageViewModeAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
@@ -200,6 +208,17 @@ export default class Leads extends React.PureComponent {
                         </TransparentAccentButton>
                     </div>
                 ),
+            },
+        ];
+
+        this.viewModes = [
+            {
+                label: 'Table',
+                value: 'table',
+            },
+            {
+                label: 'Visualizations',
+                value: 'Viz',
             },
         ];
 
@@ -445,12 +464,17 @@ export default class Leads extends React.PureComponent {
         this.props.setLeadPageActiveSort({ activeSort });
     }
 
+    handleLeadViewChange = (newViewMode) => {
+        this.props.setLeadPageViewMode({ viewMode: newViewMode });
+    }
+
     render() {
         console.log('Rendering Leads');
 
         const {
             totalLeadsCount,
             activePage,
+            viewMode,
         } = this.props;
 
         const {
@@ -481,27 +505,42 @@ export default class Leads extends React.PureComponent {
                         {leadsString.addSourcesButtonLabel}
                     </PrimaryButton>
                 </header>
-
-                <div styleName="table-container">
-                    <RawTable
-                        data={this.props.leads}
-                        dataModifier={this.leadModifier}
-                        headerModifier={this.headerModifier}
-                        headers={this.headers}
-                        onHeaderClick={this.handleTableHeaderClick}
-                        keyExtractor={this.leadKeyExtractor}
-                        styleName="leads-table"
-                    />
-                    { loadingLeads && <LoadingAnimation /> }
-                </div>
-
+                {viewMode === 'table' ? (
+                    <div styleName="table-container">
+                        <RawTable
+                            data={this.props.leads}
+                            dataModifier={this.leadModifier}
+                            headerModifier={this.headerModifier}
+                            headers={this.headers}
+                            onHeaderClick={this.handleTableHeaderClick}
+                            keyExtractor={this.leadKeyExtractor}
+                            styleName="leads-table"
+                        />
+                        { loadingLeads && <LoadingAnimation /> }
+                    </div>
+                ) : (
+                    <div styleName="viz-container">
+                        Visualizations
+                    </div>
+                )
+                }
                 <footer styleName="footer">
-                    <Pager
-                        activePage={activePage}
-                        styleName="pager"
-                        itemsCount={totalLeadsCount}
-                        maxItemsPerPage={MAX_LEADS_PER_REQUEST}
-                        onPageClick={this.handlePageClick}
+                    <div>
+                        {viewMode === 'table' &&
+                            <Pager
+                                activePage={activePage}
+                                styleName="pager"
+                                itemsCount={totalLeadsCount}
+                                maxItemsPerPage={MAX_LEADS_PER_REQUEST}
+                                onPageClick={this.handlePageClick}
+                            />
+                        }
+                    </div>
+                    <SegmentButton
+                        styleName="view-mode-button"
+                        data={this.viewModes}
+                        selected={viewMode}
+                        onPress={this.handleLeadViewChange}
                     />
                 </footer>
             </div>

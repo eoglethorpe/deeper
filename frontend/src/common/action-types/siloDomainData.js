@@ -19,6 +19,7 @@ export const LA__COPY_ALL = 'domain-data/LA__COPY_ALL';
 export const L__SET_FILTER = 'silo-domain-data/L__SET_FILTER';
 export const L__UNSET_FILTER = 'silo-domain-data/L__UNSET_FILTER';
 export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
+export const L__SET_VIEW_MODE = 'silo-domain-data/L__SET_VIEW_MODE';
 export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
 export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
 
