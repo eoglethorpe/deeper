@@ -32,11 +32,18 @@ export default class DeepGallery extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
+        this.initialState = {
             pending: false,
             canShow: false,
             mimeType: undefined,
+            isSameOrigin: undefined,
+            isSecure: undefined,
+            isDoc: undefined,
+            httpsUrl: undefined,
+            invalidUrl: undefined,
         };
+
+        this.state = { ...this.initialState };
 
         if (props.url) {
             this.urlRequest = this.createRequestForUrl(props.url);
@@ -74,32 +81,34 @@ export default class DeepGallery extends React.PureComponent {
             .params(() => createParamsForWebsiteFetch(url))
             .success((response) => {
                 try {
-                    const isSameOrigin = (response.headers['X-Frame-Options'] || '').toLowerCase().match('sameorigin');
-                    const isSecure = (response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
+                    const isSameOrigin = !!(response.headers['X-Frame-Options'] || '').toLowerCase().match('sameorigin');
+                    const isSecure = !!(response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
+                    const mimeType = response.headers['Content-Type'];
+                    const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
+                    const httpsUrl = response.url;
 
-                    if (isSameOrigin && !isSecure) {
-                        // can't display in our website
-                        this.setState({ canShow: false, supportedUrl: response.httpUrl });
-                    } else {
-                        this.setState({
-                            canShow: true,
-                            supportedUrl: response.url,
-                            mimeType: response.headers['Content-Type'],
-                        });
-                    }
+                    this.setState({
+                        canShow: true,
+                        isSameOrigin,
+                        isSecure,
+                        mimeType,
+                        isDoc,
+                        httpsUrl,
+                        invalidUrl: false,
+                    });
                 } catch (err) {
-                    this.setState({ canShow: false });
+                    this.setState({ ...this.initialState });
                 }
             })
             .failure((response) => {
                 // server can't fetch the url
                 console.error('Failure: ', response);
-                this.setState({ canShow: false });
+                this.setState({ ...this.initialState, invalidUrl: true });
             })
             .fatal((response) => {
                 // server can't fetch the url
                 console.error('Fatal: ', response);
-                this.setState({ canShow: false });
+                this.setState({ ...this.initialState });
             })
             .build();
 
@@ -110,8 +119,12 @@ export default class DeepGallery extends React.PureComponent {
         const {
             pending,
             canShow,
-            supportedUrl,
+            isSameOrigin,
+            isSecure,
             mimeType,
+            isDoc,
+            httpsUrl,
+            invalidUrl,
         } = this.state;
 
         const {
@@ -134,45 +147,49 @@ export default class DeepGallery extends React.PureComponent {
             );
         }
 
-        if (GalleryMapping[mimeType] === ComponentType.DOC) {
+        if (isDoc) {
             return (
                 <GalleryDocs
                     className={className}
                     docUrl={url}
-                    // mimeType={mimeType}
+                    mimeType={mimeType}
+                    isSameOrigin={isSameOrigin}
                 />
             );
         }
 
+        console.warn(canShow && !isSameOrigin && isSecure);
+        console.warn(canShow, !isSameOrigin, isSecure);
         return (
-            canShow ?
+            (canShow && !isSameOrigin && isSecure) ?
                 <iframe
                     // styleName="doc"
                     sandbox="allow-scripts allow-same-origin"
                     className={className}
-                    title={supportedUrl}
-                    src={supportedUrl}
+                    title={httpsUrl || url}
+                    src={httpsUrl || url}
+
                 /> :
                 <div className={className}>
-                    <span styleName="error-website-msg">Oops!! This website prevents the preview. Please open in a new tab.
-                        {
-                            supportedUrl ?
+                    {
+                        !invalidUrl ?
+                            <div styleName="error-website-msg">
+                                <span>
+                                Oops!! This website prevents the preview. Please open in a new tab
+                                </span>
                                 <a
-                                    styleName="gallery-file-name"
-                                    href={supportedUrl}
+                                    styleName="url"
+                                    href={httpsUrl || url}
                                     target="_blank"
                                 >
-                                    {supportedUrl}
-                                </a> :
-                                <a
-                                    styleName="gallery-file-name"
-                                    href={url}
-                                    target="_blank"
-                                >
-                                    {url}
+                                    {httpsUrl || url}
                                 </a>
-                        }
-                    </span>
+                            </div>
+                            :
+                            <span styleName="error-website-msg">
+                                Invalid Url
+                            </span>
+                    }
                 </div>
         );
     }

@@ -124,9 +124,18 @@ export default class LeadFormItem extends React.PureComponent {
         const type = lead.data.type;
 
         if (type === LEAD_TYPE.website) {
+            if (lead.form.values.url) {
+                return (
+                    <div className={styles['lead-preview']} >
+                        <WebsiteViewer styleName="gallery-file" url={lead.form.values.url} />
+                    </div>
+                );
+            }
             return (
                 <div className={styles['lead-preview']} >
-                    <WebsiteViewer styleName="gallery-file" url={lead.form.values.url} />
+                    <div styleName="preview-text">
+                        <h1>Lead Preview</h1>
+                    </div>
                 </div>
             );
         } else if (type === LEAD_TYPE.text) {

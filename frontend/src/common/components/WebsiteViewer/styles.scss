@@ -1,15 +1,19 @@
 @import '../../../stylesheets/base';
 
-.gallery-file-name {
-    color: $color-accent;
-}
 
 .error-website-msg {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin: auto;
     color: $color-danger;
+
+    .url {
+        display: inline-block;
+        color: $color-accent;
+        text-transform: lowercase;
+    }
 }
 
 .loading-animation {
