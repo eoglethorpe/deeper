@@ -1,4 +1,5 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
@@ -11,8 +12,14 @@ import styles from './styles.scss';
 const TEXT = 'text';
 const IMAGE = 'image';
 
+const propTypes = {
+    editAction: PropTypes.func.isRequired,
+};
+
 @CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {
+    static propTypes = propTypes;
+
     constructor(props) {
         super(props);
 
@@ -26,6 +33,12 @@ export default class ExcerptTextOverview extends React.PureComponent {
         this.state = {
             excerptType: TEXT,
         };
+
+        this.props.editAction(this.handleEdit);
+    }
+
+    handleEdit = () => {
+        console.log('Edit excerpt (overview)');
     }
 
     handleProjectTypeChange = (value) => {

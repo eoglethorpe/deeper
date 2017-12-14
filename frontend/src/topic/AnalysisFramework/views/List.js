@@ -51,6 +51,8 @@ export default class List extends React.PureComponent {
     constructor(props) {
         super(props);
         this.update(props.analysisFramework);
+
+        this.widgetEditActions = {};
     }
 
     componentWillReceiveProps(nextProps) {
@@ -73,11 +75,41 @@ export default class List extends React.PureComponent {
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.listGridLayout,
+        data: item.properties.data,
+        headerRightComponent: (
+            <div
+                className={styles['action-buttons']}
+            >
+                <TransparentButton
+                    onClick={() => this.handleWidgetEditButtonClick(item.key)}
+                >
+                    <span className={iconNames.edit} />
+                </TransparentButton>
+                <TransparentButton
+                    onClick={() => this.handleWidgetRemoveButtonClick(item.key)}
+                >
+                    <span className={iconNames.close} />
+                </TransparentButton>
+            </div>
+        ),
     }))
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
-        return <Component />;
+        return (
+            <Component
+                data={item.data}
+                editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
+                onChange={data => this.handleItemChange(item.key, data)}
+                className={styles.component}
+            />
+        );
+    }
+
+    handleWidgetEditButtonClick = (id) => {
+        if (this.widgetEditActions[id]) {
+            (this.widgetEditActions[id])();
+        }
     }
 
     handleWidgetRemoveButtonClick = (id) => {
@@ -137,6 +169,19 @@ export default class List extends React.PureComponent {
             const widget = update(originalItem, settings);
             this.props.updateWidget({ analysisFrameworkId, widget });
         });
+    }
+
+    handleItemChange = (key, data) => {
+        const originalItem = this.items.find(i => i.key === key);
+        const settings = {
+            properties: {
+                data: { $set: data },
+            },
+        };
+
+        const analysisFrameworkId = this.props.analysisFramework.id;
+        const widget = update(originalItem, settings);
+        this.props.updateWidget({ analysisFrameworkId, widget });
     }
 
     handleGotoOverviewButtonClick = () => {

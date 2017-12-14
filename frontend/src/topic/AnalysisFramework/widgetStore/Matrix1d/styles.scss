@@ -4,7 +4,7 @@
     flex-shrink: 0;
     margin: $spacing-extra-small;
     background-color: $color-background;
-    padding: $spacing-small;
+    padding: $spacing-small $spacing-medium;
     user-select: none;
 }
 
@@ -15,7 +15,7 @@
 
     .title {
         flex-shrink: 0;
-        padding: $spacing-small;
+        padding: $spacing-medium;
     }
 
     .cells {
@@ -34,18 +34,43 @@
     width: 100%;
 }
 
+%modal {
+    width: 480px;
+
+    :global .modal-body {
+        height: 400px;
+    }
+}
+
 .edit-cell-modal {
-    width: 400px;
+    @extend %modal;
 
     .edit-cell {
         display: flex;
+
+        .title-input {
+            flex-grow: 1;
+        }
+
+        .delete-button {
+            flex-shrink: 1;
+        }
     }
 }
 
 .edit-row-modal {
-    width: 400px;
+    @extend %modal;
 
     .edit-row {
         display: flex;
+        align-items: center;
+
+        .title-input {
+            flex-grow: 1;
+        }
+
+        .delete-button {
+            flex-shrink: 1;
+        }
     }
 }

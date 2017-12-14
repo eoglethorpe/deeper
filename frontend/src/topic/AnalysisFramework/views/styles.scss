@@ -6,10 +6,6 @@
     width: 100%;
     height: calc(100vh - #{$height-navbar});
 
-    :global .responsive-wrapper {
-        height: 100%;
-    }
-
     %widget-list {
         flex-grow: 1;
         overflow-y: auto;
@@ -35,43 +31,6 @@
         }
     }
 
-    %grid-item {
-        .header {
-            display: flex;
-            position: relative;
-            flex-shrink: 0;
-            align-items: center;
-            justify-content: space-between;
-            background-color: $color-background;
-            cursor: grab;
-            padding: $spacing-small $spacing-medium;
-
-            .heading {
-                font-size: $font-size-small;
-            }
-
-            .actions {
-                position: absolute;
-                top: 0;
-                right: 0;
-                font-size: $font-size-large;
-
-                .close-button {
-                    margin-left: $spacing-small;
-                    color: $color-danger;
-                }
-            }
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: $spacing-medium;
-
-            /* TODO: fix following hardcoded value */
-            height: calc(100% - 32px);
-        }
-    }
-
     .overview {
         display: flex;
         height: 100%;
@@ -94,22 +53,18 @@
         }
 
         .right {
+            display: flex;
             flex-basis: 74%;
+            flex-direction: column;
             background-color: $color-foreground-alt;
-            overflow: auto;
 
             >.header {
                 display: flex;
-                position: sticky;
-                top: 0;
-                left: 0;
                 align-items: center;
                 justify-content: space-between;
-                z-index: 11;
                 border-bottom: $width-separator-thin solid $color-separator;
                 background-color: $color-background-header;
                 padding: $spacing-small $spacing-medium;
-                width: 100%;
 
                 .entry-actions {
                     display: flex;
@@ -123,11 +78,17 @@
             }
 
             .grid-layout {
-                // min-height: 100%;
-                overflow: visible;
+                flex-grow: 1;
+                height: auto;
+                overflow: auto;
 
-                .grid-item {
-                    @extend %grid-item;
+                .action-buttons {
+                    display: flex;
+
+                    button {
+                        margin-left: $spacing-small;
+                        padding: $spacing-small;
+                    }
                 }
             }
         }
@@ -145,10 +106,6 @@
 
             .grid-layout {
                 height: 100%;
-
-                .grid-item {
-                    @extend %grid-item;
-                }
             }
         }
 
