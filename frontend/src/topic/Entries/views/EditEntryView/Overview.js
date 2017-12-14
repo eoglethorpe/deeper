@@ -43,8 +43,8 @@ const propTypes = {
     choices: PropTypes.object.isRequired, // eslint-disable-line
 
     saveAllDisabled: PropTypes.bool.isRequired,
-    widgetDisabled: PropTypes.bool.isRequired,
-    removeDisabled: PropTypes.bool.isRequired,
+    widgetDisabled: PropTypes.bool,
+    removeDisabled: PropTypes.bool,
 
     onEntryAdd: PropTypes.func.isRequired,
     onEntryDelete: PropTypes.func.isRequired,
@@ -53,6 +53,8 @@ const propTypes = {
 
 const defaultProps = {
     selectedEntryId: undefined,
+    widgetDisabled: false,
+    removeDisabled: false,
 };
 
 const mapDispatchToProps = dispatch => ({

@@ -350,7 +350,6 @@ export default class EditEntryView extends React.PureComponent {
             .url(createUrlForDeleteEntry(entry.data.serverId))
             .params(() => createParamsForDeleteEntry())
             .preLoad(() => {
-                console.warn('Pending', entry.data.id);
                 this.setState((state) => {
                     const requestSettings = {
                         [entry.data.id]: { $auto: {
@@ -362,7 +361,6 @@ export default class EditEntryView extends React.PureComponent {
                 });
             })
             .postLoad(() => {
-                console.warn('Not pending', entry.data.id);
                 this.setState((state) => {
                     const requestSettings = {
                         [entry.data.id]: { $auto: {
@@ -374,7 +372,6 @@ export default class EditEntryView extends React.PureComponent {
                 });
             })
             .success(() => {
-                console.warn('Removing', entry.data.id);
                 this.props.removeEntry({
                     leadId,
                     entryId: entry.data.id,
