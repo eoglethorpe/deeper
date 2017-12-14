@@ -18,6 +18,7 @@ const emptyList = [];
 const emptyObject = {};
 
 export const leadIdFromRoute = (state, { match }) => match.params.leadId;
+export const projectIdFromRoute = (state, { match }) => match.params.projectId;
 
 // LEAD ADD
 
@@ -145,6 +146,34 @@ export const totalLeadsCountForProjectSelector = createSelector(
     leadPageForProjectSelector,
     leadPage => leadPage.totalLeadsCount || 0,
 );
+
+// ENTRIES
+
+export const entriesViewSelector = ({ siloDomainData }) => siloDomainData.entriesView;
+
+export const entriesViewForProjectSelector = createSelector(
+    entriesViewSelector,
+    projectIdFromRoute,
+    (entriesView, activeProject) => (
+        entriesView[activeProject] || emptyObject
+    ),
+);
+
+export const entriesForProjectSelector = createSelector(
+    entriesViewForProjectSelector,
+    entriesView => entriesView.entries || emptyList,
+);
+
+export const analysisFrameworkForProjectSelector = createSelector(
+    projectIdFromRoute,
+    projectsSelector,
+    analysisFrameworksSelector,
+    (projectId, projects, analysisFrameworks) => (
+        (projects[projectId].analysisFramework
+            && analysisFrameworks[projects[projectId].analysisFramework]) || emptyObject
+    ),
+);
+
 
 // EDIT_ENTRY
 export const editEntryViewSelector = ({ siloDomainData }) => (

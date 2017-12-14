@@ -1,7 +1,8 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout';
+
+import { GridLayout } from '../../../../public/components/View';
 
 import styles from './styles.scss';
 
@@ -12,24 +13,13 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
-import {
-    Responsive,
-} from '../../../../public/components/General';
-
-
 const propTypes = {
-    boundingClientRect: PropTypes.shape({
-        width: PropTypes.number,
-        height: PropTypes.number,
-    }).isRequired,
-
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 const defaultProps = {
 };
 
-@Responsive
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
@@ -44,32 +34,20 @@ export default class List extends React.PureComponent {
         this.update(nextProps.analysisFramework);
     }
 
-    getGridItems = () => {
-        const {
-            widgets,
-            items,
-        } = this;
+    getGridItems = () => this.items.map(item => ({
+        key: item.key,
+        widgetId: item.widgetId,
+        title: item.title,
+        layout: item.properties.listGridLayout,
+    }))
 
-        return items.map((item) => {
-            const Component = widgets.find(w => w.id === item.widgetId).component;
-            return (
-                <div
-                    key={item.key}
-                    data-af-key={item.key}
-                    data-grid={item.properties.listGridData}
-                    styleName="grid-item"
-                >
-                    <header
-                        styleName="header"
-                    >
-                        <h2>{item.title}</h2>
-                    </header>
-                    <div styleName="content">
-                        <Component />
-                    </div>
-                </div>
-            );
-        });
+    getMaxHeight = () => this.items.reduce((acc, item) => (
+        Math.max(acc, item.properties.listGridLayout.height + item.properties.listGridLayout.top)
+    ), 0);
+
+    getItemView = (item) => {
+        const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
+        return <Component />;
     }
 
     handleGotoOverviewButtonClick = () => {
@@ -82,7 +60,7 @@ export default class List extends React.PureComponent {
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                component: widget.analysisFramework.listComponent,
+                listComponent: widget.analysisFramework.listComponent,
             }));
 
         if (analysisFramework.widgets) {
@@ -95,14 +73,6 @@ export default class List extends React.PureComponent {
     }
 
     render() {
-        const {
-            width,
-        } = this.props.boundingClientRect;
-
-        const numOfColumns = 100;
-        const margin = [0, 0];
-        const rowHeight = 24;
-
         return (
             <div
                 styleName="list"
@@ -134,22 +104,16 @@ export default class List extends React.PureComponent {
                     {
                         this.props.entries.map(entry => (
                             <div
-                                key={entry.id}
+                                key={entry.data.id}
                                 styleName="entry"
+                                style={{ height: this.getMaxHeight() + 16 }}
                             >
-                                <ReactGridLayout
-                                    isDraggable={false}
-                                    isResizable={false}
+                                <GridLayout
                                     styleName="grid-layout"
-                                    cols={numOfColumns}
-                                    margin={margin}
-                                    width={width || 0}
-                                    rowHeight={rowHeight}
-                                    compactType={null}
-                                    onLayoutChange={this.handleLayoutChange}
-                                >
-                                    { this.getGridItems() }
-                                </ReactGridLayout>
+                                    modifier={this.getItemView}
+                                    items={this.getGridItems()}
+                                    viewOnly
+                                />
                             </div>
                         ))
                     }

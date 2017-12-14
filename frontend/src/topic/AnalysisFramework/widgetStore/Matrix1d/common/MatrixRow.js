@@ -55,27 +55,24 @@ export default class MatrixRow extends React.PureComponent {
         });
     }
 
-    getEditCell = (key, data) => {
-        console.log(key, data);
-
-        return (
-            <div
-                className={styles['edit-cell']}
-                key={key}
+    getEditCell = (key, data) => (
+        <div
+            className={styles['edit-cell']}
+            key={key}
+        >
+            <TextInput
+                label="Title"
+                placeholder="eg: Overview"
+                onChange={(value) => { this.handleCellValueInputChange(key, value); }}
+                value={data.value}
+            />
+            <TransparentButton
+                onClick={() => { this.handleCellRemoveButtonClick(key); }}
             >
-                <TextInput
-                    placeholder="Enter cell title"
-                    onChange={(value) => { this.handleCellValueInputChange(key, value); }}
-                    value={data.value}
-                />
-                <TransparentButton
-                    onClick={() => { this.handleCellRemoveButtonClick(key); }}
-                >
-                    <span className={iconNames.delete} />
-                </TransparentButton>
-            </div>
-        );
-    }
+                <span className={iconNames.delete} />
+            </TransparentButton>
+        </div>
+    )
 
     getCell = (key, data) => (
         <MatrixCell
@@ -102,9 +99,7 @@ export default class MatrixRow extends React.PureComponent {
         const cellIndex = newCells.findIndex(d => d.key === key);
         newCells[cellIndex].value = value;
 
-        this.setState({
-            cells: newCells,
-        });
+        this.props.onChange(newCells);
     }
 
     handleEditButtonClick = () => {
@@ -188,7 +183,7 @@ export default class MatrixRow extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Edit pillar"
+                        title="Add / edit cell"
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddCellButtonClick}

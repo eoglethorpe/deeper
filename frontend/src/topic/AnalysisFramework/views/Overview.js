@@ -1,13 +1,15 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGridLayout from 'react-grid-layout-resize-prevent-collision';
 import update from 'immutability-helper';
 
 import { connect } from 'react-redux';
 
+import { GridLayout } from '../../../public/components/View';
+
 import {
     TransparentButton,
+    TransparentDangerButton,
     Button,
     SuccessButton,
 } from '../../../public/components/Action';
@@ -55,19 +57,7 @@ export default class Overview extends React.PureComponent {
         super(props);
         this.update(props.analysisFramework);
 
-        this.state = {
-            gridLayoutBoundingRect: {},
-        };
-    }
-
-    componentDidMount() {
-        setTimeout(() => {
-            if (this.gridLayoutContainer) {
-                this.setState({
-                    gridLayoutBoundingRect: this.gridLayoutContainer.getBoundingClientRect(),
-                });
-            }
-        }, 0);
+        this.widgetEditActions = {};
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,42 +75,48 @@ export default class Overview extends React.PureComponent {
         return key;
     }
 
-    getGridItems = () => {
-        const {
-            widgets,
-            items,
-        } = this;
-
-        return items.map((item) => {
-            const Component = widgets.find(w => w.id === item.widgetId).component;
-            return (
-                <div
-                    key={item.key}
-                    data-af-key={item.key}
-                    data-grid={item.properties.overviewGridData}
-                    styleName="grid-item"
+    getGridItems = () => this.items.map(item => ({
+        key: item.key,
+        widgetId: item.widgetId,
+        title: item.title,
+        layout: item.properties.overviewGridLayout,
+        minSize: this.widgets.find(w => w.id === item.widgetId).overviewMinSize,
+        data: item.properties.data,
+        headerRightComponent: (
+            <div
+                className={styles['action-buttons']}
+            >
+                <TransparentButton
+                    onClick={() => this.handleWidgetEditButtonClick(item.key)}
                 >
-                    <header
-                        className="header"
-                        styleName="header"
-                    >
-                        <h4 styleName="heading">{item.title}</h4>
-                        <div styleName="actions">
-                            <TransparentButton
-                                className="remove"
-                                styleName="close-button"
-                                onClick={() => { this.handleWidgetRemoveButtonClick(item.key); }}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentButton>
-                        </div>
-                    </header>
-                    <div styleName="content">
-                        <Component />
-                    </div>
-                </div>
-            );
-        });
+                    <span className={iconNames.edit} />
+                </TransparentButton>
+                <TransparentDangerButton
+                    onClick={() => this.handleWidgetRemoveButtonClick(item.key)}
+                >
+                    <span className={iconNames.close} />
+                </TransparentDangerButton>
+            </div>
+        ),
+    }))
+
+    getItemView = (item) => {
+        const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
+
+        return (
+            <Component
+                data={item.data}
+                editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
+                onChange={data => this.handleItemChange(item.key, data)}
+                className={styles.component}
+            />
+        );
+    };
+
+    handleWidgetEditButtonClick = (id) => {
+        if (this.widgetEditActions[id]) {
+            (this.widgetEditActions[id])();
+        }
     }
 
     handleWidgetRemoveButtonClick = (id) => {
@@ -148,7 +144,16 @@ export default class Overview extends React.PureComponent {
             title: widget.title,
             // TODO: calculate new position appropriately
             properties: {
-                overviewGridData: { x: 2, y: 2, w: 30, h: 20 },
+                overviewGridLayout: widget.overviewComponent && {
+                    left: 0,
+                    top: 0,
+                    ...widget.overviewMinSize || { width: 200, height: 50 },
+                },
+                listGridLayout: widget.listComponent && {
+                    left: 0,
+                    top: 0,
+                    ...widget.listMinSize || { width: 200, height: 50 },
+                },
             },
         };
 
@@ -158,40 +163,32 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    handleLayoutChange = (layout) => {
-        setTimeout(() => {
-            if (this.gridLayout) {
-                layout.forEach((itemLayout) => {
-                    const child = this.gridLayout.props.children.find(
-                        c => c.key === itemLayout.i,
-                    );
+    handleLayoutChange = (items) => {
+        items.forEach((item) => {
+            const originalItem = this.items.find(i => i.key === item.key);
+            const settings = {
+                properties: {
+                    overviewGridLayout: { $set: item.layout },
+                },
+            };
 
-                    if (!child) {
-                        return;
-                    }
+            const analysisFrameworkId = this.props.analysisFramework.id;
+            const widget = update(originalItem, settings);
+            this.props.updateWidget({ analysisFrameworkId, widget });
+        });
+    }
 
-                    const key = child.props['data-af-key'];
+    handleItemChange = (key, data) => {
+        const originalItem = this.items.find(i => i.key === key);
+        const settings = {
+            properties: {
+                data: { $set: data },
+            },
+        };
 
-                    const itemIndex = this.items.findIndex(i => i.key === key);
-                    const item = this.items[itemIndex];
-
-                    const settings = {
-                        properties: {
-                            overviewGridData: { $auto: { $merge: {
-                                x: itemLayout.x,
-                                y: itemLayout.y,
-                                w: itemLayout.w,
-                                h: itemLayout.h,
-                            } } },
-                        },
-                    };
-
-                    const analysisFrameworkId = this.props.analysisFramework.id;
-                    const widget = update(item, settings);
-                    this.props.updateWidget({ analysisFrameworkId, widget });
-                });
-            }
-        }, 0);
+        const analysisFrameworkId = this.props.analysisFramework.id;
+        const widget = update(originalItem, settings);
+        this.props.updateWidget({ analysisFrameworkId, widget });
     }
 
     handleGotoListButtonClick = () => {
@@ -204,7 +201,10 @@ export default class Overview extends React.PureComponent {
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                component: widget.analysisFramework.overviewComponent,
+                overviewComponent: widget.analysisFramework.overviewComponent,
+                listComponent: widget.analysisFramework.listComponent,
+                overviewMinSize: widget.analysisFramework.overviewMinSize,
+                listMinSize: widget.analysisFramework.listMinSize,
             }));
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
@@ -212,15 +212,7 @@ export default class Overview extends React.PureComponent {
     }
 
     render() {
-        const {
-            width,
-            height,
-        } = this.state.gridLayoutBoundingRect;
-
-        const numOfRows = 100;
-        const numOfColumns = 100;
-        const margin = [0, 0];
-        const rowHeight = parseInt((height || 0) / numOfRows, 10);
+        const gridItems = this.getGridItems();
 
         return (
             <div styleName="overview">
@@ -306,21 +298,13 @@ export default class Overview extends React.PureComponent {
                             </SuccessButton>
                         </div>
                     </header>
-                    <ReactGridLayout
+
+                    <GridLayout
                         styleName="grid-layout"
-                        cols={numOfColumns}
-                        margin={margin}
-                        width={width || 0}
-                        rowHeight={rowHeight}
-                        compactType={null}
-                        preventCollision
+                        modifier={this.getItemView}
+                        items={gridItems}
                         onLayoutChange={this.handleLayoutChange}
-                        draggableHandle=".header"
-                        draggableCancel=".remove"
-                        ref={(gridLayout) => { this.gridLayout = gridLayout; }}
-                    >
-                        { this.getGridItems() }
-                    </ReactGridLayout>
+                    />
                 </div>
             </div>
         );

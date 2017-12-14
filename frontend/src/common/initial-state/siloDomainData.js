@@ -52,6 +52,18 @@ const initialSiloDomainData = {
         */
     },
 
+    entriesView: {
+        /*
+        1: {
+            activeSort: '-created_at',
+            activePage: 1,
+            filters: { },
+            entries: [],
+            totalEntriesCount: 123,
+        },
+        */
+    },
+
     // i specifies lead
     editEntryView: {
         /*

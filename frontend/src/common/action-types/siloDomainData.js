@@ -22,13 +22,16 @@ export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
 export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
 export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
 
+// E => Entries
+export const E__SET_ENTRIES = 'domain-data/E__SET_ENTRIES ';
+
 // EE => EditEntry
-export const EE_ADD_ENTRY = 'domain-data/EE_ADD_ENTRY';
-export const EE_REMOVE_ENTRY = 'domain-data/EE_REMOVE_ENTRY';
-export const EE_SET_ACTIVE_ENTRY = 'domain-data/EE_SET_ACTIVE_ENTRY';
-export const EE_SET_LEAD = 'silo-domain-data/EE_SET_LEAD';
-export const EE_ENTRY_SAVE = 'domain-data/EE_ENTRY_SAVE';
-export const EE_ENTRY_CHANGE = 'domain-data/EE_ENTRY_CHANGE';
+export const EE__ADD_ENTRY = 'domain-data/EE__ADD_ENTRY';
+export const EE__REMOVE_ENTRY = 'domain-data/EE__REMOVE_ENTRY';
+export const EE__SET_ACTIVE_ENTRY = 'domain-data/EE__SET_ACTIVE_ENTRY';
+export const EE__SET_LEAD = 'silo-domain-data/EE__SET_LEAD';
+export const EE__ENTRY_SAVE = 'domain-data/EE__ENTRY_SAVE';
+export const EE__ENTRY_CHANGE = 'domain-data/EE__ENTRY_CHANGE';
 
 // AF => AnalysisFramework
 export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';

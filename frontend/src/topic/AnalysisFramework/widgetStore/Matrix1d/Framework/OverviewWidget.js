@@ -1,4 +1,5 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import MatrixRow from '../common/MatrixRow';
@@ -6,9 +7,10 @@ import MatrixRow from '../common/MatrixRow';
 import { iconNames } from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
 import {
-    TransparentButton,
     TransparentPrimaryButton,
+    TransparentDangerButton,
     Button,
+    PrimaryButton,
 } from '../../../../../public/components/Action';
 import {
     TextInput,
@@ -23,17 +25,37 @@ import {
 
 import styles from '../styles.scss';
 
+const propTypes = {
+    editAction: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
+    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+};
+
+const defaultProps = {
+    data: [],
+};
+
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
 
         this.state = {
             showEditModal: false,
-            rows: [],
+            rows: props.data || [],
         };
+
+        this.props.editAction(this.handleEdit);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            rows: nextProps.data || [],
+        });
     }
 
     getEditRow = (key, data) => (
@@ -42,15 +64,18 @@ export default class Matrix1dOverview extends React.PureComponent {
             key={key}
         >
             <TextInput
-                placeholder="Enter row title"
+                className={styles['title-input']}
+                label="Title"
+                placeholder="eg: Context"
                 onChange={(value) => { this.handleRowValueInputChange(key, value); }}
                 value={data.title}
             />
-            <TransparentButton
+            <TransparentDangerButton
+                className={styles['delete-button']}
                 onClick={() => { this.handleRowRemoveButtonClick(key); }}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     )
 
@@ -62,6 +87,10 @@ export default class Matrix1dOverview extends React.PureComponent {
             onChange={(value) => { this.handleRowDataChange(key, value); }}
         />
     )
+
+    handleEdit = () => {
+        this.setState({ showEditModal: true });
+    }
 
     handleRowDataChange = (key, cells) => {
         const newRows = [...this.state.rows];
@@ -97,10 +126,6 @@ export default class Matrix1dOverview extends React.PureComponent {
         });
     }
 
-    handleEditButtonClick = () => {
-        this.setState({ showEditModal: true });
-    }
-
     handleAddRowButtonClick = () => {
         this.addRow();
     }
@@ -109,8 +134,19 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.setState({ showEditModal: false });
     }
 
-    handleCloseModalButtonClick = () => {
-        this.setState({ showEditModal: false });
+    handleModalCancelButtonClick = () => {
+        this.setState({
+            showEditModal: false,
+            rows: this.props.data,
+        });
+    }
+
+    handleModalSaveButtonClick = () => {
+        this.setState({
+            showEditModal: false,
+        });
+
+        this.props.onChange(this.state.rows);
     }
 
     addRow = () => {
@@ -142,13 +178,6 @@ export default class Matrix1dOverview extends React.PureComponent {
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
                     modifier={this.getRow}
                 />
-                <div styleName="action-buttons">
-                    <Button
-                        onClick={this.handleEditButtonClick}
-                    >
-                        <span className={iconNames.edit} /> Edit
-                    </Button>
-                </div>
                 <Modal
                     styleName="edit-row-modal"
                     show={showEditModal}
@@ -174,10 +203,15 @@ export default class Matrix1dOverview extends React.PureComponent {
                     </ModalBody>
                     <ModalFooter>
                         <Button
-                            onClick={this.handleCloseModalButtonClick}
+                            onClick={this.handleModalCancelButtonClick}
                         >
-                            Close
+                            Cancel
                         </Button>
+                        <PrimaryButton
+                            onClick={this.handleModalSaveButtonClick}
+                        >
+                            Save
+                        </PrimaryButton>
                     </ModalFooter>
                 </Modal>
             </div>
