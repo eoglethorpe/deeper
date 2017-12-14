@@ -237,7 +237,6 @@ export default class Entries extends React.PureComponent {
 
     render() {
         const leadIds = Object.keys(this.leadGroupedEntries);
-        console.warn(this.leadGroupedEntries);
 
         return (
             <div styleName="entries">
@@ -254,7 +253,7 @@ export default class Entries extends React.PureComponent {
                     {
                         leadIds.map(leadId => (
                             <div
-                                key={this.leadGroupedEntries[leadId].id}
+                                key={leadId}
                                 styleName="lead-entries"
                             >
                                 {

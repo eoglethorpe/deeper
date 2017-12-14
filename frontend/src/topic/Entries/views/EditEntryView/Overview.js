@@ -97,11 +97,21 @@ export default class Overview extends React.PureComponent {
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.overviewGridLayout,
+        data: item.properties.data,
     }))
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
-        return <Component />;
+        return (
+            <Component
+                data={item.data}
+                onChange={(data) => { this.handleWidgetChange(item.key, data); }}
+            />
+        );
+    }
+
+    handleWidgetChange = (key, data) => {
+        console.log(key, data);
     }
 
     updateItems(analysisFramework) {
