@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import MatrixRow from '../common/MatrixRow';
+import { MODE_EDIT } from '../common/constants';
 
 import { iconNames } from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
@@ -84,6 +85,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             key={key}
             title={data.title}
             cells={data.cells}
+            mode={MODE_EDIT}
             onChange={(value) => { this.handleRowDataChange(key, value); }}
         />
     )
@@ -151,7 +153,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     addRow = () => {
         const newRow = {
-            key: randomString(),
+            key: randomString(16).toLowerCase(),
             title: '',
             cells: [],
         };

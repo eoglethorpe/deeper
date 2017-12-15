@@ -8,12 +8,16 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
+import update from '../../../../../public/utils/immutable-update';
+
 import MatrixRow from '../common/MatrixRow';
 import { MODE_TAG } from '../common/constants';
 
 const propTypes = {
-    // onChange: PropTypes.func.isRequired,
+    id: PropTypes.number.isRequired,
+    api: PropTypes.object.isRequired, // eslint-disable-line
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -47,9 +51,49 @@ export default class Matrix1dOverview extends React.PureComponent {
             title={data.title}
             cells={data.cells}
             mode={MODE_TAG}
-            onChange={(value) => { this.handleRowDataChange(key, value); }}
+            onCellClick={cellKey => this.handleCellClick(key, cellKey)}
+            onCellDrop={(cellKey, text) => this.handleCellDrop(key, cellKey, text)}
+            selectedCells={this.props.attribute ? this.props.attribute[key] : {}}
         />
     )
+
+    handleCellClick = (key, cellKey) => {
+        const { api, id, attribute } = this.props;
+        const settings = { $auto: {
+            [key]: { $auto: {
+                [cellKey]: {
+                    $apply: item => !item,
+                },
+            } },
+        } };
+        api.setEntryAttribute(id, update(attribute, settings));
+    }
+
+    handleCellDrop = (key, cellKey, text) => {
+        const { api, id } = this.props;
+        const existing = api.getEntryForExcerpt(text);
+
+        if (existing) {
+            const settings = { $auto: {
+                [key]: { $auto: {
+                    [cellKey]: {
+                        $set: true,
+                    },
+                } },
+            } };
+            api.selectEntryAndSetAttribute(
+                existing.data.id,
+                id,
+                update(api.getEntryAttribute(id, existing.data.id), settings),
+            );
+        } else {
+            api.addExcerpt(text, id, {
+                [key]: {
+                    [cellKey]: true,
+                },
+            });
+        }
+    }
 
     render() {
         const {

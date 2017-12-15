@@ -11,7 +11,6 @@ const entrySchema = [];
             description: 'Export data for entry',
         },
         fields: {
-            entry: { type: 'uint', required: true },
             id: { type: 'uint' },
             data: { type: 'object' },
             exportable: { type: 'boolean', required: true },
@@ -28,7 +27,6 @@ const entrySchema = [];
         },
         fields: {
             number: { type: 'uint' },
-            entry: { type: 'uint', required: true },
             id: { type: 'uint' },
             values: { type: 'array.string' },
             filter: { type: 'uint', required: true },
@@ -44,7 +42,6 @@ const entrySchema = [];
             description: 'Attributes data for entry',
         },
         fields: {
-            entry: { type: 'uint', required: true },
             widget: { type: 'uint', required: true },
             id: { type: 'uint' },
             data: { type: 'object' },

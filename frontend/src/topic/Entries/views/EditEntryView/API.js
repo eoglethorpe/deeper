@@ -57,40 +57,39 @@ export default class API {
         }
     }
 
-    setEntryAttribute(data, widgetId, id = undefined) {
+    setEntryAttribute(widgetId, data, id = undefined) {
         const entry = this.getEntry(id);
         if (entry) {
             const values = entry.widget.values;
-            let newAttribute = false;
+            let index = -1;
 
             if (!values.attributes) {
-                newAttribute = true;
-            }
-
-            const index = values.attributes.find(attr => attr.widget === widgetId);
-            if (index === -1) {
-                newAttribute = true;
+                index = -1;
+            } else {
+                index = values.attributes.findIndex(attr => attr.widget === widgetId);
             }
 
             let settings;
-            if (newAttribute) {
+            if (index === -1) {
                 settings = {
                     attributes: { $autoArray: {
-                        $push: {
+                        $push: [{
                             widget: widgetId,
                             data,
-                        },
+                        }],
                     } },
                 };
             } else {
                 settings = {
                     attributes: {
-                        [index]: { $merge: { data } },
+                        [index]: { $merge: {
+                            data,
+                        } },
                     },
                 };
             }
 
-            this.changeEntryValues(entry.id, update(values, settings));
+            this.changeEntryValues(entry.data.id, update(values, settings));
         }
     }
 
@@ -113,23 +112,30 @@ export default class API {
 
     getEntryAttribute(widgetId, id = undefined) {
         const entry = this.getEntry(id);
-        return (
+        const attribute = (
             entry &&
             entry.widget.values.attributes &&
             entry.widget.values.attributes.find(attr => attr.widget === widgetId)
         );
+        return attribute && attribute.data;
     }
 
-    addAndSelectExcerpt(excerpt) {
-        const existing = this.entries.find(entry => entry.values.excerpt === excerpt);
-        if (existing) {
-            this.selectEntry(existing.id);
-        } else {
-            this.addEntry(excerpt);
+    getEntryForExcerpt(excerpt) {
+        return this.entries.find(entry => entry.widget.values.excerpt === excerpt);
+    }
+
+    selectEntryAndSetAttribute(id, widgetId, data) {
+        this.selectEntry(id);
+        if (widgetId && data) {
+            this.setEntryAttribute(widgetId, data, id);
         }
     }
 
-    addAndSelectImage(image) {
-        this.addEntry(undefined, image);
+    addExcerpt(excerpt, widgetId = undefined, data = undefined) {
+        this.addEntry(excerpt, undefined, widgetId && data && [{ widget: widgetId, data }]);
+    }
+
+    addImage(image, widgetId = undefined, data = undefined) {
+        this.addEntry(undefined, image, widgetId && data && [{ widget: widgetId, data }]);
     }
 }

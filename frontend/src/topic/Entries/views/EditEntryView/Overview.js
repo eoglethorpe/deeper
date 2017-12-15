@@ -103,15 +103,17 @@ export default class Overview extends React.PureComponent {
         title: item.title,
         layout: item.properties.overviewGridLayout,
         data: item.properties.data,
+        attribute: this.props.api.getEntryAttribute(item.id),
     }))
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
         return (
             <Component
-                data={item.data}
+                id={item.id}
                 api={this.props.api}
-                attribute={this.props.api.getEntryAttribute(item.id)}
+                attribute={item.attribute}
+                data={item.data}
             />
         );
     }

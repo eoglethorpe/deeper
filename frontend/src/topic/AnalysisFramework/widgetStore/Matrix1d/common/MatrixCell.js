@@ -22,7 +22,7 @@ const defaultProps = {
     onDrop: undefined,
 };
 
-@CSSModules(styles)
+@CSSModules(styles, { allowMultiple: true })
 export default class MatrixCell extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

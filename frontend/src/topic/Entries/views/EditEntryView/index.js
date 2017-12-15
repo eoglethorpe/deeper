@@ -412,7 +412,7 @@ export default class EditEntryView extends React.PureComponent {
         return entriesRequest;
     }
 
-    handleAddEntry = (excerpt = undefined, image = undefined) => {
+    handleAddEntry = (excerpt = undefined, image = undefined, attributes = []) => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
@@ -426,7 +426,28 @@ export default class EditEntryView extends React.PureComponent {
                     image,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
-                    attribues: [],
+                    attributes,
+                    exportData: [],
+                    filterData: [],
+                },
+            },
+        });
+    }
+
+    handleAddEntrySimple = () => {
+        const entryId = randomString();
+        const { leadId, analysisFramework } = this.props;
+
+        this.props.addEntry({
+            leadId,
+            entry: {
+                id: entryId,
+                serverId: undefined,
+                values: {
+                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
+                    lead: leadId,
+                    analysisFramework: analysisFramework.id,
+                    attributes: [],
                     exportData: [],
                     filterData: [],
                 },
@@ -459,6 +480,10 @@ export default class EditEntryView extends React.PureComponent {
             leadId: this.props.leadId,
             entryId,
             data,
+            uiState: {
+                stale: false,
+                error: false,
+            },
         });
     }
 
@@ -467,6 +492,10 @@ export default class EditEntryView extends React.PureComponent {
             leadId: this.props.leadId,
             entryId,
             values,
+            uiState: {
+                stale: false,
+                error: false,
+            },
         });
     }
 
@@ -554,6 +583,7 @@ export default class EditEntryView extends React.PureComponent {
         );
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
+
         return (
             <HashRouter>
                 <div styleName="edit-entry">
@@ -574,7 +604,7 @@ export default class EditEntryView extends React.PureComponent {
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                onEntryAdd={this.handleAddEntry}
+                                onEntryAdd={this.handleAddEntrySimple}
                                 onEntryDelete={this.handleDeleteEntry}
 
                                 widgetDisabled={isWidgetDisabled}

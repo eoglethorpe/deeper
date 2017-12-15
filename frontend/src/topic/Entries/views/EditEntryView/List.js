@@ -42,6 +42,8 @@ export default class List extends React.PureComponent {
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.listGridLayout,
+        data: item.properties.data,
+        attribute: this.props.api.getEntryAttribute(item.id),
     }))
 
     getMaxHeight = () => this.items.reduce((acc, item) => (
@@ -52,8 +54,10 @@ export default class List extends React.PureComponent {
         const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
         return (
             <Component
+                id={item.id}
                 api={this.props.api}
-                attribute={this.props.api.getEntryAttribute(item.id)}
+                attribute={item.attribute}
+                data={item.data}
             />
         );
     }
