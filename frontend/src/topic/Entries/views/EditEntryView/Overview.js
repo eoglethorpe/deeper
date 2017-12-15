@@ -5,13 +5,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    TransparentButton,
     Button,
+    DangerButton,
+    PrimaryButton,
+    SuccessButton,
+    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     GridLayout,
-    ListView,
     ListItem,
+    ListView,
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
@@ -26,11 +29,12 @@ import {
     editEntryViewCurrentLeadSelector,
 } from '../../../../common/redux';
 
-import { ENTRY_STATUS } from './utils/constants';
 import { LEAD_TYPE } from '../../../Leads/views/LeadAdd/utils/constants.js';
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import WebsiteViewer from '../../../../common/components/WebsiteViewer';
 import DeepGallery from '../../../../common/components/DeepGallery';
+
+import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -49,7 +53,6 @@ const propTypes = {
 
     saveAllDisabled: PropTypes.bool.isRequired,
     widgetDisabled: PropTypes.bool,
-    removeDisabled: PropTypes.bool,
 
     onEntryAdd: PropTypes.func.isRequired,
     onEntryDelete: PropTypes.func.isRequired,
@@ -59,7 +62,6 @@ const propTypes = {
 const defaultProps = {
     selectedEntryId: undefined,
     widgetDisabled: false,
-    removeDisabled: false,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -158,9 +160,9 @@ export default class Overview extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    calcEntryKey = entry => entry.data.id;
+    calcEntryKey = entry => entryAccessor.getKey(entry);
 
-    calcEntryLabel = entry => entry.widget.values.excerpt;
+    calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
 
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
@@ -171,6 +173,7 @@ export default class Overview extends React.PureComponent {
 
         return (
             <ListItem
+                className="entries-list-item"
                 key={key}
                 active={isActive}
                 scrollIntoView={isActive}
@@ -179,14 +182,16 @@ export default class Overview extends React.PureComponent {
                     className="button"
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    {entry.widget.values.excerpt}
-                    {
-                        entry.markedForDelete &&
-                        <span className={`${iconNames.removeCircle} ${styles.error}`} />
-                    }
-                    {
-                        this.renderIcon(status)
-                    }
+                    {this.calcEntryLabel(entry)}
+                    <div className="status-icons">
+                        {
+                            entryAccessor.isMarkedForDelete(entry) &&
+                            <span className={`${iconNames.removeCircle} error`} />
+                        }
+                        {
+                            this.renderIcon(status)
+                        }
+                    </div>
                 </button>
             </ListItem>
         );
@@ -196,19 +201,19 @@ export default class Overview extends React.PureComponent {
         switch (status) {
             case ENTRY_STATUS.requesting:
                 return (
-                    <span className={`${iconNames.loading} ${styles.pending}`} />
+                    <span className={`${iconNames.loading} pending`} />
                 );
             case ENTRY_STATUS.invalid:
                 return (
-                    <span className={`${iconNames.error} ${styles.error}`} />
+                    <span className={`${iconNames.error} error`} />
                 );
             case ENTRY_STATUS.nonstale:
                 return (
-                    <span className={`${iconNames.codeWorking} ${styles.stale}`} />
+                    <span className={`${iconNames.codeWorking} stale`} />
                 );
             case ENTRY_STATUS.complete:
                 return (
-                    <span className={`${iconNames.checkCircle} ${styles.complete}`} />
+                    <span className={`${iconNames.checkCircle} complete`} />
                 );
             default:
                 return null;
@@ -264,8 +269,10 @@ export default class Overview extends React.PureComponent {
 
             saveAllDisabled,
             widgetDisabled,
-            removeDisabled,
         } = this.props;
+
+        const entry = this.props.entries.find(e => entryAccessor.getKey(e) === selectedEntryId);
+        const isMarkedForDelete = entry && entryAccessor.isMarkedForDelete(entry);
 
         return (
             <div styleName="overview">
@@ -290,19 +297,28 @@ export default class Overview extends React.PureComponent {
                             value={selectedEntryId}
                             onChange={this.handleEntrySelectChange}
                         />
-                        <TransparentButton
+                        <PrimaryButton
                             title="Add entry"
                             onClick={this.props.onEntryAdd}
                         >
-                            <span className={iconNames.add} />
-                        </TransparentButton>
-                        <TransparentButton
-                            title="Remove current entry"
-                            onClick={this.props.onEntryDelete}
-                            disabled={removeDisabled}
-                        >
-                            <span className={iconNames.remove} />
-                        </TransparentButton>
+                            Add
+                        </PrimaryButton>
+                        { entry && !isMarkedForDelete &&
+                            <DangerButton
+                                title="Mark current entry for removal"
+                                onClick={() => this.props.onEntryDelete(true)}
+                            >
+                                Remove
+                            </DangerButton>
+                        }
+                        { entry && isMarkedForDelete &&
+                            <Button
+                                title="Unmark current entry for removal"
+                                onClick={() => this.props.onEntryDelete(false)}
+                            >
+                                Undo Remove
+                            </Button>
+                        }
                     </div>
                     <div styleName="action-buttons">
                         <Button
@@ -310,13 +326,13 @@ export default class Overview extends React.PureComponent {
                         >
                             Goto list
                         </Button>
-                        <Button
+                        <SuccessButton
                             styleName="save-button"
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}
                         >
                             Save
-                        </Button>
+                        </SuccessButton>
                     </div>
                 </header>
                 <div styleName="container">

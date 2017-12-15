@@ -197,10 +197,11 @@ export const diffEntriesAction = ({ leadId, diffs }) => ({
     diffs,
 });
 
-export const markForDeleteEntryAction = ({ leadId, entryId }) => ({
+export const markForDeleteEntryAction = ({ leadId, entryId, mark }) => ({
     type: EE__ENTRY_MARK_FOR_DELETE,
     leadId,
     entryId,
+    mark,
 });
 
 export const setActiveEntryAction = ({ leadId, entryId }) => ({

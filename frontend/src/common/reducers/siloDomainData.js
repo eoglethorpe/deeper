@@ -46,6 +46,10 @@ import {
 import {
     SET_USER_PROJECTS,
 } from '../action-types/domainData';
+import {
+    createEntry,
+    calcNewEntries,
+} from '../entities/entry';
 
 import initialSiloDomainData from '../initial-state/siloDomainData';
 import { getNumbers } from '../../public/utils/common';
@@ -87,89 +91,6 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
     };
     return update(leadReference, settings);
 };
-
-const entryReference = {
-    data: {
-        id: 'entry-0',
-        serverId: undefined,
-    },
-    widget: {
-        values: {
-            title: 'Entry #0',
-        },
-    },
-    uiState: {
-        error: false,
-        stale: false,
-    },
-};
-
-const createEntry = ({ id, serverId, values = {}, stale = false }) => {
-    const settings = {
-        data: {
-            id: { $set: id },
-            serverId: { $set: serverId },
-        },
-        widget: {
-            values: { $set: values },
-        },
-        uiState: {
-            stale: { $set: stale },
-        },
-    };
-    return update(entryReference, settings);
-};
-
-const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
-    (acc, diff) => {
-        const index = localEntries.findIndex(e => e.data.id === diff.id);
-        switch (diff.action) {
-            case 'add': {
-                // create new
-                const remoteEntry = diff.entry;
-                acc.push(createEntry(remoteEntry));
-                break;
-            }
-            case 'remove':
-                // don't push
-                break;
-            case 'replace': {
-                // set uiState = {}
-                // set versionId
-                const localEntry = { ...localEntries[index] };
-                const remoteEntry = diff.entry;
-                localEntry.data.versionId = remoteEntry.versionId;
-                localEntry.uiState = {};
-                localEntry.widget = {
-                    values: remoteEntry.values,
-                    errors: [],
-                    fieldErors: {},
-                };
-                acc.push(localEntry);
-                break;
-            }
-            case 'replace-skip': {
-                // set versionId
-                const localEntry = { ...localEntries[index] };
-                const remoteEntry = diff.entry;
-                localEntry.data.versionId = remoteEntry.versionId;
-                acc.push(localEntry);
-                break;
-            }
-            case 'noop': {
-                // just push
-                const localEntry = { ...localEntries[index] };
-                acc.push(localEntry);
-                break;
-            }
-            default:
-                console.warn(`Error: diff.action not valid ${diff.action}`);
-                break;
-        }
-        return acc;
-    },
-    [],
-);
 
 // CALCUALTE ERROR
 const setErrorForLeads = (state, leadIndices) => {
@@ -785,6 +706,7 @@ const entryMarkForDelete = (state, action) => {
     const {
         leadId,
         entryId,
+        mark,
     } = action;
 
     const index = state.editEntryView[leadId].entries.findIndex(
@@ -796,7 +718,7 @@ const entryMarkForDelete = (state, action) => {
             [leadId]: {
                 entries: {
                     [index]: {
-                        markedForDelete: { $set: true },
+                        markedForDelete: { $set: mark },
                         uiState: {
                             stale: { $set: false },
                             error: { $set: false },
