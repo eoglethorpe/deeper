@@ -84,7 +84,7 @@
             flex-grow: 1;
             overflow-y: auto;
 
-            .list-item {
+            :global .list-item {
                 display: block;
                 border-right: $width-separator-thick solid transparent;
                 border-bottom: $width-separator-thin solid $color-separator;

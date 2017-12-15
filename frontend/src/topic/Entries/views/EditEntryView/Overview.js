@@ -173,20 +173,20 @@ export default class Overview extends React.PureComponent {
 
         return (
             <ListItem
-                className={styles['entries-list-item']}
+                className="entries-list-item"
                 key={key}
                 active={isActive}
                 scrollIntoView={isActive}
             >
                 <button
-                    className={styles.button}
+                    className="button"
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
                     {this.calcEntryLabel(entry)}
-                    <div className={styles['status-icons']}>
+                    <div className="status-icons">
                         {
                             entryAccessor.isMarkedForDelete(entry) &&
-                            <span className={`${iconNames.removeCircle} ${styles.error}`} />
+                            <span className={`${iconNames.removeCircle} error`} />
                         }
                         {
                             this.renderIcon(status)
@@ -201,19 +201,19 @@ export default class Overview extends React.PureComponent {
         switch (status) {
             case ENTRY_STATUS.requesting:
                 return (
-                    <span className={`${iconNames.loading} ${styles.pending}`} />
+                    <span className={`${iconNames.loading} pending`} />
                 );
             case ENTRY_STATUS.invalid:
                 return (
-                    <span className={`${iconNames.error} ${styles.error}`} />
+                    <span className={`${iconNames.error} error`} />
                 );
             case ENTRY_STATUS.nonstale:
                 return (
-                    <span className={`${iconNames.codeWorking} ${styles.stale}`} />
+                    <span className={`${iconNames.codeWorking} stale`} />
                 );
             case ENTRY_STATUS.complete:
                 return (
-                    <span className={`${iconNames.checkCircle} ${styles.complete}`} />
+                    <span className={`${iconNames.checkCircle} complete`} />
                 );
             default:
                 return null;
@@ -272,7 +272,7 @@ export default class Overview extends React.PureComponent {
         } = this.props;
 
         const entry = this.props.entries.find(e => entryAccessor.getKey(e) === selectedEntryId);
-        const isMarkedForDelete = entryAccessor.isMarkedForDelete(entry);
+        const isMarkedForDelete = entry && entryAccessor.isMarkedForDelete(entry);
 
         return (
             <div styleName="overview">
@@ -303,7 +303,7 @@ export default class Overview extends React.PureComponent {
                         >
                             Add
                         </PrimaryButton>
-                        { !isMarkedForDelete &&
+                        { entry && !isMarkedForDelete &&
                             <DangerButton
                                 title="Mark current entry for removal"
                                 onClick={() => this.props.onEntryDelete(true)}
@@ -311,7 +311,7 @@ export default class Overview extends React.PureComponent {
                                 Remove
                             </DangerButton>
                         }
-                        { isMarkedForDelete &&
+                        { entry && isMarkedForDelete &&
                             <Button
                                 title="Unmark current entry for removal"
                                 onClick={() => this.props.onEntryDelete(false)}

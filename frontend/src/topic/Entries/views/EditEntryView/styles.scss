@@ -123,11 +123,19 @@
                     .entries-list {
                         flex-grow: 1;
 
-                        .entries-list-item {
-                            @include transition-medium;
+                        :global .entries-list-item {
                             border-bottom: $width-separator-thin solid $color-separator;
                             border-left: $width-separator-thick solid transparent;
                             padding: 0;
+
+                            &.active {
+                                border-left: $width-separator-thick solid $color-accent;
+                                background-color: $color-hover;
+                            }
+
+                            &:hover {
+                                background-color: $color-hover;
+                            }
 
                             .button {
                                 display: flex;
@@ -170,17 +178,6 @@
                                 }
 
                             }
-
-                            &.active {
-                                border-left: $width-separator-thick solid $color-accent;
-                                background-color: $color-hover;
-                            }
-
-                            &:hover {
-                                background-color: $color-hover;
-                            }
-
-
 
                         }
 

@@ -29,16 +29,16 @@ export const entryAccessor = {
     isMarkedForDelete: entry => entry.markedForDelete,
 
     getData: entry => entry.data,
-    getKey: entry => entry.data.id,
-    getServerId: entry => entry.data.serverId,
-    getVersionId: entry => entry.data.serverId,
+    getKey: entry => entry.data && entry.data.id,
+    getServerId: entry => entry.data && entry.data.serverId,
+    getVersionId: entry => entry.data && entry.data.serverId,
 
     getWidget: entry => entry.widget,
-    getValues: entry => entry.widget.values,
+    getValues: entry => entry.widget && entry.widget.values,
 
     getUiState: entry => entry.uiState,
-    getError: entry => entry.uiState.error,
-    getStale: entry => entry.uiState.stale,
+    getError: entry => entry.uiState && entry.uiState.error,
+    getStale: entry => entry.uiState && entry.uiState.stale,
 };
 
 const entryReference = {
@@ -108,14 +108,15 @@ const getValuesFromRemoteEntry = ({
 
 export const calcEntriesDiff = (locals, remotes) => {
     const localEntriesMap = listToMap(
-        remotes,
+        locals,
         entryAccessor.getServerId,
         (entry, key) => (key ? true : undefined),
     );
+    console.log(localEntriesMap);
     const actionsFoo = remotes.reduce(
         (acc, remoteEntry) => {
             const {
-                serverId: remoteServerId,
+                id: remoteServerId,
                 versionId: remoteVersionId,
             } = remoteEntry;
 
