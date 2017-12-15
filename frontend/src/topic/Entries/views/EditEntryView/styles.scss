@@ -123,33 +123,8 @@
                     .entries-list {
                         flex-grow: 1;
 
-                        .pending,
-                        .error,
-                        .complete,
-                        .stale {
-                            flex-shrink: 0;
-                            margin: 0;
-                            padding: 0;
-                            color: $color-label;
-                            font-size: $font-size-medium-alt;
-                        }
-
-                        .pending {
-                            animation: spin 1s linear infinite;
-                        }
-
-                        .error {
-                            color: $color-danger;
-                        }
-
-                        .complete {
-                            color: $color-success;
-                        }
-
-
-
-                        :global .list-item {
-                            transition: .2s all ease-in-out;
+                        .entries-list-item {
+                            @include transition-medium;
                             border-bottom: $width-separator-thin solid $color-separator;
                             border-left: $width-separator-thick solid transparent;
                             padding: 0;
@@ -167,6 +142,33 @@
                                 font-family: inherit;
                                 font-size: inherit;
 
+                                .status-icons {
+                                    .pending,
+                                    .error,
+                                    .complete,
+                                    .stale {
+                                        flex-shrink: 0;
+                                        margin: 0;
+                                        padding: 0;
+                                        color: $color-label;
+                                        font-size: $font-size-medium-alt;
+                                        margin-left: $spacing-small;
+                                    }
+
+                                    .pending {
+                                        animation: spin 1s linear infinite;
+                                    }
+
+                                    .error {
+                                        color: $color-danger;
+                                        animation: spin 1s linear infinite;
+                                    }
+
+                                    .complete {
+                                        color: $color-success;
+                                    }
+                                }
+
                             }
 
                             &.active {
@@ -177,6 +179,9 @@
                             &:hover {
                                 background-color: $color-hover;
                             }
+
+
+
                         }
 
                     }

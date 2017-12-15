@@ -52,8 +52,12 @@ import {
 } from '../../../../common/rest';
 import schema from '../../../../common/schema';
 
-import { ENTRY_STATUS } from './utils/constants';
-import { calcEntryState, calcEntriesDiff } from './utils/entryState';
+import {
+    ENTRY_STATUS,
+    entryAccessor,
+    calcEntryState,
+    calcEntriesDiff,
+} from '../../../../common/entities/entry';
 
 import styles from './styles.scss';
 import Overview from './Overview';
@@ -265,18 +269,19 @@ export default class EditEntryView extends React.PureComponent {
     createRequestForEntrySave = (entryId) => {
         const { leadId } = this.props;
         const entry = this.props.entries.find(
-            e => this.entryKeyExtractor(e) === entryId,
+            e => entryAccessor.getKey(e) === entryId,
         );
 
         let urlForEntry;
         let paramsForEntry;
-        const { serverId } = entry.data;
+        const serverId = entryAccessor.getServerId(entry);
+        const values = entryAccessor.getValues(entry);
         if (serverId) {
             urlForEntry = createUrlForEntryEdit(serverId);
-            paramsForEntry = createParamsForEntryEdit(entry.widget.values);
+            paramsForEntry = createParamsForEntryEdit(values);
         } else {
             urlForEntry = urlForEntryCreate;
-            paramsForEntry = createParamsForEntryCreate(entry.widget.values);
+            paramsForEntry = createParamsForEntryCreate(values);
         }
 
         const entrySaveRequest = new FgRestBuilder()
@@ -350,13 +355,15 @@ export default class EditEntryView extends React.PureComponent {
     };
 
     createRequestForEntryDelete = (leadId, entry) => {
+        const serverId = entryAccessor.getServerId(entry);
+        const id = entryAccessor.getKey(entry);
         const entriesRequest = new FgRestBuilder()
-            .url(createUrlForDeleteEntry(entry.data.serverId))
+            .url(createUrlForDeleteEntry(serverId))
             .params(() => createParamsForDeleteEntry())
             .preLoad(() => {
                 this.setState((state) => {
                     const requestSettings = {
-                        [entry.data.id]: { $auto: {
+                        [id]: { $auto: {
                             pending: { $set: true },
                         } },
                     };
@@ -367,7 +374,7 @@ export default class EditEntryView extends React.PureComponent {
             .postLoad(() => {
                 this.setState((state) => {
                     const requestSettings = {
-                        [entry.data.id]: { $auto: {
+                        [id]: { $auto: {
                             pending: { $set: false },
                         } },
                     };
@@ -377,18 +384,18 @@ export default class EditEntryView extends React.PureComponent {
             })
             .failure((response) => {
                 console.warn('FAILURE:', response);
-                this.saveRequestCoordinator.notifyComplete(entry.data.id);
+                this.saveRequestCoordinator.notifyComplete(id);
             })
             .fatal((response) => {
                 console.warn('FATAL:', response);
-                this.saveRequestCoordinator.notifyComplete(entry.data.id);
+                this.saveRequestCoordinator.notifyComplete(id);
             })
             .success(() => {
                 this.props.removeEntry({
                     leadId,
-                    entryId: entry.data.id,
+                    entryId: id,
                 });
-                this.saveRequestCoordinator.notifyComplete(entry.data.id);
+                this.saveRequestCoordinator.notifyComplete(id);
             })
             .build();
         return entriesRequest;
@@ -416,30 +423,33 @@ export default class EditEntryView extends React.PureComponent {
         });
     }
 
-    handleDeleteEntry = () => {
+    handleDeleteEntry = (markOrUnmark) => {
         const {
             leadId,
             selectedEntryId,
-            // entries,
         } = this.props;
 
         this.props.markForDeleteEntry({
             leadId,
             entryId: selectedEntryId,
+            mark: markOrUnmark,
         });
     }
 
     handleSaveAll = () => {
         const { leadId, entries } = this.props;
-        const entryKeys = entries.map(this.entryKeyExtractor);
+        const entryKeys = entries.map(entryAccessor.getKey);
 
         entryKeys.forEach((id, i) => {
             let request;
             const entry = entries[i];
-            if (entry.markedForDelete) {
-                if (entry.data.serverId) {
+            if (entryAccessor.isMarkedForDelete(entry)) {
+                // If maked for delete, send delete request
+                const serverId = entryAccessor.getServerId(entry);
+                if (serverId) {
                     request = this.createRequestForEntryDelete(leadId, entry);
                 } else {
+                    // If there is no serverId, just remove from list
                     request = {
                         start: () => {
                             this.props.removeEntry({ leadId, entryId: id });
@@ -455,8 +465,6 @@ export default class EditEntryView extends React.PureComponent {
         });
         this.saveRequestCoordinator.start();
     }
-
-    entryKeyExtractor = entry => entry.data.id;
 
     render() {
         const {
@@ -484,19 +492,17 @@ export default class EditEntryView extends React.PureComponent {
 
         this.choices = this.props.entries.reduce(
             (acc, entry) => {
-                const entryId = this.entryKeyExtractor(entry);
+                const entryId = entryAccessor.getKey(entry);
                 const choice = calcEntryState({
                     entry,
                     rest: entryRests[entryId],
                     deleteRest: entryDeleteRests[entryId],
                 });
-                const isRemoveDisabled = (choice === ENTRY_STATUS.requesting);
                 const isSaveDisabled = (choice !== ENTRY_STATUS.nonstale);
                 const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
                 acc[entryId] = {
                     choice,
                     isSaveDisabled,
-                    isRemoveDisabled,
                     isWidgetDisabled,
                 };
                 return acc;
@@ -504,7 +510,7 @@ export default class EditEntryView extends React.PureComponent {
             {},
         );
 
-        const { isRemoveDisabled, isWidgetDisabled } = this.choices[selectedEntryId] || {};
+        const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
 
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
@@ -533,7 +539,6 @@ export default class EditEntryView extends React.PureComponent {
                                 onEntryAdd={this.handleAddEntry}
                                 onEntryDelete={this.handleDeleteEntry}
 
-                                removeDisabled={isRemoveDisabled}
                                 widgetDisabled={isWidgetDisabled}
                                 saveAllDisabled={isSaveAllDisabled}
 
