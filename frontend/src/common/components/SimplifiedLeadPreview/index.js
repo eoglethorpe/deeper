@@ -11,6 +11,9 @@ import {
     createUrlForSimplifiedLeadPreview,
 } from '../../../common/rest';
 import {
+    LoadingAnimation,
+} from '../../../public/components/View';
+import {
     isFalsy,
 } from '../../../public/utils/common';
 
@@ -227,13 +230,11 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             >
                 {
                     (pending && (
-                        <div>
-                            Loading ...
-                        </div>
+                        <LoadingAnimation styleName="message" />
                     )) ||
                         (error && (
-                            <div>
-                                { error }
+                            <div styleName="message">
+                                Preview Error
                             </div>
                         )) ||
                         (extractedText && (
@@ -242,8 +243,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                             </pre>
                         )) ||
                         (
-                            <div>
-                                This lead has no valid preview
+                            <div styleName="message">
+                                Preview Not Available
                             </div>
                         )
                 }
