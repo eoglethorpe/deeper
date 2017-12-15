@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-
 import {
     DateInput,
     Form,
@@ -15,15 +14,16 @@ import {
     urlCondition,
 } from '../../../../../../public/components/Input';
 import { LoadingAnimation } from '../../../../../../public/components/View';
-import DeepGallery from '../../../../../../common/components/DeepGallery';
-
-import ApplyAll from '../ApplyAll';
 
 import {
     LEAD_TYPE,
     ATTACHMENT_TYPES,
     leadAccessor,
 } from '../../../../../../common/entities/lead';
+import DeepGallery from '../../../../../../common/components/DeepGallery';
+import { sources } from '../../../../../../common/constants';
+
+import ApplyAll from '../ApplyAll';
 import styles from './styles.scss';
 
 
@@ -191,10 +191,10 @@ export default class LeadForm extends React.PureComponent {
                     error={fieldErrors.project}
                     formname="project"
                     keySelector={this.keySelector}
-                    label="Project"
+                    label={sources.projectLabel}
                     labelSelector={this.labelSelector}
                     options={leadOptions.project}
-                    placeholder="Project Deep"
+                    placeholder={sources.projectPlaceholderLabel}
                     showHintAndError
                     showLabel
                     styleName="project"
@@ -208,8 +208,8 @@ export default class LeadForm extends React.PureComponent {
                     styleName="title"
                     error={fieldErrors.title}
                     formname="title"
-                    label="Title"
-                    placeholder="Lead 12:21:00 PM"
+                    label={sources.titleLabel}
+                    placeholder={sources.titlePlaceHolderLabel}
                     value={values.title}
                     disabled={isFormDisabled}
                 />
@@ -224,8 +224,8 @@ export default class LeadForm extends React.PureComponent {
                     <TextInput
                         error={fieldErrors.source}
                         formname="source"
-                        label="Source"
-                        placeholder="Newspaper"
+                        label={sources.publisherLabel}
+                        placeholder={sources.publisherPlaceHolderLabel}
                         value={values.source}
                         disabled={isFormDisabled}
                     />
@@ -241,10 +241,10 @@ export default class LeadForm extends React.PureComponent {
                         error={fieldErrors.confidentiality}
                         formname="confidentiality"
                         keySelector={this.keySelector}
-                        label="Confidentiality"
+                        label={sources.confidentialityLabel}
                         labelSelector={this.labelSelector}
                         options={leadOptions.confidentiality}
-                        placeholder="Select one"
+                        placeholder={sources.selectInputPlaceholderLabel}
                         showHintAndError
                         showLabel
                         value={values.confidentiality}
@@ -263,11 +263,11 @@ export default class LeadForm extends React.PureComponent {
                         error={fieldErrors.assignee}
                         formname="assignee"
                         keySelector={this.keySelector}
-                        label="Assign To"
+                        label={sources.assigneeLabel}
                         labelSelector={this.labelSelector}
                         multiple
                         options={leadOptions.assignee}
-                        placeholder="Select one"
+                        placeholder={sources.selectInputPlaceholderLabel}
                         showHintAndError
                         showLabel
                         value={values.assignee}
@@ -285,8 +285,8 @@ export default class LeadForm extends React.PureComponent {
                     <DateInput
                         error={fieldErrors.publishedOn}
                         formname="publishedOn"
-                        label="Published on"
-                        placeholder="12/12/2012"
+                        label={sources.datePublishedLabel}
+                        placeholder={sources.datePublishedPlaceholderLabel}
                         value={values.publishedOn}
                         disabled={isFormDisabled}
                     />
@@ -307,8 +307,8 @@ export default class LeadForm extends React.PureComponent {
                             error={fieldErrors.website}
                             formname="website"
                             key="website"
-                            label="Website"
-                            placeholder="togglecorp.com"
+                            label={sources.websiteLabel}
+                            placeholder={sources.urlPlaceholderLabel}
                             styleName="website"
                             value={values.website}
                             disabled={isFormDisabled}
@@ -320,8 +320,8 @@ export default class LeadForm extends React.PureComponent {
                         <TextArea
                             error={fieldErrors.text}
                             formname="text"
-                            label="Text"
-                            placeholder="Enter text description here"
+                            label={sources.textLabel}
+                            placeholder={sources.textareaPlaceholderLabel}
                             rows="3"
                             styleName="text"
                             value={values.text}
@@ -335,11 +335,18 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
+<<<<<<< d252bbb9811612296b22ca1099cf7dd3bf446f22
                             <DeepGallery
                                 onlyFileName
                                 galleryId={values.attachment}
                             />
                         </div>,
+=======
+
+                            {sources.attachmentLabel}
+                            <DeepGallery onlyFileName galleryId={values.attachment} />
+                        </p>,
+>>>>>>> Add strings for Leads and Add Lead Page
                         <HiddenInput
                             formname="attachment"
                             key="input"

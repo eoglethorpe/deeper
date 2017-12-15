@@ -4,3 +4,4 @@ export { default as iconNames } from './iconNames';
 export { default as strings } from './Strings/lang/en';
 export { default as validLinks } from './validLinks';
 export { default as hideNavbar } from './hideNavbar';
+export { default as sources } from './Strings/sources';

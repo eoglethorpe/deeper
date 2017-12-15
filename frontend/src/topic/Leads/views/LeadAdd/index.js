@@ -46,6 +46,9 @@ import FileUploadBuilder from './utils/builder/FileUploadBuilder';
 import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
+import {
+    sources,
+} from '../../../../common/constants';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
@@ -371,31 +374,31 @@ export default class LeadAdd extends React.PureComponent {
                                 disabled={!addLeadViewCanPrev}
                                 onClick={this.handleLeadPrev}
                             >
-                                Prev
+                                {sources.previousButtonLabel}
                             </PrimaryButton>
                             <PrimaryButton
                                 disabled={!addLeadViewCanNext}
                                 onClick={this.handleLeadNext}
                             >
-                                Next
+                                {sources.nextButtonLabel}
                             </PrimaryButton>
                             <DangerButton
                                 onClick={this.handleRemove}
                                 disabled={isRemoveDisabled}
                             >
-                                Remove
+                                {sources.removeButtonLabel}
                             </DangerButton>
                             <SuccessButton
                                 onClick={this.handleSave}
                                 disabled={isSaveDisabled}
                             >
-                                Save
+                                {sources.saveButtonLabel}
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
                                 disabled={pendingSubmitAll || !someSaveEnabled}
                             >
-                                Save All
+                                {sources.saveAllButtonLabel}
                             </SuccessButton>
                         </div>
                     }
