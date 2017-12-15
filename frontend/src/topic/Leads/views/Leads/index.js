@@ -15,6 +15,9 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
+    SunBurstView,
+} from '../../../../public/components/Visualization';
+import {
     PrimaryButton,
     TransparentAccentButton,
     TransparentButton,
@@ -35,6 +38,8 @@ import {
     currentUserActiveProjectSelector,
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
+
+    hierarchialDataSelector,
 
     setLeadsAction,
 
@@ -74,6 +79,7 @@ const propTypes = {
     filters: PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageFilter: PropTypes.func.isRequired,
     activeSort: PropTypes.string.isRequired, // eslint-disable-line
+    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageViewMode: PropTypes.func.isRequired,
     viewMode: PropTypes.string.isRequired,
@@ -92,6 +98,8 @@ const mapStateToProps = state => ({
     currentUserActiveProject: currentUserActiveProjectSelector(state),
     leads: leadsForProjectSelector(state),
     totalLeadsCount: totalLeadsCountForProjectSelector(state),
+
+    hierarchicalData: hierarchialDataSelector(state),
 
     activePage: leadPageActivePageSelector(state),
     activeSort: leadPageActiveSortSelector(state),
@@ -520,7 +528,12 @@ export default class Leads extends React.PureComponent {
                     </div>
                 ) : (
                     <div styleName="viz-container">
-                        Visualizations
+                        <SunBurstView
+                            styleName="visualization"
+                            data={this.props.hierarchicalData}
+                            valueAccessor={d => d.size}
+                            labelAccessor={d => d.name}
+                        />
                     </div>
                 )
                 }

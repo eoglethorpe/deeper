@@ -197,4 +197,11 @@ export const subCategoriesSelector = ({ domainData }) => (
 export const subSubCategoriesSelector = ({ domainData }) => (
     domainData.subSubCategories || emptyObject
 );
+<<<<<<< HEAD
 */
+
+// Visualization Selectors
+
+export const hierarchialDataSelector = ({ domainData }) => (
+    domainData.visualization.hierarchialData || emptyObject
+);

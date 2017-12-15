@@ -60,10 +60,23 @@
     }
 
     .viz-container {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         flex-grow: 1;
         background-color: $color-foreground;
         overflow-y: auto;
+
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            :global {
+                .responsive-wrapper {
+                    flex-grow: 1;
+                }
+            }
+        }
     }
 
     .footer {
