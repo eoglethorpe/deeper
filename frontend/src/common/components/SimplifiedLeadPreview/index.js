@@ -4,20 +4,19 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-import { RestBuilder } from '../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     createParamsForGenericGet,
     createUrlForLeadExtractionTrigger,
-    createUrlForLeadPreview,
+    createUrlForSimplifiedLeadPreview,
 } from '../../../common/rest';
 import {
     isFalsy,
 } from '../../../public/utils/common';
 
-
 const propTypes = {
     className: PropTypes.string,
-    leadId: PropTypes.string,
+    leadId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 };
 const defaultProps = {
     className: '',
@@ -26,7 +25,7 @@ const defaultProps = {
 
 
 @CSSModules(styles, { allowMultiple: true })
-export default class LeadPreview extends React.PureComponent {
+export default class SimplifiedLeadPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -87,7 +86,7 @@ export default class LeadPreview extends React.PureComponent {
 
         const params = createParamsForGenericGet();
         const triggerUrl = createUrlForLeadExtractionTrigger(leadId);
-        const previewUrl = createUrlForLeadPreview(leadId);
+        const previewUrl = createUrlForSimplifiedLeadPreview(leadId);
 
         this.setState({ pending: true });
 
@@ -101,7 +100,7 @@ export default class LeadPreview extends React.PureComponent {
             },
         );
 
-        this.previewRequest = this.createLeadPreviewRequest(
+        this.previewRequest = this.createSimplifiedLeadPreviewRequest(
             previewUrl,
             params,
             (response) => {
@@ -150,12 +149,9 @@ export default class LeadPreview extends React.PureComponent {
     }
 
     createLeadExtractionTriggerRequest = (url, params, onSuccess) => {
-        const request = new RestBuilder()
+        const request = new FgRestBuilder()
             .url(url)
             .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     onSuccess(response);
@@ -181,13 +177,10 @@ export default class LeadPreview extends React.PureComponent {
         return request;
     }
 
-    createLeadPreviewRequest = (url, params, onSuccess) => {
-        const request = new RestBuilder()
+    createSimplifiedLeadPreviewRequest = (url, params, onSuccess) => {
+        const request = new FgRestBuilder()
             .url(url)
             .params(params)
-            .decay(0.3)
-            .maxRetryTime(2000)
-            .maxRetryAttempts(10)
             .success((response) => {
                 try {
                     onSuccess(response);
@@ -212,6 +205,8 @@ export default class LeadPreview extends React.PureComponent {
             .build();
         return request;
     }
+
+    processText = text => text.replace(/\n\s*\n+/gi, '\n\n');
 
     render() {
         const {
@@ -243,7 +238,7 @@ export default class LeadPreview extends React.PureComponent {
                         )) ||
                         (extractedText && (
                             <pre>
-                                { extractedText }
+                                { this.processText(extractedText) }
                             </pre>
                         )) ||
                         (

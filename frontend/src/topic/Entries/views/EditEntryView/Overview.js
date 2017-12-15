@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import { connect } from 'react-redux';
 
@@ -35,6 +36,7 @@ import DeepGallery from '../../../../common/components/DeepGallery';
 
 import { LEAD_TYPE } from '../../../../common/entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
+import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -85,7 +87,7 @@ export default class Overview extends React.PureComponent {
         this.updateItems(props.analysisFramework);
 
         this.state = {
-            entriesListViewShow: true,
+            entriesListViewShow: false,
             currentEntryId: undefined,
         };
     }
@@ -220,7 +222,7 @@ export default class Overview extends React.PureComponent {
             default:
                 return null;
         }
-    };
+    }
 
     renderLeadPreview = (lead) => {
         const type = lead.sourceType;
@@ -228,13 +230,13 @@ export default class Overview extends React.PureComponent {
         if (type === LEAD_TYPE.website) {
             if (lead.url) {
                 return (
-                    <div className={styles['lead-preview']} >
+                    <div styleName="lead-preview">
                         <WebsiteViewer styleName="gallery-file" url={lead.url} />
                     </div>
                 );
             }
             return (
-                <div className={styles['lead-preview']} >
+                <div styleName="lead-preview">
                     <div styleName="preview-text">
                         <h1>Preview Not Available</h1>
                     </div>
@@ -245,7 +247,7 @@ export default class Overview extends React.PureComponent {
         }
 
         return (
-            <div className={styles['lead-preview']} >
+            <div styleName="lead-preview">
                 {
                     lead.attachment ? (
                         <DeepGallery
@@ -260,6 +262,51 @@ export default class Overview extends React.PureComponent {
             </div>
         );
     }
+
+    renderSimplifiedLeadPreview = lead => (
+        <SimplifiedLeadPreview
+            leadId={lead.id}
+        />
+    )
+
+    renderLeftSection = lead => (
+        <Tabs
+            activeLinkStyle={{ none: 'none' }}
+            styleName="tabs-container"
+            renderActiveTabContentOnly
+        >
+            <div styleName="tabs-header-container">
+                <TabLink
+                    styleName="tab-header"
+                    to="original-preview"
+                >
+                    Original
+                </TabLink>
+                <TabLink
+                    styleName="tab-header"
+                    to="simplified-preview"
+                >
+                    Simplified
+                </TabLink>
+                {/* Essential for border bottom, for more info contact AdityaKhatri */}
+                <div styleName="empty-tab" />
+            </div>
+            <div styleName="tabs-content">
+                <TabContent
+                    styleName="tab"
+                    for="simplified-preview"
+                >
+                    {this.renderSimplifiedLeadPreview(lead)}
+                </TabContent>
+                <TabContent
+                    styleName="tab"
+                    for="original-preview"
+                >
+                    {this.renderLeadPreview(lead)}
+                </TabContent>
+            </div>
+        </Tabs>
+    )
 
     render() {
         const {
@@ -339,7 +386,7 @@ export default class Overview extends React.PureComponent {
                 </header>
                 <div styleName="container">
                     <div styleName="left">
-                        {this.renderLeadPreview(lead)}
+                        {this.renderLeftSection(lead)}
                         <div
                             styleName={this.calcStyleNameWithState('entries-list-container')}
                         >

@@ -43,7 +43,7 @@ export const createParamsForWebsiteFetch = url => ({
     body: JSON.stringify({ url }),
 });
 
-export const createUrlForLeadPreview = leadId => (
+export const createUrlForSimplifiedLeadPreview = leadId => (
     `${wsEndpoint}/lead-previews/${leadId}/`
 );
 
