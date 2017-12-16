@@ -19,8 +19,11 @@ import DeepGallery from '../../../../../../common/components/DeepGallery';
 
 import ApplyAll from '../ApplyAll';
 
-import { LEAD_TYPE, ATTACHMENT_TYPES } from '../../utils/constants';
-import { leadAccessor } from '../../utils/leadState';
+import {
+    LEAD_TYPE,
+    ATTACHMENT_TYPES,
+    leadAccessor,
+} from '../../../../../../common/entities/lead';
 import styles from './styles.scss';
 
 

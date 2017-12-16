@@ -28,7 +28,10 @@ import {
     createUrlForLeadFilterOptions,
 } from '../../../../../common/rest';
 
-import { LEAD_TYPE, LEAD_FILTER_STATUS } from '../utils/constants';
+import {
+    LEAD_TYPE,
+    LEAD_FILTER_STATUS,
+} from '../../../../../common/entities/lead';
 import styles from '../styles.scss';
 
 

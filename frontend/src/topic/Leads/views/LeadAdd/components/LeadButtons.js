@@ -27,7 +27,7 @@ import {
     iconNames,
 } from '../../../../../common/constants';
 
-import { LEAD_TYPE } from '../utils/constants';
+import { LEAD_TYPE } from '../../../../../common/entities/lead';
 import styles from '../styles.scss';
 
 const supportedGoogleDriveMimeTypes = [

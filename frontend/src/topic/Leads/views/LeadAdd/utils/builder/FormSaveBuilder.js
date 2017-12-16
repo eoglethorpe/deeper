@@ -10,7 +10,10 @@ import {
     createParamsForLeadCreate,
 } from '../../../../../../common/rest';
 
-import { leadAccessor } from '../leadState';
+
+import {
+    leadAccessor,
+} from '../../../../../../common/entities/lead';
 
 export default class FormSaveBuilder {
     constructor(parent) {

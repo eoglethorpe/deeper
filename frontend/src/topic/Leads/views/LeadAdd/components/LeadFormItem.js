@@ -17,9 +17,11 @@ import LeadForm from './LeadForm';
 import DeepGallery from '../../../../../common/components/DeepGallery';
 import WebsiteViewer from '../../../../../common/components/WebsiteViewer';
 
+import {
+    LEAD_TYPE,
+    leadAccessor,
+} from '../../../../../common/entities/lead';
 import styles from '../styles.scss';
-
-import { LEAD_TYPE } from '../utils/constants';
 
 const propTypes = {
     leadKey: PropTypes.string.isRequired,
@@ -121,13 +123,17 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     renderLeadPreview = (lead) => {
-        const type = lead.data.type;
+        const type = leadAccessor.getType(lead);
 
+        const values = leadAccessor.getValues(lead);
         if (type === LEAD_TYPE.website) {
-            if (lead.form.values.url) {
+            if (values.url) {
                 return (
                     <div className={styles['lead-preview']} >
-                        <WebsiteViewer styleName="gallery-file" url={lead.form.values.url} />
+                        <WebsiteViewer
+                            styleName="gallery-file"
+                            url={values.url}
+                        />
                     </div>
                 );
             }
@@ -141,14 +147,13 @@ export default class LeadFormItem extends React.PureComponent {
         } else if (type === LEAD_TYPE.text) {
             return undefined;
         }
-
         return (
             <div className={styles['lead-preview']} >
                 {
-                    lead.form.values.attachment ? (
+                    values.attachment ? (
                         <DeepGallery
                             styleName="gallery-file"
-                            galleryId={lead.form.values.attachment}
+                            galleryId={values.attachment}
                         />
                     ) :
                         <div styleName="preview-text">

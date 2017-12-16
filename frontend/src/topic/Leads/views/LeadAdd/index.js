@@ -35,14 +35,17 @@ import {
 
 } from '../../../../common/redux';
 
-import { calcLeadState, leadAccessor } from './utils/leadState';
+import {
+    LEAD_STATUS,
+    calcLeadState,
+    leadAccessor,
+} from '../../../../common/entities/lead';
 
 import DropboxBuilder from './utils/builder/DropboxBuilder';
 import FileUploadBuilder from './utils/builder/FileUploadBuilder';
 import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
-import { LEAD_STATUS } from './utils/constants';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';

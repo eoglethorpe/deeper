@@ -2,8 +2,12 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { LEAD_TYPE, LEAD_STATUS } from '../../utils/constants';
-import { leadAccessor } from '../../utils/leadState';
+import {
+    LEAD_TYPE,
+    LEAD_STATUS,
+    leadAccessor,
+} from '../../../../../../common/entities/lead';
+
 import {
     iconNames,
 } from '../../../../../../common/constants';
