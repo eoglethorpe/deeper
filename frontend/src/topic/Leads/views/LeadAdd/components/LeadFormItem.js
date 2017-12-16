@@ -72,7 +72,7 @@ export default class LeadFormItem extends React.PureComponent {
             values,
             formErrors,
             formFieldErrors,
-            uiState: { stale: false },
+            uiState: { pristine: false },
         });
     }
 
@@ -82,7 +82,7 @@ export default class LeadFormItem extends React.PureComponent {
             leadId,
             formErrors,
             formFieldErrors,
-            uiState: { stale: true },
+            uiState: { pristine: true },
         });
 
         this.props.onFormSubmitFailure(this.props.leadKey);

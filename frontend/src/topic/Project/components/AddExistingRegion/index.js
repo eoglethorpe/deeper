@@ -85,7 +85,7 @@ export default class AddExistingRegion extends React.PureComponent {
             formFieldErrors: {},
             formValues,
             pending: false,
-            stale: false,
+            pristine: false,
             regionOptions: projectOptions.regions || emptyList,
         };
 
@@ -162,7 +162,7 @@ export default class AddExistingRegion extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -196,7 +196,7 @@ export default class AddExistingRegion extends React.PureComponent {
         this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, projectId);
         this.projectPatchRequest.start();
 
-        this.setState({ stale: false });
+        this.setState({ pristine: false });
     };
 
     render() {
@@ -205,7 +205,7 @@ export default class AddExistingRegion extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
             regionOptions,
         } = this.state;
 
@@ -250,7 +250,7 @@ export default class AddExistingRegion extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Update
                     </PrimaryButton>
                 </div>

@@ -21,7 +21,7 @@ export default class CountryPopulationData extends React.PureComponent {
         super(props);
 
         this.state = {
-            stale: false,
+            pristine: false,
             pending: false,
         };
         this.elements = [
@@ -41,7 +41,7 @@ export default class CountryPopulationData extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -63,7 +63,7 @@ export default class CountryPopulationData extends React.PureComponent {
     };
     render() {
         const {
-            stale,
+            pristine,
             pending,
         } = this.state;
         return (
@@ -83,7 +83,7 @@ export default class CountryPopulationData extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Save changes
                     </PrimaryButton>
                 </div>

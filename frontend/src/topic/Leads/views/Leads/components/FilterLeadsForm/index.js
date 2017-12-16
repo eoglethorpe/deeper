@@ -75,7 +75,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         const { similar, ...values } = this.props.value;
         this.state = {
             formValues: values,
-            stale: false,
+            pristine: false,
         };
 
         this.formElements = [
@@ -99,7 +99,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             const { similar, ...values } = value;
             this.setState({
                 formValues: values,
-                stale: false,
+                pristine: false,
             });
         }
 
@@ -158,12 +158,12 @@ export default class FilterLeadsForm extends React.PureComponent {
     handleChange = (values) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
-            stale: true,
+            pristine: true,
         });
     }
 
     handleSubmit = (values) => {
-        this.setState({ stale: false });
+        this.setState({ pristine: false });
         this.props.setLeadPageFilter({
             filters: values,
         });
@@ -176,7 +176,7 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     handleClearFilters = () => {
-        if (!this.state.stale) {
+        if (!this.state.pristine) {
             this.props.unsetLeadPageFilter();
         } else {
             this.setState({
@@ -193,7 +193,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
         const {
             formValues,
-            stale,
+            pristine,
         } = this.state;
 
         const {
@@ -281,7 +281,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <Button
                     styleName="filter-btn"
-                    disabled={!stale}
+                    disabled={!pristine}
                 >
                     Apply Filter
                 </Button>

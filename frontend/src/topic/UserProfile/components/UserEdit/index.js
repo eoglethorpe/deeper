@@ -74,7 +74,7 @@ export default class UserEdit extends React.PureComponent {
             formFieldErrors: {},
             formValues: this.props.userInformation,
             pending: false,
-            stale: false,
+            pristine: false,
             showGalleryImage: true,
         };
 
@@ -158,7 +158,7 @@ export default class UserEdit extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -201,7 +201,7 @@ export default class UserEdit extends React.PureComponent {
         uploader.success = (response) => {
             this.setState({
                 formValues: { ...this.state.formValues, displayPicture: response.id },
-                stale: true,
+                pristine: true,
                 pending: false,
             });
         };
@@ -228,7 +228,7 @@ export default class UserEdit extends React.PureComponent {
             formErrors = [],
             formFieldErrors,
             pending,
-            stale,
+            pristine,
             showGalleryImage,
         } = this.state;
 
@@ -300,7 +300,7 @@ export default class UserEdit extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Save
                     </PrimaryButton>
                 </div>

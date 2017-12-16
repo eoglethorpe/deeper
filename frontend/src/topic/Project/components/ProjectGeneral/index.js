@@ -104,7 +104,7 @@ export default class ProjectGeneral extends React.PureComponent {
             showAddMemberModal: false,
             formErrors: [],
             formFieldErrors: {},
-            stale: false,
+            pristine: false,
             pending: false,
             actionPending: false,
             formValues,
@@ -257,7 +257,7 @@ export default class ProjectGeneral extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -265,7 +265,7 @@ export default class ProjectGeneral extends React.PureComponent {
         this.setState({
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: false,
+            pristine: false,
         });
     };
 
@@ -282,7 +282,7 @@ export default class ProjectGeneral extends React.PureComponent {
 
         this.setState({
             formValues,
-            stale: false,
+            pristine: false,
             pending: false,
             formErrors: [],
             formFieldErrors: {},
@@ -311,7 +311,7 @@ export default class ProjectGeneral extends React.PureComponent {
         this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, activeProject);
         this.projectPatchRequest.start();
 
-        this.setState({ stale: false });
+        this.setState({ pristine: false });
     };
 
     createRequestForMembershipDelete = (memberId) => {
@@ -457,7 +457,7 @@ export default class ProjectGeneral extends React.PureComponent {
 
             formErrors,
             formFieldErrors,
-            stale,
+            pristine,
             pending,
             actionPending,
             formValues,
@@ -484,7 +484,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     handleFormCancel={this.handleFormCancel}
                     successCallback={this.successCallback}
                     styleName="project-general-form"
-                    stale={stale}
+                    pristine={pristine}
                     pending={pending}
                 />
                 <div styleName="members">

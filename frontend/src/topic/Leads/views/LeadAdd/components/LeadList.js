@@ -42,7 +42,7 @@ const statusMatches = (leadStatus, status) => {
             return leadStatus === LEAD_STATUS.complete;
         case LEAD_FILTER_STATUS.unsaved:
             return (
-                leadStatus === LEAD_STATUS.nonstale ||
+                leadStatus === LEAD_STATUS.nonPristine ||
                 leadStatus === LEAD_STATUS.uploading ||
                 leadStatus === LEAD_STATUS.requesting
             );

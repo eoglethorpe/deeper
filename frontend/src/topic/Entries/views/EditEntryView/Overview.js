@@ -209,9 +209,9 @@ export default class Overview extends React.PureComponent {
                 return (
                     <span className={`${iconNames.error} error`} />
                 );
-            case ENTRY_STATUS.nonstale:
+            case ENTRY_STATUS.nonPristine:
                 return (
-                    <span className={`${iconNames.codeWorking} stale`} />
+                    <span className={`${iconNames.codeWorking} pristine`} />
                 );
             case ENTRY_STATUS.complete:
                 return (

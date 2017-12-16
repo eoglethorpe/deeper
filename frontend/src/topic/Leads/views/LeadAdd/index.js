@@ -269,10 +269,44 @@ export default class LeadAdd extends React.PureComponent {
         }
     }
 
-    renderLeadDetail = (key, lead) => {
-        const { isSaveDisabled, isFormDisabled } = this.choices[key] || {};
+    calcChoices = () => {
+        const {
+            leadUploads,
+            leadRests,
+            leadDriveRests,
+            leadDropboxRests,
+        } = this.state;
+        const { addLeadViewLeads } = this.props;
+        return addLeadViewLeads.reduce(
+            (acc, lead) => {
+                const leadId = leadAccessor.getKey(lead);
+                const choice = calcLeadState({
+                    lead,
+                    rest: leadRests[leadId],
+                    upload: leadUploads[leadId],
+                    drive: leadDriveRests[leadId],
+                    dropbox: leadDropboxRests[leadId],
+                });
+                const isSaveDisabled = (choice !== LEAD_STATUS.nonPristine);
+                const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
+                const isFormDisabled = (choice === LEAD_STATUS.requesting);
+                acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
+                return acc;
+            },
+            {},
+        );
+    }
 
-        const { activeLeadId, leadFilterOptions } = this.props;
+    renderLeadDetail = (key, lead) => {
+        const {
+            isSaveDisabled,
+            isFormDisabled,
+        } = this.choices[key] || {};
+        const {
+            activeLeadId,
+            leadFilterOptions,
+        } = this.props;
+        const { pendingSubmitAll } = this.state;
         const { project } = leadAccessor.getValues(lead);
         const leadOptions = leadFilterOptions[project];
         return (
@@ -284,7 +318,7 @@ export default class LeadAdd extends React.PureComponent {
                 lead={lead}
                 isFormDisabled={isFormDisabled}
                 isSaveDisabled={isSaveDisabled}
-                isBulkActionDisabled={this.state.pendingSubmitAll}
+                isBulkActionDisabled={pendingSubmitAll}
                 leadOptions={leadOptions}
                 onFormSubmitFailure={this.handleFormSubmitFailure}
                 onFormSubmitSuccess={this.handleFormSubmitSuccess}
@@ -295,35 +329,17 @@ export default class LeadAdd extends React.PureComponent {
     render() {
         const {
             leadUploads,
-            leadRests,
-            leadDriveRests,
-            leadDropboxRests,
+            pendingSubmitAll,
         } = this.state;
         const {
             activeLead,
             activeLeadId,
+            addLeadViewCanPrev,
+            addLeadViewCanNext,
         } = this.props;
 
         // calculate all choices
-        this.choices = this.props.addLeadViewLeads.reduce(
-            (acc, lead) => {
-                const leadId = leadAccessor.getKey(lead);
-                const choice = calcLeadState({
-                    lead,
-                    rest: leadRests[leadId],
-                    upload: leadUploads[leadId],
-                    drive: leadDriveRests[leadId],
-                    dropbox: leadDropboxRests[leadId],
-                });
-                const isSaveDisabled = (choice !== LEAD_STATUS.nonstale);
-                const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
-                const isFormDisabled = (choice === LEAD_STATUS.requesting);
-                acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
-                return acc;
-            },
-            {},
-        );
-
+        this.choices = this.calcChoices();
         // get choice for activeLead
         const { isSaveDisabled, isRemoveDisabled } = this.choices[activeLeadId] || {};
         // identify if save is enabled for some leads
@@ -340,13 +356,13 @@ export default class LeadAdd extends React.PureComponent {
                     { activeLead &&
                         <div styleName="action-buttons">
                             <PrimaryButton
-                                disabled={!this.props.addLeadViewCanPrev}
+                                disabled={!addLeadViewCanPrev}
                                 onClick={this.handleLeadPrev}
                             >
                                 Prev
                             </PrimaryButton>
                             <PrimaryButton
-                                disabled={!this.props.addLeadViewCanNext}
+                                disabled={!addLeadViewCanNext}
                                 onClick={this.handleLeadNext}
                             >
                                 Next
@@ -365,7 +381,7 @@ export default class LeadAdd extends React.PureComponent {
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
-                                disabled={this.state.pendingSubmitAll || !someSaveEnabled}
+                                disabled={pendingSubmitAll || !someSaveEnabled}
                             >
                                 Save All
                             </SuccessButton>

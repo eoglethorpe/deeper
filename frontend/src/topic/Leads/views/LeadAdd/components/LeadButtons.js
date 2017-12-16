@@ -100,7 +100,7 @@ export default class LeadButtons extends React.PureComponent {
                     project: activeProject,
                 },
 
-                stale: false,
+                pristine: false,
             });
 
             uploads.unshift({
@@ -138,7 +138,7 @@ export default class LeadButtons extends React.PureComponent {
                     project: activeProject,
                 },
 
-                stale: false,
+                pristine: false,
             });
 
             uploads.unshift({
@@ -177,7 +177,7 @@ export default class LeadButtons extends React.PureComponent {
                     project: activeProject,
                 },
 
-                stale: false,
+                pristine: false,
             });
 
             uploads.unshift({
@@ -206,7 +206,7 @@ export default class LeadButtons extends React.PureComponent {
                 project: activeProject,
             },
 
-            stale: false,
+            pristine: false,
         });
 
         this.props.addLeads(newLeads);
@@ -228,7 +228,7 @@ export default class LeadButtons extends React.PureComponent {
                 project: activeProject,
             },
 
-            stale: false,
+            pristine: false,
         });
 
         this.props.addLeads(newLeads);

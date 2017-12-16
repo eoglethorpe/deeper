@@ -100,7 +100,7 @@ export default class AddProjectMembers extends React.PureComponent {
             formFieldErrors: {},
             formValues,
             pending: false,
-            stale: false,
+            pristine: false,
             usersWithRole,
         };
 
@@ -275,7 +275,7 @@ export default class AddProjectMembers extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -312,7 +312,7 @@ export default class AddProjectMembers extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
             usersWithRole,
         } = this.state;
 
@@ -357,7 +357,7 @@ export default class AddProjectMembers extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale}>
+                    <PrimaryButton disabled={pending || !pristine}>
                         Update
                     </PrimaryButton>
                 </div>

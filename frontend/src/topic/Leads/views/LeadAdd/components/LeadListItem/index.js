@@ -86,10 +86,10 @@ export default class LeadListItem extends React.PureComponent {
                         className={iconNames.error}
                     />
                 );
-            case LEAD_STATUS.nonstale:
+            case LEAD_STATUS.nonPristine:
                 return (
                     <span
-                        styleName="stale"
+                        styleName="pristine"
                         className={iconNames.codeWorking}
                     />
                 );

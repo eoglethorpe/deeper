@@ -31,7 +31,7 @@ const initialSiloDomainData = {
                 },
                 uiState: {
                     error: true,
-                    stale: false,
+                    pristine: false,
                 },
             },
             */

@@ -65,7 +65,7 @@ export default class AddRegion extends React.PureComponent {
             formFieldErrors: {},
             formValues: {},
             pending: false,
-            stale: false,
+            pristine: false,
 
             redirectTo: undefined,
         };
@@ -166,7 +166,7 @@ export default class AddRegion extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -194,7 +194,7 @@ export default class AddRegion extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
         } = this.state;
 
         const {
@@ -246,7 +246,7 @@ export default class AddRegion extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Add Region
                     </PrimaryButton>
                 </div>

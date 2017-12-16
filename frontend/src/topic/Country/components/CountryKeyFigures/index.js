@@ -65,7 +65,7 @@ export default class CountryKeyFigures extends React.PureComponent {
         super(props);
 
         this.state = {
-            stale: false,
+            pristine: false,
             pending: false,
             formErrors: [],
             formFieldErrors: {},
@@ -135,7 +135,7 @@ export default class CountryKeyFigures extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -188,7 +188,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         regionDetails: response,
                         regionId,
                     });
-                    this.setState({ stale: false });
+                    this.setState({ pristine: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -244,13 +244,13 @@ export default class CountryKeyFigures extends React.PureComponent {
             formFieldErrors: {},
             formValues: props.regionDetail.keyFigures || {},
             pending: false,
-            stale: false,
+            pristine: false,
         });
     };
 
     render() {
         const {
-            stale,
+            pristine,
             pending,
             formValues,
             formErrors,
@@ -274,11 +274,11 @@ export default class CountryKeyFigures extends React.PureComponent {
                         <DangerButton
                             type="button"
                             onClick={this.handleFormCancel}
-                            disabled={pending || !stale}
+                            disabled={pending || !pristine}
                         >
                             Cancel
                         </DangerButton>
-                        <PrimaryButton disabled={pending || !stale} >
+                        <PrimaryButton disabled={pending || !pristine} >
                             Save changes
                         </PrimaryButton>
                     </div>

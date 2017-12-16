@@ -17,9 +17,9 @@ export const LEAD_STATUS = {
     warning: 'warning',
     requesting: 'requesting',
     invalid: 'invalid',
-    nonstale: 'nonstale',
+    nonPristine: 'nonPristine',
     complete: 'complete',
-    stale: 'stale',
+    pristine: 'pristine',
 };
 
 export const LEAD_FILTER_STATUS = {
@@ -31,7 +31,7 @@ export const LEAD_FILTER_STATUS = {
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     const { data, form, uiState } = lead;
     const { values } = form;
-    const { stale, error } = uiState;
+    const { pristine, error } = uiState;
     const { type, serverId } = data;
 
     const isFileUploading = () => upload && upload.progress <= 100;
@@ -57,12 +57,12 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
         return LEAD_STATUS.requesting;
     } else if (error) {
         return LEAD_STATUS.invalid;
-    } else if (!stale) {
-        return LEAD_STATUS.nonstale;
+    } else if (!pristine) {
+        return LEAD_STATUS.nonPristine;
     } else if (serverId) {
         return LEAD_STATUS.complete;
     }
-    return LEAD_STATUS.stale;
+    return LEAD_STATUS.pristine;
 };
 
 export const leadAccessor = {

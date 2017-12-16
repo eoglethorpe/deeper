@@ -26,7 +26,7 @@ describe('<ProjectGeneralForm />', () => {
                 userGroupsOptions={[]}
                 regionOptions={[]}
                 pending
-                stale={false}
+                pristine={false}
             />
         </Provider>,
     );

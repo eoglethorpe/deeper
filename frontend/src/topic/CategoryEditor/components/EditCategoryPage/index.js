@@ -37,7 +37,7 @@ export default class EditCategoryPage extends React.PureComponent {
             formFieldErrors: {},
             formValues: [],
             pending: false,
-            stale: false,
+            pristine: false,
         };
 
         this.elements = [
@@ -126,7 +126,7 @@ export default class EditCategoryPage extends React.PureComponent {
             formValues,
             formFieldErrors,
             pending,
-            stale,
+            pristine,
             formErrors,
         } = this.state;
 
@@ -180,7 +180,7 @@ export default class EditCategoryPage extends React.PureComponent {
                                 Cancel
                             </DangerButton>
                             <PrimaryButton
-                                disabled={pending || !stale}
+                                disabled={pending || !pristine}
                             >
                                 Save Changes
                             </PrimaryButton>

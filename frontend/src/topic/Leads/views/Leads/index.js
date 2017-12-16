@@ -378,7 +378,7 @@ export default class Leads extends React.PureComponent {
             serverId,
             values,
 
-            stale: true,
+            pristine: true,
         });
         this.props.addLeads(newLeads);
 
