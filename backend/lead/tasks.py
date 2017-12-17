@@ -16,22 +16,33 @@ from utils.websocket.subscription import SubscriptionConsumer
 import json
 import reversion
 import os
+import re
 
 
-def _extract_from_lead_core(lead):
+def _preprocess(text):
+    return re.sub(r'\n(\s*\n)*', '\n\n', text)
+
+
+def _extract_from_lead_core(lead_id):
     """
     The core lead extraction method.
     DONOT USE THIS METHOD DIRECTLY.
     TO PREVENT MULTIPLE LEAD EXTRACTIONS HAPPEN SIMULTANEOUSLY,
     USE THE extract_from_lead METHOD.
     """
+    # Get the lead to be extracted
+    lead = Lead.objects.get(id=lead_id)
+
     with reversion.create_revision():
         text, images = '', []
 
         # Extract either using FileDocument or WebDocument
         # as per the document type
         try:
-            if lead.attachment:
+            if lead.text:
+                text = lead.text
+                images = []
+            elif lead.attachment:
                 text, images = FileDocument(
                     lead.attachment.file,
                     lead.attachment.file.name,
@@ -39,6 +50,8 @@ def _extract_from_lead_core(lead):
 
             elif lead.url:
                 text, images = WebDocument(lead.url).extract()
+
+            text = _preprocess(text)
         except Exception as e:
             return False
 
@@ -79,14 +92,6 @@ def extract_from_lead(lead_id):
       need to be notified.
     """
 
-    # Get the lead to be extracted
-    lead = Lead.objects.get(id=lead_id)
-
-    # We can't possible extract from anything other than
-    # file attachment or web url
-    if not lead.attachment and not lead.url:
-        return False
-
     # Use redis store to keep track of leads currently being extracted
     # and try to prevent useless parallel extraction of same lead that
     # that might happen.
@@ -103,7 +108,7 @@ def extract_from_lead(lead_id):
 
     try:
         # Actual extraction process
-        return_value = _extract_from_lead_core(lead)
+        return_value = _extract_from_lead_core(lead_id)
 
         # Send signal to all pending websocket clients
         # that the lead extraction has completed.
@@ -111,7 +116,7 @@ def extract_from_lead(lead_id):
         code = SubscriptionConsumer.encode({
             'channel': 'leads',
             'event': 'onPreviewExtracted',
-            'leadId': lead.id,
+            'leadId': lead_id,
         })
 
         # TODO: Discuss and decide the notification response format
