@@ -38,6 +38,20 @@ export default class API {
         }
     }
 
+    setEntryType(type, id = undefined) {
+        const entry = this.getEntry(id);
+        if (entry) {
+            const settings = {
+                entryType: { $set: type },
+            };
+
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(entryAccessor.getValues(entry), settings),
+            );
+        }
+    }
+
     setEntryExcerpt(excerpt, id = undefined) {
         const entry = this.getEntry(id);
         if (entry) {
@@ -101,6 +115,11 @@ export default class API {
                 update(values, settings),
             );
         }
+    }
+
+    getEntryType(id = undefined) {
+        const entry = this.getEntry(id);
+        return entryAccessor.getValues(entry).entryType;
     }
 
     getEntryExcerpt(id = undefined) {

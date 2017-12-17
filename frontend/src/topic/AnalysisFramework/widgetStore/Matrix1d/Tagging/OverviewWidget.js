@@ -22,6 +22,7 @@ const propTypes = {
 
 const defaultProps = {
     data: [],
+    attribute: undefined,
 };
 
 @CSSModules(styles)

@@ -64,6 +64,7 @@ const entrySchema = [];
 
             excerpt: { type: 'string' },
             lead: { type: 'uint', required: true },
+            entryType: { type: 'string', required: true },
 
             exportData: { type: 'array.entryExport', required: true },
             filterData: { type: 'array.entryFilter', required: true },

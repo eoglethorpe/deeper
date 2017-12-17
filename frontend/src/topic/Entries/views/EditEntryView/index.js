@@ -422,6 +422,7 @@ export default class EditEntryView extends React.PureComponent {
                 id: entryId,
                 serverId: undefined,
                 values: {
+                    entryType: 'excerpt',
                     excerpt: excerpt || (!image && `Excerpt ${entryId.toUpperCase()}`),
                     image,
                     lead: leadId,
@@ -444,6 +445,7 @@ export default class EditEntryView extends React.PureComponent {
                 id: entryId,
                 serverId: undefined,
                 values: {
+                    entryType: 'excerpt',
                     excerpt: `Excerpt ${entryId.toUpperCase()}`,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
