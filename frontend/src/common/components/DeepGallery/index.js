@@ -29,12 +29,14 @@ const propTypes = {
     className: PropTypes.string,
     galleryId: PropTypes.number,
     onlyFileName: PropTypes.bool,
+    label: PropTypes.string,
 };
 
 const defaultProps = {
     className: '',
     galleryId: undefined,
     onlyFileName: false,
+    label: 'Loading file',
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -176,10 +178,15 @@ export default class DeepGallery extends React.PureComponent {
         if (onlyFileName) {
             if (pending) {
                 return (
-                    <span
-                        className={`${iconNames.loading} ${className}`}
-                        styleName="loading-animation"
-                    />
+                    <div styleName="upload-filename">
+                        <span styleName="label" >
+                            {this.props.label}
+                        </span>
+                        <span
+                            className={`${iconNames.loading} ${className}`}
+                            styleName="loading-animation"
+                        />
+                    </div>
                 );
             }
             return this.renderFileName({ fileName, fileUrl });

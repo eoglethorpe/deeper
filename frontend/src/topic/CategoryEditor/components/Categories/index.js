@@ -128,7 +128,7 @@ export default class Categories extends React.PureComponent {
             formFieldErrors: {},
             formValues: [],
             pending: false,
-            stale: false,
+            pristine: false,
         };
 
         this.elements = [
@@ -263,7 +263,7 @@ export default class Categories extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -333,7 +333,7 @@ export default class Categories extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
             formErrors = [],
         } = this.state;
 
@@ -502,7 +502,7 @@ export default class Categories extends React.PureComponent {
                                     Cancel
                                 </DangerButton>
                                 <PrimaryButton
-                                    disabled={pending || !stale}
+                                    disabled={pending || !pristine}
                                 >
                                     Save
                                 </PrimaryButton>
@@ -547,7 +547,7 @@ export default class Categories extends React.PureComponent {
                                     Cancel
                                 </DangerButton>
                                 <PrimaryButton
-                                    disabled={pending || !stale}
+                                    disabled={pending || !pristine}
                                 >
                                     Add
                                 </PrimaryButton>
@@ -588,7 +588,7 @@ export default class Categories extends React.PureComponent {
                                     Cancel
                                 </DangerButton>
                                 <PrimaryButton
-                                    disabled={pending || !stale}
+                                    disabled={pending || !pristine}
                                 >
                                     Add
                                 </PrimaryButton>

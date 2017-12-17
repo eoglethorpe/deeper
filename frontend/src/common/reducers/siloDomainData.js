@@ -71,11 +71,11 @@ const leadReference = {
     },
     uiState: {
         error: false,
-        stale: false,
+        pristine: false,
     },
 };
 
-const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
+const createLead = ({ id, serverId, type, values = {}, pristine = false }) => {
     const settings = {
         data: {
             id: { $set: id },
@@ -86,7 +86,7 @@ const createLead = ({ id, serverId, type, values = {}, stale = false }) => {
             values: { $set: values },
         },
         uiState: {
-            stale: { $set: stale },
+            pristine: { $set: pristine },
         },
     };
     return update(leadReference, settings);
@@ -289,7 +289,7 @@ const addLeadViewSaveLead = (state, action) => {
                     } },
                     uiState: {
                         $merge: {
-                            stale: true,
+                            pristine: true,
                         },
                     },
                 },
@@ -326,11 +326,11 @@ const addLeadViewCopyAll = (state, action, behavior) => {
                 values: { [attrName]: { $set: valueToCopy } },
                 fieldErrors: { [attrName]: { $set: undefined } },
             },
-            uiState: { stale: { $set: false } },
+            uiState: { pristine: { $set: false } },
         };
     }
 
-    // put stale (remove error for that as well)
+    // put pristine (remove error for that as well)
 
     const settings = {
         addLeadView: {
@@ -625,7 +625,7 @@ const editEntryViewSaveEntry = (state, action) => {
                             values: { $merge: values },
                         },
                         uiState: {
-                            stale: { $set: true },
+                            pristine: { $set: true },
                             error: { $set: false },
                         },
                     },
@@ -720,7 +720,7 @@ const entryMarkForDelete = (state, action) => {
                     [index]: {
                         markedForDelete: { $set: mark },
                         uiState: {
-                            stale: { $set: false },
+                            pristine: { $set: false },
                             error: { $set: false },
                         },
                     },

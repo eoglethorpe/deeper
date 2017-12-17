@@ -10,7 +10,10 @@ import {
     createParamsForLeadCreate,
 } from '../../../../../../common/rest';
 
-import { leadAccessor } from '../leadState';
+
+import {
+    leadAccessor,
+} from '../../../../../../common/entities/lead';
 
 export default class FormSaveBuilder {
     constructor(parent) {
@@ -85,7 +88,7 @@ export default class FormSaveBuilder {
             leadId,
             formErrors,
             formFieldErrors,
-            uiState: { stale: true },
+            uiState: { pristine: true },
         });
         this.parent.formCoordinator.notifyComplete(leadId);
     }
@@ -95,7 +98,7 @@ export default class FormSaveBuilder {
         this.parent.props.addLeadViewLeadChange({
             leadId,
             formErrors: ['Error while trying to save lead.'],
-            uiState: { stale: true },
+            uiState: { pristine: true },
         });
         this.parent.formCoordinator.notifyComplete(leadId);
     }

@@ -82,7 +82,7 @@ export default class EditAdminLevel extends React.PureComponent {
             formFieldErrors: {},
             formValues: this.props.adminLevelDetail,
             pending: false,
-            stale: false,
+            pristine: false,
             adminLevelsOfRegion: this.otherAdminLevels(props.adminLevelsOfRegion),
         };
 
@@ -216,7 +216,7 @@ export default class EditAdminLevel extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -261,7 +261,7 @@ export default class EditAdminLevel extends React.PureComponent {
         uploader.success = (response) => {
             this.setState({
                 formValues: { ...this.state.formValues, geoShapeFile: response.id },
-                stale: true,
+                pristine: true,
                 pending: false,
             });
         };
@@ -292,7 +292,7 @@ export default class EditAdminLevel extends React.PureComponent {
             formErrors,
             formValues,
             pending,
-            stale,
+            pristine,
             adminLevelsOfRegion,
         } = this.state;
 
@@ -407,7 +407,7 @@ export default class EditAdminLevel extends React.PureComponent {
                         </DangerButton>
                         <PrimaryButton
                             styleName="save-btn"
-                            disabled={pending || !stale}
+                            disabled={pending || !pristine}
                         >
                             Save Changes
                         </PrimaryButton>

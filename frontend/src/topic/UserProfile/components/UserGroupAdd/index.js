@@ -67,7 +67,7 @@ export default class UserGroupAdd extends React.PureComponent {
             formFieldErrors: {},
             formValues: {},
             pending: false,
-            stale: false,
+            pristine: false,
         };
 
         this.elements = [
@@ -137,7 +137,7 @@ export default class UserGroupAdd extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -168,7 +168,7 @@ export default class UserGroupAdd extends React.PureComponent {
             formErrors = [],
             formFieldErrors,
             pending,
-            stale,
+            pristine,
         } = this.state;
 
         return (
@@ -198,7 +198,7 @@ export default class UserGroupAdd extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Create
                     </PrimaryButton>
                 </div>

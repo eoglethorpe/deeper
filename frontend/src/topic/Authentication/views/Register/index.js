@@ -55,7 +55,7 @@ export default class Login extends React.PureComponent {
             formFieldErrors: {},
             formValues: {},
             pending: false,
-            stale: false,
+            pristine: false,
 
             redirectTo: undefined,
         };
@@ -96,7 +96,7 @@ export default class Login extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -136,7 +136,7 @@ export default class Login extends React.PureComponent {
                 password,
             }))
             .preLoad(() => {
-                this.setState({ pending: true, stale: false });
+                this.setState({ pending: true, pristine: false });
             })
             .postLoad(() => {
                 this.setState({ pending: false });
@@ -181,7 +181,7 @@ export default class Login extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
         } = this.state;
 
         if (this.state.redirectTo) {
@@ -243,7 +243,7 @@ export default class Login extends React.PureComponent {
                             <PrimaryButton
                                 disabled={pending}
                             >
-                                { stale ? 'Register*' : 'Register' }
+                                { pristine ? 'Register*' : 'Register' }
                             </PrimaryButton>
                         </div>
                     </Form>

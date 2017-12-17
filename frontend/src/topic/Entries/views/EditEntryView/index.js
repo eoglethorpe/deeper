@@ -351,7 +351,8 @@ export default class EditEntryView extends React.PureComponent {
             })
             .build();
 
-        const interceptor = {
+        // Wrap into an actor type for co-ordinator
+        const adapter = {
             start: () => {
                 if (this.choices[entryId].isSaveDisabled) {
                     this.saveRequestCoordinator.notifyComplete(entryId);
@@ -362,7 +363,7 @@ export default class EditEntryView extends React.PureComponent {
             stop: entrySaveRequest.stop,
         };
 
-        return interceptor;
+        return adapter;
     };
 
     createRequestForEntryDelete = (leadId, entry) => {
@@ -483,7 +484,7 @@ export default class EditEntryView extends React.PureComponent {
             entryId,
             data,
             uiState: {
-                stale: false,
+                pristine: false,
                 error: false,
             },
         });
@@ -495,7 +496,7 @@ export default class EditEntryView extends React.PureComponent {
             entryId,
             values,
             uiState: {
-                stale: false,
+                pristine: false,
                 error: false,
             },
         });
@@ -531,6 +532,34 @@ export default class EditEntryView extends React.PureComponent {
         this.saveRequestCoordinator.start();
     }
 
+    calcChoices = () => {
+        const { entries } = this.props;
+        const {
+            entryRests,
+            entryDeleteRests,
+        } = this.state;
+
+        return entries.reduce(
+            (acc, entry) => {
+                const entryId = entryAccessor.getKey(entry);
+                const choice = calcEntryState({
+                    entry,
+                    rest: entryRests[entryId],
+                    deleteRest: entryDeleteRests[entryId],
+                });
+                const isSaveDisabled = (choice !== ENTRY_STATUS.nonPristine);
+                const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
+                acc[entryId] = {
+                    choice,
+                    isSaveDisabled,
+                    isWidgetDisabled,
+                };
+                return acc;
+            },
+            {},
+        );
+    }
+
     render() {
         const {
             analysisFramework,
@@ -540,8 +569,6 @@ export default class EditEntryView extends React.PureComponent {
             match,
         } = this.props;
         const {
-            entryRests,
-            entryDeleteRests,
             pendingSaveAll,
             pendingEntries,
             pendingProjectAndAf,
@@ -558,28 +585,9 @@ export default class EditEntryView extends React.PureComponent {
         this.api.setEntries(entries);
         this.api.setSelectedId(selectedEntryId);
 
-        this.choices = this.props.entries.reduce(
-            (acc, entry) => {
-                const entryId = entryAccessor.getKey(entry);
-                const choice = calcEntryState({
-                    entry,
-                    rest: entryRests[entryId],
-                    deleteRest: entryDeleteRests[entryId],
-                });
-                const isSaveDisabled = (choice !== ENTRY_STATUS.nonstale);
-                const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
-                acc[entryId] = {
-                    choice,
-                    isSaveDisabled,
-                    isWidgetDisabled,
-                };
-                return acc;
-            },
-            {},
-        );
-
+        // calculate all choices
+        this.choices = this.calcChoices();
         const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
-
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
         );

@@ -61,7 +61,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
             formFieldErrors: {},
             formValues: {},
             pending: false,
-            stale: false,
+            pristine: false,
         };
 
         this.elements = [
@@ -131,7 +131,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -159,7 +159,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            stale,
+            pristine,
         } = this.state;
 
         const {
@@ -195,7 +195,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Add
                     </PrimaryButton>
                 </div>

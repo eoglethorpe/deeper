@@ -88,7 +88,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             formValues: { ...afDetails },
             formErrors: [],
             formFieldErrors: {},
-            stale: false,
+            pristine: false,
             pending: false,
 
             redirectTo: undefined,
@@ -209,7 +209,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -217,7 +217,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: false,
+            pristine: false,
         });
     };
 
@@ -228,7 +228,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             formValues: { ...afDetails },
             formErrors: [],
             formFieldErrors: {},
-            stale: false,
+            pristine: false,
             pending: false,
         });
     };
@@ -240,7 +240,7 @@ export default class ProjectAfDetail extends React.PureComponent {
 
         this.afPutRequest = this.createAfPutRequest(values);
         this.afPutRequest.start();
-        this.setState({ stale: false });
+        this.setState({ pristine: false });
     };
 
     handleAfEditClick = () => {
@@ -269,7 +269,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             useConfirmModalShow,
             formErrors,
             formFieldErrors,
-            stale,
+            pristine,
             pending,
             formValues,
 
@@ -356,7 +356,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                         handleFormCancel={this.handleFormCancel}
                         successCallback={this.successCallback}
                         styleName="project-af-form"
-                        stale={stale}
+                        pristine={pristine}
                         pending={pending}
                     />
                     <ImagesSlider

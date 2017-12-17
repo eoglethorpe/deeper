@@ -21,8 +21,12 @@ import {
     addLeadViewFiltersSelector,
 } from '../../../../../common/redux';
 
-import { LEAD_STATUS, LEAD_FILTER_STATUS } from '../utils/constants';
-import { leadAccessor } from '../utils/leadState';
+import {
+    LEAD_FILTER_STATUS,
+    LEAD_STATUS,
+    leadAccessor,
+} from '../../../../../common/entities/lead';
+
 
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';
@@ -38,7 +42,7 @@ const statusMatches = (leadStatus, status) => {
             return leadStatus === LEAD_STATUS.complete;
         case LEAD_FILTER_STATUS.unsaved:
             return (
-                leadStatus === LEAD_STATUS.nonstale ||
+                leadStatus === LEAD_STATUS.nonPristine ||
                 leadStatus === LEAD_STATUS.uploading ||
                 leadStatus === LEAD_STATUS.requesting
             );

@@ -7,11 +7,11 @@ export const ENTRY_STATUS = {
     // Error occured and it cannot be recovered
     invalid: 'invalid',
     // Some changed has occured
-    nonstale: 'nonstale',
+    nonPristine: 'nonPristine',
     // No change has occured and saved in server
     complete: 'complete',
     // Some change has occured
-    stale: 'stale',
+    pristine: 'pristine',
 };
 
 export const DIFF_ACTION = {
@@ -38,7 +38,7 @@ export const entryAccessor = {
 
     getUiState: entry => entry.uiState,
     getError: entry => entry.uiState && entry.uiState.error,
-    getStale: entry => entry.uiState && entry.uiState.stale,
+    getPristine: entry => entry.uiState && entry.uiState.pristine,
 };
 
 const entryReference = {
@@ -52,12 +52,12 @@ const entryReference = {
     },
     uiState: {
         error: false,
-        stale: false,
+        pristine: false,
     },
 };
 
 export const createEntry = ({
-    id, serverId, versionId, values = {}, stale = false, error = false,
+    id, serverId, versionId, values = {}, pristine = false, error = false,
 }) => {
     const settings = {
         data: {
@@ -69,7 +69,7 @@ export const createEntry = ({
             values: { $set: values },
         },
         uiState: {
-            stale: { $set: stale },
+            pristine: { $set: pristine },
             error: { $set: error },
         },
     };
@@ -79,19 +79,19 @@ export const createEntry = ({
 // Get the current state of a entry with rest-request information
 export const calcEntryState = ({ entry, rest, deleteRest }) => {
     const serverId = entryAccessor.getServerId(entry);
-    const stale = entryAccessor.getStale(entry);
+    const pristine = entryAccessor.getPristine(entry);
     const error = entryAccessor.getError(entry);
 
     if ((rest && rest.pending) || (deleteRest && deleteRest.pending)) {
         return ENTRY_STATUS.requesting;
     } else if (error) {
         return ENTRY_STATUS.invalid;
-    } else if (!stale) {
-        return ENTRY_STATUS.nonstale;
+    } else if (!pristine) {
+        return ENTRY_STATUS.nonPristine;
     } else if (serverId) {
         return ENTRY_STATUS.complete;
     }
-    return ENTRY_STATUS.stale;
+    return ENTRY_STATUS.pristine;
 };
 
 const getValuesFromRemoteEntry = ({
@@ -130,7 +130,7 @@ export const calcEntriesDiff = (locals, remotes) => {
                     serverId: remoteServerId,
                     versionId: remoteVersionId,
                     values: remoteValues,
-                    stale: true,
+                    pristine: true,
                     error: false,
                 });
                 acc.push({
@@ -175,11 +175,11 @@ export const calcEntriesDiff = (locals, remotes) => {
                     serverId: localServerId, // here
                     versionId: remoteVersionId,
                     values: remoteValues,
-                    stale: true,
+                    pristine: true,
                     error: false,
                 });
 
-                const localStale = entryAccessor.getStale(localEntry);
+                const localPristine = entryAccessor.getPristine(localEntry);
                 const localError = entryAccessor.getError(localEntry);
                 const localValues = entryAccessor.getValues(localEntry);
                 const newEntryOnSkip = createEntry({
@@ -187,7 +187,7 @@ export const calcEntriesDiff = (locals, remotes) => {
                     serverId: localServerId,
                     versionId: remoteVersionId,
                     values: localValues,
-                    state: localStale,
+                    state: localPristine,
                     error: localError,
                 });
                 arr.push({

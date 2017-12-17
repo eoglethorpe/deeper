@@ -72,34 +72,45 @@ export default class DropboxChooser extends React.Component {
         // make sure api is loaded,
         // called by loadScript after loading is success or failure
         // if the api is not loaded, try to load in retry delay
+        const {
+            retryLimit,
+            retryDelay,
+            onApiLoad,
+        } = this.props;
+
         if (!this.isDropboxReady()) {
-            if (this.retry <= this.props.retryLimit) {
-                this.apiLoadTimeOut = setTimeout(() => {
-                    this.retry += 1;
-                    scriptLoadingStarted = false;
-                    this.loadDropboxApi();
-                }, this.props.retryDelay);
+            if (this.retry <= retryLimit) {
+                this.apiLoadTimeOut = setTimeout(
+                    () => {
+                        this.retry += 1;
+                        scriptLoadingStarted = false;
+                        this.loadDropboxApi();
+                    },
+                    retryDelay,
+                );
             } else {
                 scriptLoadingStarted = false;
             }
-        } else if (this.isDropboxReady && this.props.onApiLoad) {
+        } else if (this.isDropboxReady && onApiLoad) {
             // call func when dropbox is ready to be used
-            this.props.onApiLoad();
+            onApiLoad();
         }
     }
 
     onChoose() {
-        if (!this.isDropboxReady() || this.props.disabled) {
-            return;
-        }
-
         const {
             success,
+            disabled,
             cancel,
             linkType,
             multiselect,
             extensions,
+            onClick,
         } = this.props;
+
+        if (!this.isDropboxReady() || disabled) {
+            return;
+        }
 
         window.Dropbox.choose({
             success,
@@ -109,35 +120,44 @@ export default class DropboxChooser extends React.Component {
             extensions,
         });
 
-        if (this.props.onClick) { this.props.onClick(); }
+        if (onClick) {
+            onClick();
+        }
     }
 
     loadDropboxApi = () => {
+        const { appKey } = this.props;
         if (!this.isDropboxReady() && !scriptLoadingStarted) {
             scriptLoadingStarted = true;
-            loadScript(DROPBOX_SDK_URL, {
-                attrs: {
-                    id: SCRIPT_ID,
-                    'data-app-key': this.props.appKey,
+            loadScript(
+                DROPBOX_SDK_URL,
+                {
+                    attrs: {
+                        id: SCRIPT_ID,
+                        'data-app-key': appKey,
+                    },
                 },
-            }, this.onApiLoad);
+                this.onApiLoad,
+            );
         }
     }
 
     isDropboxReady = () => (!!window.Dropbox)
 
     render() {
+        const { className, disabled, children } = this.props;
         return (
             <TransparentButton
-                className={this.props.className}
+                className={className}
                 styleName="dropbox-btn"
                 onClick={this.onChoose}
-                disabled={this.props.disabled}
+                disabled={disabled}
             >
                 {
-                    this.props.children ?
-                        this.props.children :
-                        <button>Open dropbox chooser</button>
+                    children ||
+                    <button>
+                        Open dropbox chooser
+                    </button>
                 }
             </TransparentButton>
         );

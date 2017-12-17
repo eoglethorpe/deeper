@@ -88,7 +88,7 @@ export default class App extends React.PureComponent {
         console.log('Mounting App');
 
         // If there is no refresh token, no need to get a new access token
-        const { refresh: refreshToken } = this.props.token;
+        const { token: { refresh: refreshToken } } = this.props;
         if (!refreshToken) {
             console.info('There is no previous session');
             this.setState({ pending: false });
@@ -106,12 +106,20 @@ export default class App extends React.PureComponent {
             this.refreshRequest.stop();
         }
 
-        this.props.stopRefresh();
-        this.props.stopSiloTasks();
+        const { stopRefresh, stopSiloTasks } = this.props;
+        stopRefresh();
+        stopSiloTasks();
     }
 
     createRequestForRefresh = () => {
-        const { refresh } = this.props.token;
+        const {
+            token: { refresh },
+            setAccessToken,
+            currentUserProjects,
+            startRefresh,
+            startSiloTasks,
+            logout,
+        } = this.props;
         const refreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
             .params(() => createParamsForTokenRefresh({ refresh }))
@@ -119,24 +127,24 @@ export default class App extends React.PureComponent {
                 try {
                     schema.validate(response, 'tokenRefreshResponse');
                     const { access } = response;
-                    this.props.setAccessToken(access);
+                    setAccessToken(access);
 
                     // NOTE: after setAccessToken, current user is verified
                     // If there is no projects, block the user until it is retrieved
-                    if (this.props.currentUserProjects.length <= 0) {
+                    if (currentUserProjects.length <= 0) {
                         console.info('No projects in cache');
                         // set pending to false after api call is complete
-                        this.props.startRefresh(() => {
+                        startRefresh(() => {
                             this.setState({ pending: false });
                         });
                     } else {
                         // set pending to false irrespective of api call
-                        this.props.startRefresh();
+                        startRefresh();
                         this.setState({ pending: false });
                     }
 
                     // Start the locked silo tasks
-                    this.props.startSiloTasks(() => {
+                    startSiloTasks(() => {
                         console.log('Silo tasks started');
                     });
                 } catch (er) {
@@ -145,7 +153,7 @@ export default class App extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                this.props.logout();
+                logout();
             })
             .fatal((response) => {
                 console.info('FATAL:', response);

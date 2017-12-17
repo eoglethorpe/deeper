@@ -32,12 +32,12 @@ const propTypes = {
     handleFormCancel: PropTypes.func.isRequired,
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,
-    stale: PropTypes.bool,
+    pristine: PropTypes.bool,
 };
 
 const defaultProps = {
     pending: false,
-    stale: false,
+    pristine: false,
     className: '',
 };
 
@@ -82,7 +82,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
             userGroupsOptions,
             handleFormCancel,
             pending,
-            stale,
+            pristine,
             successCallback,
         } = this.props;
 
@@ -101,12 +101,12 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     <DangerButton
                         onClick={handleFormCancel}
                         type="button"
-                        disabled={pending || !stale}
+                        disabled={pending || !pristine}
                     >
                         Revert
                     </DangerButton>
                     <SuccessButton
-                        disabled={pending || !stale}
+                        disabled={pending || !pristine}
                     >
                         Save
                     </SuccessButton>

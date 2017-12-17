@@ -30,7 +30,7 @@ export default class DropboxBuilder {
                 title: response.title,
                 url: response.file,
             },
-            uiState: { stale: false },
+            uiState: { pristine: false },
         });
 
         // FOR UPLAOD

@@ -7,7 +7,7 @@ import {
     Form,
     requiredCondition,
     TextInput,
-} from '../../../../public/components/Input/Form';
+} from '../../../../public/components/Input';
 
 const initialState = {
 };

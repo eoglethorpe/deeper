@@ -32,7 +32,7 @@ export default class GoogleDriveUploadModule {
                 title: response.title,
                 url: response.file,
             },
-            uiState: { stale: false },
+            uiState: { pristine: false },
         });
 
         // FOR UPLAOD

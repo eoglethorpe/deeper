@@ -65,7 +65,7 @@ export default class UserGroupEdit extends React.PureComponent {
             formFieldErrors: {},
             formValues: { title: props.userGroup.title },
             pending: false,
-            stale: false,
+            pristine: false,
         };
 
         this.elements = [
@@ -135,7 +135,7 @@ export default class UserGroupEdit extends React.PureComponent {
             formValues: { ...this.state.formValues, ...values },
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
-            stale: true,
+            pristine: true,
         });
     };
 
@@ -169,7 +169,7 @@ export default class UserGroupEdit extends React.PureComponent {
             formErrors = [],
             formFieldErrors,
             pending,
-            stale,
+            pristine,
         } = this.state;
 
         return (
@@ -199,7 +199,7 @@ export default class UserGroupEdit extends React.PureComponent {
                     >
                         Cancel
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !stale} >
+                    <PrimaryButton disabled={pending || !pristine} >
                         Save
                     </PrimaryButton>
                 </div>
