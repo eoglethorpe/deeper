@@ -22,6 +22,7 @@ describe('<AddLeadForm />', () => {
                 onChange={() => {}}
                 onFailure={() => {}}
                 isFormDisabled
+                isFormLoading={false}
                 isBulkActionDisabled
                 onApplyAllClick={() => {}}
                 onApplyAllBelowClick={() => {}}

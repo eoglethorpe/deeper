@@ -290,7 +290,6 @@ export default class LeadAdd extends React.PureComponent {
                 const isSaveDisabled = (choice !== LEAD_STATUS.nonPristine);
                 const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
                 const isFormLoading = (choice === LEAD_STATUS.requesting);
-                console.log(choice);
                 const isFormDisabled = (
                     choice === LEAD_STATUS.requesting ||
                     choice === LEAD_STATUS.warning

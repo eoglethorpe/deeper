@@ -39,6 +39,7 @@ const propTypes = {
     addLeadViewCopyAll: PropTypes.func.isRequired,
 
     isFormDisabled: PropTypes.bool.isRequired,
+    isFormLoading: PropTypes.bool.isRequired,
     isSaveDisabled: PropTypes.bool.isRequired,
     isBulkActionDisabled: PropTypes.bool.isRequired,
 };
