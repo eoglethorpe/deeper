@@ -1,4 +1,5 @@
 import update from '../../../../public/utils/immutable-update';
+import { entryAccessor } from '../../../../common/entities/entry';
 
 export default class API {
     constructor(
@@ -43,7 +44,10 @@ export default class API {
             const settings = {
                 excerpt: { $set: excerpt },
             };
-            this.changeEntryValues(entry.id, update(entry.widget.values, settings));
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(entryAccessor.getValues(entry), settings),
+            );
         }
     }
 
@@ -53,14 +57,17 @@ export default class API {
             const settings = {
                 image: { $set: image },
             };
-            this.changeEntryValues(entry.id, update(entry.widget.values, settings));
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(entryAccessor.getValues(entry), settings),
+            );
         }
     }
 
     setEntryAttribute(widgetId, data, id = undefined) {
         const entry = this.getEntry(id);
         if (entry) {
-            const values = entry.widget.values;
+            const values = entryAccessor.getValues(entry);
             let index = -1;
 
             if (!values.attributes) {
@@ -89,39 +96,44 @@ export default class API {
                 };
             }
 
-            this.changeEntryValues(entry.data.id, update(values, settings));
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(values, settings),
+            );
         }
     }
 
     getEntryExcerpt(id = undefined) {
         const entry = this.getEntry(id);
-        return entry && entry.widget.values.excerpt;
+        return entry && entryAccessor.getValues(entry).excerpt;
     }
 
     getEntryImage(id = undefined) {
         const entry = this.getEntry(id);
-        return entry && entry.widget.values.image;
+        return entry && entryAccessor.getValues(entry).image;
     }
 
     getEntryExcerptOrImage(id = undefined) {
         const entry = this.getEntry(id);
         return entry && (
-            entry.widget.values.excerpt || entry.widget.values.image
+            entryAccessor.getValues(entry).excerpt || entryAccessor.getValues(entry).image
         );
     }
 
     getEntryAttribute(widgetId, id = undefined) {
         const entry = this.getEntry(id);
+        const values = entry && entryAccessor.getValues(entry);
+
         const attribute = (
-            entry &&
-            entry.widget.values.attributes &&
-            entry.widget.values.attributes.find(attr => attr.widget === widgetId)
+            values &&
+            values.attributes &&
+            values.attributes.find(attr => attr.widget === widgetId)
         );
         return attribute && attribute.data;
     }
 
     getEntryForExcerpt(excerpt) {
-        return this.entries.find(entry => entry.widget.values.excerpt === excerpt);
+        return this.entries.find(entry => entryAccessor.getValues(entry).excerpt === excerpt);
     }
 
     selectEntryAndSetAttribute(id, widgetId, data) {
