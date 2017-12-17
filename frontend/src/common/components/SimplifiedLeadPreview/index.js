@@ -62,6 +62,9 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     }
 
     componentWillUnmount() {
+        if (this.previewRequestTimeout) {
+            clearTimeout(this.previewRequestTimeout);
+        }
         this.destroy();
     }
 
@@ -130,7 +133,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         this.triggerRequest.start();
                     } else {
                         // Otherwise try a few more times
-                        setTimeout(() => {
+                        this.previewRequestTimeout = setTimeout(() => {
                             this.tryPreviewRequest();
                         }, 500);
                     }
@@ -148,12 +151,12 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         this.previewRequest.start();
     }
 
-    tryPreviewRequest = () => {
+    tryPreviewRequest = (maxCount = 20) => {
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }
 
-        if (this.previewRequestCount === 20) {
+        if (this.previewRequestCount === maxCount) {
             this.setState({
                 pending: false,
                 error: undefined,
@@ -225,17 +228,49 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         return request;
     }
 
-    render() {
+    renderContent() {
         const {
-            className,
             highlightModifier,
         } = this.props;
 
         const {
-            pending,
             error,
             extractedText,
             images, // eslint-disable-line
+        } = this.state;
+
+        if (error) {
+            return (
+                <div styleName="message">
+                    Preview Error
+                </div>
+            );
+        }
+
+        if (extractedText) {
+            return (
+                <HighlightedText
+                    text={extractedText}
+                    highlights={this.getHighlights()}
+                    modifier={highlightModifier}
+                />
+            );
+        }
+
+        return (
+            <div styleName="message">
+                Preview Not Available
+            </div>
+        );
+    }
+
+    render() {
+        const {
+            className,
+        } = this.props;
+
+        const {
+            pending,
         } = this.state;
 
         return (
@@ -246,24 +281,9 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                 {
                     (pending && (
                         <LoadingAnimation styleName="message" />
-                    )) ||
-                        (error && (
-                            <div styleName="message">
-                                Preview Error
-                            </div>
-                        )) ||
-                        (extractedText && (
-                            <HighlightedText
-                                text={extractedText}
-                                highlights={this.getHighlights()}
-                                modifier={highlightModifier}
-                            />
-                        )) ||
-                        (
-                            <div styleName="message">
-                                Preview Not Available
-                            </div>
-                        )
+                    )) || (
+                        this.renderContent()
+                    )
                 }
             </div>
         );
