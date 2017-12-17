@@ -68,11 +68,11 @@ export default class List extends React.PureComponent {
 
     update(analysisFramework) {
         this.widgets = widgetStore
-            .filter(widget => widget.analysisFramework.listComponent)
+            .filter(widget => widget.tagging.listComponent)
             .map(widget => ({
                 id: widget.id,
                 title: widget.title,
-                listComponent: widget.analysisFramework.listComponent,
+                listComponent: widget.tagging.listComponent,
             }));
 
         if (analysisFramework.widgets) {

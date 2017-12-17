@@ -8,12 +8,14 @@
 
     .radio-input {
         flex-shrink: 0;
+        padding: $spacing-small;
     }
 
     .textarea {
         display: flex;
-        flex-grow: 1;
         flex-direction: column;
+        flex-grow: 1;
+        padding: $spacing-small;
 
         :global .input {
             flex-grow: 1;

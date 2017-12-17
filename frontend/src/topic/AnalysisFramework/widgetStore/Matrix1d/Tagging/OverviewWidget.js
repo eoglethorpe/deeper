@@ -10,8 +10,7 @@ import {
 
 import update from '../../../../../public/utils/immutable-update';
 
-import MatrixRow from '../common/MatrixRow';
-import { MODE_TAG } from '../common/constants';
+import MatrixRow from './MatrixRow';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -51,7 +50,6 @@ export default class Matrix1dOverview extends React.PureComponent {
             key={key}
             title={data.title}
             cells={data.cells}
-            mode={MODE_TAG}
             onCellClick={cellKey => this.handleCellClick(key, cellKey)}
             onCellDrop={(cellKey, text) => this.handleCellDrop(key, cellKey, text)}
             selectedCells={this.props.attribute ? this.props.attribute[key] : {}}
