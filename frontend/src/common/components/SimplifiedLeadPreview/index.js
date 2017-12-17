@@ -4,6 +4,7 @@ import React from 'react';
 
 import styles from './styles.scss';
 
+import HighlightedText from '../HighlightedText';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     createParamsForGenericGet,
@@ -20,10 +21,14 @@ import {
 const propTypes = {
     className: PropTypes.string,
     leadId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    highlights: PropTypes.arrayOf(PropTypes.object),
+    highlightModifier: PropTypes.func,
 };
 const defaultProps = {
     className: '',
     leadId: undefined,
+    highlights: [],
+    highlightModifier: text => text,
 };
 
 
@@ -58,6 +63,17 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
     componentWillUnmount() {
         this.destroy();
+    }
+
+    getHighlights() {
+        const { highlights } = this.props;
+        const { extractedText } = this.state;
+
+        return highlights.map(h => ({
+            start: extractedText.search(h.text),
+            length: h.text.length,
+            item: h,
+        }));
     }
 
     destroy() {
@@ -209,11 +225,10 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         return request;
     }
 
-    processText = text => text;
-
     render() {
         const {
             className,
+            highlightModifier,
         } = this.props;
 
         const {
@@ -238,9 +253,11 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                             </div>
                         )) ||
                         (extractedText && (
-                            <pre>
-                                { this.processText(extractedText) }
-                            </pre>
+                            <HighlightedText
+                                text={extractedText}
+                                highlights={this.getHighlights()}
+                                modifier={highlightModifier}
+                            />
                         )) ||
                         (
                             <div styleName="message">

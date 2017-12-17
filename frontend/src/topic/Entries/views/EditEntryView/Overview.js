@@ -168,6 +168,12 @@ export default class Overview extends React.PureComponent {
 
     calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
 
+    highlightSimplifiedExcerpt = (highlight, text) => (
+        <span style={{ backgroundColor: highlight.color }}>
+            {text}
+        </span>
+    );
+
     renderEntriesList = (key, entry) => {
         const { selectedEntryId } = this.props;
 
@@ -266,6 +272,8 @@ export default class Overview extends React.PureComponent {
     renderSimplifiedLeadPreview = lead => (
         <SimplifiedLeadPreview
             leadId={lead.id}
+            highlights={this.props.api.getEntryHighlights()}
+            highlightModifier={this.highlightSimplifiedExcerpt}
         />
     )
 

@@ -1,6 +1,8 @@
 import update from '../../../../public/utils/immutable-update';
 import { entryAccessor } from '../../../../common/entities/entry';
 
+const DEFAULT_HIGHLIGHT_COLOR = '#e0e0e0';
+
 export default class API {
     constructor(
         addEntry,
@@ -117,6 +119,27 @@ export default class API {
         }
     }
 
+    setEntryHighlight(color, id = undefined) {
+        const entry = this.getEntry(id);
+        if (entry) {
+            const settings = {
+                color: { $set: color },
+            };
+
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(entryAccessor.getValues(entry), settings),
+            );
+        }
+    }
+
+    selectEntryAndSetAttribute(id, widgetId, data) {
+        this.selectEntry(id);
+        if (widgetId && data) {
+            this.setEntryAttribute(widgetId, data, id);
+        }
+    }
+
     getEntryType(id = undefined) {
         const entry = this.getEntry(id);
         return entryAccessor.getValues(entry).entryType;
@@ -155,11 +178,13 @@ export default class API {
         return this.entries.find(entry => entryAccessor.getValues(entry).excerpt === excerpt);
     }
 
-    selectEntryAndSetAttribute(id, widgetId, data) {
-        this.selectEntry(id);
-        if (widgetId && data) {
-            this.setEntryAttribute(widgetId, data, id);
-        }
+    getEntryHighlights() {
+        return this.entries
+            .filter(entry => entryAccessor.getValues(entry).entryType === 'excerpt')
+            .map(entry => ({
+                text: entryAccessor.getValues(entry).excerpt,
+                color: entryAccessor.getValues(entry).color || DEFAULT_HIGHLIGHT_COLOR,
+            })).filter(h => h.text);
     }
 
     addExcerpt(excerpt, widgetId = undefined, data = undefined) {
