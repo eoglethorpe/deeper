@@ -142,7 +142,7 @@ export default class API {
 
     getEntryType(id = undefined) {
         const entry = this.getEntry(id);
-        return entryAccessor.getValues(entry).entryType;
+        return entry && entryAccessor.getValues(entry).entryType;
     }
 
     getEntryExcerpt(id = undefined) {

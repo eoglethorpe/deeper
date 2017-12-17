@@ -70,7 +70,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const { extractedText } = this.state;
 
         return highlights.map(h => ({
-            start: extractedText.search(h.text),
+            start: extractedText.indexOf(h.text),
             length: h.text.length,
             item: h,
         }));
