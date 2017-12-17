@@ -6,6 +6,11 @@
     background-color: $color-background;
     padding: $spacing-small $spacing-medium;
     user-select: none;
+
+    &.active {
+        background-color: $color-accent;
+        color: $color-text-on-accent;
+    }
 }
 
 .matrix-row {
@@ -30,7 +35,8 @@
     }
 }
 
-.tagging-matrix-1d {
+.tagging-matrix-1d,
+.framework-matrix-1d {
     width: 100%;
 }
 

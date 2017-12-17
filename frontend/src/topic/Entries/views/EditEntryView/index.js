@@ -31,6 +31,7 @@ import {
     addEntryAction,
     removeEntryAction,
     markForDeleteEntryAction,
+    setActiveEntryAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -60,6 +61,7 @@ import {
 } from '../../../../common/entities/entry';
 
 import styles from './styles.scss';
+import API from './API';
 import Overview from './Overview';
 import List from './List';
 
@@ -80,6 +82,7 @@ const propTypes = {
     changeEntry: PropTypes.func.isRequired,
     diffEntries: PropTypes.func.isRequired,
     markForDeleteEntry: PropTypes.func.isRequired,
+    setActiveEntry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -106,6 +109,7 @@ const mapDispatchToProps = dispatch => ({
     addEntry: params => dispatch(addEntryAction(params)),
     removeEntry: params => dispatch(removeEntryAction(params)),
     markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
+    setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
 
@@ -145,6 +149,13 @@ export default class EditEntryView extends React.PureComponent {
                 this.setState({ pendingSaveAll: false });
             })
             .build();
+
+        this.api = new API(
+            this.handleAddEntry,
+            this.handleSelectEntry,
+            this.handleChangeEntryData,
+            this.handleChangeEntryValues,
+        );
     }
 
     componentWillMount() {
@@ -401,7 +412,7 @@ export default class EditEntryView extends React.PureComponent {
         return entriesRequest;
     }
 
-    handleAddEntry = () => {
+    handleAddEntry = (excerpt = undefined, image = undefined, attributes = []) => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
@@ -411,15 +422,45 @@ export default class EditEntryView extends React.PureComponent {
                 id: entryId,
                 serverId: undefined,
                 values: {
-                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
-                    image: undefined,
+                    entryType: 'excerpt',
+                    excerpt: excerpt || (!image && `Excerpt ${entryId.toUpperCase()}`),
+                    image,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
-                    attribues: [],
+                    attributes,
                     exportData: [],
                     filterData: [],
                 },
             },
+        });
+    }
+
+    handleAddEntrySimple = () => {
+        const entryId = randomString();
+        const { leadId, analysisFramework } = this.props;
+
+        this.props.addEntry({
+            leadId,
+            entry: {
+                id: entryId,
+                serverId: undefined,
+                values: {
+                    entryType: 'excerpt',
+                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
+                    lead: leadId,
+                    analysisFramework: analysisFramework.id,
+                    attributes: [],
+                    exportData: [],
+                    filterData: [],
+                },
+            },
+        });
+    }
+
+    handleSelectEntry = (entryId) => {
+        this.props.setActiveEntry({
+            leadId: this.props.leadId,
+            entryId,
         });
     }
 
@@ -433,6 +474,30 @@ export default class EditEntryView extends React.PureComponent {
             leadId,
             entryId: selectedEntryId,
             mark: markOrUnmark,
+        });
+    }
+
+    handleChangeEntryData = (entryId, data) => {
+        this.props.changeEntry({
+            leadId: this.props.leadId,
+            entryId,
+            data,
+            uiState: {
+                stale: false,
+                error: false,
+            },
+        });
+    }
+
+    handleChangeEntryValues = (entryId, values) => {
+        this.props.changeEntry({
+            leadId: this.props.leadId,
+            entryId,
+            values,
+            uiState: {
+                stale: false,
+                error: false,
+            },
         });
     }
 
@@ -490,6 +555,9 @@ export default class EditEntryView extends React.PureComponent {
             );
         }
 
+        this.api.setEntries(entries);
+        this.api.setSelectedId(selectedEntryId);
+
         this.choices = this.props.entries.reduce(
             (acc, entry) => {
                 const entryId = entryAccessor.getKey(entry);
@@ -517,6 +585,7 @@ export default class EditEntryView extends React.PureComponent {
         );
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
+
         return (
             <HashRouter>
                 <div styleName="edit-entry">
@@ -530,13 +599,14 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <Overview
                                 {...props}
+                                api={this.api}
                                 match={match}
                                 leadId={leadId}
                                 selectedEntryId={selectedEntryId}
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                onEntryAdd={this.handleAddEntry}
+                                onEntryAdd={this.handleAddEntrySimple}
                                 onEntryDelete={this.handleDeleteEntry}
 
                                 widgetDisabled={isWidgetDisabled}
@@ -551,6 +621,7 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <List
                                 {...props}
+                                api={this.api}
                                 leadId={leadId}
                                 entries={entries}
                                 analysisFramework={analysisFramework}

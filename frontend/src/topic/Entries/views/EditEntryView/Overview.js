@@ -38,6 +38,8 @@ import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
 import styles from './styles.scss';
 
 const propTypes = {
+    api: PropTypes.object.isRequired, // eslint-disable-line
+
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
@@ -95,25 +97,25 @@ export default class Overview extends React.PureComponent {
     }
 
     getGridItems = () => this.items.map(item => ({
+        id: item.id,
         key: item.key,
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.overviewGridLayout,
         data: item.properties.data,
+        attribute: this.props.api.getEntryAttribute(item.id),
     }))
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
         return (
             <Component
+                id={item.id}
+                api={this.props.api}
+                attribute={item.attribute}
                 data={item.data}
-                onChange={(data) => { this.handleWidgetChange(item.key, data); }}
             />
         );
-    }
-
-    handleWidgetChange = (key, data) => {
-        console.log(key, data);
     }
 
     updateItems(analysisFramework) {

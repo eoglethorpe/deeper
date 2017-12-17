@@ -32,13 +32,20 @@ import {
 const propTypes = {
     title: PropTypes.string,
     cells: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
+    onCellClick: PropTypes.func,
+    onCellDrop: PropTypes.func,
     mode: PropTypes.string,
+    selectedCells: PropTypes.objectOf(PropTypes.bool),
 };
 
 const defaultProps = {
     title: undefined,
     mode: MODE_VIEW,
+    onChange: undefined,
+    onCellClick: undefined,
+    onCellDrop: undefined,
+    selectedCells: {},
 };
 
 
@@ -84,15 +91,22 @@ export default class MatrixRow extends React.PureComponent {
 
     getCell = (key, data) => (
         <MatrixCell
-            onDrop={(text) => { this.handleCellDrop(key, text); }}
             key={key}
+            mode={this.props.mode}
+            onClick={() => this.handleCellClick(key)}
+            onDrop={(text) => { this.handleCellDrop(key, text); }}
+            active={this.props.selectedCells[key]}
         >
             { data.value }
         </MatrixCell>
     )
 
+    handleCellClick = (key) => {
+        this.props.onCellClick(key);
+    }
+
     handleCellDrop = (key, text) => {
-        console.log(key, text);
+        this.props.onCellDrop(key, text);
     }
 
     handleCellRemoveButtonClick = (key) => {
@@ -146,7 +160,7 @@ export default class MatrixRow extends React.PureComponent {
 
     addCell = () => {
         const newCell = {
-            key: randomString(),
+            key: randomString(16).toLowerCase(),
             value: '',
         };
 
