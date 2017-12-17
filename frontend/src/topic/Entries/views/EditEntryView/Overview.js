@@ -278,15 +278,15 @@ export default class Overview extends React.PureComponent {
             <div styleName="tabs-header-container">
                 <TabLink
                     styleName="tab-header"
-                    to="original-preview"
-                >
-                    Original
-                </TabLink>
-                <TabLink
-                    styleName="tab-header"
                     to="simplified-preview"
                 >
                     Simplified
+                </TabLink>
+                <TabLink
+                    styleName="tab-header"
+                    to="original-preview"
+                >
+                    Original
                 </TabLink>
                 {/* Essential for border bottom, for more info contact AdityaKhatri */}
                 <div styleName="empty-tab" />

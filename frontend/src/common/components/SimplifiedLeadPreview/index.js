@@ -209,7 +209,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         return request;
     }
 
-    processText = text => text.replace(/\n\s*\n+/gi, '\n\n');
+    processText = text => text;
 
     render() {
         const {
