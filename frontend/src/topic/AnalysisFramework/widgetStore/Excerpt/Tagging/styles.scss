@@ -1,5 +1,18 @@
 @import '../../../../../stylesheets/base';
 
+%textarea {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: $spacing-small;
+    width: 100%;
+
+    :global .input {
+        flex-grow: 1;
+        resize: none;
+    }
+}
+
 .excerpt-overview {
     display: flex;
     flex-direction: column;
@@ -13,15 +26,7 @@
     }
 
     .textarea {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: $spacing-small;
-
-        :global .input {
-            flex-grow: 1;
-            resize: none;
-        }
+        @extend %textarea;
     }
 
     .image {
@@ -34,7 +39,12 @@
 
 .excerpt-list {
     display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     align-items: center;
     justify-content: center;
-    height: 100%;
+
+    .textarea {
+        @extend %textarea;
+    }
 }
