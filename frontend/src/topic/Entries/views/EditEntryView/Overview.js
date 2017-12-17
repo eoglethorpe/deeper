@@ -29,11 +29,11 @@ import {
     editEntryViewCurrentLeadSelector,
 } from '../../../../common/redux';
 
-import { LEAD_TYPE } from '../../../Leads/views/LeadAdd/utils/constants.js';
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import WebsiteViewer from '../../../../common/components/WebsiteViewer';
 import DeepGallery from '../../../../common/components/DeepGallery';
 
+import { LEAD_TYPE } from '../../../../common/entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
 import styles from './styles.scss';
 

@@ -4,9 +4,17 @@
     color: $color-accent;
 }
 
-.loading-animation {
-    display: inline-block;
-    animation: spin 1s linear infinite;
+.upload-filename {
+
+    .label {
+        margin-right: $spacing-small;
+    }
+
+    .loading-animation {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
 }
 
 .pending-container {

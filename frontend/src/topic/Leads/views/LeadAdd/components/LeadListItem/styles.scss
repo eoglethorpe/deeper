@@ -43,7 +43,7 @@
     .pending,
     .error,
     .complete,
-    .stale {
+    .pristine {
         flex-shrink: 0;
         margin: 0 $spacing-small;
         padding: 0;

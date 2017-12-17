@@ -170,6 +170,7 @@ export default class LeadFormItem extends React.PureComponent {
             leadOptions,
             active,
             isFormDisabled,
+            isFormLoading,
             isBulkActionDisabled,
         } = this.props;
 
@@ -184,6 +185,7 @@ export default class LeadFormItem extends React.PureComponent {
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
                     isFormDisabled={isFormDisabled}
+                    isFormLoading={isFormLoading}
                     isBulkActionDisabled={isBulkActionDisabled}
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}

@@ -43,6 +43,7 @@ const propTypes = {
     onChange: PropTypes.func.isRequired,
 
     isFormDisabled: PropTypes.bool.isRequired,
+    isFormLoading: PropTypes.bool.isRequired,
     isBulkActionDisabled: PropTypes.bool.isRequired,
     onApplyAllClick: PropTypes.func.isRequired,
     onApplyAllBelowClick: PropTypes.func.isRequired,
@@ -151,6 +152,7 @@ export default class LeadForm extends React.PureComponent {
             onFailure,
             onSuccess,
             isFormDisabled,
+            isFormLoading,
             isBulkActionDisabled,
         } = this.props;
 
@@ -158,6 +160,8 @@ export default class LeadForm extends React.PureComponent {
         const type = leadAccessor.getType(lead);
         const errors = leadAccessor.getErrors(lead);
         const fieldErrors = leadAccessor.getFieldErrors(lead);
+
+        const isApplyAllDisabled = isFormDisabled || isBulkActionDisabled;
 
         return (
             <Form
@@ -171,7 +175,7 @@ export default class LeadForm extends React.PureComponent {
                 validations={this.validations}
             >
                 {
-                    isFormDisabled && <LoadingAnimation />
+                    isFormLoading && <LoadingAnimation />
                 }
                 <header
                     styleName="header"
@@ -207,11 +211,12 @@ export default class LeadForm extends React.PureComponent {
                     label="Title"
                     placeholder="Lead 12:21:00 PM"
                     value={values.title}
+                    disabled={isFormDisabled}
                 />
 
                 <ApplyAll
                     styleName="source"
-                    disabled={isFormDisabled || isBulkActionDisabled}
+                    disabled={isApplyAllDisabled}
                     identiferName="source"
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
@@ -222,11 +227,12 @@ export default class LeadForm extends React.PureComponent {
                         label="Source"
                         placeholder="Newspaper"
                         value={values.source}
+                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
                 <ApplyAll
                     styleName="confidentiality"
-                    disabled={isFormDisabled || isBulkActionDisabled}
+                    disabled={isApplyAllDisabled}
                     identiferName="confidentiality"
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
@@ -242,12 +248,13 @@ export default class LeadForm extends React.PureComponent {
                         showHintAndError
                         showLabel
                         value={values.confidentiality}
+                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
 
                 <ApplyAll
                     styleName="user"
-                    disabled={isFormDisabled || isBulkActionDisabled}
+                    disabled={isApplyAllDisabled}
                     identiferName="assignee"
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
@@ -264,12 +271,13 @@ export default class LeadForm extends React.PureComponent {
                         showHintAndError
                         showLabel
                         value={values.assignee}
+                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
 
                 <ApplyAll
                     styleName="date"
-                    disabled={isFormDisabled || isBulkActionDisabled}
+                    disabled={isApplyAllDisabled}
                     identiferName="publishedOn"
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
@@ -280,6 +288,7 @@ export default class LeadForm extends React.PureComponent {
                         label="Published on"
                         placeholder="12/12/2012"
                         value={values.publishedOn}
+                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
                 {
@@ -292,6 +301,7 @@ export default class LeadForm extends React.PureComponent {
                             placeholder="https://deeper.togglecorp.com"
                             styleName="url"
                             value={values.url}
+                            disabled={isFormDisabled}
                         />,
                         <TextInput
                             error={fieldErrors.website}
@@ -301,6 +311,7 @@ export default class LeadForm extends React.PureComponent {
                             placeholder="togglecorp.com"
                             styleName="website"
                             value={values.website}
+                            disabled={isFormDisabled}
                         />,
                     ]
                 }
@@ -314,19 +325,21 @@ export default class LeadForm extends React.PureComponent {
                             rows="3"
                             styleName="text"
                             value={values.text}
+                            disabled={isFormDisabled}
                         />
                 }
                 {
                     // one of drive, dropbox, or file
                     ATTACHMENT_TYPES.indexOf(type) !== -1 && ([
-                        <p
+                        <div
                             key="title"
                             styleName="file-title"
                         >
-
-                            {'Attachment File: '}
-                            <DeepGallery onlyFileName galleryId={values.attachment} />
-                        </p>,
+                            <DeepGallery
+                                onlyFileName
+                                galleryId={values.attachment}
+                            />
+                        </div>,
                         <HiddenInput
                             formname="attachment"
                             key="input"

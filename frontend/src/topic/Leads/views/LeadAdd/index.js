@@ -289,8 +289,19 @@ export default class LeadAdd extends React.PureComponent {
                 });
                 const isSaveDisabled = (choice !== LEAD_STATUS.nonPristine);
                 const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
-                const isFormDisabled = (choice === LEAD_STATUS.requesting);
-                acc[leadId] = { choice, isSaveDisabled, isFormDisabled, isRemoveDisabled };
+                const isFormLoading = (choice === LEAD_STATUS.requesting);
+                console.log(choice);
+                const isFormDisabled = (
+                    choice === LEAD_STATUS.requesting ||
+                    choice === LEAD_STATUS.warning
+                );
+                acc[leadId] = {
+                    choice,
+                    isSaveDisabled,
+                    isFormDisabled,
+                    isFormLoading,
+                    isRemoveDisabled,
+                };
                 return acc;
             },
             {},
@@ -301,6 +312,7 @@ export default class LeadAdd extends React.PureComponent {
         const {
             isSaveDisabled,
             isFormDisabled,
+            isFormLoading,
         } = this.choices[key] || {};
         const {
             activeLeadId,
@@ -317,6 +329,7 @@ export default class LeadAdd extends React.PureComponent {
                 active={key === activeLeadId}
                 lead={lead}
                 isFormDisabled={isFormDisabled}
+                isFormLoading={isFormLoading}
                 isSaveDisabled={isSaveDisabled}
                 isBulkActionDisabled={pendingSubmitAll}
                 leadOptions={leadOptions}
