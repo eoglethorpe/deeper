@@ -21,6 +21,9 @@ import {
     LEAD_TYPE,
     leadAccessor,
 } from '../../../../../common/entities/lead';
+import {
+    sources,
+} from '../../../../../common/constants';
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -141,7 +144,7 @@ export default class LeadFormItem extends React.PureComponent {
             return (
                 <div className={styles['lead-preview']} >
                     <div styleName="preview-text">
-                        <h1>Lead Preview</h1>
+                        <h1>{sources.sourcePreview}</h1>
                     </div>
                 </div>
             );

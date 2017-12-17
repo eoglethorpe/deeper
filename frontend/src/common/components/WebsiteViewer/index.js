@@ -4,7 +4,10 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-import { iconNames } from '../../../common/constants';
+import {
+    iconNames,
+    sources,
+} from '../../../common/constants';
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
 
@@ -142,7 +145,7 @@ export default class DeepGallery extends React.PureComponent {
                         className={iconNames.loading}
                         styleName="loading-animation"
                     />
-                    <span styleName="waiting-text">Gathering Website Information to Preview</span>
+                    <span styleName="waiting-text">{sources.gatheringWebsiteInfoLabel}</span>
                 </div>
             );
         }
@@ -173,7 +176,7 @@ export default class DeepGallery extends React.PureComponent {
                         !invalidUrl ?
                             <div styleName="error-website-msg">
                                 <span>
-                                Oops!! This website prevents the preview. Please open in a new tab
+                                    {sources.cannotPreviewUrl}
                                 </span>
                                 <a
                                     styleName="url"
@@ -185,7 +188,7 @@ export default class DeepGallery extends React.PureComponent {
                             </div>
                             :
                             <span styleName="error-website-msg">
-                                Invalid Url
+                                {sources.invalidUrl}
                             </span>
                     }
                 </div>

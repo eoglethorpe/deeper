@@ -70,6 +70,10 @@ const sources = {
     textareaPlaceholderLabel: string[45],
     attachmentLabel: string[46],
 
+    sourcePreview: string[48],
+
+    gatheringWebsiteInfoLabel: string[49],
+
 };
 
 export default sources;

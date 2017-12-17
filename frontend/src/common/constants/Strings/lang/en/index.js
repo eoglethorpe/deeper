@@ -1,4 +1,7 @@
 const string = {
+
+    // IMPORTANT: Before adding a new string, remember to search for existing duplicate string
+
     1: 'Owner',
     2: 'Date Created',
     3: 'Date Published',
@@ -46,6 +49,8 @@ const string = {
     45: 'Enter text description here',
     46: 'Attachment:',
     47: 'Clear Similar Filter',
+    48: 'Source Preview',
+    49: 'Gathering Website Information to Preview',
 };
 
 export default string;
