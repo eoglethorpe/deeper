@@ -24,27 +24,15 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
-import {
-    MODE_EDIT,
-    MODE_VIEW,
-} from './constants';
-
 const propTypes = {
     title: PropTypes.string,
     cells: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     onChange: PropTypes.func,
-    onCellClick: PropTypes.func,
-    onCellDrop: PropTypes.func,
-    mode: PropTypes.string,
-    selectedCells: PropTypes.objectOf(PropTypes.bool),
 };
 
 const defaultProps = {
     title: undefined,
-    mode: MODE_VIEW,
     onChange: undefined,
-    onCellClick: undefined,
-    onCellDrop: undefined,
     selectedCells: {},
 };
 
@@ -92,22 +80,10 @@ export default class MatrixRow extends React.PureComponent {
     getCell = (key, data) => (
         <MatrixCell
             key={key}
-            mode={this.props.mode}
-            onClick={() => this.handleCellClick(key)}
-            onDrop={(text) => { this.handleCellDrop(key, text); }}
-            active={this.props.selectedCells[key]}
         >
             { data.value }
         </MatrixCell>
     )
-
-    handleCellClick = (key) => {
-        this.props.onCellClick(key);
-    }
-
-    handleCellDrop = (key, text) => {
-        this.props.onCellDrop(key, text);
-    }
 
     handleCellRemoveButtonClick = (key) => {
         const newCells = [...this.state.cells];
@@ -178,10 +154,6 @@ export default class MatrixRow extends React.PureComponent {
             showEditModal,
         } = this.state;
 
-        const {
-            mode,
-        } = this.props;
-
         return (
             <div
                 styleName="matrix-row"
@@ -195,58 +167,54 @@ export default class MatrixRow extends React.PureComponent {
                     keyExtractor={MatrixRow.cellKeyExtractor}
                     modifier={this.getCell}
                 />
-                {
-                    mode === MODE_EDIT && ([
-                        <div
-                            key="action-buttons"
-                            styleName="action-buttons"
-                        >
-                            <TransparentButton
-                                onClick={this.handleEditButtonClick}
+                <div
+                    key="action-buttons"
+                    styleName="action-buttons"
+                >
+                    <TransparentButton
+                        onClick={this.handleEditButtonClick}
+                    >
+                        <span className={iconNames.edit} />
+                    </TransparentButton>
+                </div>
+                <Modal
+                    key="modal"
+                    onMouseDown={this.handleModalMouseDown}
+                    styleName="edit-cell-modal"
+                    show={showEditModal}
+                    onClose={this.handleEditModalClose}
+                >
+                    <ModalHeader
+                        title="Add / edit cell"
+                        rightComponent={
+                            <TransparentPrimaryButton
+                                onClick={this.handleAddCellButtonClick}
                             >
-                                <span className={iconNames.edit} />
-                            </TransparentButton>
-                        </div>,
-                        <Modal
-                            key="modal"
-                            onMouseDown={this.handleModalMouseDown}
-                            styleName="edit-cell-modal"
-                            show={showEditModal}
-                            onClose={this.handleEditModalClose}
+                                Add cell
+                            </TransparentPrimaryButton>
+                        }
+                    />
+                    <ModalBody>
+                        <ListView
+                            data={cells}
+                            className={styles['cell-list']}
+                            keyExtractor={MatrixRow.cellKeyExtractor}
+                            modifier={this.getEditCell}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            onClick={this.handleModalCancelButtonClick}
                         >
-                            <ModalHeader
-                                title="Add / edit cell"
-                                rightComponent={
-                                    <TransparentPrimaryButton
-                                        onClick={this.handleAddCellButtonClick}
-                                    >
-                                        Add cell
-                                    </TransparentPrimaryButton>
-                                }
-                            />
-                            <ModalBody>
-                                <ListView
-                                    data={cells}
-                                    className={styles['cell-list']}
-                                    keyExtractor={MatrixRow.cellKeyExtractor}
-                                    modifier={this.getEditCell}
-                                />
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    onClick={this.handleModalCancelButtonClick}
-                                >
-                                    Cancel
-                                </Button>
-                                <PrimaryButton
-                                    onClick={this.handleModalSaveButtonClick}
-                                >
-                                    Save
-                                </PrimaryButton>
-                            </ModalFooter>
-                        </Modal>,
-                    ])
-                }
+                            Cancel
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleModalSaveButtonClick}
+                        >
+                            Save
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
             </div>
         );
     }

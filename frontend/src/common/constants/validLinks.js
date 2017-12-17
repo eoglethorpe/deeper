@@ -21,6 +21,7 @@ const allLinks = [
     'fourHundredFour',
 ];
 
+// eslint-disable-next-line no-unused-vars
 const blacklistLinks = (links, blacklist) => {
     const newLinks = [...links];
 
@@ -41,7 +42,8 @@ const validLinks = {
 
     homeScreen: allLinks,
 
-    dashboard: blacklistLinks(allLinks, ['entries']),
+    // dashboard: blacklistLinks(allLinks, ['entries']),
+    dashboard: allLinks,
 
     leads: allLinks,
     addLeads: allLinks,

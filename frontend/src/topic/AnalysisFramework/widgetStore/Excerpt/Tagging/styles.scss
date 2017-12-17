@@ -8,12 +8,15 @@
 
     .radio-input {
         flex-shrink: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small;
     }
 
     .textarea {
         display: flex;
-        flex-grow: 1;
         flex-direction: column;
+        flex-grow: 1;
+        padding: $spacing-small;
 
         :global .input {
             flex-grow: 1;
@@ -22,10 +25,10 @@
     }
 
     .image {
-        flex-grow: 1;
         display: flex;
-        justify-content: center;
+        flex-grow: 1;
         align-items: center;
+        justify-content: center;
     }
 }
 

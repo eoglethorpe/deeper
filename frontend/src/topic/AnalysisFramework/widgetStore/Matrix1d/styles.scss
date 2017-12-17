@@ -5,6 +5,7 @@
     margin: $spacing-extra-small;
     background-color: $color-background;
     padding: $spacing-small $spacing-medium;
+    color: $color-text;
     user-select: none;
 
     &.active {
@@ -19,6 +20,7 @@
     border: $width-separator-thin solid $color-separator;
 
     .title {
+        flex-basis: $width-matrix-1d-title;
         flex-shrink: 0;
         padding: $spacing-medium;
     }
@@ -38,6 +40,20 @@
 .tagging-matrix-1d,
 .framework-matrix-1d {
     width: 100%;
+}
+
+.tagging-matrix-1d {
+    .matrix-row {
+        border: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+
+        .matrix-cell {
+            outline: 0;
+            border: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+    }
 }
 
 %modal {

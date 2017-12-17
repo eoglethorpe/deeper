@@ -9,7 +9,7 @@ import {
 
 import styles from './styles.scss';
 
-const EXCERPT = 'excerpt';
+const TEXT = 'excerpt';
 const IMAGE = 'image';
 
 const propTypes = {
@@ -31,7 +31,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         super(props);
 
         const options = [
-            { key: EXCERPT, label: 'Excerpt' },
+            { key: TEXT, label: 'Text' },
             { key: IMAGE, label: 'Image' },
         ];
 
@@ -90,7 +90,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                     value={attribute.type}
                 />
                 {
-                    attribute.type === EXCERPT ? (
+                    attribute.type === TEXT ? (
                         <TextArea
                             onChange={this.handleExcerptChange}
                             styleName="textarea"
