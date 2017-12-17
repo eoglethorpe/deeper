@@ -9,6 +9,10 @@ import {
 
 import styles from './styles.scss';
 
+import {
+    countriesString,
+} from '../../../common/constants';
+
 const propTypes = {
     className: PropTypes.string,
     regionDetail: PropTypes.shape({
@@ -84,7 +88,7 @@ export default class RegionDetailView extends React.PureComponent {
                 <h3
                     styleName="heading"
                 >
-                    Region general info
+                    {countriesString.regionGeneralInfoLabel}
                 </h3>
                 {
                     keyValues.map(data => (

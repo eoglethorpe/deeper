@@ -21,7 +21,10 @@ import {
 import { FgRestBuilder } from '../../../public/utils/rest';
 
 
-import { pathNames } from '../../../common/constants';
+import {
+    pathNames,
+    countriesString,
+} from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
@@ -244,10 +247,10 @@ export default class AddRegion extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {countriesString.cancelButtonLabel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Add Region
+                        {countriesString.addRegionButtonLabel}
                     </PrimaryButton>
                 </div>
             </Form>
