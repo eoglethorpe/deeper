@@ -25,9 +25,6 @@ import { sources } from '../../../../../../common/constants';
 
 import ApplyAll from '../ApplyAll';
 
-import {
-    sources,
-} from '../../../../../../common/constants';
 import styles from './styles.scss';
 
 
