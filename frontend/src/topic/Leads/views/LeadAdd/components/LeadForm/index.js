@@ -335,18 +335,11 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-<<<<<<< d252bbb9811612296b22ca1099cf7dd3bf446f22
                             <DeepGallery
                                 onlyFileName
                                 galleryId={values.attachment}
                             />
                         </div>,
-=======
-
-                            {sources.attachmentLabel}
-                            <DeepGallery onlyFileName galleryId={values.attachment} />
-                        </p>,
->>>>>>> Add strings for Leads and Add Lead Page
                         <HiddenInput
                             formname="attachment"
                             key="input"
