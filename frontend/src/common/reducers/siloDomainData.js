@@ -36,9 +36,10 @@ import {
     AF__REMOVE_WIDGET,
     AF__VIEW_UPDATE_WIDGET,
 
-    CE_VIEW_SET_SELECTED_CATEGORY,
-    CE_VIEW_SET_SELECTED_SUB_CATEGORY,
-    CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
+    CE_VIEW_ADD_NEW_CATEGORY,
+    CE_VIEW_SET_ACTIVE_CATEGORY_ID,
+    CE_VIEW_ADD_NEW_SUBCATEGORY,
+    CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES,
 } from '../action-types/siloDomainData';
 import {
     LOGOUT_ACTION,
@@ -770,50 +771,127 @@ const editEntryViewSetActiveEntry = (state, action) => {
     return update(state, settings);
 };
 
-const ceViewSelectedCategory = (state, action) => {
+const ceViewAddNewCategory = (state, action) => {
     const settings = {
-        selectedCategoryView: {
-            categoryId: {
-                $set: action.selectedCategoryId,
+        categoryEditorView: {
+            categories: {
+                $push: [{
+                    id: action.id,
+                    title: action.title,
+                    selectedSubcategories: [],
+                    subcategories: [],
+                }],
+            },
+            activeCategoryId: {
+                $set: action.id,
             },
         },
     };
+
     return update(state, settings);
 };
 
-const ceViewSelectedSubCategory = (state, action) => {
-    const view = state.selectedCategoryView;
-    const selectedCategory = view.categoryId;
+const ceViewSetActiveCategoryId = (state, action) => {
+    const settings = {
+        categoryEditorView: {
+            activeCategoryId: {
+                $set: action.id,
+            },
+        },
+    };
+
+    return update(state, settings);
+};
+
+// TODO: maybe move to utils
+const buildSettings = (indices, action, value, wrapper) => (
+    indices.reverse().reduce(
+        (acc, selected, index) => wrapper({ [selected]: acc }, indices.length - index - 1),
+        wrapper({ [action]: value }, indices.length),
+    )
+);
+
+const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLevel) => {
+    const activeCategoryIndex = categories.findIndex(d => d.id === activeCategoryId);
+
+    const {
+        selectedSubcategories,
+        subcategories: firstSubcategories,
+    } = categories[activeCategoryIndex];
+
+    const { indices: newIndices } = selectedSubcategories.reduce(
+        ({ subcategories, indices }, selected) => {
+            const index = subcategories.findIndex(d => d.id === selected);
+            return {
+                subcategories: subcategories[index].subcategories,
+                indices: indices.concat([index]),
+            };
+        },
+        { subcategories: firstSubcategories, indices: [activeCategoryIndex] },
+    );
+
+    if (stopLevel >= 0) {
+        newIndices.splice(stopLevel + 1);
+    }
+
+    return newIndices;
+};
+
+const subcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
+
+const ceViewAddNewSubcategory = (state, action) => {
+    const { categoryEditorView } = state;
+    const {
+        categories,
+        activeCategoryId,
+    } = categoryEditorView;
+
+    const settingAction = '$push';
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+        action.level,
+    );
 
     const settings = {
-        selectedCategoryView: {
-            subCategory: {
-                [selectedCategory]: {
-                    $set: action.selectedSubCategoryId,
+        categoryEditorView: {
+            categories: {
+                ...buildSettings(
+                    indices,
+                    settingAction,
+                    [action.newSubcategory],
+                    subcategoryWrapper,
+                ),
+            },
+        },
+    };
+
+    return update(state, settings);
+};
+
+const ceViewUpdateSelectedSubcategories = (state, action) => {
+    const { categoryEditorView } = state;
+    const {
+        categories,
+        activeCategoryId,
+    } = categoryEditorView;
+
+    const categoryIndex = categories.findIndex(d => d.id === activeCategoryId);
+
+    const settings = {
+        categoryEditorView: {
+            categories: {
+                [categoryIndex]: {
+                    selectedSubcategories: {
+                        $splice: [[action.level, length, action.subCategoryId]],
+                    },
                 },
             },
         },
     };
+
     return update(state, settings);
 };
-
-const ceViewSelectedSubSubCategory = (state, action) => {
-    const view = state.selectedCategoryView;
-    const selectedCategory = view.categoryId;
-    const selectedSubCategory = view.subCategory[selectedCategory];
-
-    const settings = {
-        selectedCategoryView: {
-            subSubCategory: {
-                [selectedSubCategory]: {
-                    $set: action.selectedSubSubCategoryId,
-                },
-            },
-        },
-    };
-    return update(state, settings);
-};
-
 
 const reducers = {
     [LOGOUT_ACTION]: logout,
@@ -856,9 +934,10 @@ const reducers = {
     [AF__REMOVE_WIDGET]: afViewRemoveWidget,
     [AF__VIEW_UPDATE_WIDGET]: afViewUpdateWidget,
 
-    [CE_VIEW_SET_SELECTED_CATEGORY]: ceViewSelectedCategory,
-    [CE_VIEW_SET_SELECTED_SUB_CATEGORY]: ceViewSelectedSubCategory,
-    [CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY]: ceViewSelectedSubSubCategory,
+    [CE_VIEW_ADD_NEW_CATEGORY]: ceViewAddNewCategory,
+    [CE_VIEW_SET_ACTIVE_CATEGORY_ID]: ceViewSetActiveCategoryId,
+    [CE_VIEW_ADD_NEW_SUBCATEGORY]: ceViewAddNewSubcategory,
+    [CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES]: ceViewUpdateSelectedSubcategories,
 };
 
 const siloDomainDataReducer = (state = initialSiloDomainData, action) => {

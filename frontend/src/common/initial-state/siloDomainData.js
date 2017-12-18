@@ -104,6 +104,23 @@ const initialSiloDomainData = {
         },
     },
 
+    // SubCategory = {
+    //     id: <string>,
+    //     title: <string>,
+    //     subCategories: <SubCategory>[],
+    // }
+    categoryEditorView: {
+        activeCategoryId: undefined,
+        categories: [
+            // {
+            //     id: <string>,
+            //     title: <string>,
+            //     selectedSubCategorie: <string>[] : SubCategory.id,
+            //     subCategories: <SubCategory>[],
+            // }
+        ],
+    },
+
     selectedCategoryView: {
         // selectedCategory: categoryId
         categoryId: 3,
