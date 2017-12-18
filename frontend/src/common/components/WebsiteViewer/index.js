@@ -6,7 +6,7 @@ import styles from './styles.scss';
 
 import {
     iconNames,
-    sources,
+    leadsString,
 } from '../../../common/constants';
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
@@ -145,7 +145,7 @@ export default class DeepGallery extends React.PureComponent {
                         className={iconNames.loading}
                         styleName="loading-animation"
                     />
-                    <span styleName="waiting-text">{sources.gatheringWebsiteInfoLabel}</span>
+                    <span styleName="waiting-text">{leadsString.gatheringWebsiteInfoLabel}</span>
                 </div>
             );
         }
@@ -176,7 +176,7 @@ export default class DeepGallery extends React.PureComponent {
                         !invalidUrl ?
                             <div styleName="error-website-msg">
                                 <span>
-                                    {sources.cannotPreviewUrl}
+                                    {leadsString.cannotPreviewUrl}
                                 </span>
                                 <a
                                     styleName="url"
@@ -188,7 +188,7 @@ export default class DeepGallery extends React.PureComponent {
                             </div>
                             :
                             <span styleName="error-website-msg">
-                                {sources.invalidUrl}
+                                {leadsString.invalidUrl}
                             </span>
                     }
                 </div>

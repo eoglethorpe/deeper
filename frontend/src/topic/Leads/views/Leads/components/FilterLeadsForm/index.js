@@ -34,7 +34,7 @@ import {
 } from '../../../../../../common/redux';
 
 import {
-    sources,
+    leadsString,
 } from '../../../../../../common/constants';
 import styles from './styles.scss';
 
@@ -218,11 +218,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={sources.assigneeLabel}
+                    label={leadsString.assigneeLabel}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={assignee}
-                    placeholder={sources.placeholderAnybody}
+                    placeholder={leadsString.placeholderAnybody}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -230,8 +230,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="created_at"
-                    label={sources.filterDateCreated}
-                    placeholder={sources.placeholderAnytime}
+                    label={leadsString.filterDateCreated}
+                    placeholder={leadsString.placeholderAnytime}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -239,8 +239,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="published_on"
-                    label={sources.filterDatePublished}
-                    placeholder={sources.placeholderAnytime}
+                    label={leadsString.filterDatePublished}
+                    placeholder={leadsString.placeholderAnytime}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -249,11 +249,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={sources.filterConfidentiality}
+                    label={leadsString.filterConfidentiality}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={confidentiality}
-                    placeholder={sources.placeholderAny}
+                    placeholder={leadsString.placeholderAny}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -262,11 +262,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={sources.filterStatus}
+                    label={leadsString.filterStatus}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={status}
-                    placeholder={sources.placeholderAny}
+                    placeholder={leadsString.placeholderAny}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -274,8 +274,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <TextInput
                     formname="search"
-                    label={sources.placeholderSearch}
-                    placeholder={sources.placeholderSearch}
+                    label={leadsString.placeholderSearch}
+                    placeholder={leadsString.placeholderSearch}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -286,7 +286,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     styleName="filter-btn"
                     disabled={!pristine}
                 >
-                    {sources.filterApplyFilter}
+                    {leadsString.filterApplyFilter}
                 </Button>
                 <DangerButton
                     styleName="filter-btn"
@@ -294,7 +294,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
-                    {sources.filterClearFilter}
+                    {leadsString.filterClearFilter}
                 </DangerButton>
                 {
                     isTruthy(this.props.value.similar) && (
@@ -303,7 +303,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                             type="button"
                             onClick={this.handleClearSimilarSelection}
                         >
-                            {sources.filterClearSimilarFilter}
+                            {leadsString.filterClearSimilarFilter}
                         </DangerButton>
                     )
                 }

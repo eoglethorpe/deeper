@@ -54,7 +54,7 @@ import schema from '../../../../common/schema';
 import {
     iconNames,
     pathNames,
-    sources,
+    leadsString,
 } from '../../../../common/constants/';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
@@ -116,12 +116,12 @@ export default class Leads extends React.PureComponent {
         this.headers = [
             {
                 key: 'title',
-                label: sources.titleLabel,
+                label: leadsString.titleLabel,
                 order: 1,
             },
             {
                 key: 'created_by',
-                label: sources.tableHeaderOwner,
+                label: leadsString.tableHeaderOwner,
                 order: 2,
                 modifier: row => (
                     <Link
@@ -134,7 +134,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'created_at',
-                label: sources.tableHeaderDateCreated,
+                label: leadsString.tableHeaderDateCreated,
                 order: 3,
                 modifier: row => (
                     <FormattedDate
@@ -145,7 +145,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'published_on',
-                label: sources.tableHeaderDatePublished,
+                label: leadsString.tableHeaderDatePublished,
                 order: 4,
                 modifier: row => (
                     <FormattedDate
@@ -156,27 +156,27 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'confidentiality',
-                label: sources.tableHeaderConfidentiality,
+                label: leadsString.tableHeaderConfidentiality,
                 order: 5,
             },
             {
                 key: 'source',
-                label: sources.tableHeaderPublisher,
+                label: leadsString.tableHeaderPublisher,
                 order: 6,
             },
             {
                 key: 'no_of_entries',
-                label: sources.tableHeaderNoOfEntries,
+                label: leadsString.tableHeaderNoOfEntries,
                 order: 7,
             },
             {
                 key: 'status',
-                label: sources.tableHeaderStatus,
+                label: leadsString.tableHeaderStatus,
                 order: 8,
             },
             {
                 key: 'actions',
-                label: sources.tableHeaderActions,
+                label: leadsString.tableHeaderActions,
                 order: 9,
                 modifier: row => (
                     <div className="actions">
@@ -478,7 +478,7 @@ export default class Leads extends React.PureComponent {
                         onClick={this.handleAddLeadClick}
                         iconName={iconNames.add}
                     >
-                        {sources.addSourcesButtonLabel}
+                        {leadsString.addSourcesButtonLabel}
                     </PrimaryButton>
                 </header>
 

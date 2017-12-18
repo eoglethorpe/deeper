@@ -1,6 +1,6 @@
 import string from '../Strings/lang/en/';
 
-const sources = {
+const leadsString = {
 
     filterOwner: string[1],
     filterDateCreated: string[2],
@@ -76,4 +76,4 @@ const sources = {
 
 };
 
-export default sources;
+export default leadsString;
