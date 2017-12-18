@@ -82,6 +82,12 @@ class Lead(UserResource):
     def __str__(self):
         return '{}'.format(self.title)
 
+    # Lead preview is invalid upon save
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        LeadPreview.objects.filter(lead=self).delete()
+        LeadPreviewImage.objects.filter(lead=self).delete()
+
     @staticmethod
     def get_for(user):
         """
