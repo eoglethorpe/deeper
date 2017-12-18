@@ -1,4 +1,4 @@
-import string from '../Strings/lang/en/';
+import string from './lang/en/';
 
 const countriesString = {
 

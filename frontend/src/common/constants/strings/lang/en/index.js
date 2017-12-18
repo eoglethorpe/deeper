@@ -1,5 +1,4 @@
-const string = {
-
+const strings = {
     // IMPORTANT: Before adding a new string, remember to search for existing duplicate string
 
     // For Sources
@@ -123,4 +122,4 @@ const string = {
     116: 'Enter UN Geographical Sub Region',
 };
 
-export default string;
+export default strings;
