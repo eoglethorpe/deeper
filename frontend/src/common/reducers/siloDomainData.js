@@ -877,6 +877,7 @@ const ceViewUpdateSelectedSubcategories = (state, action) => {
     } = categoryEditorView;
 
     const categoryIndex = categories.findIndex(d => d.id === activeCategoryId);
+    const length = categories[categoryIndex].selectedSubcategories.length;
 
     const settings = {
         categoryEditorView: {
