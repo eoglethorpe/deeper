@@ -52,12 +52,12 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.recreate();
+        this.create();
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.leadId !== nextProps.leadId) {
-            this.recreate();
+            this.create();
         }
     }
 
@@ -88,7 +88,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         }
     }
 
-    recreate() {
+    create() {
         this.destroy();
 
         /**
@@ -280,7 +280,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             >
                 {
                     (pending && (
-                        <LoadingAnimation styleName="message" />
+                        <LoadingAnimation />
                     )) || (
                         this.renderContent()
                     )
