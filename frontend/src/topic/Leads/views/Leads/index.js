@@ -15,9 +15,6 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
-    SunBurstView,
-} from '../../../../public/components/Visualization';
-import {
     PrimaryButton,
     TransparentAccentButton,
     TransparentButton,
@@ -68,6 +65,8 @@ import {
 
 import FilterLeadsForm from './components/FilterLeadsForm';
 import LeadColumnHeader from './components/LeadColumnHeader';
+import Visualizations from './components/Visualizations';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -527,14 +526,7 @@ export default class Leads extends React.PureComponent {
                         { loadingLeads && <LoadingAnimation /> }
                     </div>
                 ) : (
-                    <div styleName="viz-container">
-                        <SunBurstView
-                            styleName="visualization"
-                            data={this.props.hierarchicalData}
-                            valueAccessor={d => d.size}
-                            labelAccessor={d => d.name}
-                        />
-                    </div>
+                    <Visualizations styleName="viz-container" />
                 )
                 }
                 <footer styleName="footer">
