@@ -20,6 +20,7 @@ import schema from '../../../../common/schema';
 import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
+import GeoMap from '../../../../common/components/GeoMap';
 
 import styles from './styles.scss';
 
@@ -103,7 +104,7 @@ export default class CountryGeneral extends React.PureComponent {
                                 dataLoading={dataLoading}
                             />
                             <div styleName="map-container">
-                                The map
+                                <GeoMap />
                             </div>
                         </div>
                         <RegionAdminLevel
