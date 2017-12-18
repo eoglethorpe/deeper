@@ -1,4 +1,4 @@
-FROM devtc/ubuntu-django-react:latest
+FROM devtc/ubuntu-django-react:0.1
 
 MAINTAINER togglecorp info@togglecorp.com
 
