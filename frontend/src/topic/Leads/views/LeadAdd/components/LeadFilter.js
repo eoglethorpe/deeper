@@ -27,11 +27,14 @@ import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
 } from '../../../../../common/rest';
-
 import {
     LEAD_TYPE,
     LEAD_FILTER_STATUS,
 } from '../../../../../common/entities/lead';
+
+import {
+    leadsString,
+} from '../../../../../common/constants';
 import styles from '../styles.scss';
 
 
@@ -150,35 +153,35 @@ export default class LeadFilter extends React.PureComponent {
                 styleName="lead-filters"
             >
                 <TextInput
-                    label="Search"
+                    label={leadsString.placeholderSearch}
                     onChange={this.handleSearchChange}
                     value={filters.search}
-                    placeholder="Search"
+                    placeholder={leadsString.placeholderSearch}
                     type="search"
                     showHintAndError={false}
                 />
                 <TextInput
-                    label="Source"
-                    placeholder="Any"
+                    label={leadsString.filterPublisher}
+                    placeholder={leadsString.placeholderAny}
                     value={filters.source}
                     onChange={this.handleLeadSourceFilterChange}
                     showHintAndError={false}
                 />
                 <SelectInput
-                    label="Status"
+                    label={leadsString.filterStatus}
                     showLabel
                     options={leadStatusFilterOptions}
-                    placeholder="All"
+                    placeholder={leadsString.placeholderAny}
                     value={filters.status}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadStatusFilterChange}
                     showHintAndError={false}
                 />
                 <SelectInput
-                    label="Lead Type"
+                    label={leadsString.filterSourceType}
                     showLabel
                     options={leadTypeOptions}
-                    placeholder="All"
+                    placeholder={leadsString.placeholderAny}
                     multiple
                     value={filters.type}
                     optionsIdentifier="lead-list-filter-options"
@@ -190,7 +193,7 @@ export default class LeadFilter extends React.PureComponent {
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
-                    Clear Filter
+                    {leadsString.filterClearFilter}
                 </DangerButton>
             </div>
         );

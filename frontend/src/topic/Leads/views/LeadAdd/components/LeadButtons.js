@@ -24,6 +24,7 @@ import {
     googleDriveDeveloperKey,
 } from '../../../../../common/config/google-drive';
 import {
+    leadsString,
     iconNames,
 } from '../../../../../common/constants';
 
@@ -253,7 +254,7 @@ export default class LeadButtons extends React.PureComponent {
         return (
             <div styleName="add-lead-buttons">
                 <h3 styleName="heading">
-                    Add new lead from:
+                    {leadsString.addSourceFromLabel}
                 </h3>
                 <GooglePicker
                     styleName="add-lead-btn"
@@ -266,7 +267,7 @@ export default class LeadButtons extends React.PureComponent {
                     navHidden
                 >
                     <span className={iconNames.googleDrive} />
-                    <p>Drive</p>
+                    <p>{leadsString.googleDriveLabel}</p>
                 </GooglePicker>
                 <DropboxChooser
                     styleName="add-lead-btn"
@@ -279,7 +280,7 @@ export default class LeadButtons extends React.PureComponent {
                     disabled={dropboxDisabled}
                 >
                     <span className={iconNames.dropbox} />
-                    <p>Dropbox</p>
+                    <p>{leadsString.dropboxLabel}</p>
                 </DropboxChooser>
                 <FileInput
                     styleName="add-lead-btn"
@@ -288,21 +289,21 @@ export default class LeadButtons extends React.PureComponent {
                     multiple
                 >
                     <span className={iconNames.upload} />
-                    <p>Local disk</p>
+                    <p>{leadsString.localDiskLabel}</p>
                 </FileInput>
                 <TransparentButton
                     styleName="add-lead-btn"
                     onClick={this.handleAddLeadFromWebsite}
                 >
                     <span className={iconNames.globe} />
-                    <p>Website</p>
+                    <p>{leadsString.websiteLabel}</p>
                 </TransparentButton>
                 <TransparentButton
                     styleName="add-lead-btn"
                     onClick={this.handleAddLeadFromText}
                 >
                     <span className={iconNames.clipboard} />
-                    <p>Text</p>
+                    <p>{leadsString.textLabel}</p>
                 </TransparentButton>
             </div>
         );

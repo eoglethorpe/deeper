@@ -14,6 +14,10 @@ import {
     PrimaryButton,
 } from '../../../../public/components/Action';
 
+import {
+    countriesString,
+} from '../../../../common/constants';
+
 
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
@@ -81,24 +85,24 @@ export default class CountryPopulationData extends React.PureComponent {
                         onClick={this.handleFormCancel}
                         disabled={pending}
                     >
-                        Cancel
+                        {countriesString.cancelButtonLabel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Save changes
+                        {countriesString.saveChangesButtonLabel}
                     </PrimaryButton>
                 </div>
                 <div styleName="population-container">
                     <TextInput
-                        label="Total Population of Country"
+                        label={countriesString.totalPopulationLabel}
                         styleName="population"
-                        placeholder="Total Population"
+                        placeholder={countriesString.totalPopulationPlaceholder}
                         formname="population"
                     />
                     <TextInput
-                        label="Source"
+                        label={countriesString.sourceLabel}
                         styleName="source"
                         formname="source"
-                        placeholder="Enter Source"
+                        placeholder={countriesString.sourcePlaceholder}
                     />
                 </div>
             </Form>

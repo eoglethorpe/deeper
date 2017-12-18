@@ -26,6 +26,10 @@ import {
 import DeepGallery from '../../../common/components/DeepGallery';
 
 import {
+    countriesString,
+} from '../../../common/constants';
+
+import {
     transformResponseErrorToFormError,
     createParamsForAdminLevelsForRegionPOST,
     createParamsForAdminLevelsForRegionPATCH,
@@ -316,8 +320,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={`${formValues.level}`}
                             formname="level"
-                            label="Admin level"
-                            placeholder="Admin level"
+                            label={countriesString.adminLevelLabel}
+                            placeholder={countriesString.adminLevelPlaceholder}
                             styleName="text-input"
                             type="number"
                             error={formFieldErrors.level}
@@ -326,8 +330,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.title}
                             formname="title"
-                            label="Admin level name"
-                            placeholder="Country"
+                            label={countriesString.adminLevelNameLabel}
+                            placeholder={countriesString.adminLevelNamePlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.title}
                             disabled={pending}
@@ -335,8 +339,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.nameProp || undefined}
                             formname="nameProp"
-                            label="Name property"
-                            placeholder="NAME_ENGL"
+                            label={countriesString.namePropertyLabel}
+                            placeholder={countriesString.namePropertyPlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.nameProp}
                             disabled={pending}
@@ -344,8 +348,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.codeProp || undefined}
                             formname="codeProp"
-                            label="Pcode property"
-                            placeholder="NAME_PCODE"
+                            label={countriesString.pcodePropertyLabel}
+                            placeholder={countriesString.pcodePropertyPlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.codeProp}
                             disabled={pending}
@@ -353,8 +357,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.parentNameProp || undefined}
                             formname="parentNameProp"
-                            label="Parent name property"
-                            placeholder="NAME_ENFG"
+                            label={countriesString.parentNamePropLabel}
+                            placeholder={countriesString.parentNamePropPlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.parentNameProp}
                             disabled={pending}
@@ -362,8 +366,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.parentCodeProp || undefined}
                             formname="parentCodeProp"
-                            label="Parent pcode property"
-                            placeholder="NAME_PPCODE"
+                            label={countriesString.parentCodePropLabel}
+                            placeholder={countriesString.parentCodePropPlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.parentCodeProp}
                             disabled={pending}
@@ -376,8 +380,8 @@ export default class EditAdminLevel extends React.PureComponent {
                             showHintAndError={false}
                             value={formValues.parent || undefined}
                             formname="parent"
-                            label="Parent Admin Level"
-                            placeholder="NAME_PPCODE"
+                            label={countriesString.parentAdminLevelLabel}
+                            placeholder={countriesString.parentAdminLevelPlaceholder}
                             styleName="text-input"
                             error={formFieldErrors.parent}
                             disabled={pending}
@@ -403,13 +407,13 @@ export default class EditAdminLevel extends React.PureComponent {
                             onClick={onClose}
                             type="button"
                         >
-                            Cancel
+                            {countriesString.cancelButtonLabel}
                         </DangerButton>
                         <PrimaryButton
                             styleName="save-btn"
                             disabled={pending || !pristine}
                         >
-                            Save Changes
+                            {countriesString.saveChangesButtonLabel}
                         </PrimaryButton>
                     </div>
                 </Form>

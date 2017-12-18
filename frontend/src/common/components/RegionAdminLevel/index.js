@@ -32,6 +32,7 @@ import {
 } from '../../../common/redux';
 import {
     iconNames,
+    countriesString,
 } from '../../../common/constants';
 
 import EditAdminLevel from '../EditAdminLevel';
@@ -263,7 +264,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                         disabled={deletePending}
                         onClick={this.addAdminLevel}
                     >
-                        Add admin level
+                        {countriesString.addAdminLevelButtonLabel}
                     </PrimaryButton>
                     <Modal
                         closeOnEscape
@@ -324,7 +325,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                     closeOnEscape
                     onClose={this.deleteActiveAdminLevel}
                 >
-                    <p>{`Are you sure you want to remove admin level
+                    <p>{`${countriesString.removeAdminLevelConfirm}
                         ${activeAdminLevelDelete.title}?`}</p>
                 </Confirm>
             </div>

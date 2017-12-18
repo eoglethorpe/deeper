@@ -33,13 +33,16 @@ import {
     unsetLeadPageFilterAction,
 } from '../../../../../../common/redux';
 
+import {
+    leadsString,
+} from '../../../../../../common/constants';
 import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
     className: PropTypes.string,
     setLeadFilterOptions: PropTypes.func.isRequired,
-    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line 
+    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
     value:  PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageFilter: PropTypes.func.isRequired,
     unsetLeadPageFilter: PropTypes.func.isRequired,
@@ -215,11 +218,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label="Assigned to"
+                    label={leadsString.assigneeLabel}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={assignee}
-                    placeholder="Anybody"
+                    placeholder={leadsString.placeholderAnybody}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -227,8 +230,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="created_at"
-                    label="Created at"
-                    placeholder="Anytime"
+                    label={leadsString.filterDateCreated}
+                    placeholder={leadsString.placeholderAnytime}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -236,8 +239,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="published_on"
-                    label="Published on"
-                    placeholder="Anytime"
+                    label={leadsString.filterDatePublished}
+                    placeholder={leadsString.placeholderAnytime}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -246,11 +249,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label="Confidentiality"
+                    label={leadsString.filterConfidentiality}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={confidentiality}
-                    placeholder="Any"
+                    placeholder={leadsString.placeholderAny}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -259,11 +262,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <SelectInput
                     formname="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label="Status"
+                    label={leadsString.filterStatus}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     multiple
                     options={status}
-                    placeholder="Any"
+                    placeholder={leadsString.placeholderAny}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -271,8 +274,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <TextInput
                     formname="search"
-                    label="Search"
-                    placeholder="Nepal"
+                    label={leadsString.placeholderSearch}
+                    placeholder={leadsString.placeholderSearch}
                     showHintAndError={false}
                     showLabel
                     styleName="filter"
@@ -283,7 +286,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     styleName="filter-btn"
                     disabled={!pristine}
                 >
-                    Apply Filter
+                    {leadsString.filterApplyFilter}
                 </Button>
                 <DangerButton
                     styleName="filter-btn"
@@ -291,7 +294,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
-                    Clear Filter
+                    {leadsString.filterClearFilter}
                 </DangerButton>
                 {
                     isTruthy(this.props.value.similar) && (
@@ -300,7 +303,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                             type="button"
                             onClick={this.handleClearSimilarSelection}
                         >
-                            Clear Similarity Filter
+                            {leadsString.filterClearSimilarFilter}
                         </DangerButton>
                     )
                 }

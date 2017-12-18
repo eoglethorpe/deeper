@@ -46,6 +46,9 @@ import FileUploadBuilder from './utils/builder/FileUploadBuilder';
 import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
+import {
+    leadsString,
+} from '../../../../common/constants';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
@@ -371,31 +374,31 @@ export default class LeadAdd extends React.PureComponent {
                                 disabled={!addLeadViewCanPrev}
                                 onClick={this.handleLeadPrev}
                             >
-                                Prev
+                                {leadsString.previousButtonLabel}
                             </PrimaryButton>
                             <PrimaryButton
                                 disabled={!addLeadViewCanNext}
                                 onClick={this.handleLeadNext}
                             >
-                                Next
+                                {leadsString.nextButtonLabel}
                             </PrimaryButton>
                             <DangerButton
                                 onClick={this.handleRemove}
                                 disabled={isRemoveDisabled}
                             >
-                                Remove
+                                {leadsString.removeButtonLabel}
                             </DangerButton>
                             <SuccessButton
                                 onClick={this.handleSave}
                                 disabled={isSaveDisabled}
                             >
-                                Save
+                                {leadsString.saveButtonLabel}
                             </SuccessButton>
                             <SuccessButton
                                 onClick={this.handleBulkSave}
                                 disabled={pendingSubmitAll || !someSaveEnabled}
                             >
-                                Save All
+                                {leadsString.saveAllButtonLabel}
                             </SuccessButton>
                         </div>
                     }

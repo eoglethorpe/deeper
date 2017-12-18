@@ -29,6 +29,10 @@ import {
     setRegionDetailsAction,
 } from '../../../common/redux';
 
+import {
+    countriesString,
+} from '../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -255,12 +259,12 @@ export default class RegionDetail extends React.PureComponent {
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            Cancel
+                            {countriesString.cancelButtonLabel}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
                         >
-                            Save
+                            {countriesString.saveButtonLabel}
                         </SuccessButton>
                     </div>
                 </header>
@@ -268,64 +272,64 @@ export default class RegionDetail extends React.PureComponent {
                     <TextInput
                         error={formFieldErrors.countryCode}
                         formname="countryCode"
-                        label="Country code"
-                        placeholder="NPL"
+                        label={countriesString.countryCodeLabel}
+                        placeholder={countriesString.countryCodePlaceholder}
                         styleName="text-input"
                         value={formValues.countryCode}
                     />
                     <TextInput
                         error={formFieldErrors.countryName}
                         formname="countryName"
-                        label="Name"
-                        placeholder="Nepal"
+                        label={countriesString.countryNameLabel}
+                        placeholder={countriesString.countryNamePlaceholder}
                         styleName="text-input"
                         value={formValues.countryName}
                     />
                     <TextInput
                         error={formFieldErrors.wbRegion}
                         formname="wbRegion"
-                        label="WB Region"
-                        placeholder="Enter WB Region"
+                        label={countriesString.wbRegionLabel}
+                        placeholder={countriesString.wbRegionPlaceholer}
                         styleName="text-input"
                         value={formValues.wbRegion}
                     />
                     <TextInput
                         error={formFieldErrors.wbIncomeRegion}
                         formname="wbIncomeRegion"
-                        label="WB Income Region"
-                        placeholder="Enter WB Income Region"
+                        label={countriesString.wbIncomeRegionLabel}
+                        placeholder={countriesString.wbIncomeRegionPlaceholder}
                         styleName="text-input"
                         value={formValues.wbIncomeRegion}
                     />
                     <TextInput
                         error={formFieldErrors.ochaRegion}
                         formname="ochaRegion"
-                        label="OCHA Region"
-                        placeholder="Enter OCHA Region"
+                        label={countriesString.ochaRegionLabel}
+                        placeholder={countriesString.ochaRegionPlaceholder}
                         styleName="text-input"
                         value={formValues.ochaRegion}
                     />
                     <TextInput
                         error={formFieldErrors.echoRegion}
                         formname="echoRegion"
-                        label="ECHO Region"
-                        placeholder="Enter ECHO Region"
+                        label={countriesString.echoRegionLabel}
+                        placeholder={countriesString.echoRegionPlaceholder}
                         styleName="text-input"
                         value={formValues.echoRegion}
                     />
                     <TextInput
                         error={formFieldErrors.unGeoRegion}
                         formname="unGeoRegion"
-                        label="UN Geographical Region"
-                        placeholder="Enter UN Geographical Region"
+                        label={countriesString.unGeoRegionLabel}
+                        placeholder={countriesString.unGeoRegionPlaceholer}
                         styleName="text-input"
                         value={formValues.unGeoRegion}
                     />
                     <TextInput
                         error={formFieldErrors.unGeoSubregion}
                         formname="unGeoSubregion"
-                        label="UN Geographical Sub Region"
-                        placeholder="Enter UN Geographical Sub Region"
+                        label={countriesString.unGeoSubregionLabel}
+                        placeholder={countriesString.unGeoSubregionPlaceholer}
                         styleName="text-input"
                         value={formValues.unGeoSubregion}
                     />

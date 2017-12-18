@@ -26,6 +26,7 @@ import {
 } from '../../../../common/rest';
 import {
     iconNames,
+    countriesString,
 } from '../../../../common/constants';
 import {
     countryDetailSelector,
@@ -276,16 +277,16 @@ export default class CountryKeyFigures extends React.PureComponent {
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            Cancel
+                            {countriesString.cancelButtonLabel}
                         </DangerButton>
                         <PrimaryButton disabled={pending || !pristine} >
-                            Save changes
+                            {countriesString.saveChangesButtonLabel}
                         </PrimaryButton>
                     </div>
                 </header>
                 <div styleName="section">
                     <h3>
-                     Human Development Index
+                        {countriesString.humanDevelopmentIndexLabel}
                         <a
                             href="http://www.hdr.undp.org/en/countries"
                             target="_blank"
@@ -299,7 +300,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label="INDEX"
+                        label={countriesString.indexLabel}
                         styleName="text-input"
                         type="number"
                         step="any"
@@ -310,7 +311,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.index}
                     />
                     <TextInput
-                        label="GEO-RANK"
+                        label={countriesString.geoRankLabel}
                         styleName="text-input"
                         readOnly
                         formname="geoRank"
@@ -318,7 +319,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoRank}
                     />
                     <TextInput
-                        label="GEO-SCORE"
+                        label={countriesString.geoScoreLabel}
                         styleName="text-input"
                         readOnly
                         formname="geoScore"
@@ -326,7 +327,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoScore}
                     />
                     <TextInput
-                        label="RANK"
+                        label={countriesString.rankLabel}
                         styleName="text-input"
                         formname="rank"
                         value={formValues.rank}
@@ -335,7 +336,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                     UNDER FIVE MORTALITY RATE (per 1.000 live births)
+                        {countriesString.underFiveMortalityLabel}
                         <a
                             href="http://www.inform-index.org/"
                             target="_blank"
@@ -349,7 +350,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label="U5M"
+                        label={countriesString.u5mLabel}
                         styleName="text-input"
                         formname="u5m"
                         value={formValues.u5m}
@@ -357,7 +358,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         type="number"
                     />
                     <TextInput
-                        label="GEO SCORE"
+                        label={countriesString.geoScoreLabel}
                         styleName="text-input"
                         readOnly
                         formname="geoScoreU5m"
@@ -367,7 +368,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                     UPROOTED PEOPLE (refugees + IDPs + returned refugees)
+                        {countriesString.uprootedPeopleLabel}
                         <a
                             href="http://www.inform-index.org/"
                             target="_blank"
@@ -381,14 +382,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label="Number of Refugees"
+                        label={countriesString.numberOfRefugeesLabel}
                         styleName="text-input"
                         formname="numberOfRefugees"
                         value={formValues.numberOfRefugees}
                         error={formFieldErrors.numberOfRefugees}
                     />
                     <TextInput
-                        label="Percentage of Uprooted People"
+                        label={countriesString.percentageUprootedPeopleLabel}
                         styleName="text-input"
                         readOnly
                         formname="percentageUprootedPeople"
@@ -396,7 +397,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.percentageUprootedPeople}
                     />
                     <TextInput
-                        label="GEO-SCORE"
+                        label={countriesString.geoScoreLabel}
                         styleName="text-input"
                         readOnly
                         formname="geoScoreUprooted"
@@ -404,14 +405,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoScoreUprooted}
                     />
                     <TextInput
-                        label="Number of IDPs"
+                        label={countriesString.numberIdpLabel}
                         styleName="text-input"
                         formname="numberIdp"
                         value={formValues.numberIdp}
                         error={formFieldErrors.numberIdp}
                     />
                     <TextInput
-                        label="Number of returned refugees"
+                        label={countriesString.numberReturnedRefugeesLabel}
                         styleName="text-input"
                         formname="numberReturnedRefugees"
                         value={formValues.numberReturnedRefugees}
@@ -420,7 +421,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                    Inform Score
+                        {countriesString.informScoreLabel}
                         <a
                             href="http://www.hdr.undp.org/en/countries"
                             target="_blank"
@@ -434,35 +435,35 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label="Risk Calss"
+                        label={countriesString.riskClassLabel}
                         styleName="text-input"
                         formname="riskClass"
                         value={formValues.riskClass}
                         error={formFieldErrors.riskClass}
                     />
                     <TextInput
-                        label="Inform Risk Index"
+                        label={countriesString.informRiskIndexLabel}
                         styleName="text-input"
                         formname="informRiskIndex"
                         value={formValues.informRiskIndex}
                         error={formFieldErrors.informRiskIndex}
                     />
                     <TextInput
-                        label="Hazard and Exposure"
+                        label={countriesString.hazardAndExposureLabel}
                         styleName="text-input"
                         formname="hazardAndExposure"
                         value={formValues.hazardAndExposure}
                         error={formFieldErrors.hazardAndExposure}
                     />
                     <TextInput
-                        label="Vulnerability"
+                        label={countriesString.vulnerabilityLabel}
                         styleName="text-input"
                         formname="vulnerability"
                         value={formValues.vulnerability}
                         error={formFieldErrors.vulnerability}
                     />
                     <TextInput
-                        label="Lack of Coping Capacity"
+                        label={countriesString.lackOfCopingCapacityLabel}
                         styleName="text-input"
                         formname="lackOfCopingCapacity"
                         value={formValues.lackOfCopingCapacity}

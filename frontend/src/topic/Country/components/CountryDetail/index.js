@@ -27,6 +27,11 @@ import CountryKeyFigures from '../CountryKeyFigures';
 import CountryMediaSources from '../CountryMediaSources';
 import CountryPopulationData from '../CountryPopulationData';
 import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
+
+import {
+    countriesString,
+} from '../../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -143,7 +148,7 @@ export default class CountryDetail extends React.PureComponent {
                     {
                         activeUser.isSuperuser &&
                             <DangerButton onClick={this.onClickDeleteButton}>
-                                Delete Country
+                                {countriesString.deleteCountryButtonLabel}
                             </DangerButton>
                     }
                     <Confirm
@@ -151,7 +156,7 @@ export default class CountryDetail extends React.PureComponent {
                         closeOnEscape
                         onClose={this.deleteActiveCountry}
                     >
-                        <p>{`Are you sure you want to remove Country
+                        <p>{`${countriesString.deleteCountryConfirm}
                             ${countryDetail.title}?`}</p>
                     </Confirm>
                 </header>
@@ -165,31 +170,31 @@ export default class CountryDetail extends React.PureComponent {
                             styleName="tab-header"
                             to="general"
                         >
-                            general
+                            {countriesString.generalTabLabel}
                         </TabLink>
                         <TabLink
                             styleName="tab-header"
                             to="key-figures"
                         >
-                            key figures
+                            {countriesString.keyFiguesTabLabel}
                         </TabLink>
                         <TabLink
                             styleName="tab-header"
                             to="population-data"
                         >
-                           Population data
+                            {countriesString.populationTabLabel}
                         </TabLink>
                         <TabLink
                             styleName="tab-header"
                             to="seasonal-calendar"
                         >
-                           Seasonal Calendar
+                            {countriesString.seasonalTabLabel}
                         </TabLink>
                         <TabLink
                             styleName="tab-header"
                             to="media-sources"
                         >
-                            Media Sources
+                            {countriesString.mediaTabLabel}
                         </TabLink>
                         {/* Essential for border bottom, for more info contact AdityaKhatri */}
                         <div styleName="empty-tab" />

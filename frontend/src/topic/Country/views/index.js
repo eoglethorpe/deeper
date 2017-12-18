@@ -27,6 +27,7 @@ import {
 import {
     iconNames,
     pathNames,
+    countriesString,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
@@ -256,20 +257,20 @@ export default class CountryPanel extends React.PureComponent {
             <div styleName="country-panel">
                 <div styleName="country-list">
                     <header styleName="list-header">
-                        <h2>Countries</h2>
+                        <h2>{countriesString.countriesLabel}</h2>
                         {
                             activeUser.isSuperuser &&
                             <PrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.onAddCountry}
                             >
-                                Add country
+                                {countriesString.addCountryButtonLabel}
                             </PrimaryButton>
                         }
                         <TextInput
                             styleName="search-input"
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Country"
+                            placeholder={countriesString.searchCountryPlaceholer}
                             type="search"
                             value={this.state.searchInputValue}
                         />
