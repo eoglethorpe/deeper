@@ -57,6 +57,8 @@ import {
 
 import schema from '../../../../common/schema';
 
+import { leadTypeIconMap } from '../../../../common/entities/lead';
+
 import {
     iconNames,
     pathNames,
@@ -130,33 +132,34 @@ export default class Leads extends React.PureComponent {
 
         this.headers = [
             {
+                key: 'attachmentMimeType',
+                label: leadsString.filterSourceType,
+                order: 1,
+                modifier: (row) => {
+                    let icon = iconNames.documentText;
+                    if (row.attachmentMimeType) {
+                        icon = leadTypeIconMap[row.attachmentMimeType];
+                    } else if (row.url) {
+                        icon = iconNames.globe;
+                    }
+                    return (
+                        <TransparentButton
+                            onClick={() => (row)}
+                        >
+                            <i className={icon} />
+                        </TransparentButton>
+                    );
+                },
+            },
+            {
                 key: 'title',
                 label: leadsString.titleLabel,
-                order: 1,
-            },
-            {
-                key: 'created_by',
-                label: leadsString.tableHeaderOwner,
                 order: 2,
-                modifier: row => (
-                    <Link
-                        key={row.createdBy}
-                        to={reverseRoute(pathNames.userProfile, { userId: row.createdBy })}
-                    >
-                        {row.createdByName}
-                    </Link>
-                ),
             },
             {
-                key: 'created_at',
-                label: leadsString.tableHeaderDateCreated,
+                key: 'source',
+                label: leadsString.tableHeaderPublisher,
                 order: 3,
-                modifier: row => (
-                    <FormattedDate
-                        date={row.createdAt}
-                        mode="dd-MM-yyyy hh:mm"
-                    />
-                ),
             },
             {
                 key: 'published_on',
@@ -170,29 +173,48 @@ export default class Leads extends React.PureComponent {
                 ),
             },
             {
+                key: 'created_by',
+                label: leadsString.tableHeaderOwner,
+                order: 5,
+                modifier: row => (
+                    <Link
+                        key={row.createdBy}
+                        to={reverseRoute(pathNames.userProfile, { userId: row.createdBy })}
+                    >
+                        {row.createdByName}
+                    </Link>
+                ),
+            },
+            {
+                key: 'created_at',
+                label: leadsString.tableHeaderDateCreated,
+                order: 6,
+                modifier: row => (
+                    <FormattedDate
+                        date={row.createdAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
+            },
+            {
                 key: 'confidentiality',
                 label: leadsString.tableHeaderConfidentiality,
-                order: 5,
-            },
-            {
-                key: 'source',
-                label: leadsString.tableHeaderPublisher,
-                order: 6,
-            },
-            {
-                key: 'no_of_entries',
-                label: leadsString.tableHeaderNoOfEntries,
                 order: 7,
+            },
+            {
+                key: 'noOfEntries',
+                label: leadsString.tableHeaderNoOfEntries,
+                order: 8,
             },
             {
                 key: 'status',
                 label: leadsString.tableHeaderStatus,
-                order: 8,
+                order: 9,
             },
             {
                 key: 'actions',
                 label: leadsString.tableHeaderActions,
-                order: 9,
+                order: 10,
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton

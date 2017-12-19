@@ -12,6 +12,7 @@ const leadSchema = [];
             sourceType: { type: 'string' }, // set is required later
             assignee: { type: 'array.uint' },
             attachment: { type: 'uint' }, // file url
+            attachmentMimeType: { type: 'string' },
             confidentiality: { type: 'string', required: true },
             noOfEntries: { type: 'int' },
             project: { type: 'uint' },
