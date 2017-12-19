@@ -68,3 +68,7 @@ export const createParamsForCountryDelete = () => ({
 export const createUrlForGeoAreasLoadTrigger = regionId => (
     `${wsEndpoint}/geo-areas-load-trigger/${regionId}/`
 );
+
+export const createUrlForGeoJsonMap = adminLevelId => (
+    `${wsEndpoint}/admin-levels/${adminLevelId}/geojson/`
+);

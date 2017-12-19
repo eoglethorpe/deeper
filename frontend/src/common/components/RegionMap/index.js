@@ -4,11 +4,14 @@ import React from 'react';
 
 import styles from './styles.scss';
 
+import GeoJsonMap from '../GeoJsonMap';
+
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     createParamsForAdminLevelsForRegionGET,
     createUrlForAdminLevelsForRegion,
     createUrlForGeoAreasLoadTrigger,
+    createUrlForGeoJsonMap,
 } from '../../../common/rest';
 import {
     LoadingAnimation,
@@ -35,6 +38,7 @@ export default class RegionMap extends React.PureComponent {
             pending: true,
             error: false,
             adminLevels: [],
+            selections: [],
         };
     }
 
@@ -161,15 +165,24 @@ export default class RegionMap extends React.PureComponent {
             .build()
     )
 
-    renderGeoJson = (adminLevelId) => {
-        const url = `geo-${adminLevelId}`;
-        console.log(url);
+    handleAreaClick = (code) => {
+        const selections = [...this.state.selections];
+        const index = selections.indexOf(code);
+
+        if (index === -1) {
+            selections.push(code);
+        } else {
+            selections.splice(index, 1);
+        }
+
+        this.setState({ selections });
     }
 
     renderContent() {
         const {
             error,
             adminLevels,
+            selections,
         } = this.state;
 
         if (error) {
@@ -181,7 +194,14 @@ export default class RegionMap extends React.PureComponent {
         }
 
         if (adminLevels && adminLevels.length > 0) {
-            return this.renderGeoJson(adminLevels[0].id);
+            return (
+                <GeoJsonMap
+                    selections={selections}
+                    styleName="geo-json-map"
+                    url={createUrlForGeoJsonMap(adminLevels[0].id)}
+                    onAreaClick={this.handleAreaClick}
+                />
+            );
         }
 
         return (
