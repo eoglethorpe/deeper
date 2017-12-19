@@ -14,8 +14,32 @@ const iconNames = {
     code: 'ion-code',
     codeWorking: 'ion-code-working',
     delete: 'ion-android-delete',
-    document: 'ion-android-document',
-    documentText: 'ion-document-text',
+
+    documentText: 'ion-document',
+
+    json: 'ion-android-document',
+    xml: 'ion-android-document',
+    csv: 'ion-android-document',
+
+    docx: 'ion-document-text',
+    rtf: 'ion-document-text',
+    otf: 'ion-document-text',
+    msword: 'ion-document-text',
+
+    pdf: 'ion-document-text',
+
+    pptx: 'ion-document-text',
+    ppt: 'ion-document-text',
+
+    xls: 'ion-document-text',
+    xlxs: 'ion-document-text',
+
+    png: 'ion-image',
+    jpg: 'ion-image',
+    jpeg: 'ion-image',
+    fig: 'ion-image',
+
+
     dropbox: 'ion-social-dropbox',
     edit: 'ion-edit',
     error: 'ion-android-alert',
@@ -24,7 +48,6 @@ const iconNames = {
     googleDrive: 'ion-social-googleplus-outline',
     hamburger: 'ion-android-menu',
     help: 'ion-help-circled',
-    image: 'ion-android-image',
     link: 'ion-link',
     list: 'ion-ios-list-outline',
     loading: 'ion-load-c',

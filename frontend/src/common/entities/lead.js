@@ -94,6 +94,7 @@ export const mimeType = {
     xlxs: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     csv: 'text/csv',
     png: 'image/png',
+    jpg: 'image/jpg',
     jpeg: 'image/jpeg',
     fig: 'image/fig',
     json: 'application/json',
@@ -102,20 +103,28 @@ export const mimeType = {
 };
 
 export const leadTypeIconMap = {
-    [mimeType.docx]: iconNames.document,
-    [mimeType.rtf]: iconNames.document,
     [mimeType.text]: iconNames.documentText,
-    [mimeType.otf]: iconNames.document,
-    [mimeType.pdf]: iconNames.document,
-    [mimeType.pptx]: iconNames.document,
-    [mimeType.ppt]: iconNames.document,
-    [mimeType.xls]: iconNames.document,
-    [mimeType.xlxs]: iconNames.document,
-    [mimeType.csv]: iconNames.document,
-    [mimeType.png]: iconNames.image,
-    [mimeType.jpeg]: iconNames.image,
-    [mimeType.fig]: iconNames.document,
-    [mimeType.json]: iconNames.document,
-    [mimeType.xml]: iconNames.document,
-    [mimeType.msword]: iconNames.document,
+
+    [mimeType.docx]: iconNames.docx,
+    [mimeType.rtf]: iconNames.rtf,
+    [mimeType.otf]: iconNames.otf,
+    [mimeType.msword]: iconNames.msword,
+
+    [mimeType.pdf]: iconNames.pdf,
+
+    [mimeType.pptx]: iconNames.pptx,
+    [mimeType.ppt]: iconNames.ppt,
+
+    [mimeType.xls]: iconNames.xls,
+    [mimeType.xlxs]: iconNames.xlxs,
+
+    [mimeType.csv]: iconNames.csv,
+
+    [mimeType.png]: iconNames.png,
+    [mimeType.jpg]: iconNames.jpg,
+    [mimeType.jpeg]: iconNames.jpeg,
+    [mimeType.fig]: iconNames.fig,
+
+    [mimeType.json]: iconNames.json,
+    [mimeType.xml]: iconNames.xml,
 };
