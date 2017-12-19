@@ -80,7 +80,12 @@ export default class GeoJsonMap extends React.PureComponent {
             popup.setLngLat([
                 e.lngLat.lng,
                 e.lngLat.lat + 0.1,
-            ]).setHTML(feature.properties.title)
+            ]).setHTML(feature.properties.title);
+        });
+
+        map.on('mouseenter', 'geojson', (e) => {
+            const feature = e.features[0];
+            popup.setHTML(feature.properties.title)
                 .addTo(map);
         });
 
@@ -148,14 +153,17 @@ export default class GeoJsonMap extends React.PureComponent {
         }
 
         if (this.layerAdded) {
-            map.removeLayer('geojson');
-            map.removeLayer('geojson-selected');
-            map.removeLayer('geojson-hover');
-            map.removeSource('geojson');
+            map.getSource('geojson').setData({
+                type: 'FeatureCollection',
+                features: [],
+            });
+            map.getSource('geojson').setData(url);
+            return;
         }
+
         map.addSource('geojson', {
             type: 'geojson',
-            data: this.props.url,
+            data: url,
         });
         map.addLayer({
             id: 'geojson',
