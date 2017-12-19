@@ -62,9 +62,6 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.previewRequestTimeout) {
-            clearTimeout(this.previewRequestTimeout);
-        }
         this.destroy();
     }
 
@@ -80,6 +77,9 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     }
 
     destroy() {
+        if (this.previewRequestTimeout) {
+            clearTimeout(this.previewRequestTimeout);
+        }
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }
@@ -113,7 +113,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         this.setState({ pending: true });
 
         this.previewRequestCount = 0;
-        this.triggerRequest = this.createLeadExtractionTriggerRequest(
+        this.triggerRequest = this.createRequest(
             triggerUrl,
             params,
             () => {
@@ -122,7 +122,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             },
         );
 
-        this.previewRequest = this.createSimplifiedLeadPreviewRequest(
+        this.previewRequest = this.createRequest(
             previewUrl,
             params,
             (response) => {
@@ -170,8 +170,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         this.previewRequest.start();
     }
 
-    createLeadExtractionTriggerRequest = (url, params, onSuccess) => {
-        const request = new FgRestBuilder()
+    createRequest = (url, params, onSuccess) => (
+        new FgRestBuilder()
             .url(url)
             .params(params)
             .success((response) => {
@@ -195,38 +195,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                     error: 'Failed connecting to server',
                 });
             })
-            .build();
-        return request;
-    }
-
-    createSimplifiedLeadPreviewRequest = (url, params, onSuccess) => {
-        const request = new FgRestBuilder()
-            .url(url)
-            .params(params)
-            .success((response) => {
-                try {
-                    onSuccess(response);
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.log(response);
-                this.setState({
-                    pending: false,
-                    error: 'Server error',
-                });
-            })
-            .fatal((response) => {
-                console.log(response);
-                this.setState({
-                    pending: false,
-                    error: 'Failed connecting to server',
-                });
-            })
-            .build();
-        return request;
-    }
+            .build()
+    )
 
     renderContent() {
         const {
@@ -242,7 +212,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         if (error) {
             return (
                 <div styleName="message">
-                    Preview Error
+                    { error }
                 </div>
             );
         }

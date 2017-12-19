@@ -64,3 +64,7 @@ export const createParamsForCountryDelete = () => ({
     method: DELETE,
     headers: commonHeaderForPost,
 });
+
+export const createUrlForGeoAreasLoadTrigger = regionId => (
+    `${wsEndpoint}/geo-areas-load-trigger/${regionId}/`
+);
