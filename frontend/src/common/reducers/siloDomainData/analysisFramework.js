@@ -51,17 +51,10 @@ const afViewRemoveWidget = (state, action) => {
         return state;
     }
 
-    const existingWidgets = analysisFramework.widgets;
-    const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widgetId);
-
-    if (widgetIndex === -1) {
-        return state;
-    }
-
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $splice: [[widgetIndex, 1]] },
+                widgets: { $filter: w => getWidgetKey(w) !== widgetId },
             },
         },
     };

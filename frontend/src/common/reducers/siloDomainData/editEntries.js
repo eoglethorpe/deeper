@@ -193,9 +193,9 @@ const editEntryViewRemoveEntry = (state, action) => {
     const { editEntryView } = state;
     const { entryId, leadId } = action;
 
+    // Get new selected entry id
     const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
     const entries = getEntriesByLeadId(editEntryView, leadId);
-
     let newSelectedEntryId;
     if (entryIndex + 1 < entries.length) {
         newSelectedEntryId = getIdFromEntry(entries[entryIndex + 1]);
