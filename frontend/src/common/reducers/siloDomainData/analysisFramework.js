@@ -20,9 +20,11 @@ const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
 };
 
 const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+    const { analysisFrameworkView } = state;
+    const { analysisFramework } = analysisFrameworkView;
+    if (!analysisFramework ||
+        !analysisFramework.widgets ||
+        analysisFramework.id !== analysisFrameworkId) {
         return state;
     }
 
@@ -37,13 +39,15 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
 };
 
 const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+    const { analysisFrameworkView } = state;
+    const { analysisFramework } = analysisFrameworkView;
+    if (!analysisFramework ||
+        !analysisFramework.widgets ||
+        analysisFramework.id !== analysisFrameworkId) {
         return state;
     }
 
-    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
+    const existingWidgets = analysisFramework.widgets;
     const index = existingWidgets.findIndex(w => w.key === widgetId);
 
     if (index !== -1) {
@@ -60,13 +64,15 @@ const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
 };
 
 const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+    const { analysisFrameworkView } = state;
+    const { analysisFramework } = analysisFrameworkView;
+    if (!analysisFramework ||
+        !analysisFramework.widgets ||
+        analysisFramework.id !== analysisFrameworkId) {
         return state;
     }
 
-    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
+    const existingWidgets = analysisFramework.widgets;
     const index = existingWidgets.findIndex(w => w.key === widget.key);
 
     if (index !== -1) {

@@ -53,6 +53,7 @@ const editEntryViewAddEntry = (state, action) => {
 };
 
 const editEntryViewSaveEntry = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
@@ -61,7 +62,7 @@ const editEntryViewSaveEntry = (state, action) => {
         values = {},
     } = action;
 
-    const index = state.editEntryView[leadId].entries.findIndex(
+    const index = editEntryView[leadId].entries.findIndex(
         e => e.data.id === entryId,
     );
 
@@ -89,6 +90,7 @@ const editEntryViewSaveEntry = (state, action) => {
 };
 
 const editEntryViewChangeEntry = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
@@ -98,7 +100,7 @@ const editEntryViewChangeEntry = (state, action) => {
         uiState = {},
     } = action;
 
-    const index = state.editEntryView[leadId].entries.findIndex(
+    const index = editEntryView[leadId].entries.findIndex(
         e => e.data.id === entryId,
     );
 
@@ -125,17 +127,18 @@ const editEntryViewChangeEntry = (state, action) => {
 };
 
 const editEntryViewDiffEntries = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         diffs,
     } = action;
 
-    const localEntries = state.editEntryView[leadId].entries;
+    const localEntries = editEntryView[leadId].entries;
     const newEntries = calcNewEntries(localEntries, diffs);
 
     // If last selected was deleted in newEntries, then set the first item as
     // selected
-    let newActiveId = state.editEntryView[leadId].selectedEntryId;
+    let newActiveId = editEntryView[leadId].selectedEntryId;
     const oldSelected = newEntries.find(entry => entry.data.id === newActiveId);
     if (!oldSelected && newEntries.length > 0) {
         newActiveId = newEntries[0].data.id;
@@ -154,13 +157,14 @@ const editEntryViewDiffEntries = (state, action) => {
 };
 
 const entryMarkForDelete = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
         mark,
     } = action;
 
-    const index = state.editEntryView[leadId].entries.findIndex(
+    const index = editEntryView[leadId].entries.findIndex(
         e => e.data.id === entryId,
     );
 
@@ -183,9 +187,10 @@ const entryMarkForDelete = (state, action) => {
 };
 
 const editEntryViewRemoveEntry = (state, action) => {
+    const { editEntryView } = state;
     const { entryId, leadId } = action;
 
-    const entries = state.editEntryView[leadId].entries;
+    const entries = editEntryView[leadId].entries;
     const entryIndex = entries.findIndex(d => d.data.id === entryId);
 
     let newActiveId;

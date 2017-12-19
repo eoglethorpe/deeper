@@ -24,13 +24,13 @@ const setActiveProject = (state, action) => {
 
 // Only set new active project in this reducer
 const setUserProjects = (state, action) => {
+    const { activeProject } = state;
     const { projects } = action;
     // If there is no projects, then no need to update active project
     if (!projects || projects.length <= 0) {
         return state;
     }
 
-    const { activeProject } = state;
     let activeIndex = action.projects.findIndex(project => project.id === activeProject);
     if (activeIndex < 0) {
         activeIndex = 0;

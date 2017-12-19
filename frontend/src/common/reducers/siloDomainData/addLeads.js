@@ -18,18 +18,23 @@ import { createLead } from '../../entities/lead';
 
 // HELPER
 
-const hasError = (newState, leadIndex) => {
-    const ld = newState.addLeadView.leads[leadIndex];
-    if (ld.form.errors && ld.form.errors.length > 0) {
+const hasError = (state, leadIndex) => {
+    const { addLeadView: { leads } } = state;
+    const lead = leads[leadIndex];
+    // TODO: check if we actually use errors inside form
+    const { form: { errors, fieldErrors } } = lead;
+    if (errors && errors.length > 0) {
         return true;
     }
-    const errorList = ld.form.fieldErrors;
-    return Object.keys(errorList).some(key => !!errorList[key]);
+    return Object.keys(fieldErrors).some(key => !!fieldErrors[key]);
 };
 
+// NOTE: if leadIndices is not defined, iterate over all leads
 const setErrorForLeads = (state, leadIndices) => {
+    const { addLeadView: { leads } } = state;
+
     const newLeadIndices = !leadIndices
-        ? getNumbers(0, state.addLeadView.leads.length)
+        ? getNumbers(0, leads.length)
         : leadIndices;
 
     const leadSettings = newLeadIndices.reduce(
@@ -51,12 +56,15 @@ const setErrorForLeads = (state, leadIndices) => {
 // REDUCER
 
 const addLeadViewAddNewLeads = (state, action) => {
-    const { leads } = action;
-    if (!leads || leads.length <= 0) {
+    const { addLeadView: { leads } } = state;
+
+
+    const { leads: leadsFromAction } = action;
+    if (!leadsFromAction || leadsFromAction.length <= 0) {
         return state;
     }
 
-    const newLeads = leads.map(data => createLead(data));
+    const newLeads = leadsFromAction.map(data => createLead(data));
 
     const serverIdMap = newLeads.reduce(
         (acc, lead) => {
@@ -69,7 +77,7 @@ const addLeadViewAddNewLeads = (state, action) => {
     );
 
     // TODO: splice works only on when on lead is added (that has serverId)
-    const spliceSettings = state.addLeadView.leads.reduce(
+    const spliceSettings = leads.reduce(
         (acc, lead, i) => {
             if (lead.data && lead.data.serverId && serverIdMap[lead.data.serverId]) {
                 acc.push([i, 1]);
@@ -121,6 +129,7 @@ const removeLeadViewSetFilters = (state) => {
 };
 
 const addLeadViewChangeLead = (state, action) => {
+    const { addLeadView: { leads } } = state;
     const {
         leadId,
         values = {},
@@ -130,7 +139,7 @@ const addLeadViewChangeLead = (state, action) => {
         uiState,
     } = action;
 
-    const index = state.addLeadView.leads.findIndex(
+    const index = leads.findIndex(
         lead => lead.data.id === leadId,
     );
 
@@ -151,12 +160,13 @@ const addLeadViewChangeLead = (state, action) => {
 };
 
 const addLeadViewSaveLead = (state, action) => {
+    const { addLeadView: { leads } } = state;
     const {
         leadId,
         serverId,
     } = action;
 
-    const index = state.addLeadView.leads.findIndex(
+    const index = leads.findIndex(
         lead => lead.data.id === leadId,
     );
 
@@ -180,23 +190,24 @@ const addLeadViewSaveLead = (state, action) => {
 };
 
 const addLeadViewCopyAll = (state, action, behavior) => {
+    const { addLeadView: { leads } } = state;
     const {
         leadId,
         attrName,
     } = action;
 
-    const index = state.addLeadView.leads.findIndex(
+    const index = leads.findIndex(
         lead => lead.data.id === leadId,
     );
 
-    const leadProjectId = state.addLeadView.leads[index].form.values.project;
+    const leadProjectId = leads[index].form.values.project;
 
     const start = behavior === 'below' ? (index + 1) : 0;
 
-    const valueToCopy = state.addLeadView.leads[index].form.values[attrName];
+    const valueToCopy = leads[index].form.values[attrName];
     const leadSettings = {};
-    for (let i = start; i < state.addLeadView.leads.length; i += 1) {
-        const currLeadProjectId = state.addLeadView.leads[i].form.values.project;
+    for (let i = start; i < leads.length; i += 1) {
+        const currLeadProjectId = leads[i].form.values.project;
         if (attrName === 'assignee' && currLeadProjectId !== leadProjectId) {
             continue; // eslint-disable-line no-continue
         }
@@ -234,14 +245,16 @@ const addLeadViewSetActiveLead = (state, action) => {
 };
 
 const addLeadViewPrevLead = (state) => {
-    const index = state.addLeadView.leads.findIndex(
-        lead => lead.data.id === state.addLeadView.activeLeadId,
+    const { addLeadView: { leads, activeLeadId } } = state;
+
+    const index = leads.findIndex(
+        lead => lead.data.id === activeLeadId,
     );
     if (index - 1 < 0) {
         return state;
     }
 
-    const newActiveId = state.addLeadView.leads[index - 1].data.id;
+    const newActiveId = leads[index - 1].data.id;
     const settings = {
         addLeadView: {
             activeLeadId: { $set: newActiveId },
@@ -251,14 +264,15 @@ const addLeadViewPrevLead = (state) => {
 };
 
 const addLeadViewNextLead = (state) => {
-    const index = state.addLeadView.leads.findIndex(
-        lead => lead.data.id === state.addLeadView.activeLeadId,
+    const { addLeadView: { leads, activeLeadId } } = state;
+    const index = leads.findIndex(
+        lead => lead.data.id === activeLeadId,
     );
-    if (index + 1 >= state.addLeadView.leads.length) {
+    if (index + 1 >= leads.length) {
         return state;
     }
 
-    const newActiveId = state.addLeadView.leads[index + 1].data.id;
+    const newActiveId = leads[index + 1].data.id;
     const settings = {
         addLeadView: {
             activeLeadId: { $set: newActiveId },
@@ -268,16 +282,18 @@ const addLeadViewNextLead = (state) => {
 };
 
 const addLeadViewRemoveLead = (state, action) => {
+    const { addLeadView: { leads } } = state;
+
     const { leadId } = action;
-    const index = state.addLeadView.leads.findIndex(
+    const index = leads.findIndex(
         lead => lead.data.id === leadId,
     );
 
     let newActiveId;
-    if (index + 1 < state.addLeadView.leads.length) {
-        newActiveId = state.addLeadView.leads[index + 1].data.id;
+    if (index + 1 < leads.length) {
+        newActiveId = leads[index + 1].data.id;
     } else if (index - 1 >= 0) {
-        newActiveId = state.addLeadView.leads[index - 1].data.id;
+        newActiveId = leads[index - 1].data.id;
     }
 
     const settings = {
