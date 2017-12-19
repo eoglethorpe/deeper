@@ -6,6 +6,14 @@ import {
     AF__VIEW_UPDATE_WIDGET,
 } from '../../action-types/siloDomainData';
 
+// HELPER
+
+const isAnalysisFrameworkValid = (af, id) => (
+    af && af.id === id && af.widgets
+);
+
+const getWidgetKey = widget => widget.key;
+
 // REDUCER
 
 const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
@@ -19,12 +27,10 @@ const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
     return update(state, settings);
 };
 
-const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
-    const { analysisFrameworkView } = state;
-    const { analysisFramework } = analysisFrameworkView;
-    if (!analysisFramework ||
-        !analysisFramework.widgets ||
-        analysisFramework.id !== analysisFrameworkId) {
+const afViewAddWidget = (state, action) => {
+    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
@@ -38,54 +44,52 @@ const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
     return update(state, settings);
 };
 
-const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
-    const { analysisFrameworkView } = state;
-    const { analysisFramework } = analysisFrameworkView;
-    if (!analysisFramework ||
-        !analysisFramework.widgets ||
-        analysisFramework.id !== analysisFrameworkId) {
+const afViewRemoveWidget = (state, action) => {
+    const { analysisFrameworkId, widgetId } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
     const existingWidgets = analysisFramework.widgets;
-    const index = existingWidgets.findIndex(w => w.key === widgetId);
+    const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widgetId);
 
-    if (index !== -1) {
-        const settings = {
-            analysisFrameworkView: {
-                analysisFramework: {
-                    widgets: { $splice: [[index, 1]] },
-                },
-            },
-        };
-        return update(state, settings);
+    if (widgetIndex === -1) {
+        return state;
     }
-    return state;
+
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: {
+                widgets: { $splice: [[widgetIndex, 1]] },
+            },
+        },
+    };
+    return update(state, settings);
 };
 
-const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
-    const { analysisFrameworkView } = state;
-    const { analysisFramework } = analysisFrameworkView;
-    if (!analysisFramework ||
-        !analysisFramework.widgets ||
-        analysisFramework.id !== analysisFrameworkId) {
+const afViewUpdateWidget = (state, action) => {
+    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
     const existingWidgets = analysisFramework.widgets;
-    const index = existingWidgets.findIndex(w => w.key === widget.key);
+    const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widget.key);
 
-    if (index !== -1) {
-        const settings = {
-            analysisFrameworkView: {
-                analysisFramework: {
-                    widgets: { $splice: [[index, 1, widget]] },
-                },
-            },
-        };
-        return update(state, settings);
+    if (widgetIndex === -1) {
+        return state;
     }
-    return state;
+
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: {
+                widgets: { $splice: [[widgetIndex, 1, widget]] },
+            },
+        },
+    };
+    return update(state, settings);
 };
 
 // REDUCER MAP

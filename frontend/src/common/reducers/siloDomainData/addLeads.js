@@ -57,8 +57,6 @@ const setErrorForLeads = (state, leadIndices) => {
 
 const addLeadViewAddNewLeads = (state, action) => {
     const { addLeadView: { leads } } = state;
-
-
     const { leads: leadsFromAction } = action;
     if (!leadsFromAction || leadsFromAction.length <= 0) {
         return state;
@@ -76,10 +74,11 @@ const addLeadViewAddNewLeads = (state, action) => {
         {},
     );
 
-    // TODO: splice works only on when on lead is added (that has serverId)
+    // TODO: Use filter with help from map above along with bulk push
     const spliceSettings = leads.reduce(
         (acc, lead, i) => {
-            if (lead.data && lead.data.serverId && serverIdMap[lead.data.serverId]) {
+            const { data } = lead;
+            if (data && data.serverId && serverIdMap[data.serverId]) {
                 acc.push([i, 1]);
             }
             return acc;
@@ -148,9 +147,11 @@ const addLeadViewChangeLead = (state, action) => {
     };
     settings.addLeadView.leads[index].form.values = { $merge: values };
     settings.addLeadView.leads[index].form.fieldErrors = { $merge: formFieldErrors };
+    // TODO: use $cond
     if (formErrors) {
         settings.addLeadView.leads[index].form.errors = { $set: formErrors };
     }
+    // TODO: use $cond
     if (uiState) {
         settings.addLeadView.leads[index].uiState = { $merge: uiState };
     }
@@ -236,9 +237,7 @@ const addLeadViewSetActiveLead = (state, action) => {
     const { leadId } = action;
     const settings = {
         addLeadView: {
-            activeLeadId: {
-                $set: leadId,
-            },
+            activeLeadId: { $set: leadId },
         },
     };
     return update(state, settings);
@@ -250,6 +249,8 @@ const addLeadViewPrevLead = (state) => {
     const index = leads.findIndex(
         lead => lead.data.id === activeLeadId,
     );
+
+    // Can't go before 0
     if (index - 1 < 0) {
         return state;
     }
@@ -268,6 +269,8 @@ const addLeadViewNextLead = (state) => {
     const index = leads.findIndex(
         lead => lead.data.id === activeLeadId,
     );
+
+    // can't go beyond the length
     if (index + 1 >= leads.length) {
         return state;
     }
@@ -289,6 +292,7 @@ const addLeadViewRemoveLead = (state, action) => {
         lead => lead.data.id === leadId,
     );
 
+    // limiting the newActiveid
     let newActiveId;
     if (index + 1 < leads.length) {
         newActiveId = leads[index + 1].data.id;
@@ -298,9 +302,7 @@ const addLeadViewRemoveLead = (state, action) => {
 
     const settings = {
         addLeadView: {
-            leads: {
-                $splice: [[index, 1]],
-            },
+            leads: { $splice: [[index, 1]] },
             activeLeadId: { $set: newActiveId },
         },
     };

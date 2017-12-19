@@ -8,36 +8,35 @@ import { SET_USER_PROJECTS } from '../../action-types/domainData';
 
 import initialSiloDomainData from '../../initial-state/siloDomainData';
 
+const getIdFromProject = project => project.id;
+
 // REDUCER
 
 const logout = () => initialSiloDomainData;
 
-const setActiveProject = (state, action) => {
-    const { activeProject } = action;
+// NOTE: Only set new active project in this reducer
+const setUserProjects = (state, action) => {
+    const { activeProject } = state;
+    const { projects } = action;
+
+    const newActiveProject = projects
+        ? projects.find(project => project.id === activeProject)
+        : undefined;
+
+    const newActiveProjectId = newActiveProject
+        ? getIdFromProject(newActiveProject)
+        : undefined;
+
     const settings = {
-        activeProject: {
-            $set: activeProject,
-        },
+        activeProject: { $set: newActiveProjectId },
     };
     return update(state, settings);
 };
 
-// Only set new active project in this reducer
-const setUserProjects = (state, action) => {
-    const { activeProject } = state;
-    const { projects } = action;
-    // If there is no projects, then no need to update active project
-    if (!projects || projects.length <= 0) {
-        return state;
-    }
-
-    let activeIndex = action.projects.findIndex(project => project.id === activeProject);
-    if (activeIndex < 0) {
-        activeIndex = 0;
-    }
-
+const setActiveProject = (state, action) => {
+    const { activeProject } = action;
     const settings = {
-        activeProject: { $set: action.projects[activeIndex].id },
+        activeProject: { $set: activeProject },
     };
     return update(state, settings);
 };

@@ -47,84 +47,82 @@ const buildSettings = (indices, action, value, wrapper) => (
     )
 );
 
+const getCategoryIdFromCategory = category => category.id;
 
 // REDUCER
 
 const ceViewAddNewCategory = (state, action) => {
+    const { id, title } = action;
+    const newCategory = {
+        id,
+        title,
+        selectedSubcategories: [],
+        subcategories: [],
+    };
     const settings = {
         categoryEditorView: {
-            categories: {
-                $push: [{
-                    id: action.id,
-                    title: action.title,
-                    selectedSubcategories: [],
-                    subcategories: [],
-                }],
-            },
-            activeCategoryId: {
-                $set: action.id,
-            },
+            activeCategoryId: { $set: id },
+            categories: { $push: [newCategory] },
         },
     };
     return update(state, settings);
 };
 
 const ceViewSetActiveCategoryId = (state, action) => {
+    const { id } = action;
     const settings = {
         categoryEditorView: {
-            activeCategoryId: {
-                $set: action.id,
-            },
+            activeCategoryId: { $set: id },
         },
     };
     return update(state, settings);
 };
 
 const ceViewAddNewSubcategory = (state, action) => {
+    const { newSubcategory, level } = action;
+
     const { categoryEditorView } = state;
-    const {
-        categories,
-        activeCategoryId,
-    } = categoryEditorView;
+    const { categories, activeCategoryId } = categoryEditorView;
 
     const settingAction = '$push';
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
-        action.level,
+        level,
+    );
+
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [newSubcategory],
+        subcategoryWrapper,
     );
     const settings = {
-        categoryEditorView: {
-            categories: {
-                ...buildSettings(
-                    indices,
-                    settingAction,
-                    [action.newSubcategory],
-                    subcategoryWrapper,
-                ),
-            },
-        },
+        categoryEditorView: { categories: categoriesSettings },
     };
-
     return update(state, settings);
 };
 
 const ceViewUpdateSelectedSubcategories = (state, action) => {
+    const { level, subCategoryId } = action;
     const { categoryEditorView } = state;
     const {
         categories,
         activeCategoryId,
     } = categoryEditorView;
 
-    const categoryIndex = categories.findIndex(d => d.id === activeCategoryId);
-    const length = categories[categoryIndex].selectedSubcategories.length;
+    const categoryIndex = categories.find(
+        d => getCategoryIdFromCategory(d) === activeCategoryId,
+    );
+    const category = categories[categoryIndex];
+    const length = category.selectedSubcategories.length;
 
     const settings = {
         categoryEditorView: {
             categories: {
                 [categoryIndex]: {
                     selectedSubcategories: {
-                        $splice: [[action.level, length, action.subCategoryId]],
+                        $splice: [[level, length, subCategoryId]],
                     },
                 },
             },
