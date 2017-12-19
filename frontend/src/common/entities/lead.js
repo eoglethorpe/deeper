@@ -1,6 +1,5 @@
-import {
-    iconNames,
-} from '../constants';
+import update from '../../public/utils/immutable-update';
+import { iconNames } from '../constants';
 
 export const LEAD_TYPE = {
     dropbox: 'dropbox',
@@ -30,6 +29,90 @@ export const LEAD_FILTER_STATUS = {
     invalid: 'invalid',
     saved: 'saved',
     unsaved: 'unsaved',
+};
+
+export const mimeType = {
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    rtf: 'application/rtf',
+    text: 'text/plain',
+    otf: 'font/otf',
+    pdf: 'application/pdf',
+    pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ppt: 'application/vnd.ms-powerpoint',
+    xls: 'application/vnd.ms-excel',
+    xlxs: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    csv: 'text/csv',
+    png: 'image/png',
+    jpg: 'image/jpg',
+    jpeg: 'image/jpeg',
+    fig: 'image/fig',
+    json: 'application/json',
+    xml: 'application/xml',
+    msword: 'application/msword',
+};
+
+export const leadTypeIconMap = {
+    [mimeType.text]: iconNames.documentText,
+
+    [mimeType.docx]: iconNames.docx,
+    [mimeType.rtf]: iconNames.rtf,
+    [mimeType.otf]: iconNames.otf,
+    [mimeType.msword]: iconNames.msword,
+
+    [mimeType.pdf]: iconNames.pdf,
+
+    [mimeType.pptx]: iconNames.pptx,
+    [mimeType.ppt]: iconNames.ppt,
+
+    [mimeType.xls]: iconNames.xls,
+    [mimeType.xlxs]: iconNames.xlxs,
+
+    [mimeType.csv]: iconNames.csv,
+
+    [mimeType.png]: iconNames.png,
+    [mimeType.jpg]: iconNames.jpg,
+    [mimeType.jpeg]: iconNames.jpeg,
+    [mimeType.fig]: iconNames.fig,
+
+    [mimeType.json]: iconNames.json,
+    [mimeType.xml]: iconNames.xml,
+};
+
+const leadReference = {
+    data: {
+        id: 'lead-0',
+        type: 'void',
+        serverId: undefined,
+    },
+    form: {
+        values: {
+            title: 'Lead #0',
+            project: 0,
+        },
+        errors: [],
+        fieldErrors: {},
+    },
+    uiState: {
+        error: false,
+        pristine: false,
+    },
+};
+
+export const createLead = ({ id, serverId, type, values = {}, pristine = false }) => {
+    const settings = {
+        data: {
+            id: { $set: id },
+            type: { $set: type },
+            serverId: { $set: serverId },
+        },
+        form: {
+            values: { $set: values },
+        },
+        uiState: {
+            pristine: { $set: pristine },
+        },
+    };
+    return update(leadReference, settings);
 };
 
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
@@ -79,52 +162,4 @@ export const leadAccessor = {
     getFieldErrors: lead => lead.form && lead.form.fieldErrors,
 
     getUiState: lead => lead.uiState,
-};
-
-
-export const mimeType = {
-    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    rtf: 'application/rtf',
-    text: 'text/plain',
-    otf: 'font/otf',
-    pdf: 'application/pdf',
-    pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    ppt: 'application/vnd.ms-powerpoint',
-    xls: 'application/vnd.ms-excel',
-    xlxs: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    csv: 'text/csv',
-    png: 'image/png',
-    jpg: 'image/jpg',
-    jpeg: 'image/jpeg',
-    fig: 'image/fig',
-    json: 'application/json',
-    xml: 'application/xml',
-    msword: 'application/msword',
-};
-
-export const leadTypeIconMap = {
-    [mimeType.text]: iconNames.documentText,
-
-    [mimeType.docx]: iconNames.docx,
-    [mimeType.rtf]: iconNames.rtf,
-    [mimeType.otf]: iconNames.otf,
-    [mimeType.msword]: iconNames.msword,
-
-    [mimeType.pdf]: iconNames.pdf,
-
-    [mimeType.pptx]: iconNames.pptx,
-    [mimeType.ppt]: iconNames.ppt,
-
-    [mimeType.xls]: iconNames.xls,
-    [mimeType.xlxs]: iconNames.xlxs,
-
-    [mimeType.csv]: iconNames.csv,
-
-    [mimeType.png]: iconNames.png,
-    [mimeType.jpg]: iconNames.jpg,
-    [mimeType.jpeg]: iconNames.jpeg,
-    [mimeType.fig]: iconNames.fig,
-
-    [mimeType.json]: iconNames.json,
-    [mimeType.xml]: iconNames.xml,
 };
