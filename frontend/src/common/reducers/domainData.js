@@ -1,3 +1,4 @@
+import createReducerWithMap from '../utils/createReducerWithMap';
 import {
     SET_USER_INFORMATION,
     UNSET_USER,
@@ -840,13 +841,5 @@ const reducers = {
     [SET_CATEGORY]: setCategory,
 };
 
-const domainDataReducer = (state = initialDomainDataState, action) => {
-    const { type } = action;
-    const reducer = reducers[type];
-    if (!reducer) {
-        return state;
-    }
-    return reducer(state, action);
-};
-
+const domainDataReducer = createReducerWithMap(reducers, initialDomainDataState);
 export default domainDataReducer;

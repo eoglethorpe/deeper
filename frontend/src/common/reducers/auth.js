@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode';
+import createReducerWithMap from '../utils/createReducerWithMap';
 
 import {
     LOGIN_ACTION,
@@ -70,13 +71,5 @@ const reducers = {
     [SET_ACCESS_TOKEN_ACTION]: setAccessToken,
 };
 
-const authReducer = (state = initialAuthState, action) => {
-    const { type } = action;
-    const reducer = reducers[type];
-    if (!reducer) {
-        return state;
-    }
-    return reducer(state, action);
-};
-
+const authReducer = createReducerWithMap(reducers, initialAuthState);
 export default authReducer;
