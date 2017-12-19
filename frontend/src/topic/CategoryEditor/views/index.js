@@ -53,6 +53,9 @@ const defaultProps = {
     activeCategoryId: undefined,
 };
 
+
+const LIMIT = 5;
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CategoryEditor extends React.PureComponent {
@@ -89,17 +92,38 @@ export default class CategoryEditor extends React.PureComponent {
             );
         });
 
-        subcategoryColumns.push(
-            <SubcategoryColumn
-                level={selectedSubcategories.length}
-                key="empty"
-                subcategories={subcategories}
-                onNewSubcategory={this.handleNewSubcategory}
-                onSubcategoryClick={this.handleSubcategoryClick}
-            />,
-        );
+        if (selectedSubcategories.length < LIMIT) {
+            subcategoryColumns.push(
+                <SubcategoryColumn
+                    level={selectedSubcategories.length}
+                    key="empty"
+                    subcategories={subcategories}
+                    onNewSubcategory={this.handleNewSubcategory}
+                    onSubcategoryClick={this.handleSubcategoryClick}
+                />,
+            );
+        }
 
         return subcategoryColumns;
+    }
+
+    getSelectedSubcategory = () => {
+        const {
+            categories,
+            activeCategoryId,
+        } = this.props;
+
+        if (activeCategoryId) {
+            const category = categories.find(d => d.id === activeCategoryId);
+            const { selectedSubcategories } = category;
+
+            const len = selectedSubcategories.length;
+            if (len > 0) {
+                return selectedSubcategories[len - 1];
+            }
+        }
+
+        return 'none';
     }
 
     handleNewSubcategory = (level) => {
@@ -202,7 +226,7 @@ export default class CategoryEditor extends React.PureComponent {
                         <div
                             styleName="properties"
                         >
-                            properties
+                            { this.getSelectedSubcategory() }
                         </div>
                     </div>
                 </div>
