@@ -1,3 +1,7 @@
+import {
+    iconNames,
+} from '../constants';
+
 export const LEAD_TYPE = {
     dropbox: 'dropbox',
     drive: 'google-drive',
@@ -75,4 +79,52 @@ export const leadAccessor = {
     getFieldErrors: lead => lead.form && lead.form.fieldErrors,
 
     getUiState: lead => lead.uiState,
+};
+
+
+export const mimeType = {
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    rtf: 'application/rtf',
+    text: 'text/plain',
+    otf: 'font/otf',
+    pdf: 'application/pdf',
+    pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ppt: 'application/vnd.ms-powerpoint',
+    xls: 'application/vnd.ms-excel',
+    xlxs: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    csv: 'text/csv',
+    png: 'image/png',
+    jpg: 'image/jpg',
+    jpeg: 'image/jpeg',
+    fig: 'image/fig',
+    json: 'application/json',
+    xml: 'application/xml',
+    msword: 'application/msword',
+};
+
+export const leadTypeIconMap = {
+    [mimeType.text]: iconNames.documentText,
+
+    [mimeType.docx]: iconNames.docx,
+    [mimeType.rtf]: iconNames.rtf,
+    [mimeType.otf]: iconNames.otf,
+    [mimeType.msword]: iconNames.msword,
+
+    [mimeType.pdf]: iconNames.pdf,
+
+    [mimeType.pptx]: iconNames.pptx,
+    [mimeType.ppt]: iconNames.ppt,
+
+    [mimeType.xls]: iconNames.xls,
+    [mimeType.xlxs]: iconNames.xlxs,
+
+    [mimeType.csv]: iconNames.csv,
+
+    [mimeType.png]: iconNames.png,
+    [mimeType.jpg]: iconNames.jpg,
+    [mimeType.jpeg]: iconNames.jpeg,
+    [mimeType.fig]: iconNames.fig,
+
+    [mimeType.json]: iconNames.json,
+    [mimeType.xml]: iconNames.xml,
 };
