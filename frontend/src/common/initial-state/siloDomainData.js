@@ -44,6 +44,7 @@ const initialSiloDomainData = {
         1: {
             activeSort: '-created_at',
             activePage: 1,
+            viewMode: 'viz',
             filters: {
             },
             leads: [],

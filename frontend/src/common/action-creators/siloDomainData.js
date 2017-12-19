@@ -18,6 +18,7 @@ import {
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
+    L__SET_VIEW_MODE,
     L__SET_ACTIVE_SORT,
 
     E__SET_ENTRIES,
@@ -133,6 +134,11 @@ export const unsetLeadPageFilterAction = () => ({
 export const setLeadPageActivePageAction = ({ activePage }) => ({
     type: L__SET_ACTIVE_PAGE,
     activePage,
+});
+
+export const setLeadPageViewModeAction = ({ viewMode }) => ({
+    type: L__SET_VIEW_MODE,
+    viewMode,
 });
 
 export const setLeadPageActiveSortAction = ({ activeSort }) => ({

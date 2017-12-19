@@ -171,7 +171,7 @@ export default class AddProjectMembers extends React.PureComponent {
         const { users } = this.props;
 
         if (nextProps.users !== users) {
-            const usersWithRole = users.map(user => ({
+            const usersWithRole = nextProps.users.map(user => ({
                 ...user,
                 role: 'normal',
             }));

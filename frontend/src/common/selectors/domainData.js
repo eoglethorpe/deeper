@@ -198,3 +198,25 @@ export const subSubCategoriesSelector = ({ domainData }) => (
     domainData.subSubCategories || emptyObject
 );
 */
+
+// Visualization Selectors
+
+export const hierarchialDataSelector = ({ domainData }) => (
+    domainData.visualization.hierarchialData || emptyObject
+);
+
+export const chordDataSelector = ({ domainData }) => (
+    domainData.visualization.chordData || emptyObject
+);
+
+export const correlationDataSelector = ({ domainData }) => (
+    domainData.visualization.correlationData || emptyObject
+);
+
+export const barDataSelector = ({ domainData }) => (
+    domainData.visualization.barData || emptyObject
+);
+
+export const forceDirectedDataSelector = ({ domainData }) => (
+    domainData.visualization.forceDirectedData || emptyObject
+);
