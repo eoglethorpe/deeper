@@ -14,6 +14,9 @@ import {
     createUrlForGeoJsonMap,
 } from '../../../common/rest';
 import {
+    SegmentButton,
+} from '../../../public/components/Action';
+import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
@@ -21,6 +24,7 @@ const propTypes = {
     className: PropTypes.string,
     regionId: PropTypes.number.isRequired,
 };
+
 const defaultProps = {
     className: '',
 };
@@ -110,6 +114,7 @@ export default class RegionMap extends React.PureComponent {
                     this.setState({
                         pending: false,
                         error: undefined,
+                        selectedAdminLevelId: response.results.length > 0 ? `${response.results[0].id}` : '',
                         adminLevels: response.results,
                     });
                 }
@@ -178,11 +183,18 @@ export default class RegionMap extends React.PureComponent {
         this.setState({ selections });
     }
 
+    handleAdminLevelSelection = (id) => {
+        this.setState({
+            selectedAdminLevelId: id,
+        });
+    }
+
     renderContent() {
         const {
             error,
             adminLevels,
             selections,
+            selectedAdminLevelId,
         } = this.state;
 
         if (error) {
@@ -193,14 +205,28 @@ export default class RegionMap extends React.PureComponent {
             );
         }
 
-        if (adminLevels && adminLevels.length > 0) {
+        if (adminLevels && adminLevels.length > 0 && selectedAdminLevelId) {
             return (
-                <GeoJsonMap
-                    selections={selections}
-                    styleName="geo-json-map"
-                    url={createUrlForGeoJsonMap(adminLevels[0].id)}
-                    onAreaClick={this.handleAreaClick}
-                />
+                <div styleName="map-container">
+                    <GeoJsonMap
+                        selections={selections}
+                        styleName="geo-json-map"
+                        url={createUrlForGeoJsonMap(selectedAdminLevelId)}
+                        onAreaClick={this.handleAreaClick}
+                    />
+                    <div styleName="action">
+                        <SegmentButton
+                            data={
+                                adminLevels.map(al => ({
+                                    label: al.title,
+                                    value: `${al.id}`,
+                                }))
+                            }
+                            selected={selectedAdminLevelId}
+                            onPress={this.handleAdminLevelSelection}
+                        />
+                    </div>
+                </div>
             );
         }
 
