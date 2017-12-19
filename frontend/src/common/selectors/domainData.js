@@ -179,6 +179,7 @@ export const currentUserAdminProjectsSelector = createSelector(
 );
 
 
+/*
 export const categoriesSelector = ({ domainData }) => (
     domainData.categories || emptyObject
 );
@@ -196,3 +197,4 @@ export const subCategoriesSelector = ({ domainData }) => (
 export const subSubCategoriesSelector = ({ domainData }) => (
     domainData.subSubCategories || emptyObject
 );
+*/

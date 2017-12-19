@@ -36,9 +36,10 @@ import {
     EE__ENTRY_DIFF,
     EE__ENTRY_MARK_FOR_DELETE,
 
-    CE_VIEW_SET_SELECTED_CATEGORY,
-    CE_VIEW_SET_SELECTED_SUB_CATEGORY,
-    CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
+    CE_VIEW_ADD_NEW_CATEGORY,
+    CE_VIEW_SET_ACTIVE_CATEGORY_ID,
+    CE_VIEW_ADD_NEW_SUBCATEGORY,
+    CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES,
 } from '../action-types/siloDomainData';
 
 
@@ -235,17 +236,26 @@ export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
     widget,
 });
 
-export const setActiveCategoryAction = selectedCategoryId => ({
-    type: CE_VIEW_SET_SELECTED_CATEGORY,
-    selectedCategoryId,
+// Category Editor
+export const addNewCategoryAction = ({ id, title }) => ({
+    type: CE_VIEW_ADD_NEW_CATEGORY,
+    id,
+    title,
 });
 
-export const setActiveSubCategoryAction = selectedSubCategoryId => ({
-    type: CE_VIEW_SET_SELECTED_SUB_CATEGORY,
-    selectedSubCategoryId,
+export const setActiveCategoryIdAction = id => ({
+    type: CE_VIEW_SET_ACTIVE_CATEGORY_ID,
+    id,
 });
 
-export const setActiveSubSubCategoryAction = selectedSubSubCategoryId => ({
-    type: CE_VIEW_SET_SELECTED_SUB_SUB_CATEGORY,
-    selectedSubSubCategoryId,
+export const addNewSubcategoryAction = ({ level, newSubcategory }) => ({
+    type: CE_VIEW_ADD_NEW_SUBCATEGORY,
+    level,
+    newSubcategory,
+});
+
+export const updateSelectedSubcategoriesAction = ({ level, subCategoryId }) => ({
+    type: CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES,
+    level,
+    subCategoryId,
 });
