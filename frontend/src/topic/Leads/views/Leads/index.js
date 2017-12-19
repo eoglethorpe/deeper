@@ -512,22 +512,23 @@ export default class Leads extends React.PureComponent {
                         {leadsString.addSourcesButtonLabel}
                     </PrimaryButton>
                 </header>
-                {viewMode === 'table' ? (
-                    <div styleName="table-container">
-                        <RawTable
-                            data={this.props.leads}
-                            dataModifier={this.leadModifier}
-                            headerModifier={this.headerModifier}
-                            headers={this.headers}
-                            onHeaderClick={this.handleTableHeaderClick}
-                            keyExtractor={this.leadKeyExtractor}
-                            styleName="leads-table"
-                        />
-                        { loadingLeads && <LoadingAnimation /> }
-                    </div>
-                ) : (
-                    <Visualizations styleName="viz-container" />
-                )
+                {
+                    viewMode === 'table' ? (
+                        <div styleName="table-container">
+                            <RawTable
+                                data={this.props.leads}
+                                dataModifier={this.leadModifier}
+                                headerModifier={this.headerModifier}
+                                headers={this.headers}
+                                onHeaderClick={this.handleTableHeaderClick}
+                                keyExtractor={this.leadKeyExtractor}
+                                styleName="leads-table"
+                            />
+                            { loadingLeads && <LoadingAnimation /> }
+                        </div>
+                    ) : (
+                        <Visualizations styleName="viz-container" />
+                    )
                 }
                 <footer styleName="footer">
                     <div>

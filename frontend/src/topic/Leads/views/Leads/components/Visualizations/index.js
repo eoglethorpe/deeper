@@ -4,9 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-} from '../../../../../../public/components/View';
-
-import {
     SunBurstView,
     ChordDiagramView,
     TreeMapView,
@@ -15,8 +12,6 @@ import {
     CollapsibleTreeView,
     RadialDendrogramView,
 } from '../../../../../../public/components/Visualization';
-import {
-} from '../../../../../../public/components/Action';
 
 import {
     leadsForProjectSelector,
@@ -59,6 +54,11 @@ export default class Visualizations extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static sizeValueAccessor = d => d.size;
+    static labelValueAccessor = d => d.name;
+    static groupValueAccessor = d => d.group;
+    static valueAccessor = d => d.value;
+
     render() {
         const {
             className,
@@ -76,21 +76,21 @@ export default class Visualizations extends React.PureComponent {
                 <TreeMapView
                     styleName="tree-map viz"
                     data={hierarchicalData}
-                    valueAccessor={d => d.size}
-                    labelAccessor={d => d.name}
+                    valueAccessor={Visualizations.sizeValueAccessor}
+                    labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <SunBurstView
                     styleName="sun-burst viz"
                     data={hierarchicalData}
-                    valueAccessor={d => d.size}
-                    labelAccessor={d => d.name}
+                    valueAccessor={Visualizations.sizeValueAccessor}
+                    labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <ChordDiagramView
                     styleName="chord-diagram viz"
                     data={chordData.values}
                     labelsData={chordData.labels}
-                    valueAccessor={d => d.size}
-                    labelAccessor={d => d.name}
+                    valueAccessor={Visualizations.sizeValueAccessor}
+                    labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <CorrelationMatrixView
                     styleName="correlation-matrix viz"
@@ -100,19 +100,19 @@ export default class Visualizations extends React.PureComponent {
                     styleName="force-directed-graph viz"
                     data={forceDirectedData}
                     idAccessor={d => d.id}
-                    groupAccessor={d => d.group}
-                    valueAccessor={d => d.value}
+                    groupAccessor={Visualizations.groupValueAccessor}
+                    valueAccessor={Visualizations.valueAccessor}
                     useVoronoi={false}
                 />
                 <CollapsibleTreeView
                     styleName="collapsible-tree viz"
                     data={hierarchicalData}
-                    labelAccessor={d => d.name}
+                    labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <RadialDendrogramView
                     styleName="radial-dendrogram viz"
                     data={hierarchicalData}
-                    labelAccessor={d => d.name}
+                    labelAccessor={Visualizations.labelValueAccessor}
                 />
             </div>
         );
