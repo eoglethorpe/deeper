@@ -1,10 +1,10 @@
 # Testing
 
-> Author: *Bibek Dahal*
+> Author: [bibekdahal](https://github.com/bibekdahal)
 
-Tests are written using enzyme and jest. Tests files are stored in *\_\_tests\_\_* directory which lies inside same directory as the component or logic that needs to be tested.
+Tests are written using Enzyme and Jest. Tests files are stored in the *\_\_tests\_\_* directory which lies inside the same directory as the component or logic that needs to be tested.
 
-Following is an example for testing a component if it renders properly.
+The following is an example of how to test if a component renders properly.
 
 ```javascript
 // components/Table/__tests__/index.js
@@ -67,7 +67,7 @@ describe('<Table />', () => {
 
 More examples using redux: [writing tests](https://github.com/reactjs/redux/blob/master/docs/recipes/WritingTests.md).
 
-For event based behavioral testing, the enzyme's `simulate` method can be used as helper method.
+For event based behavioral testing, Enzyme's `simulate` can be used as helper method.
 
 ```js
 wrapper.find('button').simulate('click');

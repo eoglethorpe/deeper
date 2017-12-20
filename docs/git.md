@@ -1,7 +1,7 @@
-# Guideline
+# Guidelines for using Git with DEEP
 
 ## [Commit Messages](https://chris.beams.io/posts/git-commit/)
-- Separate subject from body with a blank line
+- Separate subjects from body with a blank line
 - Limit the subject line to 50 characters
 - Capitalize the subject line
 - Do not end the subject line with a period
@@ -44,7 +44,7 @@ Once merged, the branch *hotfix-M* is deleted.
 
 # FAQ
 
-1. How to get latest changes from develop branch?
+1. How to get latest changes from the develop branch?
 ```
 git rebase develop
 ```
@@ -67,34 +67,36 @@ git pull --rebase
 git checkout -b FEATURE_NAME
 ```
 
-5. Oh, I mistakenly committed in master/develop. What should I do?
+5. Oh, I mistakenly committed in master/develop. What should I do? 
 
-    - If you haven’t pushed
+    - Repent at your nearest place of worship
+
+    - If you haven’t pushed...
     ```bash
-    # Make new branch with the new commits
+    # Make a new branch with the new commits
     git checkout -b new-branch
-    # Push new branch with the new commits
+    # Push a new branch with the new commits
     git push --set-upstream origin new-branch
     # Go back to develop
     git checkout develop
     # Reset develop back to it's original state
     # [Note: 1 for single commit, replace 1 with number of commits]
-    # use git log to make sure.
+    # use git log to verify.
     git reset --hard HEAD~1
 
     # You can also use --soft and stash the changes to new branch
     # but you have to re-commit
     ```
-    - Else, Notify your project manager.
+    - If you have pushed... let someone know.
 
 
-6. Got conflict on rebase, What to do?
+6. Hey, I've got a conflict on rebase, what should I do?
 ```bash
 # Look for conflict files [both modified section]
 git status -u
 # Fix the conflict on *both modified files*
 vim conflicts-files.extension
-# Make sure all the files are ready to add (don’t add unwanted files, update .gitignore)
+# Make sure all the files are ready to add (in order to not add unwanted files, update .gitignore)
 git status -u
 # Add all the files
 git add .   # (Update .gitignore for unrelated repo files)

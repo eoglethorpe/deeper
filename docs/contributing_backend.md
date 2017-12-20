@@ -1,4 +1,4 @@
-# Contributing
+# Contributing to the Backend
 
 ## Project Structure
 
@@ -23,27 +23,27 @@
     └── websocket
 
 
-## Python Coding Guideline
+## Python Coding Guidelines
 
 - Follow [PEP 8](https://www.python.org/dev/peps/pep-0008/).
 
-- Use 4 spaces -never tabs. Enough said.
+- Use 4 spaces  . . . . never tabs. Enough said.
 
-- Multiple Import
+- Multiple Imports
     ```python
-    # No
+    # Avoid this
     from .serializers import ProjectSerializer, ProjectMembershipSerializer
 
-    # Yes
+    # Do this
     from .serializers import (
         ProjectSerializer, ProjectMembershipSerializer
     )
     ```
-- Write [unit test](https://docs.djangoproject.com/en/1.11/topics/testing/).
+- Write [unit tests](https://docs.djangoproject.com/en/1.11/topics/testing/), much like your mother taught you.
 
 ## FAQ
 
-- How to get to python[with django initialization] shell?
+- How to get a python shell [with django initialization]?
     ```
     docker-compose up -d
     docker-compose exec web bash

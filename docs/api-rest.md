@@ -1,12 +1,12 @@
 # REST API
 
-> Author: *Bibek Dahal*
+> Author: [bibekdahal](https://github.com/bibekdahal)
 
-A thorough api documentation can be browsed at */api-docs/*.
+A thorough documentation of the API itself can be found at */api-docs/*.
 
 ## Authentication
 
-Authentication is done using JSON Web Tokens passed in the HTTP authorization header.
+Authentication is done using JSON Web Tokens passed in through the HTTP authorization header.
 
 Format:
 
@@ -16,9 +16,9 @@ Authorization: Bearer <JWT>
 
 ### Types of tokens
 
-#### Access Token
+#### Access Tokens
 
-This is sent in all kinds of api requests for authorization. This is fast authentication and doesn’t involve checking if say user has changed password. This token expires fast, typically every hour.
+This is sent in all types of API requests for authorization. It is a fast authentication and doesn’t check for scenarious such as if a user has changed their password. This token typically expires every hour.
 
 If an invalid or expired token is provided, a 401 error with message "Token is invalid or expired" is returned in the response.
 
@@ -30,9 +30,9 @@ If an invalid or expired token is provided, a 401 error with message "Token is i
 }
 ```
 
-#### Refresh Token
+#### Refresh Tokens
 
-This is long lasting token, typically lasting one week. It is used to obtain new access token. It also performs thorough authentication before handing out new access token.
+This is a long lasting token, typically lasting one week. It is used to obtain new access tokens. It also performs thorough authentication before handing out new access tokens.
 
 An expired or invalid refresh token gives 400 error.
 
@@ -48,14 +48,14 @@ An expired or invalid refresh token gives 400 error.
 }
 ```
 
-Both access and refresh tokens can be obtained initially through the jwt api by passing user credentials.
+Both access and refresh tokens can be obtained initially through the JWT API by passing user credentials.
 
 Examples of usage: [https://github.com/davesque/django-rest-framework-simplejwt#usage](https://github.com/davesque/django-rest-framework-simplejwt#usage)
 
 
-## Response Format
+## Response Formats
 
-On success (200 or 201 responses), the body of the response is the requested resource.
+On success (200 or 201 responses), the body of the response contains the requested resource.
 
 On error, the http status code will represent the type of error and the body of the response contains the internal server error code and an error message.
 
@@ -78,21 +78,18 @@ A json object `errors` is also returned. It indicates a key-value pair for each 
 
 ## Pagination and filtering
 
-If an api returns a list of results, it is possible to query only a set of those results using query parameters.
+If an API returns a list of results, it is possible to query only a subset of those results using query parameters.
 
-You can use `limit` and `offset` query parameters to indicate the number of results to return as well as the
+You can use the `limit` and `offset` query parameters to indicate the number of results to return as well as the
 initial index from which to return the results.
 
-The order of the results can be unique to each api. But if the resource returned by the api
-has modified and created datetime fields and unless anything else is explicitly defined for that
-api, the results are usually ordered by first the `modifiedAt` field and then the `createdAt`
-field.
+The order of the results can be unique to each API. However, if the resource returned by the API
+has modified `modifiedAt` or `createdAt` fields, and unless anything else is explicitly defined for that
+API, the results are usually ordered first by `modifiedAt` and then `createdAt`.
 
 The list API response always contains the `count` and `results` fields where `count` is the total number
-of items available (not considering the limit and offset)
-and `results` is the actual list of items queried.
-It can also contain the `next` and `previous` fields indicating url
-to retrieve the next and previous set of items of same count.
+of items available (not considering the limit and offset) and `results` is the actual list of items queried.
+The API can also contain the `next` and `previous` fields indicating the URL to retrieve the next and previous set of items of the same count.
 
 
 Example request:
@@ -134,20 +131,17 @@ Example response:
 }
 ```
 
-Many APIs also take further query parameters to filter the query set. For example, we can filter
-the leads by project using:
+Many APIs also take further query parameters to filter the query set. For example, you can filter Sources by projects using:
 
 ```
 GET /api/v1/leads/?project=2
 ```
 
-The API documentation available at */api/v1/docs/* also list out filters available for each api.
+The API documentation at */api/v1/docs/* also lists filters available for each API.
 
 ### Ordering
 
-To order the results by a particular field, one can use the `ordering` filter. It takes the name
-of the field to order the results by. By default, *ascending* order is used, but *descending*
-order can be enforced by using minus (-) sign with the field.
+To order the results by a particular field, one can use the `ordering` filter. By default, *ascending* is used, but *descending* can be enforced by using minus (-) sign with the field.
 
 ```
 GET /api/v1/leads/?ordering=title
@@ -164,29 +158,29 @@ they need to directly correspond to proper sql column names, which by convention
 
 ### HTTP Status Codes
 
-#### Successful requests:
+#### Successful Requests:
 
-* 201 :	when a new resource is created. Normally for POST requests only.
-* 200 :	for any other successful requests.
+* 201 :	When a new resource is created. Normally for POST requests only.
+* 200 :	For any other successful requests.
 
-#### Client errors:
+#### Client Errors:
 
-* 400 :	bad request: when the json request doesn’t contain proper fields
-* 401 :	unauthorized: needs a logged in user
-* 403 :	forbidden: user has no permission on requested resource
-* 404 :	resource is not found in the database
-* 405 :	not one of valid HTTP methods
+* 400 :	Bad request: the json request doesn’t contain proper fields
+* 401 :	Unauthorized: needs a logged in user
+* 403 :	Forbidden: user does not have permission for the requested resource
+* 404 :	Resource is not found in the database
+* 405 :	Not a valid HTTP method
 
-#### Server errors:
+#### Server Errors:
 * 500 :	See internal error code below for actual error
 
-Other codes like 502, 504 etc. may be unintentionally raised by nginx, wsgi, or dns servers which the web server is not responsible for.
+Other codes like 502, 504 etc. may be unintentionally raised by nginx, WSGI, or DNS servers for which the web server is not responsible.
 
 ### Internal Error Codes
 
-For most types of errors like forbidden, unauthorized and not found, the internal error code is returned same as http status code.
+For most types of errors like forbidden, unauthorized and not found, the internal error code returned is the same as the HTTP status code.
 
-For server error, all except the following list of predefined errors will have internal error code as 500 by default.
+For server errors, all except the following lists of predefined errors will have internal error code 500 by default.
 
 * 4001 : JWT refresh token is invalid or expired.
 * 4011 : User is not authenticated. Access token is required in the authorization header.
