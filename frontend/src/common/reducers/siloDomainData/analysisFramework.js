@@ -1,11 +1,37 @@
 import update from '../../../public/utils/immutable-update';
 import { isEqualAndTruthy } from '../../../public/utils/common';
-import {
-    AF__SET_ANALYSIS_FRAMEWORK,
-    AF__VIEW_ADD_WIDGET,
-    AF__REMOVE_WIDGET,
-    AF__VIEW_UPDATE_WIDGET,
-} from '../../action-types/siloDomainData';
+
+// TYPE
+
+export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';
+export const AF__VIEW_ADD_WIDGET = 'silo-domain-data/AF__VIEW_ADD_WIDGET';
+export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
+export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
+
+// CREATOR
+
+export const setAfViewAnalysisFrameworkAction = ({ analysisFramework }) => ({
+    type: AF__SET_ANALYSIS_FRAMEWORK,
+    analysisFramework,
+});
+
+export const addAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+    type: AF__VIEW_ADD_WIDGET,
+    analysisFrameworkId,
+    widget,
+});
+
+export const removeAfViewWidgetAction = ({ analysisFrameworkId, widgetId }) => ({
+    type: AF__REMOVE_WIDGET,
+    analysisFrameworkId,
+    widgetId,
+});
+
+export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+    type: AF__VIEW_UPDATE_WIDGET,
+    analysisFrameworkId,
+    widget,
+});
 
 // HELPER
 

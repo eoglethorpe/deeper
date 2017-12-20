@@ -1,19 +1,74 @@
 import update from '../../../public/utils/immutable-update';
 import {
-    EE__ADD_ENTRY,
-    EE__REMOVE_ENTRY,
-    EE__SET_ACTIVE_ENTRY,
-    EE__SET_LEAD,
-    EE__ENTRY_SAVE,
-    EE__ENTRY_CHANGE,
-    EE__ENTRY_DIFF,
-    EE__ENTRY_MARK_FOR_DELETE,
-} from '../../action-types/siloDomainData';
-
-import {
     createEntry,
     calcNewEntries,
 } from '../../entities/entry';
+
+// TYPE
+
+export const EE__ADD_ENTRY = 'domain-data/EE__ADD_ENTRY';
+export const EE__REMOVE_ENTRY = 'domain-data/EE__REMOVE_ENTRY';
+export const EE__SET_ACTIVE_ENTRY = 'domain-data/EE__SET_ACTIVE_ENTRY';
+export const EE__SET_LEAD = 'silo-domain-data/EE__SET_LEAD';
+export const EE__ENTRY_SAVE = 'domain-data/EE__ENTRY_SAVE';
+export const EE__ENTRY_CHANGE = 'domain-data/EE__ENTRY_CHANGE';
+export const EE__ENTRY_DIFF = 'domain-data/EE__ENTRY_DIFF';
+export const EE__ENTRY_MARK_FOR_DELETE = 'domain-data/EE__ENTRY_MARK_FOR_DELETE';
+
+// CREATOR
+
+export const setEditEntryViewLeadAction = ({ lead }) => ({
+    type: EE__SET_LEAD,
+    lead,
+});
+
+export const addEntryAction = ({ leadId, entry }) => ({
+    type: EE__ADD_ENTRY,
+    leadId,
+    entry,
+});
+
+export const removeEntryAction = ({ leadId, entryId }) => ({
+    type: EE__REMOVE_ENTRY,
+    leadId,
+    entryId,
+});
+
+export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
+    type: EE__ENTRY_SAVE,
+    leadId,
+    entryId,
+    data,
+    values,
+});
+
+export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) => ({
+    type: EE__ENTRY_CHANGE,
+    leadId,
+    entryId,
+    data,
+    values,
+    uiState,
+});
+
+export const diffEntriesAction = ({ leadId, diffs }) => ({
+    type: EE__ENTRY_DIFF,
+    leadId,
+    diffs,
+});
+
+export const markForDeleteEntryAction = ({ leadId, entryId, mark }) => ({
+    type: EE__ENTRY_MARK_FOR_DELETE,
+    leadId,
+    entryId,
+    mark,
+});
+
+export const setActiveEntryAction = ({ leadId, entryId }) => ({
+    type: EE__SET_ACTIVE_ENTRY,
+    leadId,
+    entryId,
+});
 
 // HELPER
 

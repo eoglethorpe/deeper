@@ -1,4 +1,4 @@
-import {
+import reducers, {
     LA__SET_FILTERS,
     LA__UNSET_FILTERS,
     LA__SET_ACTIVE_LEAD_ID,
@@ -10,8 +10,18 @@ import {
     LA__LEAD_REMOVE,
     LA__COPY_ALL,
     LA__COPY_ALL_BELOW,
-} from '../../action-types/siloDomainData';
-import reducers from './addLeads.js';
+    addLeadViewSetFiltersAction,
+    addLeadViewUnsetFiltersAction,
+    addLeadViewSetActiveLeadIdAction,
+    addLeadViewAddLeadsAction,
+    addLeadViewLeadChangeAction,
+    addLeadViewLeadSaveAction,
+    addLeadViewLeadRemoveAction,
+    addLeadViewLeadNextAction,
+    addLeadViewLeadPrevAction,
+    addLeadViewCopyAllBelowAction,
+    addLeadViewCopyAllAction,
+} from './addLeads';
 
 test('should set filters', () => {
     const state = {
@@ -19,10 +29,7 @@ test('should set filters', () => {
         },
     };
 
-    const action = {
-        type: LA__SET_FILTERS,
-        filters: { search: 'hari' },
-    };
+    const action = addLeadViewSetFiltersAction({ search: 'hari' });
     const after = {
         addLeadView: {
             filters: { search: 'hari' },
@@ -37,10 +44,7 @@ test('should reset filters', () => {
             filters: { search: 'hari' },
         },
     };
-
-    const action = {
-        type: LA__UNSET_FILTERS,
-    };
+    const action = addLeadViewUnsetFiltersAction();
     const after = {
         addLeadView: {
             filters: { },
@@ -54,11 +58,7 @@ test('should set active lead', () => {
         addLeadView: {
         },
     };
-
-    const action = {
-        type: LA__SET_ACTIVE_LEAD_ID,
-        leadId: 2,
-    };
+    const action = addLeadViewSetActiveLeadIdAction(2);
     const after = {
         addLeadView: {
             activeLeadId: 2,
@@ -77,9 +77,7 @@ test('should set previous lead as active', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_PREV,
-    };
+    const action = addLeadViewLeadPrevAction();
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -102,9 +100,7 @@ test('should set previous lead as active, when no previous lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_PREV,
-    };
+    const action = addLeadViewLeadPrevAction();
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -128,9 +124,7 @@ test('should set next lead as active', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_NEXT,
-    };
+    const action = addLeadViewLeadNextAction();
     const after = {
         addLeadView: {
             activeLeadId: 2,
@@ -153,9 +147,7 @@ test('should set next lead as active, when no next lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_NEXT,
-    };
+    const action = addLeadViewLeadNextAction();
     const after = {
         addLeadView: {
             activeLeadId: 2,
@@ -178,10 +170,7 @@ test('should remove lead from top', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_REMOVE,
-        leadId: 1,
-    };
+    const action = addLeadViewLeadRemoveAction(1);
     const after = {
         addLeadView: {
             activeLeadId: 2,
@@ -203,10 +192,7 @@ test('should remove lead from bottom', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_REMOVE,
-        leadId: 2,
-    };
+    const action = addLeadViewLeadRemoveAction(2);
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -229,15 +215,12 @@ test('should add new leads', () => {
             ],
         },
     };
-    const action = {
-        type: LA__ADD_LEADS,
-        leads: [
-            { id: 1, serverId: 1, type: 'file' },
-            { id: 2, serverId: 2, type: 'file' },
-            { id: 3, serverId: 3, type: 'file' },
-            { id: 5, type: 'file' },
-        ],
-    };
+    const action = addLeadViewAddLeadsAction([
+        { id: 1, serverId: 1, type: 'file' },
+        { id: 2, serverId: 2, type: 'file' },
+        { id: 3, serverId: 3, type: 'file' },
+        { id: 5, type: 'file' },
+    ]);
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -290,16 +273,11 @@ test('should change lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_CHANGE,
+    const action = addLeadViewLeadChangeAction({
         leadId: 1,
         values: { title: 'Lead #1' },
         formFieldErrors: { title: 'Very short' },
-        /*
-        formErrors: [],
-        uistate: {},
-        */
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -339,14 +317,13 @@ test('should change lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_CHANGE,
+    const action = addLeadViewLeadChangeAction({
         leadId: 1,
         values: { title: 'Lead #1' },
         formFieldErrors: {},
         formErrors: ['Network problem'],
         uistate: { pristine: false },
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -386,11 +363,10 @@ test('should save lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__LEAD_SAVE,
+    const action = addLeadViewLeadSaveAction({
         leadId: 1,
         serverId: 12,
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -445,11 +421,10 @@ test('should copy values in all lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__COPY_ALL,
+    const action = addLeadViewCopyAllAction({
         leadId: 2,
         attrName: 'title',
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -508,11 +483,10 @@ test('should copy values in leads below', () => {
             ],
         },
     };
-    const action = {
-        type: LA__COPY_ALL_BELOW,
+    const action = addLeadViewCopyAllBelowAction({
         leadId: 2,
         attrName: 'title',
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,
@@ -543,7 +517,7 @@ test('should copy values in leads below', () => {
     expect(reducers[LA__COPY_ALL_BELOW](state, action)).toEqual(after);
 });
 
-test('should copy values in all lead', () => {
+test('should copy values in all lead, for assignee', () => {
     const state = {
         addLeadView: {
             activeLeadId: 1,
@@ -571,11 +545,10 @@ test('should copy values in all lead', () => {
             ],
         },
     };
-    const action = {
-        type: LA__COPY_ALL,
+    const action = addLeadViewCopyAllAction({
         leadId: 2,
         attrName: 'assignee',
-    };
+    });
     const after = {
         addLeadView: {
             activeLeadId: 1,

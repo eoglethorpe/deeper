@@ -1,11 +1,44 @@
 import update from '../../../public/utils/immutable-update';
-import {
-    CE__ADD_NEW_CATEGORY,
-    CE__SET_ACTIVE_CATEGORY_ID,
-    CE__ADD_NEW_SUBCATEGORY,
-    CE__UPDATE_SELECTED_SUBCATEGORIES,
-    CE__UPDATE_SELECTED_SUBCATEGORY,
-} from '../../action-types/siloDomainData';
+
+
+// TYPE
+
+export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
+export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
+export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
+export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';
+export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
+
+// ACTION-CREATOR
+
+export const addNewCategoryAction = ({ id, title }) => ({
+    type: CE__ADD_NEW_CATEGORY,
+    id,
+    title,
+});
+
+export const setActiveCategoryIdAction = id => ({
+    type: CE__SET_ACTIVE_CATEGORY_ID,
+    id,
+});
+
+export const addNewSubcategoryAction = ({ level, newSubcategory }) => ({
+    type: CE__ADD_NEW_SUBCATEGORY,
+    level,
+    newSubcategory,
+});
+
+export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => ({
+    type: CE__UPDATE_SELECTED_SUBCATEGORIES,
+    level,
+    subcategoryId,
+});
+
+export const updateSelectedSubcategoryAction = subcategory => ({
+    type: CE__UPDATE_SELECTED_SUBCATEGORY,
+    subcategory,
+});
+
 
 // HELPERS
 

@@ -1,23 +1,88 @@
 import { listToMap, getNumbers } from '../../../public/utils/common';
 import update from '../../../public/utils/immutable-update';
 import {
-    LA__SET_FILTERS,
-    LA__UNSET_FILTERS,
-    LA__SET_ACTIVE_LEAD_ID,
-    LA__ADD_LEADS,
-    LA__LEAD_CHANGE,
-    LA__LEAD_SAVE,
-    LA__LEAD_REMOVE,
-    LA__LEAD_NEXT,
-    LA__LEAD_PREV,
-    LA__COPY_ALL,
-    LA__COPY_ALL_BELOW,
-} from '../../action-types/siloDomainData';
-
-import {
     createLead,
     leadAccessor,
 } from '../../entities/lead';
+
+// ACTION-TYPE
+
+export const LA__SET_FILTERS = 'domain-data/LA__SET_FILTERS ';
+export const LA__UNSET_FILTERS = 'domain-data/LA__UNSET_FILTERS ';
+export const LA__SET_ACTIVE_LEAD_ID = 'domain-data/LA__SET_ACTIVE_LEAD_ID';
+export const LA__ADD_LEADS = 'domain-data/LA__ADD_LEADS';
+export const LA__LEAD_CHANGE = 'domain-data/LA__LEAD_CHANGE';
+export const LA__LEAD_SAVE = 'domain-data/LA__LEAD_SAVE';
+export const LA__LEAD_REMOVE = 'domain-data/LA__LEAD_REMOVE';
+export const LA__LEAD_NEXT = 'domain-data/LA__LEAD_NEXT';
+export const LA__LEAD_PREV = 'domain-data/LA__LEAD_PREV';
+export const LA__COPY_ALL_BELOW = 'domain-data/LA__COPY_ALL_BELOW';
+export const LA__COPY_ALL = 'domain-data/LA__COPY_ALL';
+
+// ACTION-CREATOR
+
+export const addLeadViewSetFiltersAction = filters => ({
+    type: LA__SET_FILTERS,
+    filters,
+});
+
+export const addLeadViewUnsetFiltersAction = () => ({
+    type: LA__UNSET_FILTERS,
+});
+
+export const addLeadViewSetActiveLeadIdAction = leadId => ({
+    type: LA__SET_ACTIVE_LEAD_ID,
+    leadId,
+});
+
+export const addLeadViewAddLeadsAction = leads => ({
+    type: LA__ADD_LEADS,
+    leads,
+});
+
+export const addLeadViewLeadChangeAction = ({
+    leadId, values, formErrors, formFieldErrors, upload, uiState,
+}) => ({
+    type: LA__LEAD_CHANGE,
+    leadId,
+    values,
+    formErrors,
+    formFieldErrors,
+    upload,
+    uiState,
+});
+
+export const addLeadViewLeadSaveAction = ({ leadId, serverId }) => ({
+    type: LA__LEAD_SAVE,
+    leadId,
+    serverId,
+});
+
+export const addLeadViewLeadRemoveAction = leadId => ({
+    type: LA__LEAD_REMOVE,
+    leadId,
+});
+
+export const addLeadViewLeadNextAction = () => ({
+    type: LA__LEAD_NEXT,
+});
+
+export const addLeadViewLeadPrevAction = () => ({
+    type: LA__LEAD_PREV,
+});
+
+export const addLeadViewCopyAllBelowAction = ({ leadId, attrName }) => ({
+    type: LA__COPY_ALL_BELOW,
+    leadId,
+    attrName,
+});
+
+export const addLeadViewCopyAllAction = ({ leadId, attrName }) => ({
+    type: LA__COPY_ALL,
+    leadId,
+    attrName,
+});
+
 
 // HELPER
 

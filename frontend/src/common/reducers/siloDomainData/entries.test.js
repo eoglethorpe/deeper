@@ -1,7 +1,7 @@
-import {
+import reducers, {
     E__SET_ENTRIES,
-} from '../../action-types/siloDomainData';
-import reducers from './entries.js';
+    setEntriesAction,
+} from './entries.js';
 
 
 test('should set entries', () => {
@@ -14,11 +14,10 @@ test('should set entries', () => {
             },
         },
     };
-    const action = {
-        type: E__SET_ENTRIES,
+    const action = setEntriesAction({
         projectId: 2,
         entries: ['entry'],
         totalEntriesCount: 1,
-    };
+    });
     expect(reducers[E__SET_ENTRIES](state, action)).toEqual(after);
 });

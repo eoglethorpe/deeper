@@ -1,12 +1,26 @@
 import update from '../../../public/utils/immutable-update';
-import {
-    SET_ACTIVE_COUNTRY,
-    SET_ACTIVE_PROJECT,
-} from '../../action-types/siloDomainData';
+
 import { LOGOUT_ACTION } from '../../action-types/auth';
 import { SET_USER_PROJECTS } from '../../action-types/domainData';
 
 import initialSiloDomainData from '../../initial-state/siloDomainData';
+
+// TYPE
+
+export const SET_ACTIVE_PROJECT = 'domain-data/SET_ACTIVE_PROJECT';
+export const SET_ACTIVE_COUNTRY = 'domain-data/SET_ACTIVE_COUNTRY';
+
+// ACTION-CREATOR
+
+export const setActiveProjectAction = ({ activeProject }) => ({
+    type: SET_ACTIVE_PROJECT,
+    activeProject,
+});
+
+export const setActiveCountryAction = ({ activeCountry }) => ({
+    type: SET_ACTIVE_COUNTRY,
+    activeCountry,
+});
 
 const getIdFromProject = project => project.id;
 
@@ -62,4 +76,5 @@ const reducers = {
     [SET_ACTIVE_PROJECT]: setActiveProject,
     [SET_ACTIVE_COUNTRY]: setActiveCountry,
 };
+
 export default reducers;

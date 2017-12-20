@@ -1,12 +1,46 @@
 import update from '../../../public/utils/immutable-update';
-import {
-    L__SET_LEADS,
-    L__SET_FILTER,
-    L__UNSET_FILTER,
-    L__SET_ACTIVE_PAGE,
-    L__SET_VIEW_MODE,
-    L__SET_ACTIVE_SORT,
-} from '../../action-types/siloDomainData';
+
+// TYPE
+
+export const L__SET_FILTER = 'silo-domain-data/L__SET_FILTER';
+export const L__UNSET_FILTER = 'silo-domain-data/L__UNSET_FILTER';
+export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
+export const L__SET_VIEW_MODE = 'silo-domain-data/L__SET_VIEW_MODE';
+export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
+export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
+
+// ACTION-CREATOR
+
+export const setLeadPageFilterAction = ({ filters }) => ({
+    type: L__SET_FILTER,
+    filters,
+});
+
+export const unsetLeadPageFilterAction = () => ({
+    type: L__UNSET_FILTER,
+});
+
+export const setLeadPageActivePageAction = ({ activePage }) => ({
+    type: L__SET_ACTIVE_PAGE,
+    activePage,
+});
+
+export const setLeadPageViewModeAction = ({ viewMode }) => ({
+    type: L__SET_VIEW_MODE,
+    viewMode,
+});
+
+export const setLeadPageActiveSortAction = ({ activeSort }) => ({
+    type: L__SET_ACTIVE_SORT,
+    activeSort,
+});
+
+export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
+    type: L__SET_LEADS,
+    projectId,
+    leads,
+    totalLeadsCount,
+});
 
 // REDUCER
 
