@@ -1,10 +1,10 @@
-export * from './action-creators/auth';
 export * from './action-creators/domainData';
 
 export * from './selectors/auth';
 export * from './selectors/domainData';
 export * from './selectors/siloDomainData';
 
+export * from './reducers/auth';
 export * from './reducers/siloDomainData/common';
 export * from './reducers/siloDomainData/leads';
 export * from './reducers/siloDomainData/entries';

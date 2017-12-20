@@ -45,7 +45,7 @@ import {
 } from '../action-types/domainData';
 import {
     LOGOUT_ACTION,
-} from '../action-types/auth';
+} from '../reducers/auth';
 
 import initialDomainDataState from '../initial-state/domainData';
 import update from '../../public/utils/immutable-update';

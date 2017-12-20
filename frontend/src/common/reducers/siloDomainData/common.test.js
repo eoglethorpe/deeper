@@ -1,4 +1,4 @@
-import { LOGOUT_ACTION } from '../../action-types/auth';
+import { LOGOUT_ACTION } from '../../reducers/auth';
 import { SET_USER_PROJECTS } from '../../action-types/domainData';
 
 import initialSiloDomainData from '../../initial-state/siloDomainData';

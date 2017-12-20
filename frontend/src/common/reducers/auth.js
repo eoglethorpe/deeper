@@ -1,20 +1,45 @@
 import jwtDecode from 'jwt-decode';
-import createReducerWithMap from '../utils/createReducerWithMap';
 
-import {
-    LOGIN_ACTION,
-    LOGOUT_ACTION,
-    AUTHENTICATE_ACTION,
-    SET_ACCESS_TOKEN_ACTION,
-} from '../action-types/auth';
-import initialAuthState from '../initial-state/auth';
 import update from '../../public/utils/immutable-update';
+
+import createReducerWithMap from '../utils/createReducerWithMap';
 import schema from '../../common/schema';
+import initialAuthState from '../initial-state/auth';
+
+
+// TYPE
+
+export const LOGIN_ACTION = 'auth/LOGIN';
+export const LOGOUT_ACTION = 'auth/LOGOUT';
+export const AUTHENTICATE_ACTION = 'auth/AUTHENTICATE_ACTION';
+export const SET_ACCESS_TOKEN_ACTION = 'auth/SET_ACCESS_TOKEN';
+
+// ACTION-CREATOR
+
+export const loginAction = ({ access, refresh }) => ({
+    type: LOGIN_ACTION,
+    access,
+    refresh,
+});
+
+export const authenticateAction = () => ({
+    type: AUTHENTICATE_ACTION,
+});
+
+export const logoutAction = () => ({
+    type: LOGOUT_ACTION,
+});
+
+export const setAccessTokenAction = access => ({
+    type: SET_ACCESS_TOKEN_ACTION,
+    access,
+});
+
+// HELPER
 
 const decodeAccessToken = (access) => {
     const decodedToken = jwtDecode(access);
     try {
-        console.log(decodedToken);
         schema.validate(decodedToken, 'accessToken');
         return {
             userId: decodedToken.userId,
@@ -29,7 +54,7 @@ const decodeAccessToken = (access) => {
     }
 };
 
-// REDUCERS
+// REDUCER
 
 const login = (state, action) => {
     const { access, refresh } = action;
@@ -65,7 +90,7 @@ const setAccessToken = (state, action) => {
     return update(state, settings);
 };
 
-const reducers = {
+export const reducers = {
     [LOGIN_ACTION]: login,
     [AUTHENTICATE_ACTION]: authenticate,
     [LOGOUT_ACTION]: logout,
