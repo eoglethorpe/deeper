@@ -135,12 +135,12 @@ export default class CategoryEditor extends React.PureComponent {
         });
     }
 
-    handleSubcategoryClick = (level, subCategoryId) => {
+    handleSubcategoryClick = (level, subcategoryId) => {
         const {
             updateSelectedSubcategories,
         } = this.props;
 
-        updateSelectedSubcategories({ level, subCategoryId });
+        updateSelectedSubcategories({ level, subcategoryId });
     }
 
     addNewSubcategory = (title) => {
@@ -284,7 +284,11 @@ export default class CategoryEditor extends React.PureComponent {
                             styleName="sub-categories"
                         >
                             {
-                                activeCategoryId && this.getSubcategoryColumns()
+                                activeCategoryId ? (
+                                    this.getSubcategoryColumns()
+                                ) : (
+                                    <p styleName="empty">Such empty</p>
+                                )
                             }
                         </div>
                         <SubcategoryPropertyPanel />

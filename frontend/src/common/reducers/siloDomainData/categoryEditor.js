@@ -1,9 +1,10 @@
 import update from '../../../public/utils/immutable-update';
 import {
-    CE_VIEW_ADD_NEW_CATEGORY,
-    CE_VIEW_SET_ACTIVE_CATEGORY_ID,
-    CE_VIEW_ADD_NEW_SUBCATEGORY,
-    CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES,
+    CE__ADD_NEW_CATEGORY,
+    CE__SET_ACTIVE_CATEGORY_ID,
+    CE__ADD_NEW_SUBCATEGORY,
+    CE__UPDATE_SELECTED_SUBCATEGORIES,
+    CE__UPDATE_SELECTED_SUBCATEGORY,
 } from '../../action-types/siloDomainData';
 
 // HELPERS
@@ -34,7 +35,7 @@ const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLeve
     return newIndices;
 };
 
-const subcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
+const newSubcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
 
 const buildSettings = (indices, action, value, wrapper) => (
     // NOTE: reverse() mutates the array so making a copy
@@ -51,7 +52,7 @@ const getCategoryIdFromCategory = category => category.id;
 
 // REDUCER
 
-const ceViewAddNewCategory = (state, action) => {
+const ceAddNewCategory = (state, action) => {
     const { id, title } = action;
     const newCategory = {
         id,
@@ -59,6 +60,7 @@ const ceViewAddNewCategory = (state, action) => {
         selectedSubcategories: [],
         subcategories: [],
     };
+
     const settings = {
         categoryEditorView: {
             activeCategoryId: { $set: id },
@@ -68,7 +70,7 @@ const ceViewAddNewCategory = (state, action) => {
     return update(state, settings);
 };
 
-const ceViewSetActiveCategoryId = (state, action) => {
+const ceSetActiveCategoryId = (state, action) => {
     const { id } = action;
     const settings = {
         categoryEditorView: {
@@ -78,9 +80,8 @@ const ceViewSetActiveCategoryId = (state, action) => {
     return update(state, settings);
 };
 
-const ceViewAddNewSubcategory = (state, action) => {
+const ceAddNewSubcategory = (state, action) => {
     const { newSubcategory, level } = action;
-
     const { categoryEditorView } = state;
     const { categories, activeCategoryId } = categoryEditorView;
 
@@ -95,7 +96,7 @@ const ceViewAddNewSubcategory = (state, action) => {
         indices,
         settingAction,
         [newSubcategory],
-        subcategoryWrapper,
+        newSubcategoryWrapper,
     );
     const settings = {
         categoryEditorView: { categories: categoriesSettings },
@@ -103,15 +104,15 @@ const ceViewAddNewSubcategory = (state, action) => {
     return update(state, settings);
 };
 
-const ceViewUpdateSelectedSubcategories = (state, action) => {
-    const { level, subCategoryId } = action;
+const ceUpdateSelectedSubcategories = (state, action) => {
+    const { level, subcategoryId } = action;
     const { categoryEditorView } = state;
     const {
         categories,
         activeCategoryId,
     } = categoryEditorView;
 
-    const categoryIndex = categories.find(
+    const categoryIndex = categories.findIndex(
         d => getCategoryIdFromCategory(d) === activeCategoryId,
     );
     const category = categories[categoryIndex];
@@ -122,7 +123,7 @@ const ceViewUpdateSelectedSubcategories = (state, action) => {
             categories: {
                 [categoryIndex]: {
                     selectedSubcategories: {
-                        $splice: [[level, length, subCategoryId]],
+                        $splice: [[level, length, subcategoryId]],
                     },
                 },
             },
@@ -131,12 +132,44 @@ const ceViewUpdateSelectedSubcategories = (state, action) => {
     return update(state, settings);
 };
 
+const ceUpdateSelectedSubcategory = (state, action) => {
+    const { subcategory } = action;
+    const { categoryEditorView } = state;
+    const {
+        categories,
+        activeCategoryId,
+    } = categoryEditorView;
+
+    const settingAction = '$splice';
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+
+    const lastIndex = indices.splice(indices.length - 1)[0];
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [[lastIndex, 1, subcategory]],
+        newSubcategoryWrapper,
+    );
+
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
+
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
-    [CE_VIEW_ADD_NEW_CATEGORY]: ceViewAddNewCategory,
-    [CE_VIEW_SET_ACTIVE_CATEGORY_ID]: ceViewSetActiveCategoryId,
-    [CE_VIEW_ADD_NEW_SUBCATEGORY]: ceViewAddNewSubcategory,
-    [CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES]: ceViewUpdateSelectedSubcategories,
+    [CE__ADD_NEW_CATEGORY]: ceAddNewCategory,
+    [CE__SET_ACTIVE_CATEGORY_ID]: ceSetActiveCategoryId,
+    [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,
+    [CE__UPDATE_SELECTED_SUBCATEGORIES]: ceUpdateSelectedSubcategories,
+    [CE__UPDATE_SELECTED_SUBCATEGORY]: ceUpdateSelectedSubcategory,
 };
 export default reducers;

@@ -41,6 +41,7 @@ import {
     CE__SET_ACTIVE_CATEGORY_ID,
     CE__ADD_NEW_SUBCATEGORY,
     CE__UPDATE_SELECTED_SUBCATEGORIES,
+    CE__UPDATE_SELECTED_SUBCATEGORY,
 } from '../action-types/siloDomainData';
 
 
@@ -260,8 +261,13 @@ export const addNewSubcategoryAction = ({ level, newSubcategory }) => ({
     newSubcategory,
 });
 
-export const updateSelectedSubcategoriesAction = ({ level, subCategoryId }) => ({
+export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORIES,
     level,
-    subCategoryId,
+    subcategoryId,
+});
+
+export const updateSelectedSubcategoryAction = subcategory => ({
+    type: CE__UPDATE_SELECTED_SUBCATEGORY,
+    subcategory,
 });

@@ -252,11 +252,16 @@ export const selectedSubcategorySelector = createSelector(
     activeCategoryIdSelector,
     (categories, activeCategoryId) => {
         if (!activeCategoryId) {
-            return {};
+            return undefined;
         }
 
         const category = categories.find(d => d.id === activeCategoryId);
         const selectedSubcategories = category.selectedSubcategories;
+
+        if (selectedSubcategories.length === 0) {
+            return undefined;
+        }
+
         let subcategory = {};
         let subcategories = category.subcategories;
 
