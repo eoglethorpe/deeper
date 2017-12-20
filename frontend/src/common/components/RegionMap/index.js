@@ -24,10 +24,14 @@ import {
 const propTypes = {
     className: PropTypes.string,
     regionId: PropTypes.number.isRequired,
+    selections: PropTypes.arrayOf(PropTypes.string),
+    onSelect: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
+    selections: [],
+    onSelect: undefined,
 };
 
 
@@ -43,7 +47,6 @@ export default class RegionMap extends React.PureComponent {
             pending: true,
             error: false,
             adminLevels: [],
-            selections: [],
             geoJsons: {},
             geoJsonBounds: {},
         };
@@ -177,17 +180,19 @@ export default class RegionMap extends React.PureComponent {
             .build()
     )
 
-    handleAreaClick = (code) => {
-        const selections = [...this.state.selections];
-        const index = selections.indexOf(code);
+    handleAreaClick = (pk) => {
+        const selections = [...this.props.selections];
+        const index = selections.indexOf(pk);
 
         if (index === -1) {
-            selections.push(code);
+            selections.push(pk);
         } else {
             selections.splice(index, 1);
         }
 
-        this.setState({ selections });
+        if (this.props.onSelect) {
+            this.props.onSelect(selections);
+        }
     }
 
     handleAdminLevelSelection = (id) => {
@@ -260,8 +265,9 @@ export default class RegionMap extends React.PureComponent {
         const {
             error,
             adminLevels,
-            selections,
             selectedAdminLevelId,
+            geoJsons,
+            geoJsonBounds,
         } = this.state;
 
         if (error) {
@@ -276,10 +282,10 @@ export default class RegionMap extends React.PureComponent {
             return (
                 <div styleName="map-container">
                     <GeoJsonMap
-                        selections={selections}
+                        selections={this.props.selections}
                         styleName="geo-json-map"
-                        geoJson={this.state.geoJsons[selectedAdminLevelId]}
-                        geoJsonBounds={this.state.geoJsonBounds[selectedAdminLevelId]}
+                        geoJson={geoJsons[selectedAdminLevelId]}
+                        geoJsonBounds={geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
                     />
                     <div styleName="action">
