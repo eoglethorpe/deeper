@@ -43,7 +43,7 @@ export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
 export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
 
 // CE => CategoryEditor
-export const CE_VIEW_ADD_NEW_CATEGORY = 'silo-domain-data/CE_VIEW_ADD_NEW_CATEGORY';
-export const CE_VIEW_SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE_VIEW_SET_ACTIVE_CATEGORY_ID';
-export const CE_VIEW_ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE_VIEW_ADD_NEW_SUBCATEGORY';
-export const CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE_VIEW_UPDATE_SELECTED_SUBCATEGORIES';
+export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
+export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
+export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
+export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';

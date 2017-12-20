@@ -17,11 +17,15 @@
         flex-direction: column;
         background-color: $color-foreground-alt;
 
-        .header {
+        >.header {
             display: flex;
             flex-shrink: 0;
             border-bottom: $width-separator-medium solid $color-separator;
             padding: $spacing-medium;
+
+            .category-select {
+                margin-right: $spacing-medium;
+            }
         }
 
         .content {
@@ -30,7 +34,7 @@
 
             .sub-categories {
                 display: flex;
-                flex-basis: 80%;
+                flex-basis: 70%;
                 overflow-x: auto;
 
                 .column {
@@ -44,11 +48,31 @@
                         outline: 0;
                         border: 0;
                         background-color: transparent;
+                        cursor: pointer;
                         padding: $spacing-medium;
-                        width: 100%;
                         color: $color-text;
                         font-family: inherit;
                         font-size: inherit;
+                    }
+
+                    .header {
+                        display: flex;
+                        flex-shrink: 0;
+                        align-items: center;
+                        justify-content: space-between;
+                        border-bottom: $width-separator-thin solid $color-separator;
+
+                        .heading {
+                            padding: $spacing-medium;
+                            color: $color-text;
+                            font-weight: $font-weight-bold;
+                        }
+
+                        button {
+                            @extend %button;
+                            text-transform: uppercase;
+                            color: $color-accent;
+                        }
                     }
 
                     .sub-category-list {
@@ -59,6 +83,7 @@
                             @extend %button;
                             display: flex;
                             border-bottom: $width-separator-thin solid $color-separator;
+                            width: 100%;
                             text-align: left;
 
                             .title {
@@ -80,24 +105,63 @@
                             }
                         }
                     }
-
-                    .action-buttons {
-                        flex-shrink: 0;
-
-                        button {
-                            @extend %button;
-                            background-color: $color-foreground;
-                            text-transform: uppercase;
-                            color: $color-accent;
-                        }
-                    }
                 }
             }
 
-            .properties {
-                flex-basis: 50%;
+            .property-panel {
+                display: flex;
+                flex-basis: 30%;
+                flex-direction: column;
                 background-color: $color-foreground;
+
+                .header {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    padding: $spacing-small 0;
+
+                    .heading {
+                        padding: 0 $spacing-medium;
+                    }
+
+                    .action-buttons {
+                        padding: 0 $spacing-medium;
+                    }
+                }
+
+                .properties {
+                    flex-shrink: 0;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    padding: $spacing-medium;
+
+                    textarea {
+                        resize: none;
+                    }
+                }
+
+                .ngrams {
+                    flex-grow: 1;
+                    padding: $spacing-medium;
+                }
             }
         }
     }
+}
+
+%modal {
+    width: 320px;
+
+    .ok-button {
+        min-width: 72px;
+    }
+}
+
+.new-category-modal {
+    @extend %modal;
+}
+
+.new-subcategory-modal {
+    @extend %modal;
 }
