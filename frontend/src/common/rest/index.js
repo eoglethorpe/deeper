@@ -9,6 +9,7 @@ export * from './token';
 export * from './userGroups';
 export * from './users';
 export * from './analysisFramework';
+export * from './categoryEditor';
 
 export const transformResponseErrorToFormError = (errors) => {
     const { nonFieldErrors: formErrors, ...formFieldErrorList } = errors;

@@ -33,6 +33,7 @@ export default class NGram extends React.PureComponent {
 
     getKeyword = (key, data) => (
         <div
+            key={key}
             className={styles.keyword}
         >
             <div
@@ -43,7 +44,9 @@ export default class NGram extends React.PureComponent {
             <div
                 className={styles['action-buttons']}
             >
-                <TransparentDangerButton>
+                <TransparentDangerButton
+                    disabled
+                >
                     <span className={iconNames.delete} />
                 </TransparentDangerButton>
             </div>

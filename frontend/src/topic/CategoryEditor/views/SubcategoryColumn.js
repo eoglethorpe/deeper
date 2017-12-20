@@ -21,6 +21,7 @@ const propTypes = {
 
     onNewSubcategory: PropTypes.func.isRequired,
     onSubcategoryClick: PropTypes.func.isRequired,
+    onDrop: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -55,6 +56,8 @@ export default class SubcategoryColumn extends React.PureComponent {
             key={key}
             onClick={() => this.handleSubcategoryClick(key)}
             className={this.getSubcategoryStyleName(key)}
+            onDragOver={this.handleSubcategoryDragOver}
+            onDrop={(e) => { this.handleSubcategoryDrop(key, e); }}
         >
             <span className={styles.title}>
                 { data.title }
@@ -68,6 +71,22 @@ export default class SubcategoryColumn extends React.PureComponent {
             }
         </button>
     )
+
+    handleSubcategoryDragOver = (e) => {
+        e.preventDefault();
+    }
+
+    handleSubcategoryDrop = (key, e) => {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text');
+
+        const {
+            level,
+            onDrop,
+        } = this.props;
+
+        onDrop(level, key, data);
+    }
 
     handleNewSubcategoryButtonClick = () => {
         const {

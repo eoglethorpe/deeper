@@ -24,6 +24,7 @@ import {
     randomString,
 } from '../../../public/utils/common';
 
+import DocumentPanel from './DocumentPanel';
 import SubcategoryColumn from './SubcategoryColumn';
 import SubcategoryPropertyPanel from './SubcategoryPropertyPanel';
 
@@ -34,6 +35,7 @@ import {
     setActiveCategoryIdAction,
     addNewSubcategoryAction,
     updateSelectedSubcategoriesAction,
+    addSubcategoryNGramAction,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -48,6 +50,7 @@ const mapDispatchToProps = dispatch => ({
     setActiveCategoryId: params => dispatch(setActiveCategoryIdAction(params)),
     addNewSubcategory: params => dispatch(addNewSubcategoryAction(params)),
     updateSelectedSubcategories: params => dispatch(updateSelectedSubcategoriesAction(params)),
+    addSubcategoryNGram: params => dispatch(addSubcategoryNGramAction(params)),
 });
 
 const propTypes = {
@@ -57,6 +60,7 @@ const propTypes = {
     setActiveCategoryId: PropTypes.func.isRequired,
     addNewSubcategory: PropTypes.func.isRequired,
     updateSelectedSubcategories: PropTypes.func.isRequired,
+    addSubcategoryNGram: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -108,6 +112,7 @@ export default class CategoryEditor extends React.PureComponent {
                     subcategories={currentSubcategories}
                     onNewSubcategory={this.handleNewSubcategory}
                     onSubcategoryClick={this.handleSubcategoryClick}
+                    onDrop={this.handleSubcategoryDrop}
                 />
             );
         });
@@ -120,11 +125,26 @@ export default class CategoryEditor extends React.PureComponent {
                     subcategories={subcategories}
                     onNewSubcategory={this.handleNewSubcategory}
                     onSubcategoryClick={this.handleSubcategoryClick}
+                    onDrop={this.handleSubcategoryDrop}
                 />,
             );
         }
 
         return subcategoryColumns;
+    }
+
+    handleSubcategoryDrop = (level, subcategoryId, data) => {
+        const ngram = JSON.parse(data);
+
+        const {
+            addSubcategoryNGram,
+        } = this.props;
+
+        addSubcategoryNGram({
+            level,
+            subcategoryId,
+            ngram,
+        });
     }
 
     handleNewSubcategory = (level) => {
@@ -157,7 +177,7 @@ export default class CategoryEditor extends React.PureComponent {
             id: key,
             title,
             description: '',
-            ngrams: [],
+            ngrams: {},
             subcategories: [],
         };
 
@@ -252,7 +272,7 @@ export default class CategoryEditor extends React.PureComponent {
                 <div
                     styleName="left"
                 >
-                    Left
+                    <DocumentPanel />
                 </div>
                 <div
                     styleName="right"

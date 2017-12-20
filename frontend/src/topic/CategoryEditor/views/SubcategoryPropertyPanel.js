@@ -54,14 +54,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            selectedNGram: 0,
+            selectedNGram: undefined,
         };
-
-        this.ngrams = [
-            ['water', 'polluted'],
-            ['water point', 'water quality'],
-            ['lack of water'],
-        ];
     }
 
     getNGramSelectStyleName = (i) => {
@@ -79,13 +73,13 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getNGramSelect = (key, data, i) => (
+    getNGramSelect = key => (
         <button
-            className={this.getNGramSelectStyleName(i)}
+            className={this.getNGramSelectStyleName(+key)}
             key={key}
-            onClick={() => { this.handleNGramSelectButtonClick(i); }}
+            onClick={() => { this.handleNGramSelectButtonClick(+key); }}
         >
-            n-Gram ({i + 1})
+            n-Gram ({+key + 1})
         </button>
     )
 
@@ -130,8 +124,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         const {
             ngrams,
-        } = this;
+        } = subcategory;
 
+        const ngramKeys = Object.keys(ngrams);
 
         if (!subcategory) {
             return (
@@ -180,12 +175,12 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                 >
                     <ListView
                         styleName="ngram-select-list"
-                        data={ngrams}
+                        data={ngramKeys}
                         modifier={this.getNGramSelect}
                         keyExtractor={d => d}
                     />
                     {
-                        ngrams.length > 0 && (
+                        ngramKeys.length > 0 && (
                             <NGram
                                 keywords={ngrams[selectedNGram]}
                             />

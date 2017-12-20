@@ -1,6 +1,5 @@
 import update from '../../../public/utils/immutable-update';
 
-
 // TYPE
 
 export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
@@ -8,6 +7,7 @@ export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEG
 export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
 export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';
 export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
+export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_NGRAM';
 
 // ACTION-CREATOR
 
@@ -37,6 +37,13 @@ export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => (
 export const updateSelectedSubcategoryAction = subcategory => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORY,
     subcategory,
+});
+
+export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
+    type: CE__ADD_SUBCATEGORY_NGRAM,
+    level,
+    subcategoryId,
+    ngram,
 });
 
 
@@ -196,6 +203,65 @@ const ceUpdateSelectedSubcategory = (state, action) => {
     return update(state, settings);
 };
 
+const ceAddSubcategoryNGram = (state, action) => {
+    const {
+        level,
+        subcategoryId,
+        ngram,
+    } = action;
+
+    const { categoryEditorView } = state;
+    const {
+        categories,
+        activeCategoryId,
+    } = categoryEditorView;
+
+    const settingAction = '$autoPush';
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+
+    // const category = categories.find(d => d.id === activeCategoryId);
+
+    indices.splice(level + 1);
+
+    let subcategories = categories;
+    indices.forEach((i) => {
+        subcategories = subcategories[i].subcategories;
+    });
+
+    const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
+    indices.push(lastIndex);
+    indices.push(+ngram.n);
+
+    const len = indices.length;
+
+    const addNGramWrapper = (val, i) => {
+        if (i <= 0 || i === len) {
+            return val;
+        } else if (i === len - 1) {
+            return { ngrams: val };
+        }
+        return { subcategories: val };
+    };
+
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [ngram.keyword],
+        addNGramWrapper,
+    );
+
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
+
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -204,5 +270,6 @@ const reducers = {
     [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,
     [CE__UPDATE_SELECTED_SUBCATEGORIES]: ceUpdateSelectedSubcategories,
     [CE__UPDATE_SELECTED_SUBCATEGORY]: ceUpdateSelectedSubcategory,
+    [CE__ADD_SUBCATEGORY_NGRAM]: ceAddSubcategoryNGram,
 };
 export default reducers;
