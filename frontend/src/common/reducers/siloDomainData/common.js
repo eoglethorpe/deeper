@@ -20,7 +20,7 @@ const setUserProjects = (state, action) => {
     const { projects } = action;
 
     const newActiveProject = projects
-        ? projects.find(project => project.id === activeProject)
+        ? projects.find(project => getIdFromProject(project) === activeProject)
         : undefined;
 
     const newActiveProjectId = newActiveProject

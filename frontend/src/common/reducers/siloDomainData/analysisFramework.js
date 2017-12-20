@@ -1,4 +1,5 @@
 import update from '../../../public/utils/immutable-update';
+import { isEqualAndTruthy } from '../../../public/utils/common';
 import {
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -8,20 +9,19 @@ import {
 
 // HELPER
 
-const isAnalysisFrameworkValid = (af, id) => (
-    af && af.id === id && af.widgets
-);
+const isAnalysisFrameworkValid = (af = {}, id) => isEqualAndTruthy(id, af.id);
 
 const getWidgetKey = widget => widget.key;
 
 // REDUCER
 
-const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
+const afViewSetAnalysisFramework = (state, action) => {
+    const { analysisFramework } = action;
     const settings = {
         analysisFrameworkView: {
-            analysisFramework: { $auto: {
+            analysisFramework: {
                 $set: analysisFramework,
-            } },
+            },
         },
     };
     return update(state, settings);
@@ -37,7 +37,9 @@ const afViewAddWidget = (state, action) => {
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $push: [widget] },
+                widgets: { $autoArray: {
+                    $push: [widget],
+                } },
             },
         },
     };
