@@ -58,12 +58,106 @@ const setErrorForLeads = (state, leadIndices) => {
 
 // REDUCER
 
-const addLeadViewAddNewLeads = (state, action) => {
-    const { leads: leadsFromAction } = action;
-    if (!leadsFromAction || leadsFromAction.length <= 0) {
+const addLeadViewSetFilters = (state, action) => {
+    const { filters } = action;
+    // set new filters
+    const settings = {
+        addLeadView: {
+            filters: { $auto: {
+                $merge: filters,
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const removeLeadViewSetFilters = (state) => {
+    // remove filters
+    const settings = {
+        addLeadView: {
+            filters: { $set: {} },
+        },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewSetActiveLead = (state, action) => {
+    const { leadId } = action;
+    const settings = {
+        addLeadView: {
+            activeLeadId: { $set: leadId },
+        },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewPrevLead = (state) => {
+    const { addLeadView: { leads, activeLeadId } } = state;
+
+    const leadIndex = leads.findIndex(
+        lead => leadAccessor.getKey(lead) === activeLeadId,
+    );
+    // Can't go before 0
+    if (leadIndex - 1 < 0) {
         return state;
     }
 
+    const newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
+    const settings = {
+        addLeadView: {
+            activeLeadId: { $set: newActiveLeadId },
+        },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewNextLead = (state) => {
+    const { addLeadView: { leads, activeLeadId } } = state;
+
+    const leadIndex = leads.findIndex(
+        lead => leadAccessor.getKey(lead) === activeLeadId,
+    );
+    // can't go beyond the length
+    if (leadIndex + 1 >= leads.length) {
+        return state;
+    }
+
+    const newActiveLeadId = leadAccessor.getKey(leads[leadIndex + 1]);
+    const settings = {
+        addLeadView: {
+            activeLeadId: { $set: newActiveLeadId },
+        },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewRemoveLead = (state, action) => {
+    const { addLeadView: { leads } } = state;
+
+    const { leadId } = action;
+    const leadIndex = leads.findIndex(
+        lead => leadAccessor.getKey(lead) === leadId,
+    );
+
+    // limiting the newActiveid
+    let newActiveLeadId;
+    if (leadIndex + 1 < leads.length) {
+        newActiveLeadId = leadAccessor.getKey(leads[leadIndex + 1]);
+    } else if (leadIndex - 1 >= 0) {
+        newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
+    }
+
+    const settings = {
+        addLeadView: {
+            leads: { $splice: [[leadIndex, 1]] },
+            activeLeadId: { $set: newActiveLeadId },
+        },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewAddNewLeads = (state, action) => {
+    const { leads: leadsFromAction } = action;
     // Adding new leads
     const newLeads = leadsFromAction.map(data => createLead(data));
     const newActiveLeadId = leadAccessor.getKey(newLeads[0]);
@@ -77,7 +171,7 @@ const addLeadViewAddNewLeads = (state, action) => {
     const filterFn = (lead) => {
         const serverId = leadAccessor.getServerId(lead);
         if (!serverId) {
-            return false;
+            return true;
         }
         return !serverIdMap[serverId];
     };
@@ -102,26 +196,6 @@ const addLeadViewAddNewLeads = (state, action) => {
                     status: '',
                 },
             },
-        },
-    };
-    return update(state, settings);
-};
-
-const addLeadViewSetFilters = (state, action) => {
-    // set new filters
-    const settings = {
-        addLeadView: {
-            filters: { $merge: action.filters },
-        },
-    };
-    return update(state, settings);
-};
-
-const removeLeadViewSetFilters = (state) => {
-    // remove filters
-    const settings = {
-        addLeadView: {
-            filters: { $set: {} },
         },
     };
     return update(state, settings);
@@ -198,7 +272,7 @@ const addLeadViewSaveLead = (state, action) => {
     return update(state, settings);
 };
 
-const addLeadViewCopyAll = (state, action, behavior) => {
+const addLeadViewCopyAll = behavior => (state, action) => {
     const { addLeadView: { leads } } = state;
     const {
         leadId,
@@ -240,82 +314,6 @@ const addLeadViewCopyAll = (state, action, behavior) => {
     return setErrorForLeads(newState);
 };
 
-const addLeadViewSetActiveLead = (state, action) => {
-    const { leadId } = action;
-    const settings = {
-        addLeadView: {
-            activeLeadId: { $set: leadId },
-        },
-    };
-    return update(state, settings);
-};
-
-const addLeadViewPrevLead = (state) => {
-    const { addLeadView: { leads, activeLeadId } } = state;
-
-    const leadIndex = leads.findIndex(
-        lead => leadAccessor.getKey(lead) === activeLeadId,
-    );
-    // Can't go before 0
-    if (leadIndex - 1 < 0) {
-        return state;
-    }
-
-    const newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
-    const settings = {
-        addLeadView: {
-            activeLeadId: { $set: newActiveLeadId },
-        },
-    };
-    return update(state, settings);
-};
-
-const addLeadViewNextLead = (state) => {
-    const { addLeadView: { leads, activeLeadId } } = state;
-
-    const leadIndex = leads.findIndex(
-        lead => leadAccessor.getKey(lead) === activeLeadId,
-    );
-    // can't go beyond the length
-    if (leadIndex + 1 >= leads.length) {
-        return state;
-    }
-
-    const newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
-    const settings = {
-        addLeadView: {
-            activeLeadId: { $set: newActiveLeadId },
-        },
-    };
-    return update(state, settings);
-};
-
-const addLeadViewRemoveLead = (state, action) => {
-    const { addLeadView: { leads } } = state;
-
-    const { leadId } = action;
-    const leadIndex = leads.findIndex(
-        lead => leadAccessor.getKey(lead) === leadId,
-    );
-
-    // limiting the newActiveid
-    let newActiveLeadId;
-    if (leadIndex + 1 < leads.length) {
-        newActiveLeadId = leadAccessor.getKey(leads[leadIndex + 1]);
-    } else if (leadIndex - 1 >= 0) {
-        newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
-    }
-
-    const settings = {
-        addLeadView: {
-            leads: { $splice: [[leadIndex, 1]] },
-            activeLeadId: { $set: newActiveLeadId },
-        },
-    };
-    return update(state, settings);
-};
-
-
 // REDUCER MAP
 
 const reducers = {
@@ -328,7 +326,7 @@ const reducers = {
     [LA__LEAD_PREV]: addLeadViewPrevLead,
     [LA__LEAD_NEXT]: addLeadViewNextLead,
     [LA__SET_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
-    [LA__COPY_ALL]: addLeadViewCopyAll,
-    [LA__COPY_ALL_BELOW]: (state, action) => addLeadViewCopyAll(state, action, 'below'),
+    [LA__COPY_ALL]: addLeadViewCopyAll('all'),
+    [LA__COPY_ALL_BELOW]: addLeadViewCopyAll('below'),
 };
 export default reducers;
