@@ -50,7 +50,7 @@
 
 3. For imports, the absolute and relative imports must be spaced with a new line. All the default imports must be sorted alphabetically.
 
-4. propTypes and defaultProps for React class mustes be written at the top of the file, only after imports. The attributes should be sorted alphabetically.
+4. propTypes and defaultProps for React classes must be written at the top of the file, only after imports. The attributes should be sorted alphabetically.
 
 5. Prefer decorators for Higher-Order Components
 
