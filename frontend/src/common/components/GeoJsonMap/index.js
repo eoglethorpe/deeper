@@ -6,23 +6,21 @@ import mapboxgl from 'mapbox-gl';
 import {
     LoadingAnimation,
 } from '../../../public/components/View';
-import {
-    wsEndpoint,
-    commonHeaderForPost,
-} from '../../config/rest';
 
 const propTypes = {
     className: PropTypes.string,
     onAreaClick: PropTypes.func,
     selections: PropTypes.arrayOf(PropTypes.string),
-    url: PropTypes.string,
+    geoJson: PropTypes.object,  // eslint-disable-line
+    geoJsonBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
 };
 
 const defaultProps = {
     className: '',
     onAreaClick: undefined,
     selections: [],
-    url: undefined,
+    geoJson: undefined,
+    geoJsonBounds: undefined,
 };
 
 
@@ -47,21 +45,12 @@ export default class GeoJsonMap extends React.PureComponent {
             container: this.mapContainer,
             style: process.env.REACT_APP_MAPBOX_STYLE,
             zoom: 2,
-            transformRequest: (url) => {
-                if (url.startsWith(wsEndpoint)) {
-                    return {
-                        url,
-                        headers: commonHeaderForPost,
-                    };
-                }
-                return undefined;
-            },
         });
 
         map.on('load', () => {
             if (this.mounted) {
                 this.setState({ map }, () => {
-                    this.loadUrl(this.props.url);
+                    this.loadGeoJson(this.props.geoJson, this.props.geoJsonBounds);
                     this.setSelections(this.props.selections);
                 });
             }
@@ -105,8 +94,8 @@ export default class GeoJsonMap extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.url !== nextProps.url) {
-            this.loadUrl(nextProps.url);
+        if (this.props.geoJson !== nextProps.geoJson) {
+            this.loadGeoJson(nextProps.geoJson, nextProps.geoJsonBounds);
         }
 
         if (this.props.selections !== nextProps.selections) {
@@ -146,10 +135,14 @@ export default class GeoJsonMap extends React.PureComponent {
         }
     }
 
-    loadUrl(url) {
+    loadGeoJson(geoJson, bounds) {
         const { map } = this.state;
-        if (!url || !map) {
+        if (!geoJson || !map) {
             return;
+        }
+
+        if (bounds) {
+            map.fitBounds(bounds, { padding: 48 });
         }
 
         if (this.layerAdded) {
@@ -157,13 +150,13 @@ export default class GeoJsonMap extends React.PureComponent {
                 type: 'FeatureCollection',
                 features: [],
             });
-            map.getSource('geojson').setData(url);
+            map.getSource('geojson').setData(geoJson);
             return;
         }
 
         map.addSource('geojson', {
             type: 'geojson',
-            data: url,
+            data: geoJson,
         });
         map.addLayer({
             id: 'geojson',
@@ -195,24 +188,6 @@ export default class GeoJsonMap extends React.PureComponent {
             filter: ['==', 'code', ''],
         });
         this.layerAdded = true;
-
-        fetch(
-            `${url}bounds/`,
-            {
-                headers: commonHeaderForPost,
-            },
-        ).then(r => r.json()).then((response) => {
-            const bounds = response.bounds;
-            if (bounds) {
-                map.fitBounds([[
-                    bounds.minX,
-                    bounds.minY,
-                ], [
-                    bounds.maxX,
-                    bounds.maxY,
-                ]], { padding: 48 });
-            }
-        });
     }
 
     render() {

@@ -12,6 +12,7 @@ import {
     createUrlForAdminLevelsForRegion,
     createUrlForGeoAreasLoadTrigger,
     createUrlForGeoJsonMap,
+    createUrlForGeoJsonBounds,
 } from '../../../common/rest';
 import {
     SegmentButton,
@@ -43,7 +44,10 @@ export default class RegionMap extends React.PureComponent {
             error: false,
             adminLevels: [],
             selections: [],
+            geoJsons: {},
+            geoJsonBounds: {},
         };
+        this.geoJsonRequests = [];
     }
 
     componentDidMount() {
@@ -64,6 +68,7 @@ export default class RegionMap extends React.PureComponent {
         if (this.staleRequestTimeout) {
             clearTimeout(this.staleRequestTimeout);
         }
+        this.geoJsonRequests.forEach(request => request.stop());
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }
@@ -116,6 +121,8 @@ export default class RegionMap extends React.PureComponent {
                         error: undefined,
                         selectedAdminLevelId: response.results.length > 0 ? `${response.results[0].id}` : '',
                         adminLevels: response.results,
+                    }, () => {
+                        this.loadGeoJsons();
                     });
                 }
             },
@@ -189,6 +196,66 @@ export default class RegionMap extends React.PureComponent {
         });
     }
 
+    loadGeoJsons() {
+        const { adminLevels } = this.state;
+        const params = createParamsForAdminLevelsForRegionGET();
+        adminLevels.forEach((adminLevel) => {
+            {
+                const url = createUrlForGeoJsonMap(adminLevel.id);
+                const request = new FgRestBuilder()
+                    .url(url)
+                    .params(params)
+                    .success((response) => {
+                        const geoJsons = {
+                            [adminLevel.id]: response,
+                            ...this.state.geoJsons,
+                        };
+                        this.setState({ geoJsons });
+                    })
+                    .failure((response) => {
+                        console.log(response);
+                    })
+                    .fatal((response) => {
+                        console.log(response);
+                    })
+                    .build();
+                request.start();
+
+                this.geoJsonRequests.push(request);
+            }
+            {
+                const url = createUrlForGeoJsonBounds(adminLevel.id);
+                const request = new FgRestBuilder()
+                    .url(url)
+                    .params(params)
+                    .success((response) => {
+                        const bounds = response.bounds;
+                        const geoJsonBounds = {
+                            [adminLevel.id]: bounds && [[
+                                bounds.minX,
+                                bounds.minY,
+                            ], [
+                                bounds.maxX,
+                                bounds.maxY,
+                            ]],
+                            ...this.state.geoJsonBounds,
+                        };
+                        this.setState({ geoJsonBounds });
+                    })
+                    .failure((response) => {
+                        console.log(response);
+                    })
+                    .fatal((response) => {
+                        console.log(response);
+                    })
+                    .build();
+                request.start();
+
+                this.geoJsonRequests.push(request);
+            }
+        });
+    }
+
     renderContent() {
         const {
             error,
@@ -211,7 +278,8 @@ export default class RegionMap extends React.PureComponent {
                     <GeoJsonMap
                         selections={selections}
                         styleName="geo-json-map"
-                        url={createUrlForGeoJsonMap(selectedAdminLevelId)}
+                        geoJson={this.state.geoJsons[selectedAdminLevelId]}
+                        geoJsonBounds={this.state.geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
                     />
                     <div styleName="action">

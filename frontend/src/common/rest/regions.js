@@ -72,3 +72,7 @@ export const createUrlForGeoAreasLoadTrigger = regionId => (
 export const createUrlForGeoJsonMap = adminLevelId => (
     `${wsEndpoint}/admin-levels/${adminLevelId}/geojson/`
 );
+
+export const createUrlForGeoJsonBounds = adminLevelId => (
+    `${wsEndpoint}/admin-levels/${adminLevelId}/geojson/bounds/`
+);
