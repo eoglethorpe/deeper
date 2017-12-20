@@ -63,7 +63,7 @@ export default class GeoJsonMap extends React.PureComponent {
 
         map.on('mousemove', 'geojson', (e) => {
             const feature = e.features[0];
-            map.setFilter('geojson-hover', ['==', 'code', feature.properties.code]);
+            map.setFilter('geojson-hover', ['==', 'pk', feature.properties.pk]);
             map.getCanvas().style.cursor = 'pointer';
 
             popup.setLngLat([
@@ -79,7 +79,7 @@ export default class GeoJsonMap extends React.PureComponent {
         });
 
         map.on('mouseleave', 'geojson', () => {
-            map.setFilter('geojson-hover', ['==', 'code', '']);
+            map.setFilter('geojson-hover', ['==', 'pk', '']);
             map.getCanvas().style.cursor = '';
 
             popup.remove();
@@ -88,7 +88,7 @@ export default class GeoJsonMap extends React.PureComponent {
         map.on('click', 'geojson', (e) => {
             if (this.props.onAreaClick) {
                 const feature = e.features[0];
-                this.props.onAreaClick(feature.properties.code);
+                this.props.onAreaClick(feature.properties.pk);
             }
         });
     }
@@ -128,9 +128,9 @@ export default class GeoJsonMap extends React.PureComponent {
 
         if (this.layerAdded) {
             if (selections.length === 0) {
-                map.setFilter('geojson-selected', ['in', 'code', '']);
+                map.setFilter('geojson-selected', ['in', 'pk', '']);
             } else {
-                map.setFilter('geojson-selected', ['in', 'code', ...selections]);
+                map.setFilter('geojson-selected', ['in', 'pk', ...selections]);
             }
         }
     }
@@ -175,7 +175,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 'fill-color': '#6e599f',
                 'fill-opacity': 0.5,
             },
-            filter: ['in', 'code', ''],
+            filter: ['in', 'pk', ''],
         });
         map.addLayer({
             id: 'geojson-hover',
@@ -185,7 +185,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 'fill-color': '#fff',
                 'fill-opacity': 0.2,
             },
-            filter: ['==', 'code', ''],
+            filter: ['==', 'pk', ''],
         });
         this.layerAdded = true;
     }
