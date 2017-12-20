@@ -19,8 +19,6 @@ import {
     SET_USER_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
 
-    DUMMY_ACTION,
-
     UNSET_REGION,
     ADD_NEW_REGION,
     REMOVE_PROJECT_REGION,
@@ -37,11 +35,6 @@ import {
     ADD_NEW_AF,
     SET_PROJECT_AF,
     SET_AF_DETAIL,
-
-    SET_CATEGORY,
-    ADD_NEW_CATEGORY,
-    ADD_NEW_SUBCATEGORY,
-    ADD_NEW_SUBSUBCATEGORY,
 } from '../action-types/domainData';
 import {
     LOGOUT_ACTION,
@@ -655,152 +648,15 @@ const setAfDetail = (state, action) => {
     return update(state, settings);
 };
 
-const addNewCategory = (state, action) => {
-    const settings = {
-        categories: { $auto: {
-            [action.category.id]: { $auto: {
-                $merge: action.category,
-            } },
-        } },
-    };
-    return update(state, settings);
-};
-
-const addNewSubCategory = (state, action) => {
-    const { category, subCategory } = action;
-    const index = ((state.categories[category.id] || {}).subCategories
-        || []).findIndex(sC => sC === subCategory.id);
-
-    const settings = {
-        subCategories: { $auto: {
-            [subCategory.id]: { $auto: {
-                $merge: subCategory,
-            } },
-        } },
-    };
-
-    if (category && index === -1) {
-        settings.categories = {
-            $auto: {
-                [category.id]: { $auto: {
-                    subCategories: { $autoArray: {
-                        $push: [subCategory.id],
-                    } },
-                } },
-            },
-        };
-    }
-    return update(state, settings);
-};
-
-const addNewSubSubCategory = (state, action) => {
-    const { subCategory, subSubCategory } = action;
-    const index = ((state.subCategories[subSubCategory.id] || {}).subSubCategories
-        || []).findIndex(sC => sC === subSubCategory.id);
-
-    const settings = {
-        subSubCategories: { $auto: {
-            [subSubCategory.id]: { $auto: {
-                $merge: subSubCategory,
-            } },
-        } },
-    };
-
-    if (subCategory && index === -1) {
-        settings.subCategories = {
-            $auto: {
-                [subCategory.id]: { $auto: {
-                    subSubCategories: { $autoArray: {
-                        $push: [subSubCategory.id],
-                    } },
-                } },
-            },
-        };
-    }
-    return update(state, settings);
-};
-
-const setCategory = (state, action) => {
-    const rCategory = { ...action.category };
-    const subCategories = action.category.subCategories;
-
-    const rSubSubCategories = {};
-    let rSubCategories;
-
-    if (subCategories) {
-        rCategory.subCategories = subCategories.map(sC => sC.id);
-
-        rSubCategories = subCategories.reduce((ac, sC) => {
-            const rSubCategory = { ...sC };
-            const subSubCategories = sC.subSubCategories;
-
-            if (subSubCategories) {
-                rSubCategory.subSubCategories = subSubCategories.map((ssC) => {
-                    rSubSubCategories[ssC.id] = { $auto: {
-                        $merge: ssC,
-                    } };
-                    return ssC.id;
-                });
-            }
-
-            return {
-                ...ac,
-                [sC.id]: { $auto: {
-                    $merge: rSubCategory,
-                } },
-            };
-        }, {});
-    }
-
-    const settings = {
-        categories: { $auto: {
-            [rCategory.id]: { $auto: {
-                $merge: rCategory,
-            } },
-        } },
-    };
-
-    if (subCategories) {
-        settings.subCategories = { $auto: rSubCategories };
-    }
-
-    if (Object.keys(rSubSubCategories)) {
-        settings.subSubCategories = { $auto: rSubSubCategories };
-    }
-
-    return update(state, settings);
-};
-
-const dummyAction = (state) => {
-    const dummy = {
-        id: 1,
-        createdOn: 17263871623,
-        createdBy: 'Frozen Helium',
-        title: 'If someone bit by a vampire turns into one when they die, how long until everyone is vampires?',
-        published: 1230129312,
-        confidentiality: 'Non-Confidential',
-        source: 'https://facebook.com',
-        numberOfEntries: 12,
-        status: 'Pending',
-        actions: 'GG WP',
-    };
-    const settings = {
-        leads: {
-            $splice: [[0, 1, dummy]],
-        },
-    };
-    return update(state, settings);
-};
-
 const reducers = {
     [LOGOUT_ACTION]: logout,
 
-    [DUMMY_ACTION]: dummyAction,
-
+    // USERS
     [SET_USER_INFORMATION]: setUserInformation,
     [UNSET_USER]: unsetUserInformation,
     [SET_USERS_INFORMATION]: setUsersInformation,
 
+    // PROJECTS
     [SET_USER_PROJECTS]: setUserProjects,
     [SET_USER_PROJECT]: setUserProject,
     [UNSET_USER_PROJECT]: unsetUserProject,
@@ -809,36 +665,35 @@ const reducers = {
     [SET_USER_PROJECT_MEMBERSHIP]: setUserProjectMembership,
     [UNSET_USER_PROJECT_MEMBERSHIP]: unsetUserProjectMembership,
 
+    // USER GROUP
     [SET_USER_GROUP]: setUserGroup,
     [SET_USER_GROUPS]: setUserGroups,
     [UNSET_USER_GROUP]: unsetUserGroup,
-
     [SET_USERS_MEMBERSHIP]: setUsersMembership,
     [SET_USER_MEMBERSHIP]: setUserMembership,
     [UNSET_USER_MEMBERSHIP]: unsetUserMembership,
 
+    // LEAD_FITLERS
     [SET_LEAD_FILTER_OPTIONS]: setLeadFilterOptions,
 
+    // REGIONS
     [SET_REGIONS]: setRegions,
     [SET_REGION_DETAILS]: setRegionDetails,
-
     [UNSET_REGION]: unsetRegion,
     [REMOVE_PROJECT_REGION]: removeProjectRegion,
     [ADD_NEW_REGION]: addNewRegion,
+
+    // ADMIN LEVELS
     [SET_ADMIN_LEVELS_FOR_REGION]: setAdminLevelsForRegion,
     [ADD_ADMIN_LEVEL_FOR_REGION]: addAdminLevelForRegion,
     [UNSET_ADMIN_LEVEL_FOR_REGION]: removeAdminLevelForRegion,
 
+    // AF
     [SET_ANALYSIS_FRAMEWORK]: setAnalysisFramework,
     [SET_ANALYSIS_FRAMEWORKS]: setAnalysisFrameworks,
     [ADD_NEW_AF]: addNewAf,
     [SET_PROJECT_AF]: setProjectAf,
     [SET_AF_DETAIL]: setAfDetail,
-
-    [ADD_NEW_CATEGORY]: addNewCategory,
-    [ADD_NEW_SUBCATEGORY]: addNewSubCategory,
-    [ADD_NEW_SUBSUBCATEGORY]: addNewSubSubCategory,
-    [SET_CATEGORY]: setCategory,
 };
 
 const domainDataReducer = createReducerWithMap(reducers, initialDomainDataState);

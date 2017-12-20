@@ -18,8 +18,6 @@ import {
     SET_USER_MEMBERSHIP,
     UNSET_USER_MEMBERSHIP,
 
-    DUMMY_ACTION,
-
     SET_REGIONS,
     SET_REGION_DETAILS,
     ADD_NEW_REGION,
@@ -210,8 +208,4 @@ export const setAfDetailAction = ({ afId, afDetail }) => ({
     type: SET_AF_DETAIL,
     afId,
     afDetail,
-});
-
-export const dummyAction = () => ({
-    type: DUMMY_ACTION,
 });
