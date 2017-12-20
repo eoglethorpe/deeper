@@ -6,6 +6,14 @@
     box-shadow: 0 1px 7px -2px $color-shadow-normal;
 }
 
+@mixin shadow-small-upward() {
+    box-shadow: 0 -1px 7px -2px $color-shadow-normal;
+}
+
+@mixin shadow-large-upward() {
+    box-shadow: 0 -3px 15px -5px $color-shadow-normal;
+}
+
 @mixin shadow-large() {
     box-shadow: 0 3px 15px -5px $color-shadow-normal;
 }
