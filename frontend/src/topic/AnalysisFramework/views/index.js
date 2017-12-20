@@ -91,8 +91,10 @@ export default class AnalysisFramework extends React.PureComponent {
                             analysisFramework: response,
                         });
                     } else if (analysisFramework.versionId < response.versionId) {
-                        // TODO: warn and set
                         console.warn('A new analysis framework was found');
+                        this.props.setAnalysisFramework({
+                            analysisFramework: response,
+                        });
                     } // else skip
                 } catch (er) {
                     console.error(er);

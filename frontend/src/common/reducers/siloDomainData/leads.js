@@ -29,7 +29,7 @@ const leadViewUnsetFilter = (state) => {
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
-                filter: { $auto: { $set: {} } },
+                filter: { $set: {} },
                 activePage: { $set: 1 },
             } },
         },

@@ -1,4 +1,5 @@
 import update from '../../../public/utils/immutable-update';
+import { isEqualAndTruthy } from '../../../public/utils/common';
 import {
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
@@ -6,80 +7,84 @@ import {
     AF__VIEW_UPDATE_WIDGET,
 } from '../../action-types/siloDomainData';
 
+// HELPER
+
+const isAnalysisFrameworkValid = (af = {}, id) => isEqualAndTruthy(id, af.id);
+
+const getWidgetKey = widget => widget.key;
+
 // REDUCER
 
-const afViewSetAnalysisFramework = (state, { analysisFramework }) => {
+const afViewSetAnalysisFramework = (state, action) => {
+    const { analysisFramework } = action;
     const settings = {
         analysisFrameworkView: {
-            analysisFramework: { $auto: {
+            analysisFramework: {
                 $set: analysisFramework,
-            } },
+            },
         },
     };
     return update(state, settings);
 };
 
-const afViewAddWidget = (state, { analysisFrameworkId, widget }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+const afViewAddWidget = (state, action) => {
+    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $push: [widget] },
+                widgets: { $autoArray: {
+                    $push: [widget],
+                } },
             },
         },
     };
     return update(state, settings);
 };
 
-const afViewRemoveWidget = (state, { analysisFrameworkId, widgetId }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+const afViewRemoveWidget = (state, action) => {
+    const { analysisFrameworkId, widgetId } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
-    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
-    const index = existingWidgets.findIndex(w => w.key === widgetId);
-
-    if (index !== -1) {
-        const settings = {
-            analysisFrameworkView: {
-                analysisFramework: {
-                    widgets: { $splice: [[index, 1]] },
-                },
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: {
+                widgets: { $filter: w => getWidgetKey(w) !== widgetId },
             },
-        };
-        return update(state, settings);
-    }
-    return state;
+        },
+    };
+    return update(state, settings);
 };
 
-const afViewUpdateWidget = (state, { analysisFrameworkId, widget }) => {
-    if (!state.analysisFrameworkView.analysisFramework ||
-        !state.analysisFrameworkView.analysisFramework.widgets ||
-        state.analysisFrameworkView.analysisFramework.id !== analysisFrameworkId) {
+const afViewUpdateWidget = (state, action) => {
+    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkView: { analysisFramework } } = state;
+    if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
-    const existingWidgets = state.analysisFrameworkView.analysisFramework.widgets;
-    const index = existingWidgets.findIndex(w => w.key === widget.key);
+    const existingWidgets = analysisFramework.widgets;
+    const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widget.key);
 
-    if (index !== -1) {
-        const settings = {
-            analysisFrameworkView: {
-                analysisFramework: {
-                    widgets: { $splice: [[index, 1, widget]] },
-                },
-            },
-        };
-        return update(state, settings);
+    if (widgetIndex === -1) {
+        return state;
     }
-    return state;
+
+    const settings = {
+        analysisFrameworkView: {
+            analysisFramework: {
+                widgets: { $splice: [[widgetIndex, 1, widget]] },
+            },
+        },
+    };
+    return update(state, settings);
 };
 
 // REDUCER MAP

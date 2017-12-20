@@ -6,12 +6,17 @@ import {
 // REDUCER
 
 const setEntries = (state, action) => {
-    const { entries, totalEntriesCount, projectId } = action;
+    const {
+        entries,
+        projectId,
+        totalEntriesCount,
+    } = action;
+
     const settings = {
         entriesView: {
             [projectId]: { $auto: {
                 entries: { $set: entries },
-                totalEntiresCount: { $set: totalEntriesCount },
+                totalEntriesCount: { $set: totalEntriesCount },
             } },
         },
     };

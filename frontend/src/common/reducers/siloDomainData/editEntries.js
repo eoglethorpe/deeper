@@ -15,6 +15,20 @@ import {
     calcNewEntries,
 } from '../../entities/entry';
 
+// HELPER
+
+const getIdFromEntry = e => e.data.id;
+const getEntriesByLeadId = (editEntryView, leadId) => (
+    editEntryView[leadId].entries
+);
+const getSelectedEntryIdByLeadId = (editEntryView, leadId) => (
+    editEntryView[leadId].selectedEntryId
+);
+const getEntryIndexByEntryId = (editEntryView, leadId, entryId) => {
+    const entries = getEntriesByLeadId(editEntryView, leadId);
+    return entries.findIndex(e => getIdFromEntry(e) === entryId);
+};
+
 // REDUCER
 
 const editEntryViewSetLead = (state, action) => {
@@ -23,26 +37,26 @@ const editEntryViewSetLead = (state, action) => {
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
-                lead: {
-                    $set: lead,
-                },
+                // TODO: why not setting leadId here?
+                // but setting it on addEntry
+                lead: { $set: lead },
             } },
         },
     };
-    // TODO: clear all other leads later
     return update(state, settings);
 };
 
 const editEntryViewAddEntry = (state, action) => {
     const { entry, leadId } = action;
-
     const newEntry = createEntry(entry);
+    const newEntryId = getIdFromEntry(newEntry);
 
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
+                // TODO: why are we setting leadId here
                 leadId: { $set: leadId },
-                selectedEntryId: { $set: newEntry.data.id },
+                selectedEntryId: { $set: newEntryId },
                 entries: { $autoArray: {
                     $unshift: [newEntry],
                 } },
@@ -52,7 +66,9 @@ const editEntryViewAddEntry = (state, action) => {
     return update(state, settings);
 };
 
+
 const editEntryViewSaveEntry = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
@@ -60,19 +76,14 @@ const editEntryViewSaveEntry = (state, action) => {
         data = {},
         values = {},
     } = action;
-
-    const index = state.editEntryView[leadId].entries.findIndex(
-        e => e.data.id === entryId,
-    );
+    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
 
     const settings = {
         editEntryView: {
             [leadId]: {
                 entries: {
-                    [index]: {
-                        data: {
-                            $merge: data,
-                        },
+                    [entryIndex]: {
+                        data: { $merge: data },
                         widget: {
                             values: { $merge: values },
                         },
@@ -89,6 +100,7 @@ const editEntryViewSaveEntry = (state, action) => {
 };
 
 const editEntryViewChangeEntry = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
@@ -98,24 +110,18 @@ const editEntryViewChangeEntry = (state, action) => {
         uiState = {},
     } = action;
 
-    const index = state.editEntryView[leadId].entries.findIndex(
-        e => e.data.id === entryId,
-    );
+    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
 
     const settings = {
         editEntryView: {
             [leadId]: {
                 entries: {
-                    [index]: {
-                        data: {
-                            $merge: data,
-                        },
+                    [entryIndex]: {
+                        data: { $merge: data },
                         widget: {
                             values: { $merge: values },
                         },
-                        uiState: {
-                            $merge: uiState,
-                        },
+                        uiState: { $merge: uiState },
                     },
                 },
             },
@@ -125,50 +131,52 @@ const editEntryViewChangeEntry = (state, action) => {
 };
 
 const editEntryViewDiffEntries = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         diffs,
     } = action;
 
-    const localEntries = state.editEntryView[leadId].entries;
+    const localEntries = getEntriesByLeadId(editEntryView, leadId);
+    // Create new entires by applying diff on local entries
     const newEntries = calcNewEntries(localEntries, diffs);
 
-    // If last selected was deleted in newEntries, then set the first item as
-    // selected
-    let newActiveId = state.editEntryView[leadId].selectedEntryId;
-    const oldSelected = newEntries.find(entry => entry.data.id === newActiveId);
-    if (!oldSelected && newEntries.length > 0) {
-        newActiveId = newEntries[0].data.id;
+    // If last selected was deleted in newEntries,
+    // then set the first item as selected
+    const selectedEntryId = getSelectedEntryIdByLeadId(editEntryView, leadId);
+    const selectedEntry = newEntries.find(entry => getIdFromEntry(entry) === selectedEntryId);
+
+    let newSelectedEntryId = selectedEntryId;
+    // If selectedEntry is not found, set new selection to first of newEntries
+    if (!selectedEntry) {
+        newSelectedEntryId = newEntries.length > 0 ? getIdFromEntry(newEntries[0]) : undefined;
     }
 
     const settings = {
         editEntryView: {
             [leadId]: {
                 entries: { $set: newEntries },
-                selectedEntryId: { $set: newActiveId },
+                selectedEntryId: { $set: newSelectedEntryId },
             },
         },
     };
-
     return update(state, settings);
 };
 
 const entryMarkForDelete = (state, action) => {
+    const { editEntryView } = state;
     const {
         leadId,
         entryId,
         mark,
     } = action;
-
-    const index = state.editEntryView[leadId].entries.findIndex(
-        e => e.data.id === entryId,
-    );
+    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
 
     const settings = {
         editEntryView: {
             [leadId]: {
                 entries: {
-                    [index]: {
+                    [entryIndex]: {
                         markedForDelete: { $set: mark },
                         uiState: {
                             pristine: { $set: false },
@@ -183,29 +191,29 @@ const entryMarkForDelete = (state, action) => {
 };
 
 const editEntryViewRemoveEntry = (state, action) => {
+    const { editEntryView } = state;
     const { entryId, leadId } = action;
 
-    const entries = state.editEntryView[leadId].entries;
-    const entryIndex = entries.findIndex(d => d.data.id === entryId);
-
-    let newActiveId;
+    // Get new selected entry id
+    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
+    const entries = getEntriesByLeadId(editEntryView, leadId);
+    let newSelectedEntryId;
     if (entryIndex + 1 < entries.length) {
-        newActiveId = entries[entryIndex + 1].data.id;
+        newSelectedEntryId = getIdFromEntry(entries[entryIndex + 1]);
     } else if (entryIndex - 1 >= 0) {
-        newActiveId = entries[entryIndex - 1].data.id;
+        newSelectedEntryId = getIdFromEntry(entries[entryIndex - 1]);
     }
 
     const settings = {
         editEntryView: {
             [leadId]: {
-                selectedEntryId: { $set: newActiveId },
+                selectedEntryId: { $set: newSelectedEntryId },
                 entries: {
                     $splice: [[entryIndex, 1]],
                 },
             },
         },
     };
-
     return update(state, settings);
 };
 
