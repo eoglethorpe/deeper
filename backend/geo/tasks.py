@@ -33,8 +33,7 @@ def _save_geo_area(admin_level, parent, feature, tolerance):
         code = feature.get(admin_level.code_prop)
 
     geo_area = GeoArea.objects.filter(
-        Q(code=None) | Q(code=code),
-        title=name,
+        Q(code=None, title=name) | Q(code=code),
         admin_level=admin_level,
     ).first()
 
@@ -42,7 +41,7 @@ def _save_geo_area(admin_level, parent, feature, tolerance):
         geo_area = GeoArea()
 
     geo_area.title = name
-    geo_area.code = code
+    geo_area.code = code if code else name
     geo_area.admin_level = admin_level
 
     geom = feature.geom

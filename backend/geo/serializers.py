@@ -81,6 +81,7 @@ class AdminLevelSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
     def create(self, validated_data):
         admin_level = super(AdminLevelSerializer, self).create(validated_data)
+        admin_level.stale_geo_areas = True
         admin_level.save()
 
         region = admin_level.region
@@ -89,8 +90,12 @@ class AdminLevelSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
 
         return admin_level
 
-    def update(self, validated_data):
-        admin_level = super(AdminLevelSerializer, self).update(validated_data)
+    def update(self, instance, validated_data):
+        admin_level = super(AdminLevelSerializer, self).update(
+            instance,
+            validated_data,
+        )
+        admin_level.stale_geo_areas = True
         admin_level.save()
 
         region = admin_level.region

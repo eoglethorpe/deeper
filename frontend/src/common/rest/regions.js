@@ -64,3 +64,15 @@ export const createParamsForCountryDelete = () => ({
     method: DELETE,
     headers: commonHeaderForPost,
 });
+
+export const createUrlForGeoAreasLoadTrigger = regionId => (
+    `${wsEndpoint}/geo-areas-load-trigger/${regionId}/`
+);
+
+export const createUrlForGeoJsonMap = adminLevelId => (
+    `${wsEndpoint}/admin-levels/${adminLevelId}/geojson/`
+);
+
+export const createUrlForGeoJsonBounds = adminLevelId => (
+    `${wsEndpoint}/admin-levels/${adminLevelId}/geojson/bounds/`
+);

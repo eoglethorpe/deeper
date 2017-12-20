@@ -39,6 +39,7 @@ const regionSchema = [];
             region: { type: 'uint', required: true },
             parent: { type: 'uint' },
             geoShapeFile: { type: 'uint' },
+            staleGeoAreas: { type: 'boolean' },
         },
     };
     regionSchema.push({ name, schema });
