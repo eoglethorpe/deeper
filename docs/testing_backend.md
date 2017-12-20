@@ -1,8 +1,8 @@
 # Testing
 
-> Authors: *Bibek Dahal*, *Navin Ayer*
+> Authors: [bibekdahal](https://github.com/bibekdahal), [thenav56](https://github.com/thenav56)
 
-Tests are written using django/django-rest test class. Tests files are stored in *tests* directory which lies inside each apps and utils modules.
+Tests are written using django/django-rest test classes. Tests files are stored in the *tests* directory which lies inside each app and utils module.
 
       ▾ docs/
           mixin_backend.md
@@ -12,7 +12,7 @@ Tests are written using django/django-rest test class. Tests files are stored in
               __init__.py
               test_apis.py
 
-##### Following is an example for testing django-rest api.
+##### The following is an example for testing django-rest API:
 
 *backend/project/tests/test_apis.py*
 ```python
@@ -48,7 +48,7 @@ class ProjectApiTest(AuthMixin, ProjectMixin, APITestCase):
         pass
 ```
 
-##### Following is an example for testing utils.
+##### The following is an example for testing utils:
 
 *backend/project/tests/test_apis.py*
 ```python
@@ -78,10 +78,10 @@ class ExtractorTest(TestCase):
 
 ```
 
-### Reference:
+### References:
 
-[Writing django tests](https://docs.djangoproject.com/en/1.11/topics/testing/overview/).
+[Writing Django tests](https://docs.djangoproject.com/en/1.11/topics/testing/overview/)
 
-[Writing Api tests](http://www.django-rest-framework.org/api-guide/testing/).
+[Writing API tests](http://www.django-rest-framework.org/api-guide/testing/)
 
 [Test Mixin](mixin_backend.md)
