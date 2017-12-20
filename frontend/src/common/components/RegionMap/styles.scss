@@ -19,6 +19,7 @@
 
     .map-container {
         display: flex;
+        position: relative;
         flex-direction: column;
         flex-grow: 1;
         width: 100%;
@@ -28,8 +29,15 @@
             flex-grow: 1;
         }
 
-        .action {
+        .bottom-bar {
             flex-shrink: 0;
+        }
+
+        .refresh-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 1;
         }
     }
 }

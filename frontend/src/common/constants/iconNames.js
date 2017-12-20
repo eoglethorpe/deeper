@@ -14,6 +14,7 @@ const iconNames = {
     code: 'ion-code',
     codeWorking: 'ion-code-working',
     delete: 'ion-android-delete',
+    refresh: 'ion-android-refresh',
 
     documentText: 'ion-document',
 

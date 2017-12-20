@@ -7,19 +7,25 @@ import styles from './styles.scss';
 import GeoJsonMap from '../GeoJsonMap';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
+
+import {
+    Button,
+    SegmentButton,
+} from '../../../public/components/Action';
+import {
+    LoadingAnimation,
+} from '../../../public/components/View';
+
+import {
+    iconNames,
+} from '../../constants';
 import {
     createParamsForAdminLevelsForRegionGET,
     createUrlForAdminLevelsForRegion,
     createUrlForGeoAreasLoadTrigger,
     createUrlForGeoJsonMap,
     createUrlForGeoJsonBounds,
-} from '../../../common/rest';
-import {
-    SegmentButton,
-} from '../../../public/components/Action';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
+} from '../../rest';
 
 const propTypes = {
     className: PropTypes.string,
@@ -261,6 +267,10 @@ export default class RegionMap extends React.PureComponent {
         });
     }
 
+    handleRefresh = () => {
+        this.create();
+    }
+
     renderContent() {
         const {
             error,
@@ -281,6 +291,12 @@ export default class RegionMap extends React.PureComponent {
         if (adminLevels && adminLevels.length > 0 && selectedAdminLevelId) {
             return (
                 <div styleName="map-container">
+                    <Button
+                        styleName="refresh-button"
+                        onClick={this.handleRefresh}
+                    >
+                        <span className={iconNames.refresh} />
+                    </Button>
                     <GeoJsonMap
                         selections={this.props.selections}
                         styleName="geo-json-map"
@@ -288,7 +304,7 @@ export default class RegionMap extends React.PureComponent {
                         geoJsonBounds={geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
                     />
-                    <div styleName="action">
+                    <div styleName="bottom-bar">
                         <SegmentButton
                             data={
                                 adminLevels.map(al => ({
