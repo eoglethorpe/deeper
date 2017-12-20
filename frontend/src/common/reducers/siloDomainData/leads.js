@@ -1,4 +1,5 @@
 import update from '../../../public/utils/immutable-update';
+import { isFalsy } from '../../../public/utils/common';
 import {
     L__SET_LEADS,
     L__SET_FILTER,
@@ -13,6 +14,9 @@ import {
 const leadViewSetFilter = (state, action) => {
     const { filters } = action;
     const { activeProject } = state;
+    if (isFalsy(activeProject)) {
+        return state;
+    }
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
@@ -29,7 +33,7 @@ const leadViewUnsetFilter = (state) => {
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
-                filter: { $auto: { $set: {} } },
+                filter: { $set: {} },
                 activePage: { $set: 1 },
             } },
         },

@@ -17,7 +17,6 @@ import {
 
 // HELPER
 
-
 const getIdFromEntry = e => e.data.id;
 const getEntriesByLeadId = (editEntryView, leadId) => (
     editEntryView[leadId].entries
@@ -39,6 +38,7 @@ const editEntryViewSetLead = (state, action) => {
         editEntryView: {
             [leadId]: { $auto: {
                 // NOTE: why not setting leadId here?
+                // but setting it on addEntry
                 lead: { $set: lead },
             } },
         },

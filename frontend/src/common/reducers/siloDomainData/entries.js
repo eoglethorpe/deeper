@@ -16,7 +16,7 @@ const setEntries = (state, action) => {
         entriesView: {
             [projectId]: { $auto: {
                 entries: { $set: entries },
-                totalEntiresCount: { $set: totalEntriesCount },
+                totalEntriesCount: { $set: totalEntriesCount },
             } },
         },
     };
