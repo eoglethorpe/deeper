@@ -246,3 +246,30 @@ export const activeCategoryIdSelector = createSelector(
     categoryEditorViewSelector,
     view => view.activeCategoryId,
 );
+
+export const selectedSubcategorySelector = createSelector(
+    categoriesSelector,
+    activeCategoryIdSelector,
+    (categories, activeCategoryId) => {
+        if (!activeCategoryId) {
+            return undefined;
+        }
+
+        const category = categories.find(d => d.id === activeCategoryId);
+        const selectedSubcategories = category.selectedSubcategories;
+
+        if (selectedSubcategories.length === 0) {
+            return undefined;
+        }
+
+        let subcategory = {};
+        let subcategories = category.subcategories;
+
+        selectedSubcategories.forEach((selected) => {
+            subcategory = subcategories.find(d => d.id === selected);
+            subcategories = subcategory.subcategories;
+        });
+
+        return subcategory;
+    },
+);

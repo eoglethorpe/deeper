@@ -178,27 +178,6 @@ export const currentUserAdminProjectsSelector = createSelector(
     projects => projects.filter(project => (project.role === 'admin')),
 );
 
-
-/*
-export const categoriesSelector = ({ domainData }) => (
-    domainData.categories || emptyObject
-);
-
-export const categoriesListSelector = createSelector(
-    categoriesSelector,
-    categories => Object.values(categories),
-);
-
-
-export const subCategoriesSelector = ({ domainData }) => (
-    domainData.subCategories || emptyObject
-);
-
-export const subSubCategoriesSelector = ({ domainData }) => (
-    domainData.subSubCategories || emptyObject
-);
-*/
-
 // Visualization Selectors
 
 export const hierarchialDataSelector = ({ domainData }) => (

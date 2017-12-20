@@ -34,10 +34,3 @@ export const SET_ANALYSIS_FRAMEWORKS = 'domain-data/SET_ANALYSIS_FRAMEWORKS';
 export const ADD_NEW_AF = 'domain-data/ADD_NEW_AF';
 export const SET_PROJECT_AF = 'domain-data/SET_PROJECT_AF';
 export const SET_AF_DETAIL = 'domain-data/SET_AF_DETAIL';
-
-/*
-export const ADD_NEW_CATEGORY = 'domain-data/ADD_NEW_CATEGORY';
-export const ADD_NEW_SUBCATEGORY = 'domain-data/ADD_NEW_SUBCATEGORY';
-export const ADD_NEW_SUBSUBCATEGORY = 'domain-data/ADD_NEW_SUBSUBCATEGORY';
-export const SET_CATEGORY = 'domain-data/SET_CATEGORY';
-*/

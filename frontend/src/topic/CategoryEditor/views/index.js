@@ -4,18 +4,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
+    TextInput,
     SelectInput,
 } from '../../../public/components/Input';
 
 import {
     Button,
+    PrimaryButton,
 } from '../../../public/components/Action';
+
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+} from '../../../public/components/View';
 
 import {
     randomString,
 } from '../../../public/utils/common';
 
 import SubcategoryColumn from './SubcategoryColumn';
+import SubcategoryPropertyPanel from './SubcategoryPropertyPanel';
 
 import {
     categoriesSelector,
@@ -53,7 +63,6 @@ const defaultProps = {
     activeCategoryId: undefined,
 };
 
-
 const LIMIT = 5;
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -61,6 +70,17 @@ const LIMIT = 5;
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showCategoryTitleModal: false,
+            newCategoryTitleInputValue: '',
+            showSubcategoryTitleModal: false,
+            newSubcategoryTitleInputValue: '',
+        };
+    }
 
     getSubcategoryColumns = () => {
         const {
@@ -107,26 +127,27 @@ export default class CategoryEditor extends React.PureComponent {
         return subcategoryColumns;
     }
 
-    getSelectedSubcategory = () => {
-        const {
-            categories,
-            activeCategoryId,
-        } = this.props;
+    handleNewSubcategory = (level) => {
+        this.newSubcategoryLevel = level;
 
-        if (activeCategoryId) {
-            const category = categories.find(d => d.id === activeCategoryId);
-            const { selectedSubcategories } = category;
-
-            const len = selectedSubcategories.length;
-            if (len > 0) {
-                return selectedSubcategories[len - 1];
-            }
-        }
-
-        return 'none';
+        this.setState({
+            showSubcategoryTitleModal: true,
+        });
     }
 
-    handleNewSubcategory = (level) => {
+    handleSubcategoryClick = (level, subcategoryId) => {
+        const {
+            updateSelectedSubcategories,
+        } = this.props;
+
+        updateSelectedSubcategories({ level, subcategoryId });
+    }
+
+    addNewSubcategory = (title) => {
+        const {
+            newSubcategoryLevel: level,
+        } = this;
+
         const {
             addNewSubcategory,
         } = this.props;
@@ -134,27 +155,21 @@ export default class CategoryEditor extends React.PureComponent {
         const key = randomString();
         const newSubcategory = {
             id: key,
-            title: `Sub category ${key}`,
+            title,
+            description: '',
+            ngrams: [],
             subcategories: [],
         };
 
         addNewSubcategory({ level, newSubcategory });
     }
 
-    handleSubcategoryClick = (level, subCategoryId) => {
-        const {
-            updateSelectedSubcategories,
-        } = this.props;
-
-        updateSelectedSubcategories({ level, subCategoryId });
-    }
-
-    addNewCategory = () => {
+    addNewCategory = (title) => {
         const key = randomString();
 
         const newCategory = {
             id: key,
-            title: `Category ${key}`,
+            title,
         };
 
         this.props.addNewCategory(newCategory);
@@ -169,11 +184,59 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     handleAddCategoryButtonClick = () => {
-        this.addNewCategory();
+        this.setState({
+            showCategoryTitleModal: true,
+        });
     }
 
     handlePropertyAddSubcategoryButtonClick = () => {
         this.addNewSubcategoryInActiveSubcategory();
+    }
+
+    handleNameModalClose = () => {
+        this.setState({
+            showCategoryTitleModal: false,
+            showSubategoryTitleModal: false,
+        });
+    }
+
+    handleNameModalCancelButtonClick = () => {
+        this.setState({
+            showCategoryTitleModal: false,
+            showSubcategoryTitleModal: false,
+            newCategoryTitleInputValue: '',
+            newSubcategoryTitleInputValue: '',
+        });
+    }
+
+    handleNewCategoryTitleInputValueChange = (value) => {
+        this.setState({
+            newCategoryTitleInputValue: value,
+        });
+    }
+
+    handleCategoryTitleModalOkButtonClick = () => {
+        this.addNewCategory(this.state.newCategoryTitleInputValue);
+
+        this.setState({
+            showCategoryTitleModal: false,
+            newCategoryTitleInputValue: '',
+        });
+    }
+
+    handleNewSubcategoryTitleInputValueChange = (value) => {
+        this.setState({
+            newSubcategoryTitleInputValue: value,
+        });
+    }
+
+    handleSubcategoryTitleModalOkButtonClick = () => {
+        this.addNewSubcategory(this.state.newSubcategoryTitleInputValue);
+
+        this.setState({
+            showSubcategoryTitleModal: false,
+            newSubcategoryTitleInputValue: '',
+        });
     }
 
     render() {
@@ -198,6 +261,7 @@ export default class CategoryEditor extends React.PureComponent {
                         styleName="header"
                     >
                         <SelectInput
+                            styleName="category-select"
                             options={categories}
                             onChange={this.handleCategorySelectChange}
                             placeholder="Select category"
@@ -220,16 +284,76 @@ export default class CategoryEditor extends React.PureComponent {
                             styleName="sub-categories"
                         >
                             {
-                                activeCategoryId && this.getSubcategoryColumns()
+                                activeCategoryId ? (
+                                    this.getSubcategoryColumns()
+                                ) : (
+                                    <p styleName="empty">Such empty</p>
+                                )
                             }
                         </div>
-                        <div
-                            styleName="properties"
-                        >
-                            { this.getSelectedSubcategory() }
-                        </div>
+                        <SubcategoryPropertyPanel />
                     </div>
                 </div>
+                <Modal
+                    styleName="new-category-modal"
+                    show={this.state.showCategoryTitleModal}
+                    onClose={this.handleNameModalClose}
+                >
+                    <ModalHeader
+                        title="Add new category"
+                    />
+                    <ModalBody>
+                        <TextInput
+                            label="Title"
+                            placeholder="eg: Sector"
+                            onChange={this.handleNewCategoryTitleInputValueChange}
+                            value={this.state.newCategoryTitleInputValue}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            onClick={this.handleNameModalCancelButtonClick}
+                        >
+                            Cancel
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleCategoryTitleModalOkButtonClick}
+                            styleName="ok-button"
+                        >
+                            Ok
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
+                <Modal
+                    styleName="new-subcategory-modal"
+                    show={this.state.showSubcategoryTitleModal}
+                    onClose={this.handleNameModalClose}
+                >
+                    <ModalHeader
+                        title="Add new subcategory"
+                    />
+                    <ModalBody>
+                        <TextInput
+                            label="Title"
+                            placeholder="eg: Wash"
+                            onChange={this.handleNewSubcategoryTitleInputValueChange}
+                            value={this.state.newSubcategoryTitleInputValue}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            onClick={this.handleNameModalCancelButtonClick}
+                        >
+                            Cancel
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleSubcategoryTitleModalOkButtonClick}
+                            styleName="ok-button"
+                        >
+                            Ok
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
             </div>
         );
     }

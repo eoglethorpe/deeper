@@ -85,25 +85,30 @@ export default class SubcategoryColumn extends React.PureComponent {
         } = this.props;
 
         onSubcategoryClick(level, id);
-        // onSubcategoryClick();
     }
 
     render() {
         const {
             subcategories,
+            level,
         } = this.props;
 
         return (
             <div
                 styleName="column"
             >
-                <div styleName="action-buttons">
+                <header styleName="header">
+                    <h4
+                        styleName="heading"
+                    >
+                        Level: {level}
+                    </h4>
                     <button
                         onClick={this.handleNewSubcategoryButtonClick}
                     >
-                        New sub category
+                        Add subcategory
                     </button>
-                </div>
+                </header>
                 <ListView
                     styleName="sub-category-list"
                     data={subcategories}
