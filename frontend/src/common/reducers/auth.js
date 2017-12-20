@@ -14,6 +14,7 @@ import schema from '../../common/schema';
 const decodeAccessToken = (access) => {
     const decodedToken = jwtDecode(access);
     try {
+        console.log(decodedToken);
         schema.validate(decodedToken, 'accessToken');
         return {
             userId: decodedToken.userId,
@@ -23,7 +24,7 @@ const decodeAccessToken = (access) => {
             exp: decodedToken.exp,
         };
     } catch (ex) {
-        console.warn('Access token schema has changed.');
+        console.warn(ex);
         return {};
     }
 };

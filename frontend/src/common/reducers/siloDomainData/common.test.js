@@ -70,7 +70,7 @@ test('should set active project on new projects', () => {
         ],
     };
     const after = {
-        activeProject: undefined,
+        activeProject: 3,
     };
     expect(reducers[SET_USER_PROJECTS](state, action)).toEqual(after);
 });

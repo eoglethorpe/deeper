@@ -19,13 +19,20 @@ const setUserProjects = (state, action) => {
     const { activeProject } = state;
     const { projects } = action;
 
-    const newActiveProject = projects
-        ? projects.find(project => getIdFromProject(project) === activeProject)
-        : undefined;
+    // if projects, try to find purano else naya
 
-    const newActiveProjectId = newActiveProject
-        ? getIdFromProject(newActiveProject)
-        : undefined;
+    let newActiveProjectId;
+    if (projects && projects.length > 0) {
+        const indexOfActiveProject = projects.findIndex(
+            project => getIdFromProject(project) === activeProject,
+        );
+        if (indexOfActiveProject === -1) {
+            newActiveProjectId = getIdFromProject(projects[0]);
+        } else {
+            // it hasn't changed
+            newActiveProjectId = activeProject;
+        }
+    }
 
     const settings = {
         activeProject: { $set: newActiveProjectId },

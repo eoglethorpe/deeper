@@ -53,7 +53,7 @@ export default class HomeScreen extends React.PureComponent {
             activeUser,
         } = this.props;
 
-        if (currentUserProjects.length > 0) {
+        if (activeProject && currentUserProjects.length > 0) {
             const params = { projectId: activeProject };
             const routeTo = reverseRoute(pathNames.dashboard, params);
             return (
@@ -68,18 +68,18 @@ export default class HomeScreen extends React.PureComponent {
 
         return (
             <div styleName="home-screen">
-                <p>
+                <h>
                     Welcome to DEEP
-                </p>
+                </h>
                 <img
                     src={logo}
                     alt="DEEP"
                     draggable="false"
                 />
-                <h2>
+                <p>
                     Seems like you have no projects yet.
-                </h2>
-                <h2>
+                </p>
+                <p>
                     <Link
                         to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })}
                     >
@@ -89,7 +89,7 @@ export default class HomeScreen extends React.PureComponent {
                             styleName="icon"
                         />
                     </Link>
-                </h2>
+                </p>
             </div>
         );
     }
