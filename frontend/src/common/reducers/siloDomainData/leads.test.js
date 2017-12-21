@@ -1,13 +1,17 @@
-import {
+import reducers, {
     L__SET_LEADS,
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
     L__SET_VIEW_MODE,
     L__SET_ACTIVE_SORT,
-} from '../../action-types/siloDomainData';
-import reducers from './leads.js';
-
+    setLeadPageFilterAction,
+    unsetLeadPageFilterAction,
+    setLeadPageActivePageAction,
+    setLeadPageViewModeAction,
+    setLeadPageActiveSortAction,
+    setLeadsAction,
+} from './leads';
 
 test('should set leads filter without clearing old filter', () => {
     const state = {
@@ -20,10 +24,9 @@ test('should set leads filter without clearing old filter', () => {
         },
     };
 
-    const action = {
-        type: L__SET_FILTER,
+    const action = setLeadPageFilterAction({
         filters: { source: 'tv' },
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -43,11 +46,9 @@ test('should set leads filter', () => {
         leadPage: {
         },
     };
-
-    const action = {
-        type: L__SET_FILTER,
+    const action = setLeadPageFilterAction({
         filters: { source: 'tv' },
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -71,10 +72,7 @@ test('should unset filter', () => {
             },
         },
     };
-
-    const action = {
-        type: L__SET_FILTER,
-    };
+    const action = unsetLeadPageFilterAction();
     const after = {
         activeProject: 2,
         leadPage: {
@@ -98,11 +96,9 @@ test('should set active page', () => {
             },
         },
     };
-
-    const action = {
-        type: L__SET_ACTIVE_PAGE,
+    const action = setLeadPageActivePageAction({
         activePage: 2,
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -122,11 +118,9 @@ test('should set active page for first time', () => {
         leadPage: {
         },
     };
-
-    const action = {
-        type: L__SET_ACTIVE_PAGE,
+    const action = setLeadPageActivePageAction({
         activePage: 2,
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -150,11 +144,9 @@ test('should set view mode', () => {
             },
         },
     };
-
-    const action = {
-        type: L__SET_VIEW_MODE,
+    const action = setLeadPageViewModeAction({
         viewMode: 'table',
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -175,11 +167,9 @@ test('should set view mode for first time', () => {
         leadPage: {
         },
     };
-
-    const action = {
-        type: L__SET_VIEW_MODE,
+    const action = setLeadPageViewModeAction({
         viewMode: 'visualization',
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -203,11 +193,9 @@ test('should set active sort', () => {
             },
         },
     };
-
-    const action = {
-        type: L__SET_ACTIVE_SORT,
+    const action = setLeadPageActiveSortAction({
         activeSort: '+created-at',
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -228,11 +216,9 @@ test('should set active sort for first time', () => {
         leadPage: {
         },
     };
-
-    const action = {
-        type: L__SET_ACTIVE_SORT,
+    const action = setLeadPageActiveSortAction({
         activeSort: '+created-at',
-    };
+    });
     const after = {
         activeProject: 2,
         leadPage: {
@@ -258,13 +244,11 @@ test('should set leads', () => {
             },
         },
     };
-
-    const action = {
-        type: L__SET_LEADS,
+    const action = setLeadsAction({
         leads: ['lead1', 'lead2'],
         totalLeadsCount: 10,
         projectId: 2,
-    };
+    });
     const after = {
         leadPage: {
             2: {
@@ -285,13 +269,11 @@ test('should set leads for first time', () => {
         leadPage: {
         },
     };
-
-    const action = {
-        type: L__SET_LEADS,
+    const action = setLeadsAction({
         leads: ['lead1', 'lead2'],
         totalLeadsCount: 10,
         projectId: 2,
-    };
+    });
     const after = {
         leadPage: {
             2: {

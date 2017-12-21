@@ -3,7 +3,7 @@ import AbstractTask from './AbstractTask';
 import { FgRestBuilder } from '../../public/utils/rest';
 import {
     setAccessTokenAction,
-} from '../action-creators/auth';
+} from '../reducers/auth';
 import schema from '../schema';
 import {
     createParamsForTokenRefresh,

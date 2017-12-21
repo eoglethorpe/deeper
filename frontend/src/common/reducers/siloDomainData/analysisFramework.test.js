@@ -1,10 +1,13 @@
-import {
+import reducers, {
     AF__SET_ANALYSIS_FRAMEWORK,
     AF__VIEW_ADD_WIDGET,
     AF__REMOVE_WIDGET,
     AF__VIEW_UPDATE_WIDGET,
-} from '../../action-types/siloDomainData';
-import reducers from './analysisFramework.js';
+    setAfViewAnalysisFrameworkAction,
+    addAfViewWidgetAction,
+    removeAfViewWidgetAction,
+    updateAfViewWidgetAction,
+} from './analysisFramework';
 
 
 test('should set analaysis framework', () => {
@@ -12,10 +15,9 @@ test('should set analaysis framework', () => {
         analysisFrameworkView: { },
     };
 
-    const action = {
-        type: AF__SET_ANALYSIS_FRAMEWORK,
+    const action = setAfViewAnalysisFrameworkAction({
         analysisFramework: { id: 1 },
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: { id: 1 },
@@ -30,11 +32,10 @@ test('should skip adding widget', () => {
         analysisFrameworkView: { },
     };
 
-    const action = {
-        type: AF__VIEW_ADD_WIDGET,
+    const action = addAfViewWidgetAction({
         widget: { key: '1', name: 'widget1' },
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
         },
@@ -49,11 +50,10 @@ test('should skip adding widget', () => {
         },
     };
 
-    const action = {
-        type: AF__VIEW_ADD_WIDGET,
+    const action = addAfViewWidgetAction({
         widget: { key: '1', name: 'widget1' },
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: {},
@@ -69,11 +69,10 @@ test('should add widget', () => {
         },
     };
 
-    const action = {
-        type: AF__VIEW_ADD_WIDGET,
+    const action = addAfViewWidgetAction({
         widget: { key: '1', name: 'widget1' },
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: {
@@ -97,12 +96,10 @@ test('should remove widget', () => {
             },
         },
     };
-
-    const action = {
-        type: AF__REMOVE_WIDGET,
+    const action = removeAfViewWidgetAction({
         widgetId: '2',
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: {
@@ -128,12 +125,10 @@ test('should update widget', () => {
             },
         },
     };
-
-    const action = {
-        type: AF__VIEW_UPDATE_WIDGET,
+    const action = updateAfViewWidgetAction({
         widget: { key: '1', name: 'widget3' },
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: {
@@ -160,12 +155,10 @@ test('should skip updating widget', () => {
             },
         },
     };
-
-    const action = {
-        type: AF__VIEW_UPDATE_WIDGET,
+    const action = updateAfViewWidgetAction({
         widget: { key: '3', name: 'widget3' },
         analysisFrameworkId: 1,
-    };
+    });
     const after = {
         analysisFrameworkView: {
             analysisFramework: {

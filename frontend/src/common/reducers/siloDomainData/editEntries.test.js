@@ -1,4 +1,5 @@
-import {
+import { DIFF_ACTION } from '../../entities/entry';
+import reducers, {
     EE__ADD_ENTRY,
     EE__REMOVE_ENTRY,
     EE__SET_ACTIVE_ENTRY,
@@ -7,20 +8,23 @@ import {
     EE__ENTRY_CHANGE,
     EE__ENTRY_DIFF,
     EE__ENTRY_MARK_FOR_DELETE,
-} from '../../action-types/siloDomainData';
-import { DIFF_ACTION } from '../../entities/entry';
-import reducers from './editEntries.js';
-
+    setEditEntryViewLeadAction,
+    addEntryAction,
+    removeEntryAction,
+    saveEntryAction,
+    changeEntryAction,
+    diffEntriesAction,
+    markForDeleteEntryAction,
+    setActiveEntryAction,
+} from './editEntries.js';
 
 test('should set lead', () => {
     const state = {
         editEntryView: {},
     };
-
-    const action = {
-        type: EE__SET_LEAD,
+    const action = setEditEntryViewLeadAction({
         lead: { id: 1, title: 'Lead #1' },
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -36,15 +40,14 @@ test('should add entry', () => {
         editEntryView: {},
     };
 
-    const action = {
-        type: EE__ADD_ENTRY,
+    const action = addEntryAction({
         entry: {
             id: 'flksjal',
             serverId: 2,
             values: { title: 'Entry #1' },
         },
         leadId: 1,
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -75,16 +78,14 @@ test('should add entry', () => {
     const state = {
         editEntryView: {},
     };
-
-    const action = {
-        type: EE__ADD_ENTRY,
+    const action = addEntryAction({
         entry: {
             id: 'flksjal',
             serverId: 2,
             values: { title: 'Entry #1' },
         },
         leadId: 1,
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -135,8 +136,7 @@ test('should save entry', () => {
             },
         },
     };
-    const action = {
-        type: EE__ENTRY_SAVE,
+    const action = saveEntryAction({
         leadId: 1,
         entryId: 'flksjal',
         data: {
@@ -145,7 +145,7 @@ test('should save entry', () => {
         values: {
             some: 'attribute',
         },
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -198,8 +198,7 @@ test('should change entry', () => {
             },
         },
     };
-    const action = {
-        type: EE__ENTRY_CHANGE,
+    const action = changeEntryAction({
         leadId: 1,
         entryId: 'flksjal',
         data: {
@@ -209,7 +208,7 @@ test('should change entry', () => {
             some: 'attribute',
         },
         uiState: { error: true },
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -262,12 +261,11 @@ test('should mark for delete', () => {
             },
         },
     };
-    const action = {
-        type: EE__ENTRY_MARK_FOR_DELETE,
+    const action = markForDeleteEntryAction({
         leadId: 1,
         entryId: 'flksjal',
         mark: true,
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -316,11 +314,10 @@ test('should delete entry at bottom', () => {
             },
         },
     };
-    const action = {
-        type: EE__REMOVE_ENTRY,
+    const action = removeEntryAction({
         leadId: 1,
         entryId: 'flksjal',
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -360,11 +357,10 @@ test('should delete entry at top', () => {
             },
         },
     };
-    const action = {
-        type: EE__REMOVE_ENTRY,
+    const action = removeEntryAction({
         leadId: 1,
         entryId: 'gksgk',
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -404,11 +400,10 @@ test('should set active entry', () => {
             },
         },
     };
-    const action = {
-        type: EE__SET_ACTIVE_ENTRY,
+    const action = setActiveEntryAction({
         leadId: 1,
         entryId: 'gksgk',
-    };
+    });
     const after = {
         editEntryView: {
             1: {
@@ -514,8 +509,7 @@ test('should apply diff', () => {
             },
         },
     };
-    const action = {
-        type: EE__ENTRY_DIFF,
+    const action = diffEntriesAction({
         leadId: 1,
         diffs: [
             // added
@@ -596,7 +590,7 @@ test('should apply diff', () => {
                 id: 'ppppp',
             },
         ],
-    };
+    });
     const after = {
         editEntryView: {
             1: {

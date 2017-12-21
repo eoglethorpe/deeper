@@ -9,7 +9,7 @@ import {
 } from '../../common/selectors/auth';
 import {
     setUserProjectsAction,
-} from '../../common/action-creators/domainData';
+} from '../../common/reducers/domainData/projects';
 
 
 export const START_REFRESH = 'refresh/START';

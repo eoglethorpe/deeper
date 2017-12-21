@@ -1,7 +1,17 @@
 import update from '../../../public/utils/immutable-update';
-import {
-    E__SET_ENTRIES,
-} from '../../action-types/siloDomainData';
+
+// TYPE
+
+export const E__SET_ENTRIES = 'domain-data/E__SET_ENTRIES ';
+
+// ACTION-CREATOR
+
+export const setEntriesAction = ({ projectId, entries, totalEntriesCount }) => ({
+    type: E__SET_ENTRIES,
+    projectId,
+    entries,
+    totalEntriesCount,
+});
 
 // REDUCER
 
