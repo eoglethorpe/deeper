@@ -8,6 +8,11 @@ import {
 import {
     FloatingContainer,
 } from '../../../../public/components/View';
+
+import {
+    getContrastYIQ,
+} from '../../../../public/utils/common';
+
 import {
     iconNames,
 } from '../../../../common/constants';
@@ -34,8 +39,7 @@ export default class AssistedTagging extends React.PureComponent {
         super(props);
 
         this.state = {
-            assistedActionsHover: false,
-            assistedHighlightHover: false,
+            assitedActionsVisible: false,
             activeHighlightRef: undefined,
             activeHighlightDetails: {},
         };
@@ -61,60 +65,68 @@ export default class AssistedTagging extends React.PureComponent {
         ];
     }
 
+    componentDidMount() {
+        if (this.primaryContainer) {
+            this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
+        }
+    }
+
     highlightSimplifiedExcerpt = (highlight, text) => {
         console.warn();
         return (
             <span
+                role="presentation"
                 className={styles['highlighted-excerpt']}
-                style={{ backgroundColor: highlight.color }}
-                onMouseEnter={e => this.handleOnMouseEnter(e, highlight)}
-                onMouseLeave={this.handleOnMouseLeave}
+                style={{
+                    backgroundColor: highlight.color,
+                    color: getContrastYIQ(highlight.color),
+                }}
+                onClick={e => this.handleOnHighlightClick(e, highlight)}
             >
                 {text}
             </span>
         );
     };
 
-    handleDynamicStyleOverride = (pickerContainer) => {
+    handleDynamicStyleOverride = (popupContainer) => {
         const { activeHighlightRef } = this.state;
 
-        const pickerRect = pickerContainer.getBoundingClientRect();
+        const popupRect = popupContainer.getBoundingClientRect();
         const cr = (activeHighlightRef && activeHighlightRef.getBoundingClientRect())
             || this.boundingClientRect;
 
         const pageOffset = window.innerHeight;
-        const containerOffset = cr.top + pickerRect.height + cr.height;
+        const containerOffset = cr.top + popupRect.height + cr.height;
+        const primaryContainerRect = this.primaryContainerRect || (
+            this.primaryContainer && this.primaryContainer.getBoundingClientRect());
+
+        if (!primaryContainerRect) {
+            return null;
+        }
 
         const newStyle = {
-            left: `${cr.right - 12}px`,
+            left: `${primaryContainerRect.left}px`,
+            width: `${primaryContainerRect.width}px`,
             top: `${(cr.top + window.scrollY) + cr.height + 2}px`,
         };
 
         if (pageOffset < containerOffset) {
-            newStyle.top = `${cr.top - pickerRect.height - 12}px`;
+            newStyle.top = `${cr.top - popupRect.height - 36}px`;
         }
 
         return newStyle;
     }
 
-    handleOnMouseEnter = (e, activeHighlightDetails) => {
+    handleOnHighlightClick = (e, activeHighlightDetails) => {
         this.setState({
-            assistedHighlightHover: true,
+            assitedActionsVisible: true,
             activeHighlightRef: e.target,
             activeHighlightDetails,
         });
     }
 
-    handleOnMouseLeave = () => {
-        this.setState({ assistedHighlightHover: false });
-    }
-
-    handleOnMouseEnterAssisted = () => {
-        this.setState({ assistedActionsHover: true });
-    }
-
-    handleOnMouseLeaveAssisted = () => {
-        this.setState({ assistedActionsHover: false });
+    handleOnCloseAssistedActions = () => {
+        this.setState({ assitedActionsVisible: false });
     }
 
     handleEntryAdd = (text) => {
@@ -124,13 +136,15 @@ export default class AssistedTagging extends React.PureComponent {
     render() {
         const { lead } = this.props;
         const {
-            assistedActionsHover,
             activeHighlightDetails,
-            assistedHighlightHover,
+            assitedActionsVisible,
         } = this.state;
 
         return (
-            <div styleName="assisted-tagging">
+            <div
+                ref={(el) => { this.primaryContainer = el; }}
+                styleName="assisted-tagging"
+            >
                 <div styleName="suggestion-select">
                     <span>Show suggestions for:</span>
                     <SelectInput
@@ -149,31 +163,46 @@ export default class AssistedTagging extends React.PureComponent {
                     parentContainer={this.state.activeHighlightRef}
                     onDynamicStyleOverride={this.handleDynamicStyleOverride}
                     containerId="assisted-actions-container"
-                    onClose={this.handleOnMouseLeave}
-                    show={assistedActionsHover || assistedHighlightHover}
+                    onClose={this.handleOnCloseAssistedActions}
+                    show={assitedActionsVisible}
                 >
-                    <div
-                        onMouseEnter={this.handleOnMouseEnterAssisted}
-                        onMouseLeave={this.handleOnMouseLeaveAssisted}
-                        ref={(el) => { this.assitedActionContainer = el; }}
-                        styleName="assisted-actions"
-                    >
+                    <div styleName="assisted-actions">
+                        <header styleName="header">
+                            <TransparentButton
+                                styleName="button"
+                                onClick={this.handleOnCloseAssistedActions}
+                            >
+                                <span className={iconNames.remove} />
+                            </TransparentButton>
+                        </header>
                         <div styleName="info-bar">
-                            <span>{activeHighlightDetails.source}</span>
-                            <span>{activeHighlightDetails.confidence}</span>
+                            <header>
+                                <span>{activeHighlightDetails.source}</span>
+                                <span>{activeHighlightDetails.confidence}</span>
+                            </header>
+                            <span>{activeHighlightDetails.text}</span>
                         </div>
                         <div styleName="action-buttons">
                             <TransparentButton
                                 styleName="button"
                                 onClick={() => this.handleEntryAdd(activeHighlightDetails.text)}
                             >
-                                <span className={iconNames.add} />
+                                Apply
                             </TransparentButton>
-                            <TransparentButton
-                                styleName="button"
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentButton>
+                            <div styleName="feedback">
+                                <TransparentButton
+                                    title="Its accurate"
+                                    styleName="button"
+                                >
+                                    <span className={iconNames.thumbsUp} />
+                                </TransparentButton>
+                                <TransparentButton
+                                    title="Its not accurate"
+                                    styleName="button"
+                                >
+                                    <span className={iconNames.thumbsDown} />
+                                </TransparentButton>
+                            </div>
                         </div>
                     </div>
                 </FloatingContainer>

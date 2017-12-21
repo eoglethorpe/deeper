@@ -26,44 +26,49 @@
         flex-grow: 1;
 
         .highlighted-excerpt {
-            display: inline-block;
-            border-radius: 5px;
-            padding: $spacing-extra-small $spacing-small;
+            cursor: pointer;
         }
     }
 }
 
 .assisted-actions {
-    @include shadow-small;
-    position: relative;
-    background-color: $color-accent;
-    width: 240px;
-    color: $color-text-on-accent;
+    @include shadow-large-dark;
+    background-color: $color-primary;
+    min-width: 240px;
+    color: $color-text-on-primary;
 
-    &::before {
-        position: absolute;
-        top: -12px;
-        left: 3px;
-        border-width: 0 6px 12px;
-        border-style: solid;
-        border-color: transparent transparent $color-accent;
-        width: 0;
-        height: 0;
-        content: '';
+    .header {
+        display: flex;
+        justify-content: flex-end;
+        border-bottom: $width-separator-thin solid $color-separator-light;
+
+        .button {
+            color: $color-text-on-primary;
+        }
     }
 
     .info-bar {
         display: flex;
-        justify-content: space-between;
-        padding: $spacing-extra-small $spacing-medium-alt;
+        flex-direction: column;
+        padding: $spacing-medium $spacing-medium-alt;
+
+        header {
+            display: flex;
+            justify-content: space-between;
+        }
     }
 
     .action-buttons {
         display: flex;
+        justify-content: space-between;
+        padding: $spacing-medium 0;
 
         .button {
+            color: $color-text-on-primary;
+        }
+
+        .feedback {
             display: flex;
-            color: $color-text-on-accent;
         }
     }
 }
