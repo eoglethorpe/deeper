@@ -292,15 +292,15 @@ export default class Overview extends React.PureComponent {
                 </TabLink>
                 <TabLink
                     styleName="tab-header"
-                    to="original-preview"
-                >
-                    Original
-                </TabLink>
-                <TabLink
-                    styleName="tab-header"
                     to="assisted-tagging"
                 >
                     Assisted
+                </TabLink>
+                <TabLink
+                    styleName="tab-header"
+                    to="original-preview"
+                >
+                    Original
                 </TabLink>
                 {/* Essential for border bottom, for more info contact AdityaKhatri */}
                 <div styleName="empty-tab" />
