@@ -1,13 +1,13 @@
 @import '../../../../../stylesheets/base';
 
-.date-overview {
+.number-overview {
     display: flex;
     flex-direction: column;
     height: 100%;
     overflow: auto;
 }
 
-.date-list {
+.number-list {
     display: flex;
     flex-direction: column;
     flex-grow: 1;

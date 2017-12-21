@@ -12,14 +12,14 @@ import {
     ViewListWidget,
 } from './View';
 
-const dateInformationWidget = {
-    id: 'dateInformationWidget',
-    title: 'Date',
+const numberWidget = {
+    id: 'numberWidget',
+    title: 'Number',
     analysisFramework: {
         // overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
-        // overviewMinSize: { width: 240, height: 96 },
-        listMinSize: { width: 240, height: 96 },
+        // overviewMinSize: { width: 196, height: 72 },
+        listMinSize: { width: 196, height: 72 },
     },
     tagging: {
         // overviewComponent: TaggingOverviewWidget,
@@ -30,4 +30,4 @@ const dateInformationWidget = {
     },
 };
 
-export default dateInformationWidget;
+export default numberWidget;

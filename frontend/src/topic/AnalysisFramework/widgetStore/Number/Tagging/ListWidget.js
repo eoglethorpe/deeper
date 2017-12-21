@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './styles.scss';
 
 import {
-    DateInput,
+    TextInput,
 } from '../../../../../public/components/Input';
 
 const propTypes = {
@@ -18,7 +18,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class DateInformationList extends React.PureComponent {
+export default class NumberList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -35,10 +35,13 @@ export default class DateInformationList extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="date-list">
-                <DateInput
+            <div styleName="number-list">
+                <TextInput
                     onChange={this.handleChange}
                     value={attribute && attribute.value}
+                    placeholder="eg: 147181"
+                    showLabel={false}
+                    showHintAndError={false}
                 />
             </div>
         );

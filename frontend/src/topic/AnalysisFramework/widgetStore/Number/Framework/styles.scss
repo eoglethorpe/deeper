@@ -1,6 +1,6 @@
 @import '../../../../../stylesheets/base';
 
-.date-overview {
+.number-overview {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,7 +9,7 @@
     overflow: auto;
 }
 
-.date-list {
+.number-list {
     display: flex;
     align-items: center;
     justify-content: center;

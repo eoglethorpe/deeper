@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    DateInput,
+    TextInput,
 } from '../../../../../public/components/Input';
 
 import styles from './styles.scss';
@@ -13,7 +13,7 @@ const propTypes = {
 };
 
 @CSSModules(styles)
-export default class ExcerptTextOverview extends React.PureComponent {
+export default class NumberOverview extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
@@ -29,7 +29,11 @@ export default class ExcerptTextOverview extends React.PureComponent {
     render() {
         return (
             <div styleName="date-overview">
-                <DateInput />
+                <TextInput
+                    placeholder="eg: 147181"
+                    showLabel={false}
+                    showHintAndError={false}
+                />
 
             </div>
         );

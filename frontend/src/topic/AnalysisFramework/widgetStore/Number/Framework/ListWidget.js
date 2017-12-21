@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    DateInput,
+    TextInput,
 } from '../../../../../public/components/Input';
 
 import styles from './styles.scss';
@@ -14,7 +14,7 @@ const propTypes = {
 };
 
 @CSSModules(styles)
-export default class DateInformation extends React.PureComponent {
+export default class Number extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
@@ -24,14 +24,17 @@ export default class DateInformation extends React.PureComponent {
     }
 
     handleEdit = () => {
-        console.log('Edit Date (List)');
+        console.log('Edit Number (List)');
     }
 
     render() {
         return (
-            <div styleName="date-list">
-                <DateInput
+            <div styleName="number-list">
+                <TextInput
                     disabled
+                    placeholder="eg: 147181"
+                    showLabel={false}
+                    showHintAndError={false}
                 />
             </div>
         );
