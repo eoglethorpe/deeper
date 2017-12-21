@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import { shallow } from 'enzyme';
 import CountryDetail from '../';
 
+jest.mock('mapbox-gl', () => undefined);
+
 const initialState = {
 };
 
