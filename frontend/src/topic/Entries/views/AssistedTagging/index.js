@@ -113,6 +113,10 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     handleOnHighlightClick = (e, activeHighlightDetails) => {
+        if (this.primaryContainer) {
+            this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
+        }
+
         this.setState({
             assitedActionsVisible: true,
             activeHighlightRef: e.target,
