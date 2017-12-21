@@ -122,12 +122,6 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
             selectedNGram,
         } = this.state;
 
-        const {
-            ngrams,
-        } = subcategory;
-
-        const ngramKeys = Object.keys(ngrams);
-
         if (!subcategory) {
             return (
                 <div styleName="property-panel">
@@ -135,6 +129,12 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                 </div>
             );
         }
+
+        const {
+            ngrams,
+        } = subcategory;
+
+        const ngramKeys = Object.keys(ngrams);
 
         return (
             <div
