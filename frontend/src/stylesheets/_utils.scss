@@ -18,6 +18,11 @@
     box-shadow: 0 3px 15px -5px $color-shadow-normal;
 }
 
+@mixin shadow-large-dark() {
+    box-shadow: 0 3px 15px -5px $color-shadow-dark;
+}
+
+
 
 @mixin transition-medium() {
     transition: .2s all ease-in-out;

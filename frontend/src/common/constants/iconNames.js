@@ -62,6 +62,8 @@ const iconNames = {
     removeCircle: 'ion-android-remove-circle',
     search: 'ion-search',
     text: 'ion-document',
+    thumbsUp: 'ion-thumbsup',
+    thumbsDown: 'ion-thumbsdown',
     upload: 'ion-android-upload',
     user: 'ion-android-contact',
     warning: 'ion-alert-circled',
