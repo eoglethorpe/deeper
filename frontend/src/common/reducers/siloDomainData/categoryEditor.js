@@ -203,6 +203,34 @@ const ceUpdateSelectedSubcategory = (state, action) => {
     return update(state, settings);
 };
 
+const createAddNGramWrapper = len => (val, i) => {
+    if (i <= 0 || i === len) {
+        // first one
+        return val;
+    } else if (i === len - 1) {
+        // second last one ( for subcategory.ngrams[last] )
+        return { ngrams: val };
+    }
+
+    // others
+    return { subcategories: val };
+};
+
+// TODO: move to utils maybe
+const getLinkedListNode = (linkedList, n, selector) => {
+    let newList = linkedList;
+
+    for (let i = 0; i < n; i += 1) {
+        newList = selector(newList, i);
+    }
+
+    return newList;
+};
+
+const createSubcategorySelector = indices => (d, i) => (
+    d[indices[i]].subcategories
+);
+
 const ceAddSubcategoryNGram = (state, action) => {
     const {
         level,
@@ -222,29 +250,27 @@ const ceAddSubcategoryNGram = (state, action) => {
         activeCategoryId,
     );
 
-    // const category = categories.find(d => d.id === activeCategoryId);
-
+    // splices indices up to level of drop target
     indices.splice(level + 1);
 
-    let subcategories = categories;
-    indices.forEach((i) => {
-        subcategories = subcategories[i].subcategories;
-    });
+    // get the array where dropped subcategory belongs
+    const subcategories = getLinkedListNode(
+        categories,
+        indices.length,
+        createSubcategorySelector(indices),
+    );
 
+    // get index for the subcategory (drop target)
     const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
+
+    // add to indices for buildSettings
     indices.push(lastIndex);
+
+
+    // add to n of ngram to the indices as well for buildSettings
     indices.push(+ngram.n);
 
-    const len = indices.length;
-
-    const addNGramWrapper = (val, i) => {
-        if (i <= 0 || i === len) {
-            return val;
-        } else if (i === len - 1) {
-            return { ngrams: val };
-        }
-        return { subcategories: val };
-    };
+    const addNGramWrapper = createAddNGramWrapper(indices.length);
 
     const categoriesSettings = buildSettings(
         indices,
