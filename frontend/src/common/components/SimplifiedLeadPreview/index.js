@@ -23,12 +23,14 @@ const propTypes = {
     leadId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     highlights: PropTypes.arrayOf(PropTypes.object),
     highlightModifier: PropTypes.func,
+    onLoad: PropTypes.func,
 };
 const defaultProps = {
     className: '',
     leadId: undefined,
     highlights: [],
     highlightModifier: text => text,
+    onLoad: undefined,
 };
 
 
@@ -70,8 +72,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const { extractedText } = this.state;
 
         return highlights.map(h => ({
-            start: extractedText.indexOf(h.text),
-            length: h.text.length,
+            start: h.text ? extractedText.indexOf(h.text) : h.startPos,
+            length: h.text ? h.text.length : h.length,
             item: h,
         }));
     }
@@ -100,6 +102,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         const {
             leadId,
+            onLoad,
         } = this.props;
 
         if (!leadId) {
@@ -144,6 +147,9 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         extractedText: response.text,
                         extractedImages: response.images,
                     });
+                    if (onLoad) {
+                        onLoad(response);
+                    }
                 }
             },
         );
