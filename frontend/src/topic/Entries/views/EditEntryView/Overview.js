@@ -299,7 +299,6 @@ export default class Overview extends React.PureComponent {
                 <TabLink
                     styleName="tab-header"
                     to="assited-tagging"
-                    default
                 >
                     Assited
                 </TabLink>
