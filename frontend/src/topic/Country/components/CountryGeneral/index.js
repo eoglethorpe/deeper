@@ -20,6 +20,7 @@ import schema from '../../../../common/schema';
 import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
+import RegionMap from '../../../../common/components/RegionMap';
 
 import styles from './styles.scss';
 
@@ -103,7 +104,9 @@ export default class CountryGeneral extends React.PureComponent {
                                 dataLoading={dataLoading}
                             />
                             <div styleName="map-container">
-                                The map
+                                <RegionMap
+                                    regionId={countryDetail.id}
+                                />
                             </div>
                         </div>
                         <RegionAdminLevel
@@ -116,7 +119,9 @@ export default class CountryGeneral extends React.PureComponent {
                     <div styleName="details-no-edit">
                         <RegionDetailView regionId={countryDetail.id} />
                         <div styleName="map-container">
-                            The map
+                            <RegionMap
+                                regionId={countryDetail.id}
+                            />
                         </div>
                     </div>
                 }

@@ -80,6 +80,11 @@ class LoadGeoAreasTaskTest(AuthMixin, APITestCase):
         result = load_geo_areas(self.region.pk)
         self.assertTrue(result)
 
+        latest_a0 = AdminLevel.objects.get(pk=self.admin_level0.pk)
+        latest_a1 = AdminLevel.objects.get(pk=self.admin_level1.pk)
+        self.assertFalse(latest_a0.stale_geo_areas)
+        self.assertFalse(latest_a1.stale_geo_areas)
+
         # Test if a geo area in admin level 0 is correctly set
         bagmati = GeoArea.objects.filter(
             title='Bagmati',
@@ -105,14 +110,28 @@ class LoadGeoAreasTaskTest(AuthMixin, APITestCase):
         result = load_geo_areas(self.region.pk)
         self.assertTrue(result)
 
+        auth = self.get_auth()
+
         # Test if geojson api works
         url = '/api/v1/admin-levels/{}/geojson/'.format(self.admin_level0.pk)
         response = self.client.get(
             url,
-            HTTP_AUTHORIZATION=self.get_auth(),
+            HTTP_AUTHORIZATION=auth,
             format='json',
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['type'], 'FeatureCollection')
         self.assertIsNotNone(response.data['features'])
         self.assertTrue(len(response.data['features']) > 0)
+
+        # Test if geobounds also works
+        url = '/api/v1/admin-levels/{}/geojson/bounds/'.format(
+            self.admin_level0.pk
+        )
+        response = self.client.get(
+            url,
+            HTTP_AUTHORIZATION=auth,
+            format='json',
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNotNone(response.data['bounds'])
