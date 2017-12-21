@@ -30,7 +30,9 @@ export default class DateInformation extends React.PureComponent {
     render() {
         return (
             <div styleName="date-list">
-                <DateInput />
+                <DateInput
+                    disabled
+                />
             </div>
         );
     }

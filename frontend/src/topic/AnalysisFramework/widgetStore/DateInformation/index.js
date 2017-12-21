@@ -14,7 +14,7 @@ import {
 
 const dateInformationWidget = {
     id: 'dateInformationWidget',
-    title: 'Date Information',
+    title: 'Date',
     analysisFramework: {
         // overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
