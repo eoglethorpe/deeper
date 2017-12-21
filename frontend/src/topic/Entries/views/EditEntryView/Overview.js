@@ -298,9 +298,9 @@ export default class Overview extends React.PureComponent {
                 </TabLink>
                 <TabLink
                     styleName="tab-header"
-                    to="assited-tagging"
+                    to="assisted-tagging"
                 >
-                    Assited
+                    Assisted
                 </TabLink>
                 {/* Essential for border bottom, for more info contact AdityaKhatri */}
                 <div styleName="empty-tab" />
@@ -320,7 +320,7 @@ export default class Overview extends React.PureComponent {
                 </TabContent>
                 <TabContent
                     styleName="tab"
-                    for="assited-tagging"
+                    for="assisted-tagging"
                 >
                     <AssistedTagging
                         lead={lead}
