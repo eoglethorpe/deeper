@@ -148,6 +148,8 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     REACT_APP_HID_CLIENT_ID=${HID_CLIENT_ID}
     REACT_APP_HID_CLIENT_REDIRECT_URL=${HID_CLIENT_REDIRECT_URL}
     REACT_APP_HID_AUTH_URI=${HID_AUTH_URI}
+    REACT_APP_MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN}
+    REACT_APP_MAPBOX_STYLE=${MAPBOX_STYLE}
     " > frontend/.env
     echo "::::::  >> Generating Reacts Builds"
     docker-compose exec web bash -c "cd frontend && yarn build"
