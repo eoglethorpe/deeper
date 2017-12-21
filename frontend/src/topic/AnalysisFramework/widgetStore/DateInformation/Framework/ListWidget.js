@@ -1,11 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './styles.scss';
 
 import {
     DateInput,
 } from '../../../../../public/components/Input';
+
+import styles from './styles.scss';
+
 
 const propTypes = {
     editAction: PropTypes.func.isRequired,
@@ -22,12 +24,12 @@ export default class DateInformation extends React.PureComponent {
     }
 
     handleEdit = () => {
-        console.log('Edit Date');
+        console.log('Edit Date (List)');
     }
 
     render() {
         return (
-            <div styleName="date-information">
+            <div styleName="date-list">
                 <DateInput />
             </div>
         );

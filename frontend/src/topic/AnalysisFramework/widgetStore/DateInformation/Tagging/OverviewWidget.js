@@ -3,14 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-    TextArea,
-    RadioInput,
+    DateInput,
 } from '../../../../../public/components/Input';
 
 import styles from './styles.scss';
-
-const TEXT = 'excerpt';
-const IMAGE = 'image';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -23,52 +19,15 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class ExcerptTextOverview extends React.PureComponent {
+export default class DateInformationOverview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-
-        const options = [
-            { key: TEXT, label: 'Text' },
-            { key: IMAGE, label: 'Image' },
-        ];
-
-        this.options = options;
-    }
-
-    componentWillMount() {
-        this.update(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.update(nextProps);
-    }
-
-    update = (props) => {
-        const { id, attribute, api } = props;
-
-        if (!attribute) {
-            const attr = {
-                type: api.getEntryType(),
-                excerpt: api.getEntryExcerpt(),
-                image: api.getEntryImage(),
-            };
-            api.setEntryAttribute(id, attr);
-        }
-    }
-
-    handleEntryTypeChange = (value) => {
-        const { id, api, attribute } = this.props;
-        api.setEntryType(value);
-        api.setEntryAttribute(id, { ...attribute, type: value });
-    }
-
-    handleExcerptChange = (value) => {
-        const { id, api, attribute } = this.props;
-        api.setEntryExcerpt(value);
-        api.setEntryAttribute(id, { ...attribute, excerpt: value });
+    handleChange = (value) => {
+        const { api, id } = this.props;
+        api.setEntryAttribute(id, {
+            value,
+        });
     }
 
     render() {
@@ -76,34 +35,12 @@ export default class ExcerptTextOverview extends React.PureComponent {
             attribute,
         } = this.props;
 
-        if (!attribute) {
-            return null;
-        }
-
         return (
-            <div styleName="excerpt-overview">
-                <RadioInput
-                    name="entry-type"
-                    options={this.options}
-                    onChange={this.handleEntryTypeChange}
-                    styleName="radio-input"
-                    value={attribute.type}
+            <div styleName="date-overview">
+                <DateInput
+                    onChange={this.handleChange}
+                    value={attribute && attribute.value}
                 />
-                {
-                    attribute.type === TEXT ? (
-                        <TextArea
-                            onChange={this.handleExcerptChange}
-                            styleName="textarea"
-                            showLabel={false}
-                            showHintAndError={false}
-                            value={attribute.excerpt}
-                        />
-                    ) : (
-                        <div styleName="image">
-                            Image
-                        </div>
-                    )
-                }
             </div>
         );
     }

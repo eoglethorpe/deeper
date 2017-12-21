@@ -36,14 +36,14 @@ export default class List extends React.PureComponent {
         this.update(nextProps.analysisFramework);
     }
 
-    getGridItems = () => this.items.map(item => ({
+    getGridItems = entryId => this.items.map(item => ({
         id: item.id,
         key: item.key,
         widgetId: item.widgetId,
         title: item.title,
         layout: item.properties.listGridLayout,
         data: item.properties.data,
-        attribute: this.props.api.getEntryAttribute(item.id),
+        attribute: this.props.api.getEntryAttribute(item.id, entryId),
     }))
 
     getMaxHeight = () => this.items.reduce((acc, item) => (
@@ -123,7 +123,7 @@ export default class List extends React.PureComponent {
                                 <GridLayout
                                     styleName="grid-layout"
                                     modifier={this.getItemView}
-                                    items={this.getGridItems()}
+                                    items={this.getGridItems(entry.data.id)}
                                     viewOnly
                                 />
                             </div>
