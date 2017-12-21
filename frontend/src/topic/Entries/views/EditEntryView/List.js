@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { GridLayout } from '../../../../public/components/View';
-
-import styles from './styles.scss';
-
-import widgetStore from '../../../AnalysisFramework/widgetStore';
-
 import {
     Button,
     SuccessButton,
 } from '../../../../public/components/Action';
+
+import { entryAccessor } from '../../../../common/entities/entry';
+import widgetStore from '../../../AnalysisFramework/widgetStore';
+import styles from './styles.scss';
+
 
 const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line
@@ -85,6 +85,7 @@ export default class List extends React.PureComponent {
     }
 
     render() {
+        const { entries } = this.props;
         return (
             <div
                 styleName="list"
@@ -114,16 +115,16 @@ export default class List extends React.PureComponent {
                     styleName="entry-list"
                 >
                     {
-                        this.props.entries.map(entry => (
+                        entries.map(entry => (
                             <div
-                                key={entry.data.id}
+                                key={entryAccessor.getKey(entry)}
                                 styleName="entry"
                                 style={{ height: this.getMaxHeight() + 16 }}
                             >
                                 <GridLayout
                                     styleName="grid-layout"
                                     modifier={this.getItemView}
-                                    items={this.getGridItems(entry.data.id)}
+                                    items={this.getGridItems(entryAccessor.getKey(entry))}
                                     viewOnly
                                 />
                             </div>
