@@ -22,10 +22,11 @@ export const setActiveCategoryIdAction = id => ({
     id,
 });
 
-export const addNewSubcategoryAction = ({ level, newSubcategory }) => ({
+export const addNewSubcategoryAction = ({ level, id, title }) => ({
     type: CE__ADD_NEW_SUBCATEGORY,
     level,
-    newSubcategory,
+    id,
+    title,
 });
 
 export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => ({
@@ -34,16 +35,19 @@ export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => (
     subcategoryId,
 });
 
-export const updateSelectedSubcategoryAction = subcategory => ({
+export const updateSelectedSubcategoryAction = ({ title, description, ngrams, subcategories }) => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORY,
-    subcategory,
+    title,
+    description,
+    ngrams,
+    subcategories,
 });
 
 export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
     type: CE__ADD_SUBCATEGORY_NGRAM,
     level,
     subcategoryId,
-    ngram,
+    ngram, // n, keyword
 });
 
 
@@ -77,6 +81,10 @@ const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLeve
 
 const newSubcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
 
+const createMergeSubcategoryWrapper = len => (val, i) => (
+    i <= 0 || i === len ? val : ({ subcategories: val })
+);
+
 const buildSettings = (indices, action, value, wrapper) => (
     // NOTE: reverse() mutates the array so making a copy
     [...indices].reverse().reduce(
@@ -104,7 +112,7 @@ const ceAddNewCategory = (state, action) => {
     const settings = {
         categoryEditorView: {
             activeCategoryId: { $set: id },
-            categories: { $push: [newCategory] },
+            categories: { $autoUnshift: [newCategory] },
         },
     };
     return update(state, settings);
@@ -121,11 +129,19 @@ const ceSetActiveCategoryId = (state, action) => {
 };
 
 const ceAddNewSubcategory = (state, action) => {
-    const { newSubcategory, level } = action;
+    const { level, id, title } = action;
     const { categoryEditorView } = state;
     const { categories, activeCategoryId } = categoryEditorView;
 
-    const settingAction = '$push';
+    const newSubcategory = {
+        id,
+        title,
+        description: '',
+        ngrams: {},
+        subcategories: [],
+    };
+
+    const settingAction = '$unshift';
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
@@ -173,25 +189,33 @@ const ceUpdateSelectedSubcategories = (state, action) => {
 };
 
 const ceUpdateSelectedSubcategory = (state, action) => {
-    const { subcategory } = action;
+    const { title, description, ngrams, subcategories } = action;
     const { categoryEditorView } = state;
     const {
         categories,
         activeCategoryId,
     } = categoryEditorView;
 
-    const settingAction = '$splice';
+    const settingAction = '$merge';
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
     );
 
-    const lastIndex = indices.splice(indices.length - 1)[0];
+    const subcategory = {
+        title,
+        description,
+        ngrams,
+        subcategories,
+    };
+
+    const wrapper = createMergeSubcategoryWrapper(indices.length);
+
     const categoriesSettings = buildSettings(
         indices,
         settingAction,
-        [[lastIndex, 1, subcategory]],
-        newSubcategoryWrapper,
+        subcategory,
+        wrapper,
     );
 
     const settings = {
@@ -199,7 +223,6 @@ const ceUpdateSelectedSubcategory = (state, action) => {
             categories: categoriesSettings,
         },
     };
-
     return update(state, settings);
 };
 
@@ -233,18 +256,17 @@ const createSubcategorySelector = indices => (d, i) => (
 
 const ceAddSubcategoryNGram = (state, action) => {
     const {
+        categoryEditorView: {
+            categories,
+            activeCategoryId,
+        },
+    } = state;
+    const {
         level,
         subcategoryId,
         ngram,
     } = action;
 
-    const { categoryEditorView } = state;
-    const {
-        categories,
-        activeCategoryId,
-    } = categoryEditorView;
-
-    const settingAction = '$autoPush';
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
@@ -252,33 +274,27 @@ const ceAddSubcategoryNGram = (state, action) => {
 
     // splices indices up to level of drop target
     indices.splice(level + 1);
-
     // get the array where dropped subcategory belongs
     const subcategories = getLinkedListNode(
         categories,
         indices.length,
         createSubcategorySelector(indices),
     );
-
     // get index for the subcategory (drop target)
     const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
-
     // add to indices for buildSettings
     indices.push(lastIndex);
-
-
     // add to n of ngram to the indices as well for buildSettings
     indices.push(+ngram.n);
 
+    const settingAction = '$autoPush';
     const addNGramWrapper = createAddNGramWrapper(indices.length);
-
     const categoriesSettings = buildSettings(
         indices,
         settingAction,
         [ngram.keyword],
         addNGramWrapper,
     );
-
     const settings = {
         categoryEditorView: {
             categories: categoriesSettings,
