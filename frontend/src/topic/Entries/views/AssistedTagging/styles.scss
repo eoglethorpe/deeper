@@ -1,0 +1,117 @@
+@import '../../../../stylesheets/base';
+
+.assisted-tagging {
+    @include transition-medium;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    &.faded {
+        filter: brightness(70%) grayscale(80%);
+        pointer-events: none;
+    }
+
+    .suggestion-select {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-top: $width-separator-thin solid $color-separator;
+        padding: $spacing-large $spacing-medium-alt;
+
+        span {
+            text-transform: uppercase;
+            font-size: $font-size-normal;
+        }
+
+        .select-input {
+            flex-basis: 50%;
+            margin-left: $spacing-small;
+        }
+    }
+
+    .text {
+        flex-grow: 1;
+        background-color: $color-foreground-alt;
+
+        .highlighted-excerpt {
+            cursor: pointer;
+        }
+    }
+}
+
+.assisted-actions {
+    @include shadow-large-dark;
+    display: flex;
+    flex-direction: column;
+    background-color: $color-foreground;
+    min-width: 240px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-medium 0 $spacing-large;
+
+        .title {
+            display: flex;
+            align-items: baseline;
+
+            .label {
+                margin-right: $spacing-extra-small;
+                text-transform: uppercase;
+                color: $color-label;
+            }
+
+            .source {
+                font-weight: $font-weight-bold;
+            }
+        }
+    }
+
+    .info-bar {
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-small $spacing-large;
+        text-align: justify;
+        overflow-y: auto;
+    }
+
+    .sectors {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 $spacing-medium-alt;
+
+        .sector {
+            display: flex;
+            align-items: center;
+            margin-top: $spacing-extra-small;
+            margin-left: $spacing-extra-small;
+            border: $width-separator-thin solid $color-separator-alt;
+            padding: 0 $spacing-extra-small;
+            min-width: 96px;
+
+            .sector-text {
+                flex-grow: 1;
+                padding: 0 $spacing-extra-small;
+                text-transform: uppercase;
+                font-size: $font-size-small;
+            }
+
+            .feedback-buttons {
+                flex-shrink: 0;
+
+                button {
+                    padding: $spacing-extra-small $spacing-small;
+                }
+            }
+        }
+    }
+
+    .add-button {
+        flex-shrink: 0;
+        align-self: flex-end;
+        margin: $spacing-extra-small $spacing-medium $spacing-medium 0;
+    }
+}

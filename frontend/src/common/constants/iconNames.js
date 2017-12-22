@@ -1,5 +1,6 @@
 const iconNames = {
     add: 'ion-plus',
+    substract: 'ion-ios-minus-empty',
     applyAll: 'ion-ios-world',
     applyAllBelow: 'ion-android-arrow-dropdown-circle',
     apps: 'ion-android-apps',
@@ -61,6 +62,8 @@ const iconNames = {
     removeCircle: 'ion-android-remove-circle',
     search: 'ion-search',
     text: 'ion-document',
+    thumbsUp: 'ion-thumbsup',
+    thumbsDown: 'ion-thumbsdown',
     upload: 'ion-android-upload',
     user: 'ion-android-contact',
     warning: 'ion-alert-circled',

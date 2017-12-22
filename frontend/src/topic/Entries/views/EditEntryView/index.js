@@ -141,7 +141,7 @@ export default class EditEntryView extends React.PureComponent {
         };
 
         this.saveRequestCoordinator = new CoordinatorBuilder()
-            .maxActiveActors(1)
+            .maxActiveActors(3)
             .preSession(() => {
                 this.setState({ pendingSaveAll: true });
             })
