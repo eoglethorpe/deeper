@@ -1,10 +1,10 @@
 import { POST } from '../config/rest';
 
 export const urlForLeadClassify =
-    'http://deepl.togglecorp.com/api/v2/classify/';
+    'https://deepl.togglecorp.com/api/v2/classify/';
 
 export const dummy = leadDocId =>
-    `http://deepl.togglecorp.com/api/v2/classify/${leadDocId}`;
+    `https://deepl.togglecorp.com/api/v2/classify/${leadDocId}`;
 
 export const createParamsForLeadClassify = body => ({
     method: POST,

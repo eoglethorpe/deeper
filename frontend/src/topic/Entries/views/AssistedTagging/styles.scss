@@ -42,6 +42,8 @@
 
 .assisted-actions {
     @include shadow-large-dark;
+    display: flex;
+    flex-direction: column;
     background-color: $color-foreground;
     min-width: 240px;
 
@@ -78,16 +80,16 @@
     }
 
     .sectors {
+        display: flex;
+
         .sector {
             display: flex;
             align-items: center;
-            background-color: $color-background-row;
-            padding: $spacing-extra-small $spacing-large;
-
-            .apply-button {
-                flex-shrink: 0;
-                padding: 0;
-            }
+            margin: 0 $spacing-extra-small;
+            border-radius: 5px;
+            background-color: $color-background-row-alt;
+            padding: $spacing-extra-small;
+            min-width: 96px;
 
             .sector-text {
                 flex-grow: 1;
@@ -98,10 +100,11 @@
             .feedback-buttons {
                 flex-shrink: 0;
             }
-
-            &:nth-child(odd) {
-                background-color: $color-background-row-alt;
-            }
         }
+    }
+
+    .add-button {
+        flex-shrink: 0;
+        align-self: flex-end;
     }
 }

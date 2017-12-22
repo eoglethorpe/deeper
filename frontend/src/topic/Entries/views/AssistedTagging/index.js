@@ -37,6 +37,7 @@ const NLP_THRESHOLD = 0.2;
 
 const propTypes = {
     lead: PropTypes.object, // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
@@ -129,7 +130,14 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     handleEntryAdd = (text) => {
-        console.log(text);
+        const { api } = this.props;
+
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntryAndSetAttribute(existing.data.id);
+        } else {
+            api.addExcerpt(text);
+        }
     }
 
     handleLeadPreviewLoad = (leadPreview) => {
@@ -230,14 +238,6 @@ export default class AssistedTagging extends React.PureComponent {
                 key={sector.label}
                 className={styles.sector}
             >
-                <TransparentAccentButton
-                    className={styles['apply-button']}
-                    onClick={() => this.handleEntryAdd(
-                        activeHighlightDetails.text,
-                    )}
-                >
-                    Apply
-                </TransparentAccentButton>
                 <div className={styles['sector-text']}>
                     {sector.label} {sector.confidence}
                 </div>
@@ -319,6 +319,14 @@ export default class AssistedTagging extends React.PureComponent {
                             data={activeHighlightDetails.sectors}
                             keyExtractor={this.calcSectorKey}
                         />
+                        <TransparentAccentButton
+                            className={styles['add-button']}
+                            onClick={() => this.handleEntryAdd(
+                                activeHighlightDetails.text,
+                            )}
+                        >
+                            Add
+                        </TransparentAccentButton>
                     </div>
                 </FloatingContainer>
             </div>
