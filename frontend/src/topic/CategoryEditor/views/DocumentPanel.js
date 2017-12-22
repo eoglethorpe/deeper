@@ -50,9 +50,7 @@ export default class DocumentPanel extends React.PureComponent {
     }
 
     getTabStyleName = (i) => {
-        const {
-            activeTabIndex,
-        } = this.state;
+        const { activeTabIndex } = this.state;
 
         const styleNames = [];
         styleNames.push(styles['document-tab']);
@@ -64,9 +62,34 @@ export default class DocumentPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getTab = (key, data, i) => (
+    createRequestForCategoryEditor = (document) => {
+        const categoryEditorRequest = new FgRestBuilder()
+            .url(urlForCategoryEditor)
+            .params(() => createParamsForCategoryEditor(document))
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .success((response) => {
+                const ngrams = response;
+                // TODO: write scheme validation
+                this.setState({
+                    pending: false,
+                    ngrams,
+                });
+            })
+            .build();
+        return categoryEditorRequest;
+    }
+
+    handleTabClick = (i) => {
+        this.setState({ activeTabIndex: i });
+    }
+
+    keyExtractorForTab = tab => tab;
+
+    renderTab = (key, data, i) => (
         <button
-            onClick={() => { this.handleTabClick(i); }}
+            onClick={() => this.handleTabClick(i)}
             className={this.getTabStyleName(i)}
             key={key}
         >
@@ -74,7 +97,7 @@ export default class DocumentPanel extends React.PureComponent {
         </button>
     )
 
-    getTabContent = () => {
+    renderTabContent = () => {
         const {
             activeTabIndex,
             ngrams,
@@ -106,48 +129,18 @@ export default class DocumentPanel extends React.PureComponent {
         }
     }
 
-    createRequestForCategoryEditor = (document) => {
-        const categoryEditorRequest = new FgRestBuilder()
-            .url(urlForCategoryEditor)
-            .params(() => createParamsForCategoryEditor(document))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .success((response) => {
-                const ngrams = response;
-
-                this.setState({
-                    pending: false,
-                    ngrams,
-                });
-            })
-            .build();
-
-        return categoryEditorRequest;
-    }
-
-    handleTabClick = (i) => {
-        this.setState({
-            activeTabIndex: i,
-        });
-    }
-
     render() {
         return (
-            <div
-                styleName="document-panel"
-            >
-                <header
-                    styleName="header"
-                >
+            <div styleName="document-panel">
+                <header styleName="header">
                     <List
                         data={this.tabs}
-                        modifier={this.getTab}
-                        keyExtractor={d => d}
+                        modifier={this.renderTab}
+                        keyExtractor={this.keyExtractorForTab}
                     />
                 </header>
                 <div styleName="content">
-                    { this.getTabContent() }
+                    { this.renderTabContent() }
                 </div>
             </div>
         );

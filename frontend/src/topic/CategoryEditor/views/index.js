@@ -141,32 +141,26 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     handleSubcategoryDrop = (level, subcategoryId, data) => {
-        const ngram = JSON.parse(data);
-
-        const {
-            addSubcategoryNGram,
-        } = this.props;
-
-        addSubcategoryNGram({
-            level,
-            subcategoryId,
-            ngram,
-        });
+        const { addSubcategoryNGram } = this.props;
+        try {
+            const ngram = JSON.parse(data);
+            addSubcategoryNGram({
+                level,
+                subcategoryId,
+                ngram,
+            });
+        } catch (ex) {
+            console.warn('Drop element is not valid');
+        }
     }
 
     handleNewSubcategory = (level) => {
         this.newSubcategoryLevel = level;
-
-        this.setState({
-            showSubcategoryTitleModal: true,
-        });
+        this.setState({ showSubcategoryTitleModal: true });
     }
 
     handleSubcategoryClick = (level, subcategoryId) => {
-        const {
-            updateSelectedSubcategories,
-        } = this.props;
-
+        const { updateSelectedSubcategories } = this.props;
         updateSelectedSubcategories({ level, subcategoryId });
     }
 
@@ -179,27 +173,20 @@ export default class CategoryEditor extends React.PureComponent {
 
     addNewCategory = (title) => {
         const key = randomString();
-
         const newCategory = {
             id: key,
             title,
         };
-
         this.props.addNewCategory(newCategory);
     }
 
     handleCategorySelectChange = (value) => {
-        const {
-            setActiveCategoryId,
-        } = this.props;
-
+        const { setActiveCategoryId } = this.props;
         setActiveCategoryId(value);
     }
 
     handleAddCategoryButtonClick = () => {
-        this.setState({
-            showCategoryTitleModal: true,
-        });
+        this.setState({ showCategoryTitleModal: true });
     }
 
     handlePropertyAddSubcategoryButtonClick = () => {
@@ -223,9 +210,7 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     handleNewCategoryTitleInputValueChange = (value) => {
-        this.setState({
-            newCategoryTitleInputValue: value,
-        });
+        this.setState({ newCategoryTitleInputValue: value });
     }
 
     handleCategoryTitleModalOkButtonClick = () => {
@@ -238,9 +223,7 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     handleNewSubcategoryTitleInputValueChange = (value) => {
-        this.setState({
-            newSubcategoryTitleInputValue: value,
-        });
+        this.setState({ newSubcategoryTitleInputValue: value });
     }
 
     handleSubcategoryTitleModalOkButtonClick = () => {
@@ -257,22 +240,20 @@ export default class CategoryEditor extends React.PureComponent {
             categories,
             activeCategoryId,
         } = this.props;
+        const {
+            showCategoryTitleModal,
+            newCategoryTitleInputValue,
+            showSubcategoryTitleModal,
+            newSubcategoryTitleInputValue,
+        } = this.state;
 
         return (
-            <div
-                styleName="category-editor"
-            >
-                <div
-                    styleName="left"
-                >
+            <div styleName="category-editor">
+                <div styleName="left">
                     <DocumentPanel />
                 </div>
-                <div
-                    styleName="right"
-                >
-                    <header
-                        styleName="header"
-                    >
+                <div styleName="right">
+                    <header styleName="header">
                         <SelectInput
                             styleName="category-select"
                             options={categories}
@@ -284,23 +265,19 @@ export default class CategoryEditor extends React.PureComponent {
                             keySelector={d => d.id}
                             labelSelector={d => d.title}
                         />
-                        <Button
-                            onClick={this.handleAddCategoryButtonClick}
-                        >
+                        <Button onClick={this.handleAddCategoryButtonClick}>
                             Add category
                         </Button>
                     </header>
-                    <div
-                        styleName="content"
-                    >
-                        <div
-                            styleName="sub-categories"
-                        >
+                    <div styleName="content">
+                        <div styleName="sub-categories">
                             {
                                 activeCategoryId ? (
                                     this.getSubcategoryColumns()
                                 ) : (
-                                    <p styleName="empty">Such empty</p>
+                                    <p styleName="empty">
+                                        Such empty
+                                    </p>
                                 )
                             }
                         </div>
@@ -309,18 +286,16 @@ export default class CategoryEditor extends React.PureComponent {
                 </div>
                 <Modal
                     styleName="new-category-modal"
-                    show={this.state.showCategoryTitleModal}
+                    show={showCategoryTitleModal}
                     onClose={this.handleNameModalClose}
                 >
-                    <ModalHeader
-                        title="Add new category"
-                    />
+                    <ModalHeader title="Add new category" />
                     <ModalBody>
                         <TextInput
                             label="Title"
                             placeholder="eg: Sector"
                             onChange={this.handleNewCategoryTitleInputValueChange}
-                            value={this.state.newCategoryTitleInputValue}
+                            value={newCategoryTitleInputValue}
                         />
                     </ModalBody>
                     <ModalFooter>
@@ -339,24 +314,20 @@ export default class CategoryEditor extends React.PureComponent {
                 </Modal>
                 <Modal
                     styleName="new-subcategory-modal"
-                    show={this.state.showSubcategoryTitleModal}
+                    show={showSubcategoryTitleModal}
                     onClose={this.handleNameModalClose}
                 >
-                    <ModalHeader
-                        title="Add new subcategory"
-                    />
+                    <ModalHeader title="Add new subcategory" />
                     <ModalBody>
                         <TextInput
                             label="Title"
                             placeholder="eg: Wash"
                             onChange={this.handleNewSubcategoryTitleInputValueChange}
-                            value={this.state.newSubcategoryTitleInputValue}
+                            value={newSubcategoryTitleInputValue}
                         />
                     </ModalBody>
                     <ModalFooter>
-                        <Button
-                            onClick={this.handleNameModalCancelButtonClick}
-                        >
+                        <Button onClick={this.handleNameModalCancelButtonClick}>
                             Cancel
                         </Button>
                         <PrimaryButton

@@ -4,32 +4,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    selectedSubcategorySelector,
-    updateSelectedSubcategoryAction,
-} from '../../../common/redux';
-
-import {
     PrimaryButton,
     DangerButton,
 } from '../../../public/components/Action';
-
 import {
     ListView,
 } from '../../../public/components/View';
-
 import {
     TextInput,
     TextArea,
 } from '../../../public/components/Input';
 
-import NGram from './NGram';
+import {
+    selectedSubcategorySelector,
+    updateSelectedSubcategoryAction,
+} from '../../../common/redux';
 
+import NGram from './NGram';
 import styles from './styles.scss';
 
 const propTypes = {
-    subcategory: PropTypes.shape({
-        id: PropTypes.string,
-    }),
+    subcategory: PropTypes.shape({ id: PropTypes.string }),
     updateSelectedSubcategory: PropTypes.func.isRequired,
 };
 
@@ -169,9 +164,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                     <div styleName="ngram-selects">
                         {
                             (ngramKeys.length > 0) && (
-                                <h4
-                                    styleName="heading"
-                                >
+                                <h4 styleName="heading">
                                     Number of words:
                                 </h4>
                             )
@@ -181,20 +174,23 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                             data={ngramKeys}
                             modifier={this.getNGramSelect}
                             keyExtractor={d => d}
+                            emptyComponent={null}
                         />
                     </div>
                     {
-                        ngramKeys.length > 0 && (
-                            <NGram
-                                keywords={ngrams[ngramKeys[selectedNGramIndex]]}
-                            />
+                        (ngramKeys.length > 0) ? (
+                            <NGram keywords={ngrams[ngramKeys[selectedNGramIndex]]} />
+                        ) : (
+                            <div styleName="empty">
+                                No words yet.
+                            </div>
                         )
                     }
-                    <PrimaryButton
-                        disabled
-                    >
-                        Add word manually
-                    </PrimaryButton>
+                    <div styleName="action-buttons">
+                        <PrimaryButton disabled >
+                            Add word manually
+                        </PrimaryButton>
+                    </div>
                 </section>
             </div>
         );
