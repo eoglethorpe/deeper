@@ -138,7 +138,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         // Otherwise try a few more times
                         this.previewRequestTimeout = setTimeout(() => {
                             this.tryPreviewRequest();
-                        }, 500);
+                        }, 1000);
                     }
                 } else {
                     this.setState({
@@ -157,7 +157,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         this.previewRequest.start();
     }
 
-    tryPreviewRequest = (maxCount = 20) => {
+    tryPreviewRequest = (maxCount = 30) => {
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }

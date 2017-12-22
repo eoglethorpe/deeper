@@ -122,7 +122,7 @@ export default class RegionMap extends React.PureComponent {
                     } else {
                         this.staleRequestTimeout = setTimeout(() => {
                             this.tryRequestToCheckStale();
-                        }, 500);
+                        }, 1000);
                     }
                 } else {
                     this.setState({
@@ -140,7 +140,7 @@ export default class RegionMap extends React.PureComponent {
         this.adminLevelsRequest.start();
     }
 
-    tryRequestToCheckStale(maxCount = 20) {
+    tryRequestToCheckStale(maxCount = 30) {
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }
