@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
+    PrimaryButton,
     TransparentPrimaryButton,
-    TransparentAccentButton,
     TransparentSuccessButton,
     TransparentWarningButton,
 } from '../../../../public/components/Action';
@@ -230,32 +230,28 @@ export default class AssistedTagging extends React.PureComponent {
 
     calcSectorKey = d => d.label;
 
-    renderSectorList = (key, sector) => {
-        const { activeHighlightDetails } = this.state;
-
-        return (
-            <div
-                key={sector.label}
-                className={styles.sector}
-            >
-                <div className={styles['sector-text']}>
-                    {sector.label} {sector.confidence}
-                </div>
-                <div className={styles['feedback-buttons']}>
-                    <TransparentSuccessButton
-                        title="Its accurate"
-                    >
-                        <span className={iconNames.thumbsUp} />
-                    </TransparentSuccessButton>
-                    <TransparentWarningButton
-                        title="Its not accurate"
-                    >
-                        <span className={iconNames.thumbsDown} />
-                    </TransparentWarningButton>
-                </div>
+    renderSectorList = (key, sector) => (
+        <div
+            key={sector.label}
+            className={styles.sector}
+        >
+            <div className={styles['sector-text']}>
+                {sector.label} {sector.confidence}
             </div>
-        );
-    }
+            <div className={styles['feedback-buttons']}>
+                <TransparentSuccessButton
+                    title="Its accurate"
+                >
+                    <span className={iconNames.thumbsUp} />
+                </TransparentSuccessButton>
+                <TransparentWarningButton
+                    title="Its not accurate"
+                >
+                    <span className={iconNames.thumbsDown} />
+                </TransparentWarningButton>
+            </div>
+        </div>
+    );
 
     render() {
         const { lead } = this.props;
@@ -319,14 +315,15 @@ export default class AssistedTagging extends React.PureComponent {
                             data={activeHighlightDetails.sectors}
                             keyExtractor={this.calcSectorKey}
                         />
-                        <TransparentAccentButton
+                        <PrimaryButton
+                            iconName={iconNames.add}
                             className={styles['add-button']}
                             onClick={() => this.handleEntryAdd(
                                 activeHighlightDetails.text,
                             )}
                         >
                             Add
-                        </TransparentAccentButton>
+                        </PrimaryButton>
                     </div>
                 </FloatingContainer>
             </div>

@@ -40,11 +40,11 @@ export default class HighlightedText extends React.PureComponent {
 
                 if (length > 0) {
                     splits.push({
-                        key: `split-${index}`,
+                        key: `split-${h.start}`,
                         text: lastString.slice(0, index),
                     });
                     splits.push({
-                        key: `split-${index + length}`,
+                        key: `split-${h.start + h.length}`,
                         text: lastString.slice(index, index + length),
                         item: h.item,
                     });

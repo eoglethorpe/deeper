@@ -169,6 +169,16 @@ export default class Overview extends React.PureComponent {
 
     calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
 
+    calcEntryLabelLimited = (entry) => {
+        const characterLimit = 32;
+        const text = entryAccessor.getValues(entry).excerpt;
+        const limitedEntry = text.slice(0, characterLimit);
+        if (text.length > characterLimit) {
+            return `${limitedEntry}...`;
+        }
+        return limitedEntry;
+    }
+
     highlightSimplifiedExcerpt = (highlight, text) => (
         <span style={{ backgroundColor: highlight.color }}>
             {text}
@@ -193,7 +203,9 @@ export default class Overview extends React.PureComponent {
                     className="button"
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    {this.calcEntryLabel(entry)}
+                    <div className="entry-excerpt">
+                        {this.calcEntryLabel(entry)}
+                    </div>
                     <div className="status-icons">
                         {
                             entryAccessor.isMarkedForDelete(entry) &&
@@ -359,12 +371,13 @@ export default class Overview extends React.PureComponent {
                     </TransparentButton>
                     <div styleName="entry-actions">
                         <SelectInput
+                            styleName="select-input"
                             placeholder="Select an excerpt"
                             showHintAndError={false}
                             showLabel={false}
                             clearable={false}
                             keySelector={this.calcEntryKey}
-                            labelSelector={this.calcEntryLabel}
+                            labelSelector={this.calcEntryLabelLimited}
                             options={entries}
                             value={selectedEntryId}
                             onChange={this.handleEntrySelectChange}

@@ -7,6 +7,8 @@
     overflow: auto;
 
     pre {
+        margin: 0;
+        background-color: $color-foreground-alt;
         padding: $spacing-large;
         text-align: justify;
         white-space: pre-wrap;

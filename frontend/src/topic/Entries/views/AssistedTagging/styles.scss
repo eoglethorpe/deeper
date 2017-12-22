@@ -51,7 +51,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: $width-separator-thin solid $color-separator-light;
+        border-bottom: $width-separator-thin solid $color-separator;
         padding: $spacing-small $spacing-medium 0 $spacing-large;
 
         .title {
@@ -73,32 +73,38 @@
     .info-bar {
         display: flex;
         flex-direction: column;
-        padding: $spacing-medium $spacing-large;
-        min-height: 86px;
+        padding: $spacing-small $spacing-large;
         text-align: justify;
         overflow-y: auto;
     }
 
     .sectors {
         display: flex;
+        flex-wrap: wrap;
+        padding: 0 $spacing-medium-alt;
 
         .sector {
             display: flex;
             align-items: center;
-            margin: 0 $spacing-extra-small;
-            border-radius: 5px;
-            background-color: $color-background-row-alt;
-            padding: $spacing-extra-small;
+            margin-top: $spacing-extra-small;
+            margin-left: $spacing-extra-small;
+            border: $width-separator-thin solid $color-separator-alt;
+            padding: 0 $spacing-extra-small;
             min-width: 96px;
 
             .sector-text {
                 flex-grow: 1;
-                padding: 0 $spacing-medium;
+                padding: 0 $spacing-extra-small;
                 text-transform: uppercase;
+                font-size: $font-size-small;
             }
 
             .feedback-buttons {
                 flex-shrink: 0;
+
+                button {
+                    padding: $spacing-extra-small $spacing-small;
+                }
             }
         }
     }
@@ -106,5 +112,6 @@
     .add-button {
         flex-shrink: 0;
         align-self: flex-end;
+        margin: $spacing-extra-small $spacing-medium $spacing-medium 0;
     }
 }

@@ -72,6 +72,10 @@
             .entry-actions {
                 display: flex;
 
+                .select-input {
+                    width: 216px;
+                }
+
                 >* {
                     margin-right: $spacing-small;
                 }
@@ -169,17 +173,24 @@
                                 font-family: inherit;
                                 font-size: inherit;
 
+                                .entry-excerpt {
+                                    flex-grow: 1;
+                                    margin-right: $spacing-medium-alt;
+                                    text-align: justify;
+                                }
+
                                 .status-icons {
+                                    padding-left: $spacing-medium-alt;
+
                                     .pending,
                                     .error,
                                     .complete,
                                     .stale {
                                         flex-shrink: 0;
-                                        margin: 0;
+                                        margin-left: 0 $spacing-small;
                                         padding: 0;
                                         color: $color-label;
                                         font-size: $font-size-medium-alt;
-                                        margin-left: $spacing-small;
                                     }
 
                                     .pending {
