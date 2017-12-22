@@ -103,11 +103,13 @@ export default class CategoryEditor extends React.PureComponent {
             const subcategoryIndex = subcategories.findIndex(d => d.id === selected);
             const currentSubcategories = subcategories;
             subcategories = currentSubcategories[subcategoryIndex].subcategories;
+            const isLastColumn = i === selectedSubcategories.length - 1;
 
             return (
                 <SubcategoryColumn
                     key={selected}
                     level={i}
+                    isLastColumn={isLastColumn}
                     selectedSubcategoryId={selected}
                     subcategories={currentSubcategories}
                     onNewSubcategory={this.handleNewSubcategory}

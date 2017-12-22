@@ -24,9 +24,39 @@
         }
     }
 
+    %ngram-selects {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        border-top: $width-separator-medium solid $color-separator;
+        background-color: $color-foreground;
+
+        .heading {
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .ngram-select-list {
+            padding: $spacing-small $spacing-medium;
+
+            .ngram-select {
+                outline: 0;
+                border: 0;
+                background-color: transparent;
+                cursor: pointer;
+                padding: $spacing-small $spacing-medium;
+                font-family: inherit;
+
+                &.active {
+                    background-color: $color-accent;
+                    color: $color-text-on-accent;
+                }
+            }
+        }
+    }
+
     .left {
         display: flex;
-        flex-basis: 26%;
+        flex-basis: 24%;
         flex-direction: column;
         background-color: $color-foreground;
 
@@ -34,6 +64,7 @@
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            border-right: $width-separator-medium solid $color-separator;
 
             .header {
                 display: flex;
@@ -67,6 +98,7 @@
                 .simplified-tab {
                     @extend %tab-content;
                     padding: $spacing-medium;
+                    text-align: justify;
                 }
 
                 .ngrams-tab {
@@ -74,33 +106,27 @@
                     display: flex;
                     flex-direction: column;
                     flex-grow: 1;
-                    overflow-y: auto;
+                    background-color: $color-foreground-alt;
 
-                    section {
-                        border-bottom: $width-separator-thin solid $color-separator;
+                    .ngram-selects {
+                        @extend %ngram-selects;
+                    }
 
-                        .heading {
-                            position: sticky;
-                            top: 0;
+                    .ngram-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+
+                        .ngram {
+                            display: flex;
                             border-bottom: $width-separator-thin solid $color-separator;
-                            background-color: $color-foreground;
                             padding: $spacing-medium;
-                            color: $color-accent;
-                        }
 
-                        .ngram-list {
-                            .ngram {
-                                display: flex;
-                                border-bottom: $width-separator-thin solid $color-separator;
-                                padding: $spacing-medium;
+                            .title {
+                                flex-grow: 1;
+                            }
 
-                                .title {
-                                    flex-grow: 1;
-                                }
-
-                                .strength {
-                                    flex-shrink: 0;
-                                }
+                            .strength {
+                                flex-shrink: 0;
                             }
                         }
                     }
@@ -111,7 +137,7 @@
 
     .right {
         display: flex;
-        flex-basis: 74%;
+        flex-basis: 76%;
         flex-direction: column;
         background-color: $color-foreground-alt;
 
@@ -133,6 +159,7 @@
             .sub-categories {
                 display: flex;
                 flex-basis: 70%;
+                background-color: $color-background-alt;
                 overflow-x: auto;
 
                 .column {
@@ -158,7 +185,7 @@
                         flex-shrink: 0;
                         align-items: center;
                         justify-content: space-between;
-                        border-bottom: $width-separator-thin solid $color-separator;
+                        border-bottom: $width-separator-medium solid $color-separator-alt;
 
                         .heading {
                             padding: $spacing-medium;
@@ -181,16 +208,26 @@
                             @extend %button;
                             display: flex;
                             border-bottom: $width-separator-thin solid $color-separator;
+                            padding: $spacing-small;
                             width: 100%;
                             text-align: left;
 
                             .title {
                                 flex-grow: 1;
+                                border: $width-separator-medium solid transparent;
+                                padding: $spacing-small;
                                 color: $color-text;
+                                pointer-events: none;
                             }
 
                             .number {
                                 flex-shrink: 0;
+                                padding: $spacing-extra-small $spacing-small;
+                                pointer-events: none;
+                            }
+
+                            &.selected {
+                                background-color: $color-background-selected;
                             }
 
                             &.active {
@@ -199,6 +236,18 @@
 
                                 .title {
                                     color: $color-text-on-accent;
+                                }
+                            }
+
+                            &.drag-enter {
+                                .title {
+                                    border: $width-separator-medium dashed $color-separator-alt;
+                                }
+
+                                &.active {
+                                    .title {
+                                        border: $width-separator-medium dashed $color-text-on-accent;
+                                    }
                                 }
                             }
                         }
@@ -244,14 +293,8 @@
                     flex-direction: column;
                     flex-grow: 1;
 
-                    .ngram-select-list {
-                        display: flex;
-                        flex-shrink: 0;
-                        justify-content: space-between;
-
-                        .ngram-select {
-                            @extend %tab;
-                        }
+                    .ngram-selects {
+                        @extend %ngram-selects;
                     }
 
                     .ngram {

@@ -9,6 +9,7 @@ import {
 } from '../../../common/redux';
 
 import {
+    PrimaryButton,
     DangerButton,
 } from '../../../public/components/Action';
 
@@ -54,38 +55,38 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            selectedNGram: undefined,
+            selectedNGramIndex: 0,
         };
     }
 
     getNGramSelectStyleName = (i) => {
         const {
-            selectedNGram,
+            selectedNGramIndex,
         } = this.state;
 
         const styleNames = [];
         styleNames.push(styles['ngram-select']);
 
-        if (selectedNGram === i) {
+        if (selectedNGramIndex === i) {
             styleNames.push(styles.active);
         }
 
         return styleNames.join(' ');
     }
 
-    getNGramSelect = key => (
+    getNGramSelect = (key, data, i) => (
         <button
-            className={this.getNGramSelectStyleName(+key)}
+            className={this.getNGramSelectStyleName(i)}
             key={key}
-            onClick={() => { this.handleNGramSelectButtonClick(+key); }}
+            onClick={() => { this.handleNGramSelectButtonClick(i); }}
         >
-            n-Gram ({+key + 1})
+            {+key + 1}
         </button>
     )
 
     handleNGramSelectButtonClick = (i) => {
         this.setState({
-            selectedNGram: i,
+            selectedNGramIndex: i,
         });
     }
 
@@ -119,7 +120,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         } = this.props;
 
         const {
-            selectedNGram,
+            selectedNGramIndex,
         } = this.state;
 
         if (!subcategory) {
@@ -149,7 +150,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         Subcategory details
                     </h3>
                     <div styleName="action-buttons">
-                        <DangerButton>
+                        <DangerButton
+                            disabled
+                        >
                             Remove
                         </DangerButton>
                     </div>
@@ -173,19 +176,35 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                 <section
                     styleName="ngrams"
                 >
-                    <ListView
-                        styleName="ngram-select-list"
-                        data={ngramKeys}
-                        modifier={this.getNGramSelect}
-                        keyExtractor={d => d}
-                    />
+                    <div styleName="ngram-selects">
+                        {
+                            ngramKeys.length && (
+                                <h4
+                                    styleName="heading"
+                                >
+                                    Number of words:
+                                </h4>
+                            )
+                        }
+                        <ListView
+                            styleName="ngram-select-list"
+                            data={ngramKeys}
+                            modifier={this.getNGramSelect}
+                            keyExtractor={d => d}
+                        />
+                    </div>
                     {
                         ngramKeys.length > 0 && (
                             <NGram
-                                keywords={ngrams[selectedNGram]}
+                                keywords={ngrams[ngramKeys[selectedNGramIndex]]}
                             />
                         )
                     }
+                    <PrimaryButton
+                        disabled
+                    >
+                        Add word manually
+                    </PrimaryButton>
                 </section>
             </div>
         );

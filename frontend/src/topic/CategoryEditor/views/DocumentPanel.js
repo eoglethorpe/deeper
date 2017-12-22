@@ -3,7 +3,6 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 
 import {
-    LoadingAnimation,
     List,
 } from '../../../public/components/View';
 
@@ -13,6 +12,7 @@ import {
 } from '../../../common/rest';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
+import DocumentNGram from './DocumentNGram';
 
 import styles from './styles.scss';
 
@@ -24,7 +24,7 @@ export default class DocumentPanel extends React.PureComponent {
         this.tabs = [
             'Document',
             'Simfilfied',
-            'n-Grams',
+            'Extracted words',
         ];
 
         this.document = 'In mid August Nepal experienced the heaviest recorded rainfall in the central and western regions in the last 60 years, resulting in significant flooding in the Terai region, and several landslides in the Hill areas, impacting lives, livelihoods and infrastructure across 36 of the country’s 75 districts. A total of 160 peop le have died, 46 were injured, 352,738 have been displaced, and 29 are still missing 1 . An estimated 1.7 million people 2 (including 680,000 children) have been affected, the majority of whom are concentrated in 10 districts, and include already vulnerable and marginalised groups. In addition, over 250,000 houses and nearly 2,000 schools and have been damaged or destroyed, affecting the education of over 250,000 children. The devastation has left people in the affected areas with little food and limited access to water and sanitation, health, nutrition, education and protection -related services. While flood waters have receded, residual damage to roads and bridges still inhibits access to some remote villages, posing challenges for the delivery of relief supplies. Further monsoon rains are expected as the season continues until the end of September.';
@@ -47,71 +47,6 @@ export default class DocumentPanel extends React.PureComponent {
         if (this.categoryEditorRequest) {
             this.categoryEditorRequest.stop();
         }
-    }
-
-    getNGramsTab = () => {
-        const {
-            ngrams,
-            pending,
-        } = this.state;
-
-        if (pending) {
-            return <LoadingAnimation />;
-        }
-
-        const ngramKeys = Object.keys(ngrams);
-        ngramKeys.sort();
-
-        return (
-            <div styleName="ngrams-tab">
-                {
-                    ngramKeys.map((key, i) => (
-                        <section
-                            key={key}
-                        >
-                            <h4
-                                styleName="heading"
-                            >
-                                n-Gram ({i + 1})
-                            </h4>
-                            <div
-                                styleName="ngram-list"
-                            >
-                                {
-                                    ngrams[key].map(keyword => (
-                                        <div
-                                            styleName="ngram"
-                                            key={keyword[0]}
-                                            draggable
-                                            onDragStart={(e) => {
-                                                e.dataTransfer.setData(
-                                                    'text',
-                                                    JSON.stringify({
-                                                        n: i,
-                                                        keyword: keyword[0],
-                                                    }),
-                                                );
-                                            }}
-                                        >
-                                            <span
-                                                styleName="title"
-                                            >
-                                                { keyword[0] }
-                                            </span>
-                                            <span
-                                                styleName="strength"
-                                            >
-                                                { keyword[1] }
-                                            </span>
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </section>
-                    ))
-                }
-            </div>
-        );
     }
 
     getTabStyleName = (i) => {
@@ -142,6 +77,8 @@ export default class DocumentPanel extends React.PureComponent {
     getTabContent = () => {
         const {
             activeTabIndex,
+            ngrams,
+            pending,
         } = this.state;
 
         switch (activeTabIndex) {
@@ -158,16 +95,15 @@ export default class DocumentPanel extends React.PureComponent {
                     </div>
                 );
             case 2:
-                return this.getNGramsTab();
+                return (
+                    <DocumentNGram
+                        ngrams={ngrams}
+                        pending={pending}
+                    />
+                );
             default:
                 return null;
         }
-    }
-
-    handleNGramSelectButtonClick = (i) => {
-        this.setState({
-            selectedNGram: i,
-        });
     }
 
     createRequestForCategoryEditor = (document) => {
