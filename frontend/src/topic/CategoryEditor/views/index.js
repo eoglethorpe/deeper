@@ -93,23 +93,27 @@ export default class CategoryEditor extends React.PureComponent {
         } = this.props;
 
         const category = categories.find(d => d.id === activeCategoryId);
-        const {
-            selectedSubcategories,
-        } = category;
+        const { selectedSubcategories } = category;
 
-        let subcategories = category.subcategories;
-
+        let nextSubcategory = category;
         const subcategoryColumns = selectedSubcategories.map((selected, i) => {
-            const subcategoryIndex = subcategories.findIndex(d => d.id === selected);
-            const currentSubcategories = subcategories;
-            subcategories = currentSubcategories[subcategoryIndex].subcategories;
+            const isLastColumn = i === selectedSubcategories.length - 1;
 
+            const subcategoryIndex = nextSubcategory.subcategories.findIndex(
+                d => d.id === selected,
+            );
+            const currentSubcategories = nextSubcategory.subcategories;
+            const currentSubcategoryTitle = nextSubcategory.title;
+
+            nextSubcategory = currentSubcategories[subcategoryIndex];
             return (
                 <SubcategoryColumn
                     key={selected}
                     level={i}
+                    isLastColumn={isLastColumn}
                     selectedSubcategoryId={selected}
                     subcategories={currentSubcategories}
+                    title={currentSubcategoryTitle}
                     onNewSubcategory={this.handleNewSubcategory}
                     onSubcategoryClick={this.handleSubcategoryClick}
                     onDrop={this.handleSubcategoryDrop}
@@ -118,11 +122,14 @@ export default class CategoryEditor extends React.PureComponent {
         });
 
         if (selectedSubcategories.length < LIMIT) {
+            const currentSubcategories = nextSubcategory.subcategories;
+            const currentSubcategoryTitle = nextSubcategory.title;
             subcategoryColumns.push(
                 <SubcategoryColumn
                     level={selectedSubcategories.length}
                     key="empty"
-                    subcategories={subcategories}
+                    subcategories={currentSubcategories}
+                    title={currentSubcategoryTitle}
                     onNewSubcategory={this.handleNewSubcategory}
                     onSubcategoryClick={this.handleSubcategoryClick}
                     onDrop={this.handleSubcategoryDrop}

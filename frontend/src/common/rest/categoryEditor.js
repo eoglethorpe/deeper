@@ -3,7 +3,7 @@ import {
     commonHeaderForPostExternal,
 } from '../config/rest';
 
-export const urlForCategoryEditor = 'http://deepl.togglecorp.com/api/keywords-extraction/';
+export const urlForCategoryEditor = 'https://deepl.togglecorp.com/api/keywords-extraction/';
 
 export const createParamsForCategoryEditor = document => ({
     method: POST,

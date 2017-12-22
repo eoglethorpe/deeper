@@ -22,11 +22,16 @@ const propTypes = {
     onNewSubcategory: PropTypes.func.isRequired,
     onSubcategoryClick: PropTypes.func.isRequired,
     onDrop: PropTypes.func.isRequired,
+
+    isLastColumn: PropTypes.bool,
+    title: PropTypes.string,
 };
 
 const defaultProps = {
     subcategories: [],
+    title: 'Title',
     selectedSubcategoryId: undefined,
+    isLastColumn: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -38,6 +43,7 @@ export default class SubcategoryColumn extends React.PureComponent {
     getSubcategoryStyleName = (id) => {
         const {
             selectedSubcategoryId,
+            isLastColumn,
         } = this.props;
 
         const styleNames = [];
@@ -45,7 +51,7 @@ export default class SubcategoryColumn extends React.PureComponent {
         styleNames.push(styles['sub-category']);
 
         if (id === selectedSubcategoryId) {
-            styleNames.push(styles.active);
+            styleNames.push(isLastColumn ? styles.active : styles.selected);
         }
 
         return styleNames.join(' ');
@@ -56,6 +62,8 @@ export default class SubcategoryColumn extends React.PureComponent {
             key={key}
             onClick={() => this.handleSubcategoryClick(key)}
             className={this.getSubcategoryStyleName(key)}
+            onDragEnter={this.handleSubcategoryDragEnter}
+            onDragLeave={this.handleSubcategoryDragLeave}
             onDragOver={this.handleSubcategoryDragOver}
             onDrop={(e) => { this.handleSubcategoryDrop(key, e); }}
         >
@@ -72,12 +80,49 @@ export default class SubcategoryColumn extends React.PureComponent {
         </button>
     )
 
+    addDragStyleName = (e) => {
+        const { target } = e;
+
+        const classNames = target.className.split(' ');
+        const dragStyleName = styles['drag-enter'];
+
+        if (classNames.findIndex(d => d === dragStyleName) === -1) {
+            classNames.push(styles['drag-enter']);
+        }
+
+        target.className = classNames.join(' ');
+    }
+
+    removeDragStyleName = (e) => {
+        const { target } = e;
+
+        const classNames = target.className.split(' ');
+        const dragStyleName = styles['drag-enter'];
+
+        const styleIndex = classNames.findIndex(d => d === dragStyleName);
+        if (styleIndex !== -1) {
+            classNames.splice(styleIndex, 1);
+        }
+
+        target.className = classNames.join(' ');
+    }
+
+    handleSubcategoryDragEnter = (e) => {
+        this.addDragStyleName(e);
+    }
+
+    handleSubcategoryDragLeave = (e) => {
+        this.removeDragStyleName(e);
+    }
+
     handleSubcategoryDragOver = (e) => {
         e.preventDefault();
     }
 
     handleSubcategoryDrop = (key, e) => {
         e.preventDefault();
+        this.removeDragStyleName(e);
+
         const data = e.dataTransfer.getData('text');
 
         const {
@@ -109,7 +154,6 @@ export default class SubcategoryColumn extends React.PureComponent {
     render() {
         const {
             subcategories,
-            level,
         } = this.props;
 
         return (
@@ -120,7 +164,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     <h4
                         styleName="heading"
                     >
-                        Level: {level}
+                        {this.props.title}
                     </h4>
                     <button
                         onClick={this.handleNewSubcategoryButtonClick}
