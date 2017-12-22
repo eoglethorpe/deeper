@@ -36,6 +36,7 @@ export default class FormSaveBuilder {
 
         const leadCreateRequest = new FgRestBuilder()
             .url(url)
+            .delay(0)
             .params(params)
             .preLoad(this.handleLeadSavePreLoad(leadId))
             .postLoad(this.handleLeadSavePostLoad(leadId))

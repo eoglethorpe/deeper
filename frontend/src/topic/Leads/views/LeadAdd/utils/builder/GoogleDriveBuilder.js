@@ -17,6 +17,7 @@ export default class GoogleDriveUploadModule {
             .params(createHeaderForGoogleDriveFileUpload({
                 title, accessToken, fileId, mimeType,
             }))
+            .delay(0)
             .success(this.handleLeadGoogleDriveUploadSuccess(leadId))
             .build();
         return googleDriveUploadRequest;

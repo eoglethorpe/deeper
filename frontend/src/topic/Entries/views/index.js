@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-import { GridLayout } from '../../../public/components/View';
-
-import widgetStore from '../../AnalysisFramework/widgetStore';
-import { pageTitles } from '../../../common/constants';
-
-import schema from '../../../common/schema';
-
+import {
+    GridLayout,
+    LoadingAnimation,
+} from '../../../public/components/View';
 import { FgRestBuilder } from '../../../public/utils/rest';
+import { groupList } from '../../../public/utils/common';
 
+import { pageTitles } from '../../../common/constants';
+import schema from '../../../common/schema';
 import {
     projectIdFromRoute,
     setEntriesAction,
@@ -21,7 +20,6 @@ import {
     setAnalysisFrameworkAction,
     analysisFrameworkForProjectSelector,
 } from '../../../common/redux';
-
 import {
     createParamsForUser,
     createUrlForEntries,
@@ -29,33 +27,8 @@ import {
     createUrlForProject,
 } from '../../../common/rest';
 
-/*
-const listToMap = (list = [], keySelector) => (
-    list.reduce(
-        (acc, elem) => {
-            const key = keySelector(elem);
-            acc[key] = elem;
-            return acc;
-        },
-        {},
-    )
-);
-*/
-
-const groupList = (list = [], keySelector) => (
-    list.reduce(
-        (acc, elem) => {
-            const key = keySelector(elem);
-            if (acc[key]) {
-                acc[key].push(elem);
-            } else {
-                acc[key] = [elem];
-            }
-            return acc;
-        },
-        {},
-    )
-);
+import widgetStore from '../../AnalysisFramework/widgetStore';
+import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
     projectId: projectIdFromRoute(state, props),
@@ -78,8 +51,7 @@ const propTypes = {
     setEntries: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-};
+const defaultProps = { };
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -90,37 +62,51 @@ export default class Entries extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            pending: true,
-        };
+        this.state = {};
 
         this.items = [];
-
-        this.leadGroupedEntries = [];
-        if (props.entries) {
-            this.leadGroupedEntries = groupList(props.entries, e => e.lead);
-        }
+        this.leadGroupedEntries = groupList(props.entries, e => e.lead);
     }
 
     componentWillMount() {
-        const {
-            projectId,
-        } = this.props;
+        const { projectId } = this.props;
 
         this.entriesRequest = this.createRequestForEntries(projectId);
         this.entriesRequest.start();
 
         this.projectRequest = this.createRequestForProject(projectId);
         this.projectRequest.start();
+
+        this.setState({ pendingEntries: true, pendingProjectAndAf: true });
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.analysisFramework) {
-            this.update(nextProps.analysisFramework);
-
-            if (nextProps.entries) {
-                this.leadGroupedEntries = groupList(nextProps.entries, e => e.lead);
+        if (this.props.projectId !== nextProps.projectId) {
+            if (this.entriesRequest) {
+                this.entriesRequest.stop();
             }
+            if (this.projectRequest) {
+                this.projectRequest.stop();
+            }
+            if (this.analysisFrameworkRequest) {
+                this.analysisFrameworkRequest.stop();
+            }
+
+            this.entriesRequest = this.createRequestForEntries(nextProps.projectId);
+            this.entriesRequest.start();
+
+            this.projectRequest = this.createRequestForProject(nextProps.projectId);
+            this.projectRequest.start();
+
+            this.setState({ pendingEntries: true, pendingProjectAndAf: true });
+            return;
+        }
+
+        if (this.props.analysisFramework !== nextProps.analysisFramework) {
+            this.update(nextProps.analysisFramework);
+        }
+        if (this.props.entries !== nextProps.entries) {
+            this.leadGroupedEntries = groupList(nextProps.entries, e => e.lead);
         }
     }
 
@@ -128,29 +114,36 @@ export default class Entries extends React.PureComponent {
         if (this.entriesRequest) {
             this.entriesRequest.stop();
         }
-
         if (this.projectRequest) {
             this.projectRequest.stop();
         }
-
         if (this.analysisFrameworkRequest) {
             this.analysisFrameworkRequest.stop();
         }
     }
 
-    getGridItems = () => this.items.map(item => ({
-        key: item.key,
-        widgetId: item.widgetId,
-        title: item.title,
-        layout: item.properties.listGridLayout,
-    }))
+    getGridItems = () => this.items.map(
+        item => ({
+            key: item.key,
+            widgetId: item.widgetId,
+            title: item.title,
+            layout: item.properties.listGridLayout,
+        }),
+    )
 
-    getMaxHeight = () => this.items.reduce((acc, item) => (
-        Math.max(acc, item.properties.listGridLayout.height + item.properties.listGridLayout.top)
-    ), 0);
+    getMaxHeight = () => this.items.reduce(
+        (acc, item) => {
+            const { height, top } = item.properties.listGridLayout;
+            return Math.max(acc, height + top);
+        },
+        0,
+    );
 
     getItemView = (item) => {
-        const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
+        const Component = this.widgets.find(
+            w => w.id === item.widgetId,
+        ).listComponent;
+
         return <Component />;
     }
 
@@ -165,6 +158,7 @@ export default class Entries extends React.PureComponent {
                         projectId,
                         entries: response.results,
                     });
+                    this.setState({ pendingEntries: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -203,12 +197,15 @@ export default class Entries extends React.PureComponent {
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
             .params(() => createParamsForUser())
+            .delay(0)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
                     this.props.setAnalysisFramework({
                         analysisFramework: response,
                     });
+
+                    this.setState({ pendingProjectAndAf: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -240,16 +237,16 @@ export default class Entries extends React.PureComponent {
 
         return (
             <div styleName="entries">
-                <div
-                    styleName="filters"
-                >
+                {
+                    (this.state.pendingEntries || this.state.pendingProjectAndAf) &&
+                    <LoadingAnimation />
+                }
+                <div styleName="filters">
                     <h2>
                         { pageTitles.entries }
                     </h2>
                 </div>
-                <div
-                    styleName="lead-entries-list"
-                >
+                <div styleName="lead-entries-list">
                     {
                         leadIds.map(leadId => (
                             <div
