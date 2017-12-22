@@ -144,9 +144,9 @@
         >.header {
             display: flex;
             flex-shrink: 0;
+            align-items: flex-end;
             border-bottom: $width-separator-medium solid $color-separator;
             padding: $spacing-medium;
-            align-items: flex-end;
 
             .category-select {
                 margin-right: $spacing-medium;
@@ -260,8 +260,8 @@
                 display: flex;
                 flex-basis: 30%;
                 flex-direction: column;
-                background-color: $color-foreground;
                 border-left: $width-separator-medium solid $color-separator;
+                background-color: $color-foreground;
 
                 .header {
                     display: flex;
@@ -320,9 +320,9 @@
                     }
 
                     > .action-buttons {
-                        text-align: right;
                         flex-shrink: 0;
                         padding: $spacing-small;
+                        text-align: right;
                     }
                 }
 
