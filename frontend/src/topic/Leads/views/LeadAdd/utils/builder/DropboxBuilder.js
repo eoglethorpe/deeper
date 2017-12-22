@@ -16,6 +16,7 @@ export default class DropboxBuilder {
             .url(urlForDropboxFileUpload)
             .params(createHeaderForDropboxUpload({ title, fileUrl }))
             .success(this.handleLeadDropboxUploadSuccess(leadId))
+            .delay(0)
             .build();
         return dropboxUploadRequest;
     }

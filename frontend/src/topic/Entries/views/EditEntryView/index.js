@@ -239,6 +239,7 @@ export default class EditEntryView extends React.PureComponent {
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(analysisFrameworkId))
             .params(() => createParamsForUser())
+            .delay(0)
             .postLoad(() => {
                 this.setState({ pendingProjectAndAf: false });
             })
@@ -298,6 +299,7 @@ export default class EditEntryView extends React.PureComponent {
         const entrySaveRequest = new FgRestBuilder()
             .url(urlForEntry)
             .params(paramsForEntry)
+            .delay(0)
             .preLoad(() => {
                 this.setState((state) => {
                     const requestSettings = {
@@ -372,6 +374,7 @@ export default class EditEntryView extends React.PureComponent {
         const entriesRequest = new FgRestBuilder()
             .url(createUrlForDeleteEntry(serverId))
             .params(() => createParamsForDeleteEntry())
+            .delay(0)
             .preLoad(() => {
                 this.setState((state) => {
                     const requestSettings = {

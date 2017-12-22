@@ -1,6 +1,7 @@
 @import '../../../stylesheets/base';
 
 .entries {
+    position: relative;
     display: flex;
     flex-direction: column;
     padding: $spacing-medium-alt;
