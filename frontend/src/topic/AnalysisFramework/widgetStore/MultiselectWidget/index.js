@@ -1,7 +1,9 @@
 import {
     FrameworkListWidget,
 } from './Framework';
-
+import {
+    TaggingListWidget,
+} from './Tagging';
 import {
     ViewListWidget,
 } from './View';
@@ -13,9 +15,9 @@ const multiselectWidget = {
         listComponent: FrameworkListWidget,
         listMinSize: { width: 216, height: 288 },
     },
-    // tagging: {
-    //     listComponent: TaggingListWidget,
-    // },
+    tagging: {
+        listComponent: TaggingListWidget,
+    },
     view: {
         listComponent: ViewListWidget,
     },

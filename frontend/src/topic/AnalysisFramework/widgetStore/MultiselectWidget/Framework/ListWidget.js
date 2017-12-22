@@ -35,6 +35,8 @@ const defaultProps = {
     data: [],
 };
 
+const emptyList = [];
+
 @CSSModules(styles)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
@@ -46,14 +48,14 @@ export default class Multiselect extends React.PureComponent {
 
         this.state = {
             showEditModal: false,
-            values: props.data || [],
+            values: props.data || emptyList,
         };
         this.props.editAction(this.handleEdit);
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            values: nextProps.data || [],
+            values: nextProps.data || emptyList,
         });
     }
 
@@ -149,7 +151,6 @@ export default class Multiselect extends React.PureComponent {
                     multiple
                     styleName="multiselect"
                     keyExtractor={Multiselect.valueKeyExtractor}
-                    modifier={this.getValue}
                 />
                 <Modal
                     styleName="edit-value-modal"
