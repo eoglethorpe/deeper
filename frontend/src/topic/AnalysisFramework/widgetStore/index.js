@@ -1,13 +1,13 @@
-import excerptWidget from './Excerpt';
-import matrix1dWidget from './Matrix1d';
-import dateInformationWidget from './DateInformation';
-import numberWidget from './Number';
+import excerptWidget from './ExcerptWidget';
+import matrix1dWidget from './Matrix1dWidget';
+import dateWidget from './DateWidget';
+import numberWidget from './NumberWidget';
 
 // Using list to maintain ordering
 const widgetStore = [
     excerptWidget,
     matrix1dWidget,
-    dateInformationWidget,
+    dateWidget,
     numberWidget,
 ];
 

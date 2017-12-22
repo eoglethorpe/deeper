@@ -1,0 +1,14 @@
+@import '../../../../../stylesheets/base';
+
+.number-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: $spacing-small;
+
+    .number-input {
+        width: 100%;
+    }
+}
+

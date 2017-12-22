@@ -1,0 +1,13 @@
+@import '../../../../../stylesheets/base';
+
+.date-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: $spacing-small;
+
+    .date-input {
+        width: 100%;
+    }
+}
