@@ -5,6 +5,7 @@ import RouteSynchronizer from '../common/components/RouteSynchronizer';
 const importers = {
     login: () => import('./Authentication/views/Login'),
     register: () => import('./Authentication/views/Register'),
+    passwordReset: () => import('./Authentication/views/PasswordReset'),
 
     homeScreen: () => import('./HomeScreen/views'),
     dashboard: () => import('./Dashboard/views'),

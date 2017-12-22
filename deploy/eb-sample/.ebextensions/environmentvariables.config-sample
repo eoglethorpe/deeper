@@ -44,6 +44,12 @@ option_settings:
     - option_name: \"DJANGO_ALLOWED_HOST_WEBSOCKET\"
       value: \"$DJANGO_ALLOWED_HOST_WEBSOCKET\"
 
+    - option_name: \"DEEPER_SITE_NAME\"
+      value: \"$DEEPER_SITE_NAME\"
+    - option_name: \"DEEP_HTTPS\"
+      value: \"$DEEP_HTTPS\"
+
+
     - option_name: \"HID_CLIENT_ID\"
       value: \"$HID_CLIENT_ID\"
     - option_name: \"HID_CLIENT_REDIRECT_URL\"

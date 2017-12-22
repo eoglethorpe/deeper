@@ -87,5 +87,17 @@ const userSchema = [];
     };
     userSchema.push({ name, schema });
 }
-
+{
+    const name = 'userPasswordResetResponse';
+    const schema = {
+        doc: {
+            name: 'User Password Rest Response',
+            description: 'Response for POST /password/reset/',
+        },
+        fields: {
+            email: { type: 'email', required: true },
+        },
+    };
+    userSchema.push({ name, schema });
+}
 export default userSchema;

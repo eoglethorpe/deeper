@@ -152,7 +152,9 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     REACT_APP_MAPBOX_STYLE=${MAPBOX_STYLE}
     " > frontend/.env
     echo "::::::  >> Generating Reacts Builds"
-    docker-compose exec web bash -c "cd frontend && yarn build"
+    set -e;
+    docker-compose exec react bash -c "cd frontend && yarn install && yarn build"
+    set +e;
     rm frontend/.env
 
     echo "::::::  >> Uploading Builds Files To S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"

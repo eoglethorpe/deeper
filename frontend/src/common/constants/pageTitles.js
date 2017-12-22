@@ -1,6 +1,7 @@
 const pageTitles = {
     login: 'Login',
     register: 'Register',
+    passwordReset: 'Password Reset',
 
     homeScreen: 'Home',
     dashboard: 'Dashboard',
