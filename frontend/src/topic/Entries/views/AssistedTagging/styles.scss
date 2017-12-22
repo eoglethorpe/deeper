@@ -1,0 +1,107 @@
+@import '../../../../stylesheets/base';
+
+.assisted-tagging {
+    @include transition-medium;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    &.faded {
+        filter: brightness(70%) grayscale(80%);
+        pointer-events: none;
+    }
+
+    .suggestion-select {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-top: $width-separator-thin solid $color-separator;
+        padding: $spacing-large $spacing-medium-alt;
+
+        span {
+            text-transform: uppercase;
+            font-size: $font-size-normal;
+        }
+
+        .select-input {
+            flex-basis: 50%;
+            margin-left: $spacing-small;
+        }
+    }
+
+    .text {
+        flex-grow: 1;
+        background-color: $color-foreground-alt;
+
+        .highlighted-excerpt {
+            cursor: pointer;
+        }
+    }
+}
+
+.assisted-actions {
+    @include shadow-large-dark;
+    background-color: $color-foreground;
+    min-width: 240px;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator-light;
+        padding: $spacing-small $spacing-medium 0 $spacing-large;
+
+        .title {
+            display: flex;
+            align-items: baseline;
+
+            .label {
+                margin-right: $spacing-extra-small;
+                text-transform: uppercase;
+                color: $color-label;
+            }
+
+            .source {
+                font-weight: $font-weight-bold;
+            }
+        }
+    }
+
+    .info-bar {
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-medium $spacing-large;
+        min-height: 86px;
+        text-align: justify;
+        overflow-y: auto;
+    }
+
+    .sectors {
+        .sector {
+            display: flex;
+            align-items: center;
+            background-color: $color-background-row;
+            padding: $spacing-extra-small $spacing-large;
+
+            .apply-button {
+                flex-shrink: 0;
+                padding: 0;
+            }
+
+            .sector-text {
+                flex-grow: 1;
+                padding: 0 $spacing-medium;
+                text-transform: uppercase;
+            }
+
+            .feedback-buttons {
+                flex-shrink: 0;
+            }
+
+            &:nth-child(odd) {
+                background-color: $color-background-row-alt;
+            }
+        }
+    }
+}

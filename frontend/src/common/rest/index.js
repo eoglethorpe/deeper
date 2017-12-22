@@ -3,6 +3,7 @@ export * from './file';
 export * from './leadFilterOptions';
 export * from './leads';
 export * from './entries';
+export * from './external';
 export * from './projects';
 export * from './regions';
 export * from './token';

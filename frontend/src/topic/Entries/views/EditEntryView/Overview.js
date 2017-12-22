@@ -33,6 +33,7 @@ import {
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import WebsiteViewer from '../../../../common/components/WebsiteViewer';
 import DeepGallery from '../../../../common/components/DeepGallery';
+import AssistedTagging from '../AssistedTagging';
 
 import { LEAD_TYPE } from '../../../../common/entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
@@ -281,7 +282,6 @@ export default class Overview extends React.PureComponent {
         <Tabs
             activeLinkStyle={{ none: 'none' }}
             styleName="tabs-container"
-            renderActiveTabContentOnly
         >
             <div styleName="tabs-header-container">
                 <TabLink
@@ -289,6 +289,12 @@ export default class Overview extends React.PureComponent {
                     to="simplified-preview"
                 >
                     Simplified
+                </TabLink>
+                <TabLink
+                    styleName="tab-header"
+                    to="assisted-tagging"
+                >
+                    Assisted
                 </TabLink>
                 <TabLink
                     styleName="tab-header"
@@ -311,6 +317,15 @@ export default class Overview extends React.PureComponent {
                     for="original-preview"
                 >
                     {this.renderLeadPreview(lead)}
+                </TabContent>
+                <TabContent
+                    styleName="tab"
+                    for="assisted-tagging"
+                >
+                    <AssistedTagging
+                        lead={lead}
+                        api={this.props.api}
+                    />
                 </TabContent>
             </div>
         </Tabs>

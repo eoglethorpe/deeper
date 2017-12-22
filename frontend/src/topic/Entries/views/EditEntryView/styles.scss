@@ -91,6 +91,7 @@
             .left {
                 position: relative;
                 flex-basis: 30%;
+                border-right: $width-separator-thin solid $color-separator;
                 background-color: $color-foreground;
                 width: 30%;
 

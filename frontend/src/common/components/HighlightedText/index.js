@@ -34,19 +34,24 @@ export default class HighlightedText extends React.PureComponent {
         highlights.filter(h => h.start >= 0)
             .sort((h1, h2) => h1.start - h2.start)
             .forEach((h) => {
-                const index = Math.max(0, h.start - lastPosition);
-                splits.push({
-                    key: `split-${h.start}`,
-                    text: lastString.slice(0, index),
-                });
-                splits.push({
-                    key: `split-${h.start + h.length}`,
-                    text: lastString.slice(index, index + h.length),
-                    item: h.item,
-                });
+                const diff = h.start - lastPosition;
+                const index = Math.max(0, diff);
+                const length = Math.max(0, diff < 0 ? h.length + diff : h.length);
 
-                lastString = lastString.slice(index + h.length);
-                lastPosition = h.start + h.length;
+                if (length > 0) {
+                    splits.push({
+                        key: `split-${index}`,
+                        text: lastString.slice(0, index),
+                    });
+                    splits.push({
+                        key: `split-${index + length}`,
+                        text: lastString.slice(index, index + length),
+                        item: h.item,
+                    });
+
+                    lastString = lastString.slice(index + length);
+                    lastPosition = h.start + h.length;
+                }
             });
 
         splits.push({
