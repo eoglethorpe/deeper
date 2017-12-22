@@ -137,8 +137,6 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         const ngramKeys = Object.keys(ngrams);
 
-        console.log(ngrams);
-
         return (
             <div
                 styleName="property-panel"

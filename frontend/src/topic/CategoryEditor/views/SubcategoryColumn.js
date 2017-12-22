@@ -154,7 +154,6 @@ export default class SubcategoryColumn extends React.PureComponent {
     render() {
         const {
             subcategories,
-            level,
         } = this.props;
 
         return (
