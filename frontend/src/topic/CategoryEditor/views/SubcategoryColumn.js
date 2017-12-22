@@ -24,10 +24,12 @@ const propTypes = {
     onDrop: PropTypes.func.isRequired,
 
     isLastColumn: PropTypes.bool,
+    title: PropTypes.string,
 };
 
 const defaultProps = {
     subcategories: [],
+    title: 'Title',
     selectedSubcategoryId: undefined,
     isLastColumn: false,
 };
@@ -163,7 +165,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     <h4
                         styleName="heading"
                     >
-                        Level: {level}
+                        {this.props.title}
                     </h4>
                     <button
                         onClick={this.handleNewSubcategoryButtonClick}

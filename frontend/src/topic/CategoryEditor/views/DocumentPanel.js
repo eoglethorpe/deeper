@@ -23,7 +23,7 @@ export default class DocumentPanel extends React.PureComponent {
 
         this.tabs = [
             'Document',
-            'Simfilfied',
+            'Simplified',
             'Extracted words',
         ];
 

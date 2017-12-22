@@ -52,10 +52,14 @@ export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
 
 
 // HELPERS
+const getCategoryIdFromCategory = category => category.id;
+const getSubcategoryIdFromSubcategory = subcategory => subcategory.id;
+const getSubcategoriesFromSubcategory = subcategory => subcategory.subcategories;
 
 const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLevel) => {
-    const activeCategoryIndex = categories.findIndex(d => d.id === activeCategoryId);
-
+    const activeCategoryIndex = categories.findIndex(
+        d => getCategoryIdFromCategory(d) === activeCategoryId,
+    );
     const {
         selectedSubcategories,
         subcategories: firstSubcategories,
@@ -63,13 +67,18 @@ const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLeve
 
     const { indices: newIndices } = selectedSubcategories.reduce(
         ({ subcategories, indices }, selected) => {
-            const index = subcategories.findIndex(d => d.id === selected);
+            const index = subcategories.findIndex(
+                d => getSubcategoryIdFromSubcategory(d) === selected,
+            );
             return {
-                subcategories: subcategories[index].subcategories,
+                subcategories: getSubcategoriesFromSubcategory(subcategories[index]),
                 indices: indices.concat([index]),
             };
         },
-        { subcategories: firstSubcategories, indices: [activeCategoryIndex] },
+        {
+            subcategories: firstSubcategories,
+            indices: [activeCategoryIndex],
+        },
     );
 
     if (stopLevel >= 0) {
@@ -78,12 +87,6 @@ const getIndicesFromSelectedCategories = (categories, activeCategoryId, stopLeve
 
     return newIndices;
 };
-
-const newSubcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
-
-const createMergeSubcategoryWrapper = len => (val, i) => (
-    i <= 0 || i === len ? val : ({ subcategories: val })
-);
 
 const buildSettings = (indices, action, value, wrapper) => (
     // NOTE: reverse() mutates the array so making a copy
@@ -96,7 +99,11 @@ const buildSettings = (indices, action, value, wrapper) => (
     )
 );
 
-const getCategoryIdFromCategory = category => category.id;
+const newSubcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
+
+const createMergeSubcategoryWrapper = len => (val, i) => (
+    i <= 0 || i === len ? val : ({ subcategories: val })
+);
 
 // REDUCER
 
@@ -282,9 +289,9 @@ const ceAddSubcategoryNGram = (state, action) => {
     );
     // get index for the subcategory (drop target)
     const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
-    // add to indices for buildSettings
+    // add to indices for build Settings
     indices.push(lastIndex);
-    // add to n of ngram to the indices as well for buildSettings
+    // add to n of ngram to the indices as well for build Settings
     indices.push(+ngram.n);
 
     const settingAction = '$autoPush';

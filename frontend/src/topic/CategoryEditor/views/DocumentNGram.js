@@ -55,7 +55,7 @@ export default class DocumentNGram extends React.PureComponent {
         </button>
     )
 
-    getNGram = (key, keyword, i) => (
+    getNGram = (key, keyword) => (
         <div
             className={styles.ngram}
             key={keyword[0]}
@@ -64,7 +64,7 @@ export default class DocumentNGram extends React.PureComponent {
                 e.dataTransfer.setData(
                     'text',
                     JSON.stringify({
-                        n: i,
+                        n: keyword[0].split(' ').length - 1,
                         keyword: keyword[0],
                     }),
                 );

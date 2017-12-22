@@ -137,29 +137,23 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         const ngramKeys = Object.keys(ngrams);
 
+        console.log(ngrams);
+
         return (
             <div
                 styleName="property-panel"
             >
-                <header
-                    styleName="header"
-                >
-                    <h3
-                        styleName="heading"
-                    >
+                <header styleName="header" >
+                    <h3 styleName="heading" >
                         Subcategory details
                     </h3>
                     <div styleName="action-buttons">
-                        <DangerButton
-                            disabled
-                        >
+                        <DangerButton disabled >
                             Remove
                         </DangerButton>
                     </div>
                 </header>
-                <section
-                    styleName="properties"
-                >
+                <section styleName="properties" >
                     <TextInput
                         label="Title"
                         placeholder="eg: Wash"
@@ -173,12 +167,10 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
                 </section>
-                <section
-                    styleName="ngrams"
-                >
+                <section styleName="ngrams" >
                     <div styleName="ngram-selects">
                         {
-                            ngramKeys.length && (
+                            (ngramKeys.length > 0) && (
                                 <h4
                                     styleName="heading"
                                 >
