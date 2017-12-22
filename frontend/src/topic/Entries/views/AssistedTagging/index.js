@@ -85,14 +85,7 @@ export default class AssistedTagging extends React.PureComponent {
     );
 
     handleDynamicStyleOverride = (popupContainer) => {
-        const { activeHighlightRef } = this.state;
-
         const popupRect = popupContainer.getBoundingClientRect();
-        const cr = (activeHighlightRef && activeHighlightRef.getBoundingClientRect())
-            || this.boundingClientRect;
-
-        const pageOffset = window.innerHeight;
-        const containerOffset = cr.top + popupRect.height + cr.height;
         const primaryContainerRect = this.primaryContainerRect || (
             this.primaryContainer && this.primaryContainer.getBoundingClientRect());
 
@@ -103,12 +96,8 @@ export default class AssistedTagging extends React.PureComponent {
         const newStyle = {
             left: `${primaryContainerRect.left + 48}px`,
             width: `${primaryContainerRect.width - 96}px`,
-            top: `${(cr.top + window.scrollY) + cr.height + 2}px`,
+            top: `${(window.scrollY + (primaryContainerRect.height / 2)) - (popupRect.height / 2)}px`,
         };
-
-        if (pageOffset < containerOffset + 32) {
-            newStyle.top = `${cr.top - popupRect.height - 36}px`;
-        }
 
         return newStyle;
     }
@@ -138,6 +127,7 @@ export default class AssistedTagging extends React.PureComponent {
         } else {
             api.addExcerpt(text);
         }
+        this.handleOnCloseAssistedActions();
     }
 
     handleLeadPreviewLoad = (leadPreview) => {
