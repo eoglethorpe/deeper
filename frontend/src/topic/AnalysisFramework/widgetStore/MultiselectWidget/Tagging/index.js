@@ -1,2 +1,2 @@
-export { default as TaggingOverviewWidget } from './OverviewWidget';
+// eslint-disable-next-line import/prefer-default-export
 export { default as TaggingListWidget } from './ListWidget';
