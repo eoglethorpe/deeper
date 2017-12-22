@@ -8,13 +8,15 @@ import {
 import styles from './styles.scss';
 
 @CSSModules(styles)
-export default class DateInformationList extends React.PureComponent {
+export default class DateViewList extends React.PureComponent {
     render() {
         return (
             <div
                 styleName="date-list"
             >
-                <DateInput />
+                <DateInput
+                    styleName="date-input"
+                />
             </div>
         );
     }

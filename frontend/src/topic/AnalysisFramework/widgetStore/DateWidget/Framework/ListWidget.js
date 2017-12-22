@@ -8,12 +8,13 @@ import {
 
 import styles from './styles.scss';
 
+
 const propTypes = {
     editAction: PropTypes.func.isRequired,
 };
 
 @CSSModules(styles)
-export default class ExcerptTextOverview extends React.PureComponent {
+export default class DateFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
@@ -23,14 +24,16 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     handleEdit = () => {
-        console.log('Edit Date (Overview)');
+        console.log('Edit Date (List)');
     }
 
     render() {
         return (
-            <div styleName="date-overview">
-                <DateInput />
-
+            <div styleName="date-list">
+                <DateInput
+                    styleName="date-input"
+                    disabled
+                />
             </div>
         );
     }

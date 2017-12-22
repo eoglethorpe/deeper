@@ -2,17 +2,13 @@ import {
     FrameworkOverviewWidget,
     FrameworkListWidget,
 } from './Framework';
-
 import {
     TaggingOverviewWidget,
     TaggingListWidget,
 } from './Tagging';
+import { ViewListWidget } from './View';
 
-import {
-    ViewListWidget,
-} from './View';
-
-const excerptTextWidget = {
+const excerptWidget = {
     id: 'matrix1dWidget',
     title: 'Matrix 1D',
     analysisFramework: {
@@ -30,4 +26,4 @@ const excerptTextWidget = {
     },
 };
 
-export default excerptTextWidget;
+export default excerptWidget;

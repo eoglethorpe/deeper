@@ -1,12 +1,11 @@
 import CSSModules from 'react-css-modules';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import styles from './styles.scss';
 
 import {
     DateInput,
 } from '../../../../../public/components/Input';
-
-import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -19,7 +18,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class DateInformationOverview extends React.PureComponent {
+export default class DateTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -36,8 +35,9 @@ export default class DateInformationOverview extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="date-overview">
+            <div styleName="date-list">
                 <DateInput
+                    styleName="date-input"
                     onChange={this.handleChange}
                     value={attribute && attribute.value}
                 />
