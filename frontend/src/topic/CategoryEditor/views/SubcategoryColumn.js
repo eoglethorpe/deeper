@@ -2,9 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    ListView,
-} from '../../../public/components/View';
+import { ListView } from '../../../public/components/View';
 
 import styles from './styles.scss';
 
@@ -38,7 +36,8 @@ const defaultProps = {
 export default class SubcategoryColumn extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-    static keyExtractor = d => d.id;
+
+    static keyExtractorForSubcategory = d => d.id;
 
     getSubcategoryStyleName = (id) => {
         const {
@@ -56,29 +55,6 @@ export default class SubcategoryColumn extends React.PureComponent {
 
         return styleNames.join(' ');
     }
-
-    getSubcategory = (key, data) => (
-        <button
-            key={key}
-            onClick={() => this.handleSubcategoryClick(key)}
-            className={this.getSubcategoryStyleName(key)}
-            onDragEnter={this.handleSubcategoryDragEnter}
-            onDragLeave={this.handleSubcategoryDragLeave}
-            onDragOver={this.handleSubcategoryDragOver}
-            onDrop={(e) => { this.handleSubcategoryDrop(key, e); }}
-        >
-            <span className={styles.title}>
-                { data.title }
-            </span>
-            {
-                data.subcategories.length >= 0 && (
-                    <span className={styles.number}>
-                        { data.subcategories.length }
-                    </span>
-                )
-            }
-        </button>
-    )
 
     addDragStyleName = (e) => {
         const { target } = e;
@@ -107,6 +83,7 @@ export default class SubcategoryColumn extends React.PureComponent {
         target.className = classNames.join(' ');
     }
 
+
     handleSubcategoryDragEnter = (e) => {
         this.addDragStyleName(e);
     }
@@ -120,16 +97,15 @@ export default class SubcategoryColumn extends React.PureComponent {
     }
 
     handleSubcategoryDrop = (key, e) => {
-        e.preventDefault();
-        this.removeDragStyleName(e);
-
-        const data = e.dataTransfer.getData('text');
-
         const {
             level,
             onDrop,
         } = this.props;
 
+        e.preventDefault();
+        this.removeDragStyleName(e);
+
+        const data = e.dataTransfer.getData('text/plain');
         onDrop(level, key, data);
     }
 
@@ -151,32 +127,47 @@ export default class SubcategoryColumn extends React.PureComponent {
         onSubcategoryClick(level, id);
     }
 
+    renderSubcategory = (key, data) => (
+        <button
+            key={key}
+            className={this.getSubcategoryStyleName(key)}
+            onClick={() => this.handleSubcategoryClick(key)}
+            onDragEnter={this.handleSubcategoryDragEnter}
+            onDragLeave={this.handleSubcategoryDragLeave}
+            onDragOver={this.handleSubcategoryDragOver}
+            onDrop={e => this.handleSubcategoryDrop(key, e)}
+        >
+            <span className={styles.title}>
+                { data.title }
+            </span>
+            {
+                data.subcategories.length > 0 && (
+                    <span className={styles.number}>
+                        { data.subcategories.length }
+                    </span>
+                )
+            }
+        </button>
+    )
+
     render() {
-        const {
-            subcategories,
-        } = this.props;
+        const { subcategories } = this.props;
 
         return (
-            <div
-                styleName="column"
-            >
+            <div styleName="column" >
                 <header styleName="header">
-                    <h4
-                        styleName="heading"
-                    >
+                    <h4 styleName="heading" >
                         {this.props.title}
                     </h4>
-                    <button
-                        onClick={this.handleNewSubcategoryButtonClick}
-                    >
+                    <button onClick={this.handleNewSubcategoryButtonClick}>
                         Add subcategory
                     </button>
                 </header>
                 <ListView
                     styleName="sub-category-list"
                     data={subcategories}
-                    modifier={this.getSubcategory}
-                    keyExtractor={SubcategoryColumn.keyExtractor}
+                    modifier={this.renderSubcategory}
+                    keyExtractor={SubcategoryColumn.keyExtractorForSubcategory}
                 />
             </div>
         );

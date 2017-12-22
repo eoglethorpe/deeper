@@ -25,70 +25,61 @@ export default class DocumentNGram extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            selectedNGramIndex: 0,
-        };
+        this.state = { selectedNGramIndex: 0 };
     }
 
     getNGramSelectStyleName = (i) => {
-        const {
-            selectedNGramIndex,
-        } = this.state;
+        const { selectedNGramIndex } = this.state;
 
         const styleNames = [];
         styleNames.push(styles['ngram-select']);
-
         if (selectedNGramIndex === i) {
             styleNames.push(styles.active);
         }
-
         return styleNames.join(' ');
     }
 
-    getNGramSelect = (key, data, i) => (
+    handleNGramSelectButtonClick = (i) => {
+        this.setState({ selectedNGramIndex: i });
+    }
+
+    handleOnDragStart = keyword => (e) => {
+        const data = JSON.stringify({
+            n: keyword.split(' ').length - 1,
+            keyword,
+        });
+
+        e.dataTransfer.setData('text/plain', data);
+        e.dataTransfer.dropEffect = 'copy';
+    }
+
+    keyExtractorKeywordTuple = keywordTuple => keywordTuple[0];
+
+    renderNGramSelect = (key, data, i) => (
         <button
-            className={this.getNGramSelectStyleName(i)}
             key={key}
-            onClick={() => { this.handleNGramSelectButtonClick(i); }}
+            className={this.getNGramSelectStyleName(i)}
+            onClick={() => this.handleNGramSelectButtonClick(i)}
         >
             {i + 1}
         </button>
     )
 
-    getNGram = (key, keyword) => (
+    renderNGram = (key, keywordTuple) => (
         <div
             className={styles.ngram}
-            key={keyword[0]}
+            key={key}
             draggable
-            onDragStart={(e) => {
-                e.dataTransfer.setData(
-                    'text',
-                    JSON.stringify({
-                        n: keyword[0].split(' ').length - 1,
-                        keyword: keyword[0],
-                    }),
-                );
-                e.dataTransfer.dropEffect = 'copy';
-            }}
+            onDragStart={this.handleOnDragStart(keywordTuple[0])}
         >
-            <span
-                className={styles.title}
-            >
-                { keyword[0] }
+            <span className={styles.title}>
+                { keywordTuple[0] }
             </span>
-            <span
-                className={styles.strength}
-            >
-                { keyword[1] }
+            <span className={styles.strength}>
+                { keywordTuple[1] }
             </span>
         </div>
     )
-
-    handleNGramSelectButtonClick = (i) => {
-        this.setState({
-            selectedNGramIndex: i,
-        });
-    }
 
     render() {
         const {
@@ -100,38 +91,29 @@ export default class DocumentNGram extends React.PureComponent {
             return <LoadingAnimation />;
         }
 
-        const {
-            selectedNGramIndex,
-        } = this.state;
+        const { selectedNGramIndex } = this.state;
 
         const ngramKeys = Object.keys(ngrams);
         ngramKeys.sort();
 
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
-
         return (
-            <div
-                styleName="ngrams-tab"
-            >
+            <div styleName="ngrams-tab" >
                 <ListView
                     styleName="ngram-list"
                     data={selectedNGram}
-                    modifier={this.getNGram}
-                    keyExtractor={d => d}
+                    modifier={this.renderNGram}
+                    keyExtractor={this.keyExtractorKeywordTuple}
                 />
-                <div
-                    styleName="ngram-selects"
-                >
-                    <h4
-                        styleName="heading"
-                    >
+                <div styleName="ngram-selects">
+                    <h4 styleName="heading">
                         Number of words:
                     </h4>
                     <ListView
                         styleName="ngram-select-list"
                         data={ngramKeys}
-                        modifier={this.getNGramSelect}
-                        keyExtractor={d => d}
+                        modifier={this.renderNGramSelect}
+                        keyExtractor={this.keyExtractorKeywordTuple}
                     />
                 </div>
             </div>
