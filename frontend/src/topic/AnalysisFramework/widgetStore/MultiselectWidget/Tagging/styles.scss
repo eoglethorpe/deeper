@@ -1,13 +1,6 @@
 @import '../../../../../stylesheets/base';
 
-.date-overview {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: auto;
-}
-
-.date-list {
+.multiselect-list {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
