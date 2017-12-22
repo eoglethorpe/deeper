@@ -164,24 +164,10 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     addNewSubcategory = (title) => {
-        const {
-            newSubcategoryLevel: level,
-        } = this;
-
-        const {
-            addNewSubcategory,
-        } = this.props;
-
-        const key = randomString();
-        const newSubcategory = {
-            id: key,
-            title,
-            description: '',
-            ngrams: {},
-            subcategories: [],
-        };
-
-        addNewSubcategory({ level, newSubcategory });
+        const { newSubcategoryLevel: level } = this;
+        const { addNewSubcategory } = this.props;
+        const id = randomString();
+        addNewSubcategory({ level, id, title });
     }
 
     addNewCategory = (title) => {
