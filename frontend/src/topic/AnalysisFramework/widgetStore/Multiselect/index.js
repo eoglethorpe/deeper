@@ -3,10 +3,10 @@ import {
     FrameworkListWidget,
 } from './Framework';
 
-import {
-    // TaggingOverviewWidget,
-    TaggingListWidget,
-} from './Tagging';
+// import {
+//     // TaggingOverviewWidget,
+//     TaggingListWidget,
+// } from './Tagging';
 
 import {
     ViewListWidget,
@@ -18,13 +18,13 @@ const dateInformationWidget = {
     analysisFramework: {
         // overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
-        // overviewMinSize: { width: 240, height: 96 },
-        listMinSize: { width: 192, height: 144 },
+        // overviewMinSize: { width: 216, height: 288 },
+        listMinSize: { width: 216, height: 288 },
     },
-    tagging: {
-        // overviewComponent: TaggingOverviewWidget,
-        listComponent: TaggingListWidget,
-    },
+    // tagging: {
+    //     // overviewComponent: TaggingOverviewWidget,
+    //     listComponent: TaggingListWidget,
+    // },
     view: {
         listComponent: ViewListWidget,
     },

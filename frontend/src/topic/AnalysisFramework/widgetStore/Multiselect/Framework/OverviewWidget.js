@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    DateInput,
+    SelectInput,
 } from '../../../../../public/components/Input';
 
 import styles from './styles.scss';
@@ -13,7 +13,7 @@ const propTypes = {
 };
 
 @CSSModules(styles)
-export default class ExcerptTextOverview extends React.PureComponent {
+export default class MultiselectOverview extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
@@ -23,13 +23,13 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     handleEdit = () => {
-        console.log('Edit Date (Overview)');
+        console.log('Edit Multiselect (Overview)');
     }
 
     render() {
         return (
-            <div styleName="date-overview">
-                <DateInput />
+            <div styleName="multiselect-overview">
+                <SelectInput />
 
             </div>
         );

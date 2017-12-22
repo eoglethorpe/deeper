@@ -1,8 +1,12 @@
 @import '../../../../../stylesheets/base';
 
-.date-list {
+.multiselect-list {
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: $spacing-small;
     height: 100%;
+
+    .multiselect {
+        width: 100%;
+    }
 }
