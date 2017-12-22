@@ -49,10 +49,10 @@
 
     .overview {
         display: flex;
-        flex-direction: column;
+        width: 100%;
         height: 100%;
 
-        >.header {
+        .header {
             display: flex;
             flex-shrink: 0;
             align-items: center;
@@ -62,42 +62,40 @@
             background-color: $color-background-header;
             padding: $spacing-small $spacing-medium;
             width: 100%;
-
-            .entries-list-btn {
-                &.active {
-                    color: $color-accent;
-                }
-            }
-
-            .entry-actions {
-                display: flex;
-
-                .select-input {
-                    width: 216px;
-                }
-
-                >* {
-                    margin-right: $spacing-small;
-                }
-            }
-
-            .action-buttons {
-                .save-button {
-                    margin-left: $spacing-medium;
-                }
-            }
         }
 
-        .container {
+        .left {
             display: flex;
-            flex-grow: 1;
+            flex-basis: 30%;
+            flex-direction: column;
+            flex-shrink: 0;
 
-            .left {
+            .header {
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: space-between;
+                z-index: 11;
+                border-bottom: $width-separator-thin solid $color-separator;
+                background-color: $color-background-header;
+                padding: $spacing-small $spacing-medium;
+                width: 100%;
+
+                .entries-list-btn {
+                    &.active {
+                        color: $color-accent;
+                    }
+                }
+            }
+
+            .container {
+                display: flex;
                 position: relative;
-                flex-basis: 30%;
+                flex-direction: column;
+                flex-grow: 1;
                 border-right: $width-separator-thin solid $color-separator;
                 background-color: $color-foreground;
-                width: 30%;
+                width: 100%;
 
                 .lead-preview {
                     display: flex;
@@ -180,14 +178,15 @@
                                 }
 
                                 .status-icons {
-                                    padding-left: $spacing-medium-alt;
+                                    display: flex;
 
                                     .pending,
                                     .error,
                                     .complete,
+                                    .pristine,
                                     .stale {
                                         flex-shrink: 0;
-                                        margin-left: 0 $spacing-small;
+                                        margin-left: $spacing-small;
                                         padding: 0;
                                         color: $color-label;
                                         font-size: $font-size-medium-alt;
@@ -214,20 +213,51 @@
                     }
                 }
             }
+        }
 
-            .right {
-                position: relative;
-                flex-basis: 70%;
-                background-color: $color-foreground-alt;
-                overflow-y: auto;
+        .right {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
 
-                .grid-layout {
-                    min-height: 100%;
-                    overflow-y: hidden;
-                    overflow-x: auto;
+            .header {
+                .entry-actions {
+                    display: flex;
 
-                    .grid-item {
-                        @extend %grid-item;
+                    .select-input {
+                        width: 216px;
+                    }
+
+                    >* {
+                        margin-right: $spacing-small;
+                    }
+                }
+
+                .action-buttons {
+                    .save-button {
+                        margin-left: $spacing-medium;
+                    }
+                }
+            }
+
+            .container {
+                display: flex;
+                flex-grow: 1;
+
+                .right {
+                    position: relative;
+                    flex-basis: 70%;
+                    background-color: $color-foreground-alt;
+                    overflow-y: auto;
+
+                    .grid-layout {
+                        min-height: 100%;
+                        overflow-y: hidden;
+                        overflow-x: auto;
+
+                        .grid-item {
+                            @extend %grid-item;
+                        }
                     }
                 }
             }
@@ -297,20 +327,6 @@
             transition: none;
             opacity: .5;
             will-change: width, height, opacity;
-        }
-
-        .react-resizable-handle {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg08IS0tIEdlbmVyYXRvcjogQWRvYmUgRmlyZXdvcmtzIENTNiwgRXhwb3J0IFNWRyBFeHRlbnNpb24gYnkgQWFyb24gQmVhbGwgKGh0dHA6Ly9maXJld29ya3MuYWJlYWxsLmNvbSkgLiBWZXJzaW9uOiAwLjYuMSAgLS0+DTwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DTxzdmcgaWQ9IlVudGl0bGVkLVBhZ2UlMjAxIiB2aWV3Qm94PSIwIDAgNiA2IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHZlcnNpb249IjEuMSINCXhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiDQl4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjZweCIgaGVpZ2h0PSI2cHgiDT4NCTxnIG9wYWNpdHk9IjAuMzAyIj4NCQk8cGF0aCBkPSJNIDYgNiBMIDAgNiBMIDAgNC4yIEwgNCA0LjIgTCA0LjIgNC4yIEwgNC4yIDAgTCA2IDAgTCA2IDYgTCA2IDYgWiIgZmlsbD0iIzAwMDAwMCIvPg0JPC9nPg08L3N2Zz4=');
-            background-repeat: no-repeat;
-            background-position: bottom right;
-            cursor: se-resize;
-            padding: 0 3px 3px 0;
-            width: 20px;
-            height: 20px;
-            background-origin: content-box;
         }
     }
 

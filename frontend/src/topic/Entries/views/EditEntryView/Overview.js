@@ -360,68 +360,18 @@ export default class Overview extends React.PureComponent {
 
         return (
             <div styleName="overview">
-                <header styleName="header">
-                    <TransparentButton
-                        title="List entries"
-                        iconName={iconNames.list}
-                        styleName={this.calcStyleNameWithState('entries-list-btn')}
-                        onClick={this.handleEntriesListToggleClick}
-                    >
-                        List Entries
-                    </TransparentButton>
-                    <div styleName="entry-actions">
-                        <SelectInput
-                            styleName="select-input"
-                            placeholder="Select an excerpt"
-                            showHintAndError={false}
-                            showLabel={false}
-                            clearable={false}
-                            keySelector={this.calcEntryKey}
-                            labelSelector={this.calcEntryLabelLimited}
-                            options={entries}
-                            value={selectedEntryId}
-                            onChange={this.handleEntrySelectChange}
-                        />
-                        <PrimaryButton
-                            title="Add entry"
-                            onClick={this.props.onEntryAdd}
+                <div styleName="left">
+                    <header styleName="header">
+                        <TransparentButton
+                            title="List entries"
+                            iconName={iconNames.list}
+                            styleName={this.calcStyleNameWithState('entries-list-btn')}
+                            onClick={this.handleEntriesListToggleClick}
                         >
-                            Add
-                        </PrimaryButton>
-                        { entry && !isMarkedForDelete &&
-                            <DangerButton
-                                title="Mark current entry for removal"
-                                onClick={() => this.props.onEntryDelete(true)}
-                            >
-                                Remove
-                            </DangerButton>
-                        }
-                        { entry && isMarkedForDelete &&
-                            <Button
-                                title="Unmark current entry for removal"
-                                onClick={() => this.props.onEntryDelete(false)}
-                            >
-                                Undo Remove
-                            </Button>
-                        }
-                    </div>
-                    <div styleName="action-buttons">
-                        <Button
-                            onClick={this.handleGotoListButtonClick}
-                        >
-                            Goto list
-                        </Button>
-                        <SuccessButton
-                            styleName="save-button"
-                            onClick={onSaveAll}
-                            disabled={saveAllDisabled}
-                        >
-                            Save
-                        </SuccessButton>
-                    </div>
-                </header>
-                <div styleName="container">
-                    <div styleName="left">
+                            List Entries
+                        </TransparentButton>
+                    </header>
+                    <div styleName="container">
                         {this.renderLeftSection(lead)}
                         <div
                             styleName={this.calcStyleNameWithState('entries-list-container')}
@@ -434,17 +384,73 @@ export default class Overview extends React.PureComponent {
                             />
                         </div>
                     </div>
-                    <div
-                        ref={(el) => { this.gridLayoutContainer = el; }}
-                        styleName="right"
-                    >
-                        { widgetDisabled && <LoadingAnimation /> }
-                        <GridLayout
-                            styleName="grid-layout"
-                            modifier={this.getItemView}
-                            items={this.getGridItems()}
-                            viewOnly
-                        />
+                </div>
+                <div styleName="right">
+                    <header styleName="header">
+                        <div styleName="entry-actions">
+                            <SelectInput
+                                styleName="select-input"
+                                placeholder="Select an excerpt"
+                                showHintAndError={false}
+                                showLabel={false}
+                                clearable={false}
+                                keySelector={this.calcEntryKey}
+                                labelSelector={this.calcEntryLabelLimited}
+                                options={entries}
+                                value={selectedEntryId}
+                                onChange={this.handleEntrySelectChange}
+                            />
+                            <PrimaryButton
+                                title="Add entry"
+                                onClick={this.props.onEntryAdd}
+                            >
+                                Add
+                            </PrimaryButton>
+                            { entry && !isMarkedForDelete &&
+                                <DangerButton
+                                    title="Mark current entry for removal"
+                                    onClick={() => this.props.onEntryDelete(true)}
+                                >
+                                    Remove
+                                </DangerButton>
+                            }
+                            { entry && isMarkedForDelete &&
+                                <Button
+                                    title="Unmark current entry for removal"
+                                    onClick={() => this.props.onEntryDelete(false)}
+                                >
+                                    Undo Remove
+                                </Button>
+                            }
+                        </div>
+                        <div styleName="action-buttons">
+                            <Button
+                                onClick={this.handleGotoListButtonClick}
+                            >
+                                Goto list
+                            </Button>
+                            <SuccessButton
+                                styleName="save-button"
+                                onClick={onSaveAll}
+                                disabled={saveAllDisabled}
+                            >
+                                Save
+                            </SuccessButton>
+                        </div>
+                    </header>
+                    <div styleName="container">
+                        <div
+                            ref={(el) => { this.gridLayoutContainer = el; }}
+                            styleName="right"
+                        >
+                            { widgetDisabled && <LoadingAnimation /> }
+                            <GridLayout
+                                styleName="grid-layout"
+                                modifier={this.getItemView}
+                                items={this.getGridItems()}
+                                viewOnly
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
