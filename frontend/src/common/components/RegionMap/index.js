@@ -313,6 +313,7 @@ export default class RegionMap extends React.PureComponent {
                                 }))
                             }
                             selected={selectedAdminLevelId}
+                            backgroundHighlight
                             onPress={this.handleAdminLevelSelection}
                         />
                     </div>

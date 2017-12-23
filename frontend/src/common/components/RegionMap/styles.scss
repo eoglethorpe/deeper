@@ -30,7 +30,9 @@
         }
 
         .bottom-bar {
+            display: flex;
             flex-shrink: 0;
+            justify-content: center;
             border-top: $width-separator-thin solid $color-separator;
         }
 
