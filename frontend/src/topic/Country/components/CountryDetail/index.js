@@ -27,6 +27,8 @@ import CountryKeyFigures from '../CountryKeyFigures';
 import CountryMediaSources from '../CountryMediaSources';
 import CountryPopulationData from '../CountryPopulationData';
 import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
+import RegionDetailView from '../../../../common/components/RegionDetailView';
+import RegionMap from '../../../../common/components/RegionMap';
 
 import {
     countriesString,
@@ -160,76 +162,88 @@ export default class CountryDetail extends React.PureComponent {
                             ${countryDetail.title}?`}</p>
                     </Confirm>
                 </header>
-                <Tabs
-                    activeLinkStyle={{ none: 'none' }}
-                    styleName="tabs-container"
-                    renderActiveTabContentOnly
-                >
-                    <div styleName="tabs-header-container">
-                        <TabLink
-                            styleName="tab-header"
-                            to="general"
-                        >
-                            {countriesString.generalTabLabel}
-                        </TabLink>
-                        <TabLink
-                            styleName="tab-header"
-                            to="key-figures"
-                        >
-                            {countriesString.keyFiguesTabLabel}
-                        </TabLink>
-                        <TabLink
-                            styleName="tab-header"
-                            to="population-data"
-                        >
-                            {countriesString.populationTabLabel}
-                        </TabLink>
-                        <TabLink
-                            styleName="tab-header"
-                            to="seasonal-calendar"
-                        >
-                            {countriesString.seasonalTabLabel}
-                        </TabLink>
-                        <TabLink
-                            styleName="tab-header"
-                            to="media-sources"
-                        >
-                            {countriesString.mediaTabLabel}
-                        </TabLink>
-                        {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                        <div styleName="empty-tab" />
+                { !activeUser.isSuperuser ? (
+                    <div styleName="details-no-edit">
+                        <RegionDetailView
+                            styleName="region-detail-box"
+                            regionId={countryDetail.id}
+                        />
+                        <div styleName="map-container">
+                            <RegionMap regionId={countryDetail.id} />
+                        </div>
                     </div>
-                    <TabContent
-                        for="general"
-                        styleName="tab-content"
+                ) : (
+                    <Tabs
+                        activeLinkStyle={{ none: 'none' }}
+                        styleName="tabs-container"
+                        renderActiveTabContentOnly
                     >
-                        <CountryGeneral countryId={countryDetail.id} />
-                    </TabContent>
-                    <TabContent
-                        for="key-figures"
-                        styleName="tab-content"
-                    >
-                        <CountryKeyFigures countryId={countryDetail.id} />
-                    </TabContent>
-                    <TabContent
-                        for="population-data"
-                        styleName="tab-content"
-                    >
-                        <CountryPopulationData countryId={countryDetail.id} />
-                    </TabContent>
-                    <TabContent
-                        for="seasonal-calendar"
-                        styleName="tab-content"
-                    >
-                        <CountrySeasonalCalendar countryId={countryDetail.id} />
-                    </TabContent>
-                    <TabContent
-                        for="media-sources"
-                        styleName="tab-content"
-                    >
-                        <CountryMediaSources countryId={countryDetail.id} />
-                    </TabContent>
-                </Tabs>
+                        <div styleName="tabs-header-container">
+                            <TabLink
+                                styleName="tab-header"
+                                to="general"
+                            >
+                                {countriesString.generalTabLabel}
+                            </TabLink>
+                            <TabLink
+                                styleName="tab-header"
+                                to="key-figures"
+                            >
+                                {countriesString.keyFiguesTabLabel}
+                            </TabLink>
+                            <TabLink
+                                styleName="tab-header"
+                                to="population-data"
+                            >
+                                {countriesString.populationTabLabel}
+                            </TabLink>
+                            <TabLink
+                                styleName="tab-header"
+                                to="seasonal-calendar"
+                            >
+                                {countriesString.seasonalTabLabel}
+                            </TabLink>
+                            <TabLink
+                                styleName="tab-header"
+                                to="media-sources"
+                            >
+                                {countriesString.mediaTabLabel}
+                            </TabLink>
+                            {/* Essential for border bottom, for more info contact AdityaKhatri */}
+                            <div styleName="empty-tab" />
+                        </div>
+                        <TabContent
+                            for="general"
+                            styleName="tab-content"
+                        >
+                            <CountryGeneral countryId={countryDetail.id} />
+                        </TabContent>
+                        <TabContent
+                            for="key-figures"
+                            styleName="tab-content"
+                        >
+                            <CountryKeyFigures countryId={countryDetail.id} />
+                        </TabContent>
+                        <TabContent
+                            for="population-data"
+                            styleName="tab-content"
+                        >
+                            <CountryPopulationData countryId={countryDetail.id} />
+                        </TabContent>
+                        <TabContent
+                            for="seasonal-calendar"
+                            styleName="tab-content"
+                        >
+                            <CountrySeasonalCalendar countryId={countryDetail.id} />
+                        </TabContent>
+                        <TabContent
+                            for="media-sources"
+                            styleName="tab-content"
+                        >
+                            <CountryMediaSources countryId={countryDetail.id} />
+                        </TabContent>
+                    </Tabs>
+                )}
             </div>
         );
     }

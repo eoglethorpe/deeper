@@ -31,6 +31,7 @@
 
         .bottom-bar {
             flex-shrink: 0;
+            border-top: $width-separator-thin solid $color-separator;
         }
 
         .refresh-button {

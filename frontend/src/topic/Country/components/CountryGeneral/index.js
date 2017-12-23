@@ -13,12 +13,10 @@ import {
 import {
     countryDetailSelector,
     setRegionDetailsAction,
-    activeUserSelector,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
 import RegionDetail from '../../../../common/components/RegionDetail';
-import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
 import RegionMap from '../../../../common/components/RegionMap';
 
@@ -31,12 +29,10 @@ const propTypes = {
         title: PropTypes.string.isRequired,
     }).isRequired,
     setRegionDetails: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
 };
 
 const mapStateToProps = state => ({
     countryDetail: countryDetailSelector(state),
-    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -88,43 +84,30 @@ export default class CountryGeneral extends React.PureComponent {
     render() {
         const {
             countryDetail,
-            activeUser,
         } = this.props;
 
         const { dataLoading } = this.state;
 
         return (
             <div styleName="country-general">
-                { activeUser.isSuperuser &&
-                    <div styleName="details-edit">
-                        <div styleName="detail-map-container">
-                            <RegionDetail
-                                styleName="region-detail-form"
-                                regionId={countryDetail.id}
-                                dataLoading={dataLoading}
-                            />
-                            <div styleName="map-container">
-                                <RegionMap
-                                    regionId={countryDetail.id}
-                                />
-                            </div>
-                        </div>
-                        <RegionAdminLevel
-                            styleName="admin-levels"
+                <div styleName="details-edit">
+                    <div styleName="detail-map-container">
+                        <RegionDetail
+                            styleName="region-detail-form"
                             regionId={countryDetail.id}
+                            dataLoading={dataLoading}
                         />
-                    </div>
-                }
-                { !activeUser.isSuperuser &&
-                    <div styleName="details-no-edit">
-                        <RegionDetailView regionId={countryDetail.id} />
                         <div styleName="map-container">
                             <RegionMap
                                 regionId={countryDetail.id}
                             />
                         </div>
                     </div>
-                }
+                    <RegionAdminLevel
+                        styleName="admin-levels"
+                        regionId={countryDetail.id}
+                    />
+                </div>
             </div>
         );
     }

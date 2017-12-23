@@ -6,6 +6,7 @@
     position: absolute;
     bottom: $spacing-medium;
     left: $spacing-medium;
+    z-index: $z-index-region-detail-view;
     border-right: $width-separator-thin solid $color-separator;
     background-color: $color-foreground;
     min-width: 280px;

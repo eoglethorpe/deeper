@@ -33,21 +33,7 @@
 
         .admin-levels {
             flex-grow: 0;
-        }
-    }
-
-    .details-no-edit {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        width: 100%;
-        height: 100%;
-
-        .map-container {
-            display: flex;
-            flex-grow: 1;
-            align-items: center;
-            justify-content: center;
+            flex-shrink: 0;
         }
     }
 }
