@@ -37,6 +37,7 @@ import {
     updateSelectedSubcategoriesAction,
     addSubcategoryNGramAction,
 } from '../../../common/redux';
+import notify from '../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -150,6 +151,11 @@ export default class CategoryEditor extends React.PureComponent {
                 ngram,
             });
         } catch (ex) {
+            notify.send({
+                type: notify.type.WARNING,
+                title: 'Invalid drop source',
+                message: 'Only drop from Extracted Words are valid.',
+            });
             console.warn('Drop element is not valid');
         }
     }
