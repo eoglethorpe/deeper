@@ -7,6 +7,7 @@ import reducers, {
     CE__ADD_SUBCATEGORY_NGRAM,
     CE__REMOVE_SUBCATEGORY_NGRAM,
     CE__REMOVE_SELECTED_SUBCATEGORY,
+    CE__ADD_MANUAL_SUBCATEGORY_NGRAM,
     addNewCategoryAction,
     setActiveCategoryIdAction,
     addNewSubcategoryAction,
@@ -15,6 +16,7 @@ import reducers, {
     addSubcategoryNGramAction,
     removeSelectedSubcategoryAction,
     removeSubcategoryNGramAction,
+    addManualSubcategoryNGramAction,
 } from './categoryEditor';
 
 test('should add new category', () => {
@@ -934,4 +936,110 @@ test('should remove ngram to any given subcategory', () => {
         },
     };
     expect(reducers[CE__REMOVE_SUBCATEGORY_NGRAM](state, action)).toEqual(after);
+});
+
+test('should add ngram to any given subcategory', () => {
+    const state = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [100],
+                    subcategories: [
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {
+                                1: ['gram'],
+                            },
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    const action = addManualSubcategoryNGramAction({
+        n: 1, keyword: 'hari',
+    });
+    const after = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [100],
+                    subcategories: [
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {
+                                1: ['gram', 'hari'],
+                            },
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    expect(reducers[CE__ADD_MANUAL_SUBCATEGORY_NGRAM](state, action)).toEqual(after);
+});
+
+test('should not add duplicate ngram to any given subcategory', () => {
+    const state = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [100],
+                    subcategories: [
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {
+                                1: ['gram'],
+                            },
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    const action = addManualSubcategoryNGramAction({
+        n: 1, keyword: 'gram',
+    });
+    const after = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [100],
+                    subcategories: [
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {
+                                1: ['gram'],
+                            },
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    expect(reducers[CE__ADD_MANUAL_SUBCATEGORY_NGRAM](state, action)).toEqual(after);
 });

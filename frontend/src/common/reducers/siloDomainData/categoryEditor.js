@@ -21,7 +21,9 @@ export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SE
 export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
 export const CE__REMOVE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__REMOVE_SELECTED_SUBCATEGORY';
 export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_NGRAM';
+
 export const CE__REMOVE_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__REMOVE_SUBCATEGORY_NGRAM';
+export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_MANUAL_SUBCATEGORY_NGRAM';
 
 // ACTION-CREATOR
 
@@ -70,6 +72,11 @@ export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
 
 export const removeSubcategoryNGramAction = ngram => ({
     type: CE__REMOVE_SUBCATEGORY_NGRAM,
+    ngram, // n, keyword
+});
+
+export const addManualSubcategoryNGramAction = ngram => ({
+    type: CE__ADD_MANUAL_SUBCATEGORY_NGRAM,
     ngram, // n, keyword
 });
 
@@ -331,11 +338,6 @@ const ceAddSubcategoryNGram = (state, action) => {
     );
     // get index for the subcategory (drop target)
     const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
-    // add to indices for build Settings
-    indices.push(lastIndex);
-    // add to n of ngram to the indices as well for build Settings
-    indices.push(+ngramN);
-
     const ngramForN = subcategories[lastIndex].ngrams[+ngramN];
     const ngramAlreadyThere = ngramForN && ngramForN.find(
         word => word.toLowerCase() === ngramKeyword.toLowerCase(),
@@ -343,6 +345,11 @@ const ceAddSubcategoryNGram = (state, action) => {
     if (ngramAlreadyThere) {
         return state;
     }
+
+    // add to indices for build Settings
+    indices.push(lastIndex);
+    // add to n of ngram to the indices as well for build Settings
+    indices.push(+ngramN);
 
     const settingAction = '$autoPush';
     const createAddNGramWrapper = len => (val, i) => {
@@ -418,6 +425,73 @@ const ceRemoveSubcategoryNGram = (state, action) => {
     return update(state, settings);
 };
 
+const ceAddManualSubcategoryNGram = (state, action) => {
+    const {
+        categoryEditorView: {
+            categories,
+            activeCategoryId,
+        },
+    } = state;
+    const {
+        ngram: { n: ngramN, keyword: ngramKeyword },
+    } = action;
+
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+
+    const createSubcategorySelector = indexList => (d, i) => (
+        d[indexList[i]].subcategories
+    );
+    // get the subcategory's ngram
+    const subcategories = getLinkedListNode(
+        categories,
+        indices.length - 1,
+        createSubcategorySelector(indices),
+    );
+    const lastIndex = indices[indices.length - 1];
+    const subcategory = subcategories[lastIndex];
+    const ngramForN = subcategory.ngrams[+ngramN];
+    const ngramAlreadyThere = ngramForN && ngramForN.find(
+        word => word.toLowerCase() === ngramKeyword.toLowerCase(),
+    );
+    if (ngramAlreadyThere) {
+        return state;
+    }
+
+    // get the array where dropped subcategory belongs
+    // add to n of ngram to the indices as well for build Settings
+    indices.push(+ngramN);
+
+    const settingAction = '$autoPush';
+    const createAddNGramWrapper = len => (val, i) => {
+        if (i <= 0 || i === len) {
+            // first one
+            return val;
+        } else if (i === len - 1) {
+            // second last one ( for subcategory.ngrams[last] )
+            return { ngrams: val };
+        }
+        // others
+        return { subcategories: val };
+    };
+    const addNGramWrapper = createAddNGramWrapper(indices.length);
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [ngramKeyword],
+        addNGramWrapper,
+    );
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
+    return update(state, settings);
+};
+
+
 // REDUCER MAP
 
 const reducers = {
@@ -429,5 +503,6 @@ const reducers = {
     [CE__REMOVE_SELECTED_SUBCATEGORY]: ceRemoveSelectedSubcategory,
     [CE__ADD_SUBCATEGORY_NGRAM]: ceAddSubcategoryNGram,
     [CE__REMOVE_SUBCATEGORY_NGRAM]: ceRemoveSubcategoryNGram,
+    [CE__ADD_MANUAL_SUBCATEGORY_NGRAM]: ceAddManualSubcategoryNGram,
 };
 export default reducers;

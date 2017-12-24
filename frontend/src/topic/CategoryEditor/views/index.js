@@ -36,6 +36,7 @@ import {
     addNewSubcategoryAction,
     updateSelectedSubcategoriesAction,
     addSubcategoryNGramAction,
+    addManualSubcategoryNGramAction,
 } from '../../../common/redux';
 import notify from '../../../common/notify';
 
@@ -52,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
     addNewSubcategory: params => dispatch(addNewSubcategoryAction(params)),
     updateSelectedSubcategories: params => dispatch(updateSelectedSubcategoriesAction(params)),
     addSubcategoryNGram: params => dispatch(addSubcategoryNGramAction(params)),
+    addManualSubcategoryNGram: params => dispatch(addManualSubcategoryNGramAction(params)),
 });
 
 const propTypes = {
@@ -62,6 +64,7 @@ const propTypes = {
     addNewSubcategory: PropTypes.func.isRequired,
     updateSelectedSubcategories: PropTypes.func.isRequired,
     addSubcategoryNGram: PropTypes.func.isRequired,
+    addManualSubcategoryNGram: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -82,8 +85,12 @@ export default class CategoryEditor extends React.PureComponent {
         this.state = {
             showCategoryTitleModal: false,
             newCategoryTitleInputValue: '',
+
             showSubcategoryTitleModal: false,
             newSubcategoryTitleInputValue: '',
+
+            showNewManualNGramModal: false,
+            newManualNGramInputValue: '',
         };
     }
 
@@ -199,19 +206,22 @@ export default class CategoryEditor extends React.PureComponent {
         this.addNewSubcategoryInActiveSubcategory();
     }
 
-    handleNameModalClose = () => {
+    handleModalClose = () => {
         this.setState({
             showCategoryTitleModal: false,
             showSubategoryTitleModal: false,
+            showNewManualNGramModal: false,
         });
     }
 
-    handleNameModalCancelButtonClick = () => {
+    handleModalCancelButtonClick = () => {
         this.setState({
             showCategoryTitleModal: false,
             showSubcategoryTitleModal: false,
+            showNewManualNGramModal: false,
             newCategoryTitleInputValue: '',
             newSubcategoryTitleInputValue: '',
+            newManualNGramInputValue: '',
         });
     }
 
@@ -241,6 +251,27 @@ export default class CategoryEditor extends React.PureComponent {
         });
     }
 
+    handleNewManualNGramInputValueChange = (value) => {
+        this.setState({ newManualNGramInputValue: value });
+    }
+
+    handleNewManualNGramModalOkButtonClick = () => {
+        this.props.addManualSubcategoryNGram({
+            n: this.state.newManualNGramInputValue.split(' ').length,
+            keyword: this.state.newManualNGramInputValue,
+        });
+        this.setState({
+            showNewManualNGramModal: false,
+            newManualNGramInputValue: '',
+        });
+    }
+
+    handleNewManualNGram = () => {
+        this.setState({
+            showNewManualNGramModal: true,
+        });
+    };
+
     render() {
         const {
             categories,
@@ -251,6 +282,8 @@ export default class CategoryEditor extends React.PureComponent {
             newCategoryTitleInputValue,
             showSubcategoryTitleModal,
             newSubcategoryTitleInputValue,
+            showNewManualNGramModal,
+            newManualNGramInputValue,
         } = this.state;
 
         return (
@@ -287,13 +320,15 @@ export default class CategoryEditor extends React.PureComponent {
                                 )
                             }
                         </div>
-                        <SubcategoryPropertyPanel />
+                        <SubcategoryPropertyPanel
+                            onNewManualNGram={this.handleNewManualNGram}
+                        />
                     </div>
                 </div>
                 <Modal
                     styleName="new-category-modal"
                     show={showCategoryTitleModal}
-                    onClose={this.handleNameModalClose}
+                    onClose={this.handleModalClose}
                 >
                     <ModalHeader title="Add new category" />
                     <ModalBody>
@@ -306,7 +341,7 @@ export default class CategoryEditor extends React.PureComponent {
                     </ModalBody>
                     <ModalFooter>
                         <Button
-                            onClick={this.handleNameModalCancelButtonClick}
+                            onClick={this.handleModalCancelButtonClick}
                         >
                             Cancel
                         </Button>
@@ -321,7 +356,7 @@ export default class CategoryEditor extends React.PureComponent {
                 <Modal
                     styleName="new-subcategory-modal"
                     show={showSubcategoryTitleModal}
-                    onClose={this.handleNameModalClose}
+                    onClose={this.handleModalClose}
                 >
                     <ModalHeader title="Add new subcategory" />
                     <ModalBody>
@@ -333,11 +368,37 @@ export default class CategoryEditor extends React.PureComponent {
                         />
                     </ModalBody>
                     <ModalFooter>
-                        <Button onClick={this.handleNameModalCancelButtonClick}>
+                        <Button onClick={this.handleModalCancelButtonClick}>
                             Cancel
                         </Button>
                         <PrimaryButton
                             onClick={this.handleSubcategoryTitleModalOkButtonClick}
+                            styleName="ok-button"
+                        >
+                            Ok
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
+                <Modal
+                    styleName="new-manual-ngram-modal"
+                    show={showNewManualNGramModal}
+                    onClose={this.handleModalClose}
+                >
+                    <ModalHeader title="Add word manually" />
+                    <ModalBody>
+                        <TextInput
+                            label="Word"
+                            placeholder="Wash Fwash"
+                            onChange={this.handleNewManualNGramInputValueChange}
+                            value={newManualNGramInputValue}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button onClick={this.handleModalCancelButtonClick}>
+                            Cancel
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleNewManualNGramModalOkButtonClick}
                             styleName="ok-button"
                         >
                             Ok
