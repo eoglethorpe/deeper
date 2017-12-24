@@ -226,10 +226,16 @@ export default class ProjectPanel extends React.PureComponent {
                         modifier={this.renderSidebarItem}
                     />
                 </div>
-                <ProjectDetails
-                    styleName="project-details"
-                    projectId={+projectId}
-                />
+                {
+                    projectId ? (
+                        <ProjectDetails
+                            styleName="project-details"
+                            projectId={+projectId}
+                        />
+                    ) : (
+                        <p styleName="no-project-text">Select a project to view its details</p>
+                    )
+                }
             </div>
         );
     }

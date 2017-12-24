@@ -237,7 +237,7 @@ export default class ProjectDetails extends React.PureComponent {
                                 keyExtractor={keyExtractor}
                             />,
                         ]) : (
-                            <p>You do not have enough permission to edit this project</p>
+                            <p styleName="forbidden-text">You do not have enough permissions to view / edit this project</p>
                         )
                     }
                 </div>

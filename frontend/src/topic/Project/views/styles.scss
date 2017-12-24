@@ -60,4 +60,15 @@
         flex-basis: 84%;
         background-color: $color-foreground-alt;
     }
+
+    .no-project-text {
+        display: flex;
+        flex-basis: 84%;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        background-color: $color-foreground-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+    }
 }
