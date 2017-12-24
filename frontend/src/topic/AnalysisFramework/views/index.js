@@ -27,6 +27,8 @@ import {
     afViewCurrentAnalysisFrameworkSelector,
 } from '../../../common/redux';
 
+import notify from '../../../common/notify';
+
 import styles from './styles.scss';
 import Overview from './Overview';
 import List from './List';
@@ -116,6 +118,13 @@ export default class AnalysisFramework extends React.PureComponent {
                     schema.validate(response, 'analysisFramework');
                     this.props.setAnalysisFramework({
                         analysisFramework: response,
+                    });
+                    notify.send({
+                        dismissable: false,
+                        title: 'Analysis Framework',
+                        type: notify.type.SUCCESS,
+                        message: 'Successfully saved the framework',
+                        duration: 5000,
                     });
                 } catch (er) {
                     console.error(er);

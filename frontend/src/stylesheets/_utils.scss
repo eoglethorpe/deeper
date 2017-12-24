@@ -23,6 +23,9 @@
 }
 
 
+@mixin transition-slow() {
+    transition: .4s all ease-in-out;
+}
 
 @mixin transition-medium() {
     transition: .2s all ease-in-out;

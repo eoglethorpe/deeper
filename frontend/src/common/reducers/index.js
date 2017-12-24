@@ -1,12 +1,14 @@
 import { persistCombineReducers } from 'redux-persist';
 
 import authReducer from './auth';
+import notifyReducer from './notify';
 import domainDataReducer from './domainData';
 import siloDomainDataReducer from './siloDomainData';
 
 import storeConfig from '../config/store';
 
 const reducers = {
+    notify: notifyReducer,
     auth: authReducer,
     domainData: domainDataReducer,
     siloDomainData: siloDomainDataReducer,

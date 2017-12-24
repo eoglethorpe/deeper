@@ -7,6 +7,9 @@ import {
     currentUserActiveProjectSelector,
 } from '../../../common/redux';
 
+import notify from '../../../common/notify';
+
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -21,6 +24,15 @@ const mapStateToProps = state => ({
 @CSSModules(styles, { allowMultiple: true })
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
+
+    componentDidMount() {
+        setTimeout(() => {
+            notify.send({
+                message: 'Sending message from homescreen',
+                duration: Infinity,
+            });
+        }, 1000);
+    }
 
     render() {
         const { currentUserActiveProject } = this.props;

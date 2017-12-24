@@ -4,6 +4,7 @@ export * from './selectors/siloDomainData';
 
 // NOTE: named exports from reducers are action-creators and action-types
 export * from './reducers/auth';
+export * from './reducers/notify';
 
 export * from './reducers/siloDomainData/common';
 export * from './reducers/siloDomainData/leads';
@@ -19,3 +20,4 @@ export * from './reducers/domainData/projects';
 export * from './reducers/domainData/regions';
 export * from './reducers/domainData/userGroups';
 export * from './reducers/domainData/users';
+
