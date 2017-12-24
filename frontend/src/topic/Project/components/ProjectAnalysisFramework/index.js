@@ -26,7 +26,6 @@ import {
     createParamsForUser,
 } from '../../../../common/rest';
 import {
-    activeProjectSelector,
     analysisFrameworkListSelector,
     projectDetailsSelector,
 
@@ -42,18 +41,17 @@ import AddAnalysisFramework from '../AddAnalysisFramework';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    projectId: PropTypes.number.isRequired,
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setAnalysisFrameworks: PropTypes.func.isRequired,
-    analysisFrameworkList: PropTypes.array.isRequired, // eslint-disable-line
+    // eslint-disable-next-line react/forbid-prop-types
+    analysisFrameworkList: PropTypes.array.isRequired,
 };
 
 const defaultProps = {
-    activeProject: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
 });
@@ -234,7 +232,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         } = this.state;
 
         const {
-            activeProject,
+            projectId,
         } = this.props;
 
         const sortedAfs = [...displayAfList];
@@ -267,7 +265,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             <ModalHeader title="Add new analysis framework" />
                             <ModalBody>
                                 <AddAnalysisFramework
-                                    projectId={activeProject}
+                                    projectId={projectId}
                                     onModalClose={this.handleModalClose}
                                 />
                             </ModalBody>

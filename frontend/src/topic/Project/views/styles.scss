@@ -2,62 +2,17 @@
 @import '../../../stylesheets/tabs';
 
 .project-panel {
-    @include shadow-medium;
     display: flex;
-    position: relative;
     margin: $spacing-medium-alt;
-    background-color: $color-foreground;
     height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});
 
-    .header {
+    .sidebar {
         display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
-        padding: $spacing-small $spacing-medium;
-
-        .heading {
-            color: $color-primary;
-            font-size: $font-size-extra-large;
-        }
-
-        .sidebar-toggle-button {
-            padding: 0 $spacing-small;
-            font-size: $font-size-large;
-        }
-    }
-
-    .content {
-        display: flex;
-        flex-basis: 100%;
+        position: relative;
+        flex-basis: 16%;
         flex-direction: column;
-        flex-grow: 1;
-
-        &.side-bar-shown {
-            flex-grow: 1;
-        }
-
-        .no-right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            color: $color-label;
-            font-size: $font-size-extra-large;
-        }
-    }
-
-    .side-bar {
-        @include shadow-medium;
-        display: none;
         background-color: $color-foreground;
-
-        &.show {
-            display: flex;
-            flex-basis: 16%;
-            flex-direction: column;
-            min-width: 320px;
-        }
+        min-width: 320px;
 
         .header {
             display: flex;
@@ -65,13 +20,10 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-normal solid $color-separator;
+            padding: $spacing-medium;
 
-            .header {
-                padding: $spacing-small;
-
-                .close-sidebar-button {
-                    padding: 0 $spacing-small;
-                }
+            .heading {
+                flex-grow: 1;
             }
 
             .search-input {
@@ -80,27 +32,32 @@
             }
         }
 
-        .list {
+        .project-list {
             flex-grow: 1;
             overflow-y: auto;
 
-            :global .list-item {
+            .list-item {
                 display: block;
-                border-right: $width-separator-thick solid transparent;
                 border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
 
                 .link {
                     display: block;
-                    padding: $spacing-small $spacing-medium-alt;
+                    padding: $spacing-medium $spacing-medium-alt;
                     width: 100%;
                     height: 100%;
                 }
             }
 
             .active {
-                border-right: $width-separator-thick solid $color-accent;
+                border-left: $width-separator-thick solid $color-accent;
                 background-color: $color-hover;
             }
         }
+    }
+
+    .project-details {
+        flex-basis: 84%;
+        background-color: $color-foreground-alt;
     }
 }

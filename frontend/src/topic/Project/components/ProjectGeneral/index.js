@@ -36,7 +36,6 @@ import {
     createUrlForProject,
 } from '../../../../common/rest';
 import {
-    activeProjectSelector,
     activeUserSelector,
 
     projectDetailsSelector,
@@ -52,21 +51,21 @@ import AddProjectMembers from '../AddProjectMembers';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number,
+    projectId: PropTypes.number.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line
     setProject: PropTypes.func.isRequired,
     unsetUserProjectMembership: PropTypes.func.isRequired,
     setUserProjectMembership: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    className: PropTypes.string,
 };
 
 const defaultProps = {
-    activeProject: undefined,
+    className: '',
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
     activeUser: activeUserSelector(state),
@@ -118,16 +117,17 @@ export default class ProjectGeneral extends React.PureComponent {
             selectedMember: {},
         };
 
+
         this.memberHeaders = [
             {
-                key: 'memberName',
+                key: 'name',
                 label: 'Name',
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
-                key: 'memberEmail',
+                key: 'email',
                 label: 'Email',
                 order: 2,
                 sortable: true,
@@ -194,6 +194,12 @@ export default class ProjectGeneral extends React.PureComponent {
         ];
     }
 
+    componentDidMount() {
+        if (this.projectRequest) {
+            this.projectRequest.start();
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         const {
             projectDetails,
@@ -213,6 +219,17 @@ export default class ProjectGeneral extends React.PureComponent {
             });
         }
     }
+
+    componentWillUnmount() {
+        if (this.projectPatchRequest) {
+            this.projectPatchRequest.stop();
+        }
+
+        if (this.membershipDeleteRequest) {
+            this.membershipDeleteRequest.stop();
+        }
+    }
+
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
@@ -290,7 +307,7 @@ export default class ProjectGeneral extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        const { activeProject } = this.props;
+        const { projectId } = this.props;
 
         const regions = values.regions.map(region => ({
             id: region,
@@ -308,14 +325,14 @@ export default class ProjectGeneral extends React.PureComponent {
             this.projectPatchRequest.stop();
         }
 
-        this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, activeProject);
+        this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, projectId);
         this.projectPatchRequest.start();
 
         this.setState({ pristine: false });
     };
 
     createRequestForMembershipDelete = (memberId) => {
-        const { activeProject } = this.props;
+        const { projectId } = this.props;
         const urlForMembership = createUrlForUserProjectMembership(memberId);
 
         const membershipDeleteRequest = new FgRestBuilder()
@@ -331,7 +348,7 @@ export default class ProjectGeneral extends React.PureComponent {
                 try {
                     this.props.unsetUserProjectMembership({
                         memberId,
-                        projectId: activeProject,
+                        projectId,
                     });
                 } catch (er) {
                     console.error(er);
@@ -348,7 +365,7 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     createRequestForMembershipPatch = ({ memberId, newRole }) => {
-        const { activeProject } = this.props;
+        const { projectId } = this.props;
         const urlForUserMembershipPatch = createUrlForUserProjectMembership(memberId);
 
         const membershipPatchRequest = new FgRestBuilder()
@@ -365,7 +382,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     schema.validate(response, 'projectMembership');
                     this.props.setUserProjectMembership({
                         memberDetails: response,
-                        projectId: activeProject,
+                        projectId,
                     });
                 } catch (er) {
                     console.error(er);
@@ -466,12 +483,16 @@ export default class ProjectGeneral extends React.PureComponent {
         } = this.state;
 
         const {
+            className,
             projectDetails,
-            activeProject,
+            projectId,
         } = this.props;
 
         return (
-            <div styleName="project-general">
+            <div
+                className={className}
+                styleName="project-general"
+            >
                 {actionPending && <LoadingAnimation />}
                 <ProjectGeneralForm
                     formValues={formValues}
@@ -490,7 +511,7 @@ export default class ProjectGeneral extends React.PureComponent {
                 <div styleName="members">
                     <header styleName="header">
                         <h2>Members</h2>
-                        <div styleName="action-btns">
+                        <div styleName="action-buttons">
                             <PrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddMemberClick}
@@ -518,7 +539,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         <ModalBody>
                             <AddProjectMembers
                                 styleName="add-member"
-                                projectId={activeProject}
+                                projectId={projectId}
                                 onModalClose={this.handleModalClose}
                             />
                         </ModalBody>
