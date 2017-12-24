@@ -90,12 +90,12 @@ const setAccessToken = (state, action) => {
     return update(state, settings);
 };
 
-export const reducers = {
+export const authReducers = {
     [LOGIN_ACTION]: login,
     [AUTHENTICATE_ACTION]: authenticate,
     [LOGOUT_ACTION]: logout,
     [SET_ACCESS_TOKEN_ACTION]: setAccessToken,
 };
 
-const authReducer = createReducerWithMap(reducers, initialAuthState);
+const authReducer = createReducerWithMap(authReducers, initialAuthState);
 export default authReducer;

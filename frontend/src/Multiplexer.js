@@ -13,6 +13,7 @@ import {
 } from './public/components/General';
 
 import Navbar from './common/components/Navbar';
+import { Toast } from './public/components/View';
 
 import {
     pathNames,
@@ -21,6 +22,10 @@ import {
 import views from './topic';
 
 import { authenticatedSelector } from './common/selectors/auth';
+import { lastNotifySelector } from './common/selectors/notify';
+import {
+    notifyHideAction,
+} from './common/redux';
 
 const ROUTE = {
     exclusivelyPublic: 'exclusively-public',
@@ -31,38 +36,23 @@ const ROUTE = {
 const routesOrder = [
     'login',
     'register',
-
     'projects',
-
     'dashboard',
-
     'leads',
     'addLeads',
-
     'entries',
     'editEntries',
-
     'ary',
     // 'editAry',
-
     'export',
-
     'countries',
-
     'userProfile',
-
     'userGroup',
-
     'analysisFramework',
-
     'categoryEditor',
-
     'weeklySnapshot',
-
     'apiDocs',
-
     'homeScreen',
-
     'fourHundredFour',
 ];
 
@@ -75,37 +65,23 @@ const routes = {
         type: ROUTE.exclusivelyPublic,
         redirectTo: '/',
     },
-
     homeScreen: { type: ROUTE.private },
     dashboard: { type: ROUTE.private },
-
     leads: { type: ROUTE.private },
     addLeads: { type: ROUTE.private },
-
     entries: { type: ROUTE.private },
     editEntries: { type: ROUTE.private },
-
     ary: { type: ROUTE.private },
     // editAry: { type: ROUTE.private },
-
     userProfile: { type: ROUTE.private },
-
     userGroup: { type: ROUTE.private },
-
     weeklySnapshot: { type: ROUTE.private },
-
     projects: { type: ROUTE.private },
-
     countries: { type: ROUTE.private },
-
     export: { type: ROUTE.private },
-
     analysisFramework: { type: ROUTE.private },
-
     categoryEditor: { type: ROUTE.private },
-
     apiDocs: { type: ROUTE.public },
-
     fourHundredFour: { type: ROUTE.public },
 };
 
@@ -113,16 +89,23 @@ const routes = {
 
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
+    lastNotify: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    notifyHide: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     authenticated: authenticatedSelector(state),
+    lastNotify: lastNotifySelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    notifyHide: params => dispatch(notifyHideAction(params)),
 });
 
 // NOTE: withRouter is required here so that link change are updated
 
 @withRouter
-@connect(mapStateToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class Multiplexer extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -187,11 +170,27 @@ export default class Multiplexer extends React.PureComponent {
         })
     )
 
+    handleToastClose = () => {
+        const {
+            notifyHide,
+        } = this.props;
+
+        notifyHide();
+    }
+
     render() {
         console.log('Rendering Multiplexer');
+        const {
+            lastNotify,
+        } = this.props;
 
         return ([
             <Navbar key="navbar" />,
+            <Toast
+                notification={lastNotify}
+                key="toast"
+                onClose={this.handleToastClose}
+            />,
             <Switch key="switch">
                 { this.getRoutes() }
             </Switch>,

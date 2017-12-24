@@ -1,6 +1,6 @@
 import initialAuthState from '../initial-state/auth';
 import {
-    reducers,
+    authReducers,
     LOGIN_ACTION,
     AUTHENTICATE_ACTION,
     LOGOUT_ACTION,
@@ -31,7 +31,7 @@ test('should log in user', () => {
             username: 'johndoe@test.com',
         },
     };
-    expect(reducers[LOGIN_ACTION](state, action)).toEqual(after);
+    expect(authReducers[LOGIN_ACTION](state, action)).toEqual(after);
 });
 
 test('should authenticate user', () => {
@@ -41,7 +41,7 @@ test('should authenticate user', () => {
     const after = {
         authenticated: true,
     };
-    expect(reducers[AUTHENTICATE_ACTION](state, action)).toEqual(after);
+    expect(authReducers[AUTHENTICATE_ACTION](state, action)).toEqual(after);
 });
 
 test('should update access token', () => {
@@ -74,7 +74,7 @@ test('should update access token', () => {
             username: 'johndoe@test.com',
         },
     };
-    expect(reducers[SET_ACCESS_TOKEN_ACTION](state, action)).toEqual(after);
+    expect(authReducers[SET_ACCESS_TOKEN_ACTION](state, action)).toEqual(after);
 });
 
 test('should logout user', () => {
@@ -93,5 +93,5 @@ test('should logout user', () => {
     };
     const action = logoutAction();
     const after = initialAuthState;
-    expect(reducers[LOGOUT_ACTION](state, action)).toEqual(after);
+    expect(authReducers[LOGOUT_ACTION](state, action)).toEqual(after);
 });
