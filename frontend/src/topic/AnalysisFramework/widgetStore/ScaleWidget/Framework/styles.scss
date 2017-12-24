@@ -1,0 +1,68 @@
+@import '../../../../../stylesheets/base';
+
+.scale-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-small;
+    height: 100%;
+}
+
+%modal {
+    width: 560px;
+
+    :global .modal-body {
+        height: 400px;
+    }
+}
+
+.edit-scales-modal {
+    @extend %modal;
+
+    .edit-row {
+        display: flex;
+        align-items: center;
+
+        .color-box-container {
+            display: flex;
+            flex-basis: 48px;
+            flex-direction: column;
+            flex-shrink: 0;
+            padding-bottom: $spacing-extra-small;
+            width: 48px;
+            height: 42px;
+
+            .color-label {
+                flex-shrink: 0;
+                text-transform: uppercase;
+                color: $color-label;
+                font-size: $font-size-extra-small;
+            }
+
+            .color-box {
+                flex-grow: 1;
+                margin: 0 $spacing-extra-small;
+                outline: 0;
+                border: 0;
+            }
+        }
+
+        .title-input {
+            flex-grow: 1;
+        }
+
+        .delete-button {
+            flex-shrink: 1;
+        }
+    }
+
+    .scale-units-container {
+        display: flex;
+
+        .list {
+            flex-basis: calc(100% - 220px);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+    }
+}
