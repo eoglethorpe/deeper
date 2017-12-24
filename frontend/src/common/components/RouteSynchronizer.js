@@ -35,6 +35,10 @@ const propTypes = {
         push: PropTypes.func,
     }).isRequired,
 
+    location: PropTypes.shape({
+        pathname: PropTypes.string,
+    }).isRequired,
+
     activeProjectId: PropTypes.number,
 
     activeCountryId: PropTypes.number,
@@ -81,6 +85,7 @@ class RouteSynchronizer extends React.PureComponent {
         const {
             activeProjectId: oldProjectId,
             activeCountryId: oldCountryId,
+            location,
         } = this.props;
 
         const {
@@ -102,7 +107,10 @@ class RouteSynchronizer extends React.PureComponent {
         }
 
         if (changed) {
-            history.push(reverseRoute(match.path, newParams));
+            history.push({
+                ...location,
+                pathname: reverseRoute(match.path, newParams),
+            });
         } else {
             this.synchronizeLocation(nextProps);
         }

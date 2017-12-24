@@ -3,11 +3,10 @@
 
 .project-general {
     display: flex;
-    flex-grow: 1;
 
     .project-general-form {
         flex-shrink: 0;
-        min-width: 720px;
+        min-width: 480px;
     }
 
     .members {
@@ -23,7 +22,7 @@
             justify-content: space-between;
             padding: $spacing-small $spacing-medium-alt;
 
-            .action-btns {
+            .action-buttons {
                 button {
                     margin-left: $spacing-small;
                 }
