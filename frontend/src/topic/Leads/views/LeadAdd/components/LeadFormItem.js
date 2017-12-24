@@ -194,9 +194,7 @@ export default class LeadFormItem extends React.PureComponent {
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 />
-                {
-                    this.renderLeadPreview(lead)
-                }
+                { active ? this.renderLeadPreview(lead) : null }
             </div>
         );
     }
