@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 
 import {
     ListView,
-    ListItem,
     LoadingAnimation,
 } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
-import { TransparentPrimaryButton } from '../../../public/components/Action';
+import {
+    PrimaryButton,
+} from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     reverseRoute,
@@ -23,33 +24,26 @@ import {
 } from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
-    createParamsForUser,
-    createUrlForProject,
     createParamsForProjectOptions,
     createUrlForProjectOptions,
 } from '../../../common/rest';
 import {
-    activeProjectSelector,
     currentUserAdminProjectsSelector,
-    projectDetailsSelector,
 
     setProjectOptionsAction,
     setActiveProjectAction,
-    setProjectAction,
 } from '../../../common/redux';
 
 import ProjectDetails from '../components/ProjectDetails';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number,
     match: PropTypes.shape({
         params: PropTypes.shape({
             countryId: PropTypes.string,
+            projectId: PropTypes.string,
         }),
-    }),
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    setProject: PropTypes.func.isRequired,
+    }).isRequired,
     setActiveProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
     userProjects: PropTypes.arrayOf(
@@ -61,22 +55,17 @@ const propTypes = {
 };
 
 const defaultProps = {
-    activeProject: undefined,
-    match: undefined,
     activeUser: {},
     userProjects: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
-    projectDetails: projectDetailsSelector(state, props),
     userProjects: currentUserAdminProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
     setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
-    setProject: params => dispatch(setProjectAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -94,31 +83,33 @@ export default class ProjectPanel extends React.PureComponent {
             isSidebarVisible: false,
             searchInputValue: '',
         };
-        const { activeProject } = props;
 
-        this.projectRequest = this.createProjectRequest(activeProject);
-        this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
+        const { projectId } = props.match.params;
+
+        this.projectOptionsRequest = this.createProjectOptionsRequest(projectId);
     }
 
     componentWillMount() {
-        this.projectRequest.start();
         this.projectOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { activeProject, userProjects } = nextProps;
+        const { userProjects } = nextProps;
         const { searchInputValue } = this.state;
 
-        if (this.props.activeProject !== activeProject) {
+        const {
+            projectId: currentProjectId,
+        } = this.props.match.params;
+
+        const {
+            projectId: nextProjectId,
+        } = nextProps.match.params;
+
+        if (nextProjectId !== currentProjectId) {
             if (this.projectOptionsRequest) {
                 this.projectOptionsRequest.stop();
-                this.projectOptionsRequest = this.createProjectOptionsRequest(activeProject);
+                this.projectOptionsRequest = this.createProjectOptionsRequest(nextProjectId);
                 this.projectOptionsRequest.start();
-            }
-            if (this.projectRequest) {
-                this.projectRequest.stop();
-                this.projectRequest = this.createProjectRequest(activeProject);
-                this.projectRequest.start();
             }
         }
 
@@ -131,8 +122,9 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.projectRequest.stop();
-        this.projectOptionsRequest.stop();
+        if (this.projectOptionsRequest) {
+            this.projectOptionsRequest.stop();
+        }
     }
 
     onChangeProject = (id) => {
@@ -150,29 +142,6 @@ export default class ProjectPanel extends React.PureComponent {
         }
         return styleNames.join(' ');
     }
-
-    createProjectRequest = (activeProject) => {
-        const projectRequest = new FgRestBuilder()
-            .url(createUrlForProject(activeProject))
-            .params(() => createParamsForUser())
-            .preLoad(() => this.setState({ pending: true }))
-            .postLoad(() => this.setState({ pending: false }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectGetResponse');
-                    this.props.setProject({
-                        project: response,
-                    });
-                    this.setState({
-                        loadingLeads: false,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return projectRequest;
-    };
 
     createProjectOptionsRequest = (projectId) => {
         const projectOptionsRequest = new FgRestBuilder()
@@ -193,15 +162,6 @@ export default class ProjectPanel extends React.PureComponent {
         return projectOptionsRequest;
     };
 
-    showProjectList = () => {
-        this.setState({ isSidebarVisible: true });
-    };
-
-    closeProjectList = () => {
-        this.setState({ isSidebarVisible: false });
-    };
-
-
     handleSearchInputChange = (searchInputValue) => {
         const displayUserProjects = this.props.userProjects.filter(
             project => caseInsensitiveSubmatch(project.title, searchInputValue),
@@ -213,69 +173,42 @@ export default class ProjectPanel extends React.PureComponent {
         });
     };
 
-    renderProjectDetails = (projectDetails) => {
-        if (projectDetails.role === 'admin') {
-            return (
-                <ProjectDetails
-                    key={projectDetails.id}
-                    project={projectDetails}
-                />
-            );
-        }
-
-        return (
-            <div styleName="no-right">
-                You do not have the rights to edit this project.
-            </div>
-        );
-    }
+    renderSidebarItem = (key, project) => (
+        <div
+            key={key}
+            className={this.getStyleName(project.id)}
+        >
+            <Link
+                to={reverseRoute(pathNames.projects, { projectId: project.id })}
+                className={styles.link}
+                onClick={() => this.onChangeProject(project.id)}
+            >
+                {project.title}
+            </Link>
+        </div>
+    )
 
     render() {
         const {
-            isSidebarVisible,
             displayUserProjects,
             pending,
         } = this.state;
-        const { projectDetails } = this.props;
+
+        const { projectId } = this.props.match.params;
 
         return (
             <div styleName="project-panel">
-                {pending && <LoadingAnimation />}
-                <div
-                    styleName={isSidebarVisible ? 'content side-bar-shown' : 'content'}
-                >
+                <div styleName="sidebar">
+                    {pending && <LoadingAnimation />}
                     <header styleName="header">
-                        <h1 styleName="heading">
-                            {projectDetails.role === 'admin' &&
-                                projectDetails.title
-                            }
-                        </h1>
-                        {
-                            !isSidebarVisible && (
-                                <TransparentPrimaryButton
-                                    styleName="sidebar-toggle-button"
-                                    onClick={this.showProjectList}
-                                >
-                                    <span className={iconNames.hamburger} />
-                                </TransparentPrimaryButton>
-                            )
-                        }
-                    </header>
-                    {this.renderProjectDetails(projectDetails)}
-                </div>
-                <div
-                    styleName={isSidebarVisible ? 'side-bar show' : 'side-bar'}
-                >
-                    <header styleName="header">
-                        <h1 styleName="heading">
+                        <h3 styleName="heading">
                             Projects
-                        </h1>
-                        <TransparentPrimaryButton
-                            styleName="close-sidebar-button"
-                            onClick={this.closeProjectList}
+                        </h3>
+                        <PrimaryButton
+                            iconName={iconNames.add}
                         >
-                            <span className={iconNames.close} />
-                        </TransparentPrimaryButton>
+                            Add
+                        </PrimaryButton>
                         <TextInput
                             onChange={this.handleSearchInputChange}
                             placeholder="Search Project"
@@ -287,25 +220,16 @@ export default class ProjectPanel extends React.PureComponent {
                         />
                     </header>
                     <ListView
-                        styleName="list"
+                        styleName="project-list"
                         data={displayUserProjects}
                         keyExtractor={project => project.id}
-                        modifier={(key, project) => (
-                            <ListItem
-                                key={key}
-                                className={this.getStyleName(project.id)}
-                            >
-                                <Link
-                                    to={reverseRoute(pathNames.projects, { projectId: project.id })}
-                                    className={styles.link}
-                                    onClick={() => this.onChangeProject(project.id)}
-                                >
-                                    {project.title}
-                                </Link>
-                            </ListItem>
-                        )}
+                        modifier={this.renderSidebarItem}
                     />
                 </div>
+                <ProjectDetails
+                    styleName="project-details"
+                    projectId={+projectId}
+                />
             </div>
         );
     }
