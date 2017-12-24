@@ -1,0 +1,10 @@
+@import '../../../../../stylesheets/base';
+
+.organigram-list {
+    padding: $spacing-small;
+    height: 100%;
+
+    .organigram {
+        width: 100%;
+    }
+}

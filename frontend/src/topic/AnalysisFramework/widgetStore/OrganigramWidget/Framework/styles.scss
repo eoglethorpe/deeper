@@ -1,0 +1,34 @@
+@import '../../../../../stylesheets/base';
+
+.organigram-list {
+    padding: $spacing-small;
+    height: 100%;
+
+    .organigram {
+        width: 100%;
+    }
+}
+
+%modal {
+    width: 480px;
+
+    :global .modal-body {
+        height: 400px;
+    }
+}
+
+.edit-value-modal {
+    @extend %modal;
+
+    .edit-value {
+        display: flex;
+
+        .title-input {
+            flex-grow: 1;
+        }
+
+        .delete-button {
+            flex-shrink: 0;
+        }
+    }
+}
