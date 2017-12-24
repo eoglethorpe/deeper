@@ -209,10 +209,7 @@ export default class ProjectDetails extends React.PureComponent {
                     <Route
                         exact
                         path="/"
-                        component={() => {
-                            console.warn('damn');
-                            return <Redirect to={pathNames[defaultRoute]} />;
-                        }}
+                        component={() => <Redirect to={pathNames[defaultRoute]} />}
                     />
                     { pending && <LoadingAnimation /> }
                     {
