@@ -20,6 +20,7 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 import { randomString } from '../../../../../public/utils/common';
+import update from '../../../../../public/utils/immutable-update';
 import { iconNames } from '../../../../../common/constants';
 
 import styles from './styles.scss';
@@ -54,9 +55,11 @@ export default class Multiselect extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            values: nextProps.data || emptyList,
-        });
+        if (this.props.data !== nextProps.data) {
+            this.setState({
+                values: nextProps.data || emptyList,
+            });
+        }
     }
 
     getEditValue = (key, data) => (
@@ -85,24 +88,22 @@ export default class Multiselect extends React.PureComponent {
     }
 
     handleRemoveButtonClick = (key) => {
-        const newvalues = [...this.state.values];
-
-        const valueIndex = newvalues.findIndex(d => d.key === key);
-        newvalues.splice(valueIndex, 1);
-
+        const newValues = this.state.values.filter(d => d.key !== key);
         this.setState({
-            values: newvalues,
+            values: newValues,
         });
     }
 
     handleValueInputChange = (key, value) => {
-        const newvalues = [...this.state.values];
-
-        const valueIndex = newvalues.findIndex(d => d.key === key);
-        newvalues[valueIndex].label = value;
-
+        const valueIndex = this.state.values.findIndex(d => d.key === key);
+        const settings = {
+            [valueIndex]: {
+                label: { $set: value },
+            },
+        };
+        const newValues = update(this.state.values, settings);
         this.setState({
-            values: newvalues,
+            values: newValues,
         });
     }
     handleAddOptionButtonClick = () => {
