@@ -18,6 +18,7 @@ import {
 import {
     selectedSubcategorySelector,
     updateSelectedSubcategoryAction,
+    removeSelectedSubcategoryAction,
 } from '../../../common/redux';
 
 import NGram from './NGram';
@@ -26,6 +27,7 @@ import styles from './styles.scss';
 const propTypes = {
     subcategory: PropTypes.shape({ id: PropTypes.string }),
     updateSelectedSubcategory: PropTypes.func.isRequired,
+    removeSelectedSubcategory: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,6 +40,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     updateSelectedSubcategory: params => dispatch(updateSelectedSubcategoryAction(params)),
+    removeSelectedSubcategory: params => dispatch(removeSelectedSubcategoryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -109,14 +112,13 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         });
     };
 
-    render() {
-        const {
-            subcategory,
-        } = this.props;
+    handleSubcategoryRemove = () => {
+        this.props.removeSelectedSubcategory();
+    };
 
-        const {
-            selectedNGramIndex,
-        } = this.state;
+    render() {
+        const { subcategory } = this.props;
+        const { selectedNGramIndex } = this.state;
 
         if (!subcategory) {
             return (
@@ -128,8 +130,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         const {
             ngrams,
+            title,
+            description,
         } = subcategory;
-
         const ngramKeys = Object.keys(ngrams);
 
         return (
@@ -141,7 +144,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         Subcategory details
                     </h3>
                     <div styleName="action-buttons">
-                        <DangerButton disabled >
+                        <DangerButton
+                            onClick={this.handleSubcategoryRemove}
+                        >
                             Remove
                         </DangerButton>
                     </div>
@@ -150,13 +155,13 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                     <TextInput
                         label="Title"
                         placeholder="eg: Wash"
-                        value={subcategory.title}
+                        value={title}
                         onChange={this.handleSubcategoryTitleInputChange}
                     />
                     <TextArea
                         label="Description"
                         placeholder="Description of the subcategory"
-                        value={subcategory.description}
+                        value={description}
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
                 </section>

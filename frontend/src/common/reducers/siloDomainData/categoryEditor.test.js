@@ -5,12 +5,14 @@ import reducers, {
     CE__UPDATE_SELECTED_SUBCATEGORIES,
     CE__UPDATE_SELECTED_SUBCATEGORY,
     CE__ADD_SUBCATEGORY_NGRAM,
+    CE__REMOVE_SELECTED_SUBCATEGORY,
     addNewCategoryAction,
     setActiveCategoryIdAction,
     addNewSubcategoryAction,
     updateSelectedSubcategoriesAction,
     updateSelectedSubcategoryAction,
     addSubcategoryNGramAction,
+    removeSelectedSubcategoryAction,
 } from './categoryEditor';
 
 test('should add new category', () => {
@@ -135,8 +137,16 @@ test('should add new subcategory', () => {
                 {
                     id: 12,
                     title: 'hari',
-                    selectedSubcategories: [],
-                    subcategories: [],
+                    selectedSubcategories: [99],
+                    subcategories: [
+                        {
+                            id: 99,
+                            title: 'older subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                    ],
                 },
             ],
         },
@@ -159,11 +169,18 @@ test('should add new subcategory', () => {
                 {
                     id: 12,
                     title: 'hari',
-                    selectedSubcategories: [],
+                    selectedSubcategories: [100],
                     subcategories: [
                         {
                             id: 100,
                             title: 'new subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                        {
+                            id: 99,
+                            title: 'older subcategory',
                             description: '',
                             ngrams: {},
                             subcategories: [],
@@ -222,7 +239,7 @@ test('should add new subcategory at start', () => {
                 {
                     id: 12,
                     title: 'hari',
-                    selectedSubcategories: [],
+                    selectedSubcategories: [101],
                     subcategories: [
                         {
                             id: 101,
@@ -287,7 +304,7 @@ test('should add new subcategory at level 1', () => {
                 {
                     id: 12,
                     title: 'hari',
-                    selectedSubcategories: [101],
+                    selectedSubcategories: [101, 103],
                     subcategories: [
                         {
                             id: 101,
@@ -317,6 +334,90 @@ test('should add new subcategory at level 1', () => {
         },
     };
     expect(reducers[CE__ADD_NEW_SUBCATEGORY](state, action)).toEqual(after);
+});
+
+test('should remove subcategory at level 1', () => {
+    const state = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [101, 103],
+                    subcategories: [
+                        {
+                            id: 101,
+                            title: 'newer subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [
+                                {
+                                    id: 105,
+                                    title: 'much better subcategory',
+                                    description: '',
+                                    ngrams: {},
+                                    subcategories: [],
+                                },
+                                {
+                                    id: 103,
+                                    title: 'better subcategory',
+                                    description: '',
+                                    ngrams: {},
+                                    subcategories: [],
+                                },
+                            ],
+                        },
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    const action = removeSelectedSubcategoryAction();
+    const after = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [101],
+                    subcategories: [
+                        {
+                            id: 101,
+                            title: 'newer subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [
+                                {
+                                    id: 105,
+                                    title: 'much better subcategory',
+                                    description: '',
+                                    ngrams: {},
+                                    subcategories: [],
+                                },
+                            ],
+                        },
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    expect(reducers[CE__REMOVE_SELECTED_SUBCATEGORY](state, action)).toEqual(after);
 });
 
 test('should update category', () => {

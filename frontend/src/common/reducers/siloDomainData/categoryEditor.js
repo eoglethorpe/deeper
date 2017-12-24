@@ -1,5 +1,17 @@
 import update from '../../../public/utils/immutable-update';
 
+// HELPER
+const getLinkedListNode = (linkedList, n, selector) => {
+    let newList = linkedList;
+
+    for (let i = 0; i < n; i += 1) {
+        newList = selector(newList, i);
+    }
+
+    return newList;
+};
+
+
 // TYPE
 
 export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
@@ -7,6 +19,7 @@ export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEG
 export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
 export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';
 export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
+export const CE__REMOVE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__REMOVE_SELECTED_SUBCATEGORY';
 export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_NGRAM';
 
 // ACTION-CREATOR
@@ -41,6 +54,10 @@ export const updateSelectedSubcategoryAction = ({ title, description, ngrams, su
     description,
     ngrams,
     subcategories,
+});
+
+export const removeSelectedSubcategoryAction = () => ({
+    type: CE__REMOVE_SELECTED_SUBCATEGORY,
 });
 
 export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
@@ -95,15 +112,13 @@ const buildSettings = (indices, action, value, wrapper) => (
             { [selected]: acc },
             indices.length - index - 1,
         ),
-        wrapper({ [action]: value }, indices.length),
+        wrapper(
+            { [action]: value },
+            indices.length,
+        ),
     )
 );
 
-const newSubcategoryWrapper = (val, i) => (i <= 0 ? val : ({ subcategories: val }));
-
-const createMergeSubcategoryWrapper = len => (val, i) => (
-    i <= 0 || i === len ? val : ({ subcategories: val })
-);
 
 // REDUCER
 
@@ -131,38 +146,6 @@ const ceSetActiveCategoryId = (state, action) => {
         categoryEditorView: {
             activeCategoryId: { $set: id },
         },
-    };
-    return update(state, settings);
-};
-
-const ceAddNewSubcategory = (state, action) => {
-    const { level, id, title } = action;
-    const { categoryEditorView } = state;
-    const { categories, activeCategoryId } = categoryEditorView;
-
-    const newSubcategory = {
-        id,
-        title,
-        description: '',
-        ngrams: {},
-        subcategories: [],
-    };
-
-    const settingAction = '$unshift';
-    const indices = getIndicesFromSelectedCategories(
-        categories,
-        activeCategoryId,
-        level,
-    );
-
-    const categoriesSettings = buildSettings(
-        indices,
-        settingAction,
-        [newSubcategory],
-        newSubcategoryWrapper,
-    );
-    const settings = {
-        categoryEditorView: { categories: categoriesSettings },
     };
     return update(state, settings);
 };
@@ -195,6 +178,47 @@ const ceUpdateSelectedSubcategories = (state, action) => {
     return update(state, settings);
 };
 
+const ceAddNewSubcategory = (state, action) => {
+    const { level, id, title } = action;
+    const { categoryEditorView } = state;
+    const { categories, activeCategoryId } = categoryEditorView;
+
+    const newSubcategory = {
+        id,
+        title,
+        description: '',
+        ngrams: {},
+        subcategories: [],
+    };
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+        level,
+    );
+    const settingAction = '$unshift';
+    const newSubcategoryWrapper = (val, i) => (
+        i <= 0 ? val : ({ subcategories: val })
+    );
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [newSubcategory],
+        newSubcategoryWrapper,
+    );
+    const settings = {
+        categoryEditorView: { categories: categoriesSettings },
+    };
+
+    // Set new category as selected category
+    const selectedCategory = categories[indices[0]];
+    const length = selectedCategory.selectedSubcategories.length;
+    settings.categoryEditorView.categories[indices[0]].selectedSubcategories = {
+        $splice: [[level, length, id]],
+    };
+
+    return update(state, settings);
+};
+
 const ceUpdateSelectedSubcategory = (state, action) => {
     const { title, description, ngrams, subcategories } = action;
     const { categoryEditorView } = state;
@@ -203,28 +227,27 @@ const ceUpdateSelectedSubcategory = (state, action) => {
         activeCategoryId,
     } = categoryEditorView;
 
-    const settingAction = '$merge';
-    const indices = getIndicesFromSelectedCategories(
-        categories,
-        activeCategoryId,
-    );
-
-    const subcategory = {
+    const updatedSubcategory = {
         title,
         description,
         ngrams,
         subcategories,
     };
-
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+    const settingAction = '$merge';
+    const createMergeSubcategoryWrapper = len => (val, i) => (
+        i <= 0 || i === len ? val : ({ subcategories: val })
+    );
     const wrapper = createMergeSubcategoryWrapper(indices.length);
-
     const categoriesSettings = buildSettings(
         indices,
         settingAction,
-        subcategory,
+        updatedSubcategory,
         wrapper,
     );
-
     const settings = {
         categoryEditorView: {
             categories: categoriesSettings,
@@ -233,33 +256,47 @@ const ceUpdateSelectedSubcategory = (state, action) => {
     return update(state, settings);
 };
 
-const createAddNGramWrapper = len => (val, i) => {
-    if (i <= 0 || i === len) {
-        // first one
-        return val;
-    } else if (i === len - 1) {
-        // second last one ( for subcategory.ngrams[last] )
-        return { ngrams: val };
-    }
+const ceRemoveSelectedSubcategory = (state) => {
+    const { categoryEditorView } = state;
+    const {
+        categories,
+        activeCategoryId,
+    } = categoryEditorView;
 
-    // others
-    return { subcategories: val };
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+    const lastIndex = indices[indices.length - 1];
+    indices.splice(indices.length - 1, 1);
+
+    console.log(indices);
+    const settingAction = '$splice';
+    const createDeleteSubcategoryWrapper = len => (val, i) => (
+        i <= 0 ? val : ({ subcategories: val })
+    );
+    const wrapper = createDeleteSubcategoryWrapper(indices.length);
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        [[lastIndex, 1]],
+        wrapper,
+    );
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
+
+    // Set new category as selected category
+    // const selectedCategory = categories[indices[0]];
+    // const length = selectedCategory.selectedSubcategories.length;
+    settings.categoryEditorView.categories[indices[0]].selectedSubcategories = {
+        $splice: [[indices.length - 1]],
+    };
+
+    return update(state, settings);
 };
-
-// TODO: move to utils maybe
-const getLinkedListNode = (linkedList, n, selector) => {
-    let newList = linkedList;
-
-    for (let i = 0; i < n; i += 1) {
-        newList = selector(newList, i);
-    }
-
-    return newList;
-};
-
-const createSubcategorySelector = indices => (d, i) => (
-    d[indices[i]].subcategories
-);
 
 const ceAddSubcategoryNGram = (state, action) => {
     const {
@@ -277,10 +314,12 @@ const ceAddSubcategoryNGram = (state, action) => {
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
+        level, // splices indices up to level of drop target
     );
 
-    // splices indices up to level of drop target
-    indices.splice(level + 1);
+    const createSubcategorySelector = indexList => (d, i) => (
+        d[indexList[i]].subcategories
+    );
     // get the array where dropped subcategory belongs
     const subcategories = getLinkedListNode(
         categories,
@@ -295,6 +334,17 @@ const ceAddSubcategoryNGram = (state, action) => {
     indices.push(+ngram.n);
 
     const settingAction = '$autoPush';
+    const createAddNGramWrapper = len => (val, i) => {
+        if (i <= 0 || i === len) {
+            // first one
+            return val;
+        } else if (i === len - 1) {
+            // second last one ( for subcategory.ngrams[last] )
+            return { ngrams: val };
+        }
+        // others
+        return { subcategories: val };
+    };
     const addNGramWrapper = createAddNGramWrapper(indices.length);
     const categoriesSettings = buildSettings(
         indices,
@@ -319,6 +369,7 @@ const reducers = {
     [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,
     [CE__UPDATE_SELECTED_SUBCATEGORIES]: ceUpdateSelectedSubcategories,
     [CE__UPDATE_SELECTED_SUBCATEGORY]: ceUpdateSelectedSubcategory,
+    [CE__REMOVE_SELECTED_SUBCATEGORY]: ceRemoveSelectedSubcategory,
     [CE__ADD_SUBCATEGORY_NGRAM]: ceAddSubcategoryNGram,
 };
 export default reducers;
