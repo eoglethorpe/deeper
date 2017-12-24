@@ -17,6 +17,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     keywords: PropTypes.arrayOf(PropTypes.string),
+    onDelete: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -39,7 +40,9 @@ export default class NGram extends React.PureComponent {
                 { data }
             </div>
             <div className={styles['action-buttons']}>
-                <TransparentDangerButton disabled>
+                <TransparentDangerButton
+                    onClick={() => this.props.onDelete(data)}
+                >
                     <span className={iconNames.delete} />
                 </TransparentDangerButton>
             </div>
@@ -48,6 +51,7 @@ export default class NGram extends React.PureComponent {
 
     render() {
         const { keywords } = this.props;
+        console.log(keywords);
 
         return (
             <ListView

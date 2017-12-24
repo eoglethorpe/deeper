@@ -45,7 +45,7 @@ export default class DocumentNGram extends React.PureComponent {
 
     handleOnDragStart = keyword => (e) => {
         const data = JSON.stringify({
-            n: keyword.split(' ').length - 1,
+            n: keyword.split(' ').length,
             keyword,
         });
 

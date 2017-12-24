@@ -21,6 +21,7 @@ export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SE
 export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
 export const CE__REMOVE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__REMOVE_SELECTED_SUBCATEGORY';
 export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_NGRAM';
+export const CE__REMOVE_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__REMOVE_SUBCATEGORY_NGRAM';
 
 // ACTION-CREATOR
 
@@ -67,6 +68,10 @@ export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
     ngram, // n, keyword
 });
 
+export const removeSubcategoryNGramAction = ngram => ({
+    type: CE__REMOVE_SUBCATEGORY_NGRAM,
+    ngram, // n, keyword
+});
 
 // HELPERS
 const getCategoryIdFromCategory = category => category.id;
@@ -270,12 +275,10 @@ const ceRemoveSelectedSubcategory = (state) => {
     const lastIndex = indices[indices.length - 1];
     indices.splice(indices.length - 1, 1);
 
-    console.log(indices);
     const settingAction = '$splice';
-    const createDeleteSubcategoryWrapper = len => (val, i) => (
+    const wrapper = (val, i) => (
         i <= 0 ? val : ({ subcategories: val })
     );
-    const wrapper = createDeleteSubcategoryWrapper(indices.length);
     const categoriesSettings = buildSettings(
         indices,
         settingAction,
@@ -308,7 +311,7 @@ const ceAddSubcategoryNGram = (state, action) => {
     const {
         level,
         subcategoryId,
-        ngram,
+        ngram: { n: ngramN, keyword: ngramKeyword },
     } = action;
 
     const indices = getIndicesFromSelectedCategories(
@@ -331,7 +334,15 @@ const ceAddSubcategoryNGram = (state, action) => {
     // add to indices for build Settings
     indices.push(lastIndex);
     // add to n of ngram to the indices as well for build Settings
-    indices.push(+ngram.n);
+    indices.push(+ngramN);
+
+    const ngramForN = subcategories[lastIndex].ngrams[+ngramN];
+    const ngramAlreadyThere = ngramForN && ngramForN.find(
+        word => word.toLowerCase() === ngramKeyword.toLowerCase(),
+    );
+    if (ngramAlreadyThere) {
+        return state;
+    }
 
     const settingAction = '$autoPush';
     const createAddNGramWrapper = len => (val, i) => {
@@ -349,7 +360,7 @@ const ceAddSubcategoryNGram = (state, action) => {
     const categoriesSettings = buildSettings(
         indices,
         settingAction,
-        [ngram.keyword],
+        [ngramKeyword],
         addNGramWrapper,
     );
     const settings = {
@@ -358,6 +369,52 @@ const ceAddSubcategoryNGram = (state, action) => {
         },
     };
 
+    return update(state, settings);
+};
+
+const ceRemoveSubcategoryNGram = (state, action) => {
+    const {
+        categoryEditorView: {
+            categories,
+            activeCategoryId,
+        },
+    } = state;
+    const {
+        ngram: { n: ngramN, keyword: ngramKeyword },
+    } = action;
+
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+    );
+    // get the array where dropped subcategory belongs
+    // add to n of ngram to the indices as well for build Settings
+    indices.push(+ngramN);
+
+    const settingAction = '$filter';
+    const createAddNGramWrapper = len => (val, i) => {
+        if (i <= 0 || i === len) {
+            // first one
+            return val;
+        } else if (i === len - 1) {
+            // second last one ( for subcategory.ngrams[last] )
+            return { ngrams: val };
+        }
+        // others
+        return { subcategories: val };
+    };
+    const addNGramWrapper = createAddNGramWrapper(indices.length);
+    const categoriesSettings = buildSettings(
+        indices,
+        settingAction,
+        gram => gram.toLowerCase() !== ngramKeyword.toLowerCase(),
+        addNGramWrapper,
+    );
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
     return update(state, settings);
 };
 
@@ -371,5 +428,6 @@ const reducers = {
     [CE__UPDATE_SELECTED_SUBCATEGORY]: ceUpdateSelectedSubcategory,
     [CE__REMOVE_SELECTED_SUBCATEGORY]: ceRemoveSelectedSubcategory,
     [CE__ADD_SUBCATEGORY_NGRAM]: ceAddSubcategoryNGram,
+    [CE__REMOVE_SUBCATEGORY_NGRAM]: ceRemoveSubcategoryNGram,
 };
 export default reducers;
