@@ -194,12 +194,6 @@ export default class ProjectGeneral extends React.PureComponent {
         ];
     }
 
-    componentDidMount() {
-        if (this.projectRequest) {
-            this.projectRequest.start();
-        }
-    }
-
     componentWillReceiveProps(nextProps) {
         const {
             projectDetails,
@@ -223,6 +217,10 @@ export default class ProjectGeneral extends React.PureComponent {
     componentWillUnmount() {
         if (this.projectPatchRequest) {
             this.projectPatchRequest.stop();
+        }
+
+        if (this.membershipDeleteRequest) {
+            this.membershipDeleteRequest.stop();
         }
 
         if (this.membershipDeleteRequest) {
