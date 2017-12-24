@@ -36,7 +36,7 @@ const regionSchema = [];
             codeProp: { type: 'string' },
             parentNameProp: { type: 'string' },
             parentCodeProp: { type: 'string' },
-            region: { type: 'uint', required: true },
+            region: { type: 'uint', required: false },
             parent: { type: 'uint' },
             geoShapeFile: { type: 'uint' },
             staleGeoAreas: { type: 'boolean' },

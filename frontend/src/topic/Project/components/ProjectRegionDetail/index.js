@@ -265,7 +265,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                     styleName="region-detail-form"
                                 />
                                 <div styleName="map-container">
-                                    The map
+                                    <RegionMap regionId={regionId} />
                                 </div>
                             </div>
                             <RegionAdminLevel
