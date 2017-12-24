@@ -392,7 +392,7 @@ test('should remove subcategory at level 1', () => {
                 {
                     id: 12,
                     title: 'hari',
-                    selectedSubcategories: [101],
+                    selectedSubcategories: [101, 105],
                     subcategories: [
                         {
                             id: 101,
@@ -423,6 +423,77 @@ test('should remove subcategory at level 1', () => {
     };
     expect(reducers[CE__REMOVE_SELECTED_SUBCATEGORY](state, action)).toEqual(after);
 });
+
+test('should remove subcategory at level 1', () => {
+    const state = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [101, 103],
+                    subcategories: [
+                        {
+                            id: 101,
+                            title: 'newer subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [
+                                {
+                                    id: 103,
+                                    title: 'better subcategory',
+                                    description: '',
+                                    ngrams: {},
+                                    subcategories: [],
+                                },
+                            ],
+                        },
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    const action = removeSelectedSubcategoryAction();
+    const after = {
+        categoryEditorView: {
+            activeCategoryId: 12,
+            categories: [
+                {
+                    id: 12,
+                    title: 'hari',
+                    selectedSubcategories: [101],
+                    subcategories: [
+                        {
+                            id: 101,
+                            title: 'newer subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [
+                            ],
+                        },
+                        {
+                            id: 100,
+                            title: 'new subcategory',
+                            description: '',
+                            ngrams: {},
+                            subcategories: [],
+                        },
+                    ],
+                },
+            ],
+        },
+    };
+    expect(reducers[CE__REMOVE_SELECTED_SUBCATEGORY](state, action)).toEqual(after);
+});
+
 
 test('should update category', () => {
     const state = {
@@ -724,7 +795,9 @@ test('should add ngram to any given subcategory', () => {
                             id: 100,
                             title: 'new subcategory',
                             description: '',
-                            ngrams: {},
+                            ngrams: {
+                                0: ['old'],
+                            },
                             subcategories: [],
                         },
                     ],
@@ -774,7 +847,7 @@ test('should add ngram to any given subcategory', () => {
                             title: 'new subcategory',
                             description: '',
                             ngrams: {
-                                0: ['wash'],
+                                0: ['wash', 'old'],
                             },
                             subcategories: [],
                         },
@@ -938,7 +1011,7 @@ test('should remove ngram to any given subcategory', () => {
     expect(reducers[CE__REMOVE_SUBCATEGORY_NGRAM](state, action)).toEqual(after);
 });
 
-test('should add ngram to any given subcategory', () => {
+test('should add ngram manually to any given subcategory', () => {
     const state = {
         categoryEditorView: {
             activeCategoryId: 12,
@@ -979,7 +1052,7 @@ test('should add ngram to any given subcategory', () => {
                             title: 'new subcategory',
                             description: '',
                             ngrams: {
-                                1: ['gram', 'hari'],
+                                1: ['hari', 'gram'],
                             },
                             subcategories: [],
                         },
@@ -991,7 +1064,7 @@ test('should add ngram to any given subcategory', () => {
     expect(reducers[CE__ADD_MANUAL_SUBCATEGORY_NGRAM](state, action)).toEqual(after);
 });
 
-test('should not add duplicate ngram to any given subcategory', () => {
+test('should not add duplicate ngram manually to any given subcategory', () => {
     const state = {
         categoryEditorView: {
             activeCategoryId: 12,

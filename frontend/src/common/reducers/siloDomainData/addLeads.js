@@ -1,4 +1,8 @@
-import { listToMap, getNumbers } from '../../../public/utils/common';
+import {
+    listToMap,
+    getElementAround,
+    getNumbers,
+} from '../../../public/utils/common';
 import update from '../../../public/utils/immutable-update';
 import {
     createLead,
@@ -205,12 +209,8 @@ const addLeadViewRemoveLead = (state, action) => {
     );
 
     // limiting the newActiveid
-    let newActiveLeadId;
-    if (leadIndex + 1 < leads.length) {
-        newActiveLeadId = leadAccessor.getKey(leads[leadIndex + 1]);
-    } else if (leadIndex - 1 >= 0) {
-        newActiveLeadId = leadAccessor.getKey(leads[leadIndex - 1]);
-    }
+    const newActiveLead = getElementAround(leads, leadIndex);
+    const newActiveLeadId = newActiveLead ? leadAccessor.getKey(newActiveLead) : undefined;
 
     const settings = {
         addLeadView: {

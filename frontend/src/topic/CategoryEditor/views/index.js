@@ -303,6 +303,7 @@ export default class CategoryEditor extends React.PureComponent {
                             value={activeCategoryId}
                             keySelector={d => d.id}
                             labelSelector={d => d.title}
+                            clearable={false}
                         />
                         <Button onClick={this.handleAddCategoryButtonClick}>
                             Add category

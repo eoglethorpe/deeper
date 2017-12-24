@@ -1,16 +1,5 @@
+import { getLinkedListNode, getElementAround } from '../../../public/utils/common';
 import update from '../../../public/utils/immutable-update';
-
-// HELPER
-const getLinkedListNode = (linkedList, n, selector) => {
-    let newList = linkedList;
-
-    for (let i = 0; i < n; i += 1) {
-        newList = selector(newList, i);
-    }
-
-    return newList;
-};
-
 
 // TYPE
 
@@ -207,15 +196,14 @@ const ceAddNewSubcategory = (state, action) => {
         activeCategoryId,
         level,
     );
-    const settingAction = '$unshift';
-    const newSubcategoryWrapper = (val, i) => (
-        i <= 0 ? val : ({ subcategories: val })
+    const wrapper = (val, i) => (
+        i <= 0 ? val : { subcategories: val }
     );
     const categoriesSettings = buildSettings(
         indices,
-        settingAction,
+        '$unshift',
         [newSubcategory],
-        newSubcategoryWrapper,
+        wrapper,
     );
     const settings = {
         categoryEditorView: { categories: categoriesSettings },
@@ -239,7 +227,7 @@ const ceUpdateSelectedSubcategory = (state, action) => {
         activeCategoryId,
     } = categoryEditorView;
 
-    const updatedSubcategory = {
+    const newSubcategory = {
         title,
         description,
         ngrams,
@@ -249,16 +237,14 @@ const ceUpdateSelectedSubcategory = (state, action) => {
         categories,
         activeCategoryId,
     );
-    const settingAction = '$merge';
-    const createMergeSubcategoryWrapper = len => (val, i) => (
-        i <= 0 || i === len ? val : ({ subcategories: val })
+    const wrapper = len => (val, i) => (
+        (i <= 0 || i === len) ? val : { subcategories: val }
     );
-    const wrapper = createMergeSubcategoryWrapper(indices.length);
     const categoriesSettings = buildSettings(
         indices,
-        settingAction,
-        updatedSubcategory,
-        wrapper,
+        '$merge',
+        newSubcategory,
+        wrapper(indices.length),
     );
     const settings = {
         categoryEditorView: {
@@ -280,15 +266,26 @@ const ceRemoveSelectedSubcategory = (state) => {
         activeCategoryId,
     );
     const lastIndex = indices[indices.length - 1];
-    indices.splice(indices.length - 1, 1);
+    indices.splice(-1, 1); // remove last element
 
-    const settingAction = '$splice';
+    const selector = indexList => (d, i) => (
+        d[indexList[i]].subcategories
+    );
+
+    const subcategories = getLinkedListNode(
+        categories,
+        indices.length,
+        selector(indices),
+    );
+    const newSelectedSubCategory = getElementAround(subcategories, lastIndex);
+    const newSelectedSubCategoryId = newSelectedSubCategory ? newSelectedSubCategory.id : undefined;
+
     const wrapper = (val, i) => (
-        i <= 0 ? val : ({ subcategories: val })
+        i <= 0 ? val : { subcategories: val }
     );
     const categoriesSettings = buildSettings(
         indices,
-        settingAction,
+        '$splice',
         [[lastIndex, 1]],
         wrapper,
     );
@@ -298,82 +295,13 @@ const ceRemoveSelectedSubcategory = (state) => {
         },
     };
 
-    // Set new category as selected category
-    // const selectedCategory = categories[indices[0]];
-    // const length = selectedCategory.selectedSubcategories.length;
+    // Set parent as selected category (TODO: maybe siblings)
     settings.categoryEditorView.categories[indices[0]].selectedSubcategories = {
-        $splice: [[indices.length - 1]],
-    };
-
-    return update(state, settings);
-};
-
-const ceAddSubcategoryNGram = (state, action) => {
-    const {
-        categoryEditorView: {
-            categories,
-            activeCategoryId,
-        },
-    } = state;
-    const {
-        level,
-        subcategoryId,
-        ngram: { n: ngramN, keyword: ngramKeyword },
-    } = action;
-
-    const indices = getIndicesFromSelectedCategories(
-        categories,
-        activeCategoryId,
-        level, // splices indices up to level of drop target
-    );
-
-    const createSubcategorySelector = indexList => (d, i) => (
-        d[indexList[i]].subcategories
-    );
-    // get the array where dropped subcategory belongs
-    const subcategories = getLinkedListNode(
-        categories,
-        indices.length,
-        createSubcategorySelector(indices),
-    );
-    // get index for the subcategory (drop target)
-    const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
-    const ngramForN = subcategories[lastIndex].ngrams[+ngramN];
-    const ngramAlreadyThere = ngramForN && ngramForN.find(
-        word => word.toLowerCase() === ngramKeyword.toLowerCase(),
-    );
-    if (ngramAlreadyThere) {
-        return state;
-    }
-
-    // add to indices for build Settings
-    indices.push(lastIndex);
-    // add to n of ngram to the indices as well for build Settings
-    indices.push(+ngramN);
-
-    const settingAction = '$autoPush';
-    const createAddNGramWrapper = len => (val, i) => {
-        if (i <= 0 || i === len) {
-            // first one
-            return val;
-        } else if (i === len - 1) {
-            // second last one ( for subcategory.ngrams[last] )
-            return { ngrams: val };
-        }
-        // others
-        return { subcategories: val };
-    };
-    const addNGramWrapper = createAddNGramWrapper(indices.length);
-    const categoriesSettings = buildSettings(
-        indices,
-        settingAction,
-        [ngramKeyword],
-        addNGramWrapper,
-    );
-    const settings = {
-        categoryEditorView: {
-            categories: categoriesSettings,
-        },
+        $splice: [
+            newSelectedSubCategoryId
+                ? [indices.length - 1, 1, newSelectedSubCategoryId]
+                : [indices.length - 1],
+        ],
     };
 
     return update(state, settings);
@@ -398,8 +326,7 @@ const ceRemoveSubcategoryNGram = (state, action) => {
     // add to n of ngram to the indices as well for build Settings
     indices.push(+ngramN);
 
-    const settingAction = '$filter';
-    const createAddNGramWrapper = len => (val, i) => {
+    const wrapper = len => (val, i) => {
         if (i <= 0 || i === len) {
             // first one
             return val;
@@ -410,12 +337,11 @@ const ceRemoveSubcategoryNGram = (state, action) => {
         // others
         return { subcategories: val };
     };
-    const addNGramWrapper = createAddNGramWrapper(indices.length);
     const categoriesSettings = buildSettings(
         indices,
-        settingAction,
-        gram => gram.toLowerCase() !== ngramKeyword.toLowerCase(),
-        addNGramWrapper,
+        '$filter',
+        (gram => gram.toLowerCase() !== ngramKeyword.toLowerCase()),
+        wrapper(indices.length),
     );
     const settings = {
         categoryEditorView: {
@@ -441,18 +367,17 @@ const ceAddManualSubcategoryNGram = (state, action) => {
         activeCategoryId,
     );
 
-    const createSubcategorySelector = indexList => (d, i) => (
-        d[indexList[i]].subcategories
+    // Only add ngram if it doesn't exist
+    const selector = indexList => (d, i) => (
+        (i === indexList.length - 1)
+            ? d[indexList[i]].ngrams[+ngramN]
+            : d[indexList[i]].subcategories
     );
-    // get the subcategory's ngram
-    const subcategories = getLinkedListNode(
+    const ngramForN = getLinkedListNode(
         categories,
-        indices.length - 1,
-        createSubcategorySelector(indices),
+        indices.length,
+        selector(indices),
     );
-    const lastIndex = indices[indices.length - 1];
-    const subcategory = subcategories[lastIndex];
-    const ngramForN = subcategory.ngrams[+ngramN];
     const ngramAlreadyThere = ngramForN && ngramForN.find(
         word => word.toLowerCase() === ngramKeyword.toLowerCase(),
     );
@@ -464,8 +389,7 @@ const ceAddManualSubcategoryNGram = (state, action) => {
     // add to n of ngram to the indices as well for build Settings
     indices.push(+ngramN);
 
-    const settingAction = '$autoPush';
-    const createAddNGramWrapper = len => (val, i) => {
+    const wrapper = len => (val, i) => {
         if (i <= 0 || i === len) {
             // first one
             return val;
@@ -476,12 +400,11 @@ const ceAddManualSubcategoryNGram = (state, action) => {
         // others
         return { subcategories: val };
     };
-    const addNGramWrapper = createAddNGramWrapper(indices.length);
     const categoriesSettings = buildSettings(
         indices,
-        settingAction,
+        '$autoUnshift',
         [ngramKeyword],
-        addNGramWrapper,
+        wrapper(indices.length),
     );
     const settings = {
         categoryEditorView: {
@@ -491,6 +414,77 @@ const ceAddManualSubcategoryNGram = (state, action) => {
     return update(state, settings);
 };
 
+// NOTE: This is complex as ngram can be added to any visible subcategory
+const ceAddSubcategoryNGram = (state, action) => {
+    const {
+        categoryEditorView: {
+            categories,
+            activeCategoryId,
+        },
+    } = state;
+    const {
+        level,
+        subcategoryId,
+        ngram: { n: ngramN, keyword: ngramKeyword },
+    } = action;
+
+    const indices = getIndicesFromSelectedCategories(
+        categories,
+        activeCategoryId,
+        level, // splices indices up to level of drop target
+    );
+
+    const selector = indexList => (d, i) => (
+        d[indexList[i]].subcategories
+    );
+    // get the array where dropped subcategory belongs
+    const subcategories = getLinkedListNode(
+        categories,
+        indices.length,
+        selector(indices),
+    );
+    // get index for the subcategory (drop target)
+    const lastIndex = subcategories.findIndex(d => d.id === subcategoryId);
+
+    // Only add ngram if it doesn't exist
+    const ngramForN = subcategories[lastIndex].ngrams[+ngramN];
+    const ngramAlreadyThere = ngramForN && ngramForN.find(
+        word => word.toLowerCase() === ngramKeyword.toLowerCase(),
+    );
+    if (ngramAlreadyThere) {
+        return state;
+    }
+
+    // add to indices for build Settings
+    indices.push(lastIndex);
+    // add to n of ngram to the indices as well for build Settings
+    indices.push(+ngramN);
+
+    const wrapper = len => (val, i) => {
+        if (i <= 0 || i === len) {
+            // first one
+            return val;
+        } else if (i === len - 1) {
+            // second last one ( for subcategory.ngrams[last] )
+            return { ngrams: val };
+        }
+        // others
+        return { subcategories: val };
+    };
+    const categoriesSettings = buildSettings(
+        indices,
+        '$autoUnshift',
+        [ngramKeyword],
+        wrapper(indices.length),
+    );
+    const settings = {
+        categoryEditorView: {
+            categories: categoriesSettings,
+        },
+    };
+
+    return update(state, settings);
+};
 
 // REDUCER MAP
 
