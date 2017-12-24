@@ -62,26 +62,37 @@ export default class Organigram extends React.PureComponent {
         }
     }
 
-    getEditValue = (key, data) => (
-        <div
-            className={styles['edit-value']}
-            key={key}
-        >
-            <TextInput
-                className={styles['title-input']}
-                label="Option"
-                placeholder="eg: Context"
-                onChange={(value) => { this.handleValueInputChange(key, value); }}
-                value={data.label}
-            />
-            <TransparentDangerButton
-                className={styles['delete-button']}
-                onClick={() => { this.handleRemoveButtonClick(key); }}
+    getEditValue = (key, data) => {
+        console.log(this.state.values);
+
+        return (
+            <div
+                className={styles['edit-value']}
+                key={key}
             >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
-        </div>
-    )
+                <TextInput
+                    className={styles['title-input']}
+                    label="Option"
+                    placeholder="eg: Context"
+                    onChange={(value) => { this.handleValueInputChange(key, value); }}
+                    value={data.label}
+                />
+                <SelectInput
+                    label="Parent"
+                    options={this.state.values}
+                    className={styles['title-parent']}
+                    placeholder="Select Parent Node"
+                    optionsIdentifier="organigram-parent-select-options"
+                />
+                <TransparentDangerButton
+                    className={styles['delete-button']}
+                    onClick={() => { this.handleRemoveButtonClick(key); }}
+                >
+                    <span className={iconNames.delete} />
+                </TransparentDangerButton>
+            </div>
+        );
+    }
 
     handleEdit = () => {
         this.setState({ showEditModal: true });

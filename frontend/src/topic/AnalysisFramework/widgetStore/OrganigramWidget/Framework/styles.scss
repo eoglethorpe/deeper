@@ -25,10 +25,20 @@
 
         .title-input {
             flex-grow: 1;
+            margin-right: $spacing-medium;
+        }
+
+        .title-parent {
+            flex-grow: 1;
+            margin-left: $spacing-medium;
         }
 
         .delete-button {
             flex-shrink: 0;
         }
     }
+}
+
+:global #organigram-parent-select-options {
+    z-index: 11111;
 }
