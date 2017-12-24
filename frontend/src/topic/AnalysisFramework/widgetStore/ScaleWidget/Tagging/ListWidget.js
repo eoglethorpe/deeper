@@ -3,10 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import {
-    TextInput,
-} from '../../../../../public/components/Input';
-
 const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
@@ -18,7 +14,7 @@ const defaultProps = {
 };
 
 @CSSModules(styles)
-export default class NumberTaggingList extends React.PureComponent {
+export default class ScaleTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -33,17 +29,11 @@ export default class NumberTaggingList extends React.PureComponent {
         const {
             attribute,
         } = this.props;
+        console.log(attribute);
 
         return (
             <div styleName="number-list">
-                <TextInput
-                    styleName="number-input"
-                    onChange={this.handleChange}
-                    value={attribute && attribute.value}
-                    placeholder="eg: 147181"
-                    showLabel={false}
-                    showHintAndError={false}
-                />
+                asdasd
             </div>
         );
     }

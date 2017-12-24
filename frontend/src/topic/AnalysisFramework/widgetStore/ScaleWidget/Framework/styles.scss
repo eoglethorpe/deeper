@@ -6,6 +6,19 @@
     justify-content: center;
     padding: $spacing-small;
     height: 100%;
+
+    .scale {
+        display: flex;
+        align-items: center;
+
+        .scale-unit {
+            margin: 0 $spacing-extra-small;
+            outline: 0;
+            border: 0;
+            width: 16px;
+            height: 36px;
+        }
+    }
 }
 
 %modal {
@@ -19,18 +32,20 @@
 .edit-scales-modal {
     @extend %modal;
 
-    .edit-row {
+    .edit-scale-unit {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
+        padding: $spacing-medium 0;
 
         .color-box-container {
             display: flex;
             flex-basis: 48px;
             flex-direction: column;
             flex-shrink: 0;
-            padding-bottom: $spacing-extra-small;
+            padding: $spacing-extra-small;
+            padding-bottom: 0;
             width: 48px;
-            height: 42px;
+            height: 40px;
 
             .color-label {
                 flex-shrink: 0;
@@ -41,18 +56,25 @@
 
             .color-box {
                 flex-grow: 1;
-                margin: 0 $spacing-extra-small;
+                margin-right: $spacing-small;
                 outline: 0;
                 border: 0;
             }
         }
 
+        &.active {
+            .color-box {
+                border: 2px solid $color-accent;
+            }
+        }
+
         .title-input {
             flex-grow: 1;
+            height: 40px;
         }
 
         .delete-button {
-            flex-shrink: 1;
+            flex-shrink: 0;
         }
     }
 

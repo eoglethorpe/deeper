@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { SketchPicker } from 'react-color';
+import update from '../../../../../public/utils/immutable-update';
 
 import {
     TextInput,
@@ -31,6 +32,9 @@ const propTypes = {
     data: PropTypes.object, //eslint-disable-line
 };
 
+const emptyList = [];
+const emptyObject = {};
+
 @CSSModules(styles)
 export default class ScaleFrameworkList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -39,22 +43,37 @@ export default class ScaleFrameworkList extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const scaleUnits = (this.props.data || emptyObject).scaleUnits || emptyList;
+
         this.state = {
             showEditModal: false,
-            scaleUnits: [],
+            activeScaleUnit: scaleUnits[0] || emptyObject,
+            scaleUnits,
         };
         this.props.editAction(this.handleEdit);
     }
 
+    getActiveSelectionStyle = (key) => {
+        const { activeScaleUnit } = this.state;
+        const scaleUnitStyle = ['edit-scale-unit'];
+        if (activeScaleUnit.key === key) {
+            scaleUnitStyle.push('active');
+        }
+        const styleNames = scaleUnitStyle.map(d => styles[d]);
+        return styleNames.join(' ');
+    }
+
     getEditScaleUnits = (key, data) => (
         <div
-            className={styles['edit-row']}
+            className={this.getActiveSelectionStyle(key)}
             key={key}
         >
             <div className={styles['color-box-container']}>
                 <span className={styles['color-label']}>Color</span>
                 <button
                     className={styles['color-box']}
+                    onClick={() => this.handleColorBoxClick(key)}
+                    style={{ backgroundColor: data.color }}
                 />
             </div>
             <TextInput
@@ -62,6 +81,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 label="Title"
                 placeholder="eg: Reliable"
                 onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
+                onFocus={() => this.handleTextInputOnFocus(key)}
                 value={data.title}
                 showHintAndError={false}
             />
@@ -73,6 +93,33 @@ export default class ScaleFrameworkList extends React.PureComponent {
             </TransparentDangerButton>
         </div>
     )
+
+    getScale = (key, data) => (
+        <button
+            key={key}
+            title={data.title}
+            className={styles['scale-unit']}
+            style={{ backgroundColor: data.color }}
+        />
+    )
+
+    handleTextInputOnFocus = (key) => {
+        const { scaleUnits } = this.state;
+        const index = scaleUnits.findIndex(d => d.key === key);
+
+        this.setState({
+            activeScaleUnit: scaleUnits[index],
+        });
+    }
+
+    handleColorBoxClick = (key) => {
+        const { scaleUnits } = this.state;
+        const index = scaleUnits.findIndex(d => d.key === key);
+
+        this.setState({
+            activeScaleUnit: scaleUnits[index],
+        });
+    }
 
     handleEdit = () => {
         this.setState({ showEditModal: true });
@@ -87,40 +134,66 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleModalCancelButtonClick = () => {
-        this.setState({ showEditModal: false });
+        this.setState({
+            showEditModal: false,
+            scaleUnits: (this.props.data || emptyObject).scaleUnits || emptyList,
+        });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
+        const { scaleUnits } = this.state;
+        const newScaleUnits = {
+            ...this.props.data,
+            scaleUnits,
+        };
+        this.props.onChange(newScaleUnits);
     }
 
     handleScaleUnitValueInputChange = (key, value) => {
-        const newScaleUnits = [...this.state.scaleUnits];
+        const rowIndex = this.state.scaleUnits.findIndex(d => d.key === key);
 
-        const rowIndex = newScaleUnits.findIndex(d => d.key === key);
-        newScaleUnits[rowIndex].title = value;
+        const settings = {
+            [rowIndex]: {
+                title: { $set: value },
+            },
+        };
+        const newScaleUnits = update(this.state.scaleUnits, settings);
 
         this.setState({
             scaleUnits: newScaleUnits,
+            activeScaleUnit: newScaleUnits[rowIndex],
         });
     }
 
     handleScaleUnitRemoveButtonClick = (key) => {
-        const newScaleUnits = [...this.state.scaleUnits];
+        const settings = {
+            $filter: d => d.key !== key,
+        };
+        const newScaleUnits = update(this.state.scaleUnits, settings);
+        this.setState({ scaleUnits: newScaleUnits });
+    };
 
-        const scaleUnitIndex = newScaleUnits.findIndex(d => d.key === key);
-        newScaleUnits.splice(scaleUnitIndex, 1);
+    handleColorChange = (newColor) => {
+        const { activeScaleUnit, scaleUnits } = this.state;
+        const rowIndex = this.state.scaleUnits.findIndex(d => d.key === activeScaleUnit.key);
 
-        this.setState({
-            scaleUnits: newScaleUnits,
-        });
+        const settings = {
+            [rowIndex]: {
+                color: { $set: newColor.hex },
+            },
+        };
+
+        const newScaleUnits = update(this.state.scaleUnits, settings);
+
+        this.setState({ scaleUnits: newScaleUnits });
     }
 
     addScaleUnit = () => {
         const newScaleUnit = {
             key: randomString(16).toLowerCase(),
             title: '',
-            color: '',
+            color: '#ffffff',
         };
 
         this.setState({
@@ -128,6 +201,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 ...this.state.scaleUnits,
                 newScaleUnit,
             ],
+            activeScaleUnit: newScaleUnit,
         });
     }
 
@@ -135,11 +209,17 @@ export default class ScaleFrameworkList extends React.PureComponent {
         const {
             scaleUnits,
             showEditModal,
+            activeScaleUnit,
         } = this.state;
 
         return (
             <div styleName="scale-list">
-                Scalalal
+                <ListView
+                    styleName="scale"
+                    data={scaleUnits}
+                    keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+                    modifier={this.getScale}
+                />
                 <Modal
                     styleName="edit-scales-modal"
                     show={showEditModal}
@@ -163,7 +243,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
                             keyExtractor={ScaleFrameworkList.rowKeyExtractor}
                             modifier={this.getEditScaleUnits}
                         />
-                        <SketchPicker />
+                        <SketchPicker
+                            color={activeScaleUnit.color}
+                            onChange={this.handleColorChange}
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button
