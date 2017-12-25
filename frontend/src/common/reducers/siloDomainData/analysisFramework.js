@@ -4,6 +4,7 @@ import { isEqualAndTruthy } from '../../../public/utils/common';
 // TYPE
 
 export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';
+
 export const AF__VIEW_ADD_WIDGET = 'silo-domain-data/AF__VIEW_ADD_WIDGET';
 export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
 export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
@@ -15,10 +16,11 @@ export const setAfViewAnalysisFrameworkAction = ({ analysisFramework }) => ({
     analysisFramework,
 });
 
-export const addAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+export const addAfViewWidgetAction = ({ analysisFrameworkId, widget, filter }) => ({
     type: AF__VIEW_ADD_WIDGET,
     analysisFrameworkId,
     widget,
+    filter,
 });
 
 export const removeAfViewWidgetAction = ({ analysisFrameworkId, widgetId }) => ({
@@ -27,10 +29,11 @@ export const removeAfViewWidgetAction = ({ analysisFrameworkId, widgetId }) => (
     widgetId,
 });
 
-export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
+export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget, filter }) => ({
     type: AF__VIEW_UPDATE_WIDGET,
     analysisFrameworkId,
     widget,
+    filter,
 });
 
 // HELPER
@@ -38,6 +41,7 @@ export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget }) => ({
 const isAnalysisFrameworkValid = (af = {}, id) => isEqualAndTruthy(id, af.id);
 
 const getWidgetKey = widget => widget.key;
+const getFilterKey = filter => filter.key;
 
 // REDUCER
 
@@ -54,7 +58,7 @@ const afViewSetAnalysisFramework = (state, action) => {
 };
 
 const afViewAddWidget = (state, action) => {
-    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkId, widget, filter } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
@@ -63,12 +67,18 @@ const afViewAddWidget = (state, action) => {
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $autoArray: {
+                widgets: {
                     $push: [widget],
-                } },
+                },
             },
         },
     };
+
+    if (filter) {
+        settings.analysisFrameworkView.analysisFramework.filters = {
+            $push: [filter],
+        };
+    }
     return update(state, settings);
 };
 
@@ -83,6 +93,7 @@ const afViewRemoveWidget = (state, action) => {
         analysisFrameworkView: {
             analysisFramework: {
                 widgets: { $filter: w => getWidgetKey(w) !== widgetId },
+                filters: { $filter: f => getFilterKey(f) !== widgetId },
             },
         },
     };
@@ -90,13 +101,15 @@ const afViewRemoveWidget = (state, action) => {
 };
 
 const afViewUpdateWidget = (state, action) => {
-    const { analysisFrameworkId, widget } = action;
+    const { analysisFrameworkId, widget, filter } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
     }
 
     const existingWidgets = analysisFramework.widgets;
+    const existingFilters = analysisFramework.filters;
+
     const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widget.key);
 
     if (widgetIndex === -1) {
@@ -106,10 +119,28 @@ const afViewUpdateWidget = (state, action) => {
     const settings = {
         analysisFrameworkView: {
             analysisFramework: {
-                widgets: { $splice: [[widgetIndex, 1, widget]] },
+                widgets: {
+                    [widgetIndex]: { $merge: widget },
+                },
             },
         },
     };
+
+    if (filter) {
+        let filterSettings;
+        const filterIndex = existingFilters.findIndex(f => getFilterKey(f) === widget.key);
+        if (filterIndex === -1) {
+            filterSettings = {
+                $push: [filter],
+            };
+        } else {
+            filterSettings = {
+                [filterIndex]: { $merge: filter },
+            };
+        }
+
+        settings.analysisFrameworkView.analysisFrameworkView.filters = filterSettings;
+    }
     return update(state, settings);
 };
 
