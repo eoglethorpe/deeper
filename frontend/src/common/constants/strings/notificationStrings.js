@@ -17,6 +17,16 @@ const notificationStrings = {
     userGroupCreateFailure: string[910],
     userGroupCreateFatal: string[911],
 
+    userProjectDelete: string[912],
+    userProjectDeleteSuccess: string[913],
+    userProjectDeleteFailure: string[914],
+    userProjectDeleteFatal: string[915],
+
+    userProjectCreate: string[916],
+    userProjectCreateSuccess: string[917],
+    userProjectCreateFailure: string[918],
+    userProjectCreateFatal: string[919],
+
 };
 
 export default notificationStrings;

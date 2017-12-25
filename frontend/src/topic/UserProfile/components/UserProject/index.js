@@ -29,6 +29,7 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 import {
     iconNames,
+    notificationStrings,
     pathNames,
 } from '../../../../common/constants';
 
@@ -49,6 +50,7 @@ import {
 } from '../../../../common/redux';
 
 import UserProjectAdd from '../../../../common/components/UserProjectAdd';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -253,6 +255,12 @@ export default class UserProject extends React.PureComponent {
                         userId,
                         projectId,
                     });
+                    notify.send({
+                        title: notificationStrings.userProjectDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userProjectDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -263,11 +271,21 @@ export default class UserProject extends React.PureComponent {
             .postLoad(() => {
                 this.setState({ deletePending: false });
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.userProjectDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userProjectDeleteFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userProjectDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userProjectDeleteFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return projectDeleteRequest;
