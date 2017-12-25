@@ -1,0 +1,90 @@
+@import '../../../../../stylesheets/base';
+
+.scale-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: $spacing-small;
+    height: 100%;
+
+    .scale {
+        display: flex;
+        align-items: center;
+
+        .scale-unit {
+            margin: 0 $spacing-extra-small;
+            outline: 0;
+            border: 0;
+            width: $width-scale-widget-unit;
+            height: $height-scale-widget-unit;
+        }
+    }
+}
+
+%modal {
+    width: 560px;
+
+    :global .modal-body {
+        height: 400px;
+    }
+}
+
+.edit-scales-modal {
+    @extend %modal;
+
+    .edit-scale-unit {
+        display: flex;
+        align-items: flex-end;
+        padding: $spacing-medium 0;
+
+        .color-box-container {
+            display: flex;
+            flex-basis: 48px;
+            flex-direction: column;
+            flex-shrink: 0;
+            padding: $spacing-extra-small;
+            padding-bottom: 0;
+            width: 48px;
+            height: 40px;
+
+            .color-label {
+                flex-shrink: 0;
+                text-transform: uppercase;
+                color: $color-label;
+                font-size: $font-size-extra-small;
+            }
+
+            .color-box {
+                flex-grow: 1;
+                margin-right: $spacing-small;
+                outline: 0;
+                border: 0;
+            }
+        }
+
+        &.active {
+            .color-box {
+                border: 2px solid $color-accent;
+            }
+        }
+
+        .title-input {
+            flex-grow: 1;
+            height: 40px;
+        }
+
+        .delete-button {
+            flex-shrink: 0;
+        }
+    }
+
+    .scale-units-container {
+        display: flex;
+
+        .list {
+            flex-basis: calc(100% - 220px);
+            flex-shrink: 0;
+            overflow-y: auto;
+        }
+    }
+}

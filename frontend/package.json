@@ -67,6 +67,7 @@
     "prop-types": "^15.5.10",
     "react": "^16.0.0",
     "react-addons-test-utils": "^15.6.2",
+    "react-color": "^2.13.8",
     "react-css-modules": "^4.7.1",
     "react-dev-utils": "^3.1.0",
     "react-dom": "^16.0.0",

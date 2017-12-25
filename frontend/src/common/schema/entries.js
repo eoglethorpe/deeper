@@ -80,6 +80,39 @@ const entrySchema = [];
 }
 
 {
+    const name = 'miniLead';
+    const schema = {
+        doc: {
+            name: 'miniLead',
+            description: 'Object of subset of lead',
+        },
+        fields: {
+            createdAt: { type: 'string', required: true }, // date
+            createdBy: { type: 'uint' },
+            id: { type: 'uint', required: true },
+            source: { type: 'string' },
+            title: { type: 'string' },
+        },
+    };
+    entrySchema.push({ name, schema });
+}
+
+{
+    const name = 'leadsEntriesObject';
+    const schema = {
+        doc: {
+            name: 'LeadsEntriesObject',
+            description: 'Object of array of leads and entries',
+        },
+        fields: {
+            leads: { type: 'array.miniLead', required: true },
+            entries: { type: 'array.entry', required: true },
+        },
+    };
+    entrySchema.push({ name, schema });
+}
+
+{
     const name = 'entriesGetResponse';
     const schema = {
         doc: {
@@ -90,7 +123,7 @@ const entrySchema = [];
             count: { type: 'uint', required: true },
             next: { type: 'string' },
             previous: { type: 'string' },
-            results: { type: 'array.entry', required: true },
+            results: { type: 'leadsEntriesObject', required: true },
         },
     };
     entrySchema.push({ name, schema });
