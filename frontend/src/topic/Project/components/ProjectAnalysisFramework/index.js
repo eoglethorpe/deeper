@@ -26,7 +26,6 @@ import {
     createParamsForUser,
 } from '../../../../common/rest';
 import {
-    activeProjectSelector,
     analysisFrameworkListSelector,
     projectDetailsSelector,
 
@@ -42,18 +41,18 @@ import AddAnalysisFramework from '../AddAnalysisFramework';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    // eslint-disable-next-line react/forbid-prop-types
+    analysisFrameworkList: PropTypes.array.isRequired,
+    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.number.isRequired,
     setAnalysisFrameworks: PropTypes.func.isRequired,
-    analysisFrameworkList: PropTypes.array.isRequired, // eslint-disable-line
 };
 
 const defaultProps = {
-    activeProject: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
 });
@@ -87,11 +86,11 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         }
 
         this.state = {
-            selectedAf,
-            pending: false,
             addAfModalShow: false,
-            searchInputValue: '',
             displayAfList,
+            pending: false,
+            searchInputValue: '',
+            selectedAf,
         };
     }
 
@@ -219,6 +218,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         return (
             <ProjectAfDetail
+                mainHistory={this.props.mainHistory}
                 key={selectedAf}
                 afId={selectedAf}
             />
@@ -234,7 +234,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         } = this.state;
 
         const {
-            activeProject,
+            projectId,
         } = this.props;
 
         const sortedAfs = [...displayAfList];
@@ -267,7 +267,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             <ModalHeader title="Add new analysis framework" />
                             <ModalBody>
                                 <AddAnalysisFramework
-                                    projectId={activeProject}
+                                    projectId={projectId}
                                     onModalClose={this.handleModalClose}
                                 />
                             </ModalBody>

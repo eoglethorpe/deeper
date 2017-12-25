@@ -45,7 +45,7 @@ import {
 
 import schema from '../../../../common/schema';
 
-import { UserProjectAdd } from '../../../UserProfile/components';
+import UserProjectAdd from '../../../../common/components/UserProjectAdd';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -275,18 +275,12 @@ export default class ProjectsTable extends React.PureComponent {
         this.setState({ showDeleteProjectModal: false });
     }
 
-    handleAddProjectClick = (row) => {
-        this.setState({
-            editRow: row,
-            showAddProjectModal: true,
-        });
+    handleAddProjectClick = () => {
+        this.setState({ showAddProjectModal: true });
     }
 
     handleAddProjectModalClose = () => {
-        this.setState({
-            // editRow: {},
-            showAddProjectModal: false,
-        });
+        this.setState({ showAddProjectModal: false });
     }
 
     handleSearchProjectChange = (value) => {

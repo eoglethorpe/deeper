@@ -63,11 +63,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
 
         this.validations = {
             name: [requiredCondition],
-            startDate: [requiredCondition],
-            endDate: [requiredCondition],
-            description: [requiredCondition],
-            regions: [requiredCondition],
-            userGroups: [requiredCondition],
         };
     }
 

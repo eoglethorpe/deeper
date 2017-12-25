@@ -12,27 +12,27 @@ import {
     NonFieldErrors,
     TextInput,
     requiredCondition,
-} from '../../../../public/components/Input';
+} from '../../../public/components/Input';
 import {
     LoadingAnimation,
-} from '../../../../public/components/View';
+} from '../../../public/components/View';
 import {
     DangerButton,
     PrimaryButton,
-} from '../../../../public/components/Action';
+} from '../../../public/components/Action';
 
-import { FgRestBuilder } from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
-import schema from '../../../../common/schema';
+import schema from '../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForProjectCreate,
     urlForProjectCreate,
-} from '../../../../common/rest';
+} from '../../../common/rest';
 import {
     setProjectAction,
     activeUserSelector,
-} from '../../../../common/redux';
+} from '../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -40,6 +40,7 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    onProjectAdded: PropTypes.func,
     userGroups: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.isRequired,
     })),
@@ -47,6 +48,7 @@ const propTypes = {
 
 const defaultProps = {
     userGroups: [],
+    onProjectAdded: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -108,6 +110,9 @@ export default class UserProjectAdd extends React.PureComponent {
                         userId: this.props.activeUser.userId,
                         project: response,
                     });
+                    if (this.props.onProjectAdded) {
+                        this.props.onProjectAdded(response.id);
+                    }
                     this.props.handleModalClose();
                 } catch (er) {
                     console.error(er);

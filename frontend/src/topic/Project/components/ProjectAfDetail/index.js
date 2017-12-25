@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import ImagesSlider from '../../../../common/components/ImagesSlider';
@@ -46,12 +45,13 @@ import ProjectAfForm from '../ProjectAfForm';
 import styles from './styles.scss';
 
 const propTypes = {
-    afDetails: PropTypes.object.isRequired, // eslint-disable-line
+    afDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     afId: PropTypes.number,
     addNewAf: PropTypes.func.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectAf: PropTypes.func.isRequired,
     setAfDetail: PropTypes.func.isRequired,
+    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -90,8 +90,6 @@ export default class ProjectAfDetail extends React.PureComponent {
             formFieldErrors: {},
             pristine: false,
             pending: false,
-
-            redirectTo: undefined,
         };
     }
 
@@ -246,15 +244,14 @@ export default class ProjectAfDetail extends React.PureComponent {
     handleAfEditClick = () => {
         const {
             afId,
+            mainHistory,
         } = this.props;
 
         const params = {
             analysisFrameworkId: afId,
         };
 
-        this.setState({
-            redirectTo: reverseRoute(pathNames.analysisFramework, params),
-        });
+        mainHistory.push(reverseRoute(pathNames.analysisFramework, params));
     }
 
     render() {
@@ -272,18 +269,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             pristine,
             pending,
             formValues,
-
-            redirectTo,
         } = this.state;
-
-        if (redirectTo) {
-            return (
-                <Redirect
-                    to={redirectTo}
-                    push
-                />
-            );
-        }
 
         const isProjectAf = afId === projectDetails.analysisFramework;
         const snapshots = [];
