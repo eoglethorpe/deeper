@@ -6,7 +6,7 @@ import UserProjectAdd from '../index';
 import {
     Form,
     TextInput,
-} from '../../../../../public/components/Input';
+} from '../../../../public/components/Input';
 
 const initialState = {
 };
