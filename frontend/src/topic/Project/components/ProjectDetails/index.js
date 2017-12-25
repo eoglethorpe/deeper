@@ -19,10 +19,13 @@ import schema from '../../../../common/schema';
 import {
     createParamsForUser,
     createUrlForProject,
+    createParamsForProjectOptions,
+    createUrlForProjectOptions,
 } from '../../../../common/rest';
 import {
     projectDetailsSelector,
     setProjectAction,
+    setProjectOptionsAction,
 } from '../../../../common/redux';
 
 import ProjectGeneral from '../ProjectGeneral';
@@ -32,15 +35,17 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
-    project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    setProjectOptions: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    projectId: undefined,
     project: undefined,
+    projectId: undefined,
 };
 
 const routes = [
@@ -81,6 +86,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setProject: params => dispatch(setProjectAction(params)),
+    setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -99,12 +105,16 @@ export default class ProjectDetails extends React.PureComponent {
         const { projectId } = props;
         if (projectId) {
             this.projectRequest = this.createProjectRequest(projectId);
+            this.projectOptionsRequest = this.createProjectOptionsRequest(projectId);
         }
     }
 
     componentDidMount() {
         if (this.projectRequest) {
             this.projectRequest.start();
+        }
+        if (this.projectOptionsRequest) {
+            this.projectOptionsRequest.start();
         }
     }
 
@@ -122,8 +132,15 @@ export default class ProjectDetails extends React.PureComponent {
                 this.projectRequest.stop();
             }
 
+            if (this.projectOptionsRequest) {
+                this.projectOptionsRequest.stop();
+            }
+
             this.projectRequest = this.createProjectRequest(nextProjectId);
             this.projectRequest.start();
+
+            this.projectOptionsRequest = this.createProjectOptionsRequest(nextProjectId);
+            this.projectOptionsRequest.start(nextProjectId);
         }
     }
 
@@ -132,8 +149,8 @@ export default class ProjectDetails extends React.PureComponent {
             this.projectRequest.stop();
         }
 
-        if (this.projectPatchRequest) {
-            this.projectPatchRequest.stop();
+        if (this.projectOptionsRequest) {
+            this.projectOptionsRequest.stop();
         }
     }
 
@@ -160,6 +177,25 @@ export default class ProjectDetails extends React.PureComponent {
         return projectRequest;
     };
 
+    createProjectOptionsRequest = (projectId) => {
+        const projectOptionsRequest = new FgRestBuilder()
+            .url(createUrlForProjectOptions(projectId))
+            .params(() => createParamsForProjectOptions())
+            .success((response) => {
+                try {
+                    schema.validate(response, 'projectOptionsGetResponse');
+                    this.props.setProjectOptions({
+                        projectId,
+                        options: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return projectOptionsRequest;
+    };
+
     renderLink = (key, routeId) => (
         <NavLink
             key={key}
@@ -184,6 +220,7 @@ export default class ProjectDetails extends React.PureComponent {
                 exact
                 render={() => (
                     <Component
+                        mainHistory={this.props.mainHistory}
                         className={styles.content}
                         projectId={projectId}
                     />

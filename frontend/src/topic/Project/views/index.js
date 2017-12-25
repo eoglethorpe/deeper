@@ -12,7 +12,6 @@ import { TextInput } from '../../../public/components/Input';
 import {
     PrimaryButton,
 } from '../../../public/components/Action';
-import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     reverseRoute,
     caseInsensitiveSubmatch,
@@ -22,15 +21,10 @@ import {
     iconNames,
     pathNames,
 } from '../../../common/constants';
-import schema from '../../../common/schema';
 import {
-    createParamsForProjectOptions,
-    createUrlForProjectOptions,
 } from '../../../common/rest';
 import {
     currentUserAdminProjectsSelector,
-
-    setProjectOptionsAction,
     setActiveProjectAction,
 } from '../../../common/redux';
 
@@ -45,7 +39,6 @@ const propTypes = {
         }),
     }).isRequired,
     setActiveProject: PropTypes.func.isRequired,
-    setProjectOptions: PropTypes.func.isRequired,
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.number,
@@ -65,7 +58,6 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
-    setProjectOptions: params => dispatch(setProjectOptionsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -83,47 +75,17 @@ export default class ProjectPanel extends React.PureComponent {
             isSidebarVisible: false,
             searchInputValue: '',
         };
-
-        const { projectId } = props.match.params;
-
-        this.projectOptionsRequest = this.createProjectOptionsRequest(projectId);
-    }
-
-    componentWillMount() {
-        this.projectOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
         const { userProjects } = nextProps;
         const { searchInputValue } = this.state;
 
-        const {
-            projectId: currentProjectId,
-        } = this.props.match.params;
-
-        const {
-            projectId: nextProjectId,
-        } = nextProps.match.params;
-
-        if (nextProjectId !== currentProjectId) {
-            if (this.projectOptionsRequest) {
-                this.projectOptionsRequest.stop();
-                this.projectOptionsRequest = this.createProjectOptionsRequest(nextProjectId);
-                this.projectOptionsRequest.start();
-            }
-        }
-
         if (this.props.userProjects !== userProjects) {
             const displayUserProjects = userProjects.filter(
                 project => caseInsensitiveSubmatch(project.title, searchInputValue),
             );
             this.setState({ displayUserProjects });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.projectOptionsRequest) {
-            this.projectOptionsRequest.stop();
         }
     }
 
@@ -142,25 +104,6 @@ export default class ProjectPanel extends React.PureComponent {
         }
         return styleNames.join(' ');
     }
-
-    createProjectOptionsRequest = (projectId) => {
-        const projectOptionsRequest = new FgRestBuilder()
-            .url(createUrlForProjectOptions(projectId))
-            .params(() => createParamsForProjectOptions())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectOptionsGetResponse');
-                    this.props.setProjectOptions({
-                        projectId,
-                        options: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return projectOptionsRequest;
-    };
 
     handleSearchInputChange = (searchInputValue) => {
         const displayUserProjects = this.props.userProjects.filter(
@@ -195,6 +138,9 @@ export default class ProjectPanel extends React.PureComponent {
         } = this.state;
 
         const { projectId } = this.props.match.params;
+        const {
+            history,
+        } = this.props;
 
         return (
             <div styleName="project-panel">
@@ -231,6 +177,7 @@ export default class ProjectPanel extends React.PureComponent {
                         <ProjectDetails
                             styleName="project-details"
                             projectId={+projectId}
+                            mainHistory={history}
                         />
                     ) : (
                         <p styleName="no-project-text">Select a project to view its details</p>

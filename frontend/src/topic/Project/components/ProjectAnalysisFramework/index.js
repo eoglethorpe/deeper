@@ -41,11 +41,12 @@ import AddAnalysisFramework from '../AddAnalysisFramework';
 import styles from './styles.scss';
 
 const propTypes = {
-    projectId: PropTypes.number.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    setAnalysisFrameworks: PropTypes.func.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     analysisFrameworkList: PropTypes.array.isRequired,
+    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.number.isRequired,
+    setAnalysisFrameworks: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -85,11 +86,11 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         }
 
         this.state = {
-            selectedAf,
-            pending: false,
             addAfModalShow: false,
-            searchInputValue: '',
             displayAfList,
+            pending: false,
+            searchInputValue: '',
+            selectedAf,
         };
     }
 
@@ -217,6 +218,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         return (
             <ProjectAfDetail
+                mainHistory={this.props.mainHistory}
                 key={selectedAf}
                 afId={selectedAf}
             />
