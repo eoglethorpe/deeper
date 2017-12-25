@@ -240,7 +240,7 @@ export default class UserGroup extends React.PureComponent {
                         title: notificationStrings.userGroupDelete,
                         type: notify.type.SUCCESS,
                         message: notificationStrings.userGroupDeleteSuccess,
-                        duration: 3000,
+                        duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
                     console.error(er);
@@ -257,7 +257,7 @@ export default class UserGroup extends React.PureComponent {
                     title: notificationStrings.userGroupDelete,
                     type: notify.type.ERROR,
                     message: notificationStrings.userGroupDeleteFailure,
-                    duration: 3000,
+                    duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
@@ -265,7 +265,7 @@ export default class UserGroup extends React.PureComponent {
                     title: notificationStrings.userGroupDelete,
                     type: notify.type.ERROR,
                     message: notificationStrings.userGroupDeleteFatal,
-                    duration: 3000,
+                    duration: notify.duration.MEDIUM,
                 });
             })
             .build();

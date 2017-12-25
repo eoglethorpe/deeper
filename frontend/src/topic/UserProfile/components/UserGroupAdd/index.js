@@ -110,7 +110,7 @@ export default class UserGroupAdd extends React.PureComponent {
                         title: notificationStrings.userGroupCreate,
                         type: notify.type.SUCCESS,
                         message: notificationStrings.userGroupCreateSuccess,
-                        duration: 3000,
+                        duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
                 } catch (er) {
@@ -122,7 +122,7 @@ export default class UserGroupAdd extends React.PureComponent {
                     title: notificationStrings.userGroupCreate,
                     type: notify.type.ERROR,
                     message: notificationStrings.userGroupCreateFailure,
-                    duration: 3000,
+                    duration: notify.duration.MEDIUM,
                 });
                 const {
                     formFieldErrors,
@@ -138,7 +138,7 @@ export default class UserGroupAdd extends React.PureComponent {
                     title: notificationStrings.userGroupCreate,
                     type: notify.type.ERROR,
                     message: notificationStrings.userGroupCreateFatal,
-                    duration: 3000,
+                    duration: notify.duration.MEDIUM,
                 });
                 this.setState({
                     formErrors: ['Error while trying to save user group.'],

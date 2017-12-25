@@ -123,7 +123,6 @@ const strings = {
 
 
     // Notification strings
-
     900: 'User Profile Edit',
     901: 'User Edit Successful',
     902: 'Error. User Edit Failure.',

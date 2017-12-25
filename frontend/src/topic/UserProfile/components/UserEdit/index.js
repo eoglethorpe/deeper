@@ -132,7 +132,7 @@ export default class UserEdit extends React.PureComponent {
                         title: notificationStrings.userProfileEdit,
                         type: notify.type.SUCCESS,
                         message: notificationStrings.userEditSuccess,
-                        duration: 5000,
+                        duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
                 } catch (er) {
@@ -144,7 +144,7 @@ export default class UserEdit extends React.PureComponent {
                     title: notificationStrings.userProfileEdit,
                     type: notify.type.ERROR,
                     message: notificationStrings.userEditFailure,
-                    duration: 5000,
+                    duration: notify.duration.MEDIUM,
                 });
                 const {
                     formFieldErrors,
@@ -160,7 +160,7 @@ export default class UserEdit extends React.PureComponent {
                     title: notificationStrings.userProfileEdit,
                     type: notify.type.ERROR,
                     message: notificationStrings.userEditFatal,
-                    duration: 5000,
+                    duration: notify.duration.MEDIUM,
                 });
                 this.setState({
                     formErrors: ['Error while trying to save user.'],
