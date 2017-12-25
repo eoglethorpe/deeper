@@ -137,17 +137,18 @@ export default class Leads extends React.PureComponent {
                 order: 1,
                 modifier: (row) => {
                     let icon = iconNames.documentText;
-                    if (row.attachmentMimeType) {
-                        icon = leadTypeIconMap[row.attachmentMimeType];
+                    let url = '';
+                    if (row.attachment) {
+                        icon = leadTypeIconMap[row.attachment.mimeType];
+                        url = row.attachment.file;
                     } else if (row.url) {
                         icon = iconNames.globe;
+                        url = row.url;
                     }
                     return (
-                        <TransparentButton
-                            onClick={() => (row)}
-                        >
+                        <a href={url} target="_blank">
                             <i className={icon} />
-                        </TransparentButton>
+                        </a>
                     );
                 },
             },
@@ -457,7 +458,7 @@ export default class Leads extends React.PureComponent {
     }
 
     isColumnClickable = key => (
-        ['actions'].indexOf(key) === -1
+        ['actions', 'attachmentMimeType'].indexOf(key) === -1
     )
 
     headerModifier = (headerData) => {
@@ -553,6 +554,13 @@ export default class Leads extends React.PureComponent {
                     )
                 }
                 <footer styleName="footer">
+                    <SegmentButton
+                        styleName="view-mode-button"
+                        data={this.viewModes}
+                        selected={viewMode}
+                        onPress={this.handleLeadViewChange}
+                        backgroundHighlight
+                    />
                     <div>
                         {viewMode === 'table' &&
                             <Pager
@@ -564,12 +572,6 @@ export default class Leads extends React.PureComponent {
                             />
                         }
                     </div>
-                    <SegmentButton
-                        styleName="view-mode-button"
-                        data={this.viewModes}
-                        selected={viewMode}
-                        onPress={this.handleLeadViewChange}
-                    />
                 </footer>
             </div>
         );

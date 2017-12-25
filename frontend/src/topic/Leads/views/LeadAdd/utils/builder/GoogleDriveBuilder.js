@@ -28,7 +28,7 @@ export default class GoogleDriveUploadModule {
         const { addLeadViewLeadChange } = this.parent.props;
         addLeadViewLeadChange({
             leadId,
-            values: { attachment: response.id },
+            values: { attachment: { id: response.id } },
             upload: {
                 title: response.title,
                 url: response.file,
