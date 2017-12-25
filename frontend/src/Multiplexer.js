@@ -36,6 +36,8 @@ const ROUTE = {
 const routesOrder = [
     'login',
     'register',
+    'passwordReset',
+
     'projects',
     'dashboard',
     'leads',
@@ -65,6 +67,11 @@ const routes = {
         type: ROUTE.exclusivelyPublic,
         redirectTo: '/',
     },
+    passwordReset: {
+        type: ROUTE.exclusivelyPublic,
+        redirectTo: '/',
+    },
+
     homeScreen: { type: ROUTE.private },
     dashboard: { type: ROUTE.private },
     leads: { type: ROUTE.private },

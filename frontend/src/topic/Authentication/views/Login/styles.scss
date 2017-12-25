@@ -88,7 +88,13 @@
 
             .action-buttons {
                 display: flex;
-                justify-content: flex-end;
+                align-items: flex-start;
+                justify-content: space-between;
+
+                .forgot-password-link {
+                    color: $color-label;
+                    font-size: $font-size-extra-small;
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 const allLinks = [
     'login',
     'register',
+    'passwordReset',
     'homeScreen',
     'dashboard',
     'leads',
@@ -39,6 +40,7 @@ const blacklistLinks = (links, blacklist) => {
 const validLinks = {
     login: [],
     register: [],
+    passwordReset: [],
 
     homeScreen: allLinks,
 

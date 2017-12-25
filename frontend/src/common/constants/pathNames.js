@@ -1,6 +1,7 @@
 const pathNames = {
     login: '/login/',
     register: '/register/',
+    passwordReset: '/password-reset/',
 
     projects: '/projects/:projectId?/',
     dashboard: '/projects/:projectId/dashboard/',

@@ -47,3 +47,11 @@ export const createParamsForUserPatch = ({
         displayPicture,
     }),
 });
+
+export const urlForUserPasswordReset = `${wsEndpoint}/password/reset/`;
+export const createParamsForUserPasswordReset = ({ email }) => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({ email }),
+});
+

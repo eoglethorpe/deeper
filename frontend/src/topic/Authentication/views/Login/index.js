@@ -324,6 +324,12 @@ export default class Login extends React.PureComponent {
                             type="password"
                         />
                         <div styleName="action-buttons">
+                            <Link
+                                styleName="forgot-password-link"
+                                to={reverseRoute(pathNames.passwordReset, {})}
+                            >
+                                Forget Password?
+                            </Link>
                             <PrimaryButton
                                 disabled={pending}
                             >
