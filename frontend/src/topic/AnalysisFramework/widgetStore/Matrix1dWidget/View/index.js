@@ -1,4 +1,2 @@
+// eslint-disable-next-line import/prefer-default-export
 export { default as ViewListWidget } from './ListWidget';
-
-const dummy = {};
-export default dummy;
