@@ -4,6 +4,8 @@ import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
 import ProjectDetails from '../index';
 
+jest.mock('mapbox-gl', () => undefined);
+
 const initialState = {
 };
 

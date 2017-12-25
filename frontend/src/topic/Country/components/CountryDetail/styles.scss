@@ -2,6 +2,8 @@
 @import '../../../../stylesheets/tabs';
 @import '../../../../stylesheets/modal';
 
+$height-header: 42px;
+
 .country-detail {
     display: flex;
     flex-direction: column;
@@ -10,8 +12,30 @@
     .header {
         display: flex;
         flex-shrink: 0;
+        align-items: center;
         justify-content: space-between;
         padding: $spacing-small $spacing-medium-alt;
+        height: $height-header;
+    }
+
+    .details-no-edit {
+        position: relative;
+        flex-grow: 1;
+        border-top: $width-separator-thin solid $color-separator;
+        width: 100%;
+        height: calc(100% - #{$height-header});
+
+        .region-detail-box {
+            bottom: calc(#{$spacing-medium} + 24px);
+        }
+
+        .map-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
     }
 
     .tabs-container {
@@ -25,6 +49,7 @@
         }
     }
 }
+
 
 .delete-confirm-modal {
     width: 400px;

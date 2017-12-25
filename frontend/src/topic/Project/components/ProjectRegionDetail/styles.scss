@@ -50,6 +50,10 @@
         position: relative;
         height: calc(100% - #{$height-header});
 
+        .region-detail-box {
+            bottom: calc(#{$spacing-medium} + 24px);
+        }
+
         .map-container-non-edit {
             display: flex;
             align-items: center;

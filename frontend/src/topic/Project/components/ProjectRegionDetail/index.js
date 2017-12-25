@@ -30,6 +30,7 @@ import {
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
+import RegionMap from '../../../../common/components/RegionMap';
 import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';
@@ -264,7 +265,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                     styleName="region-detail-form"
                                 />
                                 <div styleName="map-container">
-                                    The map
+                                    <RegionMap regionId={regionId} />
                                 </div>
                             </div>
                             <RegionAdminLevel
@@ -274,9 +275,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         </div>
                     ) : (
                         <div styleName="region-details-non-edit">
-                            <RegionDetailView regionId={regionId} />
+                            <RegionDetailView
+                                styleName="region-detail-box"
+                                regionId={regionId}
+                            />
                             <div styleName="map-container-non-edit">
-                                The map
+                                <RegionMap regionId={regionId} />
                             </div>
                         </div>
                     )
