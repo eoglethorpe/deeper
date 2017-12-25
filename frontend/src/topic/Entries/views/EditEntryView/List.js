@@ -42,6 +42,7 @@ export default class List extends React.PureComponent {
         id: item.id,
         key: item.key,
         widgetId: item.widgetId,
+        filterId: item.filterId,
         title: item.title,
         layout: item.properties.listGridLayout,
         data: item.properties.data,
@@ -59,6 +60,7 @@ export default class List extends React.PureComponent {
             <Component
                 id={item.id}
                 entryId={item.entryId}
+                filterId={item.filterId}
                 api={this.props.api}
                 attribute={item.attribute}
                 data={item.data}
@@ -82,7 +84,13 @@ export default class List extends React.PureComponent {
         if (analysisFramework.widgets) {
             this.items = analysisFramework.widgets.filter(
                 w => this.widgets.find(w1 => w1.id === w.widgetId),
-            );
+            ).map((item) => {
+                const filter = analysisFramework.filters.find(f => f.key === item.key);
+                return {
+                    ...item,
+                    filterId: filter && filter.id,
+                };
+            });
         } else {
             this.items = [];
         }
