@@ -1,12 +1,9 @@
 @import '../../../../../stylesheets/base';
 
+
 .organigram-list {
     padding: $spacing-small;
     height: 100%;
-
-    .organigram {
-        width: 100%;
-    }
 }
 
 %modal {
@@ -20,25 +17,55 @@
 .edit-value-modal {
     @extend %modal;
 
-    .edit-value {
+    .organ {
+        flex-grow: 1;
         display: flex;
+        flex-direction: column;
+
+        &+.organ {
+            border-left: $width-separator-medium solid $color-separator;
+        }
+    }
+
+    .organ-header {
+        flex-shrink: 0;
+        display: flex;
+        margin: $spacing-small;
+        padding: $spacing-medium;
+        background-color: $color-foreground;
+        position: relative;
+        // border: 1px solid blue;
+
+        .action-buttons {
+            @include transition-medium;
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            pointer-events: none;
+
+            .action-button {
+                flex-shrink: 0,
+            }
+        }
+
+        &:hover {
+            .action-buttons {
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
 
         .title-input {
             flex-grow: 1;
-            margin-right: $spacing-medium;
-        }
-
-        .title-parent {
-            flex-grow: 1;
-            margin-left: $spacing-medium;
-        }
-
-        .delete-button {
-            flex-shrink: 0;
         }
     }
-}
 
-:global #organigram-parent-select-options {
-    z-index: 11111;
+    .organ-body {
+        display: flex;
+        flex-grow: 1;
+        align-items: stretch;
+        // border: 1px solid green;
+    }
+
 }

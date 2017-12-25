@@ -3,25 +3,27 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    SelectInput,
-    TextInput,
-} from '../../../../../public/components/Input';
-import {
-    TransparentPrimaryButton,
-    TransparentDangerButton,
     Button,
     PrimaryButton,
+    TransparentPrimaryButton,
+    TransparentDangerButton,
 } from '../../../../../public/components/Action';
+import {
+    TextInput,
+} from '../../../../../public/components/Input';
 import {
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
-    ListView,
 } from '../../../../../public/components/View';
-import { randomString } from '../../../../../public/utils/common';
+import {
+    randomString,
+    isFalsy,
+} from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
-import { iconNames } from '../../../../../common/constants';
+
+// import { iconNames } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -29,18 +31,56 @@ import styles from './styles.scss';
 const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    data: [],
+    data: {
+        title: 'All',
+        key: '1',
+        organs: [
+            {
+                key: '2',
+                title: 'Head',
+                organs: [
+                    {
+                        key: '3',
+                        title: 'Eye',
+                        organs: [],
+                    },
+                    {
+                        key: '4',
+                        title: 'Nose',
+                        organs: [],
+                    },
+                ],
+            },
+            {
+                key: '5',
+                title: 'Body',
+                organs: [],
+            },
+        ],
+    },
 };
 
-const emptyList = [];
+// TODO: move this later to public
+const buildSettings = (indices, action, value, wrapper) => (
+    // NOTE: reverse() mutates the array so making a copy
+    [...indices].reverse().reduce(
+        (acc, selected, index) => wrapper(
+            { [selected]: acc },
+            indices.length - index - 1,
+        ),
+        wrapper(
+            { [action]: value },
+            indices.length,
+        ),
+    )
+);
 
 @CSSModules(styles)
 export default class Organigram extends React.PureComponent {
-    static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -49,96 +89,21 @@ export default class Organigram extends React.PureComponent {
 
         this.state = {
             showEditModal: false,
-            values: props.data || emptyList,
+            organigram: props.data,
         };
-        this.props.editAction(this.handleEdit);
+
+        this.props.editAction(this.handleEditClick);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.data !== nextProps.data) {
-            this.setState({
-                values: nextProps.data || emptyList,
-            });
+            this.setState({ organigram: nextProps.data });
         }
     }
 
-    /*
-    getEditValue = (key, data) => {
-        console.log(this.state.values);
-
-        return (
-            <div
-                className={styles['edit-value']}
-                key={key}
-            >
-                <TextInput
-                    className={styles['title-input']}
-                    label="Option"
-                    placeholder="eg: Context"
-                    onChange={(value) => { this.handleValueInputChange(key, value); }}
-                    value={data.label}
-                />
-                <SelectInput
-                    label="Parent"
-                    options={this.state.values}
-                    className={styles['title-parent']}
-                    placeholder="Select Parent Node"
-                    optionsIdentifier="organigram-parent-select-options"
-                />
-                <TransparentDangerButton
-                    className={styles['delete-button']}
-                    onClick={() => { this.handleRemoveButtonClick(key); }}
-                >
-                    <span className={iconNames.delete} />
-                </TransparentDangerButton>
-            </div>
-        );
-    }
-    */
-
-    handleEdit = () => {
+    handleEditClick = () => {
         this.setState({ showEditModal: true });
     }
-
-    /*
-    handleRemoveButtonClick = (key) => {
-        const newValues = this.state.values.filter(d => d.key !== key);
-        this.setState({
-            values: newValues,
-        });
-    }
-    */
-
-    /*
-    handleValueInputChange = (key, value) => {
-        const valueIndex = this.state.values.findIndex(d => d.key === key);
-        const settings = {
-            [valueIndex]: {
-                label: { $set: value },
-            },
-        };
-        const newValues = update(this.state.values, settings);
-        this.setState({
-            values: newValues,
-        });
-    }
-    */
-
-    /*
-    handleAddOptionButtonClick = () => {
-        const newValue = {
-            key: randomString(16).toLowerCase(),
-            label: '',
-        };
-
-        this.setState({
-            values: [
-                ...this.state.values,
-                newValue,
-            ],
-        });
-    }
-    */
 
     handleEditModalClose = () => {
         this.setState({ showEditModal: false });
@@ -147,66 +112,127 @@ export default class Organigram extends React.PureComponent {
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
-            values: this.props.data,
+            organigram: this.props.data,
         });
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({
-            showEditModal: false,
-        });
-
-        this.props.onChange(this.state.values);
+        this.setState({ showEditModal: false });
+        this.props.onChange(this.state.organigram);
     }
+
+
+    handleAdd = nextIndices => () => {
+        const wrapper = e => ({ organs: e });
+        const key = `Organ ${randomString()}`;
+        const organsSetting = buildSettings(
+            nextIndices,
+            '$push',
+            [{ key, title: '', organs: [] }],
+            wrapper,
+        );
+        const newOrganigram = update(this.state.organigram, organsSetting);
+        this.setState({ organigram: newOrganigram });
+    };
+    handleRemove = (indices, j) => () => {
+        const wrapper = e => ({ organs: e });
+        const organsSetting = buildSettings(
+            indices,
+            '$splice',
+            [[j, 1]],
+            wrapper,
+        );
+        console.log(organsSetting);
+        const newOrganigram = update(this.state.organigram, organsSetting);
+        this.setState({ organigram: newOrganigram });
+    };
+    handleChange = nextIndices => (value) => {
+        const wrapper = (e, i) => (
+            i === nextIndices.length ? { title: e } : { organs: e }
+        );
+        const organsSetting = buildSettings(
+            nextIndices,
+            '$set',
+            value,
+            wrapper,
+        );
+        const newOrganigram = update(this.state.organigram, organsSetting);
+        this.setState({ organigram: newOrganigram });
+    };
+
+    renderOrgan = (organ, indices = [], j) => {
+        const isFatherOrgan = isFalsy(j);
+        const nextIndices = isFatherOrgan ? indices : [...indices, j];
+        return (
+            <div
+                styleName="organ"
+                key={organ.key}
+            >
+                <div styleName="organ-header">
+                    <TextInput
+                        value={organ.title}
+                        styleName="title-input"
+                        showHintAndError={false}
+                        placeholder="Organ"
+                        showLabel={false}
+                        disabled={isFatherOrgan}
+                        onChange={this.handleChange(nextIndices)}
+                    />
+                    <div styleName="action-buttons">
+                        <TransparentPrimaryButton
+                            styleName="action-button"
+                            onClick={this.handleAdd(nextIndices)}
+                            title="Add child"
+                            tabIndex="-1"
+                        >
+                            <span className="ion-fork-repo" />
+                        </TransparentPrimaryButton>
+                        { !isFatherOrgan &&
+                            <TransparentDangerButton
+                                styleName="action-button"
+                                onClick={this.handleRemove(indices, j)}
+                                title="Remove"
+                                tabIndex="-1"
+                            >
+                                <span className="ion-trash-b" />
+                            </TransparentDangerButton>
+                        }
+                    </div>
+                </div>
+                <div styleName="organ-body">
+                    {
+                        organ.organs.map(
+                            (childOrgan, i) => this.renderOrgan(childOrgan, nextIndices, i),
+                        )
+                    }
+                </div>
+            </div>
+        );
+    };
+
 
     render() {
         const {
             showEditModal,
-            values,
+            organigram,
         } = this.state;
 
         return (
             <div styleName="organigram-list">
-                <SelectInput
-                    options={values}
-                    multiple
-                    styleName="organigram"
-                    keyExtractor={Organigram.valueKeyExtractor}
-                />
                 <Modal
                     styleName="edit-value-modal"
                     show={showEditModal}
                     onClose={this.handleEditModalClose}
                 >
-                    <ModalHeader
-                        title="Edit Organigram"
-                        rightComponent={null /* (
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddOptionButtonClick}
-                            >
-                                Add Option
-                            </TransparentPrimaryButton>
-                        ) */}
-                    />
+                    <ModalHeader title="Edit Organigram" />
                     <ModalBody>
-                        {/*
-                        <ListView
-                            data={values}
-                            className={styles['value-list']}
-                            keyExtractor={Organigram.valueKeyExtractor}
-                            modifier={this.getEditValue}
-                        />
-                        */}
+                        { this.renderOrgan(organigram) }
                     </ModalBody>
                     <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
+                        <Button onClick={this.handleModalCancelButtonClick}>
                             Cancel
                         </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
+                        <PrimaryButton onClick={this.handleModalSaveButtonClick}>
                             Save
                         </PrimaryButton>
                     </ModalFooter>

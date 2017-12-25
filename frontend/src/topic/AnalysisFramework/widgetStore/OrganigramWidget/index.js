@@ -13,7 +13,7 @@ const multiselectWidget = {
     title: 'Organigram',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 216, height: 288 },
+        listMinSize: { width: 216, height: 108 },
     },
     tagging: {
         listComponent: TaggingListWidget,
