@@ -32,6 +32,10 @@ import {
 import {
     setUserGroupAction,
 } from '../../../../common/redux';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -100,13 +104,24 @@ export default class UserGroupEdit extends React.PureComponent {
                     this.props.setUserGroup({
                         userGroup: response,
                     });
+                    notify.send({
+                        title: notificationStrings.userGroupEdit,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userGroupEditSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.handleModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userGroupEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupEditFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -114,14 +129,17 @@ export default class UserGroupEdit extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userGroupEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupEditFatal,
+                    duration: notify.duration.MEDIUM,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save user group.'],
-                    pending: true,
                 });
             })
             .build();

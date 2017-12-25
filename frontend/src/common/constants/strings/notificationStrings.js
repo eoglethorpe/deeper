@@ -42,6 +42,11 @@ const notificationStrings = {
     userMembershipRoleFailure: string[930],
     userMembershipRoleFatal: string[931],
 
+    userGroupEdit: string[932],
+    userGroupEditSuccess: string[933],
+    userGroupEditFailure: string[934],
+    userGroupEditFatal: string[935],
+
 };
 
 export default notificationStrings;

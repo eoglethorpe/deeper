@@ -163,10 +163,11 @@ const strings = {
     930: 'Error. User role update failure.',
     931: 'Error. Cannot update user role. Please check your network connection and try again',
 
-    932: 'User Edit Successful',
-    933: 'User Edit Successful',
-    934: 'User Edit Successful',
-    935: 'User Edit Successful',
+    932: 'User Group Edit',
+    933: 'Name Updated Successfully',
+    934: 'Error. Edit Failure.',
+    935: 'Error. Edit Failure. Please check your network connection and try again',
+
     936: 'User Edit Successful',
     937: 'User Edit Successful',
     938: 'User Edit Successful',
