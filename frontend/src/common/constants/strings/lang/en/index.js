@@ -121,18 +121,24 @@ const strings = {
     115: 'UN Geographical Sub Region',
     116: 'Enter UN Geographical Sub Region',
 
+
+    // Notification strings
+
     900: 'User Profile Edit',
     901: 'User Edit Successful',
-    902: 'Error. Please Try Again',
-    903: 'Error. Please check your network connection and try again',
-    904: 'User Edit Successful',
-    905: 'User Edit Successful',
-    906: 'User Edit Successful',
-    907: 'User Edit Successful',
-    908: 'User Edit Successful',
-    909: 'User Edit Successful',
-    910: 'User Edit Successful',
-    911: 'User Edit Successful',
+    902: 'Error. User Edit Failure.',
+    903: 'Error. User Edit Failure. Please check your network connection and try again',
+
+    904: 'User Group Delete',
+    905: 'User Group Successfully Deleted',
+    906: 'Error. User Group Delete Failure',
+    907: 'Error. User Group Delete Failure. Please check your network connection and try again',
+
+    908: 'User Group Create',
+    909: 'User Group Successfully Created',
+    910: 'Error. User Group Creation Failure',
+    911: 'Error. User Group Creation Failure. Please check your network connection and try again',
+
     912: 'User Edit Successful',
     913: 'User Edit Successful',
     914: 'User Edit Successful',

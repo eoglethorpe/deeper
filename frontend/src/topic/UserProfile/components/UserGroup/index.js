@@ -29,6 +29,7 @@ import { reverseRoute } from '../../../../public/utils/common';
 
 import {
     iconNames,
+    notificationStrings,
     pathNames,
 } from '../../../../common/constants';
 
@@ -46,6 +47,7 @@ import {
     activeUserSelector,
     unSetUserGroupAction,
 } from '../../../../common/redux';
+import notify from '../../../../common/notify';
 
 import {
     UserGroupAdd,
@@ -234,6 +236,12 @@ export default class UserGroup extends React.PureComponent {
                         userGroupId,
                         userId,
                     });
+                    notify.send({
+                        title: notificationStrings.userGroupDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userGroupDeleteSuccess,
+                        duration: 3000,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -244,11 +252,21 @@ export default class UserGroup extends React.PureComponent {
             .postLoad(() => {
                 this.setState({ deletePending: false });
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.userGroupDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupDeleteFailure,
+                    duration: 3000,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userGroupDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupDeleteFatal,
+                    duration: 3000,
+                });
             })
             .build();
         return userGroupDeletRequest;
