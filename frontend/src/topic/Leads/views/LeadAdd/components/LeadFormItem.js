@@ -157,7 +157,7 @@ export default class LeadFormItem extends React.PureComponent {
                     values.attachment ? (
                         <DeepGallery
                             styleName="gallery-file"
-                            galleryId={values.attachment}
+                            galleryId={values.attachment && values.attachment.id}
                         />
                     ) :
                         <div styleName="preview-text">
