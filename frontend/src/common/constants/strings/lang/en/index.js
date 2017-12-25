@@ -148,10 +148,11 @@ const strings = {
     918: 'Error. Project Creation Failure',
     919: 'Error. Project Creation Failure. Please check your network connection and try again',
 
-    920: 'User Edit Successful',
-    921: 'User Edit Successful',
-    922: 'User Edit Successful',
-    923: 'User Edit Successful',
+    920: 'User Membership',
+    921: 'User Added Successfully ',
+    922: 'Error. Cannot add user',
+    923: 'Error. Cannot add user. Please check your network connection and try again',
+
     924: 'User Edit Successful',
     925: 'User Edit Successful',
     926: 'User Edit Successful',
