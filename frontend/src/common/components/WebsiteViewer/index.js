@@ -164,12 +164,11 @@ export default class DeepGallery extends React.PureComponent {
         return (
             (canShow && !isSameOrigin && isSecure) ?
                 <iframe
-                    // styleName="doc"
+                    styleName="doc"
                     sandbox="allow-scripts allow-same-origin"
                     className={className}
                     title={httpsUrl || url}
                     src={httpsUrl || url}
-
                 /> :
                 <div className={className}>
                     {

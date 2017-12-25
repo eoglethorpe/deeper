@@ -105,6 +105,7 @@ export default class List extends React.PureComponent {
                             Goto overview
                         </Button>
                         <SuccessButton
+                            disabled
                             onClick={this.handleSaveButtonClick}
                         >
                             Save

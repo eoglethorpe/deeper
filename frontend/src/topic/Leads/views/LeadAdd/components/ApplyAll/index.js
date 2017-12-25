@@ -48,6 +48,7 @@ export default class ApplyAll extends React.PureComponent {
                         title="Apply this value to all"
                         disabled={disabled}
                         onClick={() => onApplyAllClick(identiferName)}
+                        tabIndex="-1"
                     >
                         <span className={iconNames.applyAll} />
                     </TransparentAccentButton>
@@ -57,6 +58,7 @@ export default class ApplyAll extends React.PureComponent {
                         title="Apply this value to all below"
                         disabled={disabled}
                         onClick={() => onApplyAllBelowClick(identiferName)}
+                        tabIndex="-1"
                     >
                         <span className={iconNames.applyAllBelow} />
                     </TransparentWarningButton>

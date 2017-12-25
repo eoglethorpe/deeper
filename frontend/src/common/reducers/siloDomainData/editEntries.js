@@ -1,3 +1,4 @@
+import { getElementAround } from '../../../public/utils/common';
 import update from '../../../public/utils/immutable-update';
 import {
     createEntry,
@@ -252,12 +253,9 @@ const editEntryViewRemoveEntry = (state, action) => {
     // Get new selected entry id
     const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
     const entries = getEntriesByLeadId(editEntryView, leadId);
-    let newSelectedEntryId;
-    if (entryIndex + 1 < entries.length) {
-        newSelectedEntryId = getIdFromEntry(entries[entryIndex + 1]);
-    } else if (entryIndex - 1 >= 0) {
-        newSelectedEntryId = getIdFromEntry(entries[entryIndex - 1]);
-    }
+
+    const newSelectedEntry = getElementAround(entries, entryIndex);
+    const newSelectedEntryId = newSelectedEntry ? getIdFromEntry(newSelectedEntry) : undefined;
 
     const settings = {
         editEntryView: {

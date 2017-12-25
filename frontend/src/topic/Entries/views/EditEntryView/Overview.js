@@ -57,6 +57,7 @@ const propTypes = {
     choices: PropTypes.object.isRequired, // eslint-disable-line
 
     saveAllDisabled: PropTypes.bool.isRequired,
+    saveAllPending: PropTypes.bool.isRequired,
     widgetDisabled: PropTypes.bool,
 
     onEntryAdd: PropTypes.func.isRequired,
@@ -158,7 +159,7 @@ export default class Overview extends React.PureComponent {
         const { entriesListViewShow } = this.state;
         const styleNames = [style];
 
-        if (entriesListViewShow) {
+        if (entriesListViewShow || this.props.saveAllPending) {
             styleNames.push('active');
         }
 

@@ -620,6 +620,7 @@ export default class EditEntryView extends React.PureComponent {
                                 onEntryAdd={this.handleAddEntrySimple}
                                 onEntryDelete={this.handleDeleteEntry}
 
+                                saveAllPending={pendingSaveAll}
                                 widgetDisabled={isWidgetDisabled}
                                 saveAllDisabled={isSaveAllDisabled}
 

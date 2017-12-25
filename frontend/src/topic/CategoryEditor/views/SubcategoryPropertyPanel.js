@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { bound } from '../../../public/utils/common';
 import {
     PrimaryButton,
     DangerButton,
@@ -18,6 +19,8 @@ import {
 import {
     selectedSubcategorySelector,
     updateSelectedSubcategoryAction,
+    removeSelectedSubcategoryAction,
+    removeSubcategoryNGramAction,
 } from '../../../common/redux';
 
 import NGram from './NGram';
@@ -26,6 +29,9 @@ import styles from './styles.scss';
 const propTypes = {
     subcategory: PropTypes.shape({ id: PropTypes.string }),
     updateSelectedSubcategory: PropTypes.func.isRequired,
+    removeSelectedSubcategory: PropTypes.func.isRequired,
+    removeSubcategoryNGram: PropTypes.func.isRequired,
+    onNewManualNGram: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,6 +44,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     updateSelectedSubcategory: params => dispatch(updateSelectedSubcategoryAction(params)),
+    removeSelectedSubcategory: params => dispatch(removeSelectedSubcategoryAction(params)),
+    removeSubcategoryNGram: params => dispatch(removeSubcategoryNGramAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -46,18 +54,49 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static getNgramKeys = (subcategory) => {
+        if (!subcategory) {
+            return [];
+        }
+        return Object.keys(subcategory.ngrams).filter(
+            key => subcategory.ngrams[key].length > 0,
+        );
+    }
+
     constructor(props) {
         super(props);
 
+        const { subcategory } = this.props;
+        const ngramKeys = SubcategoryPropertyPanel.getNgramKeys(subcategory);
         this.state = {
             selectedNGramIndex: 0,
+            ngramKeys,
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { subcategory: oldSubcategory } = this.props;
+        const { subcategory: newSubcategory } = nextProps;
+
+        if (oldSubcategory !== newSubcategory &&
+            (!oldSubcategory || !newSubcategory ||
+                oldSubcategory.ngram !== newSubcategory.ngrams)
+        ) {
+            const ngramKeys = SubcategoryPropertyPanel.getNgramKeys(newSubcategory);
+            const selectedNGramIndex = bound(
+                this.state.selectedNGramIndex,
+                ngramKeys.length - 1,
+                0,
+            );
+            this.setState({
+                ngramKeys,
+                selectedNGramIndex,
+            });
+        }
+    }
+
     getNGramSelectStyleName = (i) => {
-        const {
-            selectedNGramIndex,
-        } = this.state;
+        const { selectedNGramIndex } = this.state;
 
         const styleNames = [];
         styleNames.push(styles['ngram-select']);
@@ -69,20 +108,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getNGramSelect = (key, data, i) => (
-        <button
-            className={this.getNGramSelectStyleName(i)}
-            key={key}
-            onClick={() => { this.handleNGramSelectButtonClick(i); }}
-        >
-            {+key + 1}
-        </button>
-    )
-
     handleNGramSelectButtonClick = (i) => {
-        this.setState({
-            selectedNGramIndex: i,
-        });
+        this.setState({ selectedNGramIndex: i });
     }
 
     handleSubcategoryTitleInputChange = (value) => {
@@ -109,13 +136,32 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         });
     };
 
+    handleSubcategoryRemove = () => {
+        this.props.removeSelectedSubcategory();
+    };
+
+    handleNgramRemove = (ngram) => {
+        this.props.removeSubcategoryNGram(ngram);
+    }
+
+    renderNGramSelect = (key, data, i) => (
+        <button
+            className={this.getNGramSelectStyleName(i)}
+            key={key}
+            onClick={() => { this.handleNGramSelectButtonClick(i); }}
+        >
+            {key}
+        </button>
+    )
+
     render() {
         const {
             subcategory,
+            onNewManualNGram,
         } = this.props;
-
         const {
             selectedNGramIndex,
+            ngramKeys,
         } = this.state;
 
         if (!subcategory) {
@@ -128,9 +174,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         const {
             ngrams,
+            title,
+            description,
         } = subcategory;
-
-        const ngramKeys = Object.keys(ngrams);
 
         return (
             <div
@@ -141,7 +187,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         Subcategory details
                     </h3>
                     <div styleName="action-buttons">
-                        <DangerButton disabled >
+                        <DangerButton
+                            onClick={this.handleSubcategoryRemove}
+                        >
                             Remove
                         </DangerButton>
                     </div>
@@ -150,13 +198,13 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                     <TextInput
                         label="Title"
                         placeholder="eg: Wash"
-                        value={subcategory.title}
+                        value={title}
                         onChange={this.handleSubcategoryTitleInputChange}
                     />
                     <TextArea
                         label="Description"
                         placeholder="Description of the subcategory"
-                        value={subcategory.description}
+                        value={description}
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
                 </section>
@@ -172,14 +220,21 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         <ListView
                             styleName="ngram-select-list"
                             data={ngramKeys}
-                            modifier={this.getNGramSelect}
+                            modifier={this.renderNGramSelect}
                             keyExtractor={d => d}
                             emptyComponent={null}
                         />
                     </div>
                     {
                         (ngramKeys.length > 0) ? (
-                            <NGram keywords={ngrams[ngramKeys[selectedNGramIndex]]} />
+                            <NGram
+                                keywords={ngrams[ngramKeys[selectedNGramIndex]]}
+                                onDelete={keyword => this.handleNgramRemove({
+                                    // TODO: fix this mess later
+                                    n: ngramKeys[selectedNGramIndex],
+                                    keyword,
+                                })}
+                            />
                         ) : (
                             <div styleName="empty">
                                 No words yet.
@@ -187,7 +242,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         )
                     }
                     <div styleName="action-buttons">
-                        <PrimaryButton disabled >
+                        <PrimaryButton
+                            onClick={onNewManualNGram}
+                        >
                             Add word manually
                         </PrimaryButton>
                     </div>
