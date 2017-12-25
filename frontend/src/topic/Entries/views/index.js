@@ -175,7 +175,7 @@ export default class Entries extends React.PureComponent {
                     schema.validate(response, 'entriesGetResponse');
                     this.props.setEntries({
                         projectId,
-                        entries: response.results,
+                        entries: response.results.entries,
                     });
                     this.setState({ pendingEntries: false });
                 } catch (er) {

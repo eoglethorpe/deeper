@@ -267,7 +267,7 @@ export default class EditEntryView extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
-                    const entries = response.results;
+                    const entries = response.results.entries;
                     const diffs = calcEntriesDiff(this.props.entries, entries);
                     this.props.diffEntries({ leadId, diffs });
                 } catch (er) {
