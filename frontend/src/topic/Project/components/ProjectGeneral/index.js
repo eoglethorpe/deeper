@@ -120,14 +120,14 @@ export default class ProjectGeneral extends React.PureComponent {
 
         this.memberHeaders = [
             {
-                key: 'name',
+                key: 'memberName',
                 label: 'Name',
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
-                key: 'email',
+                key: 'memberEmail',
                 label: 'Email',
                 order: 2,
                 sortable: true,

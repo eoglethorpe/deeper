@@ -48,10 +48,7 @@ import {
     unSetProjectAction,
 } from '../../../../common/redux';
 
-
-import {
-    UserProjectAdd,
-} from '../../components/';
+import UserProjectAdd from '../../../../common/components/UserProjectAdd';
 
 import styles from './styles.scss';
 

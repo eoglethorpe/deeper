@@ -5,12 +5,16 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
+    Modal,
+    ModalBody,
+    ModalHeader,
     ListView,
     LoadingAnimation,
 } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import {
     PrimaryButton,
+    TransparentPrimaryButton,
 } from '../../../public/components/Action';
 import {
     reverseRoute,
@@ -28,6 +32,7 @@ import {
     setActiveProjectAction,
 } from '../../../common/redux';
 
+import UserProjectAdd from '../../../common/components/UserProjectAdd';
 import ProjectDetails from '../components/ProjectDetails';
 import styles from './styles.scss';
 
@@ -38,6 +43,7 @@ const propTypes = {
             projectId: PropTypes.string,
         }),
     }).isRequired,
+    history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setActiveProject: PropTypes.func.isRequired,
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
@@ -71,6 +77,7 @@ export default class ProjectPanel extends React.PureComponent {
 
         this.state = {
             pending: false,
+            showAddProjectModal: false,
             displayUserProjects: this.props.userProjects,
             isSidebarVisible: false,
             searchInputValue: '',
@@ -116,6 +123,18 @@ export default class ProjectPanel extends React.PureComponent {
         });
     };
 
+    handleProjectAdded = (projectId) => {
+        this.props.setActiveProject({ activeProject: projectId });
+    }
+
+    handleAddProjectClick = () => {
+        this.setState({ showAddProjectModal: true });
+    }
+
+    handleAddProjectModalClose = () => {
+        this.setState({ showAddProjectModal: false });
+    }
+
     renderSidebarItem = (key, project) => (
         <div
             key={key}
@@ -135,6 +154,7 @@ export default class ProjectPanel extends React.PureComponent {
         const {
             displayUserProjects,
             pending,
+            showAddProjectModal,
         } = this.state;
 
         const { projectId } = this.props.match.params;
@@ -151,6 +171,7 @@ export default class ProjectPanel extends React.PureComponent {
                             Projects
                         </h3>
                         <PrimaryButton
+                            onClick={this.handleAddProjectClick}
                             iconName={iconNames.add}
                         >
                             Add
@@ -164,6 +185,28 @@ export default class ProjectPanel extends React.PureComponent {
                             showLabel={false}
                             showHintAndError={false}
                         />
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleAddProjectModalClose}
+                            show={showAddProjectModal}
+                        >
+                            <ModalHeader
+                                title="Add New Project"
+                                rightComponent={
+                                    <TransparentPrimaryButton
+                                        onClick={this.handleAddProjectModalClose}
+                                    >
+                                        <span className={iconNames.close} />
+                                    </TransparentPrimaryButton>
+                                }
+                            />
+                            <ModalBody>
+                                <UserProjectAdd
+                                    onProjectAdded={this.handleProjectAdded}
+                                    handleModalClose={this.handleAddProjectModalClose}
+                                />
+                            </ModalBody>
+                        </Modal>
                     </header>
                     <ListView
                         styleName="project-list"
