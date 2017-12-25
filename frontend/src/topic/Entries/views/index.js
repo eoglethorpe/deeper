@@ -10,8 +10,9 @@ import {
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { groupList } from '../../../public/utils/common';
 
-import { pageTitles } from '../../../common/constants';
 import schema from '../../../common/schema';
+
+import { pageTitles } from '../../../common/constants';
 import {
     projectIdFromRoute,
     setEntriesAction,
@@ -122,12 +123,25 @@ export default class Entries extends React.PureComponent {
         }
     }
 
-    getGridItems = () => this.items.map(
+    getAttribute = (entryId, widgetId) => {
+        const entry = this.props.entries.find(e => e.id === entryId);
+        const attribute = (
+            entry &&
+            entry.attributes &&
+            entry.attributes.find(attr => attr.widget === widgetId)
+        );
+
+        return attribute && attribute.data;
+    }
+
+    getGridItems = entryId => this.items.map(
         item => ({
             key: item.key,
             widgetId: item.widgetId,
             title: item.title,
             layout: item.properties.listGridLayout,
+            attribute: this.getAttribute(entryId, item.id),
+            data: item.properties.data,
         }),
     )
 
@@ -144,7 +158,12 @@ export default class Entries extends React.PureComponent {
             w => w.id === item.widgetId,
         ).listComponent;
 
-        return <Component />;
+        return (
+            <Component
+                data={item.data}
+                attribute={item.attribute}
+            />
+        );
     }
 
     createRequestForEntries = (projectId) => {
@@ -262,7 +281,7 @@ export default class Entries extends React.PureComponent {
                                             <GridLayout
                                                 styleName="grid-layout"
                                                 modifier={this.getItemView}
-                                                items={this.getGridItems()}
+                                                items={this.getGridItems(entry.id)}
                                                 viewOnly
                                             />
                                         </div>

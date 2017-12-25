@@ -1,6 +1,6 @@
 @import '../../../../../stylesheets/base';
 
-.number-list {
+.scales {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -8,7 +8,23 @@
     justify-content: center;
     padding: $spacing-small;
 
-    .number-input {
-        width: 100%;
+    .scale {
+        display: flex;
+        align-items: center;
+
+        .scale-unit {
+            transition: .2s all ease-in-out;
+            margin: 0 $spacing-extra-small;
+            outline: 0;
+            border: 0;
+            cursor: pointer;
+            width: $width-scale-widget-unit;
+            height: $height-scale-widget-unit;
+
+            &.selected {
+                width: $width-scale-widget-unit-selected;
+                height: $height-scale-widget-unit-selected;
+            }
+        }
     }
 }

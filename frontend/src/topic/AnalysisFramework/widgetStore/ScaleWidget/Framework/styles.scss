@@ -15,8 +15,8 @@
             margin: 0 $spacing-extra-small;
             outline: 0;
             border: 0;
-            width: 16px;
-            height: 36px;
+            width: $width-scale-widget-unit;
+            height: $height-scale-widget-unit;
         }
     }
 }

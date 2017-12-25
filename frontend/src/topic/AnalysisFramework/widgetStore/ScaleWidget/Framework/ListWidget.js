@@ -175,7 +175,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
     };
 
     handleColorChange = (newColor) => {
-        const { activeScaleUnit, scaleUnits } = this.state;
+        const { activeScaleUnit } = this.state;
         const rowIndex = this.state.scaleUnits.findIndex(d => d.key === activeScaleUnit.key);
 
         const settings = {

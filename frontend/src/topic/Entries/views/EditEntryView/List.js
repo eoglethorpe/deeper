@@ -18,6 +18,8 @@ const propTypes = {
 
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    onSaveAll: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
 };
 const defaultProps = {
 };
@@ -44,6 +46,7 @@ export default class List extends React.PureComponent {
         layout: item.properties.listGridLayout,
         data: item.properties.data,
         attribute: this.props.api.getEntryAttribute(item.id, entryId),
+        entryId,
     }))
 
     getMaxHeight = () => this.items.reduce((acc, item) => (
@@ -55,6 +58,7 @@ export default class List extends React.PureComponent {
         return (
             <Component
                 id={item.id}
+                entryId={item.entryId}
                 api={this.props.api}
                 attribute={item.attribute}
                 data={item.data}
@@ -85,7 +89,12 @@ export default class List extends React.PureComponent {
     }
 
     render() {
-        const { entries } = this.props;
+        const {
+            entries,
+            onSaveAll,
+            saveAllDisabled,
+        } = this.props;
+
         return (
             <div
                 styleName="list"
@@ -105,8 +114,8 @@ export default class List extends React.PureComponent {
                             Goto overview
                         </Button>
                         <SuccessButton
-                            disabled
-                            onClick={this.handleSaveButtonClick}
+                            onClick={onSaveAll}
+                            disabled={saveAllDisabled}
                         >
                             Save
                         </SuccessButton>

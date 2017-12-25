@@ -635,6 +635,8 @@ export default class EditEntryView extends React.PureComponent {
                                 {...props}
                                 api={this.api}
                                 leadId={leadId}
+                                onSaveAll={this.handleSaveAll}
+                                saveAllDisabled={isSaveAllDisabled}
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                             />
