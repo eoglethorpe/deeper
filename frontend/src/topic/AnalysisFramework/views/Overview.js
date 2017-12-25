@@ -106,8 +106,9 @@ export default class Overview extends React.PureComponent {
         return (
             <Component
                 data={item.data}
+                filter={item.filter}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={data => this.handleItemChange(item.key, data)}
+                onChange={(data, filter) => this.handleItemChange(item.key, data, filter)}
                 className={styles.component}
             />
         );
@@ -138,7 +139,6 @@ export default class Overview extends React.PureComponent {
         const widget = this.widgets.find(w => w.id === id);
 
         const item = {
-            analysisFramework: analysisFrameworkId,
             key: `overview-${this.getUniqueKey()}`,
             widgetId: widget.id,
             title: widget.title,
@@ -157,9 +157,17 @@ export default class Overview extends React.PureComponent {
             },
         };
 
+        const filter = {
+            key: item.key,
+            title: item.title,
+            properties: undefined,
+            filterType: undefined,
+        };
+
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
+            filter,
         });
     }
 
@@ -178,7 +186,7 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data) => {
+    handleItemChange = (key, data, filter) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             properties: {
@@ -188,7 +196,14 @@ export default class Overview extends React.PureComponent {
 
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
-        this.props.updateWidget({ analysisFrameworkId, widget });
+
+        const filterData = {
+            key: widget.key,
+            title: widget.title,
+            properties: filter.data,
+            filterType: filter.type,
+        };
+        this.props.updateWidget({ analysisFrameworkId, widget, filterData });
     }
 
     handleGotoListButtonClick = () => {
@@ -206,9 +221,20 @@ export default class Overview extends React.PureComponent {
                 overviewMinSize: widget.analysisFramework.overviewMinSize,
                 listMinSize: widget.analysisFramework.listMinSize,
             }));
+
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
-        );
+        ).map((item) => {
+            const filter = analysisFramework.filters.find(f => f.key === item.key);
+            return {
+                ...item,
+                filter: {
+                    data: filter && filter.properties,
+                    widgetType: filter && filter.widgetType,
+                    title: filter && filter.title,
+                },
+            };
+        });
     }
 
     render() {
