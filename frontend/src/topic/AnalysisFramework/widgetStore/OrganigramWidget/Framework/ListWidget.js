@@ -62,6 +62,7 @@ export default class Organigram extends React.PureComponent {
         }
     }
 
+    /*
     getEditValue = (key, data) => {
         console.log(this.state.values);
 
@@ -93,18 +94,22 @@ export default class Organigram extends React.PureComponent {
             </div>
         );
     }
+    */
 
     handleEdit = () => {
         this.setState({ showEditModal: true });
     }
 
+    /*
     handleRemoveButtonClick = (key) => {
         const newValues = this.state.values.filter(d => d.key !== key);
         this.setState({
             values: newValues,
         });
     }
+    */
 
+    /*
     handleValueInputChange = (key, value) => {
         const valueIndex = this.state.values.findIndex(d => d.key === key);
         const settings = {
@@ -117,6 +122,9 @@ export default class Organigram extends React.PureComponent {
             values: newValues,
         });
     }
+    */
+
+    /*
     handleAddOptionButtonClick = () => {
         const newValue = {
             key: randomString(16).toLowerCase(),
@@ -130,6 +138,7 @@ export default class Organigram extends React.PureComponent {
             ],
         });
     }
+    */
 
     handleEditModalClose = () => {
         this.setState({ showEditModal: false });
@@ -171,21 +180,23 @@ export default class Organigram extends React.PureComponent {
                 >
                     <ModalHeader
                         title="Edit Organigram"
-                        rightComponent={
+                        rightComponent={null /* (
                             <TransparentPrimaryButton
                                 onClick={this.handleAddOptionButtonClick}
                             >
                                 Add Option
                             </TransparentPrimaryButton>
-                        }
+                        ) */}
                     />
                     <ModalBody>
+                        {/*
                         <ListView
                             data={values}
                             className={styles['value-list']}
                             keyExtractor={Organigram.valueKeyExtractor}
                             modifier={this.getEditValue}
                         />
+                        */}
                     </ModalBody>
                     <ModalFooter>
                         <Button
