@@ -17,30 +17,29 @@ const iconNames = {
     delete: 'ion-android-delete',
     refresh: 'ion-android-refresh',
 
-    documentText: 'ion-document',
+    documentText: 'fa fa-file-o',
 
-    json: 'ion-android-document',
-    xml: 'ion-android-document',
-    csv: 'ion-android-document',
+    json: 'fa fa-file-code-o',
+    xml: 'fa fa-file-code-o',
+    csv: 'fa fa-file-code-o',
 
-    docx: 'ion-document-text',
-    rtf: 'ion-document-text',
-    otf: 'ion-document-text',
-    msword: 'ion-document-text',
+    docx: 'fa fa-file-word-o',
+    rtf: 'fa fa-file-word-o',
+    otf: 'fa fa-file-word-o',
+    msword: 'fa fa-file-word-o',
 
-    pdf: 'ion-document-text',
+    pdf: 'fa fa-file-pdf-o',
 
-    pptx: 'ion-document-text',
-    ppt: 'ion-document-text',
+    pptx: 'fa fa-file-powerpoint-o',
+    ppt: 'fa fa-file-powerpoint-o',
 
-    xls: 'ion-document-text',
-    xlxs: 'ion-document-text',
+    xls: 'fa fa-file-excel-o',
+    xlxs: 'fa fa-file-excel-o',
 
-    png: 'ion-image',
-    jpg: 'ion-image',
-    jpeg: 'ion-image',
-    fig: 'ion-image',
-
+    png: 'fa fa-file-image-o',
+    jpg: 'fa fa-file-image-o',
+    jpeg: 'fa fa-file-image-o',
+    fig: 'fa fa-file-image-o',
 
     dropbox: 'ion-social-dropbox',
     edit: 'ion-edit',

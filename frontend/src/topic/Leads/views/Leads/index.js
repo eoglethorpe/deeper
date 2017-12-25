@@ -142,12 +142,11 @@ export default class Leads extends React.PureComponent {
                     } else if (row.url) {
                         icon = iconNames.globe;
                     }
+                    const url = row.file ? row.file : '';
                     return (
-                        <TransparentButton
-                            onClick={() => (row)}
-                        >
+                        <a href={url} >
                             <i className={icon} />
-                        </TransparentButton>
+                        </a>
                     );
                 },
             },
@@ -457,7 +456,7 @@ export default class Leads extends React.PureComponent {
     }
 
     isColumnClickable = key => (
-        ['actions'].indexOf(key) === -1
+        ['actions', 'attachmentMimeType'].indexOf(key) === -1
     )
 
     headerModifier = (headerData) => {
@@ -553,6 +552,13 @@ export default class Leads extends React.PureComponent {
                     )
                 }
                 <footer styleName="footer">
+                    <SegmentButton
+                        styleName="view-mode-button"
+                        data={this.viewModes}
+                        selected={viewMode}
+                        onPress={this.handleLeadViewChange}
+                        backgroundHighlight
+                    />
                     <div>
                         {viewMode === 'table' &&
                             <Pager
@@ -564,12 +570,6 @@ export default class Leads extends React.PureComponent {
                             />
                         }
                     </div>
-                    <SegmentButton
-                        styleName="view-mode-button"
-                        data={this.viewModes}
-                        selected={viewMode}
-                        onPress={this.handleLeadViewChange}
-                    />
                 </footer>
             </div>
         );
