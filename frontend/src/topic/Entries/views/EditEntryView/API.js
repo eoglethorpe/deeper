@@ -119,6 +119,47 @@ export default class API {
         }
     }
 
+    setEntryFilterData(filterId, list, number, id = undefined) {
+        const entry = this.getEntry(id);
+        if (entry) {
+            const values = entryAccessor.getValues(entry);
+            let index = -1;
+
+            if (!values.filterData) {
+                index = -1;
+            } else {
+                index = values.filterData.findIndex(attr => attr.filter === filterId);
+            }
+
+            let settings;
+            if (index === -1) {
+                settings = {
+                    filterData: { $autoArray: {
+                        $push: [{
+                            filter: filterId,
+                            values: list,
+                            number,
+                        }],
+                    } },
+                };
+            } else {
+                settings = {
+                    filterData: {
+                        [index]: { $merge: {
+                            values: list,
+                            number,
+                        } },
+                    },
+                };
+            }
+
+            this.changeEntryValues(
+                entryAccessor.getKey(entry),
+                update(values, settings),
+            );
+        }
+    }
+
     setEntryHighlight(color, id = undefined) {
         const entry = this.getEntry(id);
         if (entry) {
