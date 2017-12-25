@@ -40,6 +40,10 @@ import {
 import {
     setUserInformationAction,
 } from '../../../../common/redux';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -124,13 +128,24 @@ export default class UserEdit extends React.PureComponent {
                         userId,
                         information: response,
                     });
+                    notify.send({
+                        title: notificationStrings.userProfileEdit,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userEditSuccess,
+                        duration: 5000,
+                    });
                     this.props.handleModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userProfileEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userEditFailure,
+                    duration: 5000,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -138,11 +153,15 @@ export default class UserEdit extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userProfileEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userEditFatal,
+                    duration: 5000,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save user.'],
                 });
