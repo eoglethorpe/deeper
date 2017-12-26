@@ -1,0 +1,9 @@
+linters:
+    PropertySortOrder:
+        order: "concentric"
+    Indentation:
+        width: 4
+    SelectorDepth:
+        max_depth: 9
+    NestingDepth:
+        max_depth: 9
