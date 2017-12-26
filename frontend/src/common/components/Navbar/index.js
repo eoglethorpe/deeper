@@ -110,6 +110,20 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    componentWillReceiveProps(nextProps) {
+        if (this.props.userProjects !== nextProps.userProjects
+            && nextProps.userProjects.length > 0) {
+            const activeProjectIndex = nextProps.userProjects.findIndex(p => (
+                p.id === nextProps.activeProject));
+
+            // if active project id is not in userProjects,
+            // then set first project id from users project
+            if (activeProjectIndex === -1) {
+                this.props.setActiveProject({ activeProject: nextProps.userProjects[0].id });
+            }
+        }
+    }
+
     // UTILS
 
     getCurrentMatch = () => {
