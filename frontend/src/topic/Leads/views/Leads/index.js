@@ -137,13 +137,18 @@ export default class Leads extends React.PureComponent {
                 order: 1,
                 modifier: (row) => {
                     let icon = iconNames.documentText;
-                    let url = '';
+                    let url;
                     if (row.attachment) {
                         icon = leadTypeIconMap[row.attachment.mimeType];
                         url = row.attachment.file;
                     } else if (row.url) {
                         icon = iconNames.globe;
                         url = row.url;
+                    }
+                    if (!url) {
+                        return (
+                            <i className={icon} />
+                        );
                     }
                     return (
                         <a href={url} target="_blank">
