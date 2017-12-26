@@ -197,10 +197,10 @@ const strings = {
     954: 'Error. Cannot add admin level.',
     955: 'Error. Cannot add admin level. Please check your network connection and try again',
 
-    956: 'Delete Country',
-    957: 'Country Delete Successful',
-    958: 'Error. Cannot delete country.',
-    959: 'Error. Cannot delete country. Please check your network connection and try again',
+    956: 'Edit Admin Level',
+    957: 'Admin Level Successfully Updated',
+    958: 'Error. Cannot update admin level.',
+    959: 'Error. Cannot update admin level. Please check your network connection and try again',
 
     960: 'Delete Country',
     961: 'Country Delete Successful',

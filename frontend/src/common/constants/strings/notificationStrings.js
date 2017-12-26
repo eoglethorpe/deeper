@@ -74,6 +74,11 @@ const notificationStrings = {
     adminLevelCreateFailure: string[954],
     adminLevelCreateFatal: string[955],
 
+    adminLevelEdit: string[956],
+    adminLevelEditSuccess: string[957],
+    adminLevelEditFailure: string[958],
+    adminLevelEditFatal: string[959],
+
 };
 
 export default notificationStrings;

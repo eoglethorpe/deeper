@@ -147,13 +147,24 @@ export default class EditAdminLevel extends React.PureComponent {
                         adminLevel: response,
                         regionId: data.region,
                     });
+                    notify.send({
+                        title: notificationStrings.adminLevelEdit,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.adminLevelEditSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.adminLevelEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelEditFailure,
+                    duration: notify.duration.SLOW,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -163,8 +174,13 @@ export default class EditAdminLevel extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.adminLevelEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelEditFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save admin level.'],
                 });
