@@ -10,6 +10,8 @@ import {
 
 export const urlForEntry = `${wsEndpoint}/entries/`;
 export const urlForEntryCreate = `${wsEndpoint}/entries/`;
+export const urlForFilteredEntries = `${wsEndpoint}/entries/filter/`;
+
 export const createUrlForEntryEdit = entryId => (
     `${wsEndpoint}/entries/${entryId}/`
 );
@@ -20,6 +22,14 @@ export const createUrlForEntries = projectId => (
 export const createParamsForEntry = () => ({
     method: GET,
     headers: commonHeaderForPost,
+});
+
+export const createParamsForFilteredEntries = filters => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        filters: Object.entries(filters),
+    }),
 });
 
 export const createParamsForEntryCreate = data => ({

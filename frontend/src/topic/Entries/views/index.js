@@ -24,8 +24,10 @@ import {
     analysisFrameworkForProjectSelector,
 } from '../../../common/redux';
 import {
+    urlForFilteredEntries,
+
     createParamsForUser,
-    createUrlForEntries,
+    createParamsForFilteredEntries,
     createUrlForAnalysisFramework,
     createUrlForProject,
 } from '../../../common/rest';
@@ -65,7 +67,9 @@ export default class Entries extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            filters: {},
+        };
 
         this.items = [];
         this.leadGroupedEntries = groupList(props.entries, e => e.lead);
@@ -168,10 +172,13 @@ export default class Entries extends React.PureComponent {
         );
     }
 
-    createRequestForEntries = (projectId) => {
+    createRequestForEntries = (projectId, filters = {}) => {
         const entryRequest = new FgRestBuilder()
-            .url(createUrlForEntries(projectId))
-            .params(() => createParamsForUser())
+            .url(urlForFilteredEntries)
+            .params(() => createParamsForFilteredEntries({
+                project: projectId,
+                ...filters,
+            }))
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
@@ -261,7 +268,20 @@ export default class Entries extends React.PureComponent {
         }
     }
 
-    renderFilter = ({ id, properties: filter }) => {
+    handleFilterChange = (key, values) => {
+        const filters = { ...this.state.filters };
+        filters[key] = values;
+        this.setState({ filters }, () => {
+            if (this.entriesRequest) {
+                this.entriesRequest.stop();
+            }
+
+            this.entriesRequest = this.createRequestForEntries(this.props.projectId, filters);
+            this.entriesRequest.start();
+        });
+    }
+
+    renderFilter = ({ key, properties: filter }) => {
         if (!filter || !filter.type) {
             return null;
         }
@@ -269,9 +289,11 @@ export default class Entries extends React.PureComponent {
         if (filter.type === 'multiselect') {
             return (
                 <SelectInput
-                    key={id}
+                    key={key}
                     options={filter.options}
                     showHintAndError={false}
+                    onChange={values => this.handleFilterChange(key, values)}
+                    value={this.state.filters[key] || []}
                     multiple
                 />
             );
