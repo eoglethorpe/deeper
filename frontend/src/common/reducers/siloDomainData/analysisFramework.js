@@ -139,7 +139,7 @@ const afViewUpdateWidget = (state, action) => {
             };
         }
 
-        settings.analysisFrameworkView.analysisFrameworkView.filters = filterSettings;
+        settings.analysisFrameworkView.analysisFramework.filters = filterSettings;
     }
     return update(state, settings);
 };

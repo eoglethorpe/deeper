@@ -146,7 +146,29 @@ export default class Matrix1dOverview extends React.PureComponent {
             showEditModal: false,
         });
 
-        this.props.onChange(this.state.rows);
+        const filterOptions = [];
+        this.state.rows.forEach((row) => {
+            filterOptions.push({
+                label: row.title,
+                key: row.key,
+            });
+
+            row.cells.forEach((cell) => {
+                filterOptions.push({
+                    label: `${row.title} / ${cell.value}`,
+                    key: cell.key,
+                });
+            });
+        });
+
+        const filter = {
+            type: 'list',
+            data: {
+                type: 'multiselect',
+                options: filterOptions,
+            },
+        };
+        this.props.onChange(this.state.rows, filter);
     }
 
     addRow = () => {

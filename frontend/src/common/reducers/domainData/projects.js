@@ -194,7 +194,7 @@ const setUserProjects = (state, action) => {
     const projectSettings = projects.reduce(
         (acc, project) => {
             acc[project.id] = { $auto: {
-                $set: project,
+                $merge: project,
             } };
             return acc;
         },
