@@ -11,10 +11,12 @@ const emptyObject = {};
 export const userIdFromRoute = (state, { match }) => match.params.userId;
 export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
 export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
+export const categoryEditorIdFromProps = (state, { match }) => match.params.categoryEditorId;
 
 export const regionIdFromProps = (state, { regionId }) => regionId;
 export const userGroupIdFromProps = (state, { userGroupId }) => userGroupId;
 export const analysisFrameworkIdFromPropsForProject = (state, { afId }) => afId;
+export const categoryEditorIdFromPropsForProject = (state, { ceId }) => ceId;
 
 // Using state
 
@@ -34,6 +36,10 @@ export const analysisFrameworksSelector = ({ domainData }) => (
     domainData.analysisFrameworks || emptyObject
 );
 
+export const categoryEditorsSelector = ({ domainData }) => (
+    domainData.categoryEditors || emptyObject
+);
+
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,
     analysisFrameworkIdFromPropsForProject,
@@ -42,11 +48,27 @@ export const analysisFrameworkDetailSelector = createSelector(
     ),
 );
 
+export const categoryEditorDetailSelector = createSelector(
+    categoryEditorsSelector,
+    categoryEditorIdFromPropsForProject,
+    (categoryEditors, ceId) => (
+        categoryEditors[ceId] || emptyObject
+    ),
+);
+
 export const analysisFrameworkListSelector = createSelector(
     analysisFrameworksSelector,
     analysisFrameworks => (
         analysisFrameworks && Object.values(analysisFrameworks).filter(
             analysisFramework => analysisFramework,
+        )) || emptyList,
+);
+
+export const categoryEditorListSelector = createSelector(
+    categoryEditorsSelector,
+    categoryEditors => (
+        categoryEditors && Object.values(categoryEditors).filter(
+            categoryEditor => categoryEditor,
         )) || emptyList,
 );
 

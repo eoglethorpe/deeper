@@ -20,4 +20,4 @@ export * from './reducers/domainData/projects';
 export * from './reducers/domainData/regions';
 export * from './reducers/domainData/userGroups';
 export * from './reducers/domainData/users';
-
+export * from './reducers/domainData/categoryEditors';

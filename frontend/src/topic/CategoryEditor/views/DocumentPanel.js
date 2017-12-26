@@ -7,7 +7,7 @@ import {
 } from '../../../public/components/View';
 
 import {
-    urlForCategoryEditor,
+    urlForKeywordExtraction,
     createParamsForCategoryEditor,
 } from '../../../common/rest';
 
@@ -64,7 +64,7 @@ export default class DocumentPanel extends React.PureComponent {
 
     createRequestForCategoryEditor = (document) => {
         const categoryEditorRequest = new FgRestBuilder()
-            .url(urlForCategoryEditor)
+            .url(urlForKeywordExtraction)
             .params(() => createParamsForCategoryEditor(document))
             .preLoad(() => {
                 this.setState({ pending: true });

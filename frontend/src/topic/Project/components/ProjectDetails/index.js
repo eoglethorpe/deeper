@@ -31,6 +31,7 @@ import {
 import ProjectGeneral from '../ProjectGeneral';
 import ProjectRegions from '../ProjectRegions';
 import ProjectAnalysisFramework from '../ProjectAnalysisFramework';
+import ProjectCategoryEditor from '../ProjectCategoryEditor';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -52,7 +53,7 @@ const routes = [
     'generalDetails',
     'regions',
     'analysisFramework',
-    // 'categoryEditor',
+    'categoryEditor',
 ];
 
 const defaultRoute = 'generalDetails';
@@ -61,14 +62,14 @@ const pathNames = {
     generalDetails: '/general-details',
     regions: '/regions',
     analysisFramework: '/analysis-framework',
-    // categoryEditor: '/category-editro',
+    categoryEditor: '/category-editor',
 };
 
 const views = {
     generalDetails: ProjectGeneral,
     regions: ProjectRegions,
     analysisFramework: ProjectAnalysisFramework,
-    // categoryEditor: ProjectCategoryEditor,
+    categoryEditor: ProjectCategoryEditor,
 };
 
 const titles = {
