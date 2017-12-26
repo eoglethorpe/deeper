@@ -55,20 +55,24 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 excerpt: api.getEntryExcerpt(),
                 image: api.getEntryImage(),
             };
-            api.setEntryAttribute(id, attr);
+            api.getEntryModifier().setAttribute(id, attr).apply();
         }
     }
 
     handleEntryTypeChange = (value) => {
         const { id, api, attribute } = this.props;
-        api.setEntryType(value);
-        api.setEntryAttribute(id, { ...attribute, type: value });
+        api.getEntryModifier()
+            .setType(value)
+            .setAttribute(id, { ...attribute, type: value })
+            .apply();
     }
 
     handleExcerptChange = (value) => {
         const { id, api, attribute } = this.props;
-        api.setEntryExcerpt(value);
-        api.setEntryAttribute(id, { ...attribute, excerpt: value });
+        api.getEntryModifier()
+            .setExcerpt(value)
+            .setAttribute(id, { ...attribute, excerpt: value })
+            .apply();
     }
 
     render() {
