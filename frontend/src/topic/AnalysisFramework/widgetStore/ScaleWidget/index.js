@@ -4,7 +4,7 @@ import { ViewListWidget } from './View';
 
 const scaleWidget = {
     id: 'scaleWidget',
-    title: 'scale',
+    title: 'Scale',
     analysisFramework: {
         listComponent: FrameworkListWidget,
         listMinSize: { width: 160, height: 96 },

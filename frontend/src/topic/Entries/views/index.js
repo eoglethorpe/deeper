@@ -15,7 +15,6 @@ import { groupList } from '../../../public/utils/common';
 
 import schema from '../../../common/schema';
 
-import { pageTitles } from '../../../common/constants';
 import {
     projectIdFromRoute,
     setEntriesAction,
@@ -263,7 +262,7 @@ export default class Entries extends React.PureComponent {
     }
 
     renderFilter = ({ id, properties: filter }) => {
-        if (!filter.type) {
+        if (!filter || !filter.type) {
             return null;
         }
 
