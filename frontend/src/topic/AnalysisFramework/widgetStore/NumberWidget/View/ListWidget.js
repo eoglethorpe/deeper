@@ -31,7 +31,9 @@ export default class NumberViewList extends React.PureComponent {
             >
                 <Numeral
                     styleName="number-input"
+                    separator=" "
                     showThousandSeparator
+                    precision={null}
                     value={value}
                 />
             </div>

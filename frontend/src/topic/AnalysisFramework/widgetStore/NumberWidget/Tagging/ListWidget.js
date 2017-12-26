@@ -40,6 +40,7 @@ export default class NumberTaggingList extends React.PureComponent {
                     placeholder="999"
                     showLabel={false}
                     showHintAndError={false}
+                    separator=" "
                 />
             </div>
         );

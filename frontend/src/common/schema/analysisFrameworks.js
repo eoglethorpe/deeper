@@ -63,7 +63,7 @@ const analysisFrameworkSchema = [];
         },
         fields: {
             id: { type: 'uint', required: 'true' },
-            widgetId: { type: 'string', required: true },
+            key: { type: 'string', required: true },
             inline: { type: 'boolean' },
         },
     };
@@ -78,7 +78,7 @@ const analysisFrameworkSchema = [];
         },
         fields: {
             id: { type: 'uint', required: 'true' },
-            widgetId: { type: 'string', required: true },
+            key: { type: 'string', required: true },
             title: { type: 'string', required: true },
             properties: { type: 'object' },
             filterType: { type: 'string' }, // enum: list, number

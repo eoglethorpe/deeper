@@ -25,6 +25,7 @@ export default class NumberFrameworkList extends React.PureComponent {
                     placeholder="999"
                     showLabel={false}
                     showHintAndError={false}
+                    separator=" "
                 />
             </div>
         );
