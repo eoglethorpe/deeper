@@ -104,7 +104,7 @@ export default class Overview extends React.PureComponent {
         id: item.id,
         key: item.key,
         widgetId: item.widgetId,
-        filterId: item.filterId,
+        filters: item.filters,
         title: item.title,
         layout: item.properties.overviewGridLayout,
         data: item.properties.data,
@@ -116,7 +116,7 @@ export default class Overview extends React.PureComponent {
         return (
             <Component
                 id={item.id}
-                filterId={item.filterId}
+                filters={item.filters}
                 api={this.props.api}
                 attribute={item.attribute}
                 data={item.data}
@@ -137,10 +137,10 @@ export default class Overview extends React.PureComponent {
             this.items = analysisFramework.widgets.filter(
                 w => this.widgets.find(w1 => w1.id === w.widgetId),
             ).map((item) => {
-                const filter = analysisFramework.filters.find(f => f.key === item.key);
+                const filters = analysisFramework.filters.filter(f => f.widgetKey === item.key);
                 return {
                     ...item,
-                    filterId: filter && filter.id,
+                    filters,
                 };
             });
         } else {

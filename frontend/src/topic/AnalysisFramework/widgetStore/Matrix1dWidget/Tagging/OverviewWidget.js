@@ -14,8 +14,8 @@ import MatrixRow from './MatrixRow';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
-    filterId: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line
 };
@@ -83,7 +83,7 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleCellClick = (key, cellKey) => {
-        const { api, id, filterId, attribute } = this.props;
+        const { api, id, filters, attribute } = this.props;
         const settings = { $auto: {
             [key]: { $auto: {
                 [cellKey]: {
@@ -95,12 +95,12 @@ export default class Matrix1dOverview extends React.PureComponent {
         const newAttribute = update(attribute, settings);
         api.getEntryModifier()
             .setAttribute(id, newAttribute)
-            .setFilterData(filterId, this.getFilterData(newAttribute))
+            .setFilterData(filters[0].id, this.getFilterData(newAttribute))
             .apply();
     }
 
     handleCellDrop = (key, cellKey, text) => {
-        const { api, id, filterId } = this.props;
+        const { api, id, filters } = this.props;
         const existing = api.getEntryForExcerpt(text);
 
         if (existing) {
@@ -117,7 +117,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.selectEntry(existing.data.id);
             api.getEntryModifier(existing.data.id)
                 .setAttribute(id, attribute)
-                .setFilterData(filterId, this.getFilterData(attribute))
+                .setFilterData(filters[0].id, this.getFilterData(attribute))
                 .apply();
         } else {
             const attribute = {
@@ -128,7 +128,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.getEntryBuilder()
                 .setExcerpt(text)
                 .addAttribute(id, attribute)
-                .addFilterData(filterId, this.getFilterData(attribute))
+                .addFilterData(filters[0].id, this.getFilterData(attribute))
                 .apply();
         }
     }

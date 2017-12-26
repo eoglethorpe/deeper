@@ -10,7 +10,7 @@ class EntryModifier {
         changeEntryValues,
     ) {
         this.entry = entry;
-        this.values = entryAccessor.getValues(this.entry);
+        this.values = entry && entryAccessor.getValues(entry);
         this.changeEntryValues = changeEntryValues;
     }
 
@@ -141,10 +141,12 @@ class EntryModifier {
     }
 
     apply() {
-        this.changeEntryValues(
-            entryAccessor.getKey(this.entry),
-            this.values,
-        );
+        if (this.entry) {
+            this.changeEntryValues(
+                entryAccessor.getKey(this.entry),
+                this.values,
+            );
+        }
     }
 }
 
