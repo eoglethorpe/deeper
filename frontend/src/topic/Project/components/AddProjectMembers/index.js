@@ -19,6 +19,7 @@ import {
 } from '../../../../public/components/Action';
 import {
     iconNames,
+    notificationStrings,
 } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
@@ -37,6 +38,7 @@ import {
     projectDetailsSelector,
     setUsersProjectMembershipAction,
 } from '../../../../common/redux';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -243,13 +245,24 @@ export default class AddProjectMembers extends React.PureComponent {
                         projectId,
                         projectMembership: response.results,
                     });
+                    notify.send({
+                        title: notificationStrings.userMembershipCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userMembershipCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userMembershipCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipCreateFailure,
+                    duration: notify.duration.SLOW,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -259,8 +272,13 @@ export default class AddProjectMembers extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to :ave project.'],
                 });
