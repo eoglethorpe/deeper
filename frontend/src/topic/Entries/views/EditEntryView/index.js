@@ -151,7 +151,7 @@ export default class EditEntryView extends React.PureComponent {
             .build();
 
         this.api = new API(
-            this.handleAddEntry,
+            this.handleAddEntryWithValues,
             this.handleSelectEntry,
             this.handleChangeEntryData,
             this.handleChangeEntryValues,
@@ -416,7 +416,7 @@ export default class EditEntryView extends React.PureComponent {
         return entriesRequest;
     }
 
-    handleAddEntry = (excerpt = undefined, image = undefined, attributes = []) => {
+    handleAddEntryWithValues = (values) => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
@@ -426,20 +426,15 @@ export default class EditEntryView extends React.PureComponent {
                 id: entryId,
                 serverId: undefined,
                 values: {
-                    entryType: 'excerpt',
-                    excerpt: excerpt || (!image && `Excerpt ${entryId.toUpperCase()}`),
-                    image,
+                    ...values,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
-                    attributes,
-                    exportData: [],
-                    filterData: [],
                 },
             },
         });
     }
 
-    handleAddEntrySimple = () => {
+    handleAddEntry= () => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
@@ -617,7 +612,7 @@ export default class EditEntryView extends React.PureComponent {
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
-                                onEntryAdd={this.handleAddEntrySimple}
+                                onEntryAdd={this.handleAddEntry}
                                 onEntryDelete={this.handleDeleteEntry}
 
                                 saveAllPending={pendingSaveAll}

@@ -280,7 +280,7 @@ export default class Overview extends React.PureComponent {
                     lead.attachment ? (
                         <DeepGallery
                             styleName="gallery-file"
-                            galleryId={lead.attachment}
+                            galleryId={lead.attachment.id}
                         />
                     ) :
                         <div styleName="preview-text">

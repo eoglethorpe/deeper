@@ -25,7 +25,9 @@ export default class NumberTaggingList extends React.PureComponent {
 
     handleChange = (value) => {
         const { api, id, entryId } = this.props;
-        api.setEntryAttribute(id, { value }, entryId);
+        api.getEntryModifier(entryId)
+            .setAttribute(id, { value })
+            .apply();
     }
 
     render() {

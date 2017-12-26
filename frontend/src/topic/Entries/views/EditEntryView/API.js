@@ -3,6 +3,203 @@ import { entryAccessor } from '../../../../common/entities/entry';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#e0e0e0';
 
+
+class EntryModifier {
+    constructor(
+        entry,
+        changeEntryValues,
+    ) {
+        this.entry = entry;
+        this.values = entryAccessor.getValues(this.entry);
+        this.changeEntryValues = changeEntryValues;
+    }
+
+    setExcerpt(excerpt) {
+        if (!this.entry) {
+            return this;
+        }
+
+        const settings = {
+            excerpt: { $set: excerpt },
+        };
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    setImage(image) {
+        if (!this.entry) {
+            return this;
+        }
+
+        const settings = {
+            image: { $set: image },
+        };
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    setType(type) {
+        if (!this.entry) {
+            return this;
+        }
+
+        const settings = {
+            entryType: { $set: type },
+        };
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    setHighlightColor(color) {
+        if (!this.entry) {
+            return this;
+        }
+
+        const settings = {
+            color: { $set: color },
+        };
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    setAttribute(widgetId, data) {
+        if (!this.entry) {
+            return this;
+        }
+
+        let index = -1;
+
+        if (!this.values.attributes) {
+            index = -1;
+        } else {
+            index = this.values.attributes.findIndex(attr => attr.widget === widgetId);
+        }
+
+        let settings;
+        if (index === -1) {
+            settings = {
+                attributes: { $autoArray: {
+                    $push: [{
+                        widget: widgetId,
+                        data,
+                    }],
+                } },
+            };
+        } else {
+            settings = {
+                attributes: {
+                    [index]: { $merge: {
+                        data,
+                    } },
+                },
+            };
+        }
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    setFilterData(filterId, filterData) {
+        if (!this.entry) {
+            return this;
+        }
+
+        let index = -1;
+
+        if (!this.values.filterData) {
+            index = -1;
+        } else {
+            index = this.values.filterData.findIndex(attr => attr.filter === filterId);
+        }
+
+        let settings;
+        if (index === -1) {
+            settings = {
+                filterData: { $autoArray: {
+                    $push: [{
+                        filter: filterId,
+                        ...filterData,
+                    }],
+                } },
+            };
+        } else {
+            settings = {
+                filterData: {
+                    [index]: { $merge: {
+                        ...filterData,
+                    } },
+                },
+            };
+        }
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
+    apply() {
+        this.changeEntryValues(
+            entryAccessor.getKey(this.entry),
+            this.values,
+        );
+    }
+}
+
+
+class EntryBuilder {
+    constructor(addEntry) {
+        this.addEntry = addEntry;
+        this.attributes = [];
+        this.filterData = [];
+        this.exportData = [];
+    }
+
+    setExcerpt(excerpt) {
+        this.entryType = 'excerpt';
+        this.excerpt = excerpt;
+        return this;
+    }
+
+    setImage(image) {
+        this.entryType = 'image';
+        this.image = image;
+        return this;
+    }
+
+    addAttribute(widgetId, attribute) {
+        this.attributes.push({
+            widget: widgetId,
+            data: attribute,
+        });
+        return this;
+    }
+
+    addFilterData(filterId, filterData) {
+        this.filterData.push({
+            filter: filterId,
+            ...filterData,
+        });
+        return this;
+    }
+
+    apply() {
+        const values = {
+            entryType: this.entryType,
+            excerpt: this.excerpt,
+            image: this.image,
+            attributes: this.attributes,
+            filterData: this.filterData,
+            exportData: this.exportData,
+        };
+
+        this.addEntry(values);
+    }
+}
+
+
 export default class API {
     constructor(
         addEntry,
@@ -33,151 +230,19 @@ export default class API {
         return selectedId && this.entries.find(e => e.data.id === selectedId);
     }
 
+    getEntryModifier(id = undefined) {
+        const entry = this.getEntry(id);
+        return new EntryModifier(entry, this.changeEntryValues);
+    }
+
+    getEntryBuilder() {
+        return new EntryBuilder(this.addEntry);
+    }
+
     setEntryData(data, id = undefined) {
         const selectedId = id || this.selectedId;
         if (selectedId) {
             this.changeEntryData(selectedId, data);
-        }
-    }
-
-    setEntryType(type, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const settings = {
-                entryType: { $set: type },
-            };
-
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(entryAccessor.getValues(entry), settings),
-            );
-        }
-    }
-
-    setEntryExcerpt(excerpt, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const settings = {
-                excerpt: { $set: excerpt },
-            };
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(entryAccessor.getValues(entry), settings),
-            );
-        }
-    }
-
-    setEntryImage(image, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const settings = {
-                image: { $set: image },
-            };
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(entryAccessor.getValues(entry), settings),
-            );
-        }
-    }
-
-    setEntryAttribute(widgetId, data, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const values = entryAccessor.getValues(entry);
-            let index = -1;
-
-            if (!values.attributes) {
-                index = -1;
-            } else {
-                index = values.attributes.findIndex(attr => attr.widget === widgetId);
-            }
-
-            let settings;
-            if (index === -1) {
-                settings = {
-                    attributes: { $autoArray: {
-                        $push: [{
-                            widget: widgetId,
-                            data,
-                        }],
-                    } },
-                };
-            } else {
-                settings = {
-                    attributes: {
-                        [index]: { $merge: {
-                            data,
-                        } },
-                    },
-                };
-            }
-
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(values, settings),
-            );
-        }
-    }
-
-    setEntryFilterData(filterId, list, number, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const values = entryAccessor.getValues(entry);
-            let index = -1;
-
-            if (!values.filterData) {
-                index = -1;
-            } else {
-                index = values.filterData.findIndex(attr => attr.filter === filterId);
-            }
-
-            let settings;
-            if (index === -1) {
-                settings = {
-                    filterData: { $autoArray: {
-                        $push: [{
-                            filter: filterId,
-                            values: list,
-                            number,
-                        }],
-                    } },
-                };
-            } else {
-                settings = {
-                    filterData: {
-                        [index]: { $merge: {
-                            values: list,
-                            number,
-                        } },
-                    },
-                };
-            }
-
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(values, settings),
-            );
-        }
-    }
-
-    setEntryHighlight(color, id = undefined) {
-        const entry = this.getEntry(id);
-        if (entry) {
-            const settings = {
-                color: { $set: color },
-            };
-
-            this.changeEntryValues(
-                entryAccessor.getKey(entry),
-                update(entryAccessor.getValues(entry), settings),
-            );
-        }
-    }
-
-    selectEntryAndSetAttribute(id, widgetId, data) {
-        this.selectEntry(id);
-        if (widgetId && data) {
-            this.setEntryAttribute(widgetId, data, id);
         }
     }
 
@@ -215,6 +280,18 @@ export default class API {
         return attribute && attribute.data;
     }
 
+    getEntryFilterData(filterId, id = undefined) {
+        const entry = this.getEntry(id);
+        const values = entry && entryAccessor.getValues(entry);
+
+        const filterData = (
+            values &&
+            values.filterData &&
+            values.filterData.find(f => f.filter === filterId)
+        );
+        return { values: filterData.values, number: filterData.number };
+    }
+
     getEntryForExcerpt(excerpt) {
         return this.entries.find(entry => entryAccessor.getValues(entry).excerpt === excerpt);
     }
@@ -228,8 +305,19 @@ export default class API {
             })).filter(h => h.text);
     }
 
-    addExcerpt(excerpt, widgetId = undefined, data = undefined) {
-        this.addEntry(excerpt, undefined, widgetId && data && [{ widget: widgetId, data }]);
+    addExcerpt(
+        excerpt,
+        widgetId = undefined,
+        data = undefined,
+        filterId = undefined,
+        filterData = undefined,
+    ) {
+        this.addEntry(
+            excerpt,
+            undefined,
+            widgetId && data && [{ widget: widgetId, data }],
+            filterId && filterData && [{ filter: filterId, ...filterData }],
+        );
     }
 
     addImage(image, widgetId = undefined, data = undefined) {
