@@ -123,6 +123,8 @@ const strings = {
 
 
     // Notification strings
+
+    // User Profile
     900: 'User Profile Edit',
     901: 'User Edit Successful',
     902: 'Error. User Edit Failure.',
@@ -168,11 +170,44 @@ const strings = {
     934: 'Error. Edit Failure.',
     935: 'Error. Edit Failure. Please check your network connection and try again',
 
-    936: 'User Edit Successful',
-    937: 'User Edit Successful',
-    938: 'User Edit Successful',
-    939: 'User Edit Successful',
-    940: 'User Edit Successful',
+
+    // Country Panel
+    936: 'Delete Country',
+    937: 'Country Delete Successful',
+    938: 'Error. Cannot delete country.',
+    939: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    940: 'Add Country',
+    941: 'Country Added Successfully',
+    942: 'Error. Cannot add country.',
+    943: 'Error. Cannot add country. Please check your network connection and try again',
+
+    944: 'Region Detail',
+    945: 'Region Detail Successfully Updated',
+    946: 'Error. Cannot update region detail.',
+    947: 'Error. Cannot update region detail. Please check your network connection and try again',
+
+    948: 'Delete Country',
+    949: 'Country Delete Successful',
+    950: 'Error. Cannot delete country.',
+    951: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    952: 'Delete Country',
+    953: 'Country Delete Successful',
+    954: 'Error. Cannot delete country.',
+    955: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    956: 'Delete Country',
+    957: 'Country Delete Successful',
+    958: 'Error. Cannot delete country.',
+    959: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    960: 'Delete Country',
+    961: 'Country Delete Successful',
+    962: 'Error. Cannot delete country.',
+    963: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    964: 'User Edit Successful',
 
 };
 

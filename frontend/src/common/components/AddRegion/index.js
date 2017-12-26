@@ -24,6 +24,7 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     pathNames,
     countriesString,
+    notificationStrings,
 } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
@@ -35,7 +36,7 @@ import {
 import {
     addNewRegionAction,
 } from '../../redux';
-
+import notify from '../../notify';
 import schema from '../../schema';
 import styles from './styles.scss';
 
@@ -136,12 +137,23 @@ export default class AddRegion extends React.PureComponent {
                             ),
                         });
                     }
+                    notify.send({
+                        title: notificationStrings.countryCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.countryCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.countryCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -149,14 +161,17 @@ export default class AddRegion extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.countryCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save region.'],
-                    pending: true,
                 });
             })
             .build();

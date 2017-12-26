@@ -47,6 +47,23 @@ const notificationStrings = {
     userGroupEditFailure: string[934],
     userGroupEditFatal: string[935],
 
+
+    // Country Panel
+    countryDelete: string[936],
+    countryDeleteSuccess: string[937],
+    countryDeleteFailure: string[938],
+    countryDeleteFatal: string[939],
+
+    countryCreate: string[940],
+    countryCreateSuccess: string[941],
+    countryCreateFailure: string[942],
+    countryCreateFatal: string[943],
+
+    regionDetail: string[944],
+    regionDetailSuccess: string[945],
+    regionDetailFailure: string[946],
+    regionDetailFatal: string[947],
+
 };
 
 export default notificationStrings;
