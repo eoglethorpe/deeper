@@ -1,0 +1,72 @@
+@import '../../../../../stylesheets/base';
+
+
+.organigram-list {
+    padding: $spacing-small;
+    height: 100%;
+}
+
+%modal {
+    :global {
+        .modal-content {
+            width: auto;
+            min-width: 400px;
+            max-width: 96vw;
+        }
+    }
+}
+
+.edit-value-modal {
+    @extend %modal;
+
+    .organ {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        +.organ {
+            border-left: $width-separator-medium solid $color-separator;
+        }
+    }
+
+    .organ-header {
+        display: flex;
+        position: relative;
+        flex-shrink: 0;
+        margin: $spacing-small;
+        background-color: $color-foreground;
+        padding: $spacing-medium;
+        min-width: 144px;
+
+        .action-buttons {
+            @include transition-medium;
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            pointer-events: none;
+
+            .action-button {
+                flex-shrink: 0;
+            }
+        }
+
+        &:hover {
+            .action-buttons {
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+        .title-input {
+            flex-grow: 1;
+        }
+    }
+
+    .organ-body {
+        display: flex;
+        flex-grow: 1;
+        align-items: stretch;
+    }
+
+}

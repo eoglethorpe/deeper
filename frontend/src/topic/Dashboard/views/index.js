@@ -29,7 +29,7 @@ export default class Dashboard extends React.PureComponent {
         setTimeout(() => {
             notify.send({
                 message: 'Sending message from homescreen',
-                duration: Infinity,
+                duration: 3000,
             });
         }, 1000);
     }
