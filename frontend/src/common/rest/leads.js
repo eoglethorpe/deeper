@@ -9,7 +9,7 @@ import {
 
 // do no use this, use urlForLead instead
 export const urlForLead = `${wsEndpoint}/leads/`;
-export const urlForWebsiteFetch = `${wsEndpoint}/lead-webiste-fetch/`;
+export const urlForWebsiteFetch = `${wsEndpoint}/lead-website-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
 
 export const createParamsForLeadCreate = data => ({
