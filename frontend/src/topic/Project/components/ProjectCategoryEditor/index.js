@@ -37,7 +37,7 @@ import {
 } from '../../../../common/constants';
 
 import ProjectAfDetail from '../ProjectAfDetail';
-import AddAnalysisFramework from '../AddAnalysisFramework';
+import AddCategoryEditor from '../AddCategoryEditor';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -86,7 +86,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         }
 
         this.state = {
-            addAfModalShow: false,
+            addCeModalShow: false,
             displayCeList,
             pending: false,
             searchInputValue: '',
@@ -248,25 +248,25 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             styleName="search-input"
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Analysis Framework"
+                            placeholder="Search Category Editor"
                             type="search"
                         />
                         <PrimaryButton
                             styleName="add-btn"
                             iconName={iconNames.add}
-                            onClick={this.handleAddAfButtonClick}
+                            onClick={this.handleAddCeButtonClick}
                         >
                             Add
                         </PrimaryButton>
                         <Modal
                             closeOnEscape
                             onClose={this.handleModalClose}
-                            show={this.state.addAfModalShow}
+                            show={this.state.addCeModalShow}
                             closeOnBlur
                         >
-                            <ModalHeader title="Add new analysis framework" />
+                            <ModalHeader title="Add new category editor" />
                             <ModalBody>
-                                <AddAnalysisFramework
+                                <AddCategoryEditor
                                     projectId={projectId}
                                     onModalClose={this.handleModalClose}
                                 />
