@@ -35,33 +35,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    data: {
-        title: 'All',
-        key: '1',
-        organs: [
-            {
-                key: '2',
-                title: 'Head',
-                organs: [
-                    {
-                        key: '3',
-                        title: 'Eye',
-                        organs: [],
-                    },
-                    {
-                        key: '4',
-                        title: 'Nose',
-                        organs: [],
-                    },
-                ],
-            },
-            {
-                key: '5',
-                title: 'Body',
-                organs: [],
-            },
-        ],
-    },
+    data: undefined,
 };
 
 // TODO: move this later to public

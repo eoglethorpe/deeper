@@ -7,10 +7,12 @@
 }
 
 %modal {
-    width: 480px;
-
-    :global .modal-body {
-        height: 400px;
+    :global {
+        .modal-content {
+            width: auto;
+            min-width: 400px;
+            max-width: 96vw;
+        }
     }
 }
 
@@ -18,23 +20,23 @@
     @extend %modal;
 
     .organ {
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
 
-        &+.organ {
+        +.organ {
             border-left: $width-separator-medium solid $color-separator;
         }
     }
 
     .organ-header {
-        flex-shrink: 0;
         display: flex;
-        margin: $spacing-small;
-        padding: $spacing-medium;
-        background-color: $color-foreground;
         position: relative;
-        // border: 1px solid blue;
+        flex-shrink: 0;
+        margin: $spacing-small;
+        background-color: $color-foreground;
+        padding: $spacing-medium;
+        min-width: 144px;
 
         .action-buttons {
             @include transition-medium;
@@ -45,7 +47,7 @@
             pointer-events: none;
 
             .action-button {
-                flex-shrink: 0,
+                flex-shrink: 0;
             }
         }
 
@@ -65,7 +67,6 @@
         display: flex;
         flex-grow: 1;
         align-items: stretch;
-        // border: 1px solid green;
     }
 
 }

@@ -3,19 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import {
-    SelectInput,
-} from '../../../../../public/components/Input';
-
 const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.array,      // eslint-disable-line
+    data: PropTypes.object,      // eslint-disable-line
 };
 
 const defaultProps = {
-    data: [],
+    data: undefined,
     attribute: undefined,
 };
 
@@ -33,21 +29,9 @@ export default class Organigram extends React.PureComponent {
     }
 
     render() {
-        const {
-            attribute,
-            data,
-        } = this.props;
-
         return (
             <div styleName="organigram-list">
-                <SelectInput
-                    onChange={this.handleChange}
-                    options={data}
-                    multiple
-                    styleName="organigram"
-                    value={attribute && attribute.value}
-                    keyExtractor={Organigram.valueKeyExtractor}
-                />
+                Oraganigram List
             </div>
         );
     }
