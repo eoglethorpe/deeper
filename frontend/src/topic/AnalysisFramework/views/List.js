@@ -198,7 +198,7 @@ export default class List extends React.PureComponent {
             properties: filter.data,
             filterType: filter.type,
         };
-        this.props.updateWidget({ analysisFrameworkId, widget, filterData });
+        this.props.updateWidget({ analysisFrameworkId, widget, filter: filterData });
     }
 
     handleGotoOverviewButtonClick = () => {

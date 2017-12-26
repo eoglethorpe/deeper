@@ -7,6 +7,9 @@ import {
     GridLayout,
     LoadingAnimation,
 } from '../../../public/components/View';
+import {
+    SelectInput,
+} from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { groupList } from '../../../public/utils/common';
 
@@ -249,6 +252,33 @@ export default class Entries extends React.PureComponent {
         } else {
             this.items = [];
         }
+
+        if (analysisFramework.filters) {
+            this.filters = analysisFramework.filters.filter(
+                f => this.items.find(item => item.key === f.key),
+            );
+        } else {
+            this.filters = [];
+        }
+    }
+
+    renderFilter = ({ id, properties: filter }) => {
+        if (!filter.type) {
+            return null;
+        }
+
+        if (filter.type === 'multiselect') {
+            return (
+                <SelectInput
+                    key={id}
+                    options={filter.options}
+                    showHintAndError={false}
+                    multiple
+                />
+            );
+        }
+
+        return null;
     }
 
     render() {
@@ -261,9 +291,9 @@ export default class Entries extends React.PureComponent {
                     <LoadingAnimation />
                 }
                 <div styleName="filters">
-                    <h2>
-                        { pageTitles.entries }
-                    </h2>
+                    {
+                        this.filters && this.filters.map(filter => this.renderFilter(filter))
+                    }
                 </div>
                 <div styleName="lead-entries-list">
                     {

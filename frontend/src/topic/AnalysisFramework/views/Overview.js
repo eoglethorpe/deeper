@@ -197,13 +197,13 @@ export default class Overview extends React.PureComponent {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
 
-        const filterData = {
+        const filterData = filter && {
             key: widget.key,
             title: widget.title,
             properties: filter.data,
             filterType: filter.type,
         };
-        this.props.updateWidget({ analysisFrameworkId, widget, filterData });
+        this.props.updateWidget({ analysisFrameworkId, widget, filter: filterData });
     }
 
     handleGotoListButtonClick = () => {
