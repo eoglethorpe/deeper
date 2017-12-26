@@ -2,6 +2,7 @@ import string from './lang/en/';
 
 const notificationStrings = {
 
+    // User Profile
     userProfileEdit: string[900],
     userEditSuccess: string[901],
     userEditFailure: string[902],
@@ -78,6 +79,12 @@ const notificationStrings = {
     adminLevelEditSuccess: string[957],
     adminLevelEditFailure: string[958],
     adminLevelEditFatal: string[959],
+
+    // Project Panel
+    projectDetails: string[960],
+    projectDetailsSuccess: string[961],
+    projectDetailsFailure: string[962],
+    projectDetailsFatal: string[963],
 
 };
 

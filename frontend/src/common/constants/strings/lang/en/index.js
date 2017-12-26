@@ -202,12 +202,25 @@ const strings = {
     958: 'Error. Cannot update admin level.',
     959: 'Error. Cannot update admin level. Please check your network connection and try again',
 
-    960: 'Delete Country',
-    961: 'Country Delete Successful',
-    962: 'Error. Cannot delete country.',
-    963: 'Error. Cannot delete country. Please check your network connection and try again',
+    960: 'Project Details',
+    961: 'Project Details Successfully Updated',
+    962: 'Error. Cannot update project details.',
+    963: 'Error. Cannot update project details. Please check your network connection and try again',
 
-    964: 'User Edit Successful',
+    964: 'Delete Country',
+    965: 'Country Delete Successful',
+    966: 'Error. Cannot delete country.',
+    967: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    968: 'Delete Country',
+    969: 'Country Delete Successful',
+    970: 'Error. Cannot delete country.',
+    971: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    972: 'Delete Country',
+    973: 'Country Delete Successful',
+    974: 'Error. Cannot delete country.',
+    975: 'Error. Cannot delete country. Please check your network connection and try again',
 
 };
 

@@ -26,7 +26,10 @@ import {
 import {
     pathNames,
     iconNames,
+    notificationStrings,
 } from '../../../../common/constants';
+import notify from '../../../../common/notify';
+
 import {
     transformResponseErrorToFormError,
     createUrlForUserProjectMembership,
@@ -241,12 +244,23 @@ export default class ProjectGeneral extends React.PureComponent {
                     this.props.setProject({
                         project: response,
                     });
+                    notify.send({
+                        title: notificationStrings.projectDetails,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.projectDetailsSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.projectDetails,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.projectDetailsFailure,
+                    duration: notify.duration.SLOW,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -256,8 +270,13 @@ export default class ProjectGeneral extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.projectDetails,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.projectDetailsFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save jroject.'],
                 });
