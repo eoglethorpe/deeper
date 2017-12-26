@@ -207,15 +207,15 @@ const strings = {
     962: 'Error. Cannot update project details.',
     963: 'Error. Cannot update project details. Please check your network connection and try again',
 
-    964: 'Delete Country',
-    965: 'Country Delete Successful',
-    966: 'Error. Cannot delete country.',
-    967: 'Error. Cannot delete country. Please check your network connection and try again',
+    964: 'Analysis Framework',
+    965: 'Analysis Framework Successfully Added ',
+    966: 'Error. Cannot add Analysis Framework.',
+    967: 'Error. Cannot add Analysis Framework. Please check your network connection and try again',
 
-    968: 'Delete Country',
-    969: 'Country Delete Successful',
-    970: 'Error. Cannot delete country.',
-    971: 'Error. Cannot delete country. Please check your network connection and try again',
+    968: 'Analysis Framework Form',
+    969: 'Analysis Framework Form Updated',
+    970: 'Error. Cannot update Analysis Framework Form.',
+    971: 'Error. Cannot update Analysis Framework Form. Please check your network connection and try again',
 
     972: 'Delete Country',
     973: 'Country Delete Successful',

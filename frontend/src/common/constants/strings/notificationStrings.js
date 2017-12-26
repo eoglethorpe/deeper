@@ -86,6 +86,16 @@ const notificationStrings = {
     projectDetailsFailure: string[962],
     projectDetailsFatal: string[963],
 
+    afCreate: string[964],
+    afCreateSuccess: string[965],
+    afCreateFailure: string[966],
+    afCreateFatal: string[967],
+
+    afFormEdit: string[968],
+    afFormEditSuccess: string[969],
+    afFormEditFailure: string[970],
+    afFormEditFatal: string[971],
+
 };
 
 export default notificationStrings;

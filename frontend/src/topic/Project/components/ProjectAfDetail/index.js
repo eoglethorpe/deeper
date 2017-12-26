@@ -39,8 +39,9 @@ import {
 import {
     iconNames,
     pathNames,
+    notificationStrings,
 } from '../../../../common/constants';
-
+import notify from '../../../../common/notify';
 import ProjectAfForm from '../ProjectAfForm';
 import styles from './styles.scss';
 
@@ -161,9 +162,31 @@ export default class ProjectAfDetail extends React.PureComponent {
                         afId,
                         afDetail: response,
                     });
+                    notify.send({
+                        title: notificationStrings.afFormEdit,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.afFormEditSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.afFormEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.afFormEditFailure,
+                    duration: notify.duration.SLOW,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.afFormEdit,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.afFormEditFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return afPutRequest;
