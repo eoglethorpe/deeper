@@ -187,15 +187,15 @@ const strings = {
     946: 'Error. Cannot update region detail.',
     947: 'Error. Cannot update region detail. Please check your network connection and try again',
 
-    948: 'Delete Country',
-    949: 'Country Delete Successful',
-    950: 'Error. Cannot delete country.',
-    951: 'Error. Cannot delete country. Please check your network connection and try again',
+    948: 'Delete Admin Level',
+    949: 'Admin Level Successfully Deleted',
+    950: 'Error. Cannot delete admin level.',
+    951: 'Error. Cannot delete admin level. Please check your network connection and try again',
 
-    952: 'Delete Country',
-    953: 'Country Delete Successful',
-    954: 'Error. Cannot delete country.',
-    955: 'Error. Cannot delete country. Please check your network connection and try again',
+    952: 'Add Admin Level',
+    953: 'Admin Level Successfully Added',
+    954: 'Error. Cannot add admin level.',
+    955: 'Error. Cannot add admin level. Please check your network connection and try again',
 
     956: 'Delete Country',
     957: 'Country Delete Successful',

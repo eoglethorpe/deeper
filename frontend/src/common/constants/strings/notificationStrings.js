@@ -64,6 +64,16 @@ const notificationStrings = {
     regionDetailFailure: string[946],
     regionDetailFatal: string[947],
 
+    adminLevelDelete: string[948],
+    adminLevelDeleteSuccess: string[949],
+    adminLevelDeleteFailure: string[950],
+    adminLevelDeleteFatal: string[951],
+
+    adminLevelCreate: string[952],
+    adminLevelCreateSuccess: string[953],
+    adminLevelCreateFailure: string[954],
+    adminLevelCreateFatal: string[955],
+
 };
 
 export default notificationStrings;

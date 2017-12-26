@@ -27,7 +27,10 @@ import DeepGallery from '../../../common/components/DeepGallery';
 
 import {
     countriesString,
+    notificationStrings,
 } from '../../../common/constants';
+import notify from '../../notify';
+
 
 import {
     transformResponseErrorToFormError,
@@ -187,13 +190,24 @@ export default class EditAdminLevel extends React.PureComponent {
                         adminLevel: response,
                         regionId: data.region,
                     });
+                    notify.send({
+                        title: notificationStrings.adminLevelCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.adminLevelCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.adminLevelCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -203,8 +217,13 @@ export default class EditAdminLevel extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.adminLevelCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to create admin level.'],
                 });
