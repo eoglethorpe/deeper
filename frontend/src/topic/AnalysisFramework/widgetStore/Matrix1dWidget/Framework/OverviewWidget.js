@@ -88,20 +88,41 @@ export default class Matrix1dOverview extends React.PureComponent {
         />
     )
 
+    getFilter = (rows) => {
+        const filterOptions = [];
+        rows.forEach((row) => {
+            filterOptions.push({
+                label: row.title,
+                key: row.key,
+            });
+
+            row.cells.forEach((cell) => {
+                filterOptions.push({
+                    label: `${row.title} / ${cell.value}`,
+                    key: cell.key,
+                });
+            });
+        });
+
+        return {
+            type: 'list',
+            data: {
+                type: 'multiselect',
+                options: filterOptions,
+            },
+        };
+    }
+
     handleEdit = () => {
         this.setState({ showEditModal: true });
     }
 
     handleRowDataChange = (key, cells) => {
         const newRows = [...this.state.rows];
-
         const rowIndex = newRows.findIndex(d => d.key === key);
-
         newRows[rowIndex].cells = cells;
 
-        this.setState({
-            rows: newRows,
-        });
+        this.props.onChange(newRows, this.getFilter(newRows));
     }
 
     handleRowRemoveButtonClick = (key) => {
@@ -145,30 +166,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.setState({
             showEditModal: false,
         });
-
-        const filterOptions = [];
-        this.state.rows.forEach((row) => {
-            filterOptions.push({
-                label: row.title,
-                key: row.key,
-            });
-
-            row.cells.forEach((cell) => {
-                filterOptions.push({
-                    label: `${row.title} / ${cell.value}`,
-                    key: cell.key,
-                });
-            });
-        });
-
-        const filter = {
-            type: 'list',
-            data: {
-                type: 'multiselect',
-                options: filterOptions,
-            },
-        };
-        this.props.onChange(this.state.rows, filter);
+        this.props.onChange(this.state.rows, this.getFilter(this.state.rows));
     }
 
     addRow = () => {
