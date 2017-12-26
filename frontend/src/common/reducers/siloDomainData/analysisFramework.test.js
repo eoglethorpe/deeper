@@ -71,6 +71,7 @@ test('should add widget', () => {
 
     const action = addAfViewWidgetAction({
         widget: { key: '1', name: 'widget1' },
+        filter: { key: '1', properties: { dummy: true } },
         analysisFrameworkId: 1,
     });
     const after = {
@@ -78,6 +79,7 @@ test('should add widget', () => {
             analysisFramework: {
                 id: 1,
                 widgets: [{ key: '1', name: 'widget1' }],
+                filters: [{ key: '1', properties: { dummy: true } }],
             },
         },
     };
@@ -93,6 +95,9 @@ test('should remove widget', () => {
                     { key: '1', name: 'widget1' },
                     { key: '2', name: 'widget2' },
                 ],
+                filters: [
+                    { key: '2', properties: { dummy: true } },
+                ],
             },
         },
     };
@@ -107,6 +112,7 @@ test('should remove widget', () => {
                 widgets: [
                     { key: '1', name: 'widget1' },
                 ],
+                filters: [],
             },
         },
     };
