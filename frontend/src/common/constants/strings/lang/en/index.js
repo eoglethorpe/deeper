@@ -217,10 +217,15 @@ const strings = {
     970: 'Error. Cannot update Analysis Framework Form.',
     971: 'Error. Cannot update Analysis Framework Form. Please check your network connection and try again',
 
-    972: 'Delete Country',
-    973: 'Country Delete Successful',
-    974: 'Error. Cannot delete country.',
-    975: 'Error. Cannot delete country. Please check your network connection and try again',
+    972: 'Save Lead',
+    973: 'Lead Save Successful',
+    974: 'Error. Lead Save Failed.',
+    975: 'Error. Lead Save Failed. Please check your network connection and try again',
+
+    976: 'Delete Lead',
+    977: 'Lead Successfully Deleted',
+    978: 'Error. Cannot delete lead.',
+    979: 'Error.Cannot delete lead. Please check your network connection and try again',
 
 };
 

@@ -96,6 +96,18 @@ const notificationStrings = {
     afFormEditFailure: string[970],
     afFormEditFatal: string[971],
 
+    // Leads
+
+    leadSave: string[972],
+    leadSaveSuccess: string[973],
+    leadSaveFailure: string[974],
+    leadSaveFatal: string[975],
+
+    leadDelete: string[976],
+    leadDeleteSuccess: string[977],
+    leadDeleteFailure: string[978],
+    leadDeleteFatal: string[979],
+
 };
 
 export default notificationStrings;
