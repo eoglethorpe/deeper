@@ -117,7 +117,7 @@ export default class AddCategoryEditor extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to save region.'],
+                    formErrors: ['Error while trying to create new category editor.'],
                     pending: true,
                 });
             })
@@ -183,7 +183,7 @@ export default class AddCategoryEditor extends React.PureComponent {
                 <TextInput
                     label="Title"
                     formname="title"
-                    placeholder="ACAPS framework"
+                    placeholder="ACAPS category editor"
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />

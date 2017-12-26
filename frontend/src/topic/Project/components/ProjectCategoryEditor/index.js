@@ -36,7 +36,7 @@ import {
     iconNames,
 } from '../../../../common/constants';
 
-import ProjectAfDetail from '../ProjectAfDetail';
+import ProjectCeDetail from '../ProjectCeDetail';
 import AddCategoryEditor from '../AddCategoryEditor';
 import styles from './styles.scss';
 
@@ -45,7 +45,7 @@ const propTypes = {
     categoryEditorList: PropTypes.array.isRequired,
     mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    projectId: PropTypes.number.isRequired, // eslint-disable-line
+    projectId: PropTypes.number.isRequired,
     setCategoryEditors: PropTypes.func.isRequired,
 };
 
@@ -217,10 +217,10 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         }
 
         return (
-            <ProjectAfDetail
+            <ProjectCeDetail
                 mainHistory={this.props.mainHistory}
                 key={selectedCe}
-                afId={selectedCe}
+                ceId={selectedCe}
             />
         );
     }
@@ -282,6 +282,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                 </div>
                 <div styleName="details-container">
                     {pending && <LoadingAnimation />}
+                    {this.renderSelectedCeDetails()}
                 </div>
             </div>
         );
