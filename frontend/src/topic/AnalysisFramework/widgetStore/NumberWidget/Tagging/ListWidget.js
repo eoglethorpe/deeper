@@ -4,14 +4,14 @@ import React from 'react';
 import styles from './styles.scss';
 
 import {
-    TextInput,
+    NumberInput,
 } from '../../../../../public/components/Input';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    api: PropTypes.object.isRequired,      // eslint-disable-line
-    attribute: PropTypes.object,      // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -25,23 +25,19 @@ export default class NumberTaggingList extends React.PureComponent {
 
     handleChange = (value) => {
         const { api, id, entryId } = this.props;
-        api.setEntryAttribute(id, {
-            value,
-        }, entryId);
+        api.setEntryAttribute(id, { value }, entryId);
     }
 
     render() {
-        const {
-            attribute,
-        } = this.props;
-
+        const { attribute = {} } = this.props;
+        const { value } = attribute;
         return (
             <div styleName="number-list">
-                <TextInput
+                <NumberInput
                     styleName="number-input"
                     onChange={this.handleChange}
-                    value={attribute && attribute.value}
-                    placeholder="eg: 147181"
+                    value={value}
+                    placeholder="999"
                     showLabel={false}
                     showHintAndError={false}
                 />
