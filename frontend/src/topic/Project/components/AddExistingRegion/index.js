@@ -30,6 +30,10 @@ import {
 
     setProjectAction,
 } from '../../../../common/redux';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -130,13 +134,24 @@ export default class AddExistingRegion extends React.PureComponent {
                     this.props.setProject({
                         project: response,
                     });
+                    notify.send({
+                        title: notificationStrings.countryCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.countryCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.countryCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -146,8 +161,13 @@ export default class AddExistingRegion extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.countryCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryCreateFatal,
+                    duration: notify.duration.MEDIUM,
+                });
                 this.setState({
                     formErrors: ['Error while trying to :ave project.'],
                 });
