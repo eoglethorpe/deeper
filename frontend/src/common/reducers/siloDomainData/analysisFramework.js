@@ -68,7 +68,7 @@ const afViewAddWidget = (state, action) => {
         analysisFrameworkView: {
             analysisFramework: {
                 widgets: {
-                    $push: [widget],
+                    $autoArray: { $push: [widget] },
                 },
             },
         },
@@ -76,7 +76,7 @@ const afViewAddWidget = (state, action) => {
 
     if (filter) {
         settings.analysisFrameworkView.analysisFramework.filters = {
-            $push: [filter],
+            $autoArray: { $push: [filter] },
         };
     }
     return update(state, settings);
