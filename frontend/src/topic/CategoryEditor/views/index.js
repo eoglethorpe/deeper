@@ -7,22 +7,18 @@ import {
     TextInput,
     SelectInput,
 } from '../../../public/components/Input';
-
 import {
     Button,
     PrimaryButton,
 } from '../../../public/components/Action';
-
 import {
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
 } from '../../../public/components/View';
-
-import {
-    randomString,
-} from '../../../public/utils/common';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import { randomString } from '../../../public/utils/common';
 
 import DocumentPanel from './DocumentPanel';
 import SubcategoryColumn from './SubcategoryColumn';
@@ -38,6 +34,11 @@ import {
     addSubcategoryNGramAction,
     addManualSubcategoryNGramAction,
 } from '../../../common/redux';
+import {
+    createUrlForCategoryEditor,
+    createParamsForUser,
+} from '../../../common/rest';
+import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
 import styles from './styles.scss';
@@ -65,6 +66,7 @@ const propTypes = {
     updateSelectedSubcategories: PropTypes.func.isRequired,
     addSubcategoryNGram: PropTypes.func.isRequired,
     addManualSubcategoryNGram: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -83,6 +85,8 @@ export default class CategoryEditor extends React.PureComponent {
         super(props);
 
         this.state = {
+            pending: true,
+
             showCategoryTitleModal: false,
             newCategoryTitleInputValue: '',
 
@@ -94,59 +98,50 @@ export default class CategoryEditor extends React.PureComponent {
         };
     }
 
-    getSubcategoryColumns = () => {
-        const {
-            categories,
-            activeCategoryId,
-        } = this.props;
-
-        const category = categories.find(d => d.id === activeCategoryId);
-        const { selectedSubcategories } = category;
-
-        let nextSubcategory = category;
-        const subcategoryColumns = selectedSubcategories.map((selected, i) => {
-            const isLastColumn = i === selectedSubcategories.length - 1;
-
-            const subcategoryIndex = nextSubcategory.subcategories.findIndex(
-                d => d.id === selected,
-            );
-            const currentSubcategories = nextSubcategory.subcategories;
-            const currentSubcategoryTitle = nextSubcategory.title;
-
-            nextSubcategory = currentSubcategories[subcategoryIndex];
-            return (
-                <SubcategoryColumn
-                    key={selected}
-                    level={i}
-                    isLastColumn={isLastColumn}
-                    selectedSubcategoryId={selected}
-                    subcategories={currentSubcategories}
-                    title={currentSubcategoryTitle}
-                    onNewSubcategory={this.handleNewSubcategory}
-                    onSubcategoryClick={this.handleSubcategoryClick}
-                    onDrop={this.handleSubcategoryDrop}
-                />
-            );
-        });
-
-        if (selectedSubcategories.length < LIMIT) {
-            const currentSubcategories = nextSubcategory.subcategories;
-            const currentSubcategoryTitle = nextSubcategory.title;
-            subcategoryColumns.push(
-                <SubcategoryColumn
-                    level={selectedSubcategories.length}
-                    key="empty"
-                    subcategories={currentSubcategories}
-                    title={currentSubcategoryTitle}
-                    onNewSubcategory={this.handleNewSubcategory}
-                    onSubcategoryClick={this.handleSubcategoryClick}
-                    onDrop={this.handleSubcategoryDrop}
-                />,
-            );
-        }
-
-        return subcategoryColumns;
+    componentWillMount() {
+        const { match } = this.props;
+        this.ceRequest = this.createCeRequest(match.params.categoryEditorId);
+        this.ceRequest.start();
     }
+
+    componentWillReceiveProps(nextProps) {
+        const { match: oldMatch } = this.props;
+        const { match: newMatch } = nextProps;
+        if (oldMatch !== newMatch &&
+            (oldMatch.params.categoryEditorId !== newMatch.params.categoryEditorId)
+        ) {
+            this.ceRequest.stop();
+            this.ceRequest = this.createCeRequest(newMatch.params.categoryEditorId);
+            this.ceRequest.start();
+        }
+    }
+
+    componentWillUnmount() {
+        this.ceRequest.stop();
+    }
+
+    createCeRequest = (categoryEditorId) => {
+        const cesRequest = new FgRestBuilder()
+            .url(createUrlForCategoryEditor(categoryEditorId))
+            .params(() => createParamsForUser())
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                try {
+                    schema.validate(response, 'categoryEditor');
+                    // check version Id here
+                    /*
+                    this.props.setCategoryEditor({
+                        categoryEditors: response.results,
+                    });
+                    */
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return cesRequest;
+    };
 
     handleSubcategoryDrop = (level, subcategoryId, data) => {
         const { addSubcategoryNGram } = this.props;
@@ -272,6 +267,61 @@ export default class CategoryEditor extends React.PureComponent {
         });
     };
 
+    renderSubcategoryColumns = () => {
+        const {
+            categories,
+            activeCategoryId,
+        } = this.props;
+
+        const category = categories.find(d => d.id === activeCategoryId);
+        const { selectedSubcategories } = category;
+
+        let nextSubcategory = category;
+        const subcategoryColumns = selectedSubcategories.map((selected, i) => {
+            const isLastColumn = i === selectedSubcategories.length - 1;
+
+            const subcategoryIndex = nextSubcategory.subcategories.findIndex(
+                d => d.id === selected,
+            );
+            const currentSubcategories = nextSubcategory.subcategories;
+            const currentSubcategoryTitle = nextSubcategory.title;
+
+            nextSubcategory = currentSubcategories[subcategoryIndex];
+            return (
+                <SubcategoryColumn
+                    key={selected}
+                    level={i}
+                    isLastColumn={isLastColumn}
+                    selectedSubcategoryId={selected}
+                    subcategories={currentSubcategories}
+                    title={currentSubcategoryTitle}
+                    onNewSubcategory={this.handleNewSubcategory}
+                    onSubcategoryClick={this.handleSubcategoryClick}
+                    onDrop={this.handleSubcategoryDrop}
+                />
+            );
+        });
+
+        if (selectedSubcategories.length < LIMIT) {
+            const currentSubcategories = nextSubcategory.subcategories;
+            const currentSubcategoryTitle = nextSubcategory.title;
+            subcategoryColumns.push(
+                <SubcategoryColumn
+                    level={selectedSubcategories.length}
+                    key="empty"
+                    subcategories={currentSubcategories}
+                    title={currentSubcategoryTitle}
+                    onNewSubcategory={this.handleNewSubcategory}
+                    onSubcategoryClick={this.handleSubcategoryClick}
+                    onDrop={this.handleSubcategoryDrop}
+                />,
+            );
+        }
+
+        return subcategoryColumns;
+    }
+
+
     render() {
         const {
             categories,
@@ -313,7 +363,7 @@ export default class CategoryEditor extends React.PureComponent {
                         <div styleName="sub-categories">
                             {
                                 activeCategoryId ? (
-                                    this.getSubcategoryColumns()
+                                    this.renderSubcategoryColumns()
                                 ) : (
                                     <p styleName="empty">
                                         Such empty
