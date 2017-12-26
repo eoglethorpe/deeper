@@ -117,7 +117,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
 
             let selectedCe;
             if (projectDetails.categoryEditor) {
-                // if there is analysisFramework in current project
+                // if there is category editor in current project
                 selectedCe = projectDetails.categoryEditor;
             } else {
                 // if not, get first
