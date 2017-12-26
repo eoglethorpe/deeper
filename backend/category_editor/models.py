@@ -4,10 +4,25 @@ from user_resource.models import UserResource
 
 
 class CategoryEditor(UserResource):
+    title = models.CharField(max_length=255)
     data = JSONField(default=None, blank=True, null=True)
 
     def __str__(self):
-        return 'Category Editor by {}'.format(self.created_by)
+        return self.title
+
+    def clone(self, user):
+        """
+        Clone category editor
+        """
+        category_editor = CategoryEditor(
+            title='{} (cloned)'.format(self.title),
+            data=self.data,
+        )
+        category_editor.created_by = user
+        category_editor.modified_by = user
+        category_editor.save()
+
+        return category_editor
 
     @staticmethod
     def get_for(user):

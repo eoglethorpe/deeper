@@ -7,8 +7,8 @@ import {
 } from '../../../public/components/View';
 
 import {
-    urlForCategoryEditor,
-    createParamsForCategoryEditor,
+    urlForKeywordExtraction,
+    createParamsForCeKeywordExtraction,
 } from '../../../common/rest';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
@@ -64,8 +64,8 @@ export default class DocumentPanel extends React.PureComponent {
 
     createRequestForCategoryEditor = (document) => {
         const categoryEditorRequest = new FgRestBuilder()
-            .url(urlForCategoryEditor)
-            .params(() => createParamsForCategoryEditor(document))
+            .url(urlForKeywordExtraction)
+            .params(() => createParamsForCeKeywordExtraction(document))
             .preLoad(() => {
                 this.setState({ pending: true });
             })

@@ -24,7 +24,7 @@ const pathNames = {
 
     analysisFramework: '/analysis-framework/:analysisFrameworkId/',
 
-    categoryEditor: '/category-editor/',
+    categoryEditor: '/category-editor/:categoryEditorId/',
 
     weeklySnapshot: '/weekly-snapshot/',
 

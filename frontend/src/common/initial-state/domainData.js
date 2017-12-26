@@ -26,6 +26,19 @@ const initialDomainDataState = {
         },
     },
 
+    categoryEditors: {
+        /*
+        1: {
+            id: 1,
+            title: 'Category Editor',
+            createdAt: '',
+            modifiedAt: '',
+            createdBy: 1,
+            modifiedBy: 1,
+        },
+        */
+    },
+
     analysisFrameworks: {
         /*
         1: {

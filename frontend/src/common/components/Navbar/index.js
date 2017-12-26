@@ -174,7 +174,6 @@ export default class Navbar extends React.PureComponent {
 
         const dropLinks = [
             'userProfile',
-            'categoryEditor',
         ];
         // Don't show apiDocs in production
         if (process.env.NODE_ENV === 'development') {
