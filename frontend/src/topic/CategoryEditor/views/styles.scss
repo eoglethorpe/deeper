@@ -149,7 +149,19 @@
             padding: $spacing-medium;
 
             .category-select {
+                flex-basis: 20%;
                 margin-right: $spacing-medium;
+            }
+
+            .action-btn {
+                display: flex;
+                flex-basis: 100%;
+                align-items: flex-end;
+                justify-content: flex-end;
+
+                .add-category-btn {
+                    margin-right: $spacing-medium;
+                }
             }
         }
 

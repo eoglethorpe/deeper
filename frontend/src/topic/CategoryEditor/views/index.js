@@ -10,6 +10,7 @@ import {
 import {
     Button,
     PrimaryButton,
+    SuccessButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -415,15 +416,20 @@ export default class CategoryEditor extends React.PureComponent {
                             labelSelector={d => d.title}
                             clearable={false}
                         />
-                        <Button onClick={this.handleAddCategoryButtonClick}>
-                            Add category
-                        </Button>
-                        <Button
-                            onClick={this.handleCategoryEditorSaveButtonClick}
-                            disabled={pristine}
-                        >
-                            Save
-                        </Button>
+                        <div styleName="action-btn">
+                            <PrimaryButton
+                                styleName="add-category-btn"
+                                onClick={this.handleAddCategoryButtonClick}
+                            >
+                                Add category
+                            </PrimaryButton>
+                            <SuccessButton
+                                onClick={this.handleCategoryEditorSaveButtonClick}
+                                disabled={pristine}
+                            >
+                                Save
+                            </SuccessButton>
+                        </div>
                     </header>
                     <div styleName="content">
                         <div styleName="sub-categories">

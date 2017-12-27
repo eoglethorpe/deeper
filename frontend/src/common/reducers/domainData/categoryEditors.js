@@ -34,18 +34,6 @@ export const setCeDetailAction = ({ ceId, ceDetail }) => ({
 
 // REDUCER
 
-const setCategoryEditor = (state, action) => {
-    const { categoryEditor } = action;
-    const settings = {
-        categoryEditors: { $auto: {
-            [categoryEditor.id]: { $auto: {
-                $merge: categoryEditor,
-            } },
-        } },
-    };
-    return update(state, settings);
-};
-
 const setCategoryEditors = (state, action) => {
     const { categoryEditors } = action;
 
