@@ -1,0 +1,272 @@
+@import '../../../../stylesheets/base';
+
+.tagging-matrix-2d,
+.framework-matrix-2d {
+    width: 100%;
+}
+
+.framework-matrix-2d {
+    overflow-y: auto;
+
+    .content {
+        display: table;
+        width: 100%;
+
+        .row {
+            display: table-row;
+            position: relative;
+
+            .blank {
+                display: table-cell;
+            }
+
+            &.top-row {
+                position: relative;
+
+                .blank {
+                    position: sticky;
+                    top: 0;
+                    z-index: 11;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    background-color: $color-foreground;
+                }
+
+                .edit-sectors-button {
+                    @include transition-medium;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    opacity: 0;
+                }
+
+                &:hover {
+                    .edit-sectors-button {
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .dimensions {
+                display: table-cell;
+                border-right: $width-separator-thin solid $color-separator;
+
+                .dimension {
+                    display: flex;
+                    position: relative;
+                    border: $width-separator-thin solid $color-separator;
+
+                    .title {
+                        display: flex;
+                        flex-basis: 50%;
+                        align-items: center;
+                        justify-content: center;
+                        border-right: $width-separator-thin solid $color-separator;
+                        padding: $spacing-medium;
+                        color: $color-text;
+                    }
+
+                    .subdimensions {
+                        flex-basis: 50%;
+
+                        .subdimension {
+                            margin: $spacing-extra-small;
+                            background-color: $color-background;
+                            padding: $spacing-small $spacing-medium;
+                            color: $color-text;
+                            user-select: none;
+                        }
+                    }
+
+                    .edit-dimension-button {
+                        @include transition-medium;
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        opacity: 0;
+                    }
+
+                    &:hover {
+                        .edit-dimension-button {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+
+            .sectors {
+                display: flex;
+                position: sticky;
+                top: 0;
+                border-bottom: $width-separator-thin solid $color-separator;
+                padding: 0;
+
+                .sector {
+                    margin: 0 $width-separator-thin;
+                    background-color: $color-background;
+                    padding: $spacing-small $spacing-medium;
+                }
+
+                .edit-sectors-button {
+                    @include transition-medium;
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    opacity: 0;
+                }
+
+                &:hover {
+                    .edit-sectors-button {
+                        opacity: 1;
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.edit-widget-modal {
+    width: 600px;
+
+    .modal-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        height: 600px;
+
+        .title-input {
+            flex-shrink: 0;
+            padding: $spacing-medium;
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            border-top: $width-separator-medium solid $color-separator;
+
+            .header {
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                padding: 0 $spacing-medium;
+
+                .heading {
+                    flex-grow: 1;
+                }
+
+                button {
+                    flex-shrink: 0;
+                }
+            }
+
+            .list {
+                flex-grow: 1;
+                overflow-y: auto;
+
+                .edit-sector {
+                    display: flex;
+                    justify-content: space-between;
+                    background-color: $color-background-row;
+                    padding: $spacing-small $spacing-medium;
+
+                    &:nth-child(odd) {
+                        background-color: $color-background-row-alt;
+                    }
+                }
+
+                .edit-dimension {
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    background-color: $color-background-row;
+                    padding: $spacing-small $spacing-medium;
+
+                    &:nth-child(odd) {
+                        background-color: $color-background-row-alt;
+                    }
+                }
+            }
+        }
+
+        .edit-sectors {
+            flex-basis: 50%;
+            flex-shrink: 0;
+        }
+
+        .edit-dimensions {
+            flex-basis: 50%;
+            // flex-grow: 1;
+        }
+    }
+}
+
+.edit-dimension-modal {
+    width: 480px;
+
+    .modal-body {
+        height: 480px;
+
+        .edit-subdimension {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+.edit-sectors-modal {
+    width: 480px;
+
+    .modal-body {
+        display: flex;
+        padding: 0;
+        height: 480px;
+
+        .select-sector-list {
+            flex-basis: 40%;
+            border-right: $width-separator-medium solid $color-separator;
+            overflow-y: auto;
+
+            .select-sector {
+                display: block;
+                outline: 0;
+                border: 0;
+                background-color: transparent;
+                cursor: pointer;
+                padding: $spacing-medium $spacing-medium-alt;
+                width: 100%;
+                text-align: left;
+                color: inherit;
+                font-family: inherit;
+                font-size: inherit;
+
+                &.active {
+                    background-color: $color-accent;
+                    color: $color-text-on-accent;
+                }
+            }
+        }
+
+        .edit-subsectors {
+            display: flex;
+            flex-basis: 60%;
+            flex-direction: column;
+
+            .header {
+                display: flex;
+                flex-shrink: 0;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 $spacing-medium;
+            }
+
+            .sub-sector-list {
+                flex-grow: 1;
+                overflow-y: auto;
+
+                .edit-subsector-input {
+                    padding: $spacing-medium-alt $spacing-small;
+                }
+            }
+        }
+    }
+}
