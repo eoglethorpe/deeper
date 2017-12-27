@@ -325,8 +325,12 @@ export default class ProjectsTable extends React.PureComponent {
             <div styleName="projects">
                 {deletePending && <LoadingAnimation /> }
                 <div styleName="header">
+                    <h2>
+                        Projects
+                    </h2>
+                    <div styleName="pusher" />
                     <TextInput
-                        placeholder="Search Projects"
+                        placeholder="Search"
                         onChange={this.handleSearchProjectChange}
                         value={searchProjectInputValue}
                         type="search"
@@ -334,14 +338,13 @@ export default class ProjectsTable extends React.PureComponent {
                         showLabel={false}
                         showHintAndError={false}
                     />
-                    <div styleName="pusher" />
                     {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
                             title="Project"
                         >
-                            Add New Project
+                            Add Project
                         </PrimaryButton>
                     }
                 </div>

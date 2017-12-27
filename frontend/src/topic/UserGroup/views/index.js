@@ -195,9 +195,9 @@ export default class UserGroup extends React.PureComponent {
 
         return (
             <div styleName="usergroup">
-                <div styleName="left">
+                <div styleName="info">
                     <div styleName="title">
-                        <h1>{ userGroup.title }</h1>
+                        <span styleName="name">{ userGroup.title }</span>
                         {
                             isCurrentUserAdmin &&
                             <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
@@ -205,21 +205,21 @@ export default class UserGroup extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     </div>
-                    <MembersTable
-                        memberData={userGroup.memberships || emptyList}
-                        userGroupId={+match.params.userGroupId}
-                        isCurrentUserAdmin={isCurrentUserAdmin}
-                        activeUser={this.props.activeUser}
-                    />
-                    <ProjectsTable
-                        match={match}
-                        isCurrentUserAdmin={isCurrentUserAdmin}
-                        userGroup={userGroup}
-                    />
                 </div>
-                <div styleName="right">
+                <div styleName="stats">
                     Activity Log
                 </div>
+                <ProjectsTable
+                    match={match}
+                    isCurrentUserAdmin={isCurrentUserAdmin}
+                    userGroup={userGroup}
+                />
+                <MembersTable
+                    memberData={userGroup.memberships || emptyList}
+                    userGroupId={+match.params.userGroupId}
+                    isCurrentUserAdmin={isCurrentUserAdmin}
+                    activeUser={this.props.activeUser}
+                />
                 <Modal
                     closeOnEscape
                     onClose={this.handleUserGroupEditModalClose}
