@@ -33,19 +33,21 @@ import {
     updateSelectedSubcategoriesAction,
     addSubcategoryNGramAction,
     addManualSubcategoryNGramAction,
+    setCategoryEditorAction,
 } from '../../../common/redux';
 import {
     createUrlForCategoryEditor,
     createParamsForUser,
+    createParamsForCeViewPatch,
 } from '../../../common/rest';
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
 import styles from './styles.scss';
 
-const mapStateToProps = state => ({
-    categories: categoriesSelector(state),
-    activeCategoryId: activeCategoryIdSelector(state),
+const mapStateToProps = (state, props) => ({
+    categories: categoriesSelector(state, props),
+    activeCategoryId: activeCategoryIdSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -55,6 +57,7 @@ const mapDispatchToProps = dispatch => ({
     updateSelectedSubcategories: params => dispatch(updateSelectedSubcategoriesAction(params)),
     addSubcategoryNGram: params => dispatch(addSubcategoryNGramAction(params)),
     addManualSubcategoryNGram: params => dispatch(addManualSubcategoryNGramAction(params)),
+    setCategoryEditor: params => dispatch(setCategoryEditorAction(params)),
 });
 
 const propTypes = {
@@ -66,6 +69,7 @@ const propTypes = {
     updateSelectedSubcategories: PropTypes.func.isRequired,
     addSubcategoryNGram: PropTypes.func.isRequired,
     addManualSubcategoryNGram: PropTypes.func.isRequired,
+    setCategoryEditor: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
@@ -86,6 +90,7 @@ export default class CategoryEditor extends React.PureComponent {
 
         this.state = {
             pending: true,
+            pristine: false,
 
             showCategoryTitleModal: false,
             newCategoryTitleInputValue: '',
@@ -120,6 +125,27 @@ export default class CategoryEditor extends React.PureComponent {
         this.ceRequest.stop();
     }
 
+    createCeSaveRequest = ({ categoryEditorId, categoryEditor }) => {
+        const cesRequest = new FgRestBuilder()
+            .url(createUrlForCategoryEditor(categoryEditorId))
+            .params(() => createParamsForCeViewPatch({ data: categoryEditor }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                try {
+                    schema.validate(response, 'categoryEditor');
+                    this.props.setCategoryEditor({
+                        categoryEditor: response,
+                    });
+                    this.setState({ pristine: false });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return cesRequest;
+    };
+
     createCeRequest = (categoryEditorId) => {
         const cesRequest = new FgRestBuilder()
             .url(createUrlForCategoryEditor(categoryEditorId))
@@ -129,12 +155,9 @@ export default class CategoryEditor extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'categoryEditor');
-                    // check version Id here
-                    /*
                     this.props.setCategoryEditor({
-                        categoryEditors: response.results,
+                        categoryEditor: response,
                     });
-                    */
                 } catch (er) {
                     console.error(er);
                 }
@@ -143,11 +166,29 @@ export default class CategoryEditor extends React.PureComponent {
         return cesRequest;
     };
 
+    handleCategoryEditorSaveButtonClick = () => {
+        if (this.saveCeRequest) {
+            this.saveCeRequest.stop();
+        }
+
+        const { activeCategoryId, categories } = this.props;
+        this.saveCeRequest = this.createCeSaveRequest({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditor: {
+                activeCategoryId,
+                categories,
+            },
+        });
+
+        this.saveCeRequest.start();
+    }
+
     handleSubcategoryDrop = (level, subcategoryId, data) => {
         const { addSubcategoryNGram } = this.props;
         try {
             const ngram = JSON.parse(data);
             addSubcategoryNGram({
+                categoryEditorId: this.props.match.params.categoryEditorId,
                 level,
                 subcategoryId,
                 ngram,
@@ -169,19 +210,29 @@ export default class CategoryEditor extends React.PureComponent {
 
     handleSubcategoryClick = (level, subcategoryId) => {
         const { updateSelectedSubcategories } = this.props;
-        updateSelectedSubcategories({ level, subcategoryId });
+        updateSelectedSubcategories({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            level,
+            subcategoryId,
+        });
     }
 
     addNewSubcategory = (title) => {
         const { newSubcategoryLevel: level } = this;
         const { addNewSubcategory } = this.props;
         const id = randomString();
-        addNewSubcategory({ level, id, title });
+        addNewSubcategory({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            level,
+            id,
+            title,
+        });
     }
 
     addNewCategory = (title) => {
         const key = randomString();
         const newCategory = {
+            categoryEditorId: this.props.match.params.categoryEditorId,
             id: key,
             title,
         };
@@ -190,7 +241,10 @@ export default class CategoryEditor extends React.PureComponent {
 
     handleCategorySelectChange = (value) => {
         const { setActiveCategoryId } = this.props;
-        setActiveCategoryId(value);
+        setActiveCategoryId({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            id: value,
+        });
     }
 
     handleAddCategoryButtonClick = () => {
@@ -252,8 +306,11 @@ export default class CategoryEditor extends React.PureComponent {
 
     handleNewManualNGramModalOkButtonClick = () => {
         this.props.addManualSubcategoryNGram({
-            n: this.state.newManualNGramInputValue.split(' ').length,
-            keyword: this.state.newManualNGramInputValue,
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            ngram: {
+                n: this.state.newManualNGramInputValue.split(' ').length,
+                keyword: this.state.newManualNGramInputValue,
+            },
         });
         this.setState({
             showNewManualNGramModal: false,
@@ -326,8 +383,11 @@ export default class CategoryEditor extends React.PureComponent {
         const {
             categories,
             activeCategoryId,
+            match,
         } = this.props;
+
         const {
+            pristine,
             showCategoryTitleModal,
             newCategoryTitleInputValue,
             showSubcategoryTitleModal,
@@ -358,6 +418,12 @@ export default class CategoryEditor extends React.PureComponent {
                         <Button onClick={this.handleAddCategoryButtonClick}>
                             Add category
                         </Button>
+                        <Button
+                            onClick={this.handleCategoryEditorSaveButtonClick}
+                            disabled={pristine}
+                        >
+                            Save
+                        </Button>
                     </header>
                     <div styleName="content">
                         <div styleName="sub-categories">
@@ -373,6 +439,7 @@ export default class CategoryEditor extends React.PureComponent {
                         </div>
                         <SubcategoryPropertyPanel
                             onNewManualNGram={this.handleNewManualNGram}
+                            match={match}
                         />
                     </div>
                 </div>

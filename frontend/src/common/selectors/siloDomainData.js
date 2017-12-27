@@ -16,6 +16,7 @@ const emptyObject = {};
 
 export const leadIdFromRoute = (state, { match }) => match.params.leadId;
 export const projectIdFromRoute = (state, { match }) => match.params.projectId;
+export const categoryEditorIdFromRoute = (state, { match }) => match.params.categoryEditorId;
 
 // LEAD ADD
 
@@ -233,13 +234,19 @@ export const afViewCurrentAnalysisFrameworkSelector = createSelector(
 
 // CATEGORY EDITOR
 
-export const categoryEditorViewSelector = ({ siloDomainData }) => (
-    siloDomainData.categoryEditorView || emptyList
+export const categoryEditorsViewSelector = ({ siloDomainData }) => (
+    siloDomainData.categoryEditorView || emptyObject
+);
+
+export const categoryEditorViewSelector = createSelector(
+    categoryEditorsViewSelector,
+    categoryEditorIdFromRoute,
+    (view, id) => (view[id] || emptyObject).data || emptyObject,
 );
 
 export const categoriesSelector = createSelector(
     categoryEditorViewSelector,
-    view => view.categories,
+    view => view.categories || emptyList,
 );
 
 export const activeCategoryIdSelector = createSelector(

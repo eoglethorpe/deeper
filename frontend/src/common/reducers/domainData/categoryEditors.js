@@ -2,18 +2,12 @@ import update from '../../../public/utils/immutable-update';
 
 // TYPE
 
-export const SET_CATEGORY_EDITOR = 'domain-data/SET_CATEGORY_EDITOR';
 export const SET_CATEGORY_EDITORS = 'domain-data/SET_CATEGORY_EDITORS';
 export const ADD_NEW_CE = 'domain-data/ADD_NEW_CE';
 export const SET_PROJECT_CE = 'domain-data/SET_PROJECT_CE';
 export const SET_CE_DETAIL = 'domain-data/SET_CE_DETAIL';
 
 // ACTION-CREATOR
-
-export const setCategoryEditorAction = ({ categoryEditor }) => ({
-    type: SET_CATEGORY_EDITOR,
-    categoryEditor,
-});
 
 export const setCategoryEditorsAction = ({ categoryEditors }) => ({
     type: SET_CATEGORY_EDITORS,
@@ -134,7 +128,6 @@ const setCeDetail = (state, action) => {
 };
 
 const reducers = {
-    [SET_CATEGORY_EDITOR]: setCategoryEditor,
     [SET_CATEGORY_EDITORS]: setCategoryEditors,
     [ADD_NEW_CE]: addNewCe,
     [SET_PROJECT_CE]: setProjectCe,
