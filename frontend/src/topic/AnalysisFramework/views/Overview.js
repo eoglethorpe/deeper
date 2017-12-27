@@ -110,9 +110,10 @@ export default class Overview extends React.PureComponent {
                 title={item.title}
                 widgetKey={item.key}
                 data={item.data}
-                filters={item.filters}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={(data, filters) => this.handleItemChange(item.key, data, filters)}
+                onChange={(data, filters, exportable) => {
+                    this.handleItemChange(item.key, data, filters, exportable);
+                }}
                 className={styles.component}
             />
         );
@@ -165,6 +166,7 @@ export default class Overview extends React.PureComponent {
             analysisFrameworkId,
             widget: item,
             filters: [],
+            exportable: {},
         });
     }
 
@@ -183,7 +185,7 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data, filters) => {
+    handleItemChange = (key, data, filters, exportable) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             properties: {
@@ -194,7 +196,7 @@ export default class Overview extends React.PureComponent {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
 
-        this.props.updateWidget({ analysisFrameworkId, widget, filters });
+        this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
     }
 
     handleGotoListButtonClick = () => {
@@ -215,13 +217,7 @@ export default class Overview extends React.PureComponent {
 
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
-        ).map((item) => {
-            const filters = analysisFramework.filters.filter(f => f.widgetKey === item.key);
-            return {
-                ...item,
-                filters,
-            };
-        });
+        );
     }
 
     render() {

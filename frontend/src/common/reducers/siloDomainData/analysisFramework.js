@@ -16,24 +16,39 @@ export const setAfViewAnalysisFrameworkAction = ({ analysisFramework }) => ({
     analysisFramework,
 });
 
-export const addAfViewWidgetAction = ({ analysisFrameworkId, widget, filters }) => ({
+export const addAfViewWidgetAction = ({
+    analysisFrameworkId,
+    widget,
+    filters,
+    exportable,
+}) => ({
     type: AF__VIEW_ADD_WIDGET,
     analysisFrameworkId,
     widget,
     filters,
+    exportable,
 });
 
-export const removeAfViewWidgetAction = ({ analysisFrameworkId, widgetId }) => ({
+export const removeAfViewWidgetAction = ({
+    analysisFrameworkId,
+    widgetId,
+}) => ({
     type: AF__REMOVE_WIDGET,
     analysisFrameworkId,
     widgetId,
 });
 
-export const updateAfViewWidgetAction = ({ analysisFrameworkId, widget, filters }) => ({
+export const updateAfViewWidgetAction = ({
+    analysisFrameworkId,
+    widget,
+    filters,
+    exportable,
+}) => ({
     type: AF__VIEW_UPDATE_WIDGET,
     analysisFrameworkId,
     widget,
     filters,
+    exportable,
 });
 
 // HELPER
@@ -43,6 +58,7 @@ const isAnalysisFrameworkValid = (af = {}, id) => isEqualAndTruthy(id, af.id);
 const getWidgetKey = widget => widget.key;
 const getFilterKey = filter => filter.key;
 const getFilterWidgetKey = filter => filter.widgetKey;
+const getExportableWidgetKey = exportable => exportable.widgetKey;
 
 // REDUCER
 
@@ -59,7 +75,7 @@ const afViewSetAnalysisFramework = (state, action) => {
 };
 
 const afViewAddWidget = (state, action) => {
-    const { analysisFrameworkId, widget, filters } = action;
+    const { analysisFrameworkId, widget, filters, exportable } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
@@ -82,6 +98,14 @@ const afViewAddWidget = (state, action) => {
             },
         };
     }
+
+    if (exportable) {
+        settings.analysisFrameworkView.analysisFramework.exportables = {
+            $autoArray: {
+                $push: [{ ...exportable, widgetKey: widget.key }],
+            },
+        };
+    }
     return update(state, settings);
 };
 
@@ -97,6 +121,7 @@ const afViewRemoveWidget = (state, action) => {
             analysisFramework: {
                 widgets: { $filter: w => getWidgetKey(w) !== widgetId },
                 filters: { $filter: f => getFilterWidgetKey(f) !== widgetId },
+                exportables: { $filter: e => getExportableWidgetKey(e) !== widgetId },
             },
         },
     };
@@ -104,7 +129,7 @@ const afViewRemoveWidget = (state, action) => {
 };
 
 const afViewUpdateWidget = (state, action) => {
-    const { analysisFrameworkId, widget, filters } = action;
+    const { analysisFrameworkId, widget, filters, exportable } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
@@ -151,6 +176,24 @@ const afViewUpdateWidget = (state, action) => {
         if (Object.keys(filterSettings).length > 0) {
             settings.analysisFrameworkView.analysisFramework.filters = filterSettings;
         }
+    }
+
+    if (exportable) {
+        let exportableSettings = {};
+        const index = analysisFramework.exportables.findIndex(
+            e => getExportableWidgetKey(e) === widget.key,
+        );
+
+        if (index === -1) {
+            exportableSettings = {
+                $push: [{ ...exportable, widgetKey: widget.key }],
+            };
+        } else {
+            exportableSettings = {
+                [index]: { $merge: { ...exportable, widgetKey: widget.key } },
+            };
+        }
+        settings.analysisFrameworkView.analysisFramework.exportables = exportableSettings;
     }
     return update(state, settings);
 };

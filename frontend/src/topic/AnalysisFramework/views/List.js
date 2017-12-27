@@ -102,9 +102,10 @@ export default class List extends React.PureComponent {
                 title={item.title}
                 widgetKey={item.key}
                 data={item.data}
-                filters={item.filters}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={(data, filters) => this.handleItemChange(item.key, data, filters)}
+                onChange={(data, filters, exportable) => {
+                    this.handleItemChange(item.key, data, filters, exportable);
+                }}
                 className={styles.component}
             />
         );
@@ -154,17 +155,11 @@ export default class List extends React.PureComponent {
             },
         };
 
-        const filter = {
-            key: item.key,
-            title: item.title,
-            properties: undefined,
-            filterType: undefined,
-        };
-
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
-            filter,
+            filters: [],
+            exportable: {},
         });
     }
 
@@ -183,7 +178,7 @@ export default class List extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data, filters) => {
+    handleItemChange = (key, data, filters, exportable) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             properties: {
@@ -194,7 +189,7 @@ export default class List extends React.PureComponent {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
 
-        this.props.updateWidget({ analysisFrameworkId, widget, filters });
+        this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
     }
 
     handleGotoOverviewButtonClick = () => {
@@ -215,13 +210,7 @@ export default class List extends React.PureComponent {
 
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
-        ).map((item) => {
-            const filters = analysisFramework.filters.filter(f => f.widgetKey === item.key);
-            return {
-                ...item,
-                filters,
-            };
-        });
+        );
     }
 
     render() {

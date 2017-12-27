@@ -52,6 +52,7 @@ export default class List extends React.PureComponent {
         key: item.key,
         widgetId: item.widgetId,
         filters: item.filters,
+        exportable: item.exportable,
         title: item.title,
         layout: item.properties.listGridLayout,
         data: item.properties.data,
@@ -75,6 +76,7 @@ export default class List extends React.PureComponent {
                 id={item.id}
                 entryId={item.entryId}
                 filters={item.filters}
+                exportable={item.exportable}
                 api={this.props.api}
                 attribute={item.attribute}
                 data={item.data}
@@ -96,17 +98,21 @@ export default class List extends React.PureComponent {
             }));
 
         if (analysisFramework.widgets) {
-            this.items = analysisFramework.widgets
-                .filter(
-                    w => this.widgets.find(w1 => w1.id === w.widgetId),
-                ).map((item) => {
-                    const filters = analysisFramework.filters
-                        .filter(f => f.widgetKey === item.key);
-                    return {
-                        ...item,
-                        filters,
-                    };
-                });
+            this.items = analysisFramework.widgets.filter(
+                w => this.widgets.find(w1 => w1.id === w.widgetId),
+            ).map((item) => {
+                const filters = analysisFramework.filters
+                    .filter(f => f.widgetKey === item.key);
+                const exportable = analysisFramework.exportables.find(
+                    e => e.widgetKey === item.key,
+                );
+
+                return {
+                    ...item,
+                    filters,
+                    exportable,
+                };
+            });
         } else {
             this.items = [];
         }
