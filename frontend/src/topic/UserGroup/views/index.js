@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import {
     Modal,
@@ -206,48 +205,17 @@ export default class UserGroup extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     </div>
-                    <Tabs
-                        activeLinkStyle={{ none: 'none' }}
-                        styleName="tabs-container"
-                    >
-                        <div styleName="tabs-header-container">
-                            <TabLink
-                                styleName="tab-header"
-                                to="members"
-                            >
-                                Members
-                            </TabLink>
-                            <TabLink
-                                styleName="tab-header"
-                                to="Projects"
-                            >
-                                Projects
-                            </TabLink>
-                            {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                            <div styleName="empty-tab" />
-                        </div>
-                        <TabContent
-                            for="members"
-                            styleName="tab"
-                        >
-                            <MembersTable
-                                memberData={userGroup.memberships || emptyList}
-                                userGroupId={+match.params.userGroupId}
-                                isCurrentUserAdmin={isCurrentUserAdmin}
-                                activeUser={this.props.activeUser}
-                            />
-                        </TabContent>
-                        <TabContent
-                            for="Projects"
-                            styleName="tab"
-                        >
-                            <ProjectsTable
-                                match={match}
-                                isCurrentUserAdmin={isCurrentUserAdmin}
-                                userGroup={userGroup}
-                            />
-                        </TabContent>
-                    </Tabs>
+                    <MembersTable
+                        memberData={userGroup.memberships || emptyList}
+                        userGroupId={+match.params.userGroupId}
+                        isCurrentUserAdmin={isCurrentUserAdmin}
+                        activeUser={this.props.activeUser}
+                    />
+                    <ProjectsTable
+                        match={match}
+                        isCurrentUserAdmin={isCurrentUserAdmin}
+                        userGroup={userGroup}
+                    />
                 </div>
                 <div styleName="right">
                     Activity Log
