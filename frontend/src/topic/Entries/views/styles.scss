@@ -1,10 +1,9 @@
 @import '../../../stylesheets/base';
 
 .entries {
-    position: relative;
     display: flex;
+    position: relative;
     flex-direction: column;
-    padding: $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar});
 
     .filters {
@@ -14,13 +13,34 @@
 
     .lead-entries-list {
         flex-grow: 1;
+        padding: $spacing-medium-alt;
         overflow-y: auto;
 
         .lead-entries {
-            border-bottom: $width-separator-medium solid $color-accent;
+            @include shadow-large;
+            margin-bottom: $spacing-large;
+
+            .header {
+                display: flex;
+                justify-content: space-between;
+                border-bottom: $width-separator-medium solid $color-separator;
+                background-color: $color-background-header;
+                padding: $spacing-small $spacing-medium-alt;
+
+                p {
+                    margin: $spacing-small 0;
+
+                    span {
+                        margin-right: $spacing-small;
+                    }
+                }
+            }
 
             .entry {
-                .gri-layout {
+                border-bottom: $width-separator-thin solid $color-separator;
+                background-color: $color-foreground-white;
+
+                .grid-layout {
                     min-height: 100%;
                     overflow-y: hidden;
                     overflow-x: auto;
@@ -48,6 +68,10 @@
                             height: calc(100% - 32px);
                         }
                     }
+                }
+
+                &:nth-child(even) {
+                    background-color: $color-foreground;
                 }
             }
         }

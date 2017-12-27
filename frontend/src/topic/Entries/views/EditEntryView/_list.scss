@@ -28,7 +28,7 @@
 
         .entry {
             border-bottom: $width-separator-medium solid $color-separator;
-            background-color: #fff;
+            background-color: $color-foreground-white;
 
             :global .grid-item {
                 .header {

@@ -1,17 +1,27 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
     GridLayout,
+    FormattedDate,
+    ListView,
     LoadingAnimation,
 } from '../../../public/components/View';
+import { reverseRoute } from '../../../public/utils/common';
+import {
+    PrimaryButton,
+} from '../../../public/components/Action';
 import {
     SelectInput,
 } from '../../../public/components/Input';
+import {
+    pathNames,
+    iconNames,
+} from '../../../common/constants';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { groupList } from '../../../public/utils/common';
 
 import schema from '../../../common/schema';
 
@@ -48,6 +58,11 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    match: PropTypes.shape({
+        params: PropTypes.shape({
+            userId: PropTypes.string,
+        }),
+    }),
     setProject: PropTypes.func.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -56,11 +71,18 @@ const propTypes = {
     setEntries: PropTypes.func.isRequired,
 };
 
-const defaultProps = { };
+const defaultProps = {
+    match: {
+        params: {},
+    },
+};
+
+const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Entries extends React.PureComponent {
+    static leadKeyExtractor = d => d.id;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -72,7 +94,6 @@ export default class Entries extends React.PureComponent {
         };
 
         this.items = [];
-        this.leadGroupedEntries = groupList(props.entries, e => e.lead);
     }
 
     componentWillMount() {
@@ -112,9 +133,6 @@ export default class Entries extends React.PureComponent {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.update(nextProps.analysisFramework);
         }
-        if (this.props.entries !== nextProps.entries) {
-            this.leadGroupedEntries = groupList(nextProps.entries, e => e.lead);
-        }
     }
 
     componentWillUnmount() {
@@ -129,24 +147,22 @@ export default class Entries extends React.PureComponent {
         }
     }
 
-    getAttribute = (entryId, widgetId) => {
-        const entry = this.props.entries.find(e => e.id === entryId);
+    getAttribute = (attributes, widgetId) => {
         const attribute = (
-            entry &&
-            entry.attributes &&
-            entry.attributes.find(attr => attr.widget === widgetId)
+            attributes &&
+            attributes.find(attr => attr.widget === widgetId)
         );
 
         return attribute && attribute.data;
     }
 
-    getGridItems = entryId => this.items.map(
+    getGridItems = attributes => this.items.map(
         item => ({
             key: item.key,
             widgetId: item.widgetId,
             title: item.title,
             layout: item.properties.listGridLayout,
-            attribute: this.getAttribute(entryId, item.id),
+            attribute: this.getAttribute(attributes, item.id),
             data: item.properties.data,
         }),
     )
@@ -182,9 +198,17 @@ export default class Entries extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
+                    const responseEntries = response.results.entries;
+                    const responseLeads = response.results.leads;
+
+                    const entries = responseLeads.map(lead => ({
+                        ...lead,
+                        entries: responseEntries.filter(e => e.lead === lead.id),
+                    }));
+
                     this.props.setEntries({
                         projectId,
-                        entries: response.results.entries,
+                        entries,
                     });
                     this.setState({ pendingEntries: false });
                 } catch (er) {
@@ -281,6 +305,67 @@ export default class Entries extends React.PureComponent {
         });
     }
 
+    renderEntries = (key, data) => (
+        <div
+            key={data.id}
+            className={styles.entry}
+            style={{ height: this.getMaxHeight() }}
+        >
+            <GridLayout
+                className={styles['grid-layout']}
+                modifier={this.getItemView}
+                items={this.getGridItems(data.attributes)}
+                viewOnly
+            />
+        </div>
+    )
+
+    renderLeadGroupedEntriesItem = (key, data) => {
+        const {
+            match,
+        } = this.props;
+
+        const route = reverseRoute(pathNames.editEntries, {
+            projectId: match.params.projectId,
+            leadId: key,
+        });
+
+        return (
+            <div
+                key={data.id}
+                className={styles['lead-entries']}
+            >
+                <header className={styles.header}>
+                    <div className={styles['info-container']}>
+                        <h2>{data.title}</h2>
+                        <p>
+                            <span className={iconNames.calendar} />
+                            <FormattedDate
+                                date={data.createdAt}
+                                mode="dd-MM-yyyy"
+                            />
+                        </p>
+                    </div>
+                    <div className={styles['action-buttons']}>
+                        <Link
+                            title="Edit Entry"
+                            to={route}
+                        >
+                            <PrimaryButton iconName={iconNames.edit} >
+                                Edit
+                            </PrimaryButton>
+                        </Link>
+                    </div>
+                </header>
+                <ListView
+                    data={data.entries || emptyList}
+                    keyExtractor={Entries.leadKeyExtractor}
+                    modifier={this.renderEntries}
+                />
+            </div>
+        );
+    }
+
     renderFilter = ({ key, properties: filter }) => {
         if (!filter || !filter.type) {
             return null;
@@ -302,8 +387,9 @@ export default class Entries extends React.PureComponent {
         return null;
     }
 
+
     render() {
-        const leadIds = Object.keys(this.leadGroupedEntries);
+        const { entries } = this.props;
 
         return (
             <div styleName="entries">
@@ -316,32 +402,12 @@ export default class Entries extends React.PureComponent {
                         this.filters && this.filters.map(filter => this.renderFilter(filter))
                     }
                 </div>
-                <div styleName="lead-entries-list">
-                    {
-                        leadIds.map(leadId => (
-                            <div
-                                key={leadId}
-                                styleName="lead-entries"
-                            >
-                                {
-                                    this.leadGroupedEntries[leadId].map(entry => (
-                                        <div
-                                            key={entry.id}
-                                            style={{ height: this.getMaxHeight() }}
-                                        >
-                                            <GridLayout
-                                                styleName="gri-layout"
-                                                modifier={this.getItemView}
-                                                items={this.getGridItems(entry.id)}
-                                                viewOnly
-                                            />
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        ))
-                    }
-                </div>
+                <ListView
+                    styleName="lead-entries-list"
+                    data={entries || emptyList}
+                    keyExtractor={Entries.leadKeyExtractor}
+                    modifier={this.renderLeadGroupedEntriesItem}
+                />
             </div>
         );
     }

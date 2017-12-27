@@ -632,6 +632,7 @@ export default class EditEntryView extends React.PureComponent {
                                 leadId={leadId}
                                 onSaveAll={this.handleSaveAll}
                                 saveAllDisabled={isSaveAllDisabled}
+                                widgetDisabled={isWidgetDisabled}
                                 entries={entries}
                                 analysisFramework={analysisFramework}
                             />

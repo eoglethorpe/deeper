@@ -5,7 +5,9 @@
     flex-direction: column;
     flex-grow: 1;
     align-items: flex-start;
-    justify-content: flex-start;
+    justify-content: center;
+    padding: $spacing-extra-small 0;
+    height: $height-scale-widget-unit-selected;
 
     .scale {
         display: flex;

@@ -16,6 +16,7 @@ const iconNames = {
     codeWorking: 'ion-code-working',
     delete: 'ion-android-delete',
     refresh: 'ion-android-refresh',
+    calendar: 'ion-ios-calendar-outline',
 
     documentText: 'fa fa-file-o',
 
