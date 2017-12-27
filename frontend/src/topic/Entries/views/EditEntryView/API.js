@@ -157,6 +157,7 @@ class EntryBuilder {
         this.attributes = [];
         this.filterData = [];
         this.exportData = [];
+        this.color = undefined;
     }
 
     setExcerpt(excerpt) {
@@ -187,6 +188,11 @@ class EntryBuilder {
         return this;
     }
 
+    setHighlightColor(color) {
+        this.color = color;
+        return this;
+    }
+
     apply() {
         const values = {
             entryType: this.entryType,
@@ -195,6 +201,7 @@ class EntryBuilder {
             attributes: this.attributes,
             filterData: this.filterData,
             exportData: this.exportData,
+            color: this.color,
         };
 
         this.addEntry(values);

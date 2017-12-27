@@ -69,6 +69,8 @@
 
     .edit-cell {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         .title-input {
             flex-grow: 1;
@@ -82,17 +84,11 @@
 
 .edit-row-modal {
     @extend %modal;
+    width: 540px;
 
     .edit-row {
         display: flex;
         align-items: center;
-
-        .title-input {
-            flex-grow: 1;
-        }
-
-        .delete-button {
-            flex-shrink: 1;
-        }
+        justify-content: space-between;
     }
 }

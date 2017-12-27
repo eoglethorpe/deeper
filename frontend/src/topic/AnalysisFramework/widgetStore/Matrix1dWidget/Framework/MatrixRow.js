@@ -1,15 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from '../styles.scss';
-
-import { iconNames } from '../../../../../common/constants';
 
 import { randomString } from '../../../../../public/utils/common';
 import MatrixCell from './MatrixCell';
 import {
     TransparentButton,
     TransparentPrimaryButton,
+    TransparentDangerButton,
     PrimaryButton,
     Button,
 } from '../../../../../public/components/Action';
@@ -23,6 +21,11 @@ import {
     ModalFooter,
     ListView,
 } from '../../../../../public/components/View';
+
+import { iconNames } from '../../../../../common/constants';
+import update from '../../../../../public/utils/immutable-update';
+
+import styles from '../styles.scss';
 
 const propTypes = {
     title: PropTypes.string,
@@ -53,55 +56,28 @@ export default class MatrixRow extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            cells: nextProps.cells,
-        });
+        if (this.props.cells !== nextProps.cells) {
+            this.setState({ cells: nextProps.cells });
+        }
     }
 
-    getEditCell = (key, data) => (
-        <div
-            className={styles['edit-cell']}
-            key={key}
-        >
-            <TextInput
-                label="Title"
-                placeholder="eg: Overview"
-                onChange={(value) => { this.handleCellValueInputChange(key, value); }}
-                value={data.value}
-            />
-            <TransparentButton
-                onClick={() => { this.handleCellRemoveButtonClick(key); }}
-            >
-                <span className={iconNames.delete} />
-            </TransparentButton>
-        </div>
-    )
-
-    getCell = (key, data) => (
-        <MatrixCell
-            key={key}
-        >
-            { data.value }
-        </MatrixCell>
-    )
-
     handleCellRemoveButtonClick = (key) => {
-        const newCells = [...this.state.cells];
-
-        const cellIndex = newCells.findIndex(d => d.key === key);
-        newCells.splice(cellIndex, 1);
-
-        this.setState({
-            cells: newCells,
-        });
+        const cellIndex = this.state.cells.findIndex(d => d.key === key);
+        const settings = {
+            $splice: [[cellIndex, 1]],
+        };
+        const newCells = update(this.state.cells, settings);
+        this.setState({ cells: newCells });
     }
 
     handleCellValueInputChange = (key, value) => {
-        const newCells = [...this.state.cells];
-
-        const cellIndex = newCells.findIndex(d => d.key === key);
-        newCells[cellIndex].value = value;
-
+        const cellIndex = this.state.cells.findIndex(d => d.key === key);
+        const settings = {
+            [cellIndex]: {
+                value: { $set: value },
+            },
+        };
+        const newCells = update(this.state.cells, settings);
         this.props.onChange(newCells);
     }
 
@@ -112,7 +88,17 @@ export default class MatrixRow extends React.PureComponent {
     handleAddCellButtonClick = (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.addCell();
+
+        const newCell = {
+            key: randomString(16).toLowerCase(),
+            value: '',
+        };
+        const settings = {
+            $push: [newCell],
+        };
+        const newCells = update(this.state.cells, settings);
+
+        this.setState({ cells: newCells });
     }
 
     handleEditModalClose = () => {
@@ -127,26 +113,36 @@ export default class MatrixRow extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({
-            showEditModal: false,
-        });
-
+        this.setState({ showEditModal: false });
         this.props.onChange(this.state.cells);
     }
 
-    addCell = () => {
-        const newCell = {
-            key: randomString(16).toLowerCase(),
-            value: '',
-        };
+    renderCell = (key, data) => (
+        <MatrixCell key={key}>
+            { data.value }
+        </MatrixCell>
+    )
 
-        this.setState({
-            cells: [
-                ...this.state.cells,
-                newCell,
-            ],
-        });
-    }
+    renderEditCell = (key, data) => (
+        <div
+            className={styles['edit-cell']}
+            key={key}
+        >
+            <TextInput
+                className={styles['title-input']}
+                label="Title"
+                placeholder="eg: Overview"
+                onChange={value => this.handleCellValueInputChange(key, value)}
+                value={data.value}
+            />
+            <TransparentDangerButton
+                className={styles['delete-button']}
+                onClick={() => this.handleCellRemoveButtonClick(key)}
+            >
+                <span className={iconNames.delete} />
+            </TransparentDangerButton>
+        </div>
+    )
 
     render() {
         const {
@@ -165,7 +161,7 @@ export default class MatrixRow extends React.PureComponent {
                     data={cells}
                     className={styles.cells}
                     keyExtractor={MatrixRow.cellKeyExtractor}
-                    modifier={this.getCell}
+                    modifier={this.renderCell}
                 />
                 <div
                     key="action-buttons"
@@ -199,7 +195,7 @@ export default class MatrixRow extends React.PureComponent {
                             data={cells}
                             className={styles['cell-list']}
                             keyExtractor={MatrixRow.cellKeyExtractor}
-                            modifier={this.getEditCell}
+                            modifier={this.renderEditCell}
                         />
                     </ModalBody>
                     <ModalFooter>
