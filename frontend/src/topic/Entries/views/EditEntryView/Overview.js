@@ -447,19 +447,17 @@ export default class Overview extends React.PureComponent {
                             </SuccessButton>
                         </div>
                     </header>
-                    <div styleName="container">
-                        <div
-                            ref={(el) => { this.gridLayoutContainer = el; }}
-                            styleName="right"
-                        >
-                            { widgetDisabled && <LoadingAnimation /> }
-                            <GridLayout
-                                styleName="grid-layout"
-                                modifier={this.getItemView}
-                                items={this.getGridItems()}
-                                viewOnly
-                            />
-                        </div>
+                    <div
+                        ref={(el) => { this.gridLayoutContainer = el; }}
+                        styleName="container"
+                    >
+                        { widgetDisabled && <LoadingAnimation /> }
+                        <GridLayout
+                            styleName="grid-layout"
+                            modifier={this.getItemView}
+                            items={this.getGridItems()}
+                            viewOnly
+                        />
                     </div>
                 </div>
             </div>

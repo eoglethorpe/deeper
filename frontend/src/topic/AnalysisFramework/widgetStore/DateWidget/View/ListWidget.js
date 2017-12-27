@@ -11,12 +11,8 @@ import styles from './styles.scss';
 export default class DateViewList extends React.PureComponent {
     render() {
         return (
-            <div
-                styleName="date-list"
-            >
-                <DateInput
-                    styleName="date-input"
-                />
+            <div styleName="date-list">
+                asd
             </div>
         );
     }

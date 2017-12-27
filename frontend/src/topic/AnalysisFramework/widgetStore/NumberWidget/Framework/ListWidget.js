@@ -22,10 +22,11 @@ export default class NumberFrameworkList extends React.PureComponent {
             <div styleName="number-list">
                 <NumberInput
                     styleName="number-input"
-                    placeholder="999"
+                    placeholder="999 999"
                     showLabel={false}
                     showHintAndError={false}
                     separator=" "
+                    disabled
                 />
             </div>
         );

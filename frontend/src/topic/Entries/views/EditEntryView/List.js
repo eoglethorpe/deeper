@@ -104,18 +104,12 @@ export default class List extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                styleName="list"
-            >
-                <header
-                    styleName="header"
-                >
+            <div styleName="list">
+                <header styleName="header">
                     <h3>
                         LEAD_TITLE
                     </h3>
-                    <div
-                        styleName="action-buttons"
-                    >
+                    <div styleName="action-buttons">
                         <Button
                             onClick={this.handleGotoOverviewButtonClick}
                         >
@@ -124,14 +118,13 @@ export default class List extends React.PureComponent {
                         <SuccessButton
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}
+                            styleName="save-button"
                         >
                             Save
                         </SuccessButton>
                     </div>
                 </header>
-                <div
-                    styleName="entry-list"
-                >
+                <div styleName="entry-list">
                     {
                         entries.map(entry => (
                             <div

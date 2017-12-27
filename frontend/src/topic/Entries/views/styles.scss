@@ -20,10 +20,34 @@
             border-bottom: $width-separator-medium solid $color-accent;
 
             .entry {
-                .grid-layout {
+                .gri-layout {
                     min-height: 100%;
                     overflow-y: hidden;
                     overflow-x: auto;
+
+                    :global .grid-item {
+                        .header {
+                            display: flex;
+                            flex-shrink: 0;
+                            align-items: flex-end;
+                            justify-content: space-between;
+                            background-color: transparent;
+                            height: 18px;
+
+                            .heading {
+                                background-color: transparent;
+                                padding: 0;
+                                font-size: $font-size-small;
+                            }
+                        }
+
+                        .content {
+                            flex-grow: 1;
+                            background-color: transparent;
+                            padding: 0;
+                            height: calc(100% - 32px);
+                        }
+                    }
                 }
             }
         }

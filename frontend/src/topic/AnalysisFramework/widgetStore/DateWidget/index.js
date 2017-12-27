@@ -7,7 +7,7 @@ const dateWidget = {
     title: 'Date',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 240, height: 96 },
+        listMinSize: { width: 240, height: 48 },
     },
     tagging: {
         listComponent: TaggingListWidget,

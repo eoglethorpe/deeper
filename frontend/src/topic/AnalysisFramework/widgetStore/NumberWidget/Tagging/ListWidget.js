@@ -39,7 +39,7 @@ export default class NumberTaggingList extends React.PureComponent {
                     styleName="number-input"
                     onChange={this.handleChange}
                     value={value}
-                    placeholder="999"
+                    placeholder="999 999"
                     showLabel={false}
                     showHintAndError={false}
                     separator=" "

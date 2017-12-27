@@ -330,7 +330,7 @@ export default class Entries extends React.PureComponent {
                                             style={{ height: this.getMaxHeight() }}
                                         >
                                             <GridLayout
-                                                styleName="grid-layout"
+                                                styleName="gri-layout"
                                                 modifier={this.getItemView}
                                                 items={this.getGridItems(entry.id)}
                                                 viewOnly
