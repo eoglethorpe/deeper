@@ -63,8 +63,10 @@ const analysisFrameworkSchema = [];
         },
         fields: {
             id: { type: 'uint', required: 'true' },
-            key: { type: 'string', required: true },
+            widgetKey: { type: 'string', required: true },
             inline: { type: 'boolean' },
+            ordering: { type: 'uint' },
+            data: { type: 'object' },
         },
     };
     analysisFrameworkSchema.push({ name, schema });
