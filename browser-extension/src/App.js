@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React, { Component } from 'react';
+import { NumberInput } from './public-components/Input';
 import styles from './stylesheets/styles.scss';
 
 @CSSModules(styles, { allowMultiple: true })
@@ -13,6 +14,9 @@ class App extends Component {
                 <p styleName="intro">
                     This is the extension for humans.
                 </p>
+                <NumberInput
+                    label="I am label input"
+                />
             </div>
         );
     }
