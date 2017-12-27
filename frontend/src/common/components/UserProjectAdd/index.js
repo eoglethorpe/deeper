@@ -33,6 +33,10 @@ import {
     setProjectAction,
     activeUserSelector,
 } from '../../../common/redux';
+import {
+    notificationStrings,
+} from '../../constants';
+import notify from '../../notify';
 
 import styles from './styles.scss';
 
@@ -113,13 +117,24 @@ export default class UserProjectAdd extends React.PureComponent {
                     if (this.props.onProjectAdded) {
                         this.props.onProjectAdded(response.id);
                     }
+                    notify.send({
+                        title: notificationStrings.userProjectCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userProjectCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.handleModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userProjectCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userProjectCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -127,14 +142,17 @@ export default class UserProjectAdd extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userProjectCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userProjectCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save project.'],
-                    pending: true,
                 });
             })
             .build();

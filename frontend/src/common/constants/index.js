@@ -6,3 +6,4 @@ export { default as validLinks } from './validLinks';
 export { default as hideNavbar } from './hideNavbar';
 export { default as leadsString } from './strings/leadsString';
 export { default as countriesString } from './strings/countriesString';
+export { default as notificationStrings } from './strings/notificationStrings';

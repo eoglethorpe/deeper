@@ -9,7 +9,10 @@ import {
     createParamsForLeadEdit,
     createParamsForLeadCreate,
 } from '../../../../../../common/rest';
-
+import {
+    notificationStrings,
+} from '../../../../../../common/constants';
+import notify from '../../../../../../common/notify';
 
 import {
     leadAccessor,
@@ -72,6 +75,12 @@ export default class FormSaveBuilder {
         });
     }
     handleLeadSaveSuccess = leadId => (response) => {
+        notify.send({
+            title: notificationStrings.leadSave,
+            type: notify.type.SUCCESS,
+            message: notificationStrings.leadSaveSuccess,
+            duration: notify.duration.MEDIUM,
+        });
         this.parent.props.addLeadViewLeadSave({
             leadId,
             serverId: response.id,
@@ -80,6 +89,12 @@ export default class FormSaveBuilder {
     }
     handleLeadSaveFailure = leadId => (response) => {
         // console.error('Failed lead request:', response);
+        notify.send({
+            title: notificationStrings.leadSave,
+            type: notify.type.ERROR,
+            message: notificationStrings.leadSaveFailure,
+            duration: notify.duration.SLOW,
+        });
         const {
             formFieldErrors,
             formErrors,
@@ -93,8 +108,13 @@ export default class FormSaveBuilder {
         });
         this.parent.formCoordinator.notifyComplete(leadId);
     }
-    handleLeadSaveFatal = leadId => (response) => {
-        console.info('FATAL:', response);
+    handleLeadSaveFatal = leadId => () => {
+        notify.send({
+            title: notificationStrings.leadSave,
+            type: notify.type.ERROR,
+            message: notificationStrings.leadSaveFatal,
+            duration: notify.duration.SLOW,
+        });
 
         this.parent.props.addLeadViewLeadChange({
             leadId,

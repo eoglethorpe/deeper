@@ -29,8 +29,10 @@ import {
 
 import {
     iconNames,
+    notificationStrings,
     pathNames,
 } from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import {
     usersInformationListSelector,
@@ -187,15 +189,31 @@ export default class MembersTable extends React.PureComponent {
                         membershipId,
                         userGroupId,
                     });
+                    notify.send({
+                        title: notificationStrings.userMembershipDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userMembershipDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipDeleteFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipDeleteFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return membershipDeleteRequest;
@@ -217,15 +235,31 @@ export default class MembersTable extends React.PureComponent {
                         userMembership: response,
                         userGroupId,
                     });
+                    notify.send({
+                        title: notificationStrings.userMembershipRole,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userMembershipRoleSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipRole,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipRoleFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipRole,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipRoleFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return membershipRoleChangeRequest;

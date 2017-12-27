@@ -9,7 +9,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import update from '../../../../public/utils/immutable-update';
-import { List } from '../../../../public/components/View/';
+import {
+    Confirm,
+    List,
+} from '../../../../public/components/View/';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 
 import {
@@ -48,7 +51,9 @@ import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
 import {
     leadsString,
+    notificationStrings,
 } from '../../../../common/constants';
+import notify from '../../../../common/notify';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
@@ -111,6 +116,9 @@ export default class LeadAdd extends React.PureComponent {
             leadDriveRests: {},
             leadDropboxRests: {},
             pendingSubmitAll: false,
+
+            confirmText: '',
+            removeLead: false,
         };
         // Store references to lead forms
         this.leadRefs = { };
@@ -240,10 +248,28 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleRemove = () => {
-        const leadId = this.props.activeLeadId;
+        const confirmText = 'Are you sure you want to delete the lead?';
+        this.setState({
+            confirmText,
+            removeLead: true,
+        });
+    }
 
-        this.uploadCoordinator.remove(leadId);
-        this.props.addLeadViewLeadRemove(leadId);
+    handleRemoveLeadClose = (confirm) => {
+        this.setState({ removeLead: false });
+
+        const leadId = this.props.activeLeadId;
+        if (confirm) {
+            this.uploadCoordinator.remove(leadId);
+            this.props.addLeadViewLeadRemove(leadId);
+
+            notify.send({
+                title: notificationStrings.leadDelete,
+                type: notify.type.SUCCESS,
+                message: notificationStrings.leadDeleteSuccess,
+                duration: notify.duration.SLOW,
+            });
+        }
     }
 
     handleSave = () => {
@@ -254,6 +280,7 @@ export default class LeadAdd extends React.PureComponent {
             activeLeadForm.start();
         }
     }
+
 
     handleBulkSave = () => {
         const leadKeys = this.props.addLeadViewLeads
@@ -345,6 +372,8 @@ export default class LeadAdd extends React.PureComponent {
         const {
             leadUploads,
             pendingSubmitAll,
+            removeLead,
+            confirmText,
         } = this.state;
         const {
             activeLead,
@@ -423,6 +452,12 @@ export default class LeadAdd extends React.PureComponent {
                         keyExtractor={leadAccessor.getKey}
                     />
                 </div>
+                <Confirm
+                    onClose={this.handleRemoveLeadClose}
+                    show={removeLead}
+                >
+                    <p>{confirmText}</p>
+                </Confirm>
             </div>
         );
     }

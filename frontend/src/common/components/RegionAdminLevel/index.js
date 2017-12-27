@@ -33,7 +33,10 @@ import {
 import {
     iconNames,
     countriesString,
+    notificationStrings,
 } from '../../../common/constants';
+import notify from '../../notify';
+
 
 import EditAdminLevel from '../EditAdminLevel';
 import styles from './styles.scss';
@@ -189,15 +192,31 @@ export default class RegionAdminLevel extends React.PureComponent {
                         adminLevelId,
                         regionId,
                     });
+                    notify.send({
+                        title: notificationStrings.adminLevelDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.adminLevelDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.adminLevelDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelDeleteFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.adminLevelDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.adminLevelDeleteFatal,
+                    duration: notify.duration.MEDIUM,
+                });
             })
             .build();
         return requestForAdminLevelDelete;

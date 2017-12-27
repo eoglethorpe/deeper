@@ -27,8 +27,9 @@ import {
 } from '../../../../public/utils/common';
 
 import {
-    pathNames,
     iconNames,
+    notificationStrings,
+    pathNames,
 } from '../../../../common/constants';
 import {
     userGroupProjectSelector,
@@ -44,6 +45,7 @@ import {
 } from '../../../../common/rest';
 
 import schema from '../../../../common/schema';
+import notify from '../../../../common/notify';
 
 import UserProjectAdd from '../../../../common/components/UserProjectAdd';
 import styles from './styles.scss';
@@ -234,13 +236,24 @@ export default class ProjectsTable extends React.PureComponent {
                         projectId,
                         userId: this.props.activeUser.userId,
                     });
+                    notify.send({
+                        title: notificationStrings.userProjectDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userProjectDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.setState({ showDeleteProjectModal: false });
                 } catch (er) {
                     console.error(er);
                 }
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.userProjectDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userProjectDeleteFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);

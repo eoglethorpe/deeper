@@ -31,7 +31,10 @@ import {
 
 import {
     countriesString,
+    notificationStrings,
 } from '../../../common/constants';
+import notify from '../../notify';
+
 
 import styles from './styles.scss';
 
@@ -145,13 +148,24 @@ export default class RegionDetail extends React.PureComponent {
                         regionDetails: response,
                         regionId,
                     });
+                    notify.send({
+                        title: notificationStrings.regionDetail,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.regionDetailSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.setState({ pristine: false });
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.regionDetail,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.regionDetailFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -159,14 +173,17 @@ export default class RegionDetail extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: false,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.regionDetail,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.regionDetailFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save region detail.'],
-                    pending: false,
                 });
             })
             .build();

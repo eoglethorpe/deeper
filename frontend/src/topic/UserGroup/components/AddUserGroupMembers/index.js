@@ -19,6 +19,7 @@ import {
 } from '../../../../public/components/Action';
 import {
     iconNames,
+    notificationStrings,
 } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
@@ -37,6 +38,7 @@ import {
     userGroupDetailsSelector,
     setUsersMembershipAction,
 } from '../../../../common/redux';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -239,6 +241,12 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         usersMembership: response.results,
                         userGroupId,
                     });
+                    notify.send({
+                        title: notificationStrings.userMembershipCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userMembershipCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
@@ -246,7 +254,12 @@ export default class AddUserGroupMembers extends React.PureComponent {
             })
             .failure((response) => {
                 // TODO: Validate error response with schema
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userMembershipCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -256,8 +269,13 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     formErrors,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userMembershipCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userMembershipCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to add members.'],
                 });

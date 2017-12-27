@@ -27,6 +27,10 @@ import {
 import {
     addNewAfAction,
 } from '../../../../common/redux';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
@@ -97,13 +101,24 @@ export default class AddAnalysisFramework extends React.PureComponent {
                         afDetail: response,
                         projectId,
                     });
+                    notify.send({
+                        title: notificationStrings.afCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.afCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.afCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.afCreateFailure,
+                    duration: notify.duration.SLOW,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -111,14 +126,17 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.afCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.afCreateFatal,
+                    duration: notify.duration.SLOW,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save region.'],
-                    pending: true,
                 });
             })
             .build();

@@ -29,6 +29,10 @@ import {
     addNewRegionAction,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import RegionMap from '../../../../common/components/RegionMap';
 import RegionDetail from '../../../../common/components/RegionDetail';
@@ -150,9 +154,31 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         projectId,
                         regionId: removedRegionId,
                     });
+                    notify.send({
+                        title: notificationStrings.countryDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.countryDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.countryDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryDeleteFailure,
+                    duration: notify.duration.SLOW,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.countryDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryDeleteFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return projectPatchRequest;

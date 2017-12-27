@@ -8,6 +8,11 @@ import {
 
 const notify = {
     type: NOTIFICATION,
+    duration: {
+        SLOW: 5000,
+        MEDIUM: 3000,
+        FAST: 1500,
+    },
 
     defaultNotification: {
         type: NOTIFICATION.INFO,

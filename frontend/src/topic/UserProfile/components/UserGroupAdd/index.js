@@ -33,6 +33,10 @@ import {
     activeUserSelector,
     setUserGroupAction,
 } from '../../../../common/redux';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -102,13 +106,24 @@ export default class UserGroupAdd extends React.PureComponent {
                         userId: this.props.activeUser.userId,
                         userGroup: response,
                     });
+                    notify.send({
+                        title: notificationStrings.userGroupCreate,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.userGroupCreateSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                     this.props.handleModalClose();
                 } catch (er) {
                     console.error(er);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
+                notify.send({
+                    title: notificationStrings.userGroupCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupCreateFailure,
+                    duration: notify.duration.MEDIUM,
+                });
                 const {
                     formFieldErrors,
                     formErrors,
@@ -116,14 +131,17 @@ export default class UserGroupAdd extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
-                    pending: true,
                 });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.userGroupCreate,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.userGroupCreateFatal,
+                    duration: notify.duration.MEDIUM,
+                });
                 this.setState({
                     formErrors: ['Error while trying to save user group.'],
-                    pending: true,
                 });
             })
             .build();

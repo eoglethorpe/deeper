@@ -120,6 +120,113 @@ const strings = {
     114: 'Enter UN Geographical Region',
     115: 'UN Geographical Sub Region',
     116: 'Enter UN Geographical Sub Region',
+
+
+    // Notification strings
+
+    // User Profile
+    900: 'User Profile Edit',
+    901: 'User Edit Successful',
+    902: 'Error. User Edit Failure.',
+    903: 'Error. User Edit Failure. Please check your network connection and try again',
+
+    904: 'User Group Delete',
+    905: 'User Group Successfully Deleted',
+    906: 'Error. User Group Deletion Failure',
+    907: 'Error. User Group Deletion Failure. Please check your network connection and try again',
+
+    908: 'User Group Add',
+    909: 'User Group Successfully Created',
+    910: 'Error. User Group Creation Failure',
+    911: 'Error. User Group Creation Failure. Please check your network connection and try again',
+
+    912: 'User Project Delete',
+    913: 'Project Successfully Deleted',
+    914: 'Error. Project Deletion Failure',
+    915: 'Error. Project Deletion Failure. Please check your network connection and try again',
+
+    916: 'User Project Add',
+    917: 'Project Successfully Created',
+    918: 'Error. Project Creation Failure',
+    919: 'Error. Project Creation Failure. Please check your network connection and try again',
+
+    920: 'Add User Membership ',
+    921: 'User Added Successfully ',
+    922: 'Error. Cannot add user',
+    923: 'Error. Cannot add user. Please check your network connection and try again',
+
+    924: 'Remove User Membership',
+    925: 'User Removed Successfully ',
+    926: 'Error. Cannot remove user',
+    927: 'Error. Cannot remove user. Please check your network connection and try again',
+
+    928: 'Membership Role',
+    929: 'User role successfully updated',
+    930: 'Error. User role update failure.',
+    931: 'Error. Cannot update user role. Please check your network connection and try again',
+
+    932: 'User Group Edit',
+    933: 'Name Updated Successfully',
+    934: 'Error. Edit Failure.',
+    935: 'Error. Edit Failure. Please check your network connection and try again',
+
+
+    // Country Panel
+    936: 'Delete Country',
+    937: 'Country Delete Successful',
+    938: 'Error. Cannot delete country.',
+    939: 'Error. Cannot delete country. Please check your network connection and try again',
+
+    940: 'Add Country',
+    941: 'Country Added Successfully',
+    942: 'Error. Cannot add country.',
+    943: 'Error. Cannot add country. Please check your network connection and try again',
+
+    944: 'Region Detail',
+    945: 'Region Detail Successfully Updated',
+    946: 'Error. Cannot update region detail.',
+    947: 'Error. Cannot update region detail. Please check your network connection and try again',
+
+    948: 'Delete Admin Level',
+    949: 'Admin Level Successfully Deleted',
+    950: 'Error. Cannot delete admin level.',
+    951: 'Error. Cannot delete admin level. Please check your network connection and try again',
+
+    952: 'Add Admin Level',
+    953: 'Admin Level Successfully Added',
+    954: 'Error. Cannot add admin level.',
+    955: 'Error. Cannot add admin level. Please check your network connection and try again',
+
+    956: 'Edit Admin Level',
+    957: 'Admin Level Successfully Updated',
+    958: 'Error. Cannot update admin level.',
+    959: 'Error. Cannot update admin level. Please check your network connection and try again',
+
+    960: 'Project Details',
+    961: 'Project Details Successfully Updated',
+    962: 'Error. Cannot update project details.',
+    963: 'Error. Cannot update project details. Please check your network connection and try again',
+
+    964: 'Analysis Framework',
+    965: 'Analysis Framework Successfully Added ',
+    966: 'Error. Cannot add Analysis Framework.',
+    967: 'Error. Cannot add Analysis Framework. Please check your network connection and try again',
+
+    968: 'Analysis Framework Form',
+    969: 'Analysis Framework Form Updated',
+    970: 'Error. Cannot update Analysis Framework Form.',
+    971: 'Error. Cannot update Analysis Framework Form. Please check your network connection and try again',
+
+    972: 'Save Lead',
+    973: 'Lead Save Successful',
+    974: 'Error. Lead Save Failed.',
+    975: 'Error. Lead Save Failed. Please check your network connection and try again',
+
+    976: 'Delete Lead',
+    977: 'Lead Successfully Deleted',
+    978: 'Error. Cannot delete lead.',
+    979: 'Error.Cannot delete lead. Please check your network connection and try again',
+
 };
 
 export default strings;

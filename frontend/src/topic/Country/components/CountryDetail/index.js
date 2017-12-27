@@ -31,8 +31,10 @@ import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionMap from '../../../../common/components/RegionMap';
 
 import {
+    notificationStrings,
     countriesString,
 } from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 
@@ -93,6 +95,12 @@ export default class CountryDetail extends React.PureComponent {
             .success(() => {
                 try {
                     this.props.unSetRegion({ regionId });
+                    notify.send({
+                        title: notificationStrings.countryDelete,
+                        type: notify.type.SUCCESS,
+                        message: notificationStrings.countryDeleteSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -100,11 +108,21 @@ export default class CountryDetail extends React.PureComponent {
             .postLoad(() => {
                 this.setState({ deletePending: false });
             })
-            .failure((response) => {
-                console.info('FAILURE:', response);
+            .failure(() => {
+                notify.send({
+                    title: notificationStrings.countryDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryDeleteFailure,
+                    duration: notify.duration.MEDIUM,
+                });
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
+                notify.send({
+                    title: notificationStrings.countryDelete,
+                    type: notify.type.ERROR,
+                    message: notificationStrings.countryDeleteFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return regionDeleteRequest;
