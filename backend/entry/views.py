@@ -1,6 +1,7 @@
 from django.db import models
 from rest_framework import (
     filters,
+    generics,
     pagination,
     permissions,
     response,
@@ -98,6 +99,59 @@ class EntryFilterSet(UserResourceFilterSet):
         }
 
 
+def _get_entry_queryset(user, queries):
+    """
+    Get queryset of entries based on filters in query params
+    """
+    entries = Entry.get_for(user)
+    project = queries.get('project')
+    if project:
+        entries = entries.filter(lead__project__id=project)
+
+    filters = Filter.get_for(user)
+
+    for filter in filters:
+        # For each filter, see if there is a query for that filter
+        # and then perform filtering based on that query.
+
+        query = queries.get(filter.key)
+        query_lt = queries.get(
+            filter.key + '__lt'
+        )
+        query_gt = queries.get(
+            filter.key + '__gt'
+        )
+
+        if filter.filter_type == Filter.NUMBER:
+            if query:
+                entries = entries.filter(
+                    filterdata__filter=filter,
+                    filterdata__number=query,
+                )
+            if query_lt:
+                entries = entries.filter(
+                    filterdata__filter=filter,
+                    filterdata__number__lt=query_lt,
+                )
+            if query_gt:
+                entries = entries.filter(
+                    filterdata__filter=filter,
+                    filterdata__number__gt=query_gt,
+                )
+
+        if filter.filter_type == Filter.LIST and query:
+            if not isinstance(query, list):
+                query = query.split(',')
+
+            if len(query) > 0:
+                entries = entries.filter(
+                    filterdata__filter=filter,
+                    filterdata__values__overlap=query,
+                )
+
+    return entries.order_by('-lead__created_by', 'lead')
+
+
 class EntryViewSet(viewsets.ModelViewSet):
     """
     Entry view set
@@ -114,55 +168,40 @@ class EntryViewSet(viewsets.ModelViewSet):
     search_fields = ('lead__title', 'excerpt')
 
     def get_queryset(self):
-        """
-        Get queryset of entries based on filters in query params
-        """
-        entries = Entry.get_for(self.request.user)
-        project = self.request.GET.get('project')
-        if project:
-            entries = entries.filter(lead__project__id=project)
+        return _get_entry_queryset(self.request.user, self.request.GET)
 
-        filters = Filter.get_for(self.request.user)
 
-        for filter in filters:
-            # For each filter, see if there is a query for that filter
-            # and then perform filtering based on that query.
+class EntryFilterView(generics.GenericAPIView):
+    """
+    Entry view for getting entries based filters in POST body
+    """
+    serializer_class = EntrySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = EntryPaginationByLead
 
-            query = self.request.GET.get(filter.key)
-            query_lt = self.request.GET.get(
-                filter.key + '__lt'
+    def post(self, request, version=None):
+        filters = request.data.get('filters', [])
+        filters = {f[0]: f[1] for f in filters}
+
+        queryset = _get_entry_queryset(request.user, filters)
+
+        search = filters.get('search')
+        if search:
+            queryset = queryset.filter(
+                models.Q(lead__title__icontains=search) |
+                models.Q(excerpt__icontains=search)
             )
-            query_gt = self.request.GET.get(
-                filter.key + '__gt'
-            )
 
-            if filter.filter_type == Filter.NUMBER:
-                if query:
-                    entries = entries.filter(
-                        filterdata__filter=filter,
-                        filterdata__number=query,
-                    )
-                if query_lt:
-                    entries = entries.filter(
-                        filterdata__filter=filter,
-                        filterdata__number__lt=query_lt,
-                    )
-                if query_gt:
-                    entries = entries.filter(
-                        filterdata__filter=filter,
-                        filterdata__number__gt=query_gt,
-                    )
+        queryset = EntryFilterSet(filters, queryset=queryset).qs
 
-            if filter.filter_type == Filter.LIST and query:
-                    query = query.split(',')
+        page = self.paginate_queryset(queryset)
 
-                    if len(query) > 0:
-                        entries = entries.filter(
-                            filterdata__filter=filter,
-                            filterdata__values__contains=query,
-                        )
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-        return entries.order_by('-lead__created_by', 'lead')
+        serializer = self.get_serializer(queryset, many=True)
+        return response.Response(serializer.data)
 
 
 class AttributeViewSet(viewsets.ModelViewSet):

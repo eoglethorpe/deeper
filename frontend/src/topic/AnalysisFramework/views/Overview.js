@@ -105,9 +105,12 @@ export default class Overview extends React.PureComponent {
 
         return (
             <Component
+                title={item.title}
+                widgetKey={item.key}
                 data={item.data}
+                filters={item.filters}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={data => this.handleItemChange(item.key, data)}
+                onChange={(data, filters) => this.handleItemChange(item.key, data, filters)}
                 className={styles.component}
             />
         );
@@ -138,7 +141,6 @@ export default class Overview extends React.PureComponent {
         const widget = this.widgets.find(w => w.id === id);
 
         const item = {
-            analysisFramework: analysisFrameworkId,
             key: `overview-${this.getUniqueKey()}`,
             widgetId: widget.id,
             title: widget.title,
@@ -160,6 +162,7 @@ export default class Overview extends React.PureComponent {
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
+            filters: [],
         });
     }
 
@@ -178,7 +181,7 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data) => {
+    handleItemChange = (key, data, filters) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             properties: {
@@ -188,7 +191,8 @@ export default class Overview extends React.PureComponent {
 
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
-        this.props.updateWidget({ analysisFrameworkId, widget });
+
+        this.props.updateWidget({ analysisFrameworkId, widget, filters });
     }
 
     handleGotoListButtonClick = () => {
@@ -206,9 +210,16 @@ export default class Overview extends React.PureComponent {
                 overviewMinSize: widget.analysisFramework.overviewMinSize,
                 listMinSize: widget.analysisFramework.listMinSize,
             }));
+
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
-        );
+        ).map((item) => {
+            const filters = analysisFramework.filters.filter(f => f.widgetKey === item.key);
+            return {
+                ...item,
+                filters,
+            };
+        });
     }
 
     render() {

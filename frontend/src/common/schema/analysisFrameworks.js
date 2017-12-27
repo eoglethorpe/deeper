@@ -79,6 +79,7 @@ const analysisFrameworkSchema = [];
         fields: {
             id: { type: 'uint', required: 'true' },
             key: { type: 'string', required: true },
+            widgetKey: { type: 'string', required: true },
             title: { type: 'string', required: true },
             properties: { type: 'object' },
             filterType: { type: 'string' }, // enum: list, number

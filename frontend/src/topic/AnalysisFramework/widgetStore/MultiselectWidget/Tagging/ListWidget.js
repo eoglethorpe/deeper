@@ -9,6 +9,7 @@ import {
 
 const propTypes = {
     id: PropTypes.number.isRequired,
+    entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.array,      // eslint-disable-line
@@ -26,10 +27,12 @@ export default class Multiselect extends React.PureComponent {
     static defaultProps = defaultProps;
 
     handleChange = (value) => {
-        const { api, id } = this.props;
-        api.setEntryAttribute(id, {
-            value,
-        });
+        const { api, id, entryId } = this.props;
+        api.getEntryModifier(entryId)
+            .setAttribute(id, {
+                value,
+            })
+            .apply();
     }
 
     render() {

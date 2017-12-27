@@ -26,6 +26,8 @@ import {
 import styles from '../styles.scss';
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
@@ -88,20 +90,44 @@ export default class Matrix1dOverview extends React.PureComponent {
         />
     )
 
+    getFilters = (rows) => {
+        const filterOptions = [];
+        rows.forEach((row) => {
+            filterOptions.push({
+                label: row.title,
+                key: row.key,
+            });
+
+            row.cells.forEach((cell) => {
+                filterOptions.push({
+                    label: `${row.title} / ${cell.value}`,
+                    key: cell.key,
+                });
+            });
+        });
+
+        return [{
+            title: this.props.title,
+            widgetKey: this.props.widgetKey,
+            key: this.props.widgetKey,
+            filterType: 'list',
+            properties: {
+                type: 'multiselect',
+                options: filterOptions,
+            },
+        }];
+    }
+
     handleEdit = () => {
         this.setState({ showEditModal: true });
     }
 
     handleRowDataChange = (key, cells) => {
         const newRows = [...this.state.rows];
-
         const rowIndex = newRows.findIndex(d => d.key === key);
-
         newRows[rowIndex].cells = cells;
 
-        this.setState({
-            rows: newRows,
-        });
+        this.props.onChange(newRows, this.getFilters(newRows));
     }
 
     handleRowRemoveButtonClick = (key) => {
@@ -145,8 +171,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.setState({
             showEditModal: false,
         });
-
-        this.props.onChange(this.state.rows);
+        this.props.onChange(this.state.rows, this.getFilters(this.state.rows));
     }
 
     addRow = () => {

@@ -7,12 +7,14 @@ import {
     GridLayout,
     LoadingAnimation,
 } from '../../../public/components/View';
+import {
+    SelectInput,
+} from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { groupList } from '../../../public/utils/common';
 
 import schema from '../../../common/schema';
 
-import { pageTitles } from '../../../common/constants';
 import {
     projectIdFromRoute,
     setEntriesAction,
@@ -22,8 +24,10 @@ import {
     analysisFrameworkForProjectSelector,
 } from '../../../common/redux';
 import {
+    urlForFilteredEntries,
+
     createParamsForUser,
-    createUrlForEntries,
+    createParamsForFilteredEntries,
     createUrlForAnalysisFramework,
     createUrlForProject,
 } from '../../../common/rest';
@@ -63,7 +67,9 @@ export default class Entries extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            filters: {},
+        };
 
         this.items = [];
         this.leadGroupedEntries = groupList(props.entries, e => e.lead);
@@ -166,10 +172,13 @@ export default class Entries extends React.PureComponent {
         );
     }
 
-    createRequestForEntries = (projectId) => {
+    createRequestForEntries = (projectId, filters = {}) => {
         const entryRequest = new FgRestBuilder()
-            .url(createUrlForEntries(projectId))
-            .params(() => createParamsForUser())
+            .url(urlForFilteredEntries)
+            .params(() => createParamsForFilteredEntries({
+                project: projectId,
+                ...filters,
+            }))
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
@@ -249,6 +258,48 @@ export default class Entries extends React.PureComponent {
         } else {
             this.items = [];
         }
+
+        if (analysisFramework.filters) {
+            this.filters = analysisFramework.filters.filter(
+                f => this.items.find(item => item.key === f.key),
+            );
+        } else {
+            this.filters = [];
+        }
+    }
+
+    handleFilterChange = (key, values) => {
+        const filters = { ...this.state.filters };
+        filters[key] = values;
+        this.setState({ filters }, () => {
+            if (this.entriesRequest) {
+                this.entriesRequest.stop();
+            }
+
+            this.entriesRequest = this.createRequestForEntries(this.props.projectId, filters);
+            this.entriesRequest.start();
+        });
+    }
+
+    renderFilter = ({ key, properties: filter }) => {
+        if (!filter || !filter.type) {
+            return null;
+        }
+
+        if (filter.type === 'multiselect') {
+            return (
+                <SelectInput
+                    key={key}
+                    options={filter.options}
+                    showHintAndError={false}
+                    onChange={values => this.handleFilterChange(key, values)}
+                    value={this.state.filters[key] || []}
+                    multiple
+                />
+            );
+        }
+
+        return null;
     }
 
     render() {
@@ -261,9 +312,9 @@ export default class Entries extends React.PureComponent {
                     <LoadingAnimation />
                 }
                 <div styleName="filters">
-                    <h2>
-                        { pageTitles.entries }
-                    </h2>
+                    {
+                        this.filters && this.filters.map(filter => this.renderFilter(filter))
+                    }
                 </div>
                 <div styleName="lead-entries-list">
                     {
