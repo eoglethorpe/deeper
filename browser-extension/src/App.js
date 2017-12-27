@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React, { Component } from 'react';
-import styles from './styles.scss';
-
+import styles from './stylesheets/styles.scss';
 
 @CSSModules(styles, { allowMultiple: true })
 class App extends Component {
