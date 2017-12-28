@@ -1,6 +1,74 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/tabs';
 
+
+.usergroup {
+    $info-height: 144px;
+
+    display: grid;
+    padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
+    grid-template-areas:
+        "info projects"
+        "stats projects"
+        "stats members";
+    grid-template-columns: 3fr 7fr;
+    grid-template-rows: $info-height 3fr 2fr;
+
+    >* {
+        border: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-large;
+
+        h2 {
+            margin-bottom: $spacing-medium;
+        }
+    }
+}
+
+.info {
+    display: flex;
+    align-items: flex-start;
+    grid-area: info;
+
+    .title {
+        display: flex;
+        flex-shrink: 0;
+        background-color: $color-foreground;
+        padding: $spacing-medium $spacing-large;
+
+        .name {
+            color: $color-text;
+            font-size: $font-size-super-large;
+        }
+
+        button {
+            margin-left: $spacing-small;
+
+            .ion-edit {
+                margin: $spacing-small;
+            }
+
+            &:hover {
+                background-color: $color-background-hover;
+            }
+
+        }
+    }
+}
+
+.stats {
+    grid-area: stats;
+}
+
+.projects {
+    grid-area: projects;
+}
+
+.members {
+    grid-area: groups;
+}
+/*
 .usergroup {
     display: flex;
     padding: $spacing-medium-alt;
@@ -70,7 +138,7 @@
         font-size: $font-size-extra-large;
     }
 }
-
+*/
 .user-group-edit-modal {
     width: 480px;
 }

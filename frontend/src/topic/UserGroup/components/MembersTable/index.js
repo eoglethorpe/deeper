@@ -360,8 +360,12 @@ export default class MembersTable extends React.PureComponent {
             <div styleName="members">
                 { actionPending && <LoadingAnimation /> }
                 <div styleName="header">
+                    <h2>
+                        Members
+                    </h2>
+                    <div styleName="pusher" />
                     <TextInput
-                        placeholder="Search Member"
+                        placeholder="Search"
                         onChange={this.handleSearchMemberChange}
                         value={searchMemberInputValue}
                         type="search"
@@ -369,13 +373,12 @@ export default class MembersTable extends React.PureComponent {
                         showLabel={false}
                         showHintAndError={false}
                     />
-                    <div styleName="pusher" />
                     {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
                             onClick={this.handleAddMemberClick}
                         >
-                            Add New Member
+                            Add Member
                         </PrimaryButton>
                     }
                 </div>
