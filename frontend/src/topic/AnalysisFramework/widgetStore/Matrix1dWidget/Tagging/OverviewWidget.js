@@ -16,6 +16,7 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line
     filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line
 };
@@ -94,8 +95,30 @@ export default class Matrix1dOverview extends React.PureComponent {
         return color;
     }
 
+    createExportData = (attribute) => {
+        const values = [];
+
+        Object.keys(attribute).forEach((key) => {
+            const row = attribute[key];
+            const rowData = this.props.data.find(r => r.key === key);
+
+            Object.keys(row).forEach((cellKey) => {
+                if (row[cellKey]) {
+                    const cellData = rowData.cells.find(c => c.key === cellKey);
+
+                    values.push([rowData.title, cellData.value]);
+                }
+            });
+        });
+
+        return {
+            type: 'lists',
+            values,
+        };
+    }
+
     handleCellClick = (key, cellKey) => {
-        const { api, id, filters, attribute } = this.props;
+        const { api, id, filters, exportable, attribute } = this.props;
         const settings = { $auto: {
             [key]: { $auto: {
                 [cellKey]: {
@@ -112,11 +135,12 @@ export default class Matrix1dOverview extends React.PureComponent {
         api.getEntryModifier()
             .setAttribute(id, newAttribute)
             .setFilterData(filters[0].id, this.createFilterData(newAttribute))
+            .setExportData(exportable.id, this.createExportData(newAttribute))
             .apply();
     }
 
     handleCellDrop = (key, cellKey, text) => {
-        const { api, id, filters } = this.props;
+        const { api, id, filters, exportable } = this.props;
         const existing = api.getEntryForExcerpt(text);
 
         if (existing) {
@@ -134,6 +158,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.getEntryModifier(existing.data.id)
                 .setAttribute(id, attribute)
                 .setFilterData(filters[0].id, this.createFilterData(attribute))
+                .setExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         } else {
             const attribute = {
@@ -145,6 +170,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 .setExcerpt(text)
                 .addAttribute(id, attribute)
                 .addFilterData(filters[0].id, this.createFilterData(attribute))
+                .addExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         }
     }

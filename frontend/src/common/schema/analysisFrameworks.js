@@ -65,7 +65,7 @@ const analysisFrameworkSchema = [];
             id: { type: 'uint', required: 'true' },
             widgetKey: { type: 'string', required: true },
             inline: { type: 'boolean' },
-            ordering: { type: 'uint' },
+            order: { type: 'uint' },
             data: { type: 'object' },
         },
     };

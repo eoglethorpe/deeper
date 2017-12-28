@@ -159,7 +159,7 @@ class EntryModifier {
                 exportData: { $autoArray: {
                     $push: [{
                         exportable: exportableId,
-                        ...exportData,
+                        data: exportData,
                     }],
                 } },
             };
@@ -167,7 +167,7 @@ class EntryModifier {
             settings = {
                 exportData: {
                     [index]: { $merge: {
-                        ...exportData,
+                        data: exportData,
                     } },
                 },
             };
@@ -227,6 +227,13 @@ class EntryBuilder {
 
     setHighlightColor(color) {
         this.color = color;
+    }
+
+    addExportData(exportableId, exportData) {
+        this.exportData.push({
+            exportable: exportableId,
+            data: exportData,
+        });
         return this;
     }
 

@@ -136,10 +136,6 @@ const afViewUpdateWidget = (state, action) => {
     }
 
     const existingWidgets = analysisFramework.widgets;
-    const existingFilters = analysisFramework.filters.filter(
-        f => getFilterWidgetKey(f) === widget.key,
-    );
-
     const widgetIndex = existingWidgets.findIndex(w => getWidgetKey(w) === widget.key);
 
     if (widgetIndex === -1) {
@@ -160,7 +156,11 @@ const afViewUpdateWidget = (state, action) => {
         let filterSettings = {};
 
         filters.forEach((filter) => {
-            const index = existingFilters.findIndex(f => getFilterKey(f) === filter.key);
+            const index = analysisFramework.filters.findIndex(
+                f => getFilterKey(f) === filter.key,
+                f => getFilterWidgetKey(f) === widget.key,
+            );
+
             if (index === -1) {
                 filterSettings.$push = [{ ...filter, widgetKey: widget.key }];
             } else {

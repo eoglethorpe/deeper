@@ -13,7 +13,7 @@ const entrySchema = [];
         fields: {
             id: { type: 'uint' },
             data: { type: 'object' },
-            exportable: { type: 'boolean', required: true },
+            exportable: { type: 'uint', required: true },
         },
     };
     entrySchema.push({ name, schema });
