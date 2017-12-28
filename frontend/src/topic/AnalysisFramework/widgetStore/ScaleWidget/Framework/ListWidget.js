@@ -2,6 +2,13 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { SketchPicker } from 'react-color';
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle,
+    arrayMove,
+} from 'react-sortable-hoc';
+
 import update from '../../../../../public/utils/immutable-update';
 
 import {
@@ -32,6 +39,10 @@ const propTypes = {
     data: PropTypes.object, //eslint-disable-line
 };
 
+const DragHandle = SortableHandle(() => (
+    <span className={`${iconNames.hamburger} drag-handle`} />
+));
+
 const emptyList = [];
 const emptyObject = {};
 
@@ -53,9 +64,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState({
+            scaleUnits: arrayMove(this.state.scaleUnits, oldIndex, newIndex),
+        });
+    };
+
     getActiveSelectionStyle = (key) => {
         const { activeScaleUnit } = this.state;
-        const scaleUnitStyle = ['edit-scale-unit'];
+        const scaleUnitStyle = ['edit-scale-unit', 'list-item'];
         if (activeScaleUnit.key === key) {
             scaleUnitStyle.push('active');
         }
@@ -63,11 +80,25 @@ export default class ScaleFrameworkList extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getEditScaleUnits = (key, data) => (
+    getEditScaleUnits = (key, data, index) => (
+        <this.SortableItem key={key} index={index} value={{ key, data }} />
+    )
+
+    getScale = (key, data) => (
+        <button
+            key={key}
+            title={data.title}
+            className={styles['scale-unit']}
+            style={{ backgroundColor: data.color }}
+        />
+    )
+
+    SortableItem = SortableElement(({ value: { data, key } }) => (
         <div
             className={this.getActiveSelectionStyle(key)}
             key={key}
         >
+            <DragHandle />
             <div className={styles['color-box-container']}>
                 <span className={styles['color-label']}>Color</span>
                 <button
@@ -92,16 +123,16 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 <span className={iconNames.delete} />
             </TransparentDangerButton>
         </div>
-    )
+    ))
 
-    getScale = (key, data) => (
-        <button
-            key={key}
-            title={data.title}
-            className={styles['scale-unit']}
-            style={{ backgroundColor: data.color }}
+    SortableList = SortableContainer(({ items: scaleUnits }) => (
+        <ListView
+            className={styles.list}
+            data={scaleUnits}
+            keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+            modifier={this.getEditScaleUnits}
         />
-    )
+    ))
 
     handleTextInputOnFocus = (key) => {
         const { scaleUnits } = this.state;
@@ -237,11 +268,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         }
                     />
                     <ModalBody styleName="scale-units-container">
-                        <ListView
-                            styleName="list"
-                            data={scaleUnits}
-                            keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-                            modifier={this.getEditScaleUnits}
+                        <this.SortableList
+                            items={scaleUnits}
+                            onSortEnd={this.onSortEnd}
+                            useDragHandle
                         />
                         <SketchPicker
                             color={activeScaleUnit.color}
