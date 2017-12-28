@@ -41,23 +41,21 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            rows: nextProps.data || [],
-        });
+        const { api, attribute, data } = nextProps;
+
+        if (this.props.data !== data) {
+            this.setState({
+                rows: data || [],
+            });
+        }
+        if (this.props.attribute !== attribute) {
+            api.getEntryModifier()
+                .setHighlightColor(this.createHighlightColor(attribute))
+                .apply();
+        }
     }
 
-    getRow = (key, data) => (
-        <MatrixRow
-            key={key}
-            title={data.title}
-            cells={data.cells}
-            onCellClick={cellKey => this.handleCellClick(key, cellKey)}
-            onCellDrop={(cellKey, text) => this.handleCellDrop(key, cellKey, text)}
-            selectedCells={this.props.attribute ? this.props.attribute[key] : {}}
-        />
-    )
-
-    getFilterData = (attribute) => {
+    createFilterData = (attribute) => {
         const filterValues = [];
 
         Object.keys(attribute).forEach((key) => {
@@ -82,8 +80,22 @@ export default class Matrix1dOverview extends React.PureComponent {
         };
     }
 
+    createHighlightColor = (attribute) => {
+        let color;
+        Object.keys(attribute).forEach((key) => {
+            const row = attribute[key];
+
+            const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);
+            if (rowExists) {
+                color = this.props.data.find(d => d.key === key).color;
+            }
+        });
+
+        return color;
+    }
+
     handleCellClick = (key, cellKey) => {
-        const { api, id, filters, attribute } = this.props;
+        const { api, id, filters, attribute, data } = this.props;
         const settings = { $auto: {
             [key]: { $auto: {
                 [cellKey]: {
@@ -93,9 +105,13 @@ export default class Matrix1dOverview extends React.PureComponent {
         } };
 
         const newAttribute = update(attribute, settings);
+
+        // TODO: complicated cellApplied
+        const cellApplied = !!newAttribute[key][cellKey];
+
         api.getEntryModifier()
             .setAttribute(id, newAttribute)
-            .setFilterData(filters[0].id, this.getFilterData(newAttribute))
+            .setFilterData(filters[0].id, this.createFilterData(newAttribute))
             .apply();
     }
 
@@ -117,7 +133,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.selectEntry(existing.data.id);
             api.getEntryModifier(existing.data.id)
                 .setAttribute(id, attribute)
-                .setFilterData(filters[0].id, this.getFilterData(attribute))
+                .setFilterData(filters[0].id, this.createFilterData(attribute))
                 .apply();
         } else {
             const attribute = {
@@ -128,10 +144,22 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.getEntryBuilder()
                 .setExcerpt(text)
                 .addAttribute(id, attribute)
-                .addFilterData(filters[0].id, this.getFilterData(attribute))
+                .addFilterData(filters[0].id, this.createFilterData(attribute))
                 .apply();
         }
     }
+
+    renderRow = (key, data) => (
+        <MatrixRow
+            key={key}
+            title={data.title}
+            tooltip={data.tooltip}
+            cells={data.cells}
+            onCellClick={cellKey => this.handleCellClick(key, cellKey)}
+            onCellDrop={(cellKey, text) => this.handleCellDrop(key, cellKey, text)}
+            selectedCells={this.props.attribute ? this.props.attribute[key] : {}}
+        />
+    )
 
     render() {
         const {
@@ -144,7 +172,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                     data={rows}
                     className={styles.rows}
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                    modifier={this.getRow}
+                    modifier={this.renderRow}
                 />
             </div>
         );

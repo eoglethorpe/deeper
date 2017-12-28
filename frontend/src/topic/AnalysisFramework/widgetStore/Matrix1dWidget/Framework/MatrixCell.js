@@ -24,9 +24,7 @@ export default class MatrixCell extends React.PureComponent {
     }
 
     render() {
-        const {
-            children,
-        } = this.props;
+        const { children } = this.props;
 
         const styleName = this.getStyleName();
 

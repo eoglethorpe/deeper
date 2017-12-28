@@ -10,6 +10,7 @@ import {
 
 const propTypes = {
     title: PropTypes.string,
+    tooltip: PropTypes.string,
     cells: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     onChange: PropTypes.func,
     onCellClick: PropTypes.func,
@@ -18,7 +19,8 @@ const propTypes = {
 };
 
 const defaultProps = {
-    title: undefined,
+    title: '',
+    tooltip: '',
     onChange: undefined,
     onCellClick: undefined,
     onCellDrop: undefined,
@@ -46,17 +48,6 @@ export default class MatrixRow extends React.PureComponent {
         });
     }
 
-    getCell = (key, data) => (
-        <MatrixCell
-            key={key}
-            onClick={() => this.handleCellClick(key)}
-            onDrop={(text) => { this.handleCellDrop(key, text); }}
-            active={this.props.selectedCells[key]}
-        >
-            { data.value }
-        </MatrixCell>
-    )
-
     handleCellClick = (key) => {
         this.props.onCellClick(key);
     }
@@ -74,23 +65,39 @@ export default class MatrixRow extends React.PureComponent {
         this.props.onChange(newCells);
     }
 
+    renderCell = (key, data) => (
+        <MatrixCell
+            key={key}
+            onClick={() => this.handleCellClick(key)}
+            onDrop={(text) => { this.handleCellDrop(key, text); }}
+            active={this.props.selectedCells[key]}
+        >
+            { data.value }
+        </MatrixCell>
+    )
+
     render() {
+        const { cells } = this.state;
         const {
-            cells,
-        } = this.state;
+            tooltip,
+            title,
+        } = this.props;
 
         return (
             <div
                 styleName="matrix-row"
             >
-                <div styleName="title">
-                    { this.props.title }
+                <div
+                    styleName="title"
+                    title={tooltip}
+                >
+                    { title }
                 </div>
                 <ListView
                     data={cells}
                     className={styles.cells}
                     keyExtractor={MatrixRow.cellKeyExtractor}
-                    modifier={this.getCell}
+                    modifier={this.renderCell}
                 />
             </div>
         );

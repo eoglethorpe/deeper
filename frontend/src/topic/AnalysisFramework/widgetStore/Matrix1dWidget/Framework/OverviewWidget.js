@@ -22,6 +22,7 @@ import {
     ModalFooter,
     ListView,
 } from '../../../../../public/components/View';
+import update from '../../../../../public/utils/immutable-update';
 
 import styles from '../styles.scss';
 
@@ -55,42 +56,10 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            rows: nextProps.data || [],
-        });
+        this.setState({ rows: nextProps.data || [] });
     }
 
-    getEditRow = (key, data) => (
-        <div
-            className={styles['edit-row']}
-            key={key}
-        >
-            <TextInput
-                className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Context"
-                onChange={(value) => { this.handleRowValueInputChange(key, value); }}
-                value={data.title}
-            />
-            <TransparentDangerButton
-                className={styles['delete-button']}
-                onClick={() => { this.handleRowRemoveButtonClick(key); }}
-            >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
-        </div>
-    )
-
-    getRow = (key, data) => (
-        <MatrixRow
-            key={key}
-            title={data.title}
-            cells={data.cells}
-            onChange={(value) => { this.handleRowDataChange(key, value); }}
-        />
-    )
-
-    getFilters = (rows) => {
+    createFilters = (rows) => {
         const filterOptions = [];
         rows.forEach((row) => {
             filterOptions.push({
@@ -118,42 +87,62 @@ export default class Matrix1dOverview extends React.PureComponent {
         }];
     }
 
-    handleEdit = () => {
-        this.setState({ showEditModal: true });
-    }
-
     handleRowDataChange = (key, cells) => {
-        const newRows = [...this.state.rows];
-        const rowIndex = newRows.findIndex(d => d.key === key);
-        newRows[rowIndex].cells = cells;
+        const { rows } = this.state;
+        const rowIndex = rows.findIndex(d => d.key === key);
+        const settings = {
+            [rowIndex]: {
+                cells: { $set: cells },
+            },
+        };
+        const newRows = update(rows, settings);
+        const filters = this.createFilters(newRows);
 
-        this.props.onChange(newRows, this.getFilters(newRows));
+        this.props.onChange(newRows, filters);
     }
 
     handleRowRemoveButtonClick = (key) => {
-        const newRows = [...this.state.rows];
-
-        const rowIndex = newRows.findIndex(d => d.key === key);
-        newRows.splice(rowIndex, 1);
-
-        this.setState({
-            rows: newRows,
-        });
+        const { rows } = this.state;
+        const rowIndex = rows.findIndex(d => d.key === key);
+        const settings = {
+            [rowIndex]: {
+                $splice: [[rowIndex, 1]],
+            },
+        };
+        const newRows = update(rows, settings);
+        this.setState({ rows: newRows });
     }
 
-    handleRowValueInputChange = (key, value) => {
-        const newRows = [...this.state.rows];
-
-        const rowIndex = newRows.findIndex(d => d.key === key);
-        newRows[rowIndex].title = value;
-
-        this.setState({
-            rows: newRows,
-        });
+    handleRowValueInputChange = (key, value, name) => {
+        const rowIndex = this.state.rows.findIndex(d => d.key === key);
+        const settings = {
+            [rowIndex]: {
+                [name]: { $set: value },
+            },
+        };
+        const newRows = update(this.state.rows, settings);
+        this.setState({ rows: newRows });
     }
 
     handleAddRowButtonClick = () => {
-        this.addRow();
+        const { rows } = this.state;
+
+        const newRow = {
+            key: randomString(16).toLowerCase(),
+            title: '',
+            tooltip: '',
+            color: '#000000',
+            cells: [],
+        };
+        const settings = {
+            $push: [newRow],
+        };
+        const newRows = update(rows, settings);
+        this.setState({ rows: newRows });
+    }
+
+    handleEdit = () => {
+        this.setState({ showEditModal: true });
     }
 
     handleEditModalClose = () => {
@@ -168,26 +157,52 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({
-            showEditModal: false,
-        });
-        this.props.onChange(this.state.rows, this.getFilters(this.state.rows));
+        this.setState({ showEditModal: false });
+        const filters = this.createFilters(this.state.rows);
+        this.props.onChange(this.state.rows, filters);
     }
 
-    addRow = () => {
-        const newRow = {
-            key: randomString(16).toLowerCase(),
-            title: '',
-            cells: [],
-        };
+    renderRow = (key, data) => (
+        <MatrixRow
+            key={key}
+            title={data.title}
+            cells={data.cells}
+            onChange={(value) => { this.handleRowDataChange(key, value); }}
+        />
+    )
 
-        this.setState({
-            rows: [
-                ...this.state.rows,
-                newRow,
-            ],
-        });
-    }
+    renderEditRow = (key, data) => (
+        <div
+            className={styles['edit-row']}
+            key={key}
+        >
+            <TextInput
+                className={styles['title-input']}
+                label="Title"
+                placeholder="eg: Context"
+                onChange={value => this.handleRowValueInputChange(key, value, 'title')}
+                value={data.title}
+            />
+            <TextInput
+                className={styles['title-input']}
+                label="Tooltip"
+                placeholder="I am the context"
+                onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
+                value={data.tooltip}
+            />
+            <input
+                type="color"
+                onChange={e => this.handleRowValueInputChange(key, e.target.value, 'color')}
+                value={data.color}
+            />
+            <TransparentDangerButton
+                className={styles['delete-button']}
+                onClick={() => this.handleRowRemoveButtonClick(key)}
+            >
+                <span className={iconNames.delete} />
+            </TransparentDangerButton>
+        </div>
+    )
 
     render() {
         const {
@@ -201,7 +216,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                     data={rows}
                     className={styles.rows}
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                    modifier={this.getRow}
+                    modifier={this.renderRow}
                 />
                 <Modal
                     styleName="edit-row-modal"
@@ -223,7 +238,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                             data={rows}
                             className={styles['row-list']}
                             keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                            modifier={this.getEditRow}
+                            modifier={this.renderEditRow}
                         />
                     </ModalBody>
                     <ModalFooter>
