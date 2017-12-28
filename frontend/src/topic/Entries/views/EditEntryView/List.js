@@ -2,7 +2,10 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { GridLayout } from '../../../../public/components/View';
+import {
+    GridLayout,
+    LoadingAnimation,
+} from '../../../../public/components/View';
 import {
     Button,
     SuccessButton,
@@ -19,9 +22,12 @@ const propTypes = {
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     onSaveAll: PropTypes.func.isRequired,
+    widgetDisabled: PropTypes.bool,
     saveAllDisabled: PropTypes.bool.isRequired,
 };
+
 const defaultProps = {
+    widgetDisabled: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -101,21 +107,17 @@ export default class List extends React.PureComponent {
             entries,
             onSaveAll,
             saveAllDisabled,
+            widgetDisabled,
         } = this.props;
 
         return (
-            <div
-                styleName="list"
-            >
-                <header
-                    styleName="header"
-                >
+            <div styleName="list">
+                { widgetDisabled && <LoadingAnimation /> }
+                <header styleName="header">
                     <h3>
                         LEAD_TITLE
                     </h3>
-                    <div
-                        styleName="action-buttons"
-                    >
+                    <div styleName="action-buttons">
                         <Button
                             onClick={this.handleGotoOverviewButtonClick}
                         >
@@ -124,14 +126,13 @@ export default class List extends React.PureComponent {
                         <SuccessButton
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}
+                            styleName="save-button"
                         >
                             Save
                         </SuccessButton>
                     </div>
                 </header>
-                <div
-                    styleName="entry-list"
-                >
+                <div styleName="entry-list">
                     {
                         entries.map(entry => (
                             <div

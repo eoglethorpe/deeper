@@ -3,8 +3,7 @@
 .scale-list {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: $spacing-small;
+    justify-content: flex-start;
     height: 100%;
 
     .scale {
@@ -12,7 +11,7 @@
         align-items: center;
 
         .scale-unit {
-            margin: 0 $spacing-extra-small;
+            margin-left: $spacing-extra-small;
             outline: 0;
             border: 0;
             width: $width-scale-widget-unit;

@@ -79,7 +79,7 @@ export default class List extends React.PureComponent {
         data: item.properties.data,
         headerRightComponent: (
             <div
-                className={styles['action-buttons']}
+                className={`${styles['action-buttons']} action-buttons`}
             >
                 <TransparentButton
                     onClick={() => this.handleWidgetEditButtonClick(item.key)}

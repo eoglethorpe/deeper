@@ -2,8 +2,7 @@
 
 .organigram-list {
     display: flex;
-    justify-content: center;
-    padding: $spacing-small;
+    justify-content: flex-start;
     height: 100%;
 
     .organigram {

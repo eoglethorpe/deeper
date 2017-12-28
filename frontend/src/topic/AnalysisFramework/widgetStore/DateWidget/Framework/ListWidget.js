@@ -32,6 +32,7 @@ export default class DateFrameworkList extends React.PureComponent {
             <div styleName="date-list">
                 <DateInput
                     styleName="date-input"
+                    showHintAndError={false}
                     disabled
                 />
             </div>

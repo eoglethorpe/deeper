@@ -38,6 +38,12 @@ const defaultProps = {
     data: undefined,
 };
 
+const baseOrgan = {
+    key: 'base',
+    title: 'Base',
+    organs: [],
+};
+
 // TODO: move this later to public
 const buildSettings = (indices, action, value, wrapper) => (
     // NOTE: reverse() mutates the array so making a copy
@@ -63,7 +69,7 @@ export default class Organigram extends React.PureComponent {
 
         this.state = {
             showEditModal: false,
-            organigram: props.data,
+            organigram: props.data || baseOrgan,
         };
 
         this.props.editAction(this.handleEditClick);
@@ -71,7 +77,7 @@ export default class Organigram extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.data !== nextProps.data) {
-            this.setState({ organigram: nextProps.data });
+            this.setState({ organigram: nextProps.data || baseOrgan });
         }
     }
 
@@ -86,7 +92,7 @@ export default class Organigram extends React.PureComponent {
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
-            organigram: this.props.data,
+            organigram: this.props.data || baseOrgan,
         });
     }
 

@@ -1,0 +1,229 @@
+.overview {
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 11;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-small $spacing-medium;
+        width: 100%;
+    }
+
+    .left {
+        display: flex;
+        flex-basis: 30%;
+        flex-direction: column;
+        flex-shrink: 0;
+
+        .header {
+            .entries-list-btn {
+                &.active {
+                    color: $color-accent;
+                }
+            }
+        }
+
+        .container {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            flex-grow: 1;
+            border-right: $width-separator-thin solid $color-separator;
+            background-color: $color-foreground;
+            width: 100%;
+
+            .lead-preview {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                border-top: $width-separator-medium solid $color-separator;
+                width: 100%;
+                height: 100%;
+                overflow-y: auto;
+
+                .gallery-file {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+
+                    iframe {
+                        flex-grow: 1;
+                    }
+                }
+
+                .preview-text {
+                    display: flex;
+                    margin: auto;
+
+                    h1 {
+                        color: $color-text-disabled;
+                        font-weight: $font-weight-medium;
+                    }
+                }
+            }
+
+            .entries-list-container {
+                display: none;
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-color: $color-foreground;
+                width: 100%;
+                height: 100%;
+
+                &.active {
+                    display: flex;
+                    overflow-y: auto;
+                }
+
+                .entries-list {
+                    flex-grow: 1;
+
+                    :global .entries-list-item {
+                        border-bottom: $width-separator-thin solid $color-separator;
+                        border-left: $width-separator-thick solid transparent;
+                        padding: 0;
+
+                        &.active {
+                            border-left: $width-separator-thick solid $color-accent;
+                            background-color: $color-hover;
+                        }
+
+                        &:hover {
+                            background-color: $color-hover;
+                        }
+
+                        .button {
+                            display: flex;
+                            justify-content: space-between;
+                            outline: 0;
+                            border: 0;
+                            background-color: transparent;
+                            cursor: pointer;
+                            padding: $spacing-medium $spacing-large;
+                            width: 100%;
+                            text-align: left;
+                            font-family: inherit;
+                            font-size: inherit;
+
+                            .entry-excerpt {
+                                flex-grow: 1;
+                                margin-right: $spacing-medium-alt;
+                                text-align: justify;
+                            }
+
+                            .status-icons {
+                                display: flex;
+
+                                .pending,
+                                .error,
+                                .complete,
+                                .pristine,
+                                .stale {
+                                    flex-shrink: 0;
+                                    margin-left: $spacing-small;
+                                    padding: 0;
+                                    color: $color-label;
+                                    font-size: $font-size-medium-alt;
+                                }
+
+                                .pending {
+                                    animation: spin 1s linear infinite;
+                                }
+
+                                .error {
+                                    color: $color-danger;
+                                    animation: spin 1s linear infinite;
+                                }
+
+                                .complete {
+                                    color: $color-success;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+            }
+        }
+    }
+
+    .right {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .header {
+            .entry-actions {
+                display: flex;
+
+                .select-input {
+                    width: 216px;
+                }
+
+                >* {
+                    margin-right: $spacing-small;
+                }
+            }
+
+            .action-buttons {
+                .save-button {
+                    margin-left: $spacing-medium;
+                }
+            }
+        }
+
+        .container {
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            flex-grow: 1;
+            background-color: $color-foreground-alt;
+            overflow-y: auto;
+
+            .grid-layout {
+                flex-grow: 1;
+                background-color: #fff;
+                overflow-y: hidden;
+                overflow-x: auto;
+
+                :global .grid-item {
+                    .header {
+                        display: flex;
+                        flex-shrink: 0;
+                        align-items: flex-end;
+                        justify-content: space-between;
+                        background-color: transparent;
+                        height: 24px;
+
+                        .heading {
+                            background-color: transparent;
+                            padding: 0;
+                            font-size: $font-size-small;
+                        }
+                    }
+
+                    .content {
+                        flex-grow: 1;
+                        background-color: transparent;
+                        padding: 0;
+                        height: calc(100% - 32px);
+                    }
+                }
+            }
+        }
+    }
+
+    .entry-list {
+        height: 100%;
+    }
+}
+

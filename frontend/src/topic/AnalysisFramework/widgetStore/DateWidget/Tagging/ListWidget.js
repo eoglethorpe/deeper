@@ -43,6 +43,7 @@ export default class DateTaggingList extends React.PureComponent {
                     styleName="date-input"
                     onChange={this.handleChange}
                     value={attribute && attribute.value}
+                    showHintAndError={false}
                 />
             </div>
         );

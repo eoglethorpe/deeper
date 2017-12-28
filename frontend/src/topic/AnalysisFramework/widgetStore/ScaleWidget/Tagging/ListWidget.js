@@ -52,9 +52,11 @@ export default class ScaleTaggingList extends React.PureComponent {
 
     handleScaleClick = (selectedScale) => {
         const { api, id, entryId } = this.props;
-        api.setEntryAttribute(id, {
-            selectedScale,
-        }, entryId);
+        api.getEntryModifier(entryId)
+            .setAttribute(id, {
+                selectedScale,
+            })
+            .apply();
     }
 
     render() {

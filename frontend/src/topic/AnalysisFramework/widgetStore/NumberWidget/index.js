@@ -7,7 +7,7 @@ const numberWidget = {
     title: 'Number',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 196, height: 72 },
+        listMinSize: { width: 160, height: 48 },
     },
     tagging: {
         listComponent: TaggingListWidget,
