@@ -19,13 +19,6 @@ const defaultProps = {
     attribute: undefined,
 };
 
-const invertHexColor = (color) => {
-    const currentColor = parseInt(color.substr(1), 16);
-    const maxColor = 0xffffff;
-
-    return `#${(maxColor - currentColor).toString(16)}`;
-};
-
 @CSSModules(styles)
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -186,8 +179,6 @@ export default class Matrix2dOverview extends React.PureComponent {
                     ${rowStyle.backgroundColor} 10px
                 )`,
             };
-
-            console.log(activeCellStyle);
 
             return dimension.subdimensions.map((subdimension, i) => (
                 <tr
