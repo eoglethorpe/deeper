@@ -1,10 +1,5 @@
 @import '../../../../stylesheets/base';
 
-.tagging-matrix-2d,
-.framework-matrix-2d {
-    width: 100%;
-}
-
 .framework-matrix-2d {
     overflow-y: auto;
 
@@ -27,7 +22,6 @@
                     position: sticky;
                     top: 0;
                     z-index: 11;
-                    border-bottom: $width-separator-thin solid $color-separator;
                     background-color: $color-foreground;
                 }
 
@@ -48,20 +42,17 @@
 
             .dimensions {
                 display: table-cell;
-                border-right: $width-separator-thin solid $color-separator;
 
                 .dimension {
                     display: flex;
                     position: relative;
-                    border: $width-separator-thin solid $color-separator;
 
                     .title {
                         display: flex;
                         flex-basis: 50%;
                         align-items: center;
                         justify-content: center;
-                        border-right: $width-separator-thin solid $color-separator;
-                        padding: $spacing-medium;
+                        padding: $spacing-small $spacing-medium;
                         color: $color-text;
                     }
 
@@ -72,6 +63,7 @@
                             margin: $spacing-extra-small;
                             background-color: $color-background;
                             padding: $spacing-small $spacing-medium;
+                            text-align: center;
                             color: $color-text;
                             user-select: none;
                         }
@@ -97,13 +89,14 @@
                 display: flex;
                 position: sticky;
                 top: 0;
-                border-bottom: $width-separator-thin solid $color-separator;
                 padding: 0;
 
                 .sector {
+                    flex-grow: 1;
                     margin: 0 $width-separator-thin;
                     background-color: $color-background;
                     padding: $spacing-small $spacing-medium;
+                    text-align: center;
                 }
 
                 .edit-sectors-button {
@@ -125,6 +118,25 @@
     }
 }
 
+.tagging-matrix-2d-overview {
+    .table {
+        width: 100%;
+        text-align: center;
+
+        .sector {
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .dimension {
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .subdimension {
+            padding: $spacing-small $spacing-medium;
+        }
+    }
+}
+
 .edit-widget-modal {
     width: 600px;
 
@@ -142,7 +154,6 @@
         section {
             display: flex;
             flex-direction: column;
-            border-top: $width-separator-medium solid $color-separator;
 
             .header {
                 display: flex;
@@ -223,7 +234,6 @@
 
         .select-sector-list {
             flex-basis: 40%;
-            border-right: $width-separator-medium solid $color-separator;
             overflow-y: auto;
 
             .select-sector {

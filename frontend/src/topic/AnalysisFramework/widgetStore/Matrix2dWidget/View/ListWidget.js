@@ -5,7 +5,7 @@ export default class Matrix1dList extends React.PureComponent {
     render() {
         return (
             <div>
-                Matrix 1d view list
+                Matrix 2d view list
             </div>
         );
     }
