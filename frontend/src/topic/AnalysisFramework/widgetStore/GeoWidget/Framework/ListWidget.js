@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    TextInput,
-} from '../../../../../public/components/Input';
+    iconNames,
+} from '../../../../../common/constants';
 
 import styles from './styles.scss';
-
+import {
+    TransparentButton,
+} from '../../../../../public/components/Action';
 
 const propTypes = {
     editAction: PropTypes.func.isRequired,
@@ -30,11 +32,9 @@ export default class GeoFrameworkList extends React.PureComponent {
     render() {
         return (
             <div styleName="geo-list">
-                <TextInput
-                    showHintAndError={false}
-                    disabled
-                    placeholder="Location"
-                />
+                <TransparentButton>
+                    Location <i className={iconNames.globe} />
+                </TransparentButton>
             </div>
         );
     }
