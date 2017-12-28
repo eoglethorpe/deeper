@@ -95,7 +95,7 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleCellClick = (key, cellKey) => {
-        const { api, id, filters, attribute, data } = this.props;
+        const { api, id, filters, attribute } = this.props;
         const settings = { $auto: {
             [key]: { $auto: {
                 [cellKey]: {
@@ -107,7 +107,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         const newAttribute = update(attribute, settings);
 
         // TODO: complicated cellApplied
-        const cellApplied = !!newAttribute[key][cellKey];
+        // const cellApplied = !!newAttribute[key][cellKey];
 
         api.getEntryModifier()
             .setAttribute(id, newAttribute)

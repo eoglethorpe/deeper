@@ -72,7 +72,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
     getActiveSelectionStyle = (key) => {
         const { activeScaleUnit } = this.state;
-        const scaleUnitStyle = ['edit-scale-unit', 'list-item'];
+        const scaleUnitStyle = ['edit-scale-unit', 'draggable-item'];
         if (activeScaleUnit.key === key) {
             scaleUnitStyle.push('active');
         }
@@ -81,7 +81,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     getEditScaleUnits = (key, data, index) => (
-        <this.SortableItem key={key} index={index} value={{ key, data }} />
+        <this.SortableScaleUnit key={key} index={index} value={{ key, data }} />
     )
 
     getScale = (key, data) => (
@@ -93,7 +93,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         />
     )
 
-    SortableItem = SortableElement(({ value: { data, key } }) => (
+    SortableScaleUnit = SortableElement(({ value: { data, key } }) => (
         <div
             className={this.getActiveSelectionStyle(key)}
             key={key}
@@ -286,6 +286,8 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         <this.SortableList
                             items={scaleUnits}
                             onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
                             useDragHandle
                         />
                     </ModalBody>

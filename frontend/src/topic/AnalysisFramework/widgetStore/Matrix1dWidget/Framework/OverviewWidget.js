@@ -1,6 +1,12 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle,
+    arrayMove,
+} from 'react-sortable-hoc';
 
 import MatrixRow from './MatrixRow';
 
@@ -38,6 +44,10 @@ const defaultProps = {
     data: [],
 };
 
+const DragHandle = SortableHandle(() => (
+    <span className={`${iconNames.hamburger} drag-handle`} />
+));
+
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -58,6 +68,12 @@ export default class Matrix1dOverview extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         this.setState({ rows: nextProps.data || [] });
     }
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState({
+            rows: arrayMove(this.state.rows, oldIndex, newIndex),
+        });
+    };
 
     createFilters = (rows) => {
         const filterOptions = [];
@@ -162,20 +178,12 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.onChange(this.state.rows, filters);
     }
 
-    renderRow = (key, data) => (
-        <MatrixRow
-            key={key}
-            title={data.title}
-            cells={data.cells}
-            onChange={(value) => { this.handleRowDataChange(key, value); }}
-        />
-    )
-
-    renderEditRow = (key, data) => (
+    SortableEditRow = SortableElement(({ value: { data, key } }) => (
         <div
-            className={styles['edit-row']}
+            className={`${styles['edit-row']} ${styles['draggable-item']}`}
             key={key}
         >
+            <DragHandle />
             <TextInput
                 className={styles['title-input']}
                 label="Title"
@@ -202,7 +210,37 @@ export default class Matrix1dOverview extends React.PureComponent {
                 <span className={iconNames.delete} />
             </TransparentDangerButton>
         </div>
+    ))
+
+    SortableList = SortableContainer(({ items: rows }) => {
+        let additionalStyle = '';
+
+        if (rows.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+
+        return (
+            <ListView
+                data={rows}
+                className={`${styles['row-list']} ${additionalStyle}`}
+                keyExtractor={Matrix1dOverview.rowKeyExtractor}
+                modifier={this.renderEditRow}
+            />
+        );
+    })
+
+    renderRow = (key, data) => (
+        <MatrixRow
+            key={key}
+            title={data.title}
+            cells={data.cells}
+            onChange={(value) => { this.handleRowDataChange(key, value); }}
+        />
     )
+
+    renderEditRow = (key, data, index) => (
+        <this.SortableEditRow key={key} index={index} value={{ key, data }} />
+    );
 
     render() {
         const {
@@ -234,11 +272,12 @@ export default class Matrix1dOverview extends React.PureComponent {
                         }
                     />
                     <ModalBody>
-                        <ListView
-                            data={rows}
-                            className={styles['row-list']}
-                            keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                            modifier={this.renderEditRow}
+                        <this.SortableList
+                            items={rows}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            useDragHandle
                         />
                     </ModalBody>
                     <ModalFooter>

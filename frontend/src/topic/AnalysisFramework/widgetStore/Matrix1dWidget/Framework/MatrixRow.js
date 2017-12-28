@@ -1,6 +1,12 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle,
+    arrayMove,
+} from 'react-sortable-hoc';
 
 import { randomString } from '../../../../../public/utils/common';
 import MatrixCell from './MatrixCell';
@@ -39,6 +45,9 @@ const defaultProps = {
     selectedCells: {},
 };
 
+const DragHandle = SortableHandle(() => (
+    <span className={`${iconNames.hamburger} drag-handle`} />
+));
 
 @CSSModules(styles)
 export default class MatrixRow extends React.PureComponent {
@@ -60,6 +69,12 @@ export default class MatrixRow extends React.PureComponent {
             this.setState({ cells: nextProps.cells });
         }
     }
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState({
+            cells: arrayMove(this.state.cells, oldIndex, newIndex),
+        });
+    };
 
     handleCellRemoveButtonClick = (key) => {
         const cellIndex = this.state.cells.findIndex(d => d.key === key);
@@ -117,17 +132,29 @@ export default class MatrixRow extends React.PureComponent {
         this.props.onChange(this.state.cells);
     }
 
-    renderCell = (key, data) => (
-        <MatrixCell key={key}>
-            { data.value }
-        </MatrixCell>
-    )
+    SortableList = SortableContainer(({ items: cells }) => {
+        let additionalStyle = '';
 
-    renderEditCell = (key, data) => (
+        if (cells.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+
+        return (
+            <ListView
+                data={cells}
+                className={`${styles['cell-list']} ${additionalStyle}`}
+                keyExtractor={MatrixRow.cellKeyExtractor}
+                modifier={this.renderEditCell}
+            />
+        );
+    })
+
+    SortableEditCell = SortableElement(({ value: { data, key } }) => (
         <div
-            className={styles['edit-cell']}
+            className={`${styles['edit-cell']} ${styles['draggable-item']}`}
             key={key}
         >
+            <DragHandle />
             <TextInput
                 className={styles['title-input']}
                 label="Title"
@@ -142,6 +169,16 @@ export default class MatrixRow extends React.PureComponent {
                 <span className={iconNames.delete} />
             </TransparentDangerButton>
         </div>
+    ))
+
+    renderEditCell = (key, data, index) => (
+        <this.SortableEditCell key={key} index={index} value={{ key, data }} />
+    )
+
+    renderCell = (key, data) => (
+        <MatrixCell key={key}>
+            { data.value }
+        </MatrixCell>
     )
 
     render() {
@@ -191,11 +228,12 @@ export default class MatrixRow extends React.PureComponent {
                         }
                     />
                     <ModalBody>
-                        <ListView
-                            data={cells}
-                            className={styles['cell-list']}
-                            keyExtractor={MatrixRow.cellKeyExtractor}
-                            modifier={this.renderEditCell}
+                        <this.SortableList
+                            items={cells}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            useDragHandle
                         />
                     </ModalBody>
                     <ModalFooter>

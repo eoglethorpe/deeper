@@ -67,28 +67,45 @@
 .edit-cell-modal {
     @extend %modal;
 
-    .edit-cell {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .title-input {
-            flex-grow: 1;
-        }
-
-        .delete-button {
-            flex-shrink: 1;
-        }
-    }
 }
 
 .edit-row-modal {
     @extend %modal;
     width: 540px;
+}
 
-    .edit-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+.edit-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $color-foreground;
+
+    .title-input {
+        flex-grow: 1;
     }
+
+    .delete-button {
+        flex-shrink: 1;
+    }
+}
+
+.edit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $color-foreground;
+}
+
+:global .drag-handle {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    justify-content: center;
+    cursor: row-resize;
+    padding: $spacing-medium $spacing-large;
+    font-size: $font-size-large;
+}
+
+.draggable-item {
+    z-index: 11111;
 }
