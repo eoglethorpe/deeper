@@ -91,6 +91,10 @@
             .edit-row {
                 border-top: 0;
             }
+
+            &.no-items {
+                flex-basis: 100%;
+            }
         }
 
         :global .sketch-picker {

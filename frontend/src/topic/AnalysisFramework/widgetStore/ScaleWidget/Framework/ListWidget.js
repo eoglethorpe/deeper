@@ -161,7 +161,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleEdit = () => {
-        this.setState({ showEditModal: true });
+        this.setState({
+            showEditModal: true,
+            activeScaleUnit: this.state.scaleUnits[0] || emptyObject,
+        });
     }
 
     handleAddScaleUnitButtonClick = () => {
@@ -212,7 +215,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         const newScaleUnits = update(this.state.scaleUnits, settings);
         this.setState({
             scaleUnits: newScaleUnits,
-            activeScaleUnit: newScaleUnits[0],
+            activeScaleUnit: newScaleUnits[0] || emptyObject,
         });
     };
 

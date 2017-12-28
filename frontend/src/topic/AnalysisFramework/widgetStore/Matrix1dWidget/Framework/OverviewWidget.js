@@ -172,7 +172,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         const newRows = update(rows, settings);
         this.setState({
             rows: newRows,
-            activeRow: newRows[0],
+            activeRow: newRows[0] || emptyObject,
         });
     }
 
@@ -220,7 +220,10 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleEdit = () => {
-        this.setState({ showEditModal: true });
+        this.setState({
+            showEditModal: true,
+            activeRow: this.state.rows[0] || emptyObject,
+        });
     }
 
     handleEditModalClose = () => {
