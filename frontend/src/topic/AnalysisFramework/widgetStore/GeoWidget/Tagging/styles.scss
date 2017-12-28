@@ -1,0 +1,11 @@
+@import '../../../../../stylesheets/base';
+
+.geo-list {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0;
+
+}
