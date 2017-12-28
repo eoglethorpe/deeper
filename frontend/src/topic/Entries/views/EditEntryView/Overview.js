@@ -2,8 +2,9 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
-
 import { connect } from 'react-redux';
+
+import { getColorOnBgColor } from '../../../../public/utils/common';
 
 import {
     Button,
@@ -189,7 +190,12 @@ export default class Overview extends React.PureComponent {
     }
 
     highlightSimplifiedExcerpt = (highlight, text) => (
-        <span style={{ backgroundColor: highlight.color }}>
+        <span
+            style={{
+                backgroundColor: highlight.color,
+                color: getColorOnBgColor(highlight.color),
+            }}
+        >
             {text}
         </span>
     );
