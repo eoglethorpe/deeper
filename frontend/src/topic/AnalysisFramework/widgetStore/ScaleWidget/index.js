@@ -7,7 +7,7 @@ const scaleWidget = {
     title: 'Scale',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 72, height: 64 },
+        listMinSize: { width: 96, height: 64 },
     },
     tagging: {
         listComponent: TaggingListWidget,

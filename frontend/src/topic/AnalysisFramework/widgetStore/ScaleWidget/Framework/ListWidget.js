@@ -2,6 +2,13 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { SketchPicker } from 'react-color';
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle,
+    arrayMove,
+} from 'react-sortable-hoc';
+
 import update from '../../../../../public/utils/immutable-update';
 
 import {
@@ -32,6 +39,10 @@ const propTypes = {
     data: PropTypes.object, //eslint-disable-line
 };
 
+const DragHandle = SortableHandle(() => (
+    <span className={`${iconNames.hamburger} drag-handle`} />
+));
+
 const emptyList = [];
 const emptyObject = {};
 
@@ -53,9 +64,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState({
+            scaleUnits: arrayMove(this.state.scaleUnits, oldIndex, newIndex),
+        });
+    };
+
     getActiveSelectionStyle = (key) => {
         const { activeScaleUnit } = this.state;
-        const scaleUnitStyle = ['edit-scale-unit'];
+        const scaleUnitStyle = ['edit-scale-unit', 'draggable-item'];
         if (activeScaleUnit.key === key) {
             scaleUnitStyle.push('active');
         }
@@ -63,11 +80,25 @@ export default class ScaleFrameworkList extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    getEditScaleUnits = (key, data) => (
+    getEditScaleUnits = (key, data, index) => (
+        <this.SortableScaleUnit key={key} index={index} value={{ key, data }} />
+    )
+
+    getScale = (key, data) => (
+        <button
+            key={key}
+            title={data.title}
+            className={styles['scale-unit']}
+            style={{ backgroundColor: data.color }}
+        />
+    )
+
+    SortableScaleUnit = SortableElement(({ value: { data, key } }) => (
         <div
             className={this.getActiveSelectionStyle(key)}
             key={key}
         >
+            <DragHandle />
             <div className={styles['color-box-container']}>
                 <span className={styles['color-label']}>Color</span>
                 <button
@@ -92,16 +123,24 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 <span className={iconNames.delete} />
             </TransparentDangerButton>
         </div>
-    )
+    ))
 
-    getScale = (key, data) => (
-        <button
-            key={key}
-            title={data.title}
-            className={styles['scale-unit']}
-            style={{ backgroundColor: data.color }}
-        />
-    )
+    SortableList = SortableContainer(({ items: scaleUnits }) => {
+        let additionalStyle = '';
+
+        if (scaleUnits.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+
+        return (
+            <ListView
+                className={`${styles.list} ${additionalStyle}`}
+                data={scaleUnits}
+                keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+                modifier={this.getEditScaleUnits}
+            />
+        );
+    })
 
     handleTextInputOnFocus = (key) => {
         const { scaleUnits } = this.state;
@@ -122,7 +161,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleEdit = () => {
-        this.setState({ showEditModal: true });
+        this.setState({
+            showEditModal: true,
+            activeScaleUnit: this.state.scaleUnits[0] || emptyObject,
+        });
     }
 
     handleAddScaleUnitButtonClick = () => {
@@ -171,7 +213,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
             $filter: d => d.key !== key,
         };
         const newScaleUnits = update(this.state.scaleUnits, settings);
-        this.setState({ scaleUnits: newScaleUnits });
+        this.setState({
+            scaleUnits: newScaleUnits,
+            activeScaleUnit: newScaleUnits[0] || emptyObject,
+        });
     };
 
     handleColorChange = (newColor) => {
@@ -186,7 +231,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
         const newScaleUnits = update(this.state.scaleUnits, settings);
 
-        this.setState({ scaleUnits: newScaleUnits });
+        this.setState({
+            scaleUnits: newScaleUnits,
+            activeScaleUnit: newScaleUnits[rowIndex],
+        });
     }
 
     addScaleUnit = () => {
@@ -237,15 +285,18 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         }
                     />
                     <ModalBody styleName="scale-units-container">
-                        <ListView
-                            styleName="list"
-                            data={scaleUnits}
-                            keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-                            modifier={this.getEditScaleUnits}
-                        />
-                        <SketchPicker
-                            color={activeScaleUnit.color}
-                            onChange={this.handleColorChange}
+                        { scaleUnits.length > 0 &&
+                            <SketchPicker
+                                color={activeScaleUnit.color}
+                                onChange={this.handleColorChange}
+                            />
+                        }
+                        <this.SortableList
+                            items={scaleUnits}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            useDragHandle
                         />
                     </ModalBody>
                     <ModalFooter>

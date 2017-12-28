@@ -1,6 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { SketchPicker } from 'react-color';
+import {
+    SortableContainer,
+    SortableElement,
+    SortableHandle,
+    arrayMove,
+} from 'react-sortable-hoc';
 
 import MatrixRow from './MatrixRow';
 
@@ -38,6 +45,13 @@ const defaultProps = {
     data: [],
 };
 
+const emptyList = [];
+const emptyObject = {};
+
+const DragHandle = SortableHandle(() => (
+    <span className={`${iconNames.hamburger} drag-handle`} />
+));
+
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -47,16 +61,37 @@ export default class Matrix1dOverview extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const rows = this.props.data || emptyList;
+
         this.state = {
             showEditModal: false,
-            rows: props.data || [],
+            activeRow: rows[0] || emptyObject,
+            rows,
         };
 
         this.props.editAction(this.handleEdit);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({ rows: nextProps.data || [] });
+        if (this.state.rows !== nextProps.data) {
+            this.setState({ rows: nextProps.data || emptyList });
+        }
+    }
+
+    onSortEnd = ({ oldIndex, newIndex }) => {
+        this.setState({
+            rows: arrayMove(this.state.rows, oldIndex, newIndex),
+        });
+    };
+
+    getActiveSelectionStyle = (key) => {
+        const { activeRow } = this.state;
+        const rowStyle = ['edit-row', 'draggable-item'];
+        if (activeRow.key === key) {
+            rowStyle.push('active');
+        }
+        const styleNames = rowStyle.map(d => styles[d]);
+        return styleNames.join(' ');
     }
 
     createFilters = (rows) => {
@@ -87,6 +122,33 @@ export default class Matrix1dOverview extends React.PureComponent {
         }];
     }
 
+    handleColorBoxClick = (key) => {
+        const { rows } = this.state;
+        const index = rows.findIndex(d => d.key === key);
+
+        this.setState({
+            activeRow: rows[index],
+        });
+    }
+
+    handleColorChange = (newColor) => {
+        const { activeRow } = this.state;
+        const rowIndex = this.state.rows.findIndex(d => d.key === activeRow.key);
+
+        const settings = {
+            [rowIndex]: {
+                color: { $set: newColor.hex },
+            },
+        };
+
+        const newRows = update(this.state.rows, settings);
+
+        this.setState({
+            rows: newRows,
+            activeRow: newRows[rowIndex],
+        });
+    }
+
     handleRowDataChange = (key, cells) => {
         const { rows } = this.state;
         const rowIndex = rows.findIndex(d => d.key === key);
@@ -105,12 +167,13 @@ export default class Matrix1dOverview extends React.PureComponent {
         const { rows } = this.state;
         const rowIndex = rows.findIndex(d => d.key === key);
         const settings = {
-            [rowIndex]: {
-                $splice: [[rowIndex, 1]],
-            },
+            $splice: [[rowIndex, 1]],
         };
         const newRows = update(rows, settings);
-        this.setState({ rows: newRows });
+        this.setState({
+            rows: newRows,
+            activeRow: newRows[0] || emptyObject,
+        });
     }
 
     handleRowValueInputChange = (key, value, name) => {
@@ -121,7 +184,19 @@ export default class Matrix1dOverview extends React.PureComponent {
             },
         };
         const newRows = update(this.state.rows, settings);
-        this.setState({ rows: newRows });
+        this.setState({
+            rows: newRows,
+            activeRow: newRows[rowIndex],
+        });
+    }
+
+    handleTextInputOnFocus = (key) => {
+        const { rows } = this.state;
+        const index = rows.findIndex(d => d.key === key);
+
+        this.setState({
+            activeRow: rows[index],
+        });
     }
 
     handleAddRowButtonClick = () => {
@@ -138,11 +213,17 @@ export default class Matrix1dOverview extends React.PureComponent {
             $push: [newRow],
         };
         const newRows = update(rows, settings);
-        this.setState({ rows: newRows });
+        this.setState({
+            rows: newRows,
+            activeRow: newRow,
+        });
     }
 
     handleEdit = () => {
-        this.setState({ showEditModal: true });
+        this.setState({
+            showEditModal: true,
+            activeRow: this.state.rows[0] || emptyObject,
+        });
     }
 
     handleEditModalClose = () => {
@@ -162,6 +243,62 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.onChange(this.state.rows, filters);
     }
 
+    SortableEditRow = SortableElement(({ value: { data, key } }) => (
+        <div
+            className={this.getActiveSelectionStyle(key)}
+            key={key}
+        >
+            <DragHandle />
+            <div className={styles['color-box-container']}>
+                <span className={styles['color-label']}>Color</span>
+                <button
+                    className={styles['color-box']}
+                    onClick={() => this.handleColorBoxClick(key)}
+                    style={{ backgroundColor: data.color }}
+                />
+            </div>
+            <TextInput
+                className={styles['title-input']}
+                label="Title"
+                onFocus={() => this.handleTextInputOnFocus(key)}
+                placeholder="eg: Context"
+                onChange={value => this.handleRowValueInputChange(key, value, 'title')}
+                value={data.title}
+            />
+            <TextInput
+                className={styles['title-input']}
+                label="Tooltip"
+                onFocus={() => this.handleTextInputOnFocus(key)}
+                placeholder="I am the context"
+                onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
+                value={data.tooltip}
+            />
+            <TransparentDangerButton
+                className={styles['delete-button']}
+                onClick={() => this.handleRowRemoveButtonClick(key)}
+            >
+                <span className={iconNames.delete} />
+            </TransparentDangerButton>
+        </div>
+    ))
+
+    SortableList = SortableContainer(({ items: rows }) => {
+        let additionalStyle = '';
+
+        if (rows.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+
+        return (
+            <ListView
+                data={rows}
+                className={`${styles['row-list']} ${additionalStyle}`}
+                keyExtractor={Matrix1dOverview.rowKeyExtractor}
+                modifier={this.renderEditRow}
+            />
+        );
+    })
+
     renderRow = (key, data) => (
         <MatrixRow
             key={key}
@@ -171,43 +308,15 @@ export default class Matrix1dOverview extends React.PureComponent {
         />
     )
 
-    renderEditRow = (key, data) => (
-        <div
-            className={styles['edit-row']}
-            key={key}
-        >
-            <TextInput
-                className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Context"
-                onChange={value => this.handleRowValueInputChange(key, value, 'title')}
-                value={data.title}
-            />
-            <TextInput
-                className={styles['title-input']}
-                label="Tooltip"
-                placeholder="I am the context"
-                onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
-                value={data.tooltip}
-            />
-            <input
-                type="color"
-                onChange={e => this.handleRowValueInputChange(key, e.target.value, 'color')}
-                value={data.color}
-            />
-            <TransparentDangerButton
-                className={styles['delete-button']}
-                onClick={() => this.handleRowRemoveButtonClick(key)}
-            >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
-        </div>
-    )
+    renderEditRow = (key, data, index) => (
+        <this.SortableEditRow key={key} index={index} value={{ key, data }} />
+    );
 
     render() {
         const {
             rows,
             showEditModal,
+            activeRow,
         } = this.state;
 
         return (
@@ -233,12 +342,19 @@ export default class Matrix1dOverview extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     />
-                    <ModalBody>
-                        <ListView
-                            data={rows}
-                            className={styles['row-list']}
-                            keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                            modifier={this.renderEditRow}
+                    <ModalBody styleName="edit-row-body">
+                        { rows.length > 0 &&
+                            <SketchPicker
+                                color={activeRow.color}
+                                onChange={this.handleColorChange}
+                            />
+                        }
+                        <this.SortableList
+                            items={rows}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            useDragHandle
                         />
                     </ModalBody>
                     <ModalFooter>
