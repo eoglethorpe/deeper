@@ -90,12 +90,21 @@
 
     .scale-units-container {
         display: flex;
-        padding: $spacing-medium-alt $spacing-medium-alt $spacing-medium-alt 0;
+        padding: 0;
+
+        :global .sketch-picker {
+            margin: $spacing-medium-alt;
+        }
 
         .list {
             flex-basis: calc(100% - 220px);
             flex-shrink: 0;
+            border-left: $width-separator-thin solid $color-separator;
             overflow-y: auto;
+
+            &.no-items {
+                flex-basis: 100%;
+            }
         }
     }
 }

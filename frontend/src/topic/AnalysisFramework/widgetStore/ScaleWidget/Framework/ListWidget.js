@@ -125,14 +125,23 @@ export default class ScaleFrameworkList extends React.PureComponent {
         </div>
     ))
 
-    SortableList = SortableContainer(({ items: scaleUnits }) => (
-        <ListView
-            className={styles.list}
-            data={scaleUnits}
-            keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-            modifier={this.getEditScaleUnits}
-        />
-    ))
+    SortableList = SortableContainer(({ items: scaleUnits }) => {
+        let additionalStyle = '';
+
+        if (scaleUnits.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+        console.warn(scaleUnits, scaleUnits.length, additionalStyle);
+
+        return (
+            <ListView
+                className={`${styles.list} ${additionalStyle}`}
+                data={scaleUnits}
+                keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+                modifier={this.getEditScaleUnits}
+            />
+        );
+    })
 
     handleTextInputOnFocus = (key) => {
         const { scaleUnits } = this.state;
@@ -268,14 +277,16 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         }
                     />
                     <ModalBody styleName="scale-units-container">
+                        { scaleUnits.length > 0 &&
+                            <SketchPicker
+                                color={activeScaleUnit.color}
+                                onChange={this.handleColorChange}
+                            />
+                        }
                         <this.SortableList
                             items={scaleUnits}
                             onSortEnd={this.onSortEnd}
                             useDragHandle
-                        />
-                        <SketchPicker
-                            color={activeScaleUnit.color}
-                            onChange={this.handleColorChange}
                         />
                     </ModalBody>
                     <ModalFooter>
