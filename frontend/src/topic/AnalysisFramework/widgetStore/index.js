@@ -6,6 +6,7 @@ import numberWidget from './NumberWidget';
 import multiselectWidget from './MultiselectWidget';
 import scaleWidget from './ScaleWidget';
 import organigramWidget from './OrganigramWidget';
+import geoWidget from './GeoWidget';
 
 // Using list to maintain ordering
 const widgetStore = [
@@ -17,6 +18,7 @@ const widgetStore = [
     multiselectWidget,
     scaleWidget,
     organigramWidget,
+    geoWidget,
 ];
 
 export default widgetStore;
