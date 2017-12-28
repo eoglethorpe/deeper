@@ -43,7 +43,9 @@ export const addNewSubcategoryAction = ({ categoryEditorId, level, id, title }) 
     title,
 });
 
-export const updateSelectedSubcategoriesAction = ({ categoryEditorId, level, subcategoryId }) => ({
+export const updateSelectedSubcategoriesAction = ({
+    categoryEditorId, level, subcategoryId,
+}) => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORIES,
     categoryEditorId,
     level,
@@ -66,7 +68,9 @@ export const removeSelectedSubcategoryAction = ({ categoryEditorId }) => ({
     categoryEditorId,
 });
 
-export const addSubcategoryNGramAction = ({ categoryEditorId, level, subcategoryId, ngram }) => ({
+export const addSubcategoryNGramAction = ({
+    categoryEditorId, level, subcategoryId, ngram,
+}) => ({
     type: CE__ADD_SUBCATEGORY_NGRAM,
     categoryEditorId,
     level,
@@ -141,12 +145,16 @@ const buildSettings = (indices, action, value, wrapper) => (
 // REDUCER
 
 const setCategoryEditor = (state, action) => {
-    const { categoryEditor } = action;
+    const { categoryEditor: { id, data, versionId, title } } = action;
 
     const settings = {
         categoryEditorView: {
-            [categoryEditor.id]: { $auto: {
-                $set: categoryEditor,
+            [id]: { $auto: {
+                id: { $set: id },
+                data: { $set: data },
+                title: { $set: title },
+                versionId: { $set: versionId },
+                pristine: { $set: true },
             } },
         },
     };
@@ -166,6 +174,7 @@ const ceAddNewCategory = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
                 data: { $auto: {
                     activeCategoryId: { $set: id },
                     categories: { $autoUnshift: [newCategory] },
@@ -263,6 +272,7 @@ const ceAddNewSubcategory = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: {
+                pristine: { $set: false },
                 data: {
                     categories: categoriesSettings,
                 },
@@ -319,6 +329,7 @@ const ceUpdateSelectedSubcategory = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
                 data: { $auto: {
                     categories: categoriesSettings,
                 } },
@@ -373,6 +384,7 @@ const ceRemoveSelectedSubcategory = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: {
+                pristine: { $set: false },
                 data: {
                     categories: categoriesSettings,
                 },
@@ -436,6 +448,7 @@ const ceRemoveSubcategoryNGram = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
                 data: { $auto: {
                     categories: categoriesSettings,
                 } },
@@ -505,6 +518,7 @@ const ceAddManualSubcategoryNGram = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
                 data: { $auto: {
                     categories: categoriesSettings,
                 } },
@@ -583,6 +597,7 @@ const ceAddSubcategoryNGram = (state, action) => {
     const settings = {
         categoryEditorView: {
             [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
                 data: { $auto: {
                     categories: categoriesSettings,
                 } },

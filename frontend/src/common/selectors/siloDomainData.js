@@ -238,6 +238,24 @@ export const categoryEditorsViewSelector = ({ siloDomainData }) => (
     siloDomainData.categoryEditorView || emptyObject
 );
 
+export const categoryEditorViewPristineSelector = createSelector(
+    categoryEditorsViewSelector,
+    categoryEditorIdFromRoute,
+    (view, id) => (view[id] || emptyObject).pristine,
+);
+
+export const categoryEditorViewTitleSelector = createSelector(
+    categoryEditorsViewSelector,
+    categoryEditorIdFromRoute,
+    (view, id) => (view[id] || emptyObject).title || '',
+);
+
+export const categoryEditorViewVersionIdSelector = createSelector(
+    categoryEditorsViewSelector,
+    categoryEditorIdFromRoute,
+    (view, id) => (view[id] || emptyObject).versionId,
+);
+
 export const categoryEditorViewSelector = createSelector(
     categoryEditorsViewSelector,
     categoryEditorIdFromRoute,

@@ -10,22 +10,31 @@ import {
 import {
     Button,
     PrimaryButton,
+    DangerButton,
     SuccessButton,
 } from '../../../public/components/Action';
 import {
+    LoadingAnimation,
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
 } from '../../../public/components/View';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { randomString } from '../../../public/utils/common';
+import {
+    isTruthy,
+    isFalsy,
+    randomString,
+} from '../../../public/utils/common';
 
 import DocumentPanel from './DocumentPanel';
 import SubcategoryColumn from './SubcategoryColumn';
 import SubcategoryPropertyPanel from './SubcategoryPropertyPanel';
 
 import {
+    categoryEditorViewTitleSelector,
+    categoryEditorViewVersionIdSelector,
+    categoryEditorViewPristineSelector,
     categoriesSelector,
     activeCategoryIdSelector,
     addNewCategoryAction,
@@ -47,6 +56,10 @@ import notify from '../../../common/notify';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
+    categoryEditorViewTitle: categoryEditorViewTitleSelector(state, props),
+    categoryEditorViewVersionId: categoryEditorViewVersionIdSelector(state, props),
+    categoryEditorViewPristine: categoryEditorViewPristineSelector(state, props),
+
     categories: categoriesSelector(state, props),
     activeCategoryId: activeCategoryIdSelector(state, props),
 });
@@ -62,6 +75,10 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    categoryEditorViewTitle: PropTypes.string.isRequired,
+    categoryEditorViewVersionId: PropTypes.number,
+    categoryEditorViewPristine: PropTypes.bool,
+
     categories: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     activeCategoryId: PropTypes.string,
     addNewCategory: PropTypes.func.isRequired,
@@ -76,6 +93,8 @@ const propTypes = {
 
 const defaultProps = {
     activeCategoryId: undefined,
+    categoryEditorViewVersionId: undefined,
+    categoryEditorViewPristine: undefined,
 };
 
 const LIMIT = 5;
@@ -91,7 +110,6 @@ export default class CategoryEditor extends React.PureComponent {
 
         this.state = {
             pending: true,
-            pristine: false,
 
             showCategoryTitleModal: false,
             newCategoryTitleInputValue: '',
@@ -138,7 +156,6 @@ export default class CategoryEditor extends React.PureComponent {
                     this.props.setCategoryEditor({
                         categoryEditor: response,
                     });
-                    this.setState({ pristine: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -156,9 +173,21 @@ export default class CategoryEditor extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'categoryEditor');
-                    this.props.setCategoryEditor({
-                        categoryEditor: response,
-                    });
+
+                    const {
+                        categoryEditorViewVersionId,
+                    } = this.props;
+                    if (isFalsy(categoryEditorViewVersionId)) {
+                        this.props.setCategoryEditor({ categoryEditor: response });
+                    } else if (categoryEditorViewVersionId < response.versionId) {
+                        notify.send({
+                            type: notify.type.WARNING,
+                            title: 'Category editor was updated in server.',
+                            message: 'Your copy was overridden by server\'s copy',
+                            duration: notify.duration.SLOW,
+                        });
+                        this.props.setCategoryEditor({ categoryEditor: response });
+                    }
                 } catch (er) {
                     console.error(er);
                 }
@@ -388,7 +417,6 @@ export default class CategoryEditor extends React.PureComponent {
         } = this.props;
 
         const {
-            pristine,
             showCategoryTitleModal,
             newCategoryTitleInputValue,
             showSubcategoryTitleModal,
@@ -399,33 +427,63 @@ export default class CategoryEditor extends React.PureComponent {
 
         return (
             <div styleName="category-editor">
+                { this.state.pending && <LoadingAnimation /> }
                 <div styleName="left">
                     <DocumentPanel />
                 </div>
                 <div styleName="right">
                     <header styleName="header">
-                        <SelectInput
-                            styleName="category-select"
-                            options={categories}
-                            onChange={this.handleCategorySelectChange}
-                            placeholder="Select category"
-                            showLabel={false}
-                            showHintAndError={false}
-                            value={activeCategoryId}
-                            keySelector={d => d.id}
-                            labelSelector={d => d.title}
-                            clearable={false}
-                        />
+                        <div>
+                            <h2>
+                                {this.props.categoryEditorViewTitle}
+                            </h2>
+                            <SelectInput
+                                label="Category"
+                                styleName="category-select"
+                                options={categories}
+                                onChange={this.handleCategorySelectChange}
+                                placeholder="Select category"
+                                showHintAndError={false}
+                                value={activeCategoryId}
+                                keySelector={d => d.id}
+                                labelSelector={d => d.title}
+                                clearable={false}
+                                disabled={this.state.pending}
+                            />
+                        </div>
                         <div styleName="action-btn">
                             <PrimaryButton
                                 styleName="add-category-btn"
                                 onClick={this.handleAddCategoryButtonClick}
+                                disabled={this.state.pending}
                             >
-                                Add category
+                                Add
                             </PrimaryButton>
+
+                            { isTruthy(activeCategoryId) &&
+                                [
+                                    <PrimaryButton
+                                        key="edit"
+                                        styleName="add-category-btn"
+                                        disabled={this.state.pending}
+                                    >
+                                        Edit
+                                    </PrimaryButton>,
+                                    <DangerButton
+                                        key="remove"
+                                        styleName="add-category-btn"
+                                        disabled={this.state.pending}
+                                    >
+                                        Remove
+                                    </DangerButton>,
+                                ]
+                            }
+
                             <SuccessButton
+                                disabled={
+                                    this.props.categoryEditorViewPristine || this.state.pending
+                                }
                                 onClick={this.handleCategoryEditorSaveButtonClick}
-                                disabled={pristine}
                             >
                                 Save
                             </SuccessButton>

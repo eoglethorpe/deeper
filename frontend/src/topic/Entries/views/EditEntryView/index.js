@@ -51,6 +51,7 @@ import {
     createUrlForDeleteEntry,
     createParamsForDeleteEntry,
 } from '../../../../common/rest';
+import notify from '../../../../common/notify';
 import schema from '../../../../common/schema';
 
 import {
@@ -58,6 +59,7 @@ import {
     entryAccessor,
     calcEntryState,
     calcEntriesDiff,
+    getApplicableDiffCount,
 } from '../../../../common/entities/entry';
 
 import styles from './styles.scss';
@@ -269,7 +271,16 @@ export default class EditEntryView extends React.PureComponent {
                     schema.validate(response, 'entriesGetResponse');
                     const entries = response.results.entries;
                     const diffs = calcEntriesDiff(this.props.entries, entries);
-                    this.props.diffEntries({ leadId, diffs });
+                    const applicableDiffCount = getApplicableDiffCount(diffs);
+                    if (diffs > 0) {
+                        notify.send({
+                            type: notify.type.WARNING,
+                            title: `${applicableDiffCount} entries was updated in server.`,
+                            message: 'Your copy was overridden by server\'s copy',
+                            duration: notify.duration.SLOW,
+                        });
+                        this.props.diffEntries({ leadId, diffs });
+                    }
                 } catch (er) {
                     console.error(er);
                 }
