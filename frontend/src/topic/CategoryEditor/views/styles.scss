@@ -144,24 +144,46 @@
 
         >.header {
             display: flex;
-            flex-shrink: 0;
-            align-items: flex-end;
+            flex-wrap: wrap;
             border-bottom: $width-separator-medium solid $color-separator;
             padding: $spacing-medium;
 
-            .category-select {
-                flex-basis: 20%;
-                margin-right: $spacing-medium;
+            .header-content {
+                display: flex;
+                flex-basis: 100%;
+
+                h2 {
+                    flex-grow: 1;
+                    font-weight: $font-weight-medium;
+                }
+
+                button {
+                    flex-shrink: 0;
+                }
             }
+
 
             .action-btn {
                 display: flex;
                 flex-basis: 100%;
                 align-items: flex-end;
-                justify-content: flex-end;
+                justify-content: flex-start;
+
+                .category-select {
+                    flex-basis: 23%;
+                    margin-right: $spacing-medium;
+
+                    .input {
+                        text-transform: uppercase;
+                    }
+                }
 
                 .add-category-btn {
                     margin-right: $spacing-medium;
+
+                    i {
+                        margin-right: 0;
+                    }
                 }
             }
         }

@@ -26,6 +26,9 @@ import {
     isFalsy,
     randomString,
 } from '../../../public/utils/common';
+import {
+    iconNames,
+} from '../../../common/constants';
 
 import DocumentPanel from './DocumentPanel';
 import SubcategoryColumn from './SubcategoryColumn';
@@ -433,10 +436,20 @@ export default class CategoryEditor extends React.PureComponent {
                 </div>
                 <div styleName="right">
                     <header styleName="header">
-                        <div>
+                        <div styleName="header-content">
                             <h2>
                                 {this.props.categoryEditorViewTitle}
                             </h2>
+                            <SuccessButton
+                                disabled={
+                                    this.props.categoryEditorViewPristine || this.state.pending
+                                }
+                                onClick={this.handleCategoryEditorSaveButtonClick}
+                            >
+                                Save
+                            </SuccessButton>
+                        </div>
+                        <div styleName="action-btn">
                             <SelectInput
                                 label="Category"
                                 styleName="category-select"
@@ -450,43 +463,31 @@ export default class CategoryEditor extends React.PureComponent {
                                 clearable={false}
                                 disabled={this.state.pending}
                             />
-                        </div>
-                        <div styleName="action-btn">
                             <PrimaryButton
                                 styleName="add-category-btn"
                                 onClick={this.handleAddCategoryButtonClick}
                                 disabled={this.state.pending}
-                            >
-                                Add
-                            </PrimaryButton>
-
+                                iconName={iconNames.add}
+                                title="Add Category"
+                            />
                             { isTruthy(activeCategoryId) &&
                                 [
                                     <PrimaryButton
                                         key="edit"
                                         styleName="add-category-btn"
                                         disabled={this.state.pending}
-                                    >
-                                        Edit
-                                    </PrimaryButton>,
+                                        iconName={iconNames.edit}
+                                        title="Edit Category"
+                                    />,
                                     <DangerButton
                                         key="remove"
                                         styleName="add-category-btn"
                                         disabled={this.state.pending}
-                                    >
-                                        Remove
-                                    </DangerButton>,
+                                        iconName={iconNames.delete}
+                                        title="Delete Category"
+                                    />,
                                 ]
                             }
-
-                            <SuccessButton
-                                disabled={
-                                    this.props.categoryEditorViewPristine || this.state.pending
-                                }
-                                onClick={this.handleCategoryEditorSaveButtonClick}
-                            >
-                                Save
-                            </SuccessButton>
                         </div>
                     </header>
                     <div styleName="content">
