@@ -31,7 +31,8 @@
 .edit-scale-unit {
     display: flex;
     align-items: flex-end;
-    margin-right: $spacing-medium;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
     border-left: $width-separator-thick solid transparent;
     background-color: $color-foreground;
     padding: $spacing-medium 0;
@@ -101,6 +102,10 @@
             flex-shrink: 0;
             border-left: $width-separator-thin solid $color-separator;
             overflow-y: auto;
+
+            .edit-scale-unit {
+                border-top: 0;
+            }
 
             &.no-items {
                 flex-basis: 100%;

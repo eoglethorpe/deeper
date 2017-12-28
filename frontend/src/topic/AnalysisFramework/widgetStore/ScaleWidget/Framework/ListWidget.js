@@ -131,7 +131,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
         if (scaleUnits.length === 0) {
             additionalStyle = styles['no-items'];
         }
-        console.warn(scaleUnits, scaleUnits.length, additionalStyle);
 
         return (
             <ListView
@@ -211,7 +210,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
             $filter: d => d.key !== key,
         };
         const newScaleUnits = update(this.state.scaleUnits, settings);
-        this.setState({ scaleUnits: newScaleUnits });
+        this.setState({
+            scaleUnits: newScaleUnits,
+            activeScaleUnit: newScaleUnits[0],
+        });
     };
 
     handleColorChange = (newColor) => {
@@ -226,7 +228,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
         const newScaleUnits = update(this.state.scaleUnits, settings);
 
-        this.setState({ scaleUnits: newScaleUnits });
+        this.setState({
+            scaleUnits: newScaleUnits,
+            activeScaleUnit: newScaleUnits[rowIndex],
+        });
     }
 
     addScaleUnit = () => {

@@ -221,13 +221,14 @@ export default class MatrixRow extends React.PureComponent {
                         title="Add / edit cell"
                         rightComponent={
                             <TransparentPrimaryButton
+                                iconName={iconNames.add}
                                 onClick={this.handleAddCellButtonClick}
                             >
                                 Add cell
                             </TransparentPrimaryButton>
                         }
                     />
-                    <ModalBody>
+                    <ModalBody styleName="edit-cell-body">
                         <this.SortableList
                             items={cells}
                             onSortEnd={this.onSortEnd}
