@@ -61,7 +61,9 @@ export default class Overview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.update(nextProps.analysisFramework);
+        if (this.props.analysisFramework !== nextProps.analysisFramework) {
+            this.update(nextProps.analysisFramework);
+        }
     }
 
     getUniqueKey = () => {

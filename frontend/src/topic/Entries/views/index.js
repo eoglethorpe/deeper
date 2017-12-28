@@ -94,6 +94,7 @@ export default class Entries extends React.PureComponent {
         };
 
         this.items = [];
+        this.gridItems = {};
     }
 
     componentWillMount() {
@@ -131,7 +132,11 @@ export default class Entries extends React.PureComponent {
         }
 
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
-            this.update(nextProps.analysisFramework);
+            this.updateAnalysisFramework(nextProps.analysisFramework);
+        }
+
+        if (this.props.entries !== nextProps.entries) {
+            this.updateGridItems(nextProps.entries);
         }
     }
 
@@ -155,17 +160,6 @@ export default class Entries extends React.PureComponent {
 
         return attribute && attribute.data;
     }
-
-    getGridItems = attributes => this.items.map(
-        item => ({
-            key: item.key,
-            widgetId: item.widgetId,
-            title: item.title,
-            layout: item.properties.listGridLayout,
-            attribute: this.getAttribute(attributes, item.id),
-            data: item.properties.data,
-        }),
-    )
 
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
@@ -266,7 +260,7 @@ export default class Entries extends React.PureComponent {
         return analysisFrameworkRequest;
     }
 
-    update(analysisFramework) {
+    updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.view.listComponent)
             .map(widget => ({
@@ -292,6 +286,24 @@ export default class Entries extends React.PureComponent {
         }
     }
 
+    updateGridItems(entries) {
+        this.gridItems = {};
+        entries.forEach((entryGroup) => {
+            entryGroup.entries.forEach((entry) => {
+                this.gridItems[entry.id] = this.items.map(
+                    item => ({
+                        key: item.key,
+                        widgetId: item.widgetId,
+                        title: item.title,
+                        layout: item.properties.listGridLayout,
+                        attribute: this.getAttribute(entry.attributes, item.id),
+                        data: item.properties.data,
+                    }),
+                );
+            });
+        });
+    }
+
     handleFilterChange = (key, values) => {
         const filters = { ...this.state.filters };
         filters[key] = values;
@@ -314,7 +326,7 @@ export default class Entries extends React.PureComponent {
             <GridLayout
                 className={styles['grid-layout']}
                 modifier={this.getItemView}
-                items={this.getGridItems(data.attributes)}
+                items={this.gridItems[data.id] || emptyList}
                 viewOnly
             />
         </div>
@@ -394,20 +406,28 @@ export default class Entries extends React.PureComponent {
         return (
             <div styleName="entries">
                 {
-                    (this.state.pendingEntries || this.state.pendingProjectAndAf) &&
-                    <LoadingAnimation />
+                    ((this.state.pendingEntries || this.state.pendingProjectAndAf) && (
+                        <LoadingAnimation />
+                    )) || ([
+                        <div
+                            key="filters"
+                            styleName="filters"
+                        >
+                            {
+                                this.filters && this.filters.map(
+                                    filter => this.renderFilter(filter),
+                                )
+                            }
+                        </div>,
+                        <ListView
+                            key="lead-entries-list"
+                            styleName="lead-entries-list"
+                            data={entries || emptyList}
+                            keyExtractor={Entries.leadKeyExtractor}
+                            modifier={this.renderLeadGroupedEntriesItem}
+                        />,
+                    ])
                 }
-                <div styleName="filters">
-                    {
-                        this.filters && this.filters.map(filter => this.renderFilter(filter))
-                    }
-                </div>
-                <ListView
-                    styleName="lead-entries-list"
-                    data={entries || emptyList}
-                    keyExtractor={Entries.leadKeyExtractor}
-                    modifier={this.renderLeadGroupedEntriesItem}
-                />
             </div>
         );
     }
