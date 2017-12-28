@@ -137,7 +137,7 @@ export default class Matrix2dOverview extends React.PureComponent {
             id: randomString(),
             title: '',
             tooltip: '',
-            color: '#000000',
+            color: '#ffffff',
             subdimensions: [],
         };
 
@@ -169,7 +169,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         } = data;
 
         return (
-            <div styleName="framework-matrix-2d">
+            <div styleName="framework-matrix-2d-overview">
                 <div styleName="content">
                     <div styleName="row top-row">
                         <div styleName="blank" />

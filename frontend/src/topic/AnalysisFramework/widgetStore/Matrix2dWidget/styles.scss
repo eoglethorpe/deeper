@@ -1,6 +1,6 @@
 @import '../../../../stylesheets/base';
 
-.framework-matrix-2d {
+.framework-matrix-2d-overview {
     overflow-y: auto;
 
     .content {
@@ -60,7 +60,7 @@
                         flex-basis: 50%;
 
                         .subdimension {
-                            margin: $spacing-extra-small;
+                            margin: $width-separator-medium;
                             padding: $spacing-small $spacing-medium;
                             text-align: center;
                             user-select: none;
@@ -87,6 +87,10 @@
                         .edit-dimension-button {
                             opacity: 1;
                         }
+                    }
+
+                    + .dimension {
+                        margin-top: $width-separator-medium;
                     }
                 }
             }

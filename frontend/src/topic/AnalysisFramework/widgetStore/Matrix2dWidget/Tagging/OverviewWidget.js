@@ -39,12 +39,45 @@ export default class Matrix2dOverview extends React.PureComponent {
             showEditModal: false,
             data: props.data || {},
         };
+
+        const color = this.getHighlightColor(props.attribute);
+
+        if (color) {
+            props.api.getEntryModifier()
+                .setHighlightColor(color)
+                .apply();
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            rows: nextProps.data || {},
-        });
+        const { api, attribute, data } = nextProps;
+
+        if (this.props.data !== data) {
+            this.setState({
+                rows: data || [],
+            });
+        }
+        if (this.props.attribute !== attribute) {
+            const color = this.getHighlightColor(attribute);
+
+            if (color) {
+                api.getEntryModifier()
+                    .setHighlightColor(color)
+                    .apply();
+            }
+        }
+    }
+
+    getHighlightColor = (attribute) => {
+        const keys = Object.keys(attribute || {});
+
+        if (keys.length > 0) {
+            const { dimensions } = this.props.data;
+            const dimension = dimensions.find(d => d.id === keys[0]);
+            return dimension.color;
+        }
+
+        return undefined;
     }
 
     isCellActive = (dimensionId, subdimensionId, sectorId) => {
@@ -144,8 +177,17 @@ export default class Matrix2dOverview extends React.PureComponent {
             };
 
             const activeCellStyle = {
-                backgroundColor: invertHexColor(dimension.color),
+                background: `repeating-linear-gradient(
+                    -60deg,
+                    ${rowStyle.backgroundColor} 0,
+                    ${rowStyle.color} 1px,
+                    ${rowStyle.color} 1px,
+                    ${rowStyle.backgroundColor} 2px,
+                    ${rowStyle.backgroundColor} 10px
+                )`,
             };
+
+            console.log(activeCellStyle);
 
             return dimension.subdimensions.map((subdimension, i) => (
                 <tr
