@@ -6,6 +6,7 @@
     .content {
         display: table;
         width: 100%;
+        border-spacing: $width-separator-medium;
 
         .row {
             display: table-row;
@@ -53,7 +54,6 @@
                         align-items: center;
                         justify-content: center;
                         padding: $spacing-small $spacing-medium;
-                        color: $color-text;
                     }
 
                     .subdimensions {
@@ -61,11 +61,17 @@
 
                         .subdimension {
                             margin: $spacing-extra-small;
-                            background-color: $color-background;
                             padding: $spacing-small $spacing-medium;
                             text-align: center;
-                            color: $color-text;
                             user-select: none;
+
+                            &:first-child {
+                                margin-top: 0;
+                            }
+
+                            &:last-child {
+                                margin-bottom: 0;
+                            }
                         }
                     }
 
@@ -122,6 +128,11 @@
     .table {
         width: 100%;
         text-align: center;
+
+        th {
+            position: sticky;
+            top: 0;
+        }
 
         .sector {
             padding: $spacing-small $spacing-medium;

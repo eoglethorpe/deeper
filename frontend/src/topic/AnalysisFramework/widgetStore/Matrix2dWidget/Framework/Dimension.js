@@ -4,7 +4,10 @@ import React from 'react';
 import styles from '../styles.scss';
 
 import { iconNames } from '../../../../../common/constants';
-import { randomString } from '../../../../../public/utils/common';
+import {
+    randomString,
+    getColorOnBgColor,
+} from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
 
 import {
@@ -48,12 +51,20 @@ export default class Dimension extends React.PureComponent {
         this.state = {
             data: props.data,
             showEditDimensionModal: false,
+            rowStyle: {
+                backgroundColor: props.data.color,
+                color: getColorOnBgColor(props.data.color),
+            },
         };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             data: nextProps.data,
+            rowStyle: {
+                backgroundColor: nextProps.data.color,
+                color: getColorOnBgColor(nextProps.data.color),
+            },
         });
     }
 
@@ -168,6 +179,7 @@ export default class Dimension extends React.PureComponent {
         <div
             key={data.id}
             className={styles.subdimension}
+            style={this.state.rowStyle}
         >
             { data.title }
         </div>
@@ -206,8 +218,13 @@ export default class Dimension extends React.PureComponent {
         const styleName = 'dimension';
 
         return (
-            <div styleName={styleName}>
-                <div styleName="title">
+            <div
+                styleName={styleName}
+            >
+                <div
+                    styleName="title"
+                    style={this.state.rowStyle}
+                >
                     { data.title }
                 </div>
                 <ListView
