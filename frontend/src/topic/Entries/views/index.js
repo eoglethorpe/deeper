@@ -133,6 +133,8 @@ export default class Entries extends React.PureComponent {
 
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.updateAnalysisFramework(nextProps.analysisFramework);
+            // After analysis framework is loaded, update grid items as well
+            this.updateGridItems(nextProps.entries);
         }
 
         if (this.props.entries !== nextProps.entries) {
@@ -261,6 +263,7 @@ export default class Entries extends React.PureComponent {
     }
 
     updateAnalysisFramework(analysisFramework) {
+        console.warn('updated analysisFramework');
         this.widgets = widgetStore
             .filter(widget => widget.view.listComponent)
             .map(widget => ({
@@ -276,6 +279,7 @@ export default class Entries extends React.PureComponent {
         } else {
             this.items = [];
         }
+        console.warn(this.items);
 
         if (analysisFramework.filters) {
             this.filters = analysisFramework.filters.filter(
@@ -287,6 +291,7 @@ export default class Entries extends React.PureComponent {
     }
 
     updateGridItems(entries) {
+        console.warn('updated gridItems');
         this.gridItems = {};
         entries.forEach((entryGroup) => {
             entryGroup.entries.forEach((entry) => {
