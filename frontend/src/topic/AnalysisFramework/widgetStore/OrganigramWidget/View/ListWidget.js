@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import styles from './styles.scss';
 
 const propTypes = {
-    value: PropTypes.object,      // eslint-disable-line
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    value: undefined,
+    attribute: undefined,
 };
 @CSSModules(styles)
 export default class OrganigramList extends React.PureComponent {
@@ -17,11 +17,21 @@ export default class OrganigramList extends React.PureComponent {
     static defaultProps = defaultProps;
 
     render() {
+        const { attribute: { values = [] } = {} } = this.props;
+
         return (
             <div
                 styleName="organigram-list"
             >
-                Oraganigram view
+                <ul>
+                    {
+                        values.map(value => (
+                            <li key={value.id}>
+                                {value.name}
+                            </li>
+                        ))
+                    }
+                </ul>
             </div>
         );
     }
