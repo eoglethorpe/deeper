@@ -86,6 +86,15 @@ export default class GeoTaggingList extends React.PureComponent {
         </div>
     )
 
+    mapRegionsList = (key, data) => (
+        <div
+            className={styles['regions-content']}
+            key={key}
+        >
+            <span className={styles['region-name']}>{data.title}</span>
+        </div>
+    )
+
     handleRemoveButtonClick = (key) => {
         const newValues = this.state.values.filter(d => d.key !== key);
         this.setState({
@@ -130,9 +139,17 @@ export default class GeoTaggingList extends React.PureComponent {
             <div styleName="geo-list">
                 <TransparentButton
                     onClick={this.handleModalOpen}
+                    styleName="location-button"
+                    title="Click to select a Geo Area"
                 >
-                    Location <i className={iconNames.globe} />
+                    Geo Area <i className={iconNames.globe} />
                 </TransparentButton>
+                <ListView
+                    data={values}
+                    className={styles['region-list']}
+                    keyExtractor={GeoTaggingList.valueKeyExtractor}
+                    modifier={this.mapRegionsList}
+                />
                 <Modal
                     styleName="map-modal"
                     show={showMapModal}

@@ -5,4 +5,20 @@
     align-items: flex-start;
     justify-content: flex-start;
     padding: 0;
+
+    .region-list {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+
+        .regions-content {
+            display: flex;
+            flex-grow: 1;
+
+            .region-name {
+                flex-grow: 1;
+            }
+        }
+
+    }
 }
