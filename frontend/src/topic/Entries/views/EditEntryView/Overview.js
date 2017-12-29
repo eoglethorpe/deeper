@@ -87,7 +87,12 @@ export default class Overview extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.updateItems(props.analysisFramework);
+
+        this.items = [];
+        this.gridItems = [];
+
+        this.updateAnalysisFramework(props.analysisFramework);
+        this.updateGridItems(props.entries);
 
         this.state = {
             entriesListViewShow: false,
@@ -97,21 +102,15 @@ export default class Overview extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
-            this.updateItems(nextProps.analysisFramework);
+            this.updateAnalysisFramework(nextProps.analysisFramework);
+            this.updateGridItems(nextProps.entries);
+        } else if (
+            this.props.entries !== nextProps.entries ||
+            this.props.selectedEntryId !== nextProps.selectedEntryId
+        ) {
+            this.updateGridItems();
         }
     }
-
-    getGridItems = () => this.items.map(item => ({
-        id: item.id,
-        key: item.key,
-        widgetId: item.widgetId,
-        filters: item.filters,
-        exportable: item.exportable,
-        title: item.title,
-        layout: item.properties.overviewGridLayout,
-        data: item.properties.data,
-        attribute: this.props.api.getEntryAttribute(item.id),
-    }))
 
     getItemView = (item) => {
         const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
@@ -127,7 +126,7 @@ export default class Overview extends React.PureComponent {
         );
     }
 
-    updateItems(analysisFramework) {
+    updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.overviewComponent)
             .map(widget => ({
@@ -154,6 +153,20 @@ export default class Overview extends React.PureComponent {
         } else {
             this.items = [];
         }
+    }
+
+    updateGridItems() {
+        this.gridItems = this.items.map(item => ({
+            id: item.id,
+            key: item.key,
+            widgetId: item.widgetId,
+            filters: item.filters,
+            exportable: item.exportable,
+            title: item.title,
+            layout: item.properties.overviewGridLayout,
+            data: item.properties.data,
+            attribute: this.props.api.getEntryAttribute(item.id),
+        }));
     }
 
     handleGotoListButtonClick = () => {
@@ -468,7 +481,7 @@ export default class Overview extends React.PureComponent {
                         <GridLayout
                             styleName="grid-layout"
                             modifier={this.getItemView}
-                            items={this.getGridItems()}
+                            items={this.gridItems}
                             viewOnly
                         />
                     </div>

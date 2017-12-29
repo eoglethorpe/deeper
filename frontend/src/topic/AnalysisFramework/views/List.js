@@ -50,13 +50,17 @@ export default class List extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.update(props.analysisFramework);
+
+        this.items = [];
+        this.gridItems = [];
+
+        this.updateAnalysisFramework(props.analysisFramework);
 
         this.widgetEditActions = {};
     }
 
     componentWillReceiveProps(nextProps) {
-        this.update(nextProps.analysisFramework);
+        this.updateAnalysisFramework(nextProps.analysisFramework);
     }
 
     getUniqueKey = () => {
@@ -196,7 +200,7 @@ export default class List extends React.PureComponent {
         window.location.hash = '/overview/';
     }
 
-    update(analysisFramework) {
+    updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.listComponent)
             .map(widget => ({
@@ -211,6 +215,8 @@ export default class List extends React.PureComponent {
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
         );
+
+        this.gridItems = this.getGridItems();
     }
 
     render() {
@@ -220,7 +226,7 @@ export default class List extends React.PureComponent {
                     <GridLayout
                         styleName="grid-layout"
                         modifier={this.getItemView}
-                        items={this.getGridItems()}
+                        items={this.gridItems}
                         onLayoutChange={this.handleLayoutChange}
                     />
                 </div>

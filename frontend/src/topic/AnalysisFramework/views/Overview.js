@@ -55,14 +55,18 @@ export default class Overview extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.update(props.analysisFramework);
+
+        this.items = [];
+        this.gridItems = [];
+
+        this.updateAnalysisFramework(props.analysisFramework);
 
         this.widgetEditActions = {};
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
-            this.update(nextProps.analysisFramework);
+            this.updateAnalysisFramework(nextProps.analysisFramework);
         }
     }
 
@@ -203,7 +207,7 @@ export default class Overview extends React.PureComponent {
         window.location.hash = '/list/';
     }
 
-    update(analysisFramework) {
+    updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.overviewComponent)
             .map(widget => ({
@@ -218,11 +222,11 @@ export default class Overview extends React.PureComponent {
         this.items = analysisFramework.widgets.filter(
             w => this.widgets.find(w1 => w1.id === w.widgetId),
         );
+
+        this.gridItems = this.getGridItems();
     }
 
     render() {
-        const gridItems = this.getGridItems();
-
         return (
             <div styleName="overview">
                 <div
@@ -311,7 +315,7 @@ export default class Overview extends React.PureComponent {
                     <GridLayout
                         styleName="grid-layout"
                         modifier={this.getItemView}
-                        items={gridItems}
+                        items={this.gridItems}
                         onLayoutChange={this.handleLayoutChange}
                     />
                 </div>

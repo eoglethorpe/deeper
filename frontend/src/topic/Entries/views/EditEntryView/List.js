@@ -37,28 +37,22 @@ export default class List extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.update(props.analysisFramework);
+
+        this.items = [];
+        this.gridItems = {};
+
+        this.updateAnalysisFramework(props.analysisFramework);
+        this.updateGridItems(props.entries);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
-            this.update(nextProps.analysisFramework);
+            this.updateAnalysisFramework(nextProps.analysisFramework);
+            this.updateGridItems(nextProps.entries);
+        } else if (this.props.entries !== nextProps.entries) {
+            this.updateGridItems(nextProps.entries);
         }
     }
-
-    // TODO: optimize this later
-    getGridItems = entryId => this.items.map(item => ({
-        id: item.id,
-        key: item.key,
-        widgetId: item.widgetId,
-        filters: item.filters,
-        exportable: item.exportable,
-        title: item.title,
-        layout: item.properties.listGridLayout,
-        data: item.properties.data,
-        attribute: this.props.api.getEntryAttribute(item.id, entryId),
-        entryId,
-    }))
 
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
@@ -88,7 +82,7 @@ export default class List extends React.PureComponent {
         window.location.hash = '/overview/';
     }
 
-    update(analysisFramework) {
+    updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.listComponent)
             .map(widget => ({
@@ -116,6 +110,25 @@ export default class List extends React.PureComponent {
         } else {
             this.items = [];
         }
+    }
+
+    updateGridItems(entries) {
+        this.gridItems = {};
+        entries.forEach((entry) => {
+            const entryId = entryAccessor.getKey(entry);
+            this.gridItems[entryId] = this.items.map(item => ({
+                id: item.id,
+                key: item.key,
+                widgetId: item.widgetId,
+                filters: item.filters,
+                exportable: item.exportable,
+                title: item.title,
+                layout: item.properties.listGridLayout,
+                data: item.properties.data,
+                attribute: this.props.api.getEntryAttribute(item.id, entryId),
+                entryId,
+            }));
+        });
     }
 
     render() {
@@ -161,7 +174,7 @@ export default class List extends React.PureComponent {
                                 <GridLayout
                                     styleName="grid-layout"
                                     modifier={this.getItemView}
-                                    items={this.getGridItems(entryAccessor.getKey(entry))}
+                                    items={this.gridItems[entryAccessor.getKey(entry)]}
                                     viewOnly
                                 />
                             </div>
