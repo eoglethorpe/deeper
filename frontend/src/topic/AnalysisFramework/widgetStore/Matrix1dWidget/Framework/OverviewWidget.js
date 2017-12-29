@@ -122,15 +122,29 @@ export default class Matrix1dOverview extends React.PureComponent {
         }];
     }
 
-    createExportable = () => {
-        const data = {
+    createExportable = (rows) => {
+        const excel = {
             type: 'multiple',
             titles: ['Dimension', 'Subdimension'],
         };
 
+        const report = {
+            levels: rows.map(row => ({
+                id: row.key,
+                title: row.title,
+                sublevels: row.cells.map(cell => ({
+                    id: `${row.key}-${cell.key}`,
+                    title: cell.value,
+                })),
+            })),
+        };
+
         return {
             widgetKey: this.props.widgetKey,
-            data,
+            data: {
+                excel,
+                report,
+            },
         };
     }
 
@@ -178,7 +192,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.onChange(
             newRows,
             this.createFilters(newRows),
-            this.createExportable(),
+            this.createExportable(newRows),
         );
     }
 
@@ -263,7 +277,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.onChange(
             this.state.rows,
             this.createFilters(this.state.rows),
-            this.getExportable(),
+            this.createExportable(this.state.rows),
         );
     }
 

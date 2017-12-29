@@ -96,7 +96,8 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     createExportData = (attribute) => {
-        const values = [];
+        const excelValues = [];
+        const reportValues = [];
 
         Object.keys(attribute).forEach((key) => {
             const row = attribute[key];
@@ -106,14 +107,20 @@ export default class Matrix1dOverview extends React.PureComponent {
                 if (row[cellKey]) {
                     const cellData = rowData.cells.find(c => c.key === cellKey);
 
-                    values.push([rowData.title, cellData.value]);
+                    excelValues.push([rowData.title, cellData.value]);
+                    reportValues.push(`${key}-${cellKey}`);
                 }
             });
         });
 
         return {
-            type: 'lists',
-            values,
+            excel: {
+                type: 'lists',
+                values: excelValues,
+            },
+            report: {
+                keys: reportValues,
+            },
         };
     }
 
