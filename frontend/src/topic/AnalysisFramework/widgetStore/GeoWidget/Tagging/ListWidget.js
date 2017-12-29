@@ -17,6 +17,7 @@ import {
     ModalBody,
     ModalFooter,
     ListView,
+    Table,
 } from '../../../../../public/components/View';
 import {
     iconNames,
@@ -50,6 +51,30 @@ export default class GeoTaggingList extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.tableHeaders = [
+            {
+                key: 'title',
+                label: 'Region',
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
+            },
+            {
+                key: 'actions',
+                label: 'Actions',
+                order: 2,
+                modifier: row => (
+                    <div className="actions">
+                        <TransparentDangerButton
+                            onClick={() => this.handleRemoveButtonClick(row.key)}
+                        >
+                            <span className={iconNames.close} />
+                        </TransparentDangerButton>
+                    </div>
+                ),
+            },
+        ];
+
         this.state = {
             showMapModal: false,
             values: (props.attribute && props.attribute.values) || emptyList,
@@ -69,22 +94,6 @@ export default class GeoTaggingList extends React.PureComponent {
             values,
         });
     }
-
-    mapSelectedRegions = (key, data) => (
-        <div
-            className={styles['selected-regions']}
-            key={key}
-        >
-
-            <span className={styles['region-name']}>{data.title}</span>
-            <TransparentDangerButton
-                className={styles['delete-button']}
-                onClick={() => this.handleRemoveButtonClick(key)}
-            >
-                <span className={iconNames.close} />
-            </TransparentDangerButton>
-        </div>
-    )
 
     mapRegionsList = (key, data) => (
         <div
@@ -142,7 +151,7 @@ export default class GeoTaggingList extends React.PureComponent {
                     styleName="location-button"
                     title="Click to select a Geo Area"
                 >
-                    Geo Area <i className={iconNames.globe} />
+                    Geo Area <span className={iconNames.globe} />
                 </TransparentButton>
                 <ListView
                     data={values}
@@ -172,20 +181,23 @@ export default class GeoTaggingList extends React.PureComponent {
                             onSelect={this.onMapSelect}
                             selections={values}
                         />
-                        <div styleName="search-box">
-                            <h3>Selected Regions</h3>
-                            <SelectInput
-                                showHintAndError={false}
-                                showLabel={false}
-                                placeholder="Search a location"
-                            />
+                        <div styleName="content">
+                            <div styleName="search-box">
+                                <h3>Selected Regions</h3>
+                                <SelectInput
+                                    showHintAndError={false}
+                                    showLabel={false}
+                                    placeholder="Search a location"
+                                />
+                            </div>
+                            <div styleName="regions-table">
+                                <Table
+                                    data={values}
+                                    headers={this.tableHeaders}
+                                    keyExtractor={GeoTaggingList.valueKeyExtractor}
+                                />
+                            </div>
                         </div>
-                        <ListView
-                            data={values}
-                            className={styles['region-list']}
-                            keyExtractor={GeoTaggingList.valueKeyExtractor}
-                            modifier={this.mapSelectedRegions}
-                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button
