@@ -238,7 +238,6 @@ export default class CategoryEditor extends React.PureComponent {
                 title: 'Invalid drop source',
                 message: 'Only drop from Extracted Words are valid.',
             });
-            console.warn('Drop element is not valid');
         }
     }
 
@@ -287,7 +286,6 @@ export default class CategoryEditor extends React.PureComponent {
             id: this.props.activeCategoryId,
             values: { title },
         };
-        console.warn(newCategory);
         this.props.setCategory(newCategory);
     }
 
