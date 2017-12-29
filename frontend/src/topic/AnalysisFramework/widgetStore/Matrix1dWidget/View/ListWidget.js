@@ -61,7 +61,7 @@ export default class Matrix1dList extends React.PureComponent {
         >
             <span className={styles['row-title']}>{data.title}</span>
             <ListView
-                className={styles.cell}
+                className={styles['cell-container']}
                 data={data.selectedCells || emptyList}
                 keyExtractor={Matrix1dList.rowKeyExtractor}
                 modifier={this.renderCellData}

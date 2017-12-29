@@ -50,11 +50,23 @@ export default class Matrix2dList extends React.PureComponent {
                             const sectorAttribute = subdimensionAttribute[sector.id];
 
                             if (sectorAttribute) {
+                                const sectorAttributeWithTitle = sectorAttribute.map(
+                                    (d) => {
+                                        const index = sector.subsectors.findIndex(s => s.id === d);
+
+                                        return ({
+                                            key: d,
+                                            title: (sector.subsectors[index] || {}).title,
+                                        });
+                                    },
+                                );
+
                                 selectedSectors.push({
                                     sector,
                                     dimension,
                                     subdimension,
                                     subsectors: sectorAttribute,
+                                    subsectorsWithTitle: sectorAttributeWithTitle,
                                     key: `${sector.id}-${dimension.id}-${subdimension.id}`,
                                 });
                             }

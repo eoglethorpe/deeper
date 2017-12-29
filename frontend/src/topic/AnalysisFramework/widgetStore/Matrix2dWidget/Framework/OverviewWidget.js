@@ -94,7 +94,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     addSector = () => {
         const newSector = {
-            id: randomString(),
+            id: randomString(16).toLowerCase(),
             title: '',
             tooltip: '',
             subsectors: [],
@@ -115,7 +115,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         } = this.state;
 
         const newSubsector = {
-            id: randomString(),
+            id: randomString(16).toLowerCase(),
             title: '',
         };
 
@@ -134,7 +134,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     addDimension = () => {
         const newDimension = {
-            id: randomString(),
+            id: randomString(16).toLowerCase(),
             title: '',
             tooltip: '',
             color: '#ffffff',

@@ -96,7 +96,7 @@ export default class Entries extends React.PureComponent {
         this.items = [];
         this.gridItems = {};
 
-        this.update(props.analysisFramework);
+        this.updateAnalysisFramework(props.analysisFramework);
         this.updateGridItems(props.entries);
     }
 

@@ -25,10 +25,15 @@
 }
 
 .matrix-2d-list {
+    padding: $spacing-small;
+
     .list {
+        width: 100%;
+        overflow-y: auto;
+
         .tag-unit {
             display: flex;
-            margin-bottom: $spacing-small;
+            padding-bottom: $spacing-extra-small;
 
             .tag-dimension {
                 display: flex;

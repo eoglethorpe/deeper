@@ -99,7 +99,7 @@ export default class Dimension extends React.PureComponent {
 
     addSubdimension = () => {
         const newSubdimension = {
-            id: randomString(),
+            id: randomString(16).toLowerCase(),
             title: '',
             tooltip: '',
         };

@@ -1,7 +1,6 @@
 @import '../../../../../stylesheets/base';
 
 .matrix-1d-view {
-    display: flex;
     padding: $spacing-small;
 
     .list {
@@ -19,9 +18,10 @@
 
             .cell {
                 margin-left: $spacing-extra-small;
+                word-wrap: break-word;
 
                 &:first-child {
-                    margin-left: $spacing-small;
+                    margin-left: 0;
                 }
 
                 &:not(:last-child) {
