@@ -12,10 +12,14 @@ import {
     SelectInput,
 } from '../../../../../public/components/Input';
 import {
+    unique,
+} from '../../../../../public/utils/common';
+import {
     Modal,
     ModalHeader,
     ModalBody,
     ModalFooter,
+    ListView,
 } from '../../../../../public/components/View';
 import {
     iconNames,
@@ -24,20 +28,24 @@ import RegionMap from '../../../../../common/components/RegionMap';
 
 
 const propTypes = {
-    id: PropTypes.number.isRequired,
-    entryId: PropTypes.string.isRequired,
+    // id: PropTypes.number.isRequired,
+    // entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
+    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+
 };
 
 const defaultProps = {
     attribute: undefined,
+    data: [],
 };
 
 const emptyList = [];
 
 @CSSModules(styles)
 export default class GeoTaggingList extends React.PureComponent {
+    static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -50,14 +58,26 @@ export default class GeoTaggingList extends React.PureComponent {
         };
     }
 
-    handleChange = (value) => {
-        const { api, id, entryId } = this.props;
-        api.getEntryModifier(entryId)
-            .setAttribute(id, {
-                value,
-            })
-            .apply();
+    // onMapSelect = (value) => {
+    //     console.warn(value);
+    // }
+
+    onMapSelect = (value) => {
+        console.log(value);
+        const newValues = unique(this.state.values.concat(value), v => v);
+        this.setState({
+            values: newValues,
+        });
     }
+
+    mapSelectedRegions = (key, data) => (
+        <div
+            className="selected-regions"
+            key={key}
+        >
+            {data}
+        </div>
+    )
 
     handleModalOpen = () => {
         this.setState({ showMapModal: true });
@@ -78,15 +98,9 @@ export default class GeoTaggingList extends React.PureComponent {
         this.setState({
             showMapModal: false,
         });
-
-        // this.props.onChange(this.state.values);
     }
 
     render() {
-        const {
-            attribute = {},
-        } = this.props;
-
         const {
             showMapModal,
             values,
@@ -116,11 +130,15 @@ export default class GeoTaggingList extends React.PureComponent {
                     />
                     <ModalBody>
                         <RegionMap
-                            regionId={112}
+                            styleName="map-content"
+                            regionId={1}
+                            onSelect={this.onMapSelect}
                         />
-                        <div styleName="selected-regions">
-                            Selected Regions
-                        </div>
+                        <ListView
+                            data={values}
+                            keyExtractor={GeoTaggingList.valueKeyExtractor}
+                            modifier={this.mapSelectedRegions}
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button
