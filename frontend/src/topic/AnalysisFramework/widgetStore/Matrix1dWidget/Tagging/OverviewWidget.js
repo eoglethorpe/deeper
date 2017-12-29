@@ -83,7 +83,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     createHighlightColor = (attribute) => {
         let color;
-        Object.keys(attribute).forEach((key) => {
+        Object.keys(attribute || {}).forEach((key) => {
             const row = attribute[key];
 
             const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);
