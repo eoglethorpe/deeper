@@ -31,7 +31,7 @@ import {
 import { iconNames } from '../../../../../common/constants';
 import update from '../../../../../public/utils/immutable-update';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string,

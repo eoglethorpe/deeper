@@ -31,6 +31,7 @@ export default class NumberViewList extends React.PureComponent {
             >
                 <Numeral
                     separator=" "
+                    invalidText="-"
                     showThousandSeparator
                     precision={null}
                     value={value}

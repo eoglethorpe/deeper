@@ -1,0 +1,91 @@
+@import '../../../../../stylesheets/base';
+
+.matrix-1d-list {
+    display: flex;
+    padding: $spacing-small;
+
+    .list {
+        width: 100%;
+        overflow-y: auto;
+
+        .row {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: $spacing-extra-small;
+
+            .row-title {
+                font-weight: $font-weight-bold;
+            }
+
+            .cell {
+                margin-left: $spacing-extra-small;
+
+                &:first-child {
+                    margin-left: $spacing-small;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ',';
+                    }
+                }
+            }
+        }
+    }
+}
+
+.matrix-cell {
+    flex-shrink: 0;
+    margin: $spacing-extra-small;
+    background-color: $color-background;
+    padding: $spacing-small $spacing-medium;
+    color: $color-text;
+    user-select: none;
+
+    &.active {
+        background-color: $color-accent;
+        color: $color-text-on-accent;
+    }
+}
+
+.matrix-row {
+    display: flex;
+    align-items: center;
+    border: $width-separator-thin solid $color-separator;
+
+    .title {
+        flex-basis: $width-matrix-1d-title;
+        flex-shrink: 0;
+        padding: $spacing-medium;
+    }
+
+    .cells {
+        display: flex;
+        flex-basis: 100%;
+        flex-grow: 1;
+        flex-wrap: wrap;
+    }
+
+    .action-buttons {
+        flex-shrink: 0;
+    }
+}
+
+.tagging-matrix-1d,
+.framework-matrix-1d {
+    width: 100%;
+}
+
+.tagging-matrix-1d {
+    .matrix-row {
+        border: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+
+        .matrix-cell {
+            outline: 0;
+            border: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+    }
+}

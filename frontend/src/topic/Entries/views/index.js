@@ -278,7 +278,6 @@ export default class Entries extends React.PureComponent {
         } else {
             this.items = [];
         }
-        console.warn(this.items);
 
         if (analysisFramework.filters) {
             this.filters = analysisFramework.filters.filter(

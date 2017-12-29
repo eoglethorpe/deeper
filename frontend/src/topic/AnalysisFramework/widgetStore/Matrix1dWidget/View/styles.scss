@@ -1,0 +1,35 @@
+@import '../../../../../stylesheets/base';
+
+.matrix-1d-view {
+    display: flex;
+    padding: $spacing-small;
+
+    .list {
+        width: 100%;
+        overflow-y: auto;
+
+        .row {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: $spacing-extra-small;
+
+            .row-title {
+                font-weight: $font-weight-bold;
+            }
+
+            .cell {
+                margin-left: $spacing-extra-small;
+
+                &:first-child {
+                    margin-left: $spacing-small;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ',';
+                    }
+                }
+            }
+        }
+    }
+}
