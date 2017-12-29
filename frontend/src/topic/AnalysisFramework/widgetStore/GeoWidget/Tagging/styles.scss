@@ -27,7 +27,9 @@
 
 .map-modal {
     @extend %modal;
-
+    .map-content {
+        height: 800px;
+    }
     .selected-regions {
         display: flex;
         background-color: $color-foreground;
