@@ -17,16 +17,21 @@
                 font-weight: $font-weight-bold;
             }
 
-            .cell {
-                margin-left: $spacing-extra-small;
+            .cell-container {
+                margin-left: $spacing-small;
 
-                &:first-child {
-                    margin-left: $spacing-small;
-                }
+                .cell {
+                    margin-left: $spacing-extra-small;
+                    word-wrap: break-word;
 
-                &:not(:last-child) {
-                    &::after {
-                        content: ',';
+                    &:first-child {
+                        margin-left: 0;
+                    }
+
+                    &:not(:last-child) {
+                        &::after {
+                            content: ',';
+                        }
                     }
                 }
             }

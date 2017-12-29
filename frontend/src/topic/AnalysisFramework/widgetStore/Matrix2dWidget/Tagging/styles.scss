@@ -23,3 +23,34 @@
         }
     }
 }
+
+.matrix-2d-list {
+    .list {
+        .tag-unit {
+            display: flex;
+            margin-bottom: $spacing-small;
+
+            .tag-dimension {
+                display: flex;
+                flex-basis: 50%;
+                flex-direction: column;
+                font-weight: $font-weight-bold;
+
+                .tag-sub-dimension {
+                    font-weight: $font-weight-normal;
+                }
+            }
+
+            .tag-sector {
+                display: flex;
+                flex-basis: 50%;
+                flex-direction: column;
+
+                .tag-sector-select {
+                    padding: 0 $spacing-extra-small;
+                    width: 160px;
+                }
+            }
+        }
+    }
+}

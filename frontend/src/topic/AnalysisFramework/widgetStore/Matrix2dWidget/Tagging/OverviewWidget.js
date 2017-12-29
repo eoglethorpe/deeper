@@ -84,6 +84,43 @@ export default class Matrix2dOverview extends React.PureComponent {
         return !!subsectors;
     }
 
+    handleCellClick = (dimensionId, subdimensionId, sectorId) => {
+        const {
+            attribute,
+            api,
+            id,
+            // filters,
+        } = this.props;
+
+        let settings;
+        if (this.isCellActive(dimensionId, subdimensionId, sectorId)) {
+            settings = { $auto: {
+                [dimensionId]: { $auto: {
+                    [subdimensionId]: { $auto: {
+                        $unset: [sectorId],
+                    } },
+                } },
+            } };
+        } else {
+            settings = { $auto: {
+                [dimensionId]: { $auto: {
+                    [subdimensionId]: { $auto: {
+                        [sectorId]: { $auto: {
+                            $set: [],
+                        } },
+                    } },
+                } },
+            } };
+        }
+
+        const newAttribute = update(attribute, settings);
+
+        api.getEntryModifier()
+            .setAttribute(id, newAttribute)
+        // .setFilterData(filters[0].id, this.getFilterData(newAttribute))
+            .apply();
+    }
+
     handleCellDrop = (dimensionId, subdimensionId, sectorId, color, e) => {
         const text = e.dataTransfer.getData('text/plain');
 
@@ -203,6 +240,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                     {
                         sectors.map(sector => (
                             <td
+                                role="gridcell"
                                 onDrop={(e) => {
                                     this.handleCellDrop(
                                         dimension.id,
@@ -213,6 +251,14 @@ export default class Matrix2dOverview extends React.PureComponent {
                                     );
                                 }}
                                 onDragOver={this.handleCellDragover}
+                                onClick={() =>
+                                    this.handleCellClick(
+                                        dimension.id,
+                                        subdimension.id,
+                                        sector.id,
+                                        dimension.color,
+                                    )
+                                }
                                 key={sector.id}
                                 style={
                                     this.isCellActive(

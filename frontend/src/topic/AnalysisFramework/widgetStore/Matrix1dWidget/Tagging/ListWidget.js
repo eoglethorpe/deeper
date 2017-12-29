@@ -29,8 +29,8 @@ export default class Matrix1dList extends React.PureComponent {
     getSelectedRowsTitles = (data, attribute) => {
         const selectedRows = [];
         data.forEach((row) => {
-            const selectedCells = [];
             const attributeRow = attribute[row.key];
+            const selectedCells = [];
 
             if (attributeRow) {
                 row.cells.forEach((cell) => {
@@ -61,7 +61,7 @@ export default class Matrix1dList extends React.PureComponent {
         >
             <span className={styles['row-title']}>{data.title}</span>
             <ListView
-                className={styles.cell}
+                className={styles['cell-container']}
                 data={data.selectedCells || emptyList}
                 keyExtractor={Matrix1dList.rowKeyExtractor}
                 modifier={this.renderCellData}
