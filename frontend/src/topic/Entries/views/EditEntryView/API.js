@@ -140,6 +140,43 @@ class EntryModifier {
         return this;
     }
 
+    setExportData(exportableId, exportData) {
+        if (!this.entry) {
+            return this;
+        }
+
+        let index = -1;
+
+        if (!this.values.exportData) {
+            index = -1;
+        } else {
+            index = this.values.exportData.findIndex(attr => attr.exportable === exportableId);
+        }
+
+        let settings;
+        if (index === -1) {
+            settings = {
+                exportData: { $autoArray: {
+                    $push: [{
+                        exportable: exportableId,
+                        data: exportData,
+                    }],
+                } },
+            };
+        } else {
+            settings = {
+                exportData: {
+                    [index]: { $merge: {
+                        data: exportData,
+                    } },
+                },
+            };
+        }
+
+        this.values = update(this.values, settings);
+        return this;
+    }
+
     apply() {
         if (this.entry) {
             this.changeEntryValues(
@@ -190,6 +227,13 @@ class EntryBuilder {
 
     setHighlightColor(color) {
         this.color = color;
+    }
+
+    addExportData(exportableId, exportData) {
+        this.exportData.push({
+            exportable: exportableId,
+            data: exportData,
+        });
         return this;
     }
 

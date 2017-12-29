@@ -122,6 +122,32 @@ export default class Matrix1dOverview extends React.PureComponent {
         }];
     }
 
+    createExportable = (rows) => {
+        const excel = {
+            type: 'multiple',
+            titles: ['Dimension', 'Subdimension'],
+        };
+
+        const report = {
+            levels: rows.map(row => ({
+                id: row.key,
+                title: row.title,
+                sublevels: row.cells.map(cell => ({
+                    id: `${row.key}-${cell.key}`,
+                    title: cell.value,
+                })),
+            })),
+        };
+
+        return {
+            widgetKey: this.props.widgetKey,
+            data: {
+                excel,
+                report,
+            },
+        };
+    }
+
     handleColorBoxClick = (key) => {
         const { rows } = this.state;
         const index = rows.findIndex(d => d.key === key);
@@ -149,6 +175,10 @@ export default class Matrix1dOverview extends React.PureComponent {
         });
     }
 
+    handleEdit = () => {
+        this.setState({ showEditModal: true });
+    }
+
     handleRowDataChange = (key, cells) => {
         const { rows } = this.state;
         const rowIndex = rows.findIndex(d => d.key === key);
@@ -158,9 +188,12 @@ export default class Matrix1dOverview extends React.PureComponent {
             },
         };
         const newRows = update(rows, settings);
-        const filters = this.createFilters(newRows);
 
-        this.props.onChange(newRows, filters);
+        this.props.onChange(
+            newRows,
+            this.createFilters(newRows),
+            this.createExportable(newRows),
+        );
     }
 
     handleRowRemoveButtonClick = (key) => {
@@ -238,9 +271,14 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({ showEditModal: false });
-        const filters = this.createFilters(this.state.rows);
-        this.props.onChange(this.state.rows, filters);
+        this.setState({
+            showEditModal: false,
+        });
+        this.props.onChange(
+            this.state.rows,
+            this.createFilters(this.state.rows),
+            this.createExportable(this.state.rows),
+        );
     }
 
     SortableEditRow = SortableElement(({ value: { data, key } }) => (
