@@ -1,19 +1,16 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './styles.scss';
 
 import {
     Button,
     PrimaryButton,
     TransparentButton,
+    TransparentDangerButton,
 } from '../../../../../public/components/Action';
 import {
     SelectInput,
 } from '../../../../../public/components/Input';
-import {
-    unique,
-} from '../../../../../public/utils/common';
 import {
     Modal,
     ModalHeader,
@@ -26,10 +23,11 @@ import {
 } from '../../../../../common/constants';
 import RegionMap from '../../../../../common/components/RegionMap';
 
+import styles from './styles.scss';
 
 const propTypes = {
-    // id: PropTypes.number.isRequired,
-    // entryId: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
@@ -54,30 +52,46 @@ export default class GeoTaggingList extends React.PureComponent {
 
         this.state = {
             showMapModal: false,
-            values: props.data || emptyList,
+            values: (props.attribute && props.attribute.values) || emptyList,
         };
     }
 
-    // onMapSelect = (value) => {
-    //     console.warn(value);
-    // }
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            this.setState({
+                values: (nextProps.attribute && nextProps.attribute.values) || emptyList,
+            });
+        }
+    }
 
-    onMapSelect = (value) => {
-        console.log(value);
-        const newValues = unique(this.state.values.concat(value), v => v);
+    onMapSelect = (values) => {
         this.setState({
-            values: newValues,
+            values,
         });
     }
 
     mapSelectedRegions = (key, data) => (
         <div
-            className="selected-regions"
+            className={styles['selected-regions']}
             key={key}
         >
-            {data}
+
+            <span className={styles['region-name']}>{data.title}</span>
+            <TransparentDangerButton
+                className={styles['delete-button']}
+                onClick={() => this.handleRemoveButtonClick(key)}
+            >
+                <span className={iconNames.close} />
+            </TransparentDangerButton>
         </div>
     )
+
+    handleRemoveButtonClick = (key) => {
+        const newValues = this.state.values.filter(d => d.key !== key);
+        this.setState({
+            values: newValues,
+        });
+    }
 
     handleModalOpen = () => {
         this.setState({ showMapModal: true });
@@ -95,6 +109,12 @@ export default class GeoTaggingList extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
+        const { api, id, entryId } = this.props;
+        api.getEntryModifier(entryId)
+            .setAttribute(id, {
+                values: this.state.values,
+            })
+            .apply();
         this.setState({
             showMapModal: false,
         });
@@ -133,12 +153,24 @@ export default class GeoTaggingList extends React.PureComponent {
                             styleName="map-content"
                             regionId={1}
                             onSelect={this.onMapSelect}
+                            selections={values}
                         />
+                        <div styleName="search-box">
+                            <h3>Selected Regions</h3>
+                            <SelectInput
+                                showHintAndError={false}
+                                showLabel={false}
+                                placeholder="Search a location"
+                            />
+                        </div>
                         <ListView
                             data={values}
+                            className={styles['region-list']}
                             keyExtractor={GeoTaggingList.valueKeyExtractor}
                             modifier={this.mapSelectedRegions}
-                        />
+                        >
+                            <h3>Selected Regions</h3>
+                        </ListView>
                     </ModalBody>
                     <ModalFooter>
                         <Button
