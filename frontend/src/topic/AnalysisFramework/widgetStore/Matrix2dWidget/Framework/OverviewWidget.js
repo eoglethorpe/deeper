@@ -16,7 +16,7 @@ import {
     List,
 } from '../../../../../public/components/View';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 import Renderer from './Renderer';
 import Handler from './Handler';
