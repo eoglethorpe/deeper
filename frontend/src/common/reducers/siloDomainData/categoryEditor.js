@@ -3,7 +3,7 @@ import update from '../../../public/utils/immutable-update';
 
 // TYPE
 
-export const SET_CATEGORY_EDITOR = 'silo-domain-data/SET_CATEGORY_EDITOR';
+export const CE__SET_CATEGORY_EDITOR = 'silo-domain-data/CE__SET_CATEGORY_EDITOR';
 export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
 export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
 export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
@@ -18,7 +18,7 @@ export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_MANUAL
 // ACTION-CREATOR
 
 export const setCategoryEditorAction = ({ categoryEditor }) => ({
-    type: SET_CATEGORY_EDITOR,
+    type: CE__SET_CATEGORY_EDITOR,
     categoryEditor,
 });
 
@@ -173,13 +173,13 @@ const ceAddNewCategory = (state, action) => {
 
     const settings = {
         categoryEditorView: {
-            [categoryEditorId]: { $auto: {
+            [categoryEditorId]: {
                 pristine: { $set: false },
                 data: { $auto: {
                     activeCategoryId: { $set: id },
                     categories: { $autoUnshift: [newCategory] },
                 } },
-            } },
+            },
         },
     };
     return update(state, settings);
@@ -611,7 +611,7 @@ const ceAddSubcategoryNGram = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [SET_CATEGORY_EDITOR]: setCategoryEditor,
+    [CE__SET_CATEGORY_EDITOR]: setCategoryEditor,
     [CE__ADD_NEW_CATEGORY]: ceAddNewCategory,
     [CE__SET_ACTIVE_CATEGORY_ID]: ceSetActiveCategoryId,
     [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,
