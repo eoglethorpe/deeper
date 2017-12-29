@@ -168,9 +168,7 @@ export default class GeoTaggingList extends React.PureComponent {
                             className={styles['region-list']}
                             keyExtractor={GeoTaggingList.valueKeyExtractor}
                             modifier={this.mapSelectedRegions}
-                        >
-                            <h3>Selected Regions</h3>
-                        </ListView>
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button

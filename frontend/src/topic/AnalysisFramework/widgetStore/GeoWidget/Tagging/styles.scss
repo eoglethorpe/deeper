@@ -46,16 +46,24 @@
         padding: $spacing-medium;
 
         .selected-regions {
+            @include shadow-small;
             display: flex;
             margin-right: $spacing-medium;
             background-color: $color-background-disabled;
             padding: $spacing-extra-small;
+            font-size: $font-size-medium;
 
             .region-name {
                 display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: $font-size-large;
+            }
+
+            .delete-button {
+                margin-left: $spacing-small;
+                padding: 0 $spacing-small;
+
+                span {
+                    font-size: $font-size-small;
+                }
             }
         }
 
