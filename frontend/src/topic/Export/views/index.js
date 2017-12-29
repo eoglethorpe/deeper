@@ -3,26 +3,19 @@ import React from 'react';
 
 import styles from './styles.scss';
 import {
-    Form,
-    RadioInput,
-    Checkbox,
-} from '../../../public/components/Input';
-import {
-    TransparentButton,
+    Button,
 } from '../../../public/components/Action';
 import {
-    ListView,
+    List,
 } from '../../../public/components/View';
-import {
-    iconNames,
-} from '../../../common/constants';
+import update from '../../../public/utils/immutable-update';
 
-import FilterSection from '../components/FilterSection';
-import StructureSection from '../components/StructureSection';
-import wordLogo from '../../../img/ms-word.svg';
-import excelLogo from '../../../img/ms-excel.svg';
-import pdfLogo from '../../../img/pdf-logo.svg';
-import jsonLogo from '../../../img/json-logo.svg';
+import wordIcon from '../../../img/word.svg';
+import excelIcon from '../../../img/excel.svg';
+import pdfIcon from '../../../img/pdf.svg';
+import jsonIcon from '../../../img/json.svg';
+
+import BasicInformationInputs from '../components/BasicInformationInputs';
 
 const propTypes = {
 };
@@ -40,10 +33,14 @@ export default class Export extends React.PureComponent {
         super(props);
 
         this.state = {
-            buttonIsHovered: false,
+            activeExportTypeKey: undefined,
+            values: {
+                excerpt: '',
+                createdBy: [],
+                createdAt: {},
+            },
         };
 
-        this.elements = [];
         this.options = [
             {
                 key: 'generic',
@@ -51,126 +48,154 @@ export default class Export extends React.PureComponent {
             },
             {
                 key: 'geo',
-                label: 'GEO',
-            },
-            {
-                key: 'briefingNote',
-                label: 'Briefing Note',
+                label: 'Geo',
             },
         ];
 
-        this.exports = [
+        this.exportTypes = [
             {
                 key: 'word',
-                img: wordLogo,
-                preview: true,
-            },
-            {
-                key: 'excel',
-                img: excelLogo,
+                img: wordIcon,
+                title: 'DOCX',
             },
             {
                 key: 'pdf',
-                img: pdfLogo,
-                preview: true,
+                img: pdfIcon,
+                title: 'PDF',
+            },
+            {
+                key: 'excel',
+                title: 'XLXS',
+                img: excelIcon,
             },
             {
                 key: 'json',
-                img: jsonLogo,
+                img: jsonIcon,
+                title: 'JSON',
             },
         ];
     }
 
-    getExportButton = (key, data) => (
-        <div
+    getExportTypeClassName = (key) => {
+        const {
+            activeExportTypeKey,
+        } = this.state;
+
+        const classNames = [styles['export-type-select']];
+
+        if (activeExportTypeKey === key) {
+            classNames.push(styles.active);
+        }
+
+        return classNames.join(' ');
+    }
+
+    exportTypeKeyExtractor = d => d.key
+
+    handleExportTypeSelectButtonClick = (key) => {
+        this.setState({
+            activeExportTypeKey: key,
+        });
+    }
+
+    handleFilterInputsChange = (newValues) => {
+        const {
+            values: oldValues,
+        } = this.state;
+
+        const settings = {
+            $merge: newValues,
+        };
+
+        const values = update(oldValues, settings);
+
+        this.setState({
+            values,
+        });
+    }
+
+    renderExportType = (key, data) => (
+        <button
+            className={this.getExportTypeClassName(key)}
             key={key}
-            className={styles['export-button']}
+            title={data.title}
+            onClick={() => { this.handleExportTypeSelectButtonClick(key); }}
         >
-            <img src={data.img} alt={key} />
-            <div
-                className={styles['action-buttons']}
-            >
-                <TransparentButton
-                    onClick={() => { this.handleExportButtonClick(key); }}
-                >
-                    Export
-                </TransparentButton>
-                {
-                    data.preview && (
-                        <TransparentButton
-                            onClick={() => { this.handlePreviewButtonClick(key); }}
-                        >
-                            Preview
-                        </TransparentButton>
-                    )
-                }
-            </div>
-        </div>
+            <img
+                className={styles.image}
+                src={data.img}
+                alt={data.title}
+            />
+        </button>
     )
 
-    handleExportButtonClick = (key) => {
-        console.log('exporting', key);
-    }
-
-    handlePreviewButtonClick = (key) => {
-        console.log('previewing', key);
-    }
-
     render() {
+        const {
+            values,
+        } = this.state;
+
         return (
             <div styleName="export">
-                <div styleName="preview-container">
-                    <div><h1>No Preview Available</h1></div>
-                </div>
-                <Form
-                    styleName="form-container"
-                    elements={this.elements}
-                >
-                    <div styleName="left">
-                        <div styleName="export-text">
-                            <h2>Export</h2>
-                        </div>
-                        <div styleName="filters-text">
-                            <h2>Filters</h2>
-                        </div>
+                <header styleName="header">
+                    <h2>Export</h2>
+                    <div styleName="action-buttons">
+                        <Button>Show preview</Button>
+                        <Button>Start export</Button>
                     </div>
-                    <div styleName="right">
-                        <header
-                            styleName="header"
-                        >
-                            <div styleName="export-type">
-                                <RadioInput
-                                    name="export-type"
-                                    selected={'geo'}
-                                    options={this.options}
+                </header>
+                <div styleName="main-content">
+                    <section
+                        styleName="export-types"
+                    >
+                        <header styleName="header">
+                            <h4 styleName="heading">Select export type</h4>
+                        </header>
+                        <div styleName="content">
+                            <div styleName="export-type-select-list">
+                                <List
+                                    styleName="export-type-select-list"
+                                    data={this.exportTypes}
+                                    modifier={this.renderExportType}
+                                    keyExtractor={this.exportTypeKeyExtractor}
                                 />
                             </div>
-                            <ListView
-                                styleName="export-buttons"
-                                data={this.exports}
-                                modifier={this.getExportButton}
-                                keyExtractor={Export.exportButtonKeyExtractor}
-                            />
+                            <div styleName="export-type-options">
+                                Export type options
+                            </div>
+                        </div>
+                    </section>
+                    <section
+                        styleName="filters"
+                    >
+                        <header styleName="header">
+                            <h4>Select filters</h4>
                         </header>
-                        <div styleName="check-btn">
-                            <Checkbox
-                                label="Include de-coupled data"
-                            />
-                            <i
-                                className={iconNames.help}
-                                title="Note that by selecting this option it can greaty increase the amount of time to export"
-                            />
-                        </div>
                         <div styleName="content">
-                            <FilterSection
-                                styleName="filter-section"
-                            />
-                            <StructureSection
-                                styleName="structure-section"
-                            />
+                            <div styleName="left">
+                                <div styleName="basic-information">
+                                    <BasicInformationInputs
+                                        onChange={this.handleFilterInputsChange}
+                                        values={values}
+                                    />
+                                </div>
+                                <div styleName="entry-attributes">
+                                    Entry attributes
+                                </div>
+                            </div>
+                            <div styleName="right">
+                                <div styleName="lead-attributes">
+                                    Lead attributes
+                                </div>
+                                <div styleName="leads">
+                                    Leads
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </Form>
+                    </section>
+                    <section styleName="preview">
+                        Export preview
+                    </section>
+                </div>
             </div>
         );
     }

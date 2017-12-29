@@ -42,8 +42,13 @@ const propTypes = {
     activeProject: PropTypes.number.isRequired,
     className: PropTypes.string,
     setLeadFilterOptions: PropTypes.func.isRequired,
-    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
-    value:  PropTypes.object.isRequired, // eslint-disable-line
+
+    // eslint-disable-next-line react/forbid-prop-types
+    leadFilterOptions: PropTypes.object.isRequired,
+
+    // eslint-disable-next-line react/forbid-prop-types
+    value: PropTypes.object.isRequired,
+
     setLeadPageFilter: PropTypes.func.isRequired,
     unsetLeadPageFilter: PropTypes.func.isRequired,
 };
