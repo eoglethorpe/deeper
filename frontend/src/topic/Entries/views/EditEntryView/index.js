@@ -272,7 +272,7 @@ export default class EditEntryView extends React.PureComponent {
                     const entries = response.results.entries;
                     const diffs = calcEntriesDiff(this.props.entries, entries);
                     const applicableDiffCount = getApplicableDiffCount(diffs);
-                    if (diffs > 0) {
+                    if (applicableDiffCount > 0) {
                         notify.send({
                             type: notify.type.WARNING,
                             title: `${applicableDiffCount} entries was updated in server.`,
