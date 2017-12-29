@@ -1,5 +1,6 @@
 import {
     POST,
+    PATCH,
     wsEndpoint,
     PUT,
     commonHeaderForPost,
@@ -46,6 +47,12 @@ export const createParamsForCeClone = data => ({
 
 export const createParamsForCeEdit = data => ({
     method: PUT,
+    headers: commonHeaderForPost,
+    body: JSON.stringify(data),
+});
+
+export const createParamsForCeViewPatch = data => ({
+    method: PATCH,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });

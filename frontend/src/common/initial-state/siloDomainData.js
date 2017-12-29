@@ -111,15 +111,21 @@ const initialSiloDomainData = {
     //     subCategories: <SubCategory>[],
     // }
     categoryEditorView: {
-        activeCategoryId: undefined,
-        categories: [
-            // {
-            //     id: <string>,
-            //     title: <string>,
-            //     selectedSubCategorie: <string>[] : SubCategory.id,
-            //     subCategories: <SubCategory>[],
-            // }
-        ],
+        1: {
+            title: '',
+            versionId: 0,
+            data: {
+                activeCategoryId: undefined,
+                categories: [
+                    // {
+                    //     id: <string>,
+                    //     title: <string>,
+                    //     selectedSubCategorie: <string>[] : SubCategory.id,
+                    //     subCategories: <SubCategory>[],
+                    // }
+                ],
+            },
+        },
     },
 };
 

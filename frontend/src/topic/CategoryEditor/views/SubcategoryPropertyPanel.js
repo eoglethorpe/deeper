@@ -32,14 +32,15 @@ const propTypes = {
     removeSelectedSubcategory: PropTypes.func.isRequired,
     removeSubcategoryNGram: PropTypes.func.isRequired,
     onNewManualNGram: PropTypes.func.isRequired,
+    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     subcategory: undefined,
 };
 
-const mapStateToProps = state => ({
-    subcategory: selectedSubcategorySelector(state),
+const mapStateToProps = (state, props) => ({
+    subcategory: selectedSubcategorySelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -120,6 +121,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         updateSelectedSubcategory({
             ...subcategory,
+            categoryEditorId: this.props.match.params.categoryEditorId,
             title: value,
         });
     };
@@ -132,16 +134,22 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         updateSelectedSubcategory({
             ...subcategory,
+            categoryEditorId: this.props.match.params.categoryEditorId,
             description: value,
         });
     };
 
     handleSubcategoryRemove = () => {
-        this.props.removeSelectedSubcategory();
+        this.props.removeSelectedSubcategory({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+        });
     };
 
     handleNgramRemove = (ngram) => {
-        this.props.removeSubcategoryNGram(ngram);
+        this.props.removeSubcategoryNGram({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            ngram,
+        });
     }
 
     renderNGramSelect = (key, data, i) => (

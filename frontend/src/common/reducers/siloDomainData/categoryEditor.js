@@ -3,6 +3,7 @@ import update from '../../../public/utils/immutable-update';
 
 // TYPE
 
+export const CE__SET_CATEGORY_EDITOR = 'silo-domain-data/CE__SET_CATEGORY_EDITOR';
 export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
 export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
 export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
@@ -16,56 +17,76 @@ export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_MANUAL
 
 // ACTION-CREATOR
 
-export const addNewCategoryAction = ({ id, title }) => ({
+export const setCategoryEditorAction = ({ categoryEditor }) => ({
+    type: CE__SET_CATEGORY_EDITOR,
+    categoryEditor,
+});
+
+export const addNewCategoryAction = ({ categoryEditorId, id, title }) => ({
     type: CE__ADD_NEW_CATEGORY,
+    categoryEditorId,
     id,
     title,
 });
 
-export const setActiveCategoryIdAction = id => ({
+export const setActiveCategoryIdAction = ({ categoryEditorId, id }) => ({
     type: CE__SET_ACTIVE_CATEGORY_ID,
+    categoryEditorId,
     id,
 });
 
-export const addNewSubcategoryAction = ({ level, id, title }) => ({
+export const addNewSubcategoryAction = ({ categoryEditorId, level, id, title }) => ({
     type: CE__ADD_NEW_SUBCATEGORY,
+    categoryEditorId,
     level,
     id,
     title,
 });
 
-export const updateSelectedSubcategoriesAction = ({ level, subcategoryId }) => ({
+export const updateSelectedSubcategoriesAction = ({
+    categoryEditorId, level, subcategoryId,
+}) => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORIES,
+    categoryEditorId,
     level,
     subcategoryId,
 });
 
-export const updateSelectedSubcategoryAction = ({ title, description, ngrams, subcategories }) => ({
+export const updateSelectedSubcategoryAction = ({
+    categoryEditorId, title, description, ngrams, subcategories,
+}) => ({
     type: CE__UPDATE_SELECTED_SUBCATEGORY,
+    categoryEditorId,
     title,
     description,
     ngrams,
     subcategories,
 });
 
-export const removeSelectedSubcategoryAction = () => ({
+export const removeSelectedSubcategoryAction = ({ categoryEditorId }) => ({
     type: CE__REMOVE_SELECTED_SUBCATEGORY,
+    categoryEditorId,
 });
 
-export const addSubcategoryNGramAction = ({ level, subcategoryId, ngram }) => ({
+export const addSubcategoryNGramAction = ({
+    categoryEditorId, level, subcategoryId, ngram,
+}) => ({
     type: CE__ADD_SUBCATEGORY_NGRAM,
+    categoryEditorId,
     level,
     subcategoryId,
     ngram, // n, keyword
 });
 
-export const removeSubcategoryNGramAction = ngram => ({
+export const removeSubcategoryNGramAction = ({ categoryEditorId, ngram }) => ({
     type: CE__REMOVE_SUBCATEGORY_NGRAM,
+    categoryEditorId,
     ngram, // n, keyword
 });
 
-export const addManualSubcategoryNGramAction = ngram => ({
+export const addManualSubcategoryNGramAction = ({ categoryEditorId, ngram }) => ({
     type: CE__ADD_MANUAL_SUBCATEGORY_NGRAM,
+    categoryEditorId,
     ngram, // n, keyword
 });
 
@@ -123,8 +144,26 @@ const buildSettings = (indices, action, value, wrapper) => (
 
 // REDUCER
 
+const setCategoryEditor = (state, action) => {
+    const { categoryEditor: { id, data, versionId, title } } = action;
+
+    const settings = {
+        categoryEditorView: {
+            [id]: { $auto: {
+                id: { $set: id },
+                data: { $set: data },
+                title: { $set: title },
+                versionId: { $set: versionId },
+                pristine: { $set: true },
+            } },
+        },
+    };
+
+    return update(state, settings);
+};
+
 const ceAddNewCategory = (state, action) => {
-    const { id, title } = action;
+    const { categoryEditorId, id, title } = action;
     const newCategory = {
         id,
         title,
@@ -134,26 +173,41 @@ const ceAddNewCategory = (state, action) => {
 
     const settings = {
         categoryEditorView: {
-            activeCategoryId: { $set: id },
-            categories: { $autoUnshift: [newCategory] },
+            [categoryEditorId]: {
+                pristine: { $set: false },
+                data: { $auto: {
+                    activeCategoryId: { $set: id },
+                    categories: { $autoUnshift: [newCategory] },
+                } },
+            },
         },
     };
     return update(state, settings);
 };
 
 const ceSetActiveCategoryId = (state, action) => {
-    const { id } = action;
+    const { categoryEditorId, id } = action;
     const settings = {
         categoryEditorView: {
-            activeCategoryId: { $set: id },
+            [categoryEditorId]: { $auto: {
+                data: { $auto: {
+                    activeCategoryId: { $set: id },
+                } },
+            } },
         },
     };
     return update(state, settings);
 };
 
 const ceUpdateSelectedSubcategories = (state, action) => {
-    const { level, subcategoryId } = action;
-    const { categoryEditorView } = state;
+    const { categoryEditorId, level, subcategoryId } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
     const {
         categories,
         activeCategoryId,
@@ -167,21 +221,31 @@ const ceUpdateSelectedSubcategories = (state, action) => {
 
     const settings = {
         categoryEditorView: {
-            categories: {
-                [categoryIndex]: {
-                    selectedSubcategories: {
-                        $splice: [[level, length, subcategoryId]],
+            [categoryEditorId]: { $auto: {
+                data: { $auto: {
+                    categories: {
+                        [categoryIndex]: {
+                            selectedSubcategories: {
+                                $splice: [[level, length, subcategoryId]],
+                            },
+                        },
                     },
-                },
-            },
+                } },
+            } },
         },
     };
     return update(state, settings);
 };
 
 const ceAddNewSubcategory = (state, action) => {
-    const { level, id, title } = action;
-    const { categoryEditorView } = state;
+    const { categoryEditorId, level, id, title } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
     const { categories, activeCategoryId } = categoryEditorView;
 
     const newSubcategory = {
@@ -206,22 +270,38 @@ const ceAddNewSubcategory = (state, action) => {
         wrapper,
     );
     const settings = {
-        categoryEditorView: { categories: categoriesSettings },
+        categoryEditorView: {
+            [categoryEditorId]: {
+                pristine: { $set: false },
+                data: {
+                    categories: categoriesSettings,
+                },
+            },
+        },
     };
 
     // Set new category as selected category
     const selectedCategory = categories[indices[0]];
     const length = selectedCategory.selectedSubcategories.length;
-    settings.categoryEditorView.categories[indices[0]].selectedSubcategories = {
-        $splice: [[level, length, id]],
-    };
+
+    settings
+        .categoryEditorView[categoryEditorId]
+        .data.categories[indices[0]].selectedSubcategories = {
+            $splice: [[level, length, id]],
+        };
 
     return update(state, settings);
 };
 
 const ceUpdateSelectedSubcategory = (state, action) => {
-    const { title, description, ngrams, subcategories } = action;
-    const { categoryEditorView } = state;
+    const { categoryEditorId, title, description, ngrams, subcategories } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
     const {
         categories,
         activeCategoryId,
@@ -248,14 +328,26 @@ const ceUpdateSelectedSubcategory = (state, action) => {
     );
     const settings = {
         categoryEditorView: {
-            categories: categoriesSettings,
+            [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
+                data: { $auto: {
+                    categories: categoriesSettings,
+                } },
+            } },
         },
     };
     return update(state, settings);
 };
 
-const ceRemoveSelectedSubcategory = (state) => {
-    const { categoryEditorView } = state;
+const ceRemoveSelectedSubcategory = (state, action) => {
+    const { categoryEditorId } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
     const {
         categories,
         activeCategoryId,
@@ -291,32 +383,42 @@ const ceRemoveSelectedSubcategory = (state) => {
     );
     const settings = {
         categoryEditorView: {
-            categories: categoriesSettings,
+            [categoryEditorId]: {
+                pristine: { $set: false },
+                data: {
+                    categories: categoriesSettings,
+                },
+            },
         },
     };
 
     // Set parent as selected category (TODO: maybe siblings)
-    settings.categoryEditorView.categories[indices[0]].selectedSubcategories = {
-        $splice: [
-            newSelectedSubCategoryId
-                ? [indices.length - 1, 1, newSelectedSubCategoryId]
-                : [indices.length - 1],
-        ],
-    };
+    settings
+        .categoryEditorView[categoryEditorId]
+        .data.categories[indices[0]].selectedSubcategories = {
+            $splice: [
+                newSelectedSubCategoryId
+                    ? [indices.length - 1, 1, newSelectedSubCategoryId]
+                    : [indices.length - 1],
+            ],
+        };
 
     return update(state, settings);
 };
 
 const ceRemoveSubcategoryNGram = (state, action) => {
     const {
-        categoryEditorView: {
-            categories,
-            activeCategoryId,
-        },
-    } = state;
-    const {
+        categoryEditorId,
         ngram: { n: ngramN, keyword: ngramKeyword },
     } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
+    const { categories, activeCategoryId } = categoryEditorView;
 
     const indices = getIndicesFromSelectedCategories(
         categories,
@@ -345,7 +447,12 @@ const ceRemoveSubcategoryNGram = (state, action) => {
     );
     const settings = {
         categoryEditorView: {
-            categories: categoriesSettings,
+            [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
+                data: { $auto: {
+                    categories: categoriesSettings,
+                } },
+            } },
         },
     };
     return update(state, settings);
@@ -353,15 +460,17 @@ const ceRemoveSubcategoryNGram = (state, action) => {
 
 const ceAddManualSubcategoryNGram = (state, action) => {
     const {
+        ngram: { n: ngramN, keyword: ngramKeyword },
+        categoryEditorId,
+    } = action;
+    const {
         categoryEditorView: {
-            categories,
-            activeCategoryId,
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
         },
     } = state;
-    const {
-        ngram: { n: ngramN, keyword: ngramKeyword },
-    } = action;
-
+    const { categories, activeCategoryId } = categoryEditorView;
     const indices = getIndicesFromSelectedCategories(
         categories,
         activeCategoryId,
@@ -408,7 +517,12 @@ const ceAddManualSubcategoryNGram = (state, action) => {
     );
     const settings = {
         categoryEditorView: {
-            categories: categoriesSettings,
+            [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
+                data: { $auto: {
+                    categories: categoriesSettings,
+                } },
+            } },
         },
     };
     return update(state, settings);
@@ -417,16 +531,19 @@ const ceAddManualSubcategoryNGram = (state, action) => {
 // NOTE: This is complex as ngram can be added to any visible subcategory
 const ceAddSubcategoryNGram = (state, action) => {
     const {
-        categoryEditorView: {
-            categories,
-            activeCategoryId,
-        },
-    } = state;
-    const {
+        categoryEditorId,
         level,
         subcategoryId,
         ngram: { n: ngramN, keyword: ngramKeyword },
     } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: categoryEditorView = {},
+            } = {},
+        },
+    } = state;
+    const { categories, activeCategoryId } = categoryEditorView;
 
     const indices = getIndicesFromSelectedCategories(
         categories,
@@ -479,7 +596,12 @@ const ceAddSubcategoryNGram = (state, action) => {
     );
     const settings = {
         categoryEditorView: {
-            categories: categoriesSettings,
+            [categoryEditorId]: { $auto: {
+                pristine: { $set: false },
+                data: { $auto: {
+                    categories: categoriesSettings,
+                } },
+            } },
         },
     };
 
@@ -489,6 +611,7 @@ const ceAddSubcategoryNGram = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
+    [CE__SET_CATEGORY_EDITOR]: setCategoryEditor,
     [CE__ADD_NEW_CATEGORY]: ceAddNewCategory,
     [CE__SET_ACTIVE_CATEGORY_ID]: ceSetActiveCategoryId,
     [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,

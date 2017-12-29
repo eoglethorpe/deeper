@@ -112,7 +112,6 @@ export const calcEntriesDiff = (locals, remotes) => {
         entryAccessor.getServerId,
         (entry, key) => (key ? true : undefined),
     );
-    console.log(localEntriesMap);
     const actionsFoo = remotes.reduce(
         (acc, remoteEntry) => {
             const {
@@ -212,6 +211,10 @@ export const calcEntriesDiff = (locals, remotes) => {
 
     return [...actionsFoo, ...actionsBar];
 };
+
+export const getApplicableDiffCount = diffs => diffs.filter(
+    diff => diff.action !== DIFF_ACTION.noop && !diff.skip,
+).length;
 
 export const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
     (acc, diff) => {
