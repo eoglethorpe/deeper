@@ -3,12 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { FgRestBuilder } from '../../../public/utils/rest';
+import { SelectInput } from '../../../public/components/Input';
 import {
-    TextInput,
-    SelectInput,
-} from '../../../public/components/Input';
-import {
-    Button,
     PrimaryButton,
     DangerButton,
     SuccessButton,
@@ -16,23 +13,18 @@ import {
 import {
     LoadingAnimation,
     Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
 } from '../../../public/components/View';
-import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     isTruthy,
     isFalsy,
     randomString,
 } from '../../../public/utils/common';
-import {
-    iconNames,
-} from '../../../common/constants';
 
-import DocumentPanel from './DocumentPanel';
-import SubcategoryColumn from './SubcategoryColumn';
-import SubcategoryPropertyPanel from './SubcategoryPropertyPanel';
+import { iconNames } from '../../../common/constants';
+
+import DocumentPanel from './components/DocumentPanel';
+import SubcategoryColumn from './components/SubcategoryColumn';
+import SubcategoryPropertyPanel from './components/SubcategoryPropertyPanel';
 
 import {
     categoryEditorViewTitleSelector,
@@ -40,7 +32,11 @@ import {
     categoryEditorViewPristineSelector,
     categoriesSelector,
     activeCategoryIdSelector,
+
     addNewCategoryAction,
+    removeCategoryAction,
+    setCategoryAction,
+
     setActiveCategoryIdAction,
     addNewSubcategoryAction,
     updateSelectedSubcategoriesAction,
@@ -56,6 +52,10 @@ import {
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
+import NewCategoryModal from './components/NewCategoryModal';
+import NewSubcategoryModal from './components/NewSubcategoryModal';
+import NewManualNgramModal from './components/NewManualNgramModal';
+
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
@@ -69,6 +69,9 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     addNewCategory: params => dispatch(addNewCategoryAction(params)),
+    setCategory: params => dispatch(setCategoryAction(params)),
+    removeCategory: params => dispatch(removeCategoryAction(params)),
+
     setActiveCategoryId: params => dispatch(setActiveCategoryIdAction(params)),
     addNewSubcategory: params => dispatch(addNewSubcategoryAction(params)),
     updateSelectedSubcategories: params => dispatch(updateSelectedSubcategoriesAction(params)),
@@ -84,6 +87,9 @@ const propTypes = {
 
     categories: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     activeCategoryId: PropTypes.string,
+
+    setCategory: PropTypes.func.isRequired,
+    removeCategory: PropTypes.func.isRequired,
     addNewCategory: PropTypes.func.isRequired,
     setActiveCategoryId: PropTypes.func.isRequired,
     addNewSubcategory: PropTypes.func.isRequired,
@@ -114,14 +120,10 @@ export default class CategoryEditor extends React.PureComponent {
         this.state = {
             pending: true,
 
-            showCategoryTitleModal: false,
-            newCategoryTitleInputValue: '',
-
-            showSubcategoryTitleModal: false,
-            newSubcategoryTitleInputValue: '',
-
+            showNewCategoryModal: false,
+            showEditCategoryModal: false,
+            showNewSubcategoryModal: false,
             showNewManualNGramModal: false,
-            newManualNGramInputValue: '',
         };
     }
 
@@ -147,25 +149,7 @@ export default class CategoryEditor extends React.PureComponent {
         this.ceRequest.stop();
     }
 
-    createCeSaveRequest = ({ categoryEditorId, categoryEditor }) => {
-        const cesRequest = new FgRestBuilder()
-            .url(createUrlForCategoryEditor(categoryEditorId))
-            .params(() => createParamsForCeViewPatch({ data: categoryEditor }))
-            .preLoad(() => this.setState({ pending: true }))
-            .postLoad(() => this.setState({ pending: false }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'categoryEditor');
-                    this.props.setCategoryEditor({
-                        categoryEditor: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return cesRequest;
-    };
+    // REST
 
     createCeRequest = (categoryEditorId) => {
         const cesRequest = new FgRestBuilder()
@@ -199,6 +183,26 @@ export default class CategoryEditor extends React.PureComponent {
         return cesRequest;
     };
 
+    createCeSaveRequest = ({ categoryEditorId, categoryEditor }) => {
+        const cesRequest = new FgRestBuilder()
+            .url(createUrlForCategoryEditor(categoryEditorId))
+            .params(() => createParamsForCeViewPatch({ data: categoryEditor }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                try {
+                    schema.validate(response, 'categoryEditor');
+                    this.props.setCategoryEditor({
+                        categoryEditor: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return cesRequest;
+    };
+
     handleCategoryEditorSaveButtonClick = () => {
         if (this.saveCeRequest) {
             this.saveCeRequest.stop();
@@ -215,6 +219,8 @@ export default class CategoryEditor extends React.PureComponent {
 
         this.saveCeRequest.start();
     }
+
+    // SUBCATEGORY DROP & CLICK
 
     handleSubcategoryDrop = (level, subcategoryId, data) => {
         const { addSubcategoryNGram } = this.props;
@@ -236,11 +242,6 @@ export default class CategoryEditor extends React.PureComponent {
         }
     }
 
-    handleNewSubcategory = (level) => {
-        this.newSubcategoryLevel = level;
-        this.setState({ showSubcategoryTitleModal: true });
-    }
-
     handleSubcategoryClick = (level, subcategoryId) => {
         const { updateSelectedSubcategories } = this.props;
         updateSelectedSubcategories({
@@ -250,15 +251,23 @@ export default class CategoryEditor extends React.PureComponent {
         });
     }
 
-    addNewSubcategory = (title) => {
-        const { newSubcategoryLevel: level } = this;
-        const { addNewSubcategory } = this.props;
-        const id = randomString();
-        addNewSubcategory({
+    // SELECT INPUT
+
+    handleCategorySelectChange = (value) => {
+        const { setActiveCategoryId } = this.props;
+        setActiveCategoryId({
             categoryEditorId: this.props.match.params.categoryEditorId,
-            level,
-            id,
-            title,
+            id: value,
+        });
+    }
+
+    noop = () => {}
+
+    // ADDTION HELPERS
+    handleRemoveCategory = () => {
+        this.props.removeCategory({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            id: this.props.activeCategoryId,
         });
     }
 
@@ -272,90 +281,98 @@ export default class CategoryEditor extends React.PureComponent {
         this.props.addNewCategory(newCategory);
     }
 
-    handleCategorySelectChange = (value) => {
-        const { setActiveCategoryId } = this.props;
-        setActiveCategoryId({
+    editCategory = (title) => {
+        const newCategory = {
             categoryEditorId: this.props.match.params.categoryEditorId,
-            id: value,
+            id: this.props.activeCategoryId,
+            values: { title },
+        };
+        console.warn(newCategory);
+        this.props.setCategory(newCategory);
+    }
+
+    addNewSubcategory = ({ title, description }) => {
+        const { newSubcategoryLevel: level } = this;
+        const id = randomString();
+        this.props.addNewSubcategory({
+            categoryEditorId: this.props.match.params.categoryEditorId,
+            level,
+            id,
+            title,
+            description,
         });
     }
 
-    handleAddCategoryButtonClick = () => {
-        this.setState({ showCategoryTitleModal: true });
-    }
-
-    handlePropertyAddSubcategoryButtonClick = () => {
-        this.addNewSubcategoryInActiveSubcategory();
-    }
-
-    handleModalClose = () => {
-        this.setState({
-            showCategoryTitleModal: false,
-            showSubategoryTitleModal: false,
-            showNewManualNGramModal: false,
-        });
-    }
-
-    handleModalCancelButtonClick = () => {
-        this.setState({
-            showCategoryTitleModal: false,
-            showSubcategoryTitleModal: false,
-            showNewManualNGramModal: false,
-            newCategoryTitleInputValue: '',
-            newSubcategoryTitleInputValue: '',
-            newManualNGramInputValue: '',
-        });
-    }
-
-    handleNewCategoryTitleInputValueChange = (value) => {
-        this.setState({ newCategoryTitleInputValue: value });
-    }
-
-    handleCategoryTitleModalOkButtonClick = () => {
-        this.addNewCategory(this.state.newCategoryTitleInputValue);
-
-        this.setState({
-            showCategoryTitleModal: false,
-            newCategoryTitleInputValue: '',
-        });
-    }
-
-    handleNewSubcategoryTitleInputValueChange = (value) => {
-        this.setState({ newSubcategoryTitleInputValue: value });
-    }
-
-    handleSubcategoryTitleModalOkButtonClick = () => {
-        this.addNewSubcategory(this.state.newSubcategoryTitleInputValue);
-
-        this.setState({
-            showSubcategoryTitleModal: false,
-            newSubcategoryTitleInputValue: '',
-        });
-    }
-
-    handleNewManualNGramInputValueChange = (value) => {
-        this.setState({ newManualNGramInputValue: value });
-    }
-
-    handleNewManualNGramModalOkButtonClick = () => {
+    addNewManualNgram = (keyword) => {
         this.props.addManualSubcategoryNGram({
             categoryEditorId: this.props.match.params.categoryEditorId,
             ngram: {
-                n: this.state.newManualNGramInputValue.split(' ').length,
-                keyword: this.state.newManualNGramInputValue,
+                n: keyword.split(' ').length,
+                keyword,
             },
-        });
-        this.setState({
-            showNewManualNGramModal: false,
-            newManualNGramInputValue: '',
         });
     }
 
+    // MODAL OPENERS
+
+    handleNewCategory = () => {
+        this.setState({ showNewCategoryModal: true });
+    }
+
+    handleEditCategory = () => {
+        this.setState({ showEditCategoryModal: true });
+    }
+
+    handleNewSubcategory = (level) => {
+        this.newSubcategoryLevel = level;
+        this.setState({ showNewSubcategoryModal: true });
+    }
+
     handleNewManualNGram = () => {
-        this.setState({
-            showNewManualNGramModal: true,
-        });
+        this.setState({ showNewManualNGramModal: true });
     };
+
+    // MODAL SUBMIT
+
+    handleNewCategoryModalSubmit = (val) => {
+        this.setState({ showNewCategoryModal: false });
+        this.addNewCategory(val);
+    }
+
+    handleEditCategoryModalSubmit = (val) => {
+        this.setState({ showEditCategoryModal: false });
+        this.editCategory(val);
+    }
+
+    handleNewSubcategoryModalSubmit = (val) => {
+        this.setState({ showNewSubcategoryModal: false });
+        this.addNewSubcategory(val);
+    }
+
+    handleNewManualNgramModalSubmit = (val) => {
+        this.setState({ showNewManualNGramModal: false });
+        this.addNewManualNgram(val);
+    }
+
+    // MODAL CLOSE
+
+    handleNewCategoryModalClose = () => {
+        this.setState({ showNewCategoryModal: false });
+    }
+
+    handleEditCategoryModalClose = () => {
+        this.setState({ showEditCategoryModal: false });
+    }
+
+    handleNewSubcategoryModalClose = () => {
+        this.setState({ showNewSubcategoryModal: false });
+    }
+
+    handleNewManualNgramModalClose = () => {
+        this.setState({ showNewManualNGramModal: false });
+    }
+
+    // RENDER
 
     renderSubcategoryColumns = () => {
         const {
@@ -411,26 +428,27 @@ export default class CategoryEditor extends React.PureComponent {
         return subcategoryColumns;
     }
 
-
     render() {
         const {
             categories,
             activeCategoryId,
             match,
+            categoryEditorViewPristine,
+            categoryEditorViewTitle,
         } = this.props;
-
         const {
-            showCategoryTitleModal,
-            newCategoryTitleInputValue,
-            showSubcategoryTitleModal,
-            newSubcategoryTitleInputValue,
+            pending,
+            showNewCategoryModal,
+            showEditCategoryModal,
+            showNewSubcategoryModal,
             showNewManualNGramModal,
-            newManualNGramInputValue,
         } = this.state;
+
+        const activeCategory = categories.find(cat => cat.id === activeCategoryId);
 
         return (
             <div styleName="category-editor">
-                { this.state.pending && <LoadingAnimation /> }
+                { pending && <LoadingAnimation /> }
                 <div styleName="left">
                     <DocumentPanel />
                 </div>
@@ -438,12 +456,10 @@ export default class CategoryEditor extends React.PureComponent {
                     <header styleName="header">
                         <div styleName="header-content">
                             <h2>
-                                {this.props.categoryEditorViewTitle}
+                                {categoryEditorViewTitle}
                             </h2>
                             <SuccessButton
-                                disabled={
-                                    this.props.categoryEditorViewPristine || this.state.pending
-                                }
+                                disabled={categoryEditorViewPristine || pending}
                                 onClick={this.handleCategoryEditorSaveButtonClick}
                             >
                                 Save
@@ -461,12 +477,12 @@ export default class CategoryEditor extends React.PureComponent {
                                 keySelector={d => d.id}
                                 labelSelector={d => d.title}
                                 clearable={false}
-                                disabled={this.state.pending}
+                                disabled={pending}
                             />
                             <PrimaryButton
                                 styleName="add-category-btn"
-                                onClick={this.handleAddCategoryButtonClick}
-                                disabled={this.state.pending}
+                                onClick={this.handleNewCategory}
+                                disabled={pending}
                                 iconName={iconNames.add}
                                 title="Add Category"
                             />
@@ -475,14 +491,16 @@ export default class CategoryEditor extends React.PureComponent {
                                     <PrimaryButton
                                         key="edit"
                                         styleName="add-category-btn"
-                                        disabled={this.state.pending}
+                                        onClick={this.handleEditCategory}
+                                        disabled={pending}
                                         iconName={iconNames.edit}
                                         title="Edit Category"
                                     />,
                                     <DangerButton
                                         key="remove"
                                         styleName="add-category-btn"
-                                        disabled={this.state.pending}
+                                        onClick={this.handleRemoveCategory}
+                                        disabled={pending}
                                         iconName={iconNames.delete}
                                         title="Delete Category"
                                     />,
@@ -510,83 +528,45 @@ export default class CategoryEditor extends React.PureComponent {
                 </div>
                 <Modal
                     styleName="new-category-modal"
-                    show={showCategoryTitleModal}
-                    onClose={this.handleModalClose}
+                    show={showNewCategoryModal}
+                    onClose={this.noop}
                 >
-                    <ModalHeader title="Add new category" />
-                    <ModalBody>
-                        <TextInput
-                            label="Title"
-                            placeholder="eg: Sector"
-                            onChange={this.handleNewCategoryTitleInputValueChange}
-                            value={newCategoryTitleInputValue}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            Cancel
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleCategoryTitleModalOkButtonClick}
-                            styleName="ok-button"
-                        >
-                            Ok
-                        </PrimaryButton>
-                    </ModalFooter>
+                    <NewCategoryModal
+                        onSubmit={this.handleNewCategoryModalSubmit}
+                        onClose={this.handleNewCategoryModalClose}
+                    />
+                </Modal>
+                <Modal
+                    styleName="edit-category-modal"
+                    show={showEditCategoryModal}
+                    onClose={this.noop}
+                >
+                    <NewCategoryModal
+                        editMode
+                        initialValue={activeCategory}
+                        onSubmit={this.handleEditCategoryModalSubmit}
+                        onClose={this.handleEditCategoryModalClose}
+                    />
                 </Modal>
                 <Modal
                     styleName="new-subcategory-modal"
-                    show={showSubcategoryTitleModal}
-                    onClose={this.handleModalClose}
+                    show={showNewSubcategoryModal}
+                    onClose={this.noop}
                 >
-                    <ModalHeader title="Add new subcategory" />
-                    <ModalBody>
-                        <TextInput
-                            label="Title"
-                            placeholder="eg: Wash"
-                            onChange={this.handleNewSubcategoryTitleInputValueChange}
-                            value={newSubcategoryTitleInputValue}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.handleModalCancelButtonClick}>
-                            Cancel
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleSubcategoryTitleModalOkButtonClick}
-                            styleName="ok-button"
-                        >
-                            Ok
-                        </PrimaryButton>
-                    </ModalFooter>
+                    <NewSubcategoryModal
+                        onSubmit={this.handleNewSubcategoryModalSubmit}
+                        onClose={this.handleNewSubcategoryModalClose}
+                    />
                 </Modal>
                 <Modal
                     styleName="new-manual-ngram-modal"
                     show={showNewManualNGramModal}
-                    onClose={this.handleModalClose}
+                    onClose={this.noop}
                 >
-                    <ModalHeader title="Add word manually" />
-                    <ModalBody>
-                        <TextInput
-                            label="Word"
-                            placeholder="Wash Fwash"
-                            onChange={this.handleNewManualNGramInputValueChange}
-                            value={newManualNGramInputValue}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.handleModalCancelButtonClick}>
-                            Cancel
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleNewManualNGramModalOkButtonClick}
-                            styleName="ok-button"
-                        >
-                            Ok
-                        </PrimaryButton>
-                    </ModalFooter>
+                    <NewManualNgramModal
+                        onSubmit={this.handleNewManualNgramModalSubmit}
+                        onClose={this.handleNewManualNgramModalClose}
+                    />
                 </Modal>
             </div>
         );

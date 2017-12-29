@@ -5,9 +5,9 @@ import React from 'react';
 import {
     LoadingAnimation,
     ListView,
-} from '../../../public/components/View';
+} from '../../../../public/components/View';
 
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const propTypes = {
     ngrams: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -93,10 +93,12 @@ export default class DocumentNGram extends React.PureComponent {
 
         const { selectedNGramIndex } = this.state;
 
+        // TODO: use selector or move to componentWillReceiveProps
         const ngramKeys = Object.keys(ngrams);
         ngramKeys.sort();
 
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
+
         return (
             <div styleName="ngrams-tab" >
                 <ListView

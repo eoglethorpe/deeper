@@ -2,9 +2,11 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ListView } from '../../../public/components/View';
+import { TransparentAccentButton } from '../../../../public/components/Action';
+import { ListView } from '../../../../public/components/View';
+import { iconNames } from '../../../../common/constants';
 
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const propTypes = {
     level: PropTypes.number.isRequired,
@@ -159,9 +161,11 @@ export default class SubcategoryColumn extends React.PureComponent {
                     <h4 styleName="heading" >
                         {this.props.title}
                     </h4>
-                    <button onClick={this.handleNewSubcategoryButtonClick}>
-                        Add subcategory
-                    </button>
+                    <TransparentAccentButton
+                        onClick={this.handleNewSubcategoryButtonClick}
+                        title={`Add subcategory in ${this.props.title}`}
+                        iconName={iconNames.add}
+                    />
                 </header>
                 <ListView
                     styleName="sub-category-list"

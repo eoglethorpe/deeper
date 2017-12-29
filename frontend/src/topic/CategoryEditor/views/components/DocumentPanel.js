@@ -1,20 +1,16 @@
 import CSSModules from 'react-css-modules';
-// import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    List,
-} from '../../../public/components/View';
+import { List } from '../../../../public/components/View';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import {
     urlForKeywordExtraction,
     createParamsForCeKeywordExtraction,
-} from '../../../common/rest';
+} from '../../../../common/rest';
 
-import { FgRestBuilder } from '../../../public/utils/rest';
 import DocumentNGram from './DocumentNGram';
-
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 @CSSModules(styles, { allowMultiple: true })
 export default class DocumentPanel extends React.PureComponent {

@@ -386,6 +386,10 @@
     @extend %modal;
 }
 
+.edit-category-modal {
+    @extend %modal;
+}
+
 .new-subcategory-modal {
     @extend %modal;
 }

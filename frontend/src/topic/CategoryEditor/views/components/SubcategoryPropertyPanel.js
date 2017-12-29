@@ -3,28 +3,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { bound } from '../../../public/utils/common';
+import { bound } from '../../../../public/utils/common';
 import {
     PrimaryButton,
     DangerButton,
-} from '../../../public/components/Action';
-import {
-    ListView,
-} from '../../../public/components/View';
+} from '../../../../public/components/Action';
 import {
     TextInput,
     TextArea,
-} from '../../../public/components/Input';
+} from '../../../../public/components/Input';
+import { ListView } from '../../../../public/components/View';
 
 import {
     selectedSubcategorySelector,
     updateSelectedSubcategoryAction,
     removeSelectedSubcategoryAction,
     removeSubcategoryNGramAction,
-} from '../../../common/redux';
+} from '../../../../common/redux';
 
 import NGram from './NGram';
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const propTypes = {
     subcategory: PropTypes.shape({ id: PropTypes.string }),

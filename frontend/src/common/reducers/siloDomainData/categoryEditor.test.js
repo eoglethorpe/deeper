@@ -1,5 +1,7 @@
 import reducers, {
     CE__SET_CATEGORY_EDITOR,
+    CE__SET_CATEGORY,
+    CE__REMOVE_CATEGORY,
     CE__ADD_NEW_CATEGORY,
     CE__SET_ACTIVE_CATEGORY_ID,
     CE__ADD_NEW_SUBCATEGORY,
@@ -11,6 +13,8 @@ import reducers, {
     CE__ADD_MANUAL_SUBCATEGORY_NGRAM,
     setCategoryEditorAction,
     addNewCategoryAction,
+    setCategoryAction,
+    removeCategoryAction,
     setActiveCategoryIdAction,
     addNewSubcategoryAction,
     updateSelectedSubcategoriesAction,
@@ -40,7 +44,7 @@ test('should set category editor', () => {
                         subcategories: [],
                     },
                 ],
-            }
+            },
         },
     });
     const after = {
@@ -163,6 +167,195 @@ test('should add new category', () => {
         },
     };
     expect(reducers[CE__ADD_NEW_CATEGORY](state, action)).toEqual(after);
+});
+
+test('should set category', () => {
+    const state = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: true,
+                data: {
+                    activeCategoryId: 13,
+                    categories: [
+                        {
+                            id: 13,
+                            title: 'shyam',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    const action = setCategoryAction({
+        categoryEditorId: 1,
+        id: 13,
+        values: {
+            title: 'chor',
+        },
+    });
+    const after = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: false,
+                data: {
+                    activeCategoryId: 13,
+                    categories: [
+                        {
+                            id: 13,
+                            title: 'chor',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    expect(reducers[CE__SET_CATEGORY](state, action)).toEqual(after);
+});
+
+test('should remove category', () => {
+    const state = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: true,
+                data: {
+                    activeCategoryId: 13,
+                    categories: [
+                        {
+                            id: 13,
+                            title: 'shyam',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    const action = removeCategoryAction({
+        categoryEditorId: 1,
+        id: 13,
+    });
+    const after = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: false,
+                data: {
+                    activeCategoryId: 12,
+                    categories: [
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    expect(reducers[CE__REMOVE_CATEGORY](state, action)).toEqual(after);
+});
+
+test('should remove category', () => {
+    const state = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: true,
+                data: {
+                    activeCategoryId: 12,
+                    categories: [
+                        {
+                            id: 13,
+                            title: 'shyam',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 11,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    const action = removeCategoryAction({
+        categoryEditorId: 1,
+        id: 11,
+    });
+    const after = {
+        categoryEditorView: {
+            1: {
+                id: 1,
+                title: 'hari',
+                versionId: 1,
+                pristine: false,
+                data: {
+                    activeCategoryId: 12,
+                    categories: [
+                        {
+                            id: 13,
+                            title: 'shyam',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                        {
+                            id: 12,
+                            title: 'hari',
+                            selectedSubcategories: [],
+                            subcategories: [],
+                        },
+                    ],
+                },
+            },
+        },
+    };
+    expect(reducers[CE__REMOVE_CATEGORY](state, action)).toEqual(after);
 });
 
 test('should set active category', () => {
