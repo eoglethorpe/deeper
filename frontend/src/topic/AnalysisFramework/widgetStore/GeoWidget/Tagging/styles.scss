@@ -17,10 +17,11 @@
     :global {
         .modal-content {
             width: auto;
-            min-width: 800px;
+            min-width: 1200px;
             max-width: 96vw;
 
             .modal-body {
+                display: flex;
                 padding: 0;
             }
         }
@@ -31,43 +32,64 @@
     @extend %modal;
 
     .map-content {
+        flex-basis: 70%;
         height: 700px;
     }
 
-    .search-box {
+    .content {
         display: flex;
-        justify-content: space-between;
-        padding: $spacing-medium;
-    }
+        flex-basis: 30%;
+        flex-direction: column;
+        background-color: $color-foreground-alt;
 
-    .region-list {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-foreground;
-        padding: $spacing-medium;
+        .search-box {
+            padding: $spacing-medium;
 
-        .selected-regions {
-            @include shadow-small;
-            display: flex;
-            margin-right: $spacing-medium;
-            background-color: $color-background-disabled;
-            padding: $spacing-extra-small;
-            font-size: $font-size-medium;
+            h3 {
+                margin-bottom: $spacing-medium;
+             }
+        }
 
-            .region-name {
-                display: flex;
-            }
+        .regions-table {
+            flex-grow: 1;
+            margin-top: $spacing-large;
+            overflow-y: auto;
 
-            .delete-button {
-                margin-left: $spacing-small;
-                padding: 0 $spacing-small;
+            :global .header {
+                position: sticky;
+                top: 0;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-small $spacing-medium-alt;
+                user-select: none;
 
-                span {
-                    font-size: $font-size-small;
+                &:not(.actions) {
+                    cursor: pointer;
+
+                    &:hover {
+                        background-color: $color-background-hover;
+                    }
                 }
             }
         }
 
+        .region-list {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: $spacing-medium;
+
+            .selected-regions {
+                @include shadow-small;
+                display: flex;
+                margin-right: $spacing-medium;
+                background-color: $color-background-disabled;
+                padding: $spacing-extra-small;
+                font-size: $font-size-medium;
+
+                .region-name {
+                    display: flex;
+                }
+            }
+        }
     }
 }
