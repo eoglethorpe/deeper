@@ -2,18 +2,12 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    ListView,
-} from '../../../public/components/View';
-import {
-    TransparentDangerButton,
-} from '../../../public/components/Action';
+import { ListView } from '../../../../public/components/View';
+import { TransparentDangerButton } from '../../../../public/components/Action';
 
-import {
-    iconNames,
-} from '../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 
-import styles from './styles.scss';
+import styles from '../styles.scss';
 
 const propTypes = {
     keywords: PropTypes.arrayOf(PropTypes.string),

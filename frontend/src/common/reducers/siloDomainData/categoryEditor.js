@@ -5,6 +5,8 @@ import update from '../../../public/utils/immutable-update';
 
 export const CE__SET_CATEGORY_EDITOR = 'silo-domain-data/CE__SET_CATEGORY_EDITOR';
 export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
+export const CE__SET_CATEGORY = 'silo-domain-data/CE__SET_CATEGORY';
+export const CE__REMOVE_CATEGORY = 'silo-domain-data/CE__REMOVE_CATEGORY';
 export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
 export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
 export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';
@@ -29,18 +31,32 @@ export const addNewCategoryAction = ({ categoryEditorId, id, title }) => ({
     title,
 });
 
+export const removeCategoryAction = ({ categoryEditorId, id }) => ({
+    type: CE__REMOVE_CATEGORY,
+    categoryEditorId,
+    id,
+});
+
+export const setCategoryAction = ({ categoryEditorId, id, values }) => ({
+    type: CE__SET_CATEGORY,
+    categoryEditorId,
+    id,
+    values,
+});
+
 export const setActiveCategoryIdAction = ({ categoryEditorId, id }) => ({
     type: CE__SET_ACTIVE_CATEGORY_ID,
     categoryEditorId,
     id,
 });
 
-export const addNewSubcategoryAction = ({ categoryEditorId, level, id, title }) => ({
+export const addNewSubcategoryAction = ({ categoryEditorId, level, id, title, description }) => ({
     type: CE__ADD_NEW_SUBCATEGORY,
     categoryEditorId,
     level,
     id,
     title,
+    description,
 });
 
 export const updateSelectedSubcategoriesAction = ({
@@ -185,6 +201,75 @@ const ceAddNewCategory = (state, action) => {
     return update(state, settings);
 };
 
+const ceRemoveCategory = (state, action) => {
+    const { categoryEditorId, id } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: { activeCategoryId, categories },
+            },
+        },
+    } = state;
+    const index = categories.findIndex(category => category.id === id);
+    const toBeDeletedIsSelected = activeCategoryId === categories[index].id;
+
+    let newSelectedCategoryId;
+    // if to be removed is selected, then set another active
+    if (toBeDeletedIsSelected) {
+        const newSelectedCategory = getElementAround(categories, index);
+        newSelectedCategoryId = newSelectedCategory ? newSelectedCategory.id : undefined;
+    }
+
+    const settings = {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                pristine: { $set: false },
+                data: {
+                    activeCategoryId: {
+                        $if: [
+                            toBeDeletedIsSelected,
+                            { $set: newSelectedCategoryId },
+                        ],
+                    },
+                    categories: {
+                        $splice: [[index, 1]],
+                    },
+                },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
+const ceSetCategory = (state, action) => {
+    const { categoryEditorId, id, values } = action;
+    const {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                data: { categories },
+            },
+        },
+    } = state;
+
+    const index = categories.findIndex(category => category.id === id);
+
+    const settings = {
+        categoryEditorView: {
+            [categoryEditorId]: {
+                pristine: { $set: false },
+                data: {
+                    categories: {
+                        [index]: { $auto: {
+                            $merge: values,
+                        } },
+                    },
+                },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
 const ceSetActiveCategoryId = (state, action) => {
     const { categoryEditorId, id } = action;
     const settings = {
@@ -238,7 +323,7 @@ const ceUpdateSelectedSubcategories = (state, action) => {
 };
 
 const ceAddNewSubcategory = (state, action) => {
-    const { categoryEditorId, level, id, title } = action;
+    const { categoryEditorId, level, id, title, description = '' } = action;
     const {
         categoryEditorView: {
             [categoryEditorId]: {
@@ -251,7 +336,7 @@ const ceAddNewSubcategory = (state, action) => {
     const newSubcategory = {
         id,
         title,
-        description: '',
+        description,
         ngrams: {},
         subcategories: [],
     };
@@ -613,6 +698,8 @@ const ceAddSubcategoryNGram = (state, action) => {
 const reducers = {
     [CE__SET_CATEGORY_EDITOR]: setCategoryEditor,
     [CE__ADD_NEW_CATEGORY]: ceAddNewCategory,
+    [CE__REMOVE_CATEGORY]: ceRemoveCategory,
+    [CE__SET_CATEGORY]: ceSetCategory,
     [CE__SET_ACTIVE_CATEGORY_ID]: ceSetActiveCategoryId,
     [CE__ADD_NEW_SUBCATEGORY]: ceAddNewSubcategory,
     [CE__UPDATE_SELECTED_SUBCATEGORIES]: ceUpdateSelectedSubcategories,
