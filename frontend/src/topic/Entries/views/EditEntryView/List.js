@@ -41,9 +41,12 @@ export default class List extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.update(nextProps.analysisFramework);
+        if (this.props.analysisFramework !== nextProps.analysisFramework) {
+            this.update(nextProps.analysisFramework);
+        }
     }
 
+    // TODO: optimize this later
     getGridItems = entryId => this.items.map(item => ({
         id: item.id,
         key: item.key,
@@ -56,12 +59,17 @@ export default class List extends React.PureComponent {
         entryId,
     }))
 
-    getMaxHeight = () => this.items.reduce((acc, item) => (
-        Math.max(acc, item.properties.listGridLayout.height + item.properties.listGridLayout.top)
-    ), 0);
+    getMaxHeight = () => this.items.reduce(
+        (acc, item) => {
+            const { height, top } = item.properties.listGridLayout;
+            return Math.max(acc, height + top);
+        },
+        0,
+    );
 
     getItemView = (item) => {
-        const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
+        const Component = this.widgets
+            .find(w => w.id === item.widgetId).listComponent;
         return (
             <Component
                 id={item.id}
@@ -88,15 +96,17 @@ export default class List extends React.PureComponent {
             }));
 
         if (analysisFramework.widgets) {
-            this.items = analysisFramework.widgets.filter(
-                w => this.widgets.find(w1 => w1.id === w.widgetId),
-            ).map((item) => {
-                const filters = analysisFramework.filters.filter(f => f.widgetKey === item.key);
-                return {
-                    ...item,
-                    filters,
-                };
-            });
+            this.items = analysisFramework.widgets
+                .filter(
+                    w => this.widgets.find(w1 => w1.id === w.widgetId),
+                ).map((item) => {
+                    const filters = analysisFramework.filters
+                        .filter(f => f.widgetKey === item.key);
+                    return {
+                        ...item,
+                        filters,
+                    };
+                });
         } else {
             this.items = [];
         }
@@ -109,6 +119,8 @@ export default class List extends React.PureComponent {
             saveAllDisabled,
             widgetDisabled,
         } = this.props;
+
+        const entryStyle = { height: this.getMaxHeight() + 16 };
 
         return (
             <div styleName="list">
@@ -138,7 +150,7 @@ export default class List extends React.PureComponent {
                             <div
                                 key={entryAccessor.getKey(entry)}
                                 styleName="entry"
-                                style={{ height: this.getMaxHeight() + 16 }}
+                                style={entryStyle}
                             >
                                 <GridLayout
                                     styleName="grid-layout"
