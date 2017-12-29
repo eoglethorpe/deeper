@@ -187,6 +187,7 @@ export default class AssistedTagging extends React.PureComponent {
             })),
         })).filter(c => c.sectors.length > 0);
 
+
         this.setState({ sectorOptions, selectedSectors });
 
         this.refreshClassifications();

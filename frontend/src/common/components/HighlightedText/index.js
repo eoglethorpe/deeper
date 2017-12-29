@@ -31,6 +31,7 @@ export default class HighlightedText extends React.PureComponent {
         const splits = [];
         let lastString = text;
         let lastPosition = 0;
+
         highlights.filter(h => h.start >= 0)
             .sort((h1, h2) => h1.start - h2.start)
             .forEach((h) => {
@@ -44,7 +45,7 @@ export default class HighlightedText extends React.PureComponent {
                         text: lastString.slice(0, index),
                     });
                     splits.push({
-                        key: `split-${h.start}-${h.start + h.length}`,
+                        key: `split-${h.start}-${h.length}-item`,
                         text: lastString.slice(index, index + length),
                         item: h.item,
                     });
