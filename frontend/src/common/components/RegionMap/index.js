@@ -30,7 +30,10 @@ import {
 const propTypes = {
     className: PropTypes.string,
     regionId: PropTypes.number.isRequired,
-    selections: PropTypes.arrayOf(PropTypes.string),
+    selections: PropTypes.arrayOf(PropTypes.shape({
+        key: PropTypes.string,
+        title: PropTypes.string,
+    })),
     onSelect: PropTypes.func,
 };
 
@@ -186,12 +189,12 @@ export default class RegionMap extends React.PureComponent {
             .build()
     )
 
-    handleAreaClick = (pk) => {
+    handleAreaClick = (selection) => {
         const selections = [...this.props.selections];
-        const index = selections.indexOf(pk);
+        const index = selections.findIndex(s => s.key === selection.key);
 
         if (index === -1) {
-            selections.push(pk);
+            selections.push(selection);
         } else {
             selections.splice(index, 1);
         }

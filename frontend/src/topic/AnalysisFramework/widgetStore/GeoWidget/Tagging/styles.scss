@@ -27,12 +27,37 @@
 
 .map-modal {
     @extend %modal;
+
     .map-content {
-        height: 800px;
+        height: 700px;
     }
-    .selected-regions {
+
+    .search-box {
         display: flex;
+        justify-content: space-between;
+        padding: $spacing-medium;
+    }
+
+    .region-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: $color-foreground;
         padding: $spacing-medium;
+
+        .selected-regions {
+            display: flex;
+            margin-right: $spacing-medium;
+            background-color: $color-background-disabled;
+            padding: $spacing-extra-small;
+
+            .region-name {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: $font-size-large;
+            }
+        }
+
     }
 }

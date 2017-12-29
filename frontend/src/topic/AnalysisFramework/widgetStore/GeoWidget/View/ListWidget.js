@@ -20,13 +20,13 @@ export default class GeoViewList extends React.PureComponent {
     render() {
         const {
             attribute: {
-                value = [],
+                values = [],
             } = {},
         } = this.props;
 
         return (
             <div styleName="geo-list">
-                {value.map(val => <span>{val}</span>)}
+                {values.map(val => <span key={val.key}>{val.title}</span>)}
             </div>
         );
     }
