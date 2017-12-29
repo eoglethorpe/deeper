@@ -12,7 +12,7 @@ import {
 
 import Dimension from './Dimension';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 export default class Renderer {
     constructor(parent) {

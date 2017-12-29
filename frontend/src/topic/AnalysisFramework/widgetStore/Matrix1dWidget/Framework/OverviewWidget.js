@@ -31,7 +31,7 @@ import {
 } from '../../../../../public/components/View';
 import update from '../../../../../public/utils/immutable-update';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,

@@ -1,4 +1,4 @@
-@import '../../../../stylesheets/base';
+@import '../../../../../stylesheets/base';
 
 .framework-matrix-2d-overview {
     overflow-y: auto;
@@ -124,30 +124,6 @@
                 }
 
             }
-        }
-    }
-}
-
-.tagging-matrix-2d-overview {
-    .table {
-        width: 100%;
-        text-align: center;
-
-        th {
-            position: sticky;
-            top: 0;
-        }
-
-        .sector {
-            padding: $spacing-small $spacing-medium;
-        }
-
-        .dimension {
-            padding: $spacing-small $spacing-medium;
-        }
-
-        .subdimension {
-            padding: $spacing-small $spacing-medium;
         }
     }
 }

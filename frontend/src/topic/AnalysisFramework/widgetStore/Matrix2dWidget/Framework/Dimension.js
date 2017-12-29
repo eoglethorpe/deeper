@@ -1,7 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 import { iconNames } from '../../../../../common/constants';
 import {
@@ -99,7 +99,7 @@ export default class Dimension extends React.PureComponent {
 
     addSubdimension = () => {
         const newSubdimension = {
-            id: randomString(),
+            id: randomString(16).toLowerCase(),
             title: '',
             tooltip: '',
         };

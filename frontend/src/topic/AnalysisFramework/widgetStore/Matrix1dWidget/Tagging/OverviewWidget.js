@@ -2,7 +2,7 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 import {
     ListView,
@@ -83,7 +83,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     createHighlightColor = (attribute) => {
         let color;
-        Object.keys(attribute).forEach((key) => {
+        Object.keys(attribute || {}).forEach((key) => {
             const row = attribute[key];
 
             const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);
