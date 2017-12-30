@@ -247,7 +247,7 @@ export default class RegionAdminLevel extends React.PureComponent {
         });
     }
 
-    deleteActiveAdminLevel = (confirm) => {
+    handleDeleteActiveAdminLevelConfirmClose = (confirm) => {
         if (confirm) {
             if (this.requestForAlDelete) {
                 this.requestForAlDelete.stop();
@@ -342,7 +342,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                 <Confirm
                     show={showDeleteModal}
                     closeOnEscape
-                    onClose={this.deleteActiveAdminLevel}
+                    onClose={this.handleDeleteActiveAdminLevelConfirmClose}
                 >
                     <p>{`${countriesString.removeAdminLevelConfirm}
                         ${activeAdminLevelDelete.title}?`}</p>

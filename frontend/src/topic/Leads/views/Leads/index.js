@@ -13,10 +13,12 @@ import {
     RawTable,
     FormattedDate,
     LoadingAnimation,
+    Confirm,
 } from '../../../../public/components/View';
 import {
     PrimaryButton,
     TransparentAccentButton,
+    TransparentDangerButton,
     TransparentButton,
     SegmentButton,
 } from '../../../../public/components/Action';
@@ -29,6 +31,8 @@ import {
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
+    createUrlForLeadDelete,
+    createParamsForLeadDelete,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -64,6 +68,7 @@ import {
     pathNames,
     leadsString,
 } from '../../../../common/constants/';
+import notify from '../../../../common/notify';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
 import LeadColumnHeader from './components/LeadColumnHeader';
@@ -235,6 +240,12 @@ export default class Leads extends React.PureComponent {
                         >
                             <i className={iconNames.edit} />
                         </TransparentButton>
+                        <TransparentDangerButton
+                            title="Remove lead"
+                            onClick={() => this.handleRemoveLead(row)}
+                        >
+                            <i className={iconNames.delete} />
+                        </TransparentDangerButton>
                         <TransparentAccentButton
                             title="Add entry from this lead"
                             onClick={() => this.handleAddEntryClick(row)}
@@ -260,6 +271,9 @@ export default class Leads extends React.PureComponent {
         this.state = {
             loadingLeads: false,
             redirectTo: undefined,
+
+            showDeleteModal: false,
+            leadToDelete: undefined,
         };
     }
 
@@ -309,6 +323,10 @@ export default class Leads extends React.PureComponent {
 
     componentWillUnmount() {
         this.leadRequest.stop();
+
+        if (this.leadDeleteRequest) {
+            this.leadDeleteRequest.stop();
+        }
     }
 
     // REST UTILS
@@ -386,6 +404,46 @@ export default class Leads extends React.PureComponent {
         return leadRequest;
     }
 
+    createRequestForLeadDelete = (lead) => {
+        const { id } = lead;
+        const leadRequest = new FgRestBuilder()
+            .url(createUrlForLeadDelete(id))
+            .params(() => createParamsForLeadDelete())
+            .preLoad(() => {
+                this.setState({ loadingLeads: true });
+            })
+            .success(() => {
+                notify.send({
+                    title: 'Remove Success',
+                    type: notify.type.SUCCESS,
+                    message: 'Lead was successfully removed.',
+                    duration: notify.duration.MEDIUM,
+                });
+
+                if (this.leadRequest) {
+                    this.leadRequest.stop();
+                }
+                const { activeProject, activePage, activeSort, filters } = this.props;
+                this.leadRequest = this.createRequestForProjectLeads({
+                    activeProject,
+                    activePage,
+                    activeSort,
+                    filters,
+                });
+                this.leadRequest.start();
+            })
+            .failure(() => {
+                notify.send({
+                    title: 'Remove Error',
+                    type: notify.type.ERROR,
+                    message: 'Lead couldn\'t be deleted.',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return leadRequest;
+    }
+
     // UI
 
     handleAddLeadClick = () => {
@@ -445,6 +503,29 @@ export default class Leads extends React.PureComponent {
             filters: { similar: row.id },
         });
     };
+
+    handleRemoveLead = (row) => {
+        this.setState({
+            showDeleteModal: true,
+            leadToDelete: row,
+        });
+    };
+
+    handleDeleteModalClose = (confirm) => {
+        if (confirm) {
+            const { leadToDelete } = this.state;
+            if (this.leadDeleteRequest) {
+                this.leadDeleteRequest.stop();
+            }
+            this.leadDeleteRequest = this.createRequestForLeadDelete(leadToDelete);
+            this.leadDeleteRequest.start();
+        }
+
+        this.setState({
+            showDeleteModal: false,
+            leadToDelete: undefined,
+        });
+    }
 
     handlePageClick = (page) => {
         this.props.setLeadPageActivePage({ activePage: page });
@@ -514,12 +595,14 @@ export default class Leads extends React.PureComponent {
 
         const {
             loadingLeads,
+            showDeleteModal,
+            redirectTo,
         } = this.state;
 
-        if (this.state.redirectTo) {
+        if (redirectTo) {
             return (
                 <Redirect
-                    to={this.state.redirectTo}
+                    to={redirectTo}
                     push
                 />
             );
@@ -558,6 +641,17 @@ export default class Leads extends React.PureComponent {
                         <Visualizations styleName="viz-container" />
                     )
                 }
+                <Confirm
+                    show={showDeleteModal}
+                    closeOnEscape
+                    onClose={this.handleDeleteModalClose}
+                >
+                    <p>
+                        Are you sure you want to remove this lead?
+                        The lead along with all the associated entries will be
+                        removed.
+                    </p>
+                </Confirm>
                 <footer styleName="footer">
                     <SegmentButton
                         styleName="view-mode-button"
