@@ -24,7 +24,7 @@ export default class GeoViewList extends React.PureComponent {
 
     mapRegionsList = (key, data) => (
         <div
-            className={styles['regions-content']}
+            className={styles['region-content']}
             key={key}
         >
             <span className={styles['region-name']}>{data.title}</span>
