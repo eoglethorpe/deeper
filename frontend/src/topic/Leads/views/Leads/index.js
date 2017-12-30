@@ -464,7 +464,6 @@ export default class Leads extends React.PureComponent {
     }
 
     handleEditLeadClick = (row) => {
-        // TODO: while editing, set leads such that serverId is never repeated
         const newLeads = [];
 
         const type = row.sourceType;

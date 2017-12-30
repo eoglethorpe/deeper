@@ -10,8 +10,13 @@ import {
     ListView,
     LoadingAnimation,
 } from '../../../public/components/View';
-import { reverseRoute } from '../../../public/utils/common';
 import {
+    reverseRoute,
+    isObjectEmpty,
+} from '../../../public/utils/common';
+import {
+    Button,
+    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
@@ -30,8 +35,11 @@ import {
     setEntriesAction,
     setProjectAction,
     entriesForProjectSelector,
+    entriesViewFilterSelector,
     setAnalysisFrameworkAction,
     analysisFrameworkForProjectSelector,
+    setEntriesViewFilterAction,
+    unsetEntriesViewFilterAction,
 } from '../../../common/redux';
 import {
     urlForFilteredEntries,
@@ -49,12 +57,15 @@ const mapStateToProps = (state, props) => ({
     projectId: projectIdFromRoute(state, props),
     entries: entriesForProjectSelector(state, props),
     analysisFramework: analysisFrameworkForProjectSelector(state, props),
+    entriesFilter: entriesViewFilterSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setEntries: params => dispatch(setEntriesAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
+    setEntriesViewFilter: params => dispatch(setEntriesViewFilterAction(params)),
+    unsetEntriesViewFilter: params => dispatch(unsetEntriesViewFilterAction(params)),
 });
 
 const propTypes = {
@@ -69,6 +80,9 @@ const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.string.isRequired,
     setEntries: PropTypes.func.isRequired,
+    entriesFilter: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    setEntriesViewFilter: PropTypes.func.isRequired,
+    unsetEntriesViewFilter: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -90,7 +104,8 @@ export default class Entries extends React.PureComponent {
         super(props);
 
         this.state = {
-            filters: {},
+            filters: this.props.entriesFilter,
+            pristine: true,
         };
 
         this.items = [];
@@ -101,9 +116,9 @@ export default class Entries extends React.PureComponent {
     }
 
     componentWillMount() {
-        const { projectId } = this.props;
+        const { projectId, entriesFilter } = this.props;
 
-        this.entriesRequest = this.createRequestForEntries(projectId);
+        this.entriesRequest = this.createRequestForEntries(projectId, entriesFilter);
         this.entriesRequest.start();
 
         this.projectRequest = this.createRequestForProject(projectId);
@@ -113,7 +128,21 @@ export default class Entries extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.projectId !== nextProps.projectId) {
+        const {
+            analysisFramework: oldAf,
+            projectId: oldProjectId,
+            entriesFilter: oldFilter,
+            entries: oldEntries,
+        } = this.props;
+        const {
+            analysisFramework: newAf,
+            projectId: newProjectId,
+            entriesFilter: newFilter,
+            entries: newEntries,
+        } = nextProps;
+
+
+        if (oldProjectId !== newProjectId) {
             if (this.entriesRequest) {
                 this.entriesRequest.stop();
             }
@@ -124,21 +153,38 @@ export default class Entries extends React.PureComponent {
                 this.analysisFrameworkRequest.stop();
             }
 
-            this.entriesRequest = this.createRequestForEntries(nextProps.projectId);
+            this.entriesRequest = this.createRequestForEntries(newProjectId, newFilter);
             this.entriesRequest.start();
 
-            this.projectRequest = this.createRequestForProject(nextProps.projectId);
+            this.projectRequest = this.createRequestForProject(newProjectId);
             this.projectRequest.start();
 
-            this.setState({ pendingEntries: true, pendingProjectAndAf: true });
-            return;
-        }
+            this.setState({
+                pendingEntries: true,
+                pendingProjectAndAf: true,
+                filters: newFilter,
+            });
+        } else if (oldAf !== newAf) {
+            this.updateAnalysisFramework(newAf);
+            this.updateGridItems(newEntries);
 
-        if (this.props.analysisFramework !== nextProps.analysisFramework) {
-            this.updateAnalysisFramework(nextProps.analysisFramework);
-            this.updateGridItems(nextProps.entries);
-        } else if (this.props.entries !== nextProps.entries) {
-            this.updateGridItems(nextProps.entries);
+            // when analysisFramework has changed - remove previous filters
+            if (!oldAf || !newAf || oldAf.versionId !== newAf.versionId) {
+                this.props.unsetEntriesViewFilter();
+            }
+        } else if (oldEntries !== newEntries) {
+            this.updateGridItems(newEntries);
+        } else if (oldFilter !== newFilter) {
+            if (this.entriesRequest) {
+                this.entriesRequest.stop();
+            }
+            this.entriesRequest = this.createRequestForEntries(
+                newProjectId,
+                newFilter,
+            );
+            this.entriesRequest.start();
+
+            this.setState({ filters: newFilter });
         }
     }
 
@@ -191,6 +237,11 @@ export default class Entries extends React.PureComponent {
                 project: projectId,
                 ...filters,
             }))
+            .preLoad(() => {
+                this.setState({
+                    pendingEntries: true,
+                });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
@@ -206,7 +257,10 @@ export default class Entries extends React.PureComponent {
                         projectId,
                         entries,
                     });
-                    this.setState({ pendingEntries: false });
+                    this.setState({
+                        pendingEntries: false,
+                        pristine: true,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
@@ -306,16 +360,29 @@ export default class Entries extends React.PureComponent {
         });
     }
 
-    handleFilterChange = (key, values) => {
-        const filters = { ...this.state.filters };
-        filters[key] = values;
-        this.setState({ filters }, () => {
-            if (this.entriesRequest) {
-                this.entriesRequest.stop();
-            }
+    handleApplyFilter = () => {
+        const { filters } = this.state;
+        this.props.setEntriesViewFilter({ filters });
+    }
 
-            this.entriesRequest = this.createRequestForEntries(this.props.projectId, filters);
-            this.entriesRequest.start();
+    handleClearFilter = () => {
+        if (this.state.pristine) {
+            this.props.unsetEntriesViewFilter();
+        } else {
+            this.setState({
+                filters: {},
+            });
+        }
+    }
+
+    handleFilterChange = (key, values) => {
+        const filters = {
+            ...this.state.filters,
+            ...{ [key]: values },
+        };
+        this.setState({
+            filters,
+            pristine: false,
         });
     }
 
@@ -389,10 +456,13 @@ export default class Entries extends React.PureComponent {
             return (
                 <SelectInput
                     key={key}
+                    className={styles.filter}
                     options={filter.options}
+                    label={key}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
                     value={this.state.filters[key] || []}
+                    disabled={this.state.pendingProjectAndAf}
                     multiple
                 />
             );
@@ -403,33 +473,59 @@ export default class Entries extends React.PureComponent {
 
 
     render() {
-        const { entries } = this.props;
+        const { entries = [] } = this.props;
+
+        const {
+            pendingEntries,
+            pendingProjectAndAf,
+            pristine,
+            filters,
+        } = this.state;
+
+        const pending = pendingEntries || pendingProjectAndAf;
+        const isFilterEmpty = isObjectEmpty(filters);
 
         return (
             <div styleName="entries">
-                {
-                    ((this.state.pendingEntries || this.state.pendingProjectAndAf) && (
-                        <LoadingAnimation />
-                    )) || ([
-                        <div
-                            key="filters"
-                            styleName="filters"
-                        >
-                            {
-                                this.filters && this.filters.map(
-                                    filter => this.renderFilter(filter),
-                                )
-                            }
-                        </div>,
+                <div
+                    key="filters"
+                    styleName="filters"
+                >
+                    { this.filters.map(this.renderFilter) }
+                    { this.filters.length > 0 &&
+                        [
+                            <Button
+                                key="apply-btn"
+                                styleName="filter-btn"
+                                onClick={this.handleApplyFilter}
+                                disabled={pending || pristine}
+                            >
+                                Apply Filter
+                            </Button>,
+                            <DangerButton
+                                key="clear-btn"
+                                styleName="filter-btn"
+                                onClick={this.handleClearFilter}
+                                type="button"
+                                disabled={pending || isFilterEmpty}
+                            >
+                                Clear Filter
+                            </DangerButton>,
+                        ]
+                    }
+                </div>
+                <div styleName="lead-entries-container">
+                    { pending && <LoadingAnimation /> }
+                    { !pending &&
                         <ListView
                             key="lead-entries-list"
                             styleName="lead-entries-list"
-                            data={entries || emptyList}
+                            data={entries}
                             keyExtractor={Entries.leadKeyExtractor}
                             modifier={this.renderLeadGroupedEntriesItem}
-                        />,
-                    ])
-                }
+                        />
+                    }
+                </div>
             </div>
         );
     }

@@ -162,6 +162,11 @@ export const entriesViewForProjectSelector = createSelector(
     ),
 );
 
+export const entriesViewFilterSelector = createSelector(
+    entriesViewForProjectSelector,
+    entriesView => entriesView.filter || emptyObject,
+);
+
 export const entriesForProjectSelector = createSelector(
     entriesViewForProjectSelector,
     entriesView => entriesView.entries || emptyList,
