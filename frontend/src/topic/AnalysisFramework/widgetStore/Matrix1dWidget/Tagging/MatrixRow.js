@@ -69,7 +69,7 @@ export default class MatrixRow extends React.PureComponent {
         <MatrixCell
             key={key}
             onClick={() => this.handleCellClick(key)}
-            onDrop={(text) => { this.handleCellDrop(key, text); }}
+            onDrop={droppedData => this.handleCellDrop(key, droppedData)}
             active={this.props.selectedCells[key]}
         >
             { data.value }

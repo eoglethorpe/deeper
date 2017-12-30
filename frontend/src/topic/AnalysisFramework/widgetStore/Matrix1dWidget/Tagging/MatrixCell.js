@@ -43,9 +43,21 @@ export default class MatrixCell extends React.PureComponent {
 
     handleDrop = (e) => {
         e.preventDefault();
-        if (this.props.onDrop) {
-            const data = e.dataTransfer.getData('text');
-            this.props.onDrop(data);
+
+        if (!this.props.onDrop) {
+            return;
+        }
+
+        const data = e.dataTransfer.getData('text');
+        try {
+            const parsedData = JSON.parse(data);
+            this.props.onDrop(parsedData);
+        } catch (ex) {
+            const formmatedData = {
+                type: 'text',
+                data,
+            };
+            this.props.onDrop(formmatedData);
         }
     }
 

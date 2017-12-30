@@ -64,6 +64,16 @@ export default class ImagesGrid extends React.PureComponent {
         this.setState({ imageViewModalShow: false });
     }
 
+    handleOnDragStart = source => (e) => {
+        const data = JSON.stringify({
+            type: 'image',
+            data: source,
+        });
+
+        e.dataTransfer.setData('text/plain', data);
+        e.dataTransfer.dropEffect = 'copy';
+    }
+
     renderImage = (key, data) => {
         let source = data;
 
@@ -77,6 +87,8 @@ export default class ImagesGrid extends React.PureComponent {
                 src={source}
                 role="presentation"
                 onClick={() => this.handleImageClick(source)}
+                draggable
+                onDragStart={this.handleOnDragStart(source)}
                 alt={key}
                 key={key}
             />

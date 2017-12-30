@@ -146,9 +146,9 @@ export default class Matrix1dOverview extends React.PureComponent {
             .apply();
     }
 
-    handleCellDrop = (key, cellKey, text) => {
+    handleCellDrop = (key, cellKey, droppedData) => {
         const { api, id, filters, exportable } = this.props;
-        const existing = api.getEntryForExcerpt(text);
+        const existing = api.getEntryForExcerpt(droppedData.data);
 
         if (existing) {
             const settings = { $auto: {
@@ -174,7 +174,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 },
             };
             api.getEntryBuilder()
-                .setExcerpt(text)
+                .setExcerpt(droppedData.data)
                 .addAttribute(id, attribute)
                 .addFilterData(filters[0].id, this.createFilterData(attribute))
                 .addExportData(exportable.id, this.createExportData(attribute))
@@ -189,7 +189,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             tooltip={data.tooltip}
             cells={data.cells}
             onCellClick={cellKey => this.handleCellClick(key, cellKey)}
-            onCellDrop={(cellKey, text) => this.handleCellDrop(key, cellKey, text)}
+            onCellDrop={(cellKey, droppedData) => this.handleCellDrop(key, cellKey, droppedData)}
             selectedCells={this.props.attribute ? this.props.attribute[key] : {}}
         />
     )
