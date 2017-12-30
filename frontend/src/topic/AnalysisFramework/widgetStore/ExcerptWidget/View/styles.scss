@@ -1,8 +1,32 @@
 @import '../../../../../stylesheets/base';
 
-.excerpt-list {
+%textarea {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: $spacing-small;
+    width: 100%;
+
+    :global .input {
+        flex-grow: 1;
+        resize: none;
+    }
+}
+
+.excerpt-overview {
+    display: flex;
+    flex-direction: column;
     height: 100%;
+    overflow: auto;
+
+    .textarea {
+        @extend %textarea;
+    }
+
+    .image {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+    }
 }
