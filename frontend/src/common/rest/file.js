@@ -45,3 +45,11 @@ export const createHeaderForGalleryFile = () => ({
     method: GET,
     headers: commonHeaderForPost,
 });
+
+export const createUrlForSimplifiedFilePreview = fileId => (
+    `${wsEndpoint}/file-previews/${fileId}/`
+);
+
+export const createUrlForFileExtractionTrigger = fileId => (
+    `${wsEndpoint}/file-extraction-trigger/${fileId}/`
+);
