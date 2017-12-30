@@ -29,18 +29,21 @@ import {
 
 const propTypes = {
     className: PropTypes.string,
-    regionId: PropTypes.number.isRequired,
+    regionId: PropTypes.number,
     selections: PropTypes.arrayOf(PropTypes.shape({
         key: PropTypes.string,
         title: PropTypes.string,
     })),
-    onSelect: PropTypes.func,
+    onChange: PropTypes.func,
+    onLocationsChange: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
     selections: [],
-    onSelect: undefined,
+    onChange: undefined,
+    onLocationsChange: undefined,
+    regionId: undefined,
 };
 
 
@@ -63,12 +66,12 @@ export default class RegionMap extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.create();
+        this.create(this.props.regionId);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.regionId !== nextProps.regionId) {
-            this.create();
+            this.create(nextProps.regionId);
         }
     }
 
@@ -89,12 +92,14 @@ export default class RegionMap extends React.PureComponent {
         }
     }
 
-    create() {
-        const {
-            regionId,
-        } = this.props;
-
+    create(regionId) {
         this.destroy();
+
+        if (!regionId) {
+            this.setState({ pending: false });
+            return;
+        }
+
         this.setState({ pending: true });
 
         const params = createParamsForAdminLevelsForRegionGET();
@@ -199,8 +204,8 @@ export default class RegionMap extends React.PureComponent {
             selections.splice(index, 1);
         }
 
-        if (this.props.onSelect) {
-            this.props.onSelect(selections);
+        if (this.props.onChange) {
+            this.props.onChange(selections);
         }
     }
 
@@ -208,6 +213,27 @@ export default class RegionMap extends React.PureComponent {
         this.setState({
             selectedAdminLevelId: id,
         });
+    }
+
+    loadLocations() {
+        const { adminLevels, geoJsons } = this.state;
+        let locations = [];
+        adminLevels.forEach((adminLevel) => {
+            const geoJson = geoJsons[adminLevel.id];
+            if (geoJson) {
+                locations = [
+                    ...locations,
+                    ...geoJson.features.map(feature => ({
+                        key: feature.properties.pk,
+                        label: feature.properties.title,
+                    })),
+                ];
+            }
+        });
+
+        if (this.props.onLocationsChange) {
+            this.props.onLocationsChange(locations);
+        }
     }
 
     loadGeoJsons() {
@@ -224,7 +250,9 @@ export default class RegionMap extends React.PureComponent {
                             [adminLevel.id]: response,
                             ...this.state.geoJsons,
                         };
-                        this.setState({ geoJsons });
+                        this.setState({ geoJsons }, () => {
+                            this.loadLocations();
+                        });
                     })
                     .failure((response) => {
                         console.log(response);
@@ -271,7 +299,7 @@ export default class RegionMap extends React.PureComponent {
     }
 
     handleRefresh = () => {
-        this.create();
+        this.create(this.props.regionId);
     }
 
     renderContent() {

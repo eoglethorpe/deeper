@@ -93,3 +93,8 @@
         }
     }
 }
+
+:global #region-select-options,
+:global #location-select-options {
+    z-index: 1111;
+}

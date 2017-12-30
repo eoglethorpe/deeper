@@ -220,6 +220,8 @@ export default class EditEntryView extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
+
+                    this.api.setProject(response);
                     this.props.setProject({
                         project: response,
                     });
