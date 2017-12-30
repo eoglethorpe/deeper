@@ -1,15 +1,29 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
     SelectInput,
     TextInput,
     DateFilter,
-} from '../../../../public/components/Input';
+} from '../../../public/components/Input';
 
-import update from '../../../../public/utils/immutable-update';
+import update from '../../../public/utils/immutable-update';
+
+import styles from './styles.scss';
+
+const propTypes = {
+    values: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    onChange: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+};
 
 // eslint-disable-next-line react/prefer-stateless-function
 export default class BasicInformationInputs extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     handleInputChange = (key, value) => {
         const {
             values,
@@ -39,8 +53,14 @@ export default class BasicInformationInputs extends React.PureComponent {
         } = values;
 
         return ([
-            <h4 key="title">Basic Information</h4>,
+            <h4
+                className={styles.title}
+                key="title"
+            >
+                Basic Information
+            </h4>,
             <TextInput
+                className={styles.excerpt}
                 key="excerpt"
                 label="Search Excerpt"
                 onChange={(value) => { this.handleInputChange('excerpt', value); }}
@@ -49,6 +69,7 @@ export default class BasicInformationInputs extends React.PureComponent {
                 value={excerpt}
             />,
             <SelectInput
+                className={styles['created-by']}
                 key="created-by"
                 label="Created by"
                 multiple
@@ -57,6 +78,7 @@ export default class BasicInformationInputs extends React.PureComponent {
                 value={createdBy}
             />,
             <DateFilter
+                className={styles['created-at']}
                 key="created-at"
                 label="Created at"
                 onChange={(value) => { this.handleInputChange('createdAt', value); }}
