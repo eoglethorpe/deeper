@@ -1,22 +1,24 @@
 @import '../../../../../stylesheets/base';
 
 .geo-list {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
     padding: 0;
+    overflow: auto;
 
     .region-list {
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
+        margin-top: $spacing-medium;
         overflow: auto;
 
-        .regions-content {
+        .region-content {
             display: flex;
             flex-grow: 1;
 
             .region-name {
                 flex-grow: 1;
+                margin-bottom: $spacing-small;
+                padding: $spacing-extra-small $spacing-small;
             }
         }
 

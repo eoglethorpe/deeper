@@ -4,10 +4,10 @@ import { ViewListWidget } from './View';
 
 const geoWidget = {
     id: 'geoWidget',
-    title: 'Geographic Location',
+    title: 'Geo Location',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 192, height: 64 },
+        listMinSize: { width: 192, height: 240 },
     },
     tagging: {
         listComponent: TaggingListWidget,

@@ -1,15 +1,38 @@
 @import '../../../../../stylesheets/base';
 
 .geo-list {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    align-items: flex-start;
-    justify-content: flex-start;
     padding: 0;
+    overflow: auto;
 
-    .location-button {
-        color: $color-accent;
+    .geo-button-wrapper {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+        justify-content: center;
+
+        .location-button {
+            margin-bottom: $spacing-small;
+            color: $color-accent;
+        }
+    }
+
+    .region-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: auto;
+
+        .region-content {
+            display: flex;
+            flex-grow: 1;
+
+            .region-name {
+                flex-grow: 1;
+                margin-bottom: $spacing-small;
+                padding: $spacing-extra-small $spacing-small;
+            }
+        }
+
     }
 }
 
@@ -41,6 +64,7 @@
         flex-basis: 30%;
         flex-direction: column;
         background-color: $color-foreground-alt;
+        height: 700px;
 
         .search-box {
             padding: $spacing-medium;
@@ -54,22 +78,6 @@
             flex-grow: 1;
             margin-top: $spacing-large;
             overflow-y: auto;
-
-            :global .header {
-                position: sticky;
-                top: 0;
-                border-bottom: $width-separator-medium solid $color-separator;
-                padding: $spacing-small $spacing-medium-alt;
-                user-select: none;
-
-                &:not(.actions) {
-                    cursor: pointer;
-
-                    &:hover {
-                        background-color: $color-background-hover;
-                    }
-                }
-            }
         }
 
         .region-list {

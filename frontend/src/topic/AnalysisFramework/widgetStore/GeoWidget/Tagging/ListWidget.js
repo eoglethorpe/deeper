@@ -66,6 +66,7 @@ export default class GeoTaggingList extends React.PureComponent {
                     <div className="actions">
                         <TransparentDangerButton
                             onClick={() => this.handleRemoveButtonClick(row.key)}
+                            title="Remove Location"
                         >
                             <span className={iconNames.close} />
                         </TransparentDangerButton>
@@ -92,7 +93,7 @@ export default class GeoTaggingList extends React.PureComponent {
 
     mapRegionsList = (key, data) => (
         <div
-            className={styles['regions-content']}
+            className={styles['region-content']}
             key={key}
         >
             <span className={styles['region-name']}>{data.title}</span>
@@ -215,13 +216,15 @@ export default class GeoTaggingList extends React.PureComponent {
 
         return (
             <div styleName="geo-list">
-                <TransparentButton
-                    onClick={this.handleModalOpen}
-                    styleName="location-button"
-                    title="Click to select a Geo Area"
-                >
-                    Geo Area <span className={iconNames.globe} />
-                </TransparentButton>
+                <div styleName="geo-button-wrapper">
+                    <TransparentButton
+                        onClick={this.handleModalOpen}
+                        styleName="location-button"
+                        title="Click to select a Geo Area"
+                    >
+                        Geo Area <span className={iconNames.globe} />
+                    </TransparentButton>
+                </div>
                 <ListView
                     data={values}
                     className={styles['region-list']}
@@ -246,6 +249,7 @@ export default class GeoTaggingList extends React.PureComponent {
                                 onChange={this.handleRegionSelection}
                                 optionsIdentifier="region-select-options"
                                 value={selectedRegion}
+                                clearable={false}
                             />
                         }
                     />
