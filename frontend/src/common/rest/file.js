@@ -50,6 +50,12 @@ export const createUrlForSimplifiedFilePreview = fileId => (
     `${wsEndpoint}/file-previews/${fileId}/`
 );
 
-export const createUrlForFileExtractionTrigger = fileId => (
-    `${wsEndpoint}/file-extraction-trigger/${fileId}/`
-);
+export const urlForFileExtractionTrigger = `${wsEndpoint}/file-extraction-trigger/`;
+
+export const createParamsForFileExtractionTrigger = fileIds => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        fileIds,
+    }),
+});

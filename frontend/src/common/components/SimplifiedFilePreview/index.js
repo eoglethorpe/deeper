@@ -7,24 +7,26 @@ import styles from './styles.scss';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     createParamsForGenericGet,
-    createUrlForFileExtractionTrigger,
+    createParamsForFileExtractionTrigger,
     createUrlForSimplifiedFilePreview,
+    urlForFileExtractionTrigger,
 } from '../../../common/rest';
 import {
     LoadingAnimation,
 } from '../../../public/components/View';
-import {
-    isFalsy,
-} from '../../../public/utils/common';
 
 const propTypes = {
     className: PropTypes.string,
-    fileId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    fileIds: PropTypes.arrayOf(
+        PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    ),
+    previewId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onLoad: PropTypes.func,
 };
 const defaultProps = {
     className: '',
-    fileId: undefined,
+    fileIds: [],
+    previewId: undefined,
     onLoad: undefined,
 };
 
@@ -52,8 +54,9 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.fileId !== nextProps.fileId) {
-            this.create();
+        if (this.props.fileIds !== nextProps.fileIds ||
+            this.props.previewId !== nextProps.previewId) {
+            this.create(nextProps);
         }
     }
 
@@ -73,56 +76,55 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
     }
 
-    create() {
+    create(props) {
         this.destroy();
 
-        /**
-         * Get file preview
-         * If null, trigger one
-         * Either use websocket or polling to check if file preview can be obtained
-         * If failed or timeout, show error
-         */
-
         const {
-            fileId,
-            onLoad,
-        } = this.props;
+            fileIds,
+            previewId,
+        } = props;
 
-        if (!fileId) {
+        if (!fileIds || fileIds.length === 0) {
             return;
         }
 
-        const params = createParamsForGenericGet();
-        const triggerUrl = createUrlForFileExtractionTrigger(fileId);
-        const previewUrl = createUrlForSimplifiedFilePreview(fileId);
-
         this.setState({ pending: true });
+
+        if (previewId) {
+            this.createPreviewRequest(previewId);
+            return;
+        }
+
+        const triggerParams = createParamsForFileExtractionTrigger(fileIds);
+        const triggerUrl = urlForFileExtractionTrigger;
 
         this.previewRequestCount = 0;
         this.triggerRequest = this.createRequest(
             triggerUrl,
-            params,
-            () => {
-                console.log(`Triggered file extraction for ${fileId}`);
-                this.tryPreviewRequest();
+            triggerParams,
+            (response) => {
+                this.createPreviewRequest(response.extractionTriggered);
+                console.log(`Triggered file extraction for ${fileIds.join(', ')}`);
             },
         );
+
+        this.triggerRequest.start();
+    }
+
+    createPreviewRequest = (previewId) => {
+        const { onLoad } = this.props;
+        const params = createParamsForGenericGet();
+        const previewUrl = createUrlForSimplifiedFilePreview(previewId);
 
         this.previewRequest = this.createRequest(
             previewUrl,
             params,
             (response) => {
-                if (isFalsy(response.text) && response.images.length === 0) {
-                    // There is no preview
-                    if (this.previewRequestCount === 0) {
-                        // Trigger an extraction if this is the first time
-                        this.triggerRequest.start();
-                    } else {
-                        // Otherwise try a few more times
-                        this.previewRequestTimeout = setTimeout(() => {
-                            this.tryPreviewRequest();
-                        }, 1000);
-                    }
+                if (!response.extracted) {
+                    // Keep trying
+                    this.previewRequestTimeout = setTimeout(() => {
+                        this.tryPreviewRequest();
+                    }, 1000);
                 } else {
                     this.setState({
                         pending: false,
