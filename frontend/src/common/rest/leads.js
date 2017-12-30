@@ -3,6 +3,7 @@ import {
     GET,
     POST,
     PUT,
+    DELETE,
     commonHeaderForPost,
     p,
 } from '../config/rest';
@@ -11,6 +12,7 @@ import {
 export const urlForLead = `${wsEndpoint}/leads/`;
 export const urlForWebsiteFetch = `${wsEndpoint}/lead-website-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
+export const createUrlForLeadDelete = leadId => `${urlForLead}${leadId}/`;
 
 export const createParamsForLeadCreate = data => ({
     method: POST,
@@ -22,6 +24,11 @@ export const createParamsForLeadEdit = data => ({
     method: PUT,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
+});
+
+export const createParamsForLeadDelete = () => ({
+    method: DELETE,
+    headers: commonHeaderForPost,
 });
 
 export const createParamsForGenericGet = () => ({
