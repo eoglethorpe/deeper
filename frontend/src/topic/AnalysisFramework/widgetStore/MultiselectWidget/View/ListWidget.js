@@ -7,29 +7,51 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
+
+const emptyList = [];
+
 const propTypes = {
-    value: PropTypes.array,      // eslint-disable-line
+    attribute: PropTypes.object,      // eslint-disable-line
+    data: PropTypes.array,      // eslint-disable-line
 };
 
 const defaultProps = {
-    value: [],
+    data: [],
+    attribute: undefined,
 };
 @CSSModules(styles)
 export default class MultiselectList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    mapMultiselectList = (key, data) => (
+        <div
+            className={styles['multiselect-content']}
+            key={key}
+        >
+            <span className={styles['multiselect-name']}>{data.label}</span>
+        </div>
+    )
+
     render() {
         const {
-            value,
+            attribute: {
+                value = emptyList,
+            } = {},
+            data = emptyList,
         } = this.props;
+        const selectedData = data.filter(d => value.includes(d.key));
+        console.warn(selectedData);
         return (
             <div
                 styleName="multiselect-list"
             >
                 <ListView
-                    data={value}
+                    data={selectedData}
+                    className={styles['multiselect-list-view']}
                     keyExtractor={MultiselectList.valueKeyExtractor}
+                    modifier={this.mapMultiselectList}
                 />
             </div>
         );
