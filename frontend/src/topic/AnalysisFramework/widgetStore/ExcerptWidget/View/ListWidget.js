@@ -11,7 +11,6 @@ import styles from './styles.scss';
 const TEXT = 'excerpt';
 
 const propTypes = {
-    api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
 };
 

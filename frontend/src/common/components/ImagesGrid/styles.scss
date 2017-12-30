@@ -1,0 +1,59 @@
+@import '../../../stylesheets/base';
+
+.images-grid {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .images {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .image {
+            padding: $spacing-large;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    }
+}
+
+.image-preview {
+    :global {
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+            width: 100vw;
+            height: 100vh;
+            max-height: 100vh;
+        }
+    }
+
+    .modal-header {
+        flex-shrink: 0;
+        opacity: .8;
+        background-color: $color-primary;
+        color: $color-text-on-primary;
+
+        .transparent-btn {
+            color: $color-text-on-primary;
+            font-size: $font-size-super-large;
+        }
+    }
+
+    .modal-body {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+    }
+
+}
+
+.preview-image {
+    background-color: $color-foreground;
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+}

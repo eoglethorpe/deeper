@@ -19,6 +19,7 @@
         display: flex;
         flex-basis: 30%;
         flex-direction: column;
+        flex-grow: 0;
         flex-shrink: 0;
 
         .header {
