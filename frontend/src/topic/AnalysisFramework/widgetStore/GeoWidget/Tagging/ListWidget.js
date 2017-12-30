@@ -11,6 +11,7 @@ import {
 import {
     SelectInput,
 } from '../../../../../public/components/Input';
+import update from '../../../../../public/utils/immutable-update';
 import {
     Modal,
     ModalHeader,
@@ -31,13 +32,11 @@ const propTypes = {
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 
 };
 
 const defaultProps = {
     attribute: undefined,
-    data: [],
 };
 
 const emptyList = [];
@@ -77,7 +76,9 @@ export default class GeoTaggingList extends React.PureComponent {
 
         this.state = {
             showMapModal: false,
+            selectedRegion: undefined,
             values: (props.attribute && props.attribute.values) || emptyList,
+            locations: {},
         };
     }
 
@@ -87,12 +88,6 @@ export default class GeoTaggingList extends React.PureComponent {
                 values: (nextProps.attribute && nextProps.attribute.values) || emptyList,
             });
         }
-    }
-
-    onMapSelect = (values) => {
-        this.setState({
-            values,
-        });
     }
 
     mapRegionsList = (key, data) => (
@@ -112,6 +107,11 @@ export default class GeoTaggingList extends React.PureComponent {
     }
 
     handleModalOpen = () => {
+        if (this.props.api.getProject().regions.length > 0) {
+            this.setState({
+                selectedRegion: this.props.api.getProject().regions[0].id,
+            });
+        }
         this.setState({ showMapModal: true });
     }
 
@@ -122,7 +122,7 @@ export default class GeoTaggingList extends React.PureComponent {
     handleModalCancelButtonClick = () => {
         this.setState({
             showMapModal: false,
-            values: this.props.data,
+            values: (this.props.attribute && this.props.attribute.values) || emptyList,
         });
     }
 
@@ -138,9 +138,78 @@ export default class GeoTaggingList extends React.PureComponent {
         });
     }
 
+    handleMapSelect = (values) => {
+        const locations = this.state.locations;
+        const settings = {
+            [this.state.selectedRegion]: { $autoArray: {
+                $filter: l => !values.find(v => v.key === l.key),
+            } },
+        };
+        this.setState({
+            values,
+            locations: update(locations, settings),
+        });
+    }
+
+    handleMapLocationsChange = (newLocations) => {
+        const { locations, selectedRegion, values } = this.state;
+        const settings = {
+            [selectedRegion]: { $autoArray: {
+                $set: newLocations.filter(l => !values.find(v => v.key === l.key)),
+            } },
+        };
+
+        this.setState({
+            locations: update(locations, settings),
+        });
+    }
+
+    handleRegionSelection = (selectedRegion) => {
+        this.setState({
+            selectedRegion,
+        });
+    }
+
+    handleLocationSelection = (selection) => {
+        if (!selection) {
+            return;
+        }
+
+        if (!this.state.values.find(v => v.key === selection)) {
+            const { locations, selectedRegion } = this.state;
+            const location = locations[selectedRegion].find(
+                l => l.key === selection,
+            );
+            const values = [
+                ...this.state.values,
+                {
+                    key: location.key,
+                    title: location.label,
+                },
+            ];
+
+            const settings = {
+                [selectedRegion]: {
+                    $filter: l => !values.find(v => v.key === l.key),
+                },
+            };
+
+            this.setState({
+                values,
+                locations: update(locations, settings),
+            });
+        }
+    }
+
+    regionKeySelector = d => d.id
+
+    regionLabelSelector = d => d.title
+
     render() {
         const {
+            locations,
             showMapModal,
+            selectedRegion,
             values,
         } = this.state;
 
@@ -170,15 +239,22 @@ export default class GeoTaggingList extends React.PureComponent {
                             <SelectInput
                                 showHintAndError={false}
                                 showLabel={false}
-                                placeholder="Select a country"
+                                placeholder="Select a region"
+                                options={this.props.api.getProject().regions}
+                                keySelector={this.regionKeySelector}
+                                labelSelector={this.regionLabelSelector}
+                                onChange={this.handleRegionSelection}
+                                optionsIdentifier="region-select-options"
+                                value={selectedRegion}
                             />
                         }
                     />
                     <ModalBody>
                         <RegionMap
                             styleName="map-content"
-                            regionId={1}
-                            onSelect={this.onMapSelect}
+                            regionId={selectedRegion}
+                            onChange={this.handleMapSelect}
+                            onLocationsChange={this.handleMapLocationsChange}
                             selections={values}
                         />
                         <div styleName="content">
@@ -188,6 +264,10 @@ export default class GeoTaggingList extends React.PureComponent {
                                     showHintAndError={false}
                                     showLabel={false}
                                     placeholder="Search a location"
+                                    options={locations[selectedRegion]}
+                                    optionsIdentifier="location-select-options"
+                                    onChange={this.handleLocationSelection}
+                                    value="invalid"
                                 />
                             </div>
                             <div styleName="regions-table">
