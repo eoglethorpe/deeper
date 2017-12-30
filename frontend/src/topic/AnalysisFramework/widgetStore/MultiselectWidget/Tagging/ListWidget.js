@@ -66,6 +66,7 @@ export default class Multiselect extends React.PureComponent {
                     onChange={this.handleChange}
                     options={data}
                     multiple
+                    clearable={false}
                     styleName="multiselect"
                     value={value}
                     keyExtractor={Multiselect.valueKeyExtractor}
