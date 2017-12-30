@@ -5,6 +5,8 @@ const iconNames = {
     applyAllBelow: 'ion-android-arrow-dropdown-circle',
     apps: 'ion-android-apps',
     check: 'ion-checkmark',
+    checkbox: 'ion-android-checkbox',
+    checkboxOutlineBlank: 'ion-android-checkbox-outline-blank',
     checkCircle: 'ion-checkmark-circled',
     chevronDown: 'ion-chevron-down',
     chevronLeft: 'ion-chevron-left',

@@ -1,0 +1,34 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/modal';
+
+
+.add-gallery-file-modal {
+    display: flex;
+
+    :global {
+        .modal-content {
+            position: relative;
+            width: 960px;
+            min-width: 50vw;
+        }
+    }
+
+    .search-input {
+        padding: $spacing-extra-small;
+        width: 200px;
+    }
+
+    .modal-body {
+        padding: 0;
+        height: 72vh;
+    }
+
+    .gallery-table {
+        :global .header {
+            border-bottom: $width-separator-medium solid $color-separator;
+            user-select: none;
+        }
+    }
+
+}
+

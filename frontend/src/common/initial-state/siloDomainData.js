@@ -127,6 +127,8 @@ const initialSiloDomainData = {
             },
         },
     },
+
+    userGalleryFiles: [],
 };
 
 export default initialSiloDomainData;

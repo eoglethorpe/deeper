@@ -13,6 +13,7 @@ export * from './reducers/siloDomainData/addLeads';
 export * from './reducers/siloDomainData/editEntries';
 export * from './reducers/siloDomainData/analysisFramework';
 export * from './reducers/siloDomainData/categoryEditor';
+export * from './reducers/siloDomainData/galleryFiles';
 
 export * from './reducers/domainData/analysisFrameworks';
 export * from './reducers/domainData/leadFilter';
