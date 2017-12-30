@@ -265,7 +265,6 @@ export default class Navbar extends React.PureComponent {
 
         const match = this.getCurrentMatch();
         const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
-        console.log(currentPath);
         if (hideNavbar[currentPath]) {
             return null;
         }

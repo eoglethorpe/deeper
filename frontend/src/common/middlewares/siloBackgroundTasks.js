@@ -18,16 +18,18 @@ const siloBackgroundTasks = (store) => {
     const siloBackgroundTaskManager = new SiloTasksManager('background');
 
     // Add tasks to siloBackgroundTaskManager
-    siloBackgroundTaskManager.addTask(new TokenRefresher(store, 1000 * 60 * 10));
+    const tokenRefresher = new TokenRefresher(store);
+    siloBackgroundTaskManager.addTask(tokenRefresher);
 
     return next => (action) => {
         switch (action.type) {
             case START_SILO_BACKGROUND_TASKS:
-                siloBackgroundTaskManager.start().then(() => {
-                    if (action.callback) {
-                        action.callback();
-                    }
-                });
+                siloBackgroundTaskManager.start()
+                    .then(() => {
+                        if (action.callback) {
+                            action.callback();
+                        }
+                    });
                 break;
             case STOP_SILO_BACKGROUND_TASKS:
                 siloBackgroundTaskManager.stop();
