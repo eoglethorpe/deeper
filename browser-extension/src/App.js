@@ -1,21 +1,41 @@
 import CSSModules from 'react-css-modules';
 import React, { Component } from 'react';
-import { NumberInput } from './public-components/Input';
-import styles from './stylesheets/styles.scss';
+import {
+    DateInput,
+    SelectInput,
+    TextInput,
+} from './public-components/Input';
+
+import styles from './app.scss';
 
 @CSSModules(styles, { allowMultiple: true })
 class App extends Component {
     render() {
         return (
             <div styleName="app">
-                <header styleName="header">
-                    Deep Extension
-                </header>
-                <p styleName="intro">
-                    This is the extension for humans.
-                </p>
-                <NumberInput
-                    label="I am label input"
+                <SelectInput
+                    label="Project"
+                />
+                <TextInput
+                    label="Title"
+                />
+                <TextInput
+                    label="Source"
+                />
+                <SelectInput
+                    label="Confidentiality"
+                />
+                <SelectInput
+                    label="Assigned to"
+                />
+                <DateInput
+                    label="Assigned to"
+                />
+                <TextInput
+                    label="Url"
+                />
+                <TextInput
+                    label="website"
                 />
             </div>
         );
