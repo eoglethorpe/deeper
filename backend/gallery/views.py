@@ -1,13 +1,20 @@
-from rest_framework import viewsets, permissions
 from rest_framework import mixins
 from deep.permissions import ModifyPermission
 from django.conf import settings
+from rest_framework import (
+    permissions,
+    response,
+    views,
+    viewsets,
+)
 
-from .models import File
+from .tasks import extract_from_file
+from .models import File, FilePreview
 from .serializers import (
     FileSerializer,
     GoogleDriveFileSerializer,
     DropboxFileSerializer,
+    FilePreviewSerializer
 )
 
 
@@ -36,3 +43,29 @@ class DropboxFileViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = DropboxFileSerializer
     permission_classes = [permissions.IsAuthenticated,
                           ModifyPermission]
+
+
+class FilePreviewViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = FilePreviewSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return FilePreview.objects.all()
+
+
+class FileExtractionTriggerView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, version=None):
+        file_ids = request.data.getlist('file_ids')
+        file_preview = FilePreview.objects.create(
+            file_ids=file_ids,
+            extracted=False
+        )
+
+        if not settings.TESTING:
+            extract_from_file(file_preview.id)
+
+        return response.Response({
+            'extraction_triggered': file_preview.id,
+        })

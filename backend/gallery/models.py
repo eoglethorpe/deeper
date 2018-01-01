@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from user_group.models import UserGroup
 from user_resource.models import UserResource
@@ -34,3 +34,13 @@ class File(UserResource):
 
     def can_modify(self, user):
         return self.created_by == user
+
+
+class FilePreview(models.Model):
+    file_ids = ArrayField(models.IntegerField())
+    text = models.TextField(blank=True)
+    ngrams = JSONField(null=True, blank=True, default=None)
+    extracted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return 'Text extracted for {}'.format(self.file)

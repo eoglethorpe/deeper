@@ -1,3 +1,4 @@
+from drf_dynamic_fields import DynamicFieldsMixin
 from rest_framework import serializers
 from rest_framework.exceptions import APIException
 
@@ -7,7 +8,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from user_resource.serializers import UserResourceSerializer
 from utils.external_storages.google_drive import download as g_download
 from utils.external_storages.dropbox import download as d_download
-from .models import File
+from .models import File, FilePreview
 
 
 class SimpleFileSerializer(serializers.ModelSerializer):
@@ -20,7 +21,7 @@ class SimpleFileSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'file', 'mime_type')
 
 
-class FileSerializer(UserResourceSerializer):
+class FileSerializer(DynamicFieldsMixin, UserResourceSerializer):
     class Meta:
         model = File
         fields = ('__all__')
@@ -100,3 +101,9 @@ class DropboxFileSerializer(UserResourceSerializer):
         file = super(DropboxFileSerializer, self).create(validated_data)
         file.permitted_users.add(self.context['request'].user)
         return file
+
+
+class FilePreviewSerializer(DynamicFieldsMixin, serializers.ModelSerializer):
+    class Meta:
+        model = FilePreview
+        fields = ('id', 'text', 'ngrams', 'extracted')

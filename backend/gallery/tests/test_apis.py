@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from user.tests.test_apis import AuthMixin
 
-from gallery.models import File
+from gallery.models import File, FilePreview
 from django.conf import settings
 
 import os
@@ -82,3 +82,27 @@ class GalleryTests(AuthMixin, APITestCase):
                                     format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(File.objects.count(), last_count)
+
+    def test_trigger_api(self):
+        file = File.objects.create(
+            title='Test',
+            created_by=self.user,
+        )
+
+        url = '/api/v1/file-extraction-trigger/'
+        data = {
+            'file_ids': [file.id],
+        }
+        response = self.client.post(url, data, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(FilePreview.objects.filter(
+            id=response.data['extraction_triggered']
+        ).exists())
+
+    def test_preview_api(self):
+        preview = FilePreview.objects.create(file_ids=[], text='dummy')
+
+        url = '/api/v1/file-previews/{}/'.format(preview.id)
+        response = self.client.get(url, HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['text'], preview.text)
