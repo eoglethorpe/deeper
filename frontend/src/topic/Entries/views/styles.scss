@@ -7,71 +7,87 @@
     height: calc(100vh - #{$height-navbar});
 
     .filters {
+        display: flex;
         flex-shrink: 0;
         padding: $spacing-large;
+        align-items: flex-end;
+
+        .filter {
+            +.filter {
+                margin-left: $spacing-small;
+            }
+        }
+
+       .filter-btn {
+            margin-left: $spacing-small;
+        }
     }
 
-    .lead-entries-list {
+    .lead-entries-container {
+        position: relative;
         flex-grow: 1;
-        padding: $spacing-medium-alt;
         overflow-y: auto;
 
-        .lead-entries {
-            @include shadow-large;
-            margin-bottom: $spacing-large;
+        .lead-entries-list {
+            padding: $spacing-medium-alt;
 
-            .header {
-                display: flex;
-                justify-content: space-between;
-                border-bottom: $width-separator-medium solid $color-separator;
-                background-color: $color-background-header;
-                padding: $spacing-small $spacing-medium-alt;
+            .lead-entries {
+                @include shadow-large;
+                margin-bottom: $spacing-large;
 
-                p {
-                    margin: $spacing-small 0;
+                .header {
+                    display: flex;
+                    justify-content: space-between;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    background-color: $color-background-header;
+                    padding: $spacing-small $spacing-medium-alt;
 
-                    span {
-                        margin-right: $spacing-small;
+                    p {
+                        margin: $spacing-small 0;
+
+                        span {
+                            margin-right: $spacing-small;
+                        }
                     }
                 }
-            }
 
-            .entry {
-                border-bottom: $width-separator-thin solid $color-separator;
-                background-color: $color-foreground-white;
+                .entry {
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    background-color: $color-foreground-white;
 
-                .grid-layout {
-                    min-height: 100%;
-                    overflow-y: hidden;
-                    overflow-x: auto;
+                    .grid-layout {
+                        min-height: 100%;
+                        overflow-y: hidden;
+                        overflow-x: auto;
 
-                    :global .grid-item {
-                        .header {
-                            display: flex;
-                            flex-shrink: 0;
-                            align-items: flex-end;
-                            justify-content: space-between;
-                            background-color: transparent;
-                            height: 18px;
+                        :global .grid-item {
+                            .header {
+                                display: flex;
+                                flex-shrink: 0;
+                                align-items: flex-end;
+                                justify-content: space-between;
+                                background-color: transparent;
+                                height: 18px;
 
-                            .heading {
+                                .heading {
+                                    background-color: transparent;
+                                    padding: 0;
+                                    font-size: $font-size-small;
+                                }
+                            }
+
+                            .content {
+                                flex-grow: 1;
                                 background-color: transparent;
                                 padding: 0;
-                                font-size: $font-size-small;
+                                height: calc(100% - 32px);
                             }
                         }
-
-                        .content {
-                            flex-grow: 1;
-                            background-color: transparent;
-                            padding: 0;
-                            height: calc(100% - 32px);
-                        }
                     }
-                }
 
-                &:nth-child(even) {
-                    background-color: $color-foreground;
+                    &:nth-child(even) {
+                        background-color: $color-foreground;
+                    }
                 }
             }
         }
