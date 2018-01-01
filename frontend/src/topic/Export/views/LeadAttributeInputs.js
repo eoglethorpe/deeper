@@ -53,7 +53,7 @@ export default class BasicInformationInputs extends React.PureComponent {
 
         return ([
             <h4 key="title">
-                LeadAttributes
+                Lead Attributes
             </h4>,
             <TextInput
                 className={styles.title}

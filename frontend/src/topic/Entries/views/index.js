@@ -10,18 +10,8 @@ import {
     ListView,
     LoadingAnimation,
 } from '../../../public/components/View';
-import {
-    reverseRoute,
-    isObjectEmpty,
-} from '../../../public/utils/common';
-import {
-    Button,
-    DangerButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    SelectInput,
-} from '../../../public/components/Input';
+import { reverseRoute } from '../../../public/utils/common';
+import { PrimaryButton } from '../../../public/components/Action';
 import {
     pathNames,
     iconNames,
@@ -38,9 +28,13 @@ import {
     entriesViewFilterSelector,
     setAnalysisFrameworkAction,
     analysisFrameworkForProjectSelector,
-    setEntriesViewFilterAction,
     unsetEntriesViewFilterAction,
+
+    gridItemsForProjectSelector,
+    widgetsSelector,
+    maxHeightForProjectSelector,
 } from '../../../common/redux';
+
 import {
     urlForFilteredEntries,
 
@@ -50,7 +44,8 @@ import {
     createUrlForProject,
 } from '../../../common/rest';
 
-import widgetStore from '../../AnalysisFramework/widgetStore';
+import FilterEntriesForm from './FilterEntriesForm';
+// import widgetStore from '../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
@@ -58,13 +53,16 @@ const mapStateToProps = (state, props) => ({
     entries: entriesForProjectSelector(state, props),
     analysisFramework: analysisFrameworkForProjectSelector(state, props),
     entriesFilter: entriesViewFilterSelector(state, props),
+
+    gridItems: gridItemsForProjectSelector(state, props),
+    widgets: widgetsSelector(state, props),
+    maxHeight: maxHeightForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setEntries: params => dispatch(setEntriesAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
-    setEntriesViewFilter: params => dispatch(setEntriesViewFilterAction(params)),
     unsetEntriesViewFilter: params => dispatch(unsetEntriesViewFilterAction(params)),
 });
 
@@ -80,15 +78,20 @@ const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.string.isRequired,
     setEntries: PropTypes.func.isRequired,
+
     entriesFilter: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    setEntriesViewFilter: PropTypes.func.isRequired,
     unsetEntriesViewFilter: PropTypes.func.isRequired,
+
+    gridItems: PropTypes.object.isRequired,
+    widgets: PropTypes.array.isRequired,
+    maxHeight: PropTypes.number,
 };
 
 const defaultProps = {
     match: {
         params: {},
     },
+    maxHeight: 0,
 };
 
 const emptyList = [];
@@ -104,45 +107,33 @@ export default class Entries extends React.PureComponent {
         super(props);
 
         this.state = {
-            filters: this.props.entriesFilter,
-            pristine: true,
+            pendingEntries: true,
+            pendingAf: true,
         };
-
-        this.items = [];
-        this.gridItems = {};
-
-        this.updateAnalysisFramework(props.analysisFramework);
-        this.updateGridItems(props.entries);
     }
 
     componentWillMount() {
-        const { projectId, entriesFilter } = this.props;
-
-        this.entriesRequest = this.createRequestForEntries(projectId, entriesFilter);
-        this.entriesRequest.start();
+        const { projectId } = this.props;
 
         this.projectRequest = this.createRequestForProject(projectId);
         this.projectRequest.start();
-
-        this.setState({ pendingEntries: true, pendingProjectAndAf: true });
     }
 
     componentWillReceiveProps(nextProps) {
         const {
-            analysisFramework: oldAf,
             projectId: oldProjectId,
+            analysisFramework: oldAf,
             entriesFilter: oldFilter,
-            entries: oldEntries,
         } = this.props;
         const {
-            analysisFramework: newAf,
             projectId: newProjectId,
+            analysisFramework: newAf,
             entriesFilter: newFilter,
-            entries: newEntries,
         } = nextProps;
 
 
         if (oldProjectId !== newProjectId) {
+            // NOTE: If projects is changed; af, filter and entries will also changed
             if (this.entriesRequest) {
                 this.entriesRequest.stop();
             }
@@ -153,28 +144,23 @@ export default class Entries extends React.PureComponent {
                 this.analysisFrameworkRequest.stop();
             }
 
-            this.entriesRequest = this.createRequestForEntries(newProjectId, newFilter);
-            this.entriesRequest.start();
-
             this.projectRequest = this.createRequestForProject(newProjectId);
             this.projectRequest.start();
 
             this.setState({
                 pendingEntries: true,
-                pendingProjectAndAf: true,
-                filters: newFilter,
+                pendingAf: true,
             });
-        } else if (oldAf !== newAf) {
-            this.updateAnalysisFramework(newAf);
-            this.updateGridItems(newEntries);
+            return;
+        }
 
-            // when analysisFramework has changed - remove previous filters
-            if (!oldAf || !newAf || oldAf.versionId !== newAf.versionId) {
-                this.props.unsetEntriesViewFilter();
-            }
-        } else if (oldEntries !== newEntries) {
-            this.updateGridItems(newEntries);
-        } else if (oldFilter !== newFilter) {
+        if (oldAf !== newAf && (!oldAf || !newAf || oldAf.versionId !== newAf.versionId)) {
+            // clear previous filters
+            this.props.unsetEntriesViewFilter();
+        }
+
+        if (oldFilter !== newFilter) {
+            // Make request for new entries after filter has changed
             if (this.entriesRequest) {
                 this.entriesRequest.stop();
             }
@@ -183,8 +169,6 @@ export default class Entries extends React.PureComponent {
                 newFilter,
             );
             this.entriesRequest.start();
-
-            this.setState({ filters: newFilter });
         }
     }
 
@@ -277,9 +261,7 @@ export default class Entries extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
-                    this.props.setProject({
-                        project: response,
-                    });
+                    this.props.setProject({ project: response });
 
                     this.analysisFramework = this.createRequestForAnalysisFramework(
                         response.analysisFramework,
@@ -304,11 +286,15 @@ export default class Entries extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
-                    this.props.setAnalysisFramework({
-                        analysisFramework: response,
-                    });
+                    this.props.setAnalysisFramework({ analysisFramework: response });
 
-                    this.setState({ pendingProjectAndAf: false });
+                    this.entriesRequest = this.createRequestForEntries(
+                        projectIdFromRoute,
+                        this.props.entriesFilter,
+                    );
+                    this.entriesRequest.start();
+
+                    this.setState({ pendingAf: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -317,95 +303,77 @@ export default class Entries extends React.PureComponent {
         return analysisFrameworkRequest;
     }
 
-    updateAnalysisFramework(analysisFramework) {
-        this.widgets = widgetStore
-            .filter(widget => widget.view.listComponent)
-            .map(widget => ({
-                id: widget.id,
-                title: widget.title,
-                listComponent: widget.view.listComponent,
-            }));
+    createRequestForEntries = (projectId, filters = {}) => {
+        const entryRequest = new FgRestBuilder()
+            .url(urlForFilteredEntries)
+            .params(() => createParamsForFilteredEntries({
+                project: projectId,
+                ...filters,
+            }))
+            .preLoad(() => {
+                this.setState({
+                    pendingEntries: true,
+                });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'entriesGetResponse');
+                    const responseEntries = response.results.entries;
+                    const responseLeads = response.results.leads;
 
-        if (analysisFramework.widgets) {
-            this.items = analysisFramework.widgets.filter(
-                w => this.widgets.find(w1 => w1.id === w.widgetId),
-            );
-        } else {
-            this.items = [];
-        }
+                    const entries = responseLeads.map(lead => ({
+                        ...lead,
+                        entries: responseEntries.filter(e => e.lead === lead.id),
+                    }));
 
-        if (analysisFramework.filters) {
-            this.filters = analysisFramework.filters.filter(
-                f => this.items.find(item => item.key === f.key),
-            );
-        } else {
-            this.filters = [];
-        }
+                    this.props.setEntries({
+                        projectId,
+                        entries,
+                    });
+                    this.setState({ pendingEntries: false });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return entryRequest;
     }
 
-    updateGridItems(entries) {
-        this.gridItems = {};
-        entries.forEach((entryGroup) => {
-            entryGroup.entries.forEach((entry) => {
-                this.gridItems[entry.id] = this.items.map(
-                    item => ({
-                        key: item.key,
-                        widgetId: item.widgetId,
-                        title: item.title,
-                        layout: item.properties.listGridLayout,
-                        attribute: this.getAttribute(entry.attributes, item.id),
-                        data: item.properties.data,
-                    }),
-                );
-            });
-        });
-    }
-
-    handleApplyFilter = () => {
-        const { filters } = this.state;
-        this.props.setEntriesViewFilter({ filters });
-    }
-
-    handleClearFilter = () => {
-        if (this.state.pristine) {
-            this.props.unsetEntriesViewFilter();
-        } else {
-            this.setState({
-                filters: {},
-            });
-        }
-    }
-
-    handleFilterChange = (key, values) => {
-        const filters = {
-            ...this.state.filters,
-            ...{ [key]: values },
-        };
-        this.setState({
-            filters,
-            pristine: false,
-        });
-    }
-
-    renderEntries = (key, data) => (
-        <div
-            key={data.id}
-            className={styles.entry}
-            style={{ height: this.getMaxHeight() }}
-        >
-            <GridLayout
-                className={styles['grid-layout']}
-                modifier={this.getItemView}
-                items={this.gridItems[data.id] || emptyList}
-                viewOnly
+    renderItemView = (item) => {
+        const { widgets } = this.props;
+        const widget = widgets.find(w => w.id === item.widgetId);
+        const ListComponent = widget.listComponent;
+        return (
+            <ListComponent
+                data={item.data}
+                attribute={item.attribute}
             />
-        </div>
-    )
+        );
+    }
+
+    renderEntries = (key, data) => {
+        const {
+            maxHeight,
+            gridItems,
+        } = this.props;
+        return (
+            <div
+                key={data.id}
+                className={styles.entry}
+                style={{ height: maxHeight }}
+            >
+                <GridLayout
+                    className={styles['grid-layout']}
+                    modifier={this.renderItemView}
+                    items={gridItems[data.id] || emptyList}
+                    viewOnly
+                />
+            </div>
+        );
+    }
 
     renderLeadGroupedEntriesItem = (key, data) => {
-        const {
-            match,
-        } = this.props;
+        const { match } = this.props;
 
         const route = reverseRoute(pathNames.editEntries, {
             projectId: match.params.projectId,
@@ -419,7 +387,9 @@ export default class Entries extends React.PureComponent {
             >
                 <header className={styles.header}>
                     <div className={styles['info-container']}>
-                        <h2>{data.title}</h2>
+                        <h2>
+                            {data.title}
+                        </h2>
                         <p>
                             <span className={iconNames.calendar} />
                             <FormattedDate
@@ -448,73 +418,25 @@ export default class Entries extends React.PureComponent {
         );
     }
 
-    renderFilter = ({ key, properties: filter }) => {
-        if (!filter || !filter.type) {
-            return null;
-        }
-
-        if (filter.type === 'multiselect') {
-            return (
-                <SelectInput
-                    key={key}
-                    className={styles.filter}
-                    options={filter.options}
-                    label={key}
-                    showHintAndError={false}
-                    onChange={values => this.handleFilterChange(key, values)}
-                    value={this.state.filters[key] || []}
-                    disabled={this.state.pendingProjectAndAf}
-                    multiple
-                />
-            );
-        }
-
-        return null;
-    }
-
-
     render() {
-        const { entries = [] } = this.props;
+        const {
+            entries = [],
+            match,
+        } = this.props;
 
         const {
             pendingEntries,
-            pendingProjectAndAf,
-            pristine,
-            filters,
+            pendingAf,
         } = this.state;
 
-        const pending = pendingEntries || pendingProjectAndAf;
-        const isFilterEmpty = isObjectEmpty(filters);
+        const pending = pendingEntries || pendingAf;
 
         return (
             <div styleName="entries">
-                <div
-                    key="filters"
-                    styleName="filters"
-                >
-                    { this.filters.map(this.renderFilter) }
-                    { this.filters.length > 0 &&
-                        [
-                            <Button
-                                key="apply-btn"
-                                styleName="filter-btn"
-                                onClick={this.handleApplyFilter}
-                                disabled={pending || pristine}
-                            >
-                                Apply Filter
-                            </Button>,
-                            <DangerButton
-                                key="clear-btn"
-                                styleName="filter-btn"
-                                onClick={this.handleClearFilter}
-                                type="button"
-                                disabled={pending || isFilterEmpty}
-                            >
-                                Clear Filter
-                            </DangerButton>,
-                        ]
-                    }
-                </div>
+                <FilterEntriesForm
+                    pending={pendingAf}
+                    match={match}
+                />
                 <div styleName="lead-entries-container">
                     { pending && <LoadingAnimation /> }
                     { !pending &&

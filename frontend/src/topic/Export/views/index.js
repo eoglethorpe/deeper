@@ -25,6 +25,7 @@ import excelIcon from '../../../img/excel.svg';
 import pdfIcon from '../../../img/pdf.svg';
 import jsonIcon from '../../../img/json.svg';
 
+import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
 import BasicInformationInputs from './BasicInformationInputs';
 import LeadAttributeInputs from './LeadAttributeInputs';
 import styles from './styles.scss';
@@ -246,7 +247,9 @@ export default class Export extends React.PureComponent {
                         styleName="export-types"
                     >
                         <header styleName="header">
-                            <h4 styleName="heading">Select export type</h4>
+                            <h4 styleName="heading">
+                                Select export type
+                            </h4>
                         </header>
                         <div styleName="content">
                             <div styleName="export-type-select-list">
@@ -266,7 +269,9 @@ export default class Export extends React.PureComponent {
                         styleName="filters"
                     >
                         <header styleName="header">
-                            <h4>Select filters</h4>
+                            <h4>
+                                Select filters
+                            </h4>
                         </header>
                         <div styleName="content">
                             <div styleName="left">
@@ -277,7 +282,13 @@ export default class Export extends React.PureComponent {
                                     />
                                 </div>
                                 <div styleName="entry-attributes">
-                                    Entry attributes
+                                    <h4>
+                                        Entry Attributes
+                                    </h4>
+                                    <FilterEntriesForm
+                                        pending
+                                        match={this.props.match}
+                                    />
                                 </div>
                             </div>
                             <div styleName="right">
