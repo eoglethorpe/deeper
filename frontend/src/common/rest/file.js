@@ -7,6 +7,7 @@ import {
 } from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
+export const urlForUsersGalleryFiles = `${wsEndpoint}/files/`;
 export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
 export const createUrlForGalleryFile = fileId => `${wsEndpoint}/files/${fileId}/`;

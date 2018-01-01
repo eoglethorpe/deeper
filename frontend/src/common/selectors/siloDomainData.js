@@ -303,3 +303,8 @@ export const selectedSubcategorySelector = createSelector(
         return subcategory;
     },
 );
+
+// Gallery Files
+export const userGalleryFilesSelector = ({ siloDomainData }) => (
+    siloDomainData.userGalleryFiles || emptyList
+);
