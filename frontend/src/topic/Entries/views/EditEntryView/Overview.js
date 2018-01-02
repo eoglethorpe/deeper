@@ -207,7 +207,24 @@ export default class Overview extends React.PureComponent {
 
     calcEntryKey = entry => entryAccessor.getKey(entry);
 
-    calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
+    calcEntryLabel = (entry) => {
+        const values = entryAccessor.getValues(entry);
+
+        if (values.entryType === 'image') {
+            return (
+                <img
+                    className="image"
+                    src={values.image}
+                    alt="Entry"
+                />
+            );
+        }
+        return (
+            <div className="entry-excerpt">
+                {values.excerpt}
+            </div>
+        );
+    }
 
     calcEntryLabelLimited = (entry) => {
         const values = entryAccessor.getValues(entry);
@@ -257,9 +274,7 @@ export default class Overview extends React.PureComponent {
                     className="button"
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    <div className="entry-excerpt">
-                        {this.calcEntryLabel(entry)}
-                    </div>
+                    {this.calcEntryLabel(entry)}
                     <div className="status-icons">
                         {
                             entryAccessor.isMarkedForDelete(entry) &&

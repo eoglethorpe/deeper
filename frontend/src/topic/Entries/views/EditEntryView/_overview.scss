@@ -119,6 +119,12 @@
                                 text-align: justify;
                             }
 
+                            .image {
+                                max-width: 100%;
+                                max-height: 128px;
+                                object-fit: contain;
+                            }
+
                             .status-icons {
                                 display: flex;
 
