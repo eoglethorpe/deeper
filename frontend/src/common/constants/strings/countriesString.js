@@ -1,11 +1,10 @@
 import string from './lang/en/';
 
 const countriesString = {
-
     countriesLabel: string[51],
     searchCountryPlaceholer: string[52],
 
-    addCountryButtonLabel: string[53],
+    addCountryButtonLabel: string[980],
     deleteCountryButtonLabel: string[54],
     deleteCountryConfirm: string[55],
 

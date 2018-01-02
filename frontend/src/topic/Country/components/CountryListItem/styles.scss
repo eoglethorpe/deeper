@@ -1,0 +1,20 @@
+@import '../../../../stylesheets/base';
+
+.country-link {
+    display: block;
+    transition: .2s all ease-in-out;
+    border-bottom: $width-separator-thin solid $color-separator;
+    border-left: $width-separator-thick solid transparent;
+    padding: $spacing-medium $spacing-medium-alt;
+    width: 100%;
+    text-transform: capitalize;
+
+    &:hover {
+        background-color: $color-hover;
+    }
+
+    &.active {
+        border-left: $width-separator-thick solid $color-accent;
+        background-color: $color-hover;
+    }
+}
