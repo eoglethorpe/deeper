@@ -274,6 +274,10 @@ export default class API {
         this.entries = entries;
     }
 
+    setProject(project) {
+        this.project = project;
+    }
+
     setSelectedId(id) {
         this.selectedId = id;
     }
@@ -281,6 +285,10 @@ export default class API {
     getEntry(id = undefined) {
         const selectedId = id || this.selectedId;
         return selectedId && this.entries.find(e => e.data.id === selectedId);
+    }
+
+    getProject() {
+        return this.project;
     }
 
     getEntryModifier(id = undefined) {
