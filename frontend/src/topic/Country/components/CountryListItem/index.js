@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';

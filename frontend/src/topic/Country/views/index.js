@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
@@ -19,13 +18,11 @@ import {
     ModalBody,
 } from '../../../public/components/View';
 import {
-    reverseRoute,
     caseInsensitiveSubmatch,
 } from '../../../public/utils/common';
 
 import {
     iconNames,
-    pathNames,
     countriesString,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -100,7 +97,6 @@ export default class CountryPanel extends React.PureComponent {
         };
 
         this.countriesRequest = this.createRequestforCountries();
-        console.log('reconsalsdk');
     }
 
     componentWillMount() {
@@ -111,7 +107,6 @@ export default class CountryPanel extends React.PureComponent {
         const { countries } = nextProps;
         const { searchInputValue } = this.state;
         if (this.props.countries !== countries) {
-            console.warn('Searching countries');
             const displayCountryList = countries.filter(
                 country => caseInsensitiveSubmatch(country.title, searchInputValue),
             );
