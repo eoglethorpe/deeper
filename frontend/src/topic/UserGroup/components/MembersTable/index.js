@@ -364,15 +364,19 @@ export default class MembersTable extends React.PureComponent {
                         Members
                     </h2>
                     <div styleName="pusher" />
-                    <TextInput
-                        placeholder="Search"
-                        onChange={this.handleSearchMemberChange}
-                        value={searchMemberInputValue}
-                        type="search"
-                        styleName="search-input"
-                        showLabel={false}
-                        showHintAndError={false}
-                    />
+                    <div styleName="search-wrapper">
+                        <div styleName="search-icon">
+                            <i className={iconNames.search} />
+                        </div>
+                        <TextInput
+                            placeholder="Search"
+                            onChange={this.handleSearchMemberChange}
+                            value={searchMemberInputValue}
+                            type="search"
+                            showLabel={false}
+                            showHintAndError={false}
+                        />
+                    </div>
                     {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton

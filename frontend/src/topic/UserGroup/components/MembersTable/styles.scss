@@ -21,10 +21,17 @@
             flex-grow: 1;
         }
 
-        .search-input {
+        .search-wrapper {
+            display: flex;
             flex-basis: 15%;
             align-self: flex-end;
             margin: 0 $spacing-medium;
+
+            .search-icon {
+                padding: $spacing-extra-small $spacing-small;
+                color: $color-text-disabled;
+                font-size: $font-size-large;
+            }
         }
     }
 

@@ -329,15 +329,19 @@ export default class ProjectsTable extends React.PureComponent {
                         Projects
                     </h2>
                     <div styleName="pusher" />
-                    <TextInput
-                        placeholder="Search"
-                        onChange={this.handleSearchProjectChange}
-                        value={searchProjectInputValue}
-                        type="search"
-                        styleName="search-input"
-                        showLabel={false}
-                        showHintAndError={false}
-                    />
+                    <div styleName="search-wrapper">
+                        <div styleName="search-icon">
+                            <i className={iconNames.search} />
+                        </div>
+                        <TextInput
+                            placeholder="Search"
+                            onChange={this.handleSearchProjectChange}
+                            value={searchProjectInputValue}
+                            type="search"
+                            showLabel={false}
+                            showHintAndError={false}
+                        />
+                    </div>
                     {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
