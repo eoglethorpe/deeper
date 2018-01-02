@@ -5,6 +5,7 @@ import React from 'react';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     Checkbox,
+    TreeSelection,
 } from '../../../public/components/Input';
 import {
     Button,
@@ -233,6 +234,53 @@ export default class Export extends React.PureComponent {
             leads,
         } = this.state;
 
+        const nodes = [
+            {
+                title: 'Item 1',
+                key: 'item-1',
+                selected: false,
+                nodes: [
+                    { title: 'Subitem 1', key: 'subitem-1', selected: false },
+                    { title: 'Subitem 2', key: 'subitem-2', selected: false },
+                    { title: 'Subitem 3', key: 'subitem-3', selected: false },
+                    { title: 'Subitem 4', key: 'subitem-4', selected: false },
+                    { title: 'Subitem 5', key: 'subitem-5', selected: false },
+                    {
+                        title: 'Subitem 6',
+                        key: 'subitem-6',
+                        selected: false,
+                        nodes: [
+                            { title: 'Sub-subitem 1', key: 'subsubitem-1', selected: false },
+                            { title: 'Sub-subitem 2', key: 'subsubitem-2', selected: false },
+                            { title: 'Sub-subitem 3', key: 'subsubitem-3', selected: false },
+                        ],
+                    },
+                    {
+                        title: 'Subitem 7',
+                        key: 'subitem-7',
+                        selected: false,
+                        nodes: [
+                            { title: 'Sub-subitem 1', key: 'subsubitem-1a', selected: false },
+                            { title: 'Sub-subitem 2', key: 'subsubitem-2a', selected: false },
+                            { title: 'Sub-subitem 3', key: 'subsubitem-3a', selected: false },
+                        ],
+                    },
+                ],
+            }, {
+                title: 'Item 2',
+                key: 'item-2',
+                selected: false,
+                nodes: [
+                    { title: 'Subitem 1', key: 'subitem-1a', selected: false },
+                    { title: 'Subitem 2', key: 'subitem-2a', selected: false },
+                    { title: 'Subitem 3', key: 'subitem-3a', selected: false },
+                    { title: 'Subitem 4', key: 'subitem-4a', selected: false },
+                    { title: 'Subitem 5', key: 'subitem-5a', selected: false },
+                    { title: 'Subitem 6', key: 'subitem-6a', selected: false },
+                ],
+            },
+        ];
+
         return (
             <div styleName="export">
                 <header styleName="header">
@@ -261,7 +309,9 @@ export default class Export extends React.PureComponent {
                                 />
                             </div>
                             <div styleName="export-type-options">
-                                Export type options
+                                <TreeSelection
+                                    value={nodes}
+                                />
                             </div>
                         </div>
                     </section>

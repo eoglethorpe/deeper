@@ -33,7 +33,7 @@ import {
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
 import styles from './styles.scss';
 
-const NLP_THRESHOLD = 0.2;
+const NLP_THRESHOLD = 0;
 
 const propTypes = {
     lead: PropTypes.object, // eslint-disable-line
@@ -183,10 +183,14 @@ export default class AssistedTagging extends React.PureComponent {
         this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
             startPos: excerpt.start_pos,
             length: excerpt.end_pos - excerpt.start_pos,
-            sectors: excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
+            sectors: [{
+                label: excerpt.classification[0][0],
+                confidence: `${Math.round(excerpt.classification[0][1] * 100)}%`,
+            }],
+            /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
                 label: c[0],
                 confidence: `${Math.round(c[1] * 100)}%`,
-            })),
+            })) */
         })).filter(c => c.sectors.length > 0);
 
 

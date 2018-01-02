@@ -82,8 +82,8 @@ const propTypes = {
     entriesFilter: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     unsetEntriesViewFilter: PropTypes.func.isRequired,
 
-    gridItems: PropTypes.object.isRequired,
-    widgets: PropTypes.array.isRequired,
+    gridItems: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    widgets: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     maxHeight: PropTypes.number,
 };
 

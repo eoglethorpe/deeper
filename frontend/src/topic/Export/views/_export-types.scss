@@ -64,6 +64,7 @@
         .export-type-options {
             flex-grow: 1;
             padding: $spacing-large;
+            overflow: auto;
         }
     }
 }
