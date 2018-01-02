@@ -127,6 +127,8 @@ export default class Matrix2dList extends React.PureComponent {
                     options={data.sector.subsectors}
                     keySelector={Matrix2dList.subsectorKeySelector}
                     labelSelector={Matrix2dList.subsectorLabelSelector}
+                    placeholder="Select subsectors"
+                    label="Sub-sectors"
                     onChange={subsectors => this.handleSelectSubsectorChange(
                         data.dimension.id,
                         data.subdimension.id,

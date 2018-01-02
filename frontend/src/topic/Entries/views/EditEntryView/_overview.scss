@@ -19,6 +19,7 @@
         display: flex;
         flex-basis: 30%;
         flex-direction: column;
+        flex-grow: 0;
         flex-shrink: 0;
 
         .header {
@@ -116,6 +117,12 @@
                                 flex-grow: 1;
                                 margin-right: $spacing-medium-alt;
                                 text-align: justify;
+                            }
+
+                            .image {
+                                max-width: 100%;
+                                max-height: 128px;
+                                object-fit: contain;
                             }
 
                             .status-icons {

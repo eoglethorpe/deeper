@@ -1,7 +1,7 @@
 @import '../../../../../stylesheets/base';
 
 .matrix-2d-list {
-    padding: $spacing-small;
+    overflow-y: auto;
 
     .list {
         width: 100%;

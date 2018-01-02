@@ -14,11 +14,12 @@
         align-items: center;
 
         .scale-unit {
-            transition: .2s all ease-in-out;
+            transition: .1s all ease-in-out;
             margin-left: $spacing-extra-small;
             outline: 0;
             border: 0;
             cursor: pointer;
+            padding: 0;
             width: $width-scale-widget-unit;
             height: $height-scale-widget-unit;
 

@@ -212,7 +212,8 @@ export default class Entries extends React.PureComponent {
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
             const { height, top } = item.properties.listGridLayout;
-            return Math.max(acc, height + top);
+            // To add little padding at bottom
+            return Math.max(acc, height + top + 12);
         },
         0,
     );

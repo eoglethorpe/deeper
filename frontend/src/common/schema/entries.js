@@ -59,9 +59,9 @@ const entrySchema = [];
         },
         extends: 'dbentity',
         fields: {
-            image: { type: 'uint' },
             analysisFramework: { type: 'uint', required: true },
 
+            image: { type: 'string' },
             excerpt: { type: 'string' },
             lead: { type: 'uint', required: true },
             entryType: { type: 'string', required: true },

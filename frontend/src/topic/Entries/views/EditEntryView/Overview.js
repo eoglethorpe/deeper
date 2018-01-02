@@ -34,6 +34,7 @@ import {
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import WebsiteViewer from '../../../../common/components/WebsiteViewer';
 import DeepGallery from '../../../../common/components/DeepGallery';
+import ImagesGrid from '../../../../common/components/ImagesGrid';
 import AssistedTagging from '../AssistedTagging';
 
 import { LEAD_TYPE } from '../../../../common/entities/lead';
@@ -79,6 +80,8 @@ const mapDispatchToProps = dispatch => ({
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
+const emptyList = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
@@ -97,6 +100,7 @@ export default class Overview extends React.PureComponent {
         this.state = {
             entriesListViewShow: false,
             currentEntryId: undefined,
+            images: emptyList,
         };
     }
 
@@ -184,6 +188,12 @@ export default class Overview extends React.PureComponent {
         });
     }
 
+    handleLoadImages = (response) => {
+        if (response.images) {
+            this.setState({ images: response.images });
+        }
+    }
+
     calcStyleNameWithState = (style) => {
         const { entriesListViewShow } = this.state;
         const styleNames = [style];
@@ -197,11 +207,37 @@ export default class Overview extends React.PureComponent {
 
     calcEntryKey = entry => entryAccessor.getKey(entry);
 
-    calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
+    calcEntryLabel = (entry) => {
+        const values = entryAccessor.getValues(entry);
+
+        if (values.entryType === 'image') {
+            return (
+                <img
+                    className="image"
+                    src={values.image}
+                    alt="Entry"
+                />
+            );
+        }
+        return (
+            <div className="entry-excerpt">
+                {values.excerpt}
+            </div>
+        );
+    }
 
     calcEntryLabelLimited = (entry) => {
+        const values = entryAccessor.getValues(entry);
+        if (values.entryType === 'image') {
+            return 'Image';
+        }
         const characterLimit = 32;
-        const text = entryAccessor.getValues(entry).excerpt;
+        const text = values.excerpt;
+
+        if (!text) {
+            return 'Excerpt';
+        }
+
         const limitedEntry = text.slice(0, characterLimit);
         if (text.length > characterLimit) {
             return `${limitedEntry}...`;
@@ -238,9 +274,7 @@ export default class Overview extends React.PureComponent {
                     className="button"
                     onClick={() => this.handleEntrySelectChange(currentEntryId)}
                 >
-                    <div className="entry-excerpt">
-                        {this.calcEntryLabel(entry)}
-                    </div>
+                    {this.calcEntryLabel(entry)}
                     <div className="status-icons">
                         {
                             entryAccessor.isMarkedForDelete(entry) &&
@@ -322,7 +356,12 @@ export default class Overview extends React.PureComponent {
             leadId={lead.id}
             highlights={this.props.api.getEntryHighlights()}
             highlightModifier={this.highlightSimplifiedExcerpt}
+            onLoad={this.handleLoadImages}
         />
+    )
+
+    renderLeadImages = () => (
+        <ImagesGrid images={this.state.images} />
     )
 
     renderLeftSection = lead => (
@@ -349,6 +388,14 @@ export default class Overview extends React.PureComponent {
                 >
                     Original
                 </TabLink>
+                { this.state.images.length > 0 &&
+                    <TabLink
+                        styleName="tab-header"
+                        to="images-preview"
+                    >
+                        Images
+                    </TabLink>
+                }
                 {/* Essential for border bottom, for more info contact AdityaKhatri */}
                 <div styleName="empty-tab" />
             </div>
@@ -374,6 +421,14 @@ export default class Overview extends React.PureComponent {
                         api={this.props.api}
                     />
                 </TabContent>
+                { this.state.images.length > 0 &&
+                    <TabContent
+                        styleName="tab"
+                        for="images-preview"
+                    >
+                        {this.renderLeadImages(lead)}
+                    </TabContent>
+                }
             </div>
         </Tabs>
     )

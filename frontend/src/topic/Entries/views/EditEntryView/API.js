@@ -21,6 +21,7 @@ class EntryModifier {
 
         const settings = {
             excerpt: { $set: excerpt },
+            entryType: { $set: 'excerpt' },
         };
 
         this.values = update(this.values, settings);
@@ -34,6 +35,7 @@ class EntryModifier {
 
         const settings = {
             image: { $set: image },
+            entryType: { $set: 'image' },
         };
 
         this.values = update(this.values, settings);
@@ -209,6 +211,16 @@ class EntryBuilder {
         return this;
     }
 
+    setData({ type, data }) {
+        if (type === 'image') {
+            this.setImage(data);
+        } else {
+            this.setExcerpt(data);
+        }
+
+        return this;
+    }
+
     addAttribute(widgetId, attribute) {
         this.attributes.push({
             widget: widgetId,
@@ -355,6 +367,17 @@ export default class API {
 
     getEntryForExcerpt(excerpt) {
         return this.entries.find(entry => entryAccessor.getValues(entry).excerpt === excerpt);
+    }
+
+    getEntryForImage(image) {
+        return this.entries.find(entry => entryAccessor.getValues(entry).image === image);
+    }
+
+    getEntryForData({ type, data }) {
+        if (type === 'image') {
+            return this.getEntryForImage(data);
+        }
+        return this.getEntryForExcerpt(data);
     }
 
     getEntryHighlights() {
