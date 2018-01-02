@@ -205,9 +205,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     )
 
     renderContent() {
-        const {
-            highlightModifier,
-        } = this.props;
+        const { highlightModifier } = this.props;
 
         const {
             error,
@@ -235,32 +233,22 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Preview Not Available
+                Preview not Available
             </div>
         );
     }
 
     render() {
-        const {
-            className,
-        } = this.props;
-
-        const {
-            pending,
-        } = this.state;
+        const { className } = this.props;
+        const { pending } = this.state;
 
         return (
             <div
                 className={className}
                 styleName="lead-preview"
             >
-                {
-                    (pending && (
-                        <LoadingAnimation />
-                    )) || (
-                        this.renderContent()
-                    )
-                }
+                { pending && <LoadingAnimation /> }
+                { !pending && this.renderContent() }
             </div>
         );
     }

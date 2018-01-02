@@ -11,7 +11,6 @@ import {
     DangerButton,
     PrimaryButton,
     SuccessButton,
-    TransparentButton,
 } from '../../../../public/components/Action';
 import {
     GridLayout,
@@ -185,8 +184,17 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entryId: value,
         });
+        this.setState({ currentTab: this.state.oldTab });
+    }
+
+    handleTabSelect = (selectedTab) => {
+        let oldTab;
+        if (selectedTab === 'entries-listing') {
+            oldTab = this.state.currentTab;
+        }
         this.setState({
-            currentTab: this.state.oldTab,
+            oldTab,
+            currentTab: selectedTab,
         });
     }
 
@@ -235,6 +243,12 @@ export default class Overview extends React.PureComponent {
         }
         return limitedEntry;
     }
+
+    isTypeWithUrl = t => t === LEAD_TYPE.website;
+
+    isTypeWithAttachment = t => (
+        [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive].indexOf(t) !== 1
+    );
 
     renderHighlightSimplifiedExcerpt = (highlight, text) => (
         <span
@@ -304,155 +318,34 @@ export default class Overview extends React.PureComponent {
     }
 
     renderLeadPreview = (lead) => {
-        const type = lead.sourceType;
+        const { sourceType: type } = lead;
 
-        if (type === LEAD_TYPE.website) {
-            if (lead.url) {
-                return (
-                    <div styleName="lead-preview">
-                        <WebsiteViewer styleName="gallery-file" url={lead.url} />
-                    </div>
-                );
-            }
+        if (this.isTypeWithUrl(type) && lead.url) {
             return (
-                <div styleName="lead-preview">
-                    <div styleName="preview-text">
-                        <h1>Preview Not Available</h1>
-                    </div>
-                </div>
+                <WebsiteViewer
+                    styleName="gallery-file"
+                    url={lead.url}
+                />
             );
-        } else if (type === LEAD_TYPE.text) {
-            return undefined;
+        } else if (this.isTypeWithAttachment(type) && lead.attachment) {
+            return (
+                <DeepGallery
+                    styleName="gallery-file"
+                    galleryId={lead.attachment.id}
+                />
+            );
         }
-
         return (
-            <div styleName="lead-preview">
-                {
-                    lead.attachment ? (
-                        <DeepGallery
-                            styleName="gallery-file"
-                            galleryId={lead.attachment.id}
-                        />
-                    ) :
-                        <div styleName="preview-text">
-                            <h1>Preview Not Available</h1>
-                        </div>
-                }
+            <div styleName="preview-text">
+                <h1>
+                    Preview not Available
+                </h1>
             </div>
         );
     }
 
-    renderSimplifiedLeadPreview = lead => (
-        <SimplifiedLeadPreview
-            leadId={lead.id}
-            highlights={this.props.api.getEntryHighlights()}
-            highlightModifier={this.renderHighlightSimplifiedExcerpt}
-            onLoad={this.handleLoadImages}
-        />
-    )
-
     renderLeadImages = () => (
         <ImagesGrid images={this.state.images} />
-    )
-
-    renderLeftSection = () => (
-        <Tabs
-            name="leftPaneTabs"
-            selectedTab={this.state.currentTab}
-            handleSelect={(selectedTab) => {
-                let oldTab;
-                if (selectedTab === 'entries-listing') {
-                    oldTab = this.state.currentTab;
-                }
-                this.setState({
-                    oldTab,
-                    currentTab: selectedTab,
-                });
-            }}
-            activeLinkStyle={{ none: 'none' }}
-            styleName="tabs-container"
-        >
-            <div styleName="tabs-header-container">
-                <TabLink
-                    styleName="tab-header"
-                    to="simplified-preview"
-                >
-                    Simplified
-                </TabLink>
-                <TabLink
-                    styleName="tab-header"
-                    to="assisted-tagging"
-                >
-                    Assisted
-                </TabLink>
-                <TabLink
-                    styleName="tab-header"
-                    to="original-preview"
-                >
-                    Original
-                </TabLink>
-                { this.state.images.length > 0 &&
-                    <TabLink
-                        styleName="tab-header"
-                        to="images-preview"
-                    >
-                        Images
-                    </TabLink>
-                }
-                <TabLink
-                    styleName="tab-header"
-                    to="entries-listing"
-                >
-                    Entries
-                </TabLink>
-                {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                <div styleName="empty-tab" />
-            </div>
-            <div styleName="tabs-content">
-                <TabContent
-                    styleName="tab"
-                    for="simplified-preview"
-                >
-                    {this.renderSimplifiedLeadPreview(this.props.lead)}
-                </TabContent>
-                <TabContent
-                    styleName="tab"
-                    for="original-preview"
-                >
-                    {this.renderLeadPreview(this.props.lead)}
-                </TabContent>
-                <TabContent
-                    styleName="tab"
-                    for="assisted-tagging"
-                >
-                    <AssistedTagging
-                        lead={this.props.lead}
-                        api={this.props.api}
-                    />
-                </TabContent>
-                { this.state.images.length > 0 &&
-                    <TabContent
-                        styleName="tab"
-                        for="images-preview"
-                    >
-                        {this.renderLeadImages(this.props.lead)}
-                    </TabContent>
-                }
-                <TabContent
-                    styleName="tab"
-                    for="entries-listing"
-                >
-                    <div styleName="entries-list-container">
-                        <ListView
-                            styleName="entries-list"
-                            modifier={this.renderEntriesList}
-                            data={this.props.entries}
-                            keyExtractor={this.calcEntryKey}
-                        />
-                    </div>
-                </TabContent>
-            </div>
-        </Tabs>
     )
 
     renderItemView = (item) => {
@@ -483,14 +376,115 @@ export default class Overview extends React.PureComponent {
             widgetDisabled,
         } = this.props;
 
-        const entry = this.props.entries.find(e => entryAccessor.getKey(e) === selectedEntryId);
-        const isMarkedForDelete = entry && entryAccessor.isMarkedForDelete(entry);
+        const selectedEntry = this.props.entries.find(
+            e => entryAccessor.getKey(e) === selectedEntryId,
+        );
+        const isMarkedForDelete = selectedEntryId && entryAccessor.isMarkedForDelete(selectedEntry);
 
         return (
             <div styleName="overview">
                 <div styleName="left">
                     <div styleName="container">
-                        {this.renderLeftSection()}
+                        <Tabs
+                            name="leftPaneTabs"
+                            selectedTab={this.state.currentTab}
+                            handleSelect={this.handleTabSelect}
+                            activeLinkStyle={{ none: 'none' }}
+                            styleName="tabs-container"
+                        >
+                            <div styleName="tabs-header-container">
+                                <TabLink
+                                    styleName="tab-header"
+                                    to="simplified-preview"
+                                >
+                                    Simplified
+                                </TabLink>
+                                <TabLink
+                                    styleName="tab-header"
+                                    to="assisted-tagging"
+                                >
+                                    Assisted
+                                </TabLink>
+                                <TabLink
+                                    styleName="tab-header"
+                                    to="original-preview"
+                                >
+                                    Original
+                                </TabLink>
+                                {
+                                    this.state.images.length > 0 &&
+                                    <TabLink
+                                        styleName="tab-header"
+                                        to="images-preview"
+                                    >
+                                        Images
+                                    </TabLink>
+                                }
+                                <TabLink
+                                    styleName="tab-header"
+                                    to="entries-listing"
+                                >
+                                    Entries
+                                </TabLink>
+                                {/*
+                                    Essential for border bottom,
+                                    for more info contact AdityaKhatri
+                                */}
+                                <div styleName="empty-tab" />
+                            </div>
+                            <div styleName="tabs-content">
+                                <TabContent
+                                    styleName="tab"
+                                    for="simplified-preview"
+                                >
+                                    <SimplifiedLeadPreview
+                                        leadId={this.props.lead.id}
+                                        highlights={this.props.api.getEntryHighlights()}
+                                        highlightModifier={this.renderHighlightSimplifiedExcerpt}
+                                        onLoad={this.handleLoadImages}
+                                    />
+                                </TabContent>
+                                <TabContent
+                                    styleName="tab"
+                                    for="assisted-tagging"
+                                >
+                                    <AssistedTagging
+                                        lead={this.props.lead}
+                                        api={this.props.api}
+                                    />
+                                </TabContent>
+                                <TabContent
+                                    styleName="tab"
+                                    for="original-preview"
+                                >
+                                    <div styleName="lead-preview">
+                                        {this.renderLeadPreview(this.props.lead)}
+                                    </div>
+                                </TabContent>
+                                {
+                                    this.state.images.length > 0 &&
+                                    <TabContent
+                                        styleName="tab"
+                                        for="images-preview"
+                                    >
+                                        {this.renderLeadImages(this.props.lead)}
+                                    </TabContent>
+                                }
+                                <TabContent
+                                    styleName="tab"
+                                    for="entries-listing"
+                                >
+                                    <div styleName="entries-list-container">
+                                        <ListView
+                                            styleName="entries-list"
+                                            modifier={this.renderEntriesList}
+                                            data={this.props.entries}
+                                            keyExtractor={this.calcEntryKey}
+                                        />
+                                    </div>
+                                </TabContent>
+                            </div>
+                        </Tabs>
                     </div>
                 </div>
                 <div styleName="right">
@@ -514,7 +508,7 @@ export default class Overview extends React.PureComponent {
                             >
                                 Add
                             </PrimaryButton>
-                            { entry && !isMarkedForDelete &&
+                            { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
                                     title="Mark current entry for removal"
                                     onClick={() => this.props.onEntryDelete(true)}
@@ -522,7 +516,7 @@ export default class Overview extends React.PureComponent {
                                     Remove
                                 </DangerButton>
                             }
-                            { entry && isMarkedForDelete &&
+                            { selectedEntry && isMarkedForDelete &&
                                 <Button
                                     title="Unmark current entry for removal"
                                     onClick={() => this.props.onEntryDelete(false)}
