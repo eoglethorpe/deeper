@@ -188,14 +188,12 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.log(response);
                 this.setState({
                     pending: false,
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
                 this.setState({
                     pending: false,
                     error: 'Failed connecting to server',
@@ -205,9 +203,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     )
 
     renderContent() {
-        const {
-            highlightModifier,
-        } = this.props;
+        const { highlightModifier } = this.props;
 
         const {
             error,
@@ -235,32 +231,22 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Preview Not Available
+                Preview not Available
             </div>
         );
     }
 
     render() {
-        const {
-            className,
-        } = this.props;
-
-        const {
-            pending,
-        } = this.state;
+        const { className } = this.props;
+        const { pending } = this.state;
 
         return (
             <div
                 className={className}
                 styleName="lead-preview"
             >
-                {
-                    (pending && (
-                        <LoadingAnimation />
-                    )) || (
-                        this.renderContent()
-                    )
-                }
+                { pending && <LoadingAnimation /> }
+                { !pending && this.renderContent() }
             </div>
         );
     }
