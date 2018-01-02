@@ -6,61 +6,37 @@
     $width-list: 320px;
     height: calc(100vh - #{$height-navbar});
 
-    .country-list {
-        @include shadow-medium;
+    .sidebar {
         display: flex;
+        position: relative;
         flex-basis: 16%;
         flex-direction: column;
-        flex-shrink: 0;
+        border-right: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
         min-width: 320px;
-        height: 100%;
 
-        .list-header {
+        .header {
             display: flex;
             flex-shrink: 0;
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-medium $spacing-medium-alt;
+            border-bottom: $width-separator-normal solid $color-separator;
+            padding: $spacing-medium;
+
+            .heading {
+                flex-grow: 1;
+            }
 
             .search-input {
                 flex-basis: 100%;
-                padding: $spacing-small 0;
-
-                :global .error {
-                    display: none;
-                }
+                padding: 0;
             }
         }
 
-        .list {
+        .country-list {
             flex-grow: 1;
             overflow-y: auto;
-
-            :global .list-item {
-                transition: .2s all ease-in-out;
-                border-bottom: $width-separator-thin solid $color-separator;
-                border-left: $width-separator-thick solid transparent;
-                padding: 0;
-
-                .link {
-                    display: block;
-                    padding: $spacing-medium $spacing-large;
-                    width: 100%;
-                    height: 100%;
-                }
-
-                &:hover {
-                    background-color: $color-hover;
-                }
-
-                &.active {
-                    border-left: $width-separator-thick solid $color-accent;
-                    background-color: $color-hover;
-                }
-            }
         }
     }
 

@@ -227,6 +227,7 @@ const strings = {
     978: 'Error. Cannot delete lead.',
     979: 'Error.Cannot delete lead. Please check your network connection and try again',
 
+    980: 'Add',
 };
 
 export default strings;

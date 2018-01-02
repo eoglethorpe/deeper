@@ -2,7 +2,6 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
@@ -13,20 +12,17 @@ import {
     PrimaryButton,
 } from '../../../public/components/Action';
 import {
-    ListItem,
     ListView,
     Modal,
     ModalHeader,
     ModalBody,
 } from '../../../public/components/View';
 import {
-    reverseRoute,
     caseInsensitiveSubmatch,
 } from '../../../public/utils/common';
 
 import {
     iconNames,
-    pathNames,
     countriesString,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
@@ -42,6 +38,7 @@ import {
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
+import CountryListItem from '../components/CountryListItem';
 import AddRegion from '../../../common/components/AddRegion';
 import styles from './styles.scss';
 
@@ -80,9 +77,13 @@ export default class CountryPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const displayCountryList = [...this.props.countries];
+
+        displayCountryList.sort((a, b) => (a.title.localeCompare(b.title)));
+
         this.state = {
             addCountryModal: false,
-            displayCountryList: this.props.countries,
+            displayCountryList,
             searchInputValue: '',
         };
 
@@ -109,6 +110,7 @@ export default class CountryPanel extends React.PureComponent {
             const displayCountryList = countries.filter(
                 country => caseInsensitiveSubmatch(country.title, searchInputValue),
             );
+            displayCountryList.sort((a, b) => (a.title.localeCompare(b.title)));
             this.setState({ displayCountryList });
         }
     }
@@ -176,26 +178,16 @@ export default class CountryPanel extends React.PureComponent {
     calcCountryListItemKey = country => country.id;
 
     renderCountryListItem = (key, country) => {
-        const {
-            match,
-        } = this.props;
-
-        const activeCountryId = +match.params.countryId;
+        const { match: { params: { countryId } } } = this.props;
+        const activeCountryId = +countryId;
         const isActive = country.id === activeCountryId;
-
         return (
-            <ListItem
-                active={isActive}
+            <CountryListItem
                 key={key}
-                scrollIntoView={isActive}
-            >
-                <Link
-                    className="link"
-                    to={reverseRoute(pathNames.countries, { countryId: country.id })}
-                >
-                    {country.title}
-                </Link>
-            </ListItem>
+                countryId={country.id}
+                title={country.title}
+                isActive={isActive}
+            />
         );
     }
 
@@ -250,14 +242,14 @@ export default class CountryPanel extends React.PureComponent {
         } = this.state;
 
         const { activeUser } = this.props;
-        const sortedCountries = [...displayCountryList];
-        sortedCountries.sort((a, b) => (a.title.localeCompare(b.title)));
 
         return (
             <div styleName="country-panel">
-                <div styleName="country-list">
-                    <header styleName="list-header">
-                        <h2>{countriesString.countriesLabel}</h2>
+                <div styleName="sidebar">
+                    <header styleName="header">
+                        <h3 styleName="heading">
+                            {countriesString.countriesLabel}
+                        </h3>
                         {
                             activeUser.isSuperuser &&
                             <PrimaryButton
@@ -273,12 +265,14 @@ export default class CountryPanel extends React.PureComponent {
                             placeholder={countriesString.searchCountryPlaceholer}
                             type="search"
                             value={this.state.searchInputValue}
+                            showLabel={false}
+                            showHintAndError={false}
                         />
                     </header>
                     <ListView
-                        styleName="list"
+                        styleName="country-list"
                         modifier={this.renderCountryListItem}
-                        data={sortedCountries}
+                        data={displayCountryList}
                         keyExtractor={this.calcCountryListItemKey}
                     />
                     <Modal
