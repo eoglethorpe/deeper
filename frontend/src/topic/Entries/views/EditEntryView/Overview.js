@@ -95,8 +95,8 @@ export default class Overview extends React.PureComponent {
         this.updateGridItems(props.entries);
 
         this.state = {
-            entriesListViewShow: false,
             currentEntryId: undefined,
+            currentTab: 'simplified-preview',
         };
     }
 
@@ -104,28 +104,30 @@ export default class Overview extends React.PureComponent {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.updateAnalysisFramework(nextProps.analysisFramework);
             this.updateGridItems(nextProps.entries);
-        } else if (
+        }
+        if (
             this.props.entries !== nextProps.entries ||
             this.props.selectedEntryId !== nextProps.selectedEntryId
         ) {
             this.updateGridItems();
         }
+
+        if (this.props.saveAllPending !== nextProps.saveAllPending) {
+            if (nextProps.saveAllPending && this.state.currentTab !== 'entries-listing') {
+                this.setState({
+                    currentTab: 'entries-listing',
+                    oldTab: this.state.currentTab,
+                });
+            } else if (!nextProps.saveAllPending && this.state.currentTab === 'entries-listing') {
+                this.setState({
+                    currentTab: this.state.oldTab,
+                    oldTab: undefined,
+                });
+            }
+        }
     }
 
-    getItemView = (item) => {
-        const Component = this.widgets.find(w => w.id === item.widgetId).overviewComponent;
-        return (
-            <Component
-                id={item.id}
-                filters={item.filters}
-                exportable={item.exportable}
-                api={this.props.api}
-                attribute={item.attribute}
-                data={item.data}
-            />
-        );
-    }
-
+    // TODO: these items and grids are calcualted, maybe use them
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.overviewComponent)
@@ -155,6 +157,7 @@ export default class Overview extends React.PureComponent {
         }
     }
 
+    // TODO: these items and grids are calcualted, maybe use them
     updateGridItems() {
         this.gridItems = this.items.map(item => ({
             id: item.id,
@@ -173,26 +176,14 @@ export default class Overview extends React.PureComponent {
         window.location.hash = '/list/';
     }
 
-    handleEntriesListToggleClick = () => {
-        this.setState({ entriesListViewShow: !this.state.entriesListViewShow });
-    }
-
     handleEntrySelectChange = (value) => {
         this.props.setActiveEntry({
             leadId: this.props.leadId,
             entryId: value,
         });
-    }
-
-    calcStyleNameWithState = (style) => {
-        const { entriesListViewShow } = this.state;
-        const styleNames = [style];
-
-        if (entriesListViewShow || this.props.saveAllPending) {
-            styleNames.push('active');
-        }
-
-        return styleNames.join(' ');
+        this.setState({
+            currentTab: this.state.oldTab,
+        });
     }
 
     calcEntryKey = entry => entryAccessor.getKey(entry);
@@ -209,7 +200,7 @@ export default class Overview extends React.PureComponent {
         return limitedEntry;
     }
 
-    highlightSimplifiedExcerpt = (highlight, text) => (
+    renderHighlightSimplifiedExcerpt = (highlight, text) => (
         <span
             style={{
                 backgroundColor: highlight.color,
@@ -321,12 +312,24 @@ export default class Overview extends React.PureComponent {
         <SimplifiedLeadPreview
             leadId={lead.id}
             highlights={this.props.api.getEntryHighlights()}
-            highlightModifier={this.highlightSimplifiedExcerpt}
+            highlightModifier={this.renderHighlightSimplifiedExcerpt}
         />
     )
 
-    renderLeftSection = lead => (
+    renderLeftSection = () => (
         <Tabs
+            name="leftPaneTabs"
+            selectedTab={this.state.currentTab}
+            handleSelect={(selectedTab) => {
+                let oldTab;
+                if (selectedTab === 'entries-listing') {
+                    oldTab = this.state.currentTab;
+                }
+                this.setState({
+                    oldTab,
+                    currentTab: selectedTab,
+                });
+            }}
             activeLinkStyle={{ none: 'none' }}
             styleName="tabs-container"
         >
@@ -349,6 +352,12 @@ export default class Overview extends React.PureComponent {
                 >
                     Original
                 </TabLink>
+                <TabLink
+                    styleName="tab-header"
+                    to="entries-listing"
+                >
+                    Entries
+                </TabLink>
                 {/* Essential for border bottom, for more info contact AdityaKhatri */}
                 <div styleName="empty-tab" />
             </div>
@@ -357,32 +366,61 @@ export default class Overview extends React.PureComponent {
                     styleName="tab"
                     for="simplified-preview"
                 >
-                    {this.renderSimplifiedLeadPreview(lead)}
+                    {this.renderSimplifiedLeadPreview(this.props.lead)}
                 </TabContent>
                 <TabContent
                     styleName="tab"
                     for="original-preview"
                 >
-                    {this.renderLeadPreview(lead)}
+                    {this.renderLeadPreview(this.props.lead)}
                 </TabContent>
                 <TabContent
                     styleName="tab"
                     for="assisted-tagging"
                 >
                     <AssistedTagging
-                        lead={lead}
+                        lead={this.props.lead}
                         api={this.props.api}
                     />
+                </TabContent>
+                <TabContent
+                    styleName="tab"
+                    for="entries-listing"
+                >
+                    <div styleName="entries-list-container">
+                        <ListView
+                            styleName="entries-list"
+                            modifier={this.renderEntriesList}
+                            data={this.props.entries}
+                            keyExtractor={this.calcEntryKey}
+                        />
+                    </div>
                 </TabContent>
             </div>
         </Tabs>
     )
 
+    renderItemView = (item) => {
+        const widget = this.widgets.find(
+            w => w.id === item.widgetId,
+        );
+        const OverviewComponent = widget.overviewComponent;
+        return (
+            <OverviewComponent
+                id={item.id}
+                filters={item.filters}
+                exportable={item.exportable}
+                api={this.props.api}
+                attribute={item.attribute}
+                data={item.data}
+            />
+        );
+    }
+
     render() {
         const {
             selectedEntryId,
             entries,
-            lead,
 
             onSaveAll,
 
@@ -396,28 +434,8 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="overview">
                 <div styleName="left">
-                    <header styleName="header">
-                        <TransparentButton
-                            title="List entries"
-                            iconName={iconNames.list}
-                            styleName={this.calcStyleNameWithState('entries-list-btn')}
-                            onClick={this.handleEntriesListToggleClick}
-                        >
-                            List Entries
-                        </TransparentButton>
-                    </header>
                     <div styleName="container">
-                        {this.renderLeftSection(lead)}
-                        <div
-                            styleName={this.calcStyleNameWithState('entries-list-container')}
-                        >
-                            <ListView
-                                styleName="entries-list"
-                                modifier={this.renderEntriesList}
-                                data={entries}
-                                keyExtractor={this.calcEntryKey}
-                            />
-                        </div>
+                        {this.renderLeftSection()}
                     </div>
                 </div>
                 <div styleName="right">
@@ -480,7 +498,7 @@ export default class Overview extends React.PureComponent {
                         { widgetDisabled && <LoadingAnimation /> }
                         <GridLayout
                             styleName="grid-layout"
-                            modifier={this.getItemView}
+                            modifier={this.renderItemView}
                             items={this.gridItems}
                             viewOnly
                         />
