@@ -188,6 +188,9 @@ export default class Overview extends React.PureComponent {
     }
 
     handleTabSelect = (selectedTab) => {
+        if (selectedTab === this.state.currentTab) {
+            return;
+        }
         let oldTab;
         if (selectedTab === 'entries-listing') {
             oldTab = this.state.currentTab;

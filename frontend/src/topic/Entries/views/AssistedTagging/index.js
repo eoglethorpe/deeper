@@ -123,9 +123,11 @@ export default class AssistedTagging extends React.PureComponent {
 
         const existing = api.getEntryForExcerpt(text);
         if (existing) {
-            api.selectEntryAndSetAttribute(existing.data.id);
+            api.selectEntry(existing.data.id);
         } else {
-            api.addExcerpt(text);
+            api.getEntryBuilder()
+                .setExcerpt(text)
+                .apply();
         }
         this.handleOnCloseAssistedActions();
     }

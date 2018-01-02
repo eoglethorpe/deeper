@@ -448,7 +448,7 @@ export default class EditEntryView extends React.PureComponent {
         });
     }
 
-    handleAddEntry= () => {
+    handleAddEntry = () => {
         const entryId = randomString();
         const { leadId, analysisFramework } = this.props;
 
