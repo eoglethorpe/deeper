@@ -148,7 +148,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     handleCellDrop = (key, cellKey, droppedData) => {
         const { api, id, filters, exportable } = this.props;
-        const existing = api.getEntryForExcerpt(droppedData.data);
+        const existing = api.getEntryForData(droppedData);
 
         if (existing) {
             const settings = { $auto: {
@@ -174,7 +174,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 },
             };
             api.getEntryBuilder()
-                .setExcerpt(droppedData.data)
+                .setData(droppedData)
                 .addAttribute(id, attribute)
                 .addFilterData(filters[0].id, this.createFilterData(attribute))
                 .addExportData(exportable.id, this.createExportData(attribute))

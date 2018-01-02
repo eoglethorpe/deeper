@@ -122,14 +122,24 @@ export default class Matrix2dOverview extends React.PureComponent {
     }
 
     handleCellDrop = (dimensionId, subdimensionId, sectorId, color, e) => {
-        const text = e.dataTransfer.getData('text/plain');
+        const data = e.dataTransfer.getData('text');
+        let formattedData;
+
+        try {
+            formattedData = JSON.parse(data);
+        } catch (ex) {
+            formattedData = {
+                type: 'text',
+                data,
+            };
+        }
 
         const {
             api,
             id,
             // filters,
         } = this.props;
-        const existing = api.getEntryForExcerpt(text);
+        const existing = api.getEntryForData(formattedData);
 
         if (existing) {
             const settings = { $auto: {
@@ -158,7 +168,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                 },
             };
             api.getEntryBuilder()
-                .setExcerpt(text)
+                .setData(formattedData)
                 .addAttribute(id, attribute)
             // .addFilterData(filters[0].id, this.getFilterData(attribute))
                 .apply();

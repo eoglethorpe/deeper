@@ -43,7 +43,7 @@ export default class ExcerptList extends React.PureComponent {
         }
 
         return (
-            <div styleName="excerpt-overview">
+            <div styleName="excerpt-list">
                 {
                     attribute.type === TEXT ? (
                         <TextArea
@@ -54,9 +54,11 @@ export default class ExcerptList extends React.PureComponent {
                             value={attribute.excerpt}
                         />
                     ) : (
-                        <div styleName="image">
-                            Image
-                        </div>
+                        <img
+                            styleName="image"
+                            src={attribute.image}
+                            alt="Entry"
+                        />
                     )
                 }
             </div>

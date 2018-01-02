@@ -53,11 +53,11 @@ export default class MatrixCell extends React.PureComponent {
             const parsedData = JSON.parse(data);
             this.props.onDrop(parsedData);
         } catch (ex) {
-            const formmatedData = {
+            const formattedData = {
                 type: 'text',
                 data,
             };
-            this.props.onDrop(formmatedData);
+            this.props.onDrop(formattedData);
         }
     }
 

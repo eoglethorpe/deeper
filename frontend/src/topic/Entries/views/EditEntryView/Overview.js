@@ -210,8 +210,17 @@ export default class Overview extends React.PureComponent {
     calcEntryLabel = entry => entryAccessor.getValues(entry).excerpt;
 
     calcEntryLabelLimited = (entry) => {
+        const values = entryAccessor.getValues(entry);
+        if (values.entryType === 'image') {
+            return 'Image';
+        }
         const characterLimit = 32;
-        const text = entryAccessor.getValues(entry).excerpt;
+        const text = values.excerpt;
+
+        if (!text) {
+            return 'Excerpt';
+        }
+
         const limitedEntry = text.slice(0, characterLimit);
         if (text.length > characterLimit) {
             return `${limitedEntry}...`;

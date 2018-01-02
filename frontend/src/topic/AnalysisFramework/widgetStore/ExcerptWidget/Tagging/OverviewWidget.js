@@ -103,9 +103,11 @@ export default class ExcerptTextOverview extends React.PureComponent {
                             value={attribute.excerpt}
                         />
                     ) : (
-                        <div styleName="image">
-                            Image
-                        </div>
+                        <img
+                            styleName="image"
+                            src={attribute.image}
+                            alt="Entry"
+                        />
                     )
                 }
             </div>
