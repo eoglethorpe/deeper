@@ -13,7 +13,7 @@ const multiselectWidget = {
     title: 'Multiselect',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 216, height: 288 },
+        listMinSize: { width: 192, height: 240 },
     },
     tagging: {
         listComponent: TaggingListWidget,

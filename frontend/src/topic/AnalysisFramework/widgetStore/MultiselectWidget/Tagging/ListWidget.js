@@ -7,6 +7,12 @@ import {
     SelectInput,
 } from '../../../../../public/components/Input';
 
+import {
+    ListView,
+} from '../../../../../public/components/View';
+
+const emptyList = [];
+
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
@@ -35,11 +41,24 @@ export default class Multiselect extends React.PureComponent {
             .apply();
     }
 
+    mapMultiselectList = (key, data) => (
+        <div
+            className={styles['multiselect-content']}
+            key={key}
+        >
+            <span className={styles['multiselect-name']}>{data.label}</span>
+        </div>
+    )
+
     render() {
         const {
-            attribute,
-            data,
+            attribute: {
+                value = emptyList,
+            } = {},
+            data = emptyList,
         } = this.props;
+
+        const selectedData = data.filter(d => value.includes(d.key));
 
         return (
             <div styleName="multiselect-list">
@@ -47,9 +66,16 @@ export default class Multiselect extends React.PureComponent {
                     onChange={this.handleChange}
                     options={data}
                     multiple
+                    clearable={false}
                     styleName="multiselect"
-                    value={attribute && attribute.value}
+                    value={value}
                     keyExtractor={Multiselect.valueKeyExtractor}
+                />
+                <ListView
+                    data={selectedData}
+                    className={styles['multiselect-list-view']}
+                    keyExtractor={Multiselect.valueKeyExtractor}
+                    modifier={this.mapMultiselectList}
                 />
             </div>
         );
