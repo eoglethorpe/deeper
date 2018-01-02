@@ -29,6 +29,7 @@ import {
 
     setLeadPageFilterAction,
 
+    leadPageFilterSelector,
     setLeadFilterOptionsAction,
     unsetLeadPageFilterAction,
 } from '../../../../../../common/redux';
@@ -40,26 +41,30 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
-    className: PropTypes.string,
-    setLeadFilterOptions: PropTypes.func.isRequired,
-
     // eslint-disable-next-line react/forbid-prop-types
     leadFilterOptions: PropTypes.object.isRequired,
 
-    // eslint-disable-next-line react/forbid-prop-types
-    value: PropTypes.object.isRequired,
+    className: PropTypes.string,
 
+    // eslint-disable-next-line react/forbid-prop-types
+    filters: PropTypes.object.isRequired,
+
+    setLeadFilterOptions: PropTypes.func.isRequired,
     setLeadPageFilter: PropTypes.func.isRequired,
     unsetLeadPageFilter: PropTypes.func.isRequired,
+
+    applyOnChange: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
+    applyOnChange: false,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     leadFilterOptions: leadFilterOptionsForProjectSelector(state),
+    filters: leadPageFilterSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -80,7 +85,7 @@ export default class FilterLeadsForm extends React.PureComponent {
     constructor(props) {
         super(props);
         // eslint-disable-next-line no-unused-vars
-        const { similar, ...values } = this.props.value;
+        const { similar, ...values } = this.props.filters;
         this.state = {
             formValues: values,
             pristine: false,
@@ -101,10 +106,10 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { value, activeProject } = nextProps;
-        if (this.props.value !== value) {
+        const { filters, activeProject } = nextProps;
+        if (this.props.filters !== filters) {
             // eslint-disable-next-line no-unused-vars
-            const { similar, ...values } = value;
+            const { similar, ...values } = filters;
             this.setState({
                 formValues: values,
                 pristine: false,
@@ -167,6 +172,10 @@ export default class FilterLeadsForm extends React.PureComponent {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
             pristine: true,
+        }, () => {
+            if (this.props.applyOnChange) {
+                this.formComponent.submit();
+            }
         });
     }
 
@@ -214,6 +223,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
         return (
             <Form
+                ref={(elem) => { this.formComponent = elem; }}
                 styleName="filters"
                 className={className}
                 successCallback={this.handleSubmit}
@@ -287,12 +297,14 @@ export default class FilterLeadsForm extends React.PureComponent {
                     type="search"
                     value={formValues.search}
                 />
-                <Button
-                    styleName="filter-btn"
-                    disabled={!pristine}
-                >
-                    {leadsString.filterApplyFilter}
-                </Button>
+                { !this.props.applyOnChange &&
+                    <Button
+                        styleName="filter-btn"
+                        disabled={!pristine}
+                    >
+                        {leadsString.filterApplyFilter}
+                    </Button>
+                }
                 <DangerButton
                     styleName="filter-btn"
                     type="button"
@@ -302,7 +314,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     {leadsString.filterClearFilter}
                 </DangerButton>
                 {
-                    isTruthy(this.props.value.similar) && (
+                    isTruthy(this.props.filters.similar) && (
                         <DangerButton
                             styleName="filter-btn"
                             type="button"

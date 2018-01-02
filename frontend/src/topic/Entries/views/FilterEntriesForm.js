@@ -35,11 +35,13 @@ const propTypes = {
     setEntriesViewFilter: PropTypes.func.isRequired,
     unsetEntriesViewFilter: PropTypes.func.isRequired,
     pending: PropTypes.bool,
+    applyOnChange: PropTypes.bool,
 };
 
 const defaultProps = {
     pending: true,
     filters: [],
+    applyOnChange: false,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -90,6 +92,10 @@ export default class EntriesFilter extends React.PureComponent {
         this.setState({
             filters,
             pristine: false,
+        }, () => {
+            if (this.props.applyOnChange) {
+                this.handleApplyFilter();
+            }
         });
     }
 
@@ -131,26 +137,24 @@ export default class EntriesFilter extends React.PureComponent {
                 styleName="filters"
             >
                 { this.props.filters.map(this.renderFilter) }
+                { this.props.filters.length > 0 && !this.props.applyOnChange &&
+                    <Button
+                        styleName="filter-btn"
+                        onClick={this.handleApplyFilter}
+                        disabled={pending || pristine}
+                    >
+                        Apply Filter
+                    </Button>
+                }
                 { this.props.filters.length > 0 &&
-                    [
-                        <Button
-                            key="apply-btn"
-                            styleName="filter-btn"
-                            onClick={this.handleApplyFilter}
-                            disabled={pending || pristine}
-                        >
-                            Apply Filter
-                        </Button>,
-                        <DangerButton
-                            key="clear-btn"
-                            styleName="filter-btn"
-                            onClick={this.handleClearFilter}
-                            type="button"
-                            disabled={pending || isFilterEmpty}
-                        >
-                            Clear Filter
-                        </DangerButton>,
-                    ]
+                    <DangerButton
+                        styleName="filter-btn"
+                        onClick={this.handleClearFilter}
+                        type="button"
+                        disabled={pending || isFilterEmpty}
+                    >
+                        Clear Filter
+                    </DangerButton>
                 }
             </div>
         );

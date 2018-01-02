@@ -610,10 +610,7 @@ export default class Leads extends React.PureComponent {
         return (
             <div styleName="leads">
                 <header styleName="header">
-                    <FilterLeadsForm
-                        styleName="filters"
-                        value={this.props.filters}
-                    />
+                    <FilterLeadsForm styleName="filters" />
                     <PrimaryButton
                         styleName="add-lead-button"
                         onClick={this.handleAddLeadClick}

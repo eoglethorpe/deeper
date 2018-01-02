@@ -25,9 +25,9 @@ import excelIcon from '../../../img/excel.svg';
 import pdfIcon from '../../../img/pdf.svg';
 import jsonIcon from '../../../img/json.svg';
 
+import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
 import BasicInformationInputs from './BasicInformationInputs';
-import LeadAttributeInputs from './LeadAttributeInputs';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -286,16 +286,19 @@ export default class Export extends React.PureComponent {
                                         Entry Attributes
                                     </h4>
                                     <FilterEntriesForm
-                                        pending
+                                        applyOnChange
+                                        pending={false}
                                         match={this.props.match}
                                     />
                                 </div>
                             </div>
                             <div styleName="right">
                                 <div styleName="lead-attributes">
-                                    <LeadAttributeInputs
-                                        onChange={this.handleFilterInputsChange}
-                                        values={values}
+                                    <h4>
+                                        Lead Attributes
+                                    </h4>
+                                    <FilterLeadsForm
+                                        applyOnChange
                                     />
                                 </div>
                                 <div styleName="leads">
