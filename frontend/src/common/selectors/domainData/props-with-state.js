@@ -1,134 +1,33 @@
 import { createSelector } from 'reselect';
-import { activeUserSelector } from './auth';
+import { activeUserSelector } from '../auth';
+import {
+    userIdFromRoute,
+    groupIdFromRoute,
+    countryIdFromProps,
+    projectIdFromRoute,
 
-// NOTE: Use these to make sure reference don't change
+    regionIdFromProps,
+    userGroupIdFromProps,
+    analysisFrameworkIdFromPropsForProject,
+    categoryEditorIdFromPropsForProject,
+} from './props';
+import {
+    leadFilterOptionsSelector,
+    regionsSelector,
+    projectsSelector,
+    projectsOptionsSelector,
+    analysisFrameworksSelector,
+    adminLevelsSelector,
+    groupsSelector,
+    usersSelector,
+    categoryEditorsSelector,
+    regionsListSelector,
+} from './state';
+
+
 const emptyList = [];
 const emptyObject = {};
 
-// Using props
-
-export const userIdFromRoute = (state, { match }) => match.params.userId;
-export const groupIdFromRoute = (state, { match }) => match.params.userGroupId;
-export const countryIdFromProps = (state, { match }) => match.params.countryId;
-export const projectIdFromRoute = (state, { match }) => match.params.projectId;
-
-// Used in silo-reducers
-export const analysisFrameworkIdFromProps = (state, { match }) => match.params.analysisFrameworkId;
-export const categoryEditorIdFromProps = (state, { match }) => match.params.categoryEditorId;
-export const leadIdFromRoute = (state, { match }) => match.params.leadId;
-export const categoryEditorIdFromRoute = (state, { match }) => match.params.categoryEditorId;
-
-export const regionIdFromProps = (state, { regionId }) => regionId;
-export const userGroupIdFromProps = (state, { userGroupId }) => userGroupId;
-export const analysisFrameworkIdFromPropsForProject = (state, { afId }) => afId;
-export const categoryEditorIdFromPropsForProject = (state, { ceId }) => ceId;
-
-// COMMON
-
-export const leadFilterOptionsSelector = ({ domainData }) => (
-    domainData.leadFilterOptions || emptyObject
-);
-
-export const visualizationSelector = ({ domainData }) => (
-    domainData.visualization || emptyObject
-);
-
-export const regionsSelector = ({ domainData }) => (
-    domainData.regions || emptyObject
-);
-
-export const projectsSelector = ({ domainData }) => (
-    domainData.projects || emptyObject
-);
-
-export const projectsOptionsSelector = ({ domainData }) => (
-    domainData.projectsOptions || emptyObject
-);
-
-export const analysisFrameworksSelector = ({ domainData }) => (
-    domainData.analysisFrameworks || emptyObject
-);
-
-export const adminLevelsSelector = ({ domainData }) => (
-    domainData.adminLevels || emptyObject
-);
-
-export const groupsSelector = ({ domainData }) => (
-    domainData.userGroups || emptyObject
-);
-
-const usersSelector = ({ domainData }) => (
-    domainData.users || emptyObject
-);
-
-const categoryEditorsSelector = ({ domainData }) => (
-    domainData.categoryEditors || emptyObject
-);
-
-// CONSTANTS
-
-export const hierarchialDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.hierarchialData || emptyObject,
-);
-
-export const chordDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.chordData || emptyObject,
-);
-
-export const correlationDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.correlationData || emptyObject,
-);
-
-export const barDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.barData || emptyObject,
-);
-
-export const forceDirectedDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.forceDirectedData || emptyObject,
-);
-
-export const usersInformationListSelector = createSelector(
-    usersSelector,
-    users => (
-        Object.keys(users).map(
-            id => users[id].information,
-        ) || emptyList
-    ).filter(d => d),
-);
-
-export const regionsListSelector = createSelector(
-    regionsSelector,
-    regions => (
-        (regions && Object.values(regions).filter(
-            region => region && region.public,
-        )) || emptyList
-    ),
-);
-
-export const analysisFrameworkListSelector = createSelector(
-    analysisFrameworksSelector,
-    analysisFrameworks => (
-        (analysisFrameworks && Object.values(analysisFrameworks).filter(
-            analysisFramework => analysisFramework,
-        )) || emptyList
-    ),
-);
-
-export const categoryEditorListSelector = createSelector(
-    categoryEditorsSelector,
-    categoryEditors => (
-        (categoryEditors && Object.values(categoryEditors).filter(
-            categoryEditor => categoryEditor,
-        )) || emptyList
-    ),
-);
-
-// MODIFERS
 
 // activeUser
 const currentUserSelector = createSelector(
