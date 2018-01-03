@@ -195,13 +195,18 @@ export default class ProjectRegions extends React.PureComponent {
             <div styleName="project-regions">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <TextInput
-                            styleName="search-input"
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Regions"
-                            type="search"
-                            value={searchInputValue}
-                        />
+                        <div styleName="search-wrapper">
+                            <div styleName="search-icon">
+                                <i className={iconNames.search} />
+                            </div>
+                            <TextInput
+                                styleName="search-input"
+                                onChange={this.handleSearchInputChange}
+                                placeholder="Search Regions"
+                                type="search"
+                                value={searchInputValue}
+                            />
+                        </div>
                         <PrimaryButton
                             iconName={iconNames.add}
                             styleName="add-btn"

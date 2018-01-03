@@ -18,19 +18,33 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-large;
+            padding: $spacing-medium;
 
-            .search-input {
+            .search-wrapper {
+                display: flex;
                 flex-grow: 1;
-                padding: 0 $spacing-medium-alt 0 0;
+                align-self: flex-end;
+                margin-top: $spacing-small;
 
-                :global .error {
-                    display: none;
+                .search-icon {
+                    padding: $spacing-extra-small $spacing-small;
+                    padding-left: 0;
+                    color: $color-text-disabled;
+                    font-size: $font-size-large;
+                }
+
+                .search-input {
+                    flex-basis: 100%;
+
+                    :global .error {
+                        display: none;
+                    }
                 }
             }
 
             .add-btn {
                 flex-shrink: 0;
+                margin-left: $spacing-large;
             }
         }
 
@@ -109,4 +123,3 @@
         flex-grow: 1;
     }
 }
-
