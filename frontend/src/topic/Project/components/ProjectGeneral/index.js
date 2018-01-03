@@ -587,6 +587,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         />
                         <ModalBody>
                             <AddProjectMembers
+                                match={this.props.match}
                                 styleName="add-member"
                                 projectId={projectId}
                                 onModalClose={this.handleModalClose}

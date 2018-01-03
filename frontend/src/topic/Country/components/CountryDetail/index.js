@@ -53,8 +53,8 @@ const defaultProps = {
     title: '',
 };
 
-const mapStateToProps = state => ({
-    countryDetail: countryDetailSelector(state),
+const mapStateToProps = (state, props) => ({
+    countryDetail: countryDetailSelector(state, props),
     activeUser: activeUserSelector(state),
 });
 
@@ -234,31 +234,43 @@ export default class CountryDetail extends React.PureComponent {
                             for="general"
                             styleName="tab-content"
                         >
-                            <CountryGeneral countryId={countryDetail.id} />
+                            <CountryGeneral
+                                countryId={countryDetail.id}
+                                match={this.props.match}
+                            />
                         </TabContent>
                         <TabContent
                             for="key-figures"
                             styleName="tab-content"
                         >
-                            <CountryKeyFigures countryId={countryDetail.id} />
+                            <CountryKeyFigures
+                                match={this.props.match}
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                         <TabContent
                             for="population-data"
                             styleName="tab-content"
                         >
-                            <CountryPopulationData countryId={countryDetail.id} />
+                            <CountryPopulationData
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
                             styleName="tab-content"
                         >
-                            <CountrySeasonalCalendar countryId={countryDetail.id} />
+                            <CountrySeasonalCalendar
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                         <TabContent
                             for="media-sources"
                             styleName="tab-content"
                         >
-                            <CountryMediaSources countryId={countryDetail.id} />
+                            <CountryMediaSources
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                     </Tabs>
                 )}

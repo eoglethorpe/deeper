@@ -31,8 +31,8 @@ const propTypes = {
     setRegionDetails: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-    countryDetail: countryDetailSelector(state),
+const mapStateToProps = (state, props) => ({
+    countryDetail: countryDetailSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({

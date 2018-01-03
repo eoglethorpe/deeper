@@ -221,6 +221,7 @@ export default class ProjectDetails extends React.PureComponent {
                 exact
                 render={() => (
                     <Component
+                        match={this.props.match}
                         mainHistory={this.props.mainHistory}
                         className={styles.content}
                         projectId={projectId}
@@ -275,7 +276,9 @@ export default class ProjectDetails extends React.PureComponent {
                                 keyExtractor={keyExtractor}
                             />,
                         ]) : (
-                            <p styleName="forbidden-text">You do not have enough permissions to view / edit this project</p>
+                            <p styleName="forbidden-text">
+                                You do not have enough permissions to view / edit this project
+                            </p>
                         )
                     }
                 </div>

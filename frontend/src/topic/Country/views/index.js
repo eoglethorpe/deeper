@@ -31,7 +31,7 @@ import {
     urlForRegions,
 } from '../../../common/rest';
 import {
-    countriesListSelector,
+    regionsListSelector,
 
     setRegionsAction,
     activeUserSelector,
@@ -60,7 +60,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    countries: countriesListSelector(state),
+    countries: regionsListSelector(state),
     activeUser: activeUserSelector(state),
 });
 
@@ -222,6 +222,7 @@ export default class CountryPanel extends React.PureComponent {
         if (activeCountryIndex >= 0) {
             return (
                 <CountryDetail
+                    match={this.props.match}
                     countryId={activeCountryId}
                     key={activeCountryId}
                     styleName="country-detail"

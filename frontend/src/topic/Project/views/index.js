@@ -218,6 +218,7 @@ export default class ProjectPanel extends React.PureComponent {
                 {
                     projectId ? (
                         <ProjectDetails
+                            match={this.props.match}
                             key={projectId}
                             styleName="project-details"
                             projectId={+projectId}

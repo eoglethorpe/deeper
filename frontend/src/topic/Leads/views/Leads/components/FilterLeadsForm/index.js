@@ -61,10 +61,10 @@ const defaultProps = {
     applyOnChange: false,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
-    leadFilterOptions: leadFilterOptionsForProjectSelector(state),
     filters: leadPageFilterSelector(state),
+    leadFilterOptions: leadFilterOptionsForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
