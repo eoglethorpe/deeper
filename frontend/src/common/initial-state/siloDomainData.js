@@ -128,6 +128,20 @@ const initialSiloDomainData = {
         },
     },
 
+    categoryEditorDocument: {
+        // index is category editor id
+        1: {
+            documents: [],
+            previewId: undefined,
+            extractedWords: {
+                // index is n-gram
+                '1grams': [],
+                '2grams': [],
+                '3grams': [],
+            },
+        },
+    },
+
     userGalleryFiles: [],
 };
 

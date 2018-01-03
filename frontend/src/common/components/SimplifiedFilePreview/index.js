@@ -22,11 +22,15 @@ const propTypes = {
     ),
     previewId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onLoad: PropTypes.func,
+    preLoad: PropTypes.func,
+    postLoad: PropTypes.func,
 };
 const defaultProps = {
     className: '',
     fileIds: [],
     previewId: undefined,
+    preLoad: undefined,
+    postLoad: undefined,
     onLoad: undefined,
 };
 
@@ -50,7 +54,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.create();
+        this.create(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,6 +89,17 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         } = props;
 
         if (!fileIds || fileIds.length === 0) {
+            // reset if preview id is also not set
+            if (!previewId) {
+                this.setState({
+                    error: undefined,
+                    extractedText: null,
+                });
+            }
+
+            if (this.props.onLoad) {
+                this.props.onLoad({});
+            }
             return;
         }
 
@@ -164,6 +179,16 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         new FgRestBuilder()
             .url(url)
             .params(params)
+            .preLoad(() => {
+                if (this.props.preLoad) {
+                    this.props.preLoad();
+                }
+            })
+            .postLoad(() => {
+                if (this.props.postLoad) {
+                    this.props.postLoad();
+                }
+            })
             .success((response) => {
                 try {
                     onSuccess(response);

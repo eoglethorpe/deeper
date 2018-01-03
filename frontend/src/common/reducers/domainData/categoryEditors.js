@@ -121,4 +121,5 @@ const reducers = {
     [SET_PROJECT_CE]: setProjectCe,
     [SET_CE_DETAIL]: setCeDetail,
 };
+
 export default reducers;

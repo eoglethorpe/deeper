@@ -1,5 +1,6 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/modal';
+@import '../../../stylesheets/tabs';
 
 .category-editor {
     display: flex;
@@ -77,6 +78,11 @@
                     padding: $spacing-medium;
                     text-transform: uppercase;
                 }
+
+                :global .tab-link-active {
+                    border-bottom-color: $color-accent;
+                    color: $color-accent;
+                }
             }
 
             .content {
@@ -92,14 +98,49 @@
                 .document-tab {
                     @extend %tab-content;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
+                    flex-direction: column;
+
+                    .file-list-view {
+                        display: flex;
+                        flex-grow: 1;
+                        flex-direction: column;
+                        overflow-y: auto;
+
+                        .file-list-item {
+                            flex-shrink: 0;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            border-bottom: $width-separator-thin solid $color-separator;
+
+                            .title {
+                                flex-grow: 1;
+                            }
+
+                            .icon {
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+
+                    .bottom-bar {
+                        display: flex;
+                        justify-content: flex-end;
+                        flex-shrink: 0;
+                        padding: $spacing-medium-alt $spacing-small;
+                        border-top: $width-separator-thin solid $color-separator;
+
+                        .button {
+                            margin-left: $spacing-small;
+                        }
+                    }
                 }
 
                 .simplified-tab {
                     @extend %tab-content;
                     padding: $spacing-medium;
                     text-align: justify;
+                    overflow-y: auto;
                 }
 
                 .ngrams-tab {
