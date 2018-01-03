@@ -3,13 +3,13 @@ import { activeUserSelector } from '../auth';
 import {
     userIdFromRoute,
     groupIdFromRoute,
-    countryIdFromProps,
+    countryIdFromRoute,
     projectIdFromRoute,
 
     regionIdFromProps,
     userGroupIdFromProps,
-    analysisFrameworkIdFromPropsForProject,
-    categoryEditorIdFromPropsForProject,
+    afIdFromProps,
+    ceIdFromProps,
 } from './props';
 import {
     leadFilterOptionsSelector,
@@ -45,48 +45,15 @@ const userSelector = createSelector(
 
 // OTHERS
 
-// regionIdFromProps
-export const regionDetailForRegionSelector = createSelector(
-    regionsSelector,
-    regionIdFromProps,
-    (regions, regionId) => (regions[regionId] || emptyObject),
-);
 
-// regionIdFromProps
-export const adminLevelForRegionSelector = createSelector(
-    adminLevelsSelector,
-    regionIdFromProps,
-    (adminLevels, regionId) => (
-        adminLevels[regionId] || emptyList
-    ),
-);
-
-// countryIdFromProps
+// countryIdFromRoute
 export const countryDetailSelector = createSelector(
     regionsListSelector,
-    countryIdFromProps,
+    countryIdFromRoute,
     (regions, activeCountry) => (
         regions.find(
             country => country.id === +activeCountry,
         ) || emptyObject
-    ),
-);
-
-// analysisFrameworkIdFromPropsForProject
-export const analysisFrameworkDetailSelector = createSelector(
-    analysisFrameworksSelector,
-    analysisFrameworkIdFromPropsForProject,
-    (analysisFrameworks, afId) => (
-        analysisFrameworks[afId] || emptyObject
-    ),
-);
-
-// categoryEditorIdFromPropsForProject
-export const categoryEditorDetailSelector = createSelector(
-    categoryEditorsSelector,
-    categoryEditorIdFromPropsForProject,
-    (categoryEditors, ceId) => (
-        categoryEditors[ceId] || emptyObject
     ),
 );
 
@@ -120,13 +87,6 @@ export const userGroupProjectSelector = createSelector(
                 emptyList,
             )
     ),
-);
-
-// userGroupIdFromProps
-export const userGroupDetailsSelector = createSelector(
-    groupsSelector,
-    userGroupIdFromProps,
-    (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
 );
 
 // userIdFromRoute
@@ -208,4 +168,47 @@ export const projectOptionsSelector = createSelector(
     projectsOptionsSelector,
     projectIdFromRoute,
     (projectsOptions, activeProject) => projectsOptions[activeProject] || emptyObject,
+);
+
+// OTHER
+
+// userGroupIdFromProps
+export const userGroupDetailsSelector = createSelector(
+    groupsSelector,
+    userGroupIdFromProps,
+    (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
+);
+
+// regionIdFromProps
+export const regionDetailForRegionSelector = createSelector(
+    regionsSelector,
+    regionIdFromProps,
+    (regions, regionId) => (regions[regionId] || emptyObject),
+);
+
+// regionIdFromProps
+export const adminLevelForRegionSelector = createSelector(
+    adminLevelsSelector,
+    regionIdFromProps,
+    (adminLevels, regionId) => (
+        adminLevels[regionId] || emptyList
+    ),
+);
+
+// afIdFromProps
+export const analysisFrameworkDetailSelector = createSelector(
+    analysisFrameworksSelector,
+    afIdFromProps,
+    (analysisFrameworks, afId) => (
+        analysisFrameworks[afId] || emptyObject
+    ),
+);
+
+// ceIdFromProps
+export const categoryEditorDetailSelector = createSelector(
+    categoryEditorsSelector,
+    ceIdFromProps,
+    (categoryEditors, ceId) => (
+        categoryEditors[ceId] || emptyObject
+    ),
 );

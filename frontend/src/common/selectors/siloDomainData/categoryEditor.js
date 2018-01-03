@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { categoryEditorIdFromRoute } from '../domainData';
+import { ceIdFromRoute } from '../domainData';
 
 const emptyList = [];
 const emptyObject = {};
@@ -10,7 +10,7 @@ const categoryEditorsViewSelector = ({ siloDomainData }) => (
 
 const categoryEditorViewFromRouteSelector = createSelector(
     categoryEditorsViewSelector,
-    categoryEditorIdFromRoute,
+    ceIdFromRoute,
     (view, id) => view[id] || emptyObject,
 );
 
