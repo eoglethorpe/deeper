@@ -15,6 +15,7 @@ import {
 import {
     categoryEditorDocumentsSelector,
     setCeFilesAction,
+    ceIdFromRouteSelector,
 } from '../../../../common/redux';
 
 import DeepGalleryFileSelect from '../../../../common/components/DeepGalleryFileSelect';
@@ -23,12 +24,12 @@ import styles from '../styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    match: PropTypes.object.isRequired, // eslint-disable-line
     selectedFiles: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.idRequired,
         title: PropTypes.string,
     })),
     setCeDeepGalleryFiles: PropTypes.func.isRequired,
+    categoryEditorId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -38,6 +39,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     selectedFiles: categoryEditorDocumentsSelector(state, props),
+    categoryEditorId: ceIdFromRouteSelector(state, props),
 });
 
 
@@ -104,7 +106,7 @@ export default class DocumentSelect extends React.PureComponent {
     }
 
     handleApply = () => {
-        const { categoryEditorId } = this.props.match.params;
+        const { categoryEditorId } = this.props;
         const { selectedFiles } = this.state;
         this.props.setCeDeepGalleryFiles({
             files: selectedFiles,

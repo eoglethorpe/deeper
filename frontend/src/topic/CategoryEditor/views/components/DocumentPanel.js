@@ -17,6 +17,7 @@ import {
     categoryEditorSimplifiedPreviewIdSelector,
     setCeNgramsAction,
     setCeSimplifiedPreviewIdAction,
+    ceIdFromRouteSelector,
 } from '../../../../common/redux';
 
 import SimplifiedFilePreview from '../../../../common/components/SimplifiedFilePreview';
@@ -28,14 +29,14 @@ import iconNames from '../../../../common/constants/iconNames';
 import styles from '../styles.scss';
 
 const propTypes = {
-    match: PropTypes.object.isRequired, // eslint-disable-line
-    selectedFiles: PropTypes.arrayOf(PropTypes.shape({
-        id: PropTypes.number.idRequired,
-        title: PropTypes.string,
-    })),
     previewId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     setCeNgrams: PropTypes.func.isRequired,
     setPreviewId: PropTypes.func.isRequired,
+    selectedFiles: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string,
+    })),
+    categoryEditorId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -48,6 +49,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     selectedFiles: categoryEditorDocumentsSelector(state, props),
     previewId: categoryEditorSimplifiedPreviewIdSelector(state, props),
+
+    categoryEditorId: ceIdFromRouteSelector(state, props),
 });
 
 
@@ -83,7 +86,7 @@ export default class DocumentPanel extends React.PureComponent {
 
     // Simplification callback
     handleFilesPreviewLoad = (response) => {
-        const { categoryEditorId } = this.props.match.params;
+        const { categoryEditorId } = this.props;
 
         this.props.setPreviewId({
             categoryEditorId,
@@ -157,10 +160,7 @@ export default class DocumentPanel extends React.PureComponent {
             fileIds,
         } = this.state;
 
-        const {
-            match,
-            previewId,
-        } = this.props;
+        const { previewId } = this.props;
 
         return (
             <Tabs
@@ -195,9 +195,7 @@ export default class DocumentPanel extends React.PureComponent {
                         styleName="document-tab"
                         for="document-view"
                     >
-                        <DocumentSelect
-                            match={match}
-                        />
+                        <DocumentSelect />
                     </TabContent>
                     <TabContent
                         styleName="simplified-tab"
@@ -218,9 +216,7 @@ export default class DocumentPanel extends React.PureComponent {
                         styleName="ngrams-tab"
                         for="ngram-view"
                     >
-                        <DocumentNGram
-                            match={match}
-                        />
+                        <DocumentNGram />
                     </TabContent>
                 </div>
             </Tabs>

@@ -450,9 +450,7 @@ export default class CategoryEditor extends React.PureComponent {
             <div styleName="category-editor">
                 { pending && <LoadingAnimation /> }
                 <div styleName="left">
-                    <DocumentPanel
-                        match={match}
-                    />
+                    <DocumentPanel />
                 </div>
                 <div styleName="right">
                     <header styleName="header">

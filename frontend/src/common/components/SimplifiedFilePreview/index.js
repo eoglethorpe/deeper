@@ -80,6 +80,20 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
     }
 
+    reset = (previewId) => {
+        // reset if preview id is also not set
+        if (!previewId) {
+            this.setState({
+                error: undefined,
+                extractedText: null,
+            });
+
+            if (this.props.onLoad) {
+                this.props.onLoad({});
+            }
+        }
+    }
+
     create(props) {
         this.destroy();
 
@@ -89,17 +103,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         } = props;
 
         if (!fileIds || fileIds.length === 0) {
-            // reset if preview id is also not set
-            if (!previewId) {
-                this.setState({
-                    error: undefined,
-                    extractedText: null,
-                });
-            }
-
-            if (this.props.onLoad) {
-                this.props.onLoad({});
-            }
+            this.reset(previewId);
             return;
         }
 
