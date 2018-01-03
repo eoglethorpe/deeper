@@ -264,15 +264,21 @@ export default class GeoTaggingList extends React.PureComponent {
                         <div styleName="content">
                             <div styleName="search-box">
                                 <h3>Selected Regions</h3>
-                                <SelectInput
-                                    showHintAndError={false}
-                                    showLabel={false}
-                                    placeholder="Search a location"
-                                    options={locations[selectedRegion]}
-                                    optionsIdentifier="location-select-options"
-                                    onChange={this.handleLocationSelection}
-                                    value="invalid"
-                                />
+                                <div styleName="search-wrapper">
+                                    <div styleName="search-icon">
+                                        <i className={iconNames.search} />
+                                    </div>
+                                    <SelectInput
+                                        showHintAndError={false}
+                                        showLabel={false}
+                                        styleName="search-input"
+                                        placeholder="Search a location"
+                                        options={locations[selectedRegion]}
+                                        optionsIdentifier="location-select-options"
+                                        onChange={this.handleLocationSelection}
+                                        value="invalid"
+                                    />
+                                </div>
                             </div>
                             <div styleName="regions-table">
                                 <Table
