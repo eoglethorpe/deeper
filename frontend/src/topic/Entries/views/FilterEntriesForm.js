@@ -100,7 +100,7 @@ export default class EntriesFilter extends React.PureComponent {
     }
 
 
-    renderFilter = ({ key, properties: filter }) => {
+    renderFilter = ({ title, key, properties: filter }) => {
         const { filters } = this.state;
 
         if (!filter || !filter.type) {
@@ -113,7 +113,7 @@ export default class EntriesFilter extends React.PureComponent {
                     key={key}
                     className={styles.filter}
                     options={filter.options}
-                    label={key}
+                    label={title}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
                     value={filters[key] || []}

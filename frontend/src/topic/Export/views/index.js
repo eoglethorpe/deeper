@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
@@ -21,6 +22,10 @@ import {
     createUrlForLeadsOfProject,
 } from '../../../common/rest';
 
+import {
+    analysisFrameworkForProjectSelector,
+} from '../../../common/redux';
+
 import wordIcon from '../../../img/word.svg';
 import excelIcon from '../../../img/excel.svg';
 import pdfIcon from '../../../img/pdf.svg';
@@ -31,13 +36,19 @@ import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
 import BasicInformationInputs from './BasicInformationInputs';
 import styles from './styles.scss';
 
+const mapStateToProps = (state, props) => ({
+    analysisFramework: analysisFrameworkForProjectSelector(state, props),
+});
+
 const propTypes = {
     match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
 };
 
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Export extends React.PureComponent {
     static propTypes = propTypes;
@@ -48,7 +59,8 @@ export default class Export extends React.PureComponent {
         super(props);
 
         this.state = {
-            activeExportTypeKey: undefined,
+            activeExportTypeKey: 'word',
+            reportStructure: this.createReportStructure(props.analysisFramework),
             selectedLeads: [],
             values: {
                 excerpt: '',
@@ -60,16 +72,16 @@ export default class Export extends React.PureComponent {
             },
         };
 
-        this.options = [
-            {
-                key: 'generic',
-                label: 'Generic',
-            },
-            {
-                key: 'geo',
-                label: 'Geo',
-            },
-        ];
+        // this.options = [
+        //     {
+        //         key: 'generic',
+        //         label: 'Generic',
+        //     },
+        //     {
+        //         key: 'geo',
+        //         label: 'Geo',
+        //     },
+        // ];
 
         this.exportTypes = [
             {
@@ -107,12 +119,19 @@ export default class Export extends React.PureComponent {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.analysisFramework !== this.props.analysisFramework) {
+            this.setState({
+                reportStructure: this.createReportStructure(nextProps.analysisFramework),
+            });
+        }
+    }
+
     componentWillUnmount() {
         if (this.leadRequest) {
             this.leadRequest.stop();
         }
     }
-
 
     getExportTypeClassName = (key) => {
         const {
@@ -203,6 +222,53 @@ export default class Export extends React.PureComponent {
         });
     }
 
+    handleReportStructureChange = (value) => {
+        this.setState({
+            reportStructure: value,
+        });
+    }
+
+    createReportStructure = (analysisFramework) => {
+        if (!analysisFramework) {
+            return undefined;
+        }
+
+        const { exportables, widgets } = analysisFramework;
+        const nodes = [];
+
+        if (!exportables || !widgets) {
+            return undefined;
+        }
+
+        exportables.forEach((exportable) => {
+            const levels = exportable.data && exportable.data.report &&
+                exportable.data.report.levels;
+            const widget = widgets.find(w => w.key === exportable.widgetKey);
+
+            if (!levels || !widget) {
+                return;
+            }
+
+            nodes.push({
+                title: widget.title,
+                key: `${exportable.id}`,
+                selected: true,
+                draggable: true,
+                nodes: this.mapReportLevelsToNodes(levels),
+            });
+        });
+
+        return nodes;
+    }
+
+    mapReportLevelsToNodes = levels => levels.map(level => ({
+        key: level.id,
+        title: level.title,
+        selected: true,
+        draggable: true,
+        nodes: level.sublevels && this.mapReportLevelsToNodes(level.sublevels),
+    }));
+
     renderExportType = (key, data) => (
         <button
             className={this.getExportTypeClassName(key)}
@@ -228,58 +294,23 @@ export default class Export extends React.PureComponent {
         />
     )
 
+    renderReportOptions = () => (
+        <TreeSelection
+            value={this.state.reportStructure}
+            onChange={this.handleReportStructureChange}
+        />
+    )
+
+    renderExcelOptions = () => {
+
+    }
+
     render() {
         const {
-            values,
+            activeExportTypeKey,
             leads,
+            values,
         } = this.state;
-
-        const nodes = [
-            {
-                title: 'Item 1',
-                key: 'item-1',
-                selected: false,
-                nodes: [
-                    { title: 'Subitem 1', key: 'subitem-1', selected: false },
-                    { title: 'Subitem 2', key: 'subitem-2', selected: false },
-                    { title: 'Subitem 3', key: 'subitem-3', selected: false },
-                    { title: 'Subitem 4', key: 'subitem-4', selected: false },
-                    { title: 'Subitem 5', key: 'subitem-5', selected: false },
-                    {
-                        title: 'Subitem 6',
-                        key: 'subitem-6',
-                        selected: false,
-                        nodes: [
-                            { title: 'Sub-subitem 1', key: 'subsubitem-1', selected: false },
-                            { title: 'Sub-subitem 2', key: 'subsubitem-2', selected: false },
-                            { title: 'Sub-subitem 3', key: 'subsubitem-3', selected: false },
-                        ],
-                    },
-                    {
-                        title: 'Subitem 7',
-                        key: 'subitem-7',
-                        selected: false,
-                        nodes: [
-                            { title: 'Sub-subitem 1', key: 'subsubitem-1a', selected: false },
-                            { title: 'Sub-subitem 2', key: 'subsubitem-2a', selected: false },
-                            { title: 'Sub-subitem 3', key: 'subsubitem-3a', selected: false },
-                        ],
-                    },
-                ],
-            }, {
-                title: 'Item 2',
-                key: 'item-2',
-                selected: false,
-                nodes: [
-                    { title: 'Subitem 1', key: 'subitem-1a', selected: false },
-                    { title: 'Subitem 2', key: 'subitem-2a', selected: false },
-                    { title: 'Subitem 3', key: 'subitem-3a', selected: false },
-                    { title: 'Subitem 4', key: 'subitem-4a', selected: false },
-                    { title: 'Subitem 5', key: 'subitem-5a', selected: false },
-                    { title: 'Subitem 6', key: 'subitem-6a', selected: false },
-                ],
-            },
-        ];
 
         return (
             <div styleName="export">
@@ -309,9 +340,10 @@ export default class Export extends React.PureComponent {
                                 />
                             </div>
                             <div styleName="export-type-options">
-                                <TreeSelection
-                                    value={nodes}
-                                />
+                                { (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
+                                        && this.renderReportOptions()
+                                }
+                                { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
                             </div>
                         </div>
                     </section>
