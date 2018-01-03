@@ -1,0 +1,28 @@
+@import 'base';
+
+.add-lead {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-medium $spacing-large;
+    }
+
+    .inputs {
+        flex-grow: 1;
+        padding: $spacing-medium $spacing-large;
+        overflow-y: auto;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-end;
+        padding: $spacing-medium $spacing-large;
+    }
+}

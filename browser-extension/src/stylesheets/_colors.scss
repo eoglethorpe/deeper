@@ -1,0 +1,57 @@
+$color-background: #f0f0f0;
+$color-background-header: #ececec;
+$color-background-header-alt: #e5e5e5;
+$color-background-alt-row: #f0f0f0;
+$color-background-row: #f0f0f0;
+$color-background-row-alt: #f5f5f5;
+$color-background-disabled: rgba(0, 0, 0, .06);
+$color-foreground: #f8f8f8;
+$color-foreground-alt: #f0f0f0;
+$color-text: rgba(0, 0, 0, .8);
+$color-text-disabled: rgba(0, 0, 0, .3);
+$color-label: rgba(0, 0, 0, .5);
+$color-text-tab: rgba(0, 0, 0, .3);
+
+$color-hover: rgba(0, 0, 0, .06);
+
+$color-navbar: #fff;
+$color-text-on-navbar: rgba(0, 0, 0, .9);
+
+$color-primary: #37474f;
+$color-text-active-tab: $color-primary;
+$color-accent: #009688;
+
+$color-danger: #dd2c00;
+$color-text-on-danger: #fff;
+$color-success: #4cbf50;
+$color-text-on-success: #fff;
+$color-warning: #fb8c00;
+$color-text-on-warning: #fff;
+
+$color-negative: #e74c3c;
+$color-positive: #2ecc71;
+
+$color-text-on-primary: rgba(255, 255, 255, .8);
+$color-text-on-accent: rgba(255, 255, 255, .9);
+
+$color-separator: rgba(0, 0, 0, .06);
+$color-separator-alt: rgba(0, 0, 0, .2);
+$color-separator-hover: rgba(0, 0, 0, .3);
+
+$color-shadow-normal: rgba(0, 0, 0, .5);
+$color-shadow-light: rgba(0, 0, 0, .3);
+$color-shadow-dark: rgba(0, 0, 0, .8);
+
+$color-background-hover: #e5e5e5;
+$color-bar-selected: $color-primary;
+
+$color-background-button-default: $color-foreground;
+$color-background-button-hover: #fff;
+
+$color-background-scrollbar: #ececec;
+$color-foreground-scrollbar: #afafaf;
+
+$color-background-overlay: rgba(255, 255, 255, .77);
+$color-accented-dark: #000f0d;
+
+$color-background-modal: rgba(0, 0, 0, .8);

@@ -17,3 +17,18 @@ export const analysisFrameworkDetailSelector = createSelector(
     ),
 );
 */
+
+// eslint-disable-next-line import/prefer-default-export
+export const inputValuesForTabSelector = ({ domainData, mem }) => {
+    const { currentTabId } = mem;
+
+    if (currentTabId) {
+        const tabData = domainData[currentTabId];
+
+        if (tabData) {
+            return tabData.inputValues || emptyObject;
+        }
+    }
+
+    return emptyObject;
+};
