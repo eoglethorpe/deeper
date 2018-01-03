@@ -259,15 +259,20 @@ export default class CountryPanel extends React.PureComponent {
                                 {countriesString.addCountryButtonLabel}
                             </PrimaryButton>
                         }
-                        <TextInput
-                            styleName="search-input"
-                            onChange={this.handleSearchInputChange}
-                            placeholder={countriesString.searchCountryPlaceholer}
-                            type="search"
-                            value={this.state.searchInputValue}
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
+                        <div styleName="search-wrapper">
+                            <div styleName="search-icon">
+                                <i className={iconNames.search} />
+                            </div>
+                            <TextInput
+                                styleName="search-input"
+                                onChange={this.handleSearchInputChange}
+                                placeholder={countriesString.searchCountryPlaceholer}
+                                type="search"
+                                value={this.state.searchInputValue}
+                                showLabel={false}
+                                showHintAndError={false}
+                            />
+                        </div>
                     </header>
                     <ListView
                         styleName="country-list"
