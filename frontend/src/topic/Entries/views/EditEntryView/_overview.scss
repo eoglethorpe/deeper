@@ -167,9 +167,10 @@
         .header {
             .entry-actions {
                 display: flex;
+                align-items: flex-end;
 
                 .select-input {
-                    width: 216px;
+                    width: 256px;
                 }
 
                 >* {

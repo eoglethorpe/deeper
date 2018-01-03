@@ -11,22 +11,35 @@
         pointer-events: none;
     }
 
-    .suggestion-select {
+    .bottom-box {
         display: flex;
+        flex-direction: column;
         flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
         border-top: $width-separator-thin solid $color-separator;
-        padding: $spacing-large $spacing-medium-alt;
+        padding: $spacing-medium-alt $spacing-medium-alt $spacing-large;
 
-        span {
-            text-transform: uppercase;
-            font-size: $font-size-normal;
+        .assisted-source-change-btn {
+            display: flex;
+            flex-shrink: 0;
+            width: 100%;
         }
 
-        .select-input {
-            flex-basis: 50%;
-            margin-left: $spacing-small;
+        .details {
+            display: flex;
+            flex-shrink: 0;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: $spacing-small 0;
+
+            span {
+                text-transform: uppercase;
+                font-size: $font-size-normal;
+            }
+
+            .select-input {
+                flex-basis: 50%;
+                margin-left: $spacing-small;
+            }
         }
     }
 

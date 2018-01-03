@@ -379,16 +379,16 @@ export default class Entries extends React.PureComponent {
             >
                 <header className={styles.header}>
                     <div className={styles['info-container']}>
-                        <h2>
+                        <h2 className={styles.heading}>
                             {data.title}
                         </h2>
-                        <p>
+                        <div className={styles.detail}>
                             <span className={iconNames.calendar} />
                             <FormattedDate
                                 date={data.createdAt}
                                 mode="dd-MM-yyyy"
                             />
-                        </p>
+                        </div>
                     </div>
                     <div className={styles['action-buttons']}>
                         <Link

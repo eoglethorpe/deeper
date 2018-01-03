@@ -2,10 +2,6 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    TextArea,
-} from '../../../../../public/components/Input';
-
 import styles from './styles.scss';
 
 const TEXT = 'excerpt';
@@ -36,13 +32,9 @@ export default class ExcerptTextList extends React.PureComponent {
             <div styleName="excerpt-list-view">
                 {
                     attribute.type === TEXT ? (
-                        <TextArea
-                            styleName="textarea"
-                            showLabel={false}
-                            showHintAndError={false}
-                            value={attribute.excerpt}
-                            readOnly
-                        />
+                        <span styleName="textarea">
+                            {attribute.excerpt}
+                        </span>
                     ) : (
                         <img
                             styleName="image"

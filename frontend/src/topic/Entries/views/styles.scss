@@ -1,16 +1,21 @@
 @import '../../../stylesheets/base';
 
 .entries {
+    @include shadow-large;
     display: flex;
     position: relative;
     flex-direction: column;
+    padding: $spacing-medium-alt;
     height: calc(100vh - #{$height-navbar});
 
     .filters {
         display: flex;
         flex-shrink: 0;
-        padding: $spacing-large;
-        align-items: flex-end;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-medium solid $color-separator;
+        background-color: $color-foreground-alt;
+        padding: $spacing-medium-alt;
 
         .filter {
             +.filter {
@@ -18,8 +23,10 @@
             }
         }
 
-       .filter-btn {
-            margin-left: $spacing-small;
+        .action-buttons {
+            .filter-btn {
+                margin-left: $spacing-small;
+            }
         }
     }
 
@@ -29,20 +36,23 @@
         overflow-y: auto;
 
         .lead-entries-list {
-            padding: $spacing-medium-alt;
-
             .lead-entries {
-                @include shadow-large;
-                margin-bottom: $spacing-large;
-
                 .header {
                     display: flex;
+                    position: sticky;
+                    top: 0;
                     justify-content: space-between;
+                    z-index: 11;
                     border-bottom: $width-separator-medium solid $color-separator;
                     background-color: $color-background-header;
                     padding: $spacing-small $spacing-medium-alt;
 
-                    p {
+                    .heading {
+                        text-transform: none;
+                        font-weight: $font-weight-medium;
+                    }
+
+                    .detail {
                         margin: $spacing-small 0;
 
                         span {
@@ -52,8 +62,11 @@
                 }
 
                 .entry {
+                    display: flex;
+                    align-items: center;
+                    z-index: 10;
                     border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: $color-foreground-white;
+                    background-color: $color-background-row-alt;
 
                     .grid-layout {
                         min-height: 100%;
@@ -86,7 +99,7 @@
                     }
 
                     &:nth-child(even) {
-                        background-color: $color-foreground;
+                        background-color: $color-background-row;
                     }
                 }
             }

@@ -137,25 +137,27 @@ export default class EntriesFilter extends React.PureComponent {
                 styleName="filters"
             >
                 { this.props.filters.map(this.renderFilter) }
-                { this.props.filters.length > 0 && !this.props.applyOnChange &&
-                    <Button
-                        styleName="filter-btn"
-                        onClick={this.handleApplyFilter}
-                        disabled={pending || pristine}
-                    >
-                        Apply Filter
-                    </Button>
-                }
-                { this.props.filters.length > 0 &&
-                    <DangerButton
-                        styleName="filter-btn"
-                        onClick={this.handleClearFilter}
-                        type="button"
-                        disabled={pending || isFilterEmpty}
-                    >
-                        Clear Filter
-                    </DangerButton>
-                }
+                <div styleName="action-buttons">
+                    { this.props.filters.length > 0 && !this.props.applyOnChange &&
+                        <Button
+                            styleName="filter-btn"
+                            onClick={this.handleApplyFilter}
+                            disabled={pending || pristine}
+                        >
+                            Apply Filter
+                        </Button>
+                    }
+                    { this.props.filters.length > 0 &&
+                        <DangerButton
+                            styleName="filter-btn"
+                            onClick={this.handleClearFilter}
+                            type="button"
+                            disabled={pending || isFilterEmpty}
+                        >
+                            Clear Filter
+                        </DangerButton>
+                    }
+                </div>
             </div>
         );
     }
