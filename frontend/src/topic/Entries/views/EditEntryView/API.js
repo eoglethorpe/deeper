@@ -396,15 +396,19 @@ export default class API {
         filterId = undefined,
         filterData = undefined,
     ) {
-        this.addEntry(
+        this.addEntry({
             excerpt,
-            undefined,
-            widgetId && data && [{ widget: widgetId, data }],
-            filterId && filterData && [{ filter: filterId, ...filterData }],
-        );
+            entryType: 'excerpt',
+            widget: widgetId && data && [{ widget: widgetId, data }],
+            filter: filterId && filterData && [{ filter: filterId, ...filterData }],
+        });
     }
 
     addImage(image, widgetId = undefined, data = undefined) {
-        this.addEntry(undefined, image, widgetId && data && [{ widget: widgetId, data }]);
+        this.addEntry({
+            image,
+            entryType: 'image',
+            widget: widgetId && data && [{ widget: widgetId, data }],
+        });
     }
 }

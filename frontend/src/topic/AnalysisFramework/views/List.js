@@ -222,35 +222,21 @@ export default class List extends React.PureComponent {
     render() {
         return (
             <div styleName="list">
-                <div styleName="top">
-                    <GridLayout
-                        styleName="grid-layout"
-                        modifier={this.getItemView}
-                        items={this.gridItems}
-                        onLayoutChange={this.handleLayoutChange}
-                    />
-                </div>
                 <div styleName="bottom">
-                    <header
-                        styleName="header"
-                    >
-                        <h2>Widgets</h2>
+                    <header styleName="header">
+                        <h2>
+                            Widgets
+                        </h2>
                         <div styleName="action-buttons">
-                            <Button
-                                onClick={this.handleGotoOverviewButtonClick}
-                            >
+                            <Button onClick={this.handleGotoOverviewButtonClick}>
                                 Go to overview
                             </Button>
-                            <SuccessButton
-                                onClick={this.props.onSave}
-                            >
+                            <SuccessButton onClick={this.props.onSave}>
                                 Save
                             </SuccessButton>
                         </div>
                     </header>
-                    <div
-                        styleName="widget-list"
-                    >
+                    <div styleName="widget-list">
                         {
                             this.widgets.map(widget => (
                                 <div
@@ -279,6 +265,14 @@ export default class List extends React.PureComponent {
                             ))
                         }
                     </div>
+                </div>
+                <div styleName="top">
+                    <GridLayout
+                        styleName="grid-layout"
+                        modifier={this.getItemView}
+                        items={this.gridItems}
+                        onLayoutChange={this.handleLayoutChange}
+                    />
                 </div>
             </div>
         );

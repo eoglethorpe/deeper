@@ -15,10 +15,6 @@ import {
 } from '../../../public/components/Action';
 
 import {
-    SelectInput,
-} from '../../../public/components/Input';
-
-import {
     iconNames,
 } from '../../../common/constants';
 import {
@@ -207,6 +203,7 @@ export default class Overview extends React.PureComponent {
         window.location.hash = '/list/';
     }
 
+    // TODO: use this from selector
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.overviewComponent)
@@ -229,36 +226,24 @@ export default class Overview extends React.PureComponent {
     render() {
         return (
             <div styleName="overview">
-                <div
-                    styleName="left"
-                >
-                    <header
-                        styleName="header"
-                    >
+                <div styleName="left">
+                    <header styleName="header">
                         <h2>Widgets</h2>
                     </header>
-                    <div
-                        styleName="widget-list"
-                    >
+                    <div styleName="widget-list">
                         {
                             this.widgets.map(widget => (
                                 <div
                                     styleName="widget-list-item"
                                     key={widget.id}
                                 >
-                                    <div
-                                        styleName="title"
-                                    >
+                                    <div styleName="title">
                                         {widget.title}
                                     </div>
-                                    <div
-                                        styleName="actions"
-                                    >
+                                    <div styleName="actions">
                                         <TransparentButton
                                             onClick={
-                                                () => {
-                                                    this.handleAddWidgetButtonClick(widget.id);
-                                                }
+                                                () => this.handleAddWidgetButtonClick(widget.id)
                                             }
                                         >
                                             <span className={iconNames.add} />
@@ -273,45 +258,17 @@ export default class Overview extends React.PureComponent {
                     ref={(el) => { this.gridLayoutContainer = el; }}
                     styleName="right"
                 >
-                    <header
-                        styleName="header"
-                    >
-                        <div
-                            styleName="entry-actions"
-                        >
-                            <SelectInput
-                                disabled
-                                showHintAndError={false}
-                                showLabel={false}
-                                options={[]}
-                            />
-                            <TransparentButton
-                                disabled
-                            >
-                                <span className={iconNames.add} />
-                            </TransparentButton>
-                            <TransparentButton
-                                disabled
-                            >
-                                <span className={iconNames.remove} />
-                            </TransparentButton>
-                        </div>
-                        <div
-                            styleName="action-buttons"
-                        >
-                            <Button
-                                onClick={this.handleGotoListButtonClick}
-                            >
+                    <header styleName="header">
+                        <div styleName="entry-actions" />
+                        <div styleName="action-buttons">
+                            <Button onClick={this.handleGotoListButtonClick} >
                                 Goto list
                             </Button>
-                            <SuccessButton
-                                onClick={this.props.onSave}
-                            >
+                            <SuccessButton onClick={this.props.onSave} >
                                 Save
                             </SuccessButton>
                         </div>
                     </header>
-
                     <GridLayout
                         styleName="grid-layout"
                         modifier={this.getItemView}
