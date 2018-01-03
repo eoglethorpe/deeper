@@ -65,11 +65,11 @@ const updateInputValue = (state, action) => {
 
     const settings = {
         [tabId]: { $auto: {
-            inputValues: {
+            inputValues: { $auto: {
                 $merge: {
                     [id]: value,
                 },
-            },
+            } },
         } },
     };
 
