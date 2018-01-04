@@ -289,7 +289,7 @@ export default class Entries extends React.PureComponent {
                     this.props.setAnalysisFramework({ analysisFramework: response });
 
                     this.entriesRequest = this.createRequestForEntries(
-                        projectIdFromRoute,
+                        this.props.projectId,
                         this.props.entriesFilter,
                     );
                     this.entriesRequest.start();

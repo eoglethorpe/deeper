@@ -33,7 +33,7 @@ import {
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
 import styles from './styles.scss';
 
-const NLP_THRESHOLD = 0;
+// const NLP_THRESHOLD = 0;
 
 const propTypes = {
     lead: PropTypes.object, // eslint-disable-line
