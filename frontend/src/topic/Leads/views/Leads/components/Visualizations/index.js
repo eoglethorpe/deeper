@@ -39,8 +39,8 @@ const defaultProps = {
     totalLeadsCount: 0,
 };
 
-const mapStateToProps = state => ({
-    leads: leadsForProjectSelector(state),
+const mapStateToProps = (state, props) => ({
+    leads: leadsForProjectSelector(state, props),
 
     hierarchicalData: hierarchialDataSelector(state),
     chordData: chordDataSelector(state),

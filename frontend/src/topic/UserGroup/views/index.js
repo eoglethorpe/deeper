@@ -25,6 +25,7 @@ import {
     unSetUserGroupAction,
 
     activeUserSelector,
+    groupIdFromRouteSelector,
 } from '../../../common/redux';
 
 import {
@@ -41,12 +42,12 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 
 const propTypes = {
-    match: PropTypes.object.isRequired, // eslint-disable-line
     userGroup: PropTypes.object, // eslint-disable-line
     setUserGroup: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
     unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userGroupId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -57,6 +58,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userGroup: groupSelector(state, props),
     activeUser: activeUserSelector(state),
+    userGroupId: groupIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -76,8 +78,7 @@ export default class UserGroup extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { match } = props;
-        const userGroupId = match.params.userGroupId;
+        const { userGroupId } = this.props;
 
         this.state = {
             showUserGroupEditModal: false,
@@ -170,7 +171,7 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroup, match } = this.props;
+        const { userGroup, userGroupId } = this.props;
         const { showUserGroupEditModal, pending } = this.state;
 
         const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || emptyList);
@@ -210,13 +211,12 @@ export default class UserGroup extends React.PureComponent {
                     Activity Log
                 </div>
                 <ProjectsTable
-                    match={match}
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     userGroup={userGroup}
                 />
                 <MembersTable
                     memberData={userGroup.memberships || emptyList}
-                    userGroupId={+match.params.userGroupId}
+                    userGroupId={+userGroupId}
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     activeUser={this.props.activeUser}
                 />

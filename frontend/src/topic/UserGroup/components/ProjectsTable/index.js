@@ -51,8 +51,6 @@ import UserProjectAdd from '../../../../common/components/UserProjectAdd';
 import styles from './styles.scss';
 
 const propTypes = {
-    // match required by selectors
-    match: PropTypes.object.isRequired, // eslint-disable-line
     userGroup: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array.isRequired,// eslint-disable-line
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line

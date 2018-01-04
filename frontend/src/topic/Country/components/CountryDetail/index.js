@@ -53,8 +53,8 @@ const defaultProps = {
     title: '',
 };
 
-const mapStateToProps = state => ({
-    countryDetail: countryDetailSelector(state),
+const mapStateToProps = (state, props) => ({
+    countryDetail: countryDetailSelector(state, props),
     activeUser: activeUserSelector(state),
 });
 
@@ -184,10 +184,10 @@ export default class CountryDetail extends React.PureComponent {
                     <div styleName="details-no-edit">
                         <RegionDetailView
                             styleName="region-detail-box"
-                            regionId={countryDetail.id}
+                            countryId={countryDetail.id}
                         />
                         <div styleName="map-container">
-                            <RegionMap regionId={countryDetail.id} />
+                            <RegionMap countryId={countryDetail.id} />
                         </div>
                     </div>
                 ) : (
@@ -246,19 +246,25 @@ export default class CountryDetail extends React.PureComponent {
                             for="population-data"
                             styleName="tab-content"
                         >
-                            <CountryPopulationData countryId={countryDetail.id} />
+                            <CountryPopulationData
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
                             styleName="tab-content"
                         >
-                            <CountrySeasonalCalendar countryId={countryDetail.id} />
+                            <CountrySeasonalCalendar
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                         <TabContent
                             for="media-sources"
                             styleName="tab-content"
                         >
-                            <CountryMediaSources countryId={countryDetail.id} />
+                            <CountryMediaSources
+                                countryId={countryDetail.id}
+                            />
                         </TabContent>
                     </Tabs>
                 )}

@@ -31,8 +31,8 @@ const propTypes = {
     setRegionDetails: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-    countryDetail: countryDetailSelector(state),
+const mapStateToProps = (state, props) => ({
+    countryDetail: countryDetailSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -94,18 +94,18 @@ export default class CountryGeneral extends React.PureComponent {
                     <div styleName="detail-map-container">
                         <RegionDetail
                             styleName="region-detail-form"
-                            regionId={countryDetail.id}
+                            countryId={countryDetail.id}
                             dataLoading={dataLoading}
                         />
                         <div styleName="map-container">
                             <RegionMap
-                                regionId={countryDetail.id}
+                                countryId={countryDetail.id}
                             />
                         </div>
                     </div>
                     <RegionAdminLevel
                         styleName="admin-levels"
-                        regionId={countryDetail.id}
+                        countryId={countryDetail.id}
                     />
                 </div>
             </div>

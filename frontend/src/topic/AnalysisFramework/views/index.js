@@ -21,7 +21,7 @@ import {
     createUrlForAnalysisFramework,
 } from '../../../common/rest';
 import {
-    analysisFrameworkIdFromProps,
+    afIdFromRoute,
     setAfViewAnalysisFrameworkAction,
 
     afViewCurrentAnalysisFrameworkSelector,
@@ -45,7 +45,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     analysisFramework: afViewCurrentAnalysisFrameworkSelector(state, props),
-    analysisFrameworkId: analysisFrameworkIdFromProps(state, props),
+    analysisFrameworkId: afIdFromRoute(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({

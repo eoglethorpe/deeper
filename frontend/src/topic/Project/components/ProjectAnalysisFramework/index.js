@@ -220,7 +220,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <ProjectAfDetail
                 mainHistory={this.props.mainHistory}
                 key={selectedAf}
-                afId={selectedAf}
+                analysisFrameworkId={selectedAf}
             />
         );
     }

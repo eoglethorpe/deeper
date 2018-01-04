@@ -43,7 +43,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    regionId: PropTypes.number.isRequired,
+    countryId: PropTypes.number.isRequired,
     adminLevelList: PropTypes.arrayOf(
         PropTypes.shape({
             adminLevelId: PropTypes.number,
@@ -140,7 +140,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             activeAdminLevelDelete: {},
         };
 
-        this.requestForAdminLevelsForRegion = this.createAlsForRegionRequest(props.regionId);
+        this.requestForAdminLevelsForRegion = this.createAlsForRegionRequest(props.countryId);
     }
 
     componentWillMount() {
@@ -254,7 +254,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             }
             const { activeAdminLevelDelete } = this.state;
             this.requestForAlDelete = this.createAlDeleteRequest(
-                activeAdminLevelDelete.id, this.props.regionId);
+                activeAdminLevelDelete.id, this.props.countryId);
             this.requestForAlDelete.start();
         }
 
@@ -267,7 +267,7 @@ export default class RegionAdminLevel extends React.PureComponent {
     keyExtractor = rowData => rowData.id
 
     render() {
-        const { className, adminLevelList, regionId } = this.props;
+        const { className, adminLevelList, countryId } = this.props;
         const { activeAdminLevelDelete, showDeleteModal, deletePending } = this.state;
 
         return (
@@ -302,7 +302,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                         />
                         <ModalBody>
                             <EditAdminLevel
-                                regionId={regionId}
+                                countryId={countryId}
                                 onClose={this.handleModalClose}
                                 adminLevelsOfRegion={adminLevelList}
                             />

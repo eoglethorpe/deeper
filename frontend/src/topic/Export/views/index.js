@@ -24,6 +24,7 @@ import {
 
 import {
     analysisFrameworkForProjectSelector,
+    projectIdFromRouteSelector,
 } from '../../../common/redux';
 
 import wordIcon from '../../../img/word.svg';
@@ -38,11 +39,12 @@ import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
     analysisFramework: analysisFrameworkForProjectSelector(state, props),
+    projectId: projectIdFromRouteSelector(state, props),
 });
 
 const propTypes = {
-    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -106,11 +108,8 @@ export default class Export extends React.PureComponent {
             },
         ];
 
-        const {
-            params,
-        } = props.match;
-
-        this.leadRequest = this.createRequestForProjectLeads(params.projectId);
+        const { projectId } = props;
+        this.leadRequest = this.createRequestForProjectLeads(projectId);
     }
 
     componentWillMount() {
@@ -370,7 +369,6 @@ export default class Export extends React.PureComponent {
                                     <FilterEntriesForm
                                         applyOnChange
                                         pending={false}
-                                        match={this.props.match}
                                     />
                                 </div>
                             </div>
@@ -379,9 +377,7 @@ export default class Export extends React.PureComponent {
                                     <h4>
                                         Lead Attributes
                                     </h4>
-                                    <FilterLeadsForm
-                                        applyOnChange
-                                    />
+                                    <FilterLeadsForm applyOnChange />
                                 </div>
                                 <div styleName="leads">
                                     <List

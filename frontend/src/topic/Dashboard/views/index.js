@@ -16,8 +16,8 @@ const propTypes = {
     currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
 };
 
-const mapStateToProps = state => ({
-    currentUserActiveProject: currentUserActiveProjectSelector(state),
+const mapStateToProps = (state, props) => ({
+    currentUserActiveProject: currentUserActiveProjectSelector(state, props),
 });
 
 @connect(mapStateToProps, undefined)

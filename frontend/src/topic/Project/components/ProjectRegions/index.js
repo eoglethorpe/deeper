@@ -163,7 +163,7 @@ export default class ProjectRegions extends React.PureComponent {
             return (
                 <ProjectRegionDetail
                     key={selectedRegion}
-                    regionId={selectedRegion}
+                    countryId={selectedRegion}
                 />
             );
         }

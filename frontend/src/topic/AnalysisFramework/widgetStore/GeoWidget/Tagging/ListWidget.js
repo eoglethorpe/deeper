@@ -256,7 +256,7 @@ export default class GeoTaggingList extends React.PureComponent {
                     <ModalBody>
                         <RegionMap
                             styleName="map-content"
-                            regionId={selectedRegion}
+                            countryId={selectedRegion}
                             onChange={this.handleMapSelect}
                             onLocationsChange={this.handleMapLocationsChange}
                             selections={values}

@@ -35,7 +35,7 @@ import {
     usersInformationListSelector,
     setUsersInformationAction,
 
-    userGroupDetailsSelector,
+    groupSelector,
     setUsersMembershipAction,
 } from '../../../../common/redux';
 import notify from '../../../../common/notify';
@@ -59,7 +59,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
-    userGroupDetails: userGroupDetailsSelector(state, props),
+    userGroupDetails: groupSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({

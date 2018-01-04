@@ -21,6 +21,7 @@ import {
     activeCountrySelector,
     setActiveProjectAction,
     setActiveCountryAction,
+    setRouteParamsAction,
 } from '../redux';
 
 const propTypes = {
@@ -40,8 +41,8 @@ const propTypes = {
     }).isRequired,
 
     activeProjectId: PropTypes.number,
-
     activeCountryId: PropTypes.number,
+    setRouteParams: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -57,6 +58,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
     setActiveCountry: params => dispatch(setActiveCountryAction(params)),
+    setRouteParams: params => dispatch(setRouteParamsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -67,7 +69,9 @@ class RouteSynchronizer extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.synchronizeLocation(props);
+        this.syncState(props);
+
+        this.props.setRouteParams(props.match);
     }
 
     componentWillMount() {
@@ -75,44 +79,17 @@ class RouteSynchronizer extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {
-            match,
-            activeProjectId: newProjectId,
-            activeCountryId: newCountryId,
-            history,
-        } = nextProps;
-
-        const {
-            activeProjectId: oldProjectId,
-            activeCountryId: oldCountryId,
-            location,
-        } = this.props;
-
-        const {
-            projectId,
-            countryId,
-        } = match.params;
-
-        const newParams = { ...match.params };
-        let changed = false;
-
-        if (projectId && oldProjectId !== newProjectId) {
-            newParams.projectId = newProjectId;
-            changed = true;
+        const newUrlParams = this.getNewUrlParams(nextProps);
+        if (this.props.match !== nextProps.match) {
+            this.props.setRouteParams(nextProps.match);
         }
 
-        if (countryId && oldCountryId !== newCountryId) {
-            newParams.countryId = countryId;
-            changed = true;
-        }
-
-        if (changed) {
-            history.push({
-                ...location,
-                pathname: reverseRoute(match.path, newParams),
-            });
+        if (newUrlParams) {
+            console.log('Syncing url');
+            this.syncUrl(nextProps, newUrlParams);
         } else {
-            this.synchronizeLocation(nextProps);
+            console.log('Syncing state');
+            this.syncState(nextProps);
         }
     }
 
@@ -120,37 +97,78 @@ class RouteSynchronizer extends React.PureComponent {
         console.log('Unmounting ProjectRouteSynchronizer');
     }
 
-    synchronizeLocation = (newProps) => {
+    getNewUrlParams = (nextProps) => {
         const {
-            match: oldMatch,
+            activeProjectId: oldProjectId,
+            activeCountryId: oldCountryId,
+        } = this.props;
+        const {
+            match: { params },
+            activeProjectId: newProjectId,
+            activeCountryId: newCountryId,
+        } = nextProps;
+        const {
+            projectId,
+            countryId,
+        } = params;
+
+        const changed = (
+            (projectId && oldProjectId !== newProjectId) ||
+            (countryId && oldCountryId !== newCountryId)
+        );
+
+        if (!changed) {
+            return undefined;
+        }
+        return {
+            ...params,
+            projectId: newProjectId,
+            countryId: newCountryId,
+        };
+    };
+
+    syncUrl = (nextProps, newUrlParams) => {
+        const { history, match: { path } } = nextProps;
+        const { location } = this.props;
+        history.push({
+            ...location,
+            pathname: reverseRoute(path, newUrlParams),
+        });
+    }
+
+    syncState = (newProps) => {
+        const {
             activeProjectId: oldActiveProjectId,
             activeCountryId: oldActiveCountryId,
+            match: { params: oldMatchParams },
         } = this.props;
 
         const {
-            match: newMatch,
+            match: {
+                path: newMatchPath,
+                url: newMatchUrl,
+                projectId: newMatchProjectId,
+                countryId: newMatchCountryId,
+            },
         } = newProps;
 
-        const oldParams = {
-            ...oldMatch.params,
-            projectId: oldActiveProjectId,
-            countryId: oldActiveCountryId,
-        };
+        const oldLocation = reverseRoute(
+            newMatchPath,
+            {
+                ...oldMatchParams,
+                projectId: oldActiveProjectId,
+                countryId: oldActiveCountryId,
+            },
+        );
+        if (oldLocation === newMatchUrl) {
+            return;
+        }
 
-        const oldLocation = reverseRoute(newMatch.path, oldParams);
-
-        if (oldLocation !== newMatch.url) {
-            if (newMatch.params.projectId && oldActiveProjectId !== +newMatch.params.projectId) {
-                newProps.setActiveProject({
-                    activeProject: +newMatch.params.projectId,
-                });
-            }
-
-            if (newMatch.params.countryId && oldActiveCountryId !== +newMatch.params.countryId) {
-                newProps.setActiveCountry({
-                    activeCountry: +newMatch.params.countryId,
-                });
-            }
+        if (newMatchProjectId && oldActiveProjectId !== +newMatchProjectId) {
+            newProps.setActiveProject({ activeProject: +newMatchProjectId });
+        }
+        if (newMatchCountryId && oldActiveCountryId !== +newMatchCountryId) {
+            newProps.setActiveCountry({ activeCountry: +newMatchCountryId });
         }
     }
 
@@ -161,7 +179,6 @@ class RouteSynchronizer extends React.PureComponent {
         } = this.props;
 
         const title = pageTitles[getKeyByValue(pathNames, match.path)];
-
         return [
             <Helmet key={title}>
                 <meta charSet="utf-8" />
@@ -171,7 +188,6 @@ class RouteSynchronizer extends React.PureComponent {
             </Helmet>,
             <Bundle
                 key="component"
-                match={match}
                 {...otherProps}
             />,
         ];

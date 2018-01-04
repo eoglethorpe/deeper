@@ -36,7 +36,6 @@ import {
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
-    currentUserActiveProjectSelector,
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
 
@@ -77,19 +76,19 @@ import Visualizations from './components/Visualizations';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number.isRequired,
-    currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
+    filters: PropTypes.object.isRequired, // eslint-disable-line
+    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
+
+    activePage: PropTypes.number.isRequired,
+    activeSort: PropTypes.string.isRequired,
+    activeProject: PropTypes.number.isRequired,
     setLeads: PropTypes.func.isRequired,
     totalLeadsCount: PropTypes.number,
-    filters: PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageFilter: PropTypes.func.isRequired,
-    activeSort: PropTypes.string.isRequired, // eslint-disable-line
-    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageViewMode: PropTypes.func.isRequired,
     viewMode: PropTypes.string.isRequired,
-    activePage: PropTypes.number.isRequired, // eslint-disable-line
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
 };
@@ -99,18 +98,16 @@ const defaultProps = {
     totalLeadsCount: 0,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
-    currentUserActiveProject: currentUserActiveProjectSelector(state),
-    leads: leadsForProjectSelector(state),
-    totalLeadsCount: totalLeadsCountForProjectSelector(state),
-
     hierarchicalData: hierarchialDataSelector(state),
 
-    activePage: leadPageActivePageSelector(state),
-    activeSort: leadPageActiveSortSelector(state),
-    viewMode: leadPageViewModeSelector(state),
-    filters: leadPageFilterSelector(state),
+    leads: leadsForProjectSelector(state, props),
+    totalLeadsCount: totalLeadsCountForProjectSelector(state, props),
+    activePage: leadPageActivePageSelector(state, props),
+    activeSort: leadPageActiveSortSelector(state, props),
+    viewMode: leadPageViewModeSelector(state, props),
+    filters: leadPageFilterSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -634,7 +631,9 @@ export default class Leads extends React.PureComponent {
                             { loadingLeads && <LoadingAnimation /> }
                         </div>
                     ) : (
-                        <Visualizations styleName="viz-container" />
+                        <Visualizations
+                            styleName="viz-container"
+                        />
                     )
                 }
                 <Confirm
