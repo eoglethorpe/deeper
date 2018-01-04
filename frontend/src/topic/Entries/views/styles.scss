@@ -22,6 +22,10 @@
             }
         }
 
+        .range-filter-container {
+            display: flex;
+        }
+
         .action-buttons {
             .filter-btn {
                 margin-left: $spacing-small;

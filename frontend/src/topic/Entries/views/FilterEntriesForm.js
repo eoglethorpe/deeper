@@ -121,6 +121,35 @@ export default class EntriesFilter extends React.PureComponent {
                     multiple
                 />
             );
+        } else if (filter.type === 'multiselect-range') {
+            const keyGt = `${key}__gt`;
+            const keyLt = `${key}__lt`;
+
+            return (
+                <div
+                    className={`${styles['range-filter-container']} ${styles.filter}`}
+                    key={key}
+                >
+                    <SelectInput
+                        className={styles.filter}
+                        options={filter.options}
+                        label={`${title} From`}
+                        showHintAndError={false}
+                        onChange={values => this.handleFilterChange(keyGt, values)}
+                        value={filters[keyGt] || []}
+                        disabled={this.props.pending}
+                    />
+                    <SelectInput
+                        className={styles.filter}
+                        options={filter.options}
+                        label={`${title} To`}
+                        showHintAndError={false}
+                        onChange={values => this.handleFilterChange(keyLt, values)}
+                        value={filters[keyLt] || []}
+                        disabled={this.props.pending}
+                    />
+                </div>
+            );
         }
 
         return null;

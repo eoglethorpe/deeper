@@ -11,8 +11,9 @@ import styles from './styles.scss';
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired,      // eslint-disable-line
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.object,      // eslint-disable-line
 };
@@ -51,6 +52,16 @@ export default class ScaleTaggingList extends React.PureComponent {
         />
     )
 
+    createFilterData = (attribute) => {
+        const { data } = this.props;
+        return {
+            values: undefined,
+            number: attribute.selectedScale && (
+                data.scaleUnits.findIndex(s => s.key === attribute.selectedScale) + 1
+            ),
+        };
+    }
+
     createExportData = (attribute) => {
         const { data } = this.props;
         const scale = data.scaleUnits.find(s => s.key === attribute.selectedScale);
@@ -62,10 +73,11 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     handleScaleClick = (selectedScale) => {
-        const { api, id, entryId, exportable } = this.props;
+        const { api, id, entryId, filters, exportable } = this.props;
         const attribute = { selectedScale };
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
+            .setFilterData(filters[0].id, this.createFilterData(attribute))
             .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }

@@ -94,11 +94,25 @@ export default class ScaleFrameworkList extends React.PureComponent {
         />
     )
 
-    createFilters = (scaleUnits) => {
-        // const filterOptions = [];
-        console.warn(scaleUnits);
+    createFilters = (attribute) => {
+        const { title, widgetKey } = this.props;
+        const { scaleUnits } = attribute;
 
-        return undefined;
+        const filterOptions = scaleUnits.map((s, i) => ({
+            label: s.title,
+            key: (i + 1),
+        }));
+
+        return [{
+            title,
+            widgetKey,
+            key: widgetKey,
+            filterType: 'number',
+            properties: {
+                type: 'multiselect-range',
+                options: filterOptions,
+            },
+        }];
     }
 
     createExportable = () => {
