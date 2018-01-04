@@ -10,7 +10,10 @@ import styles from './styles.scss';
 
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired, //eslint-disable-line
 };
 
 @CSSModules(styles)
@@ -21,6 +24,43 @@ export default class DateFrameworkList extends React.PureComponent {
         super(props);
 
         this.props.editAction(this.handleEdit);
+    }
+
+    componentDidMount() {
+        const { onChange } = this.props;
+
+        onChange(
+            undefined,
+            this.createFilters(),
+            this.createExportable(),
+        );
+    }
+
+    createFilters = () => {
+        const { title, widgetKey } = this.props;
+
+        return [{
+            title,
+            widgetKey,
+            key: widgetKey,
+            filterType: 'number',
+            properties: {
+                type: 'date',
+            },
+        }];
+    }
+
+    createExportable = () => {
+        const excel = {
+            title: this.props.title,
+        };
+
+        return {
+            widgetKey: this.props.widgetKey,
+            data: {
+                excel,
+            },
+        };
     }
 
     handleEdit = () => {

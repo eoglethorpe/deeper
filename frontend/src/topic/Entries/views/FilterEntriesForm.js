@@ -4,7 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { isObjectEmpty } from '../../../public/utils/common';
-import { SelectInput } from '../../../public/components/Input';
+import {
+    DateFilter,
+    SelectInput,
+} from '../../../public/components/Input';
 import {
     Button,
     DangerButton,
@@ -97,6 +100,8 @@ export default class EntriesFilter extends React.PureComponent {
                 this.handleApplyFilter();
             }
         });
+
+        console.warn(key, values);
     }
 
 
@@ -116,7 +121,7 @@ export default class EntriesFilter extends React.PureComponent {
                     label={title}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
-                    value={filters[key] || []}
+                    value={filters[key]}
                     disabled={this.props.pending}
                     multiple
                 />
@@ -136,7 +141,7 @@ export default class EntriesFilter extends React.PureComponent {
                         label={`${title} From`}
                         showHintAndError={false}
                         onChange={values => this.handleFilterChange(keyGt, values)}
-                        value={filters[keyGt] || []}
+                        value={filters[keyGt]}
                         disabled={this.props.pending}
                     />
                     <SelectInput
@@ -145,10 +150,22 @@ export default class EntriesFilter extends React.PureComponent {
                         label={`${title} To`}
                         showHintAndError={false}
                         onChange={values => this.handleFilterChange(keyLt, values)}
-                        value={filters[keyLt] || []}
+                        value={filters[keyLt]}
                         disabled={this.props.pending}
                     />
                 </div>
+            );
+        } else if (filter.type === 'date') {
+            return (
+                <DateFilter
+                    key={key}
+                    className={styles.filter}
+                    label={title}
+                    showHintAndError={false}
+                    onChange={values => this.handleFilterChange(key, values)}
+                    value={filters[key]}
+                    disabled={this.props.pending}
+                />
             );
         }
 

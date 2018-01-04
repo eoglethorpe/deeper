@@ -24,11 +24,32 @@ export const createParamsForEntry = () => ({
     headers: commonHeaderForPost,
 });
 
+
+const ONE_DAY = 24 * 60 * 60 * 1000;
+export const processEntryFilters = (filters) => {
+    const result = [];
+    filters.forEach((filter) => {
+        if (typeof filter[1] === 'object' && filter[1].startDate) {
+            result.push([
+                `${filter[0]}__gt`,
+                Math.round(filter[1].startDate / ONE_DAY),
+            ]);
+            result.push([
+                `${filter[0]}__lt`,
+                Math.round(filter[1].endDate / ONE_DAY),
+            ]);
+        } else {
+            result.push(filter);
+        }
+    });
+    return result;
+};
+
 export const createParamsForFilteredEntries = filters => ({
     method: POST,
     headers: commonHeaderForPost,
     body: JSON.stringify({
-        filters: Object.entries(filters),
+        filters: processEntryFilters(Object.entries(filters)),
     }),
 });
 
