@@ -19,6 +19,7 @@ class AddLead extends Component {
         const {
             inputValues,
             onChange,
+            projects,
         } = this.props;
 
         return (
@@ -39,6 +40,9 @@ class AddLead extends Component {
                         label="Project"
                         value={inputValues.project}
                         onChange={value => onChange('project', value)}
+                        options={projects}
+                        keySelector={d => d.id}
+                        labelSelector={d => d.title}
                     />
                     <TextInput
                         label="Title"

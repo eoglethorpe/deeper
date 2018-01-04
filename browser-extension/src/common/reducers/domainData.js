@@ -18,43 +18,7 @@ export const updateInputValueAction = ({ tabId, id, value }) => ({
     value,
 });
 
-/*
-export const loginAction = ({ access, refresh }) => ({
-    type: LOGIN_ACTION,
-    access,
-    refresh,
-});
-*/
-
 // REDUCER
-
-/*
-const login = (state, action) => {
-    const { access, refresh } = action;
-    const decodedToken = decodeAccessToken(access);
-    const settings = {
-        token: { $set: {
-            access,
-            refresh,
-        } },
-        activeUser: { $set: decodedToken },
-    };
-    return update(state, settings);
-};
-*/
-
-/*
-const defaultInputValues = {
-    project: [],
-    title: undefined,
-    source: undefined,
-    confidentiality: undefined,
-    assignedTo: [],
-    publishedOn: undefined,
-    url: undefined,
-    website: undefined,
-};
-*/
 
 const updateInputValue = (state, action) => {
     const {
@@ -74,10 +38,8 @@ const updateInputValue = (state, action) => {
     };
 
     const newState = update(state, settings);
-
     return newState;
 };
-
 
 export const domainDataReducers = {
     [UPDATE_INPUT_VALUE_ACTION]: updateInputValue,
