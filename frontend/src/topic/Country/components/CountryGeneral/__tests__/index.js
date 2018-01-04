@@ -5,8 +5,6 @@ import { shallow } from 'enzyme';
 
 import CountryGeneral from '../';
 
-jest.mock('mapbox-gl', () => undefined);
-
 const initialState = {
 };
 

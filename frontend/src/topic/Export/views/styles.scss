@@ -1,158 +1,27 @@
 @import '../../../stylesheets/base';
 
-$height-full-page: calc(100vh - #{$height-navbar} -  2 * #{$spacing-medium});
-
 .export {
-    @include shadow-medium;
     display: flex;
-    padding: $spacing-medium;
+    flex-direction: column;
+    padding: $spacing-medium-alt;
+    height: calc(100vh - #{$height-navbar});
 
-
-    .preview-container {
+    >.header {
         display: flex;
-        flex-basis: 30%;
-        align-items: center;
-        justify-content: center;
-        border-right: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground-alt;
-        height: $height-full-page;
-
-        h1 {
-            color: $color-text-disabled;
-            font-weight: bold;
-        }
-    }
-
-    .form-container {
-        display: flex;
-        flex-basis: 70%;
+        flex-shrink: 0;
+        justify-content: space-between;
+        border-bottom: $width-separator-medium solid $color-separator;
         background-color: $color-foreground;
-        height: $height-full-page;
-
-        .left {
-            display: flex;
-            flex-basis: 2%;
-            flex-wrap: wrap;
-
-            .export-text {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 12%;
-            }
-
-            .filters-text {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                height: 85%;
-            }
-
-            h2 {
-                transform: rotate(-90deg);
-                font-weight: $font-weight-medium;
-            }
-        }
-
-        .right {
-            flex-basis: 98%;
-            border-left: $width-separator-medium solid $color-separator;
-
-            .header {
-                display: flex;
-                flex-basis: 100%;
-                padding: $spacing-small $spacing-large;
-
-                .export-type {
-                    display: flex;
-                    flex-shrink: 0;
-                    align-items: center;
-                    justify-content: center;
-                    padding: $spacing-small;
-                    font-size: $font-size-large;
-
-                    label {
-                        margin-right: $spacing-large;
-                        color: $color-primary;
-                    }
-                }
-
-                .export-buttons {
-                    display: flex;
-                    flex-grow: 1;
-                    justify-content: flex-end;
-
-                    .export-button {
-                        display: flex;
-                        align-items: center;
-                        cursor: pointer;
-                        padding: $spacing-small;
-
-                        img {
-                            width: 55px;
-                            height: 55px;
-                        }
-
-                        .action-buttons {
-                            @include transition-medium;
-                            visibility: hidden;
-                            opacity: 0;
-
-                            button {
-                                display: block;
-                                margin: $spacing-small;
-                                padding: $spacing-extra-small $spacing-small;
-                            }
-                        }
-
-                        &:hover {
-                            .action-buttons {
-                                visibility: visible;
-                                opacity: 1;
-
-                                button {
-                                    background-color: $color-hover;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .check-btn {
-                display: flex;
-                padding: $spacing-small $spacing-large;
-
-                label {
-                    align-items: flex-end;
-                    justify-content: flex-end;
-                    margin-right: $spacing-large;
-                }
-
-                :global .ion-help-circled {
-                    cursor: pointer;
-                }
-            }
-
-            .content {
-                display: flex;
-                flex-basis: 100%;
-                flex-wrap: wrap;
-                height: calc(#{$height-full-page} - 120px);
-
-                .filter-section {
-                    flex-basis: 75%;
-                    border-top: $width-separator-medium solid $color-separator;
-                }
-
-                .structure-section {
-                    flex-basis: 25%;
-                    border-top: $width-separator-medium solid $color-separator;
-                    border-left: $width-separator-medium solid $color-separator;
-                    background-color: $color-background-alt-row;
-                }
-            }
-        }
+        padding: $spacing-medium $spacing-medium-alt;
     }
 
+    .main-content {
+        display: flex;
+        flex-grow: 1;
+        background-color: $color-foreground;
+
+        @import 'export-types';
+        @import 'filters';
+        @import 'preview';
+    }
 }

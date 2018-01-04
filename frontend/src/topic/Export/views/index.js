@@ -1,35 +1,54 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import styles from './styles.scss';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import {
-    Form,
-    RadioInput,
     Checkbox,
+    TreeSelection,
 } from '../../../public/components/Input';
 import {
-    TransparentButton,
+    Button,
 } from '../../../public/components/Action';
 import {
-    ListView,
+    List,
 } from '../../../public/components/View';
-import {
-    iconNames,
-} from '../../../common/constants';
+import update from '../../../public/utils/immutable-update';
+import { listToMap } from '../../../public/utils/common';
 
-import FilterSection from '../components/FilterSection';
-import StructureSection from '../components/StructureSection';
-import wordLogo from '../../../img/ms-word.svg';
-import excelLogo from '../../../img/ms-excel.svg';
-import pdfLogo from '../../../img/pdf-logo.svg';
-import jsonLogo from '../../../img/json-logo.svg';
+import {
+    createParamsForUser,
+    createUrlForLeadsOfProject,
+} from '../../../common/rest';
+
+import {
+    analysisFrameworkForProjectSelector,
+} from '../../../common/redux';
+
+import wordIcon from '../../../img/word.svg';
+import excelIcon from '../../../img/excel.svg';
+import pdfIcon from '../../../img/pdf.svg';
+import jsonIcon from '../../../img/json.svg';
+
+import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
+import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
+import BasicInformationInputs from './BasicInformationInputs';
+import styles from './styles.scss';
+
+const mapStateToProps = (state, props) => ({
+    analysisFramework: analysisFrameworkForProjectSelector(state, props),
+});
 
 const propTypes = {
+    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
 };
 
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Export extends React.PureComponent {
     static propTypes = propTypes;
@@ -40,137 +59,344 @@ export default class Export extends React.PureComponent {
         super(props);
 
         this.state = {
-            buttonIsHovered: false,
+            activeExportTypeKey: 'word',
+            reportStructure: this.createReportStructure(props.analysisFramework),
+            selectedLeads: [],
+            values: {
+                excerpt: '',
+                createdBy: [],
+                createdAt: {},
+                leadTitle: '',
+                leadSource: '',
+                leadCreatedAt: {},
+            },
         };
 
-        this.elements = [];
-        this.options = [
-            {
-                key: 'generic',
-                label: 'Generic',
-            },
-            {
-                key: 'geo',
-                label: 'GEO',
-            },
-            {
-                key: 'briefingNote',
-                label: 'Briefing Note',
-            },
-        ];
+        // this.options = [
+        //     {
+        //         key: 'generic',
+        //         label: 'Generic',
+        //     },
+        //     {
+        //         key: 'geo',
+        //         label: 'Geo',
+        //     },
+        // ];
 
-        this.exports = [
+        this.exportTypes = [
             {
                 key: 'word',
-                img: wordLogo,
-                preview: true,
-            },
-            {
-                key: 'excel',
-                img: excelLogo,
+                img: wordIcon,
+                title: 'DOCX',
             },
             {
                 key: 'pdf',
-                img: pdfLogo,
-                preview: true,
+                img: pdfIcon,
+                title: 'PDF',
+            },
+            {
+                key: 'excel',
+                title: 'XLXS',
+                img: excelIcon,
             },
             {
                 key: 'json',
-                img: jsonLogo,
+                img: jsonIcon,
+                title: 'JSON',
             },
         ];
+
+        const {
+            params,
+        } = props.match;
+
+        this.leadRequest = this.createRequestForProjectLeads(params.projectId);
     }
 
-    getExportButton = (key, data) => (
-        <div
+    componentWillMount() {
+        if (this.leadRequest) {
+            this.leadRequest.start();
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.analysisFramework !== this.props.analysisFramework) {
+            this.setState({
+                reportStructure: this.createReportStructure(nextProps.analysisFramework),
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
+    }
+
+    getExportTypeClassName = (key) => {
+        const {
+            activeExportTypeKey,
+        } = this.state;
+
+        const classNames = [styles['export-type-select']];
+
+        if (activeExportTypeKey === key) {
+            classNames.push(styles.active);
+        }
+
+        return classNames.join(' ');
+    }
+
+    createRequestForProjectLeads = ({ activeProject }) => {
+        const urlForProjectLeads = createUrlForLeadsOfProject({
+            project: activeProject,
+            fields: ['id', 'title'],
+        });
+
+        const leadRequest = new FgRestBuilder()
+            .url(urlForProjectLeads)
+            .params(() => createParamsForUser())
+            .preLoad(() => {
+                this.setState({ loadingLeads: true });
+            })
+            .success((response) => {
+                // TODO
+                // schema.validate(response, 'leadsGetResponse');
+                this.setState({
+                    leads: response.results,
+                    selectedLeads: listToMap(response.results, d => d.id, () => true),
+                    loadingLeads: false,
+                });
+            })
+            .failure((err) => {
+                console.error(err);
+                this.setState({
+                    loadingLeads: false,
+                });
+            })
+            .build();
+        return leadRequest;
+    }
+
+    exportTypeKeyExtractor = d => d.key
+
+    leadKeyExtractor = d => d.id
+
+    handleExportTypeSelectButtonClick = (key) => {
+        this.setState({
+            activeExportTypeKey: key,
+        });
+    }
+
+    handleFilterInputsChange = (newValues) => {
+        const {
+            values: oldValues,
+        } = this.state;
+
+        const settings = {
+            $merge: newValues,
+        };
+
+        const values = update(oldValues, settings);
+
+        this.setState({
+            values,
+        });
+    }
+
+    handleSelectLeadChange = (key, value) => {
+        const settings = {
+            [key]: {
+                $set: value,
+            },
+        };
+
+        const {
+            selectedLeads,
+        } = this.state;
+
+        const newSelectedLeads = update(selectedLeads, settings);
+
+        this.setState({
+            selectedLeads: newSelectedLeads,
+        });
+    }
+
+    handleReportStructureChange = (value) => {
+        this.setState({
+            reportStructure: value,
+        });
+    }
+
+    createReportStructure = (analysisFramework) => {
+        if (!analysisFramework) {
+            return undefined;
+        }
+
+        const { exportables, widgets } = analysisFramework;
+        const nodes = [];
+
+        if (!exportables || !widgets) {
+            return undefined;
+        }
+
+        exportables.forEach((exportable) => {
+            const levels = exportable.data && exportable.data.report &&
+                exportable.data.report.levels;
+            const widget = widgets.find(w => w.key === exportable.widgetKey);
+
+            if (!levels || !widget) {
+                return;
+            }
+
+            nodes.push({
+                title: widget.title,
+                key: `${exportable.id}`,
+                selected: true,
+                draggable: true,
+                nodes: this.mapReportLevelsToNodes(levels),
+            });
+        });
+
+        return nodes;
+    }
+
+    mapReportLevelsToNodes = levels => levels.map(level => ({
+        key: level.id,
+        title: level.title,
+        selected: true,
+        draggable: true,
+        nodes: level.sublevels && this.mapReportLevelsToNodes(level.sublevels),
+    }));
+
+    renderExportType = (key, data) => (
+        <button
+            className={this.getExportTypeClassName(key)}
             key={key}
-            className={styles['export-button']}
+            title={data.title}
+            onClick={() => { this.handleExportTypeSelectButtonClick(key); }}
         >
-            <img src={data.img} alt={key} />
-            <div
-                className={styles['action-buttons']}
-            >
-                <TransparentButton
-                    onClick={() => { this.handleExportButtonClick(key); }}
-                >
-                    Export
-                </TransparentButton>
-                {
-                    data.preview && (
-                        <TransparentButton
-                            onClick={() => { this.handlePreviewButtonClick(key); }}
-                        >
-                            Preview
-                        </TransparentButton>
-                    )
-                }
-            </div>
-        </div>
+            <img
+                className={styles.image}
+                src={data.img}
+                alt={data.title}
+            />
+        </button>
     )
 
-    handleExportButtonClick = (key) => {
-        console.log('exporting', key);
-    }
+    renderSelectLead = (key, data) => (
+        <Checkbox
+            className={styles['select-lead']}
+            key={key}
+            label={data.title}
+            onChange={(value) => { this.handleSelectLeadChange(key, value); }}
+            value={this.state.selectedLeads[key]}
+        />
+    )
 
-    handlePreviewButtonClick = (key) => {
-        console.log('previewing', key);
+    renderReportOptions = () => (
+        <TreeSelection
+            value={this.state.reportStructure}
+            onChange={this.handleReportStructureChange}
+        />
+    )
+
+    renderExcelOptions = () => {
+
     }
 
     render() {
+        const {
+            activeExportTypeKey,
+            leads,
+            values,
+        } = this.state;
+
         return (
             <div styleName="export">
-                <div styleName="preview-container">
-                    <div><h1>No Preview Available</h1></div>
-                </div>
-                <Form
-                    styleName="form-container"
-                    elements={this.elements}
-                >
-                    <div styleName="left">
-                        <div styleName="export-text">
-                            <h2>Export</h2>
-                        </div>
-                        <div styleName="filters-text">
-                            <h2>Filters</h2>
-                        </div>
+                <header styleName="header">
+                    <h2>Export</h2>
+                    <div styleName="action-buttons">
+                        <Button>Show preview</Button>
+                        <Button>Start export</Button>
                     </div>
-                    <div styleName="right">
-                        <header
-                            styleName="header"
-                        >
-                            <div styleName="export-type">
-                                <RadioInput
-                                    name="export-type"
-                                    selected={'geo'}
-                                    options={this.options}
+                </header>
+                <div styleName="main-content">
+                    <section
+                        styleName="export-types"
+                    >
+                        <header styleName="header">
+                            <h4 styleName="heading">
+                                Select export type
+                            </h4>
+                        </header>
+                        <div styleName="content">
+                            <div styleName="export-type-select-list">
+                                <List
+                                    styleName="export-type-select-list"
+                                    data={this.exportTypes}
+                                    modifier={this.renderExportType}
+                                    keyExtractor={this.exportTypeKeyExtractor}
                                 />
                             </div>
-                            <ListView
-                                styleName="export-buttons"
-                                data={this.exports}
-                                modifier={this.getExportButton}
-                                keyExtractor={Export.exportButtonKeyExtractor}
-                            />
+                            <div styleName="export-type-options">
+                                { (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
+                                        && this.renderReportOptions()
+                                }
+                                { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
+                            </div>
+                        </div>
+                    </section>
+                    <section
+                        styleName="filters"
+                    >
+                        <header styleName="header">
+                            <h4>
+                                Select filters
+                            </h4>
                         </header>
-                        <div styleName="check-btn">
-                            <Checkbox
-                                label="Include de-coupled data"
-                            />
-                            <i
-                                className={iconNames.help}
-                                title="Note that by selecting this option it can greaty increase the amount of time to export"
-                            />
-                        </div>
                         <div styleName="content">
-                            <FilterSection
-                                styleName="filter-section"
-                            />
-                            <StructureSection
-                                styleName="structure-section"
-                            />
+                            <div styleName="left">
+                                <div styleName="basic-information">
+                                    <BasicInformationInputs
+                                        onChange={this.handleFilterInputsChange}
+                                        values={values}
+                                    />
+                                </div>
+                                <div styleName="entry-attributes">
+                                    <h4>
+                                        Entry Attributes
+                                    </h4>
+                                    <FilterEntriesForm
+                                        applyOnChange
+                                        pending={false}
+                                        match={this.props.match}
+                                    />
+                                </div>
+                            </div>
+                            <div styleName="right">
+                                <div styleName="lead-attributes">
+                                    <h4>
+                                        Lead Attributes
+                                    </h4>
+                                    <FilterLeadsForm
+                                        applyOnChange
+                                    />
+                                </div>
+                                <div styleName="leads">
+                                    <List
+                                        data={leads}
+                                        modifier={this.renderSelectLead}
+                                        keyExtractor={this.leadKeyExtractor}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </Form>
+                    </section>
+                    <section styleName="preview">
+                        Export preview
+                    </section>
+                </div>
             </div>
         );
     }
