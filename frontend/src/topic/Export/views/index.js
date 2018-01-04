@@ -191,7 +191,9 @@ export default class Export extends React.PureComponent {
         this.exportRequest.start();
     }
 
-    createReportStructureForExport = nodes => nodes.map(node => (
+    createReportStructureForExport = nodes => nodes.filter(
+        node => node.selected,
+    ).map(node => (
         node.nodes ? {
             id: node.key,
             levels: this.createReportStructureForExport(node.nodes),

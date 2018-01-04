@@ -15,6 +15,8 @@ import styles from './styles.scss';
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line
     attribute: PropTypes.object, // eslint-disable-line
@@ -78,9 +80,103 @@ export default class Matrix2dList extends React.PureComponent {
         return selectedSectors;
     }
 
+    createDimensionFilterData = (attribute) => {
+        const filterValues = [];
+        Object.keys(attribute).forEach((key) => {
+            const dimension = attribute[key];
+            let dimensionExists = false;
+
+            Object.keys(dimension).forEach((subKey) => {
+                if (Object.values(dimension[subKey].length > 0)) {
+                    filterValues.push(subKey);
+                    dimensionExists = true;
+                }
+            });
+
+            if (dimensionExists) {
+                filterValues.push(key);
+            }
+        });
+
+
+        return {
+            values: filterValues,
+            number: undefined,
+        };
+    }
+
+    createSectorFilterData = (attribute) => {
+        const filterValues = [];
+        Object.keys(attribute).forEach((key) => {
+            const dimension = attribute[key];
+
+            Object.keys(dimension).forEach((subKey) => {
+                const subdimension = dimension[subKey];
+
+                Object.keys(subdimension).forEach((sectorKey) => {
+                    const subsectors = subdimension[sectorKey];
+                    if (subsectors) {
+                        if (filterValues.indexOf(sectorKey) === -1) {
+                            filterValues.push(sectorKey);
+                        }
+
+                        filterValues.push(...subsectors);
+                    }
+                });
+            });
+        });
+
+        return {
+            values: filterValues,
+            number: undefined,
+        };
+    }
+
+    createExportData = (attribute) => {
+        const excelValues = [];
+        const reportValues = [];
+
+        Object.keys(attribute).forEach((key) => {
+            const dimension = attribute[key];
+            const dimensionData = this.props.data.dimensions.find(d => d.id === key);
+
+            Object.keys(dimension).forEach((subKey) => {
+                const subdimension = dimension[subKey];
+                const subdimensionData = dimensionData.subdimensions.find(d => d.id === subKey);
+
+                Object.keys(subdimension).forEach((sectorKey) => {
+                    const sectorData = this.props.data.sectors.find(s => s.id === sectorKey);
+                    const subsectors = subdimension[sectorKey];
+
+                    if (subsectors) {
+                        excelValues.push([
+                            dimensionData.title,
+                            subdimensionData.title,
+                            sectorData.title,
+                            subsectors.map(ss => sectorData.subsectors.find(sd => sd.id === ss)).join(','),
+                        ]);
+                        reportValues.push(`${sectorKey}-${key}-${subKey}`);
+                    }
+                });
+            });
+        });
+
+        return {
+            excel: {
+                type: 'lists',
+                values: excelValues,
+            },
+            report: {
+                keys: reportValues,
+            },
+        };
+    }
+
     handleSelectSubsectorChange = (dimensionId, subdimensionId, sectorId, subsectors) => {
         const {
             attribute,
+            filters,
+            exportable,
             api,
             id,
             entryId,
@@ -100,6 +196,9 @@ export default class Matrix2dList extends React.PureComponent {
 
         api.getEntryModifier(entryId)
             .setAttribute(id, newAttribute)
+            .setFilterData(filters[0].id, this.createDimensionFilterData(newAttribute))
+            .setFilterData(filters[1].id, this.createSectorFilterData(newAttribute))
+            .setExportData(exportable.id, this.createExportData(newAttribute))
             .apply();
     }
 

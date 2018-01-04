@@ -33,6 +33,8 @@ import { randomString } from '../../../../../public/utils/common';
 import styles from './styles.scss';
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, //eslint-disable-line
     data: PropTypes.object, //eslint-disable-line
@@ -91,6 +93,26 @@ export default class ScaleFrameworkList extends React.PureComponent {
             style={{ backgroundColor: data.color }}
         />
     )
+
+    createFilters = (scaleUnits) => {
+        // const filterOptions = [];
+        console.warn(scaleUnits);
+
+        return undefined;
+    }
+
+    createExportable = () => {
+        const excel = {
+            title: this.props.title,
+        };
+
+        return {
+            widgetKey: this.props.widgetKey,
+            data: {
+                excel,
+            },
+        };
+    }
 
     SortableScaleUnit = SortableElement(({ value: { data, key } }) => (
         <div
@@ -188,7 +210,11 @@ export default class ScaleFrameworkList extends React.PureComponent {
             ...this.props.data,
             scaleUnits,
         };
-        this.props.onChange(newScaleUnits);
+        this.props.onChange(
+            newScaleUnits,
+            this.createFilters(newScaleUnits),
+            this.createExportable(newScaleUnits),
+        );
     }
 
     handleScaleUnitValueInputChange = (key, value) => {

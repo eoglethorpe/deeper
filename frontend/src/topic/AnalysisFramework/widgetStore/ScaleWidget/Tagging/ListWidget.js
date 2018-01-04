@@ -11,6 +11,7 @@ import styles from './styles.scss';
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.object,      // eslint-disable-line
@@ -50,12 +51,22 @@ export default class ScaleTaggingList extends React.PureComponent {
         />
     )
 
+    createExportData = (attribute) => {
+        const { data } = this.props;
+        const scale = data.scaleUnits.find(s => s.key === attribute.selectedScale);
+        return {
+            excel: {
+                value: scale ? scale.title : '',
+            },
+        };
+    }
+
     handleScaleClick = (selectedScale) => {
-        const { api, id, entryId } = this.props;
+        const { api, id, entryId, exportable } = this.props;
+        const attribute = { selectedScale };
         api.getEntryModifier(entryId)
-            .setAttribute(id, {
-                selectedScale,
-            })
+            .setAttribute(id, attribute)
+            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 

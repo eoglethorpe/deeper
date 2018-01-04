@@ -82,7 +82,7 @@ export const filtersForProjectSelector = createSelector(
             return [];
         }
         return analysisFramework.filters.filter(
-            f => items.find(item => item.key === f.key),
+            f => items.find(item => item.key === f.widgetKey),
         );
     },
 );
