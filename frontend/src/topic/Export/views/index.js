@@ -20,9 +20,13 @@ import { listToMap } from '../../../public/utils/common';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
+
+    urlForExportTrigger,
+    createParamsForExportTrigger,
 } from '../../../common/rest';
 
 import {
+    entriesViewFilterSelector,
     analysisFrameworkForProjectSelector,
     projectIdFromRouteSelector,
 } from '../../../common/redux';
@@ -35,16 +39,19 @@ import jsonIcon from '../../../img/json.svg';
 import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
 import BasicInformationInputs from './BasicInformationInputs';
+import ExportPreview from '../../../common/components/ExportPreview';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
-    analysisFramework: analysisFrameworkForProjectSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
+    analysisFramework: analysisFrameworkForProjectSelector(state, props),
+    entriesFilters: entriesViewFilterSelector(state, props),
 });
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.string.isRequired,
+    entriesFilters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -130,9 +137,13 @@ export default class Export extends React.PureComponent {
         if (this.leadRequest) {
             this.leadRequest.stop();
         }
+
+        if (this.exportRequest) {
+            this.exportRequest.stop();
+        }
     }
 
-    getExportTypeClassName = (key) => {
+    getExportTypeClassName(key) {
         const {
             activeExportTypeKey,
         } = this.state;
@@ -144,6 +155,60 @@ export default class Export extends React.PureComponent {
         }
 
         return classNames.join(' ');
+    }
+
+    export(onSuccess) {
+        // Let's start by collecting the filters
+        const {
+            projectId,
+            entriesFilters,
+        } = this.props;
+        const {
+            activeExportTypeKey,
+            selectedLeads,
+            reportStructure,
+        } = this.state;
+
+        let exportType;
+        if (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf') {
+            exportType = 'report';
+        } else {
+            exportType = activeExportTypeKey;
+        }
+
+        const filters = {
+            project: projectId,
+            export_type: exportType,
+            ...entriesFilters,
+            lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
+            report_structure: this.createReportStructureForExport(reportStructure),
+        };
+
+        if (this.exportRequest) {
+            this.exportRequest.stop();
+        }
+        this.exportRequest = this.createRequestForExport({ filters }, onSuccess);
+        this.exportRequest.start();
+    }
+
+    createReportStructureForExport = nodes => nodes.map(node => (
+        node.nodes ? {
+            id: node.key,
+            levels: this.createReportStructureForExport(node.nodes),
+        } : {
+            id: node.key,
+        }
+    ));
+
+    createRequestForExport = ({ filters }, onSuccess) => {
+        const exportRequest = new FgRestBuilder()
+            .url(urlForExportTrigger)
+            .params(() => createParamsForExportTrigger(filters))
+            .success((response) => {
+                onSuccess(response.exportTriggered);
+            })
+            .build();
+        return exportRequest;
     }
 
     createRequestForProjectLeads = ({ activeProject }) => {
@@ -224,6 +289,20 @@ export default class Export extends React.PureComponent {
     handleReportStructureChange = (value) => {
         this.setState({
             reportStructure: value,
+        });
+    }
+
+    handleExport = () => {
+        this.export((exportId) => {
+            console.log(exportId);
+        });
+    }
+
+    handlePreview = () => {
+        this.export((exportId) => {
+            this.setState({
+                previewId: exportId,
+            });
         });
     }
 
@@ -316,8 +395,16 @@ export default class Export extends React.PureComponent {
                 <header styleName="header">
                     <h2>Export</h2>
                     <div styleName="action-buttons">
-                        <Button>Show preview</Button>
-                        <Button>Start export</Button>
+                        <Button
+                            onClick={this.handlePreview}
+                        >
+                            Show preview
+                        </Button>
+                        <Button
+                            onClick={this.handleExport}
+                        >
+                            Start export
+                        </Button>
                     </div>
                 </header>
                 <div styleName="main-content">
@@ -389,9 +476,10 @@ export default class Export extends React.PureComponent {
                             </div>
                         </div>
                     </section>
-                    <section styleName="preview">
-                        Export preview
-                    </section>
+                    <ExportPreview
+                        styleName="preview"
+                        exportId={this.state.previewId}
+                    />
                 </div>
             </div>
         );
