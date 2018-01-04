@@ -1,12 +1,11 @@
 import { isFalsy } from '../../../public/utils/common';
 
-const getFromProps = identifier => (state, props) => {
-    if (!isFalsy(props[identifier])) {
+const getFromProps = identifier => ({ route }, props) => {
+    if (!isFalsy(props) && !isFalsy(props[identifier])) {
         return props[identifier];
     }
-    // TODO: read from state later instead of match
-    if (props.match) {
-        return props.match.params[identifier];
+    if (route.params) {
+        return route.params[identifier];
     }
     return undefined;
 };
@@ -17,5 +16,4 @@ export const countryIdFromRoute = getFromProps('countryId');
 export const groupIdFromRoute = getFromProps('userGroupId');
 export const leadIdFromRoute = getFromProps('leadId');
 export const projectIdFromRoute = getFromProps('projectId');
-export const regionIdFromRoute = getFromProps('regionId');
 export const userIdFromRoute = getFromProps('userId');

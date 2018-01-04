@@ -45,7 +45,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     ceDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    ceId: PropTypes.number,
+    categoryEditorId: PropTypes.number.isRequired,
     addNewCe: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectCe: PropTypes.func.isRequired,
@@ -54,7 +54,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-    ceId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -147,7 +146,7 @@ export default class ProjectCeDetail extends React.PureComponent {
     };
 
     createCePutRequest = ({ title }) => {
-        const { ceId } = this.props;
+        const { categoryEditorId: ceId } = this.props;
         const cePutRequest = new FgRestBuilder()
             .url(createUrlForCategoryEditor(ceId))
             .params(() => createParamsForCeEdit({ title }))
@@ -242,12 +241,12 @@ export default class ProjectCeDetail extends React.PureComponent {
 
     handleCeEditClick = () => {
         const {
-            ceId,
+            categoryEditorId,
             mainHistory,
         } = this.props;
 
         const params = {
-            categoryEditorId: ceId,
+            categoryEditorId,
         };
 
         mainHistory.push(reverseRoute(pathNames.categoryEditor, params));
@@ -256,7 +255,7 @@ export default class ProjectCeDetail extends React.PureComponent {
     render() {
         const {
             ceDetails,
-            ceId,
+            categoryEditorId,
             projectDetails,
         } = this.props;
 
@@ -270,7 +269,7 @@ export default class ProjectCeDetail extends React.PureComponent {
             formValues,
         } = this.state;
 
-        const isProjectCe = ceId === projectDetails.categoryEditor;
+        const isProjectCe = categoryEditorId === projectDetails.categoryEditor;
 
         return (
             <div styleName="category-editor-detail">
@@ -308,7 +307,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                     <Confirm
                         show={useConfirmModalShow}
                         onClose={useConfirm => this.handleCeUse(
-                            useConfirm, ceId, projectDetails.id)}
+                            useConfirm, categoryEditorId, projectDetails.id,
+                        )}
                     >
                         <p>{`Are you sure you want to use ${ceDetails.title}?`}</p>
                         <p>If you use this category editor, you will recieve
@@ -317,7 +317,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                     <Confirm
                         show={cloneConfirmModalShow}
                         onClose={cloneConfirm => this.handleCeClone(
-                            cloneConfirm, ceId, projectDetails.id)}
+                            cloneConfirm, categoryEditorId, projectDetails.id,
+                        )}
                     >
                         <p>{`Are you sure you want to clone ${ceDetails.title}?`}</p>
                         <p>Ceter cloning and editing this category editor,

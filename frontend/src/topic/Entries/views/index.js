@@ -21,7 +21,6 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 
 import {
-    projectIdFromRoute,
     setEntriesAction,
     setProjectAction,
     entriesForProjectSelector,
@@ -33,6 +32,8 @@ import {
     gridItemsForProjectSelector,
     widgetsSelector,
     maxHeightForProjectSelector,
+
+    projectIdFromRouteSelector,
 } from '../../../common/redux';
 
 import {
@@ -49,14 +50,13 @@ import FilterEntriesForm from './FilterEntriesForm';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
-    projectId: projectIdFromRoute(state, props),
     entries: entriesForProjectSelector(state, props),
     analysisFramework: analysisFrameworkForProjectSelector(state, props),
     entriesFilter: entriesViewFilterSelector(state, props),
-
     gridItems: gridItemsForProjectSelector(state, props),
     widgets: widgetsSelector(state, props),
     maxHeight: maxHeightForProjectSelector(state, props),
+    projectId: projectIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -67,11 +67,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string,
-        }),
-    }),
     setProject: PropTypes.func.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -88,9 +83,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-    match: {
-        params: {},
-    },
     maxHeight: 0,
 };
 
@@ -373,10 +365,10 @@ export default class Entries extends React.PureComponent {
     }
 
     renderLeadGroupedEntriesItem = (key, data) => {
-        const { match } = this.props;
+        const { projectId } = this.props;
 
         const route = reverseRoute(pathNames.editEntries, {
-            projectId: match.params.projectId,
+            projectId,
             leadId: key,
         });
 
@@ -419,10 +411,7 @@ export default class Entries extends React.PureComponent {
     }
 
     render() {
-        const {
-            entries = [],
-            match,
-        } = this.props;
+        const { entries = [] } = this.props;
 
         const {
             pendingEntries,
@@ -433,10 +422,7 @@ export default class Entries extends React.PureComponent {
 
         return (
             <div styleName="entries">
-                <FilterEntriesForm
-                    pending={pendingAf}
-                    match={match}
-                />
+                <FilterEntriesForm pending={pendingAf} />
                 <div styleName="lead-entries-container">
                     { pending && <LoadingAnimation /> }
                     { !pending &&

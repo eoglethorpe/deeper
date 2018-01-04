@@ -29,7 +29,7 @@ import {
 
 const propTypes = {
     className: PropTypes.string,
-    regionId: PropTypes.number,
+    countryId: PropTypes.number.isRequired,
     selections: PropTypes.arrayOf(PropTypes.shape({
         key: PropTypes.string,
         title: PropTypes.string,
@@ -43,7 +43,6 @@ const defaultProps = {
     selections: [],
     onChange: undefined,
     onLocationsChange: undefined,
-    regionId: undefined,
 };
 
 
@@ -66,12 +65,12 @@ export default class RegionMap extends React.PureComponent {
     }
 
     componentDidMount() {
-        this.create(this.props.regionId);
+        this.create(this.props.countryId);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.regionId !== nextProps.regionId) {
-            this.create(nextProps.regionId);
+        if (this.props.countryId !== nextProps.countryId) {
+            this.create(nextProps.countryId);
         }
     }
 
@@ -299,7 +298,7 @@ export default class RegionMap extends React.PureComponent {
     }
 
     handleRefresh = () => {
-        this.create(this.props.regionId);
+        this.create(this.props.countryId);
     }
 
     renderContent() {

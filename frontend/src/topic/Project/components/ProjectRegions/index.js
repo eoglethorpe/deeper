@@ -162,9 +162,8 @@ export default class ProjectRegions extends React.PureComponent {
         if ((projectDetails.regions || emptyList).length > 0) {
             return (
                 <ProjectRegionDetail
-                    match={this.props.match}
                     key={selectedRegion}
-                    regionId={selectedRegion}
+                    countryId={selectedRegion}
                 />
             );
         }
@@ -237,7 +236,6 @@ export default class ProjectRegions extends React.PureComponent {
                                 }
                                 {selectedAddRegionOption === 'old' &&
                                     <AddExistingRegion
-                                        match={this.props.match}
                                         styleName="add-existing-region"
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}

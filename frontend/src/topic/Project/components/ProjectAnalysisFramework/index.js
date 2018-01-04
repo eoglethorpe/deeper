@@ -218,7 +218,6 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
         return (
             <ProjectAfDetail
-                match={this.props.match}
                 mainHistory={this.props.mainHistory}
                 key={selectedAf}
                 analysisFrameworkId={selectedAf}

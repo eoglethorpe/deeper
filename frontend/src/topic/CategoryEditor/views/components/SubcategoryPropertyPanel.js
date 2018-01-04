@@ -19,6 +19,7 @@ import {
     updateSelectedSubcategoryAction,
     removeSelectedSubcategoryAction,
     removeSubcategoryNGramAction,
+    ceIdFromRouteSelector,
 } from '../../../../common/redux';
 
 import NGram from './NGram';
@@ -30,7 +31,7 @@ const propTypes = {
     removeSelectedSubcategory: PropTypes.func.isRequired,
     removeSubcategoryNGram: PropTypes.func.isRequired,
     onNewManualNGram: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    categoryEditorId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -39,6 +40,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     subcategory: selectedSubcategorySelector(state, props),
+    categoryEditorId: ceIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -119,7 +121,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         updateSelectedSubcategory({
             ...subcategory,
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             title: value,
         });
     };
@@ -132,20 +134,20 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         updateSelectedSubcategory({
             ...subcategory,
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             description: value,
         });
     };
 
     handleSubcategoryRemove = () => {
         this.props.removeSelectedSubcategory({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
         });
     };
 
     handleNgramRemove = (ngram) => {
         this.props.removeSubcategoryNGram({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             ngram,
         });
     }

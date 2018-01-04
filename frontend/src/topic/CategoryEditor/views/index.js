@@ -43,6 +43,8 @@ import {
     addSubcategoryNGramAction,
     addManualSubcategoryNGramAction,
     setCategoryEditorAction,
+
+    ceIdFromRouteSelector,
 } from '../../../common/redux';
 import {
     createUrlForCategoryEditor,
@@ -65,6 +67,8 @@ const mapStateToProps = (state, props) => ({
 
     categories: categoriesSelector(state, props),
     activeCategoryId: activeCategoryIdSelector(state, props),
+
+    categoryEditorId: ceIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,7 +101,8 @@ const propTypes = {
     addSubcategoryNGram: PropTypes.func.isRequired,
     addManualSubcategoryNGram: PropTypes.func.isRequired,
     setCategoryEditor: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    categoryEditorId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -128,19 +133,17 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     componentWillMount() {
-        const { match } = this.props;
-        this.ceRequest = this.createCeRequest(match.params.categoryEditorId);
+        const { categoryEditorId } = this.props;
+        this.ceRequest = this.createCeRequest(categoryEditorId);
         this.ceRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { match: oldMatch } = this.props;
-        const { match: newMatch } = nextProps;
-        if (oldMatch !== newMatch &&
-            (oldMatch.params.categoryEditorId !== newMatch.params.categoryEditorId)
-        ) {
+        const { categoryEditorId: oldCategoryEditorId } = this.props;
+        const { categoryEditorId: newCategoryEditorId } = nextProps;
+        if (oldCategoryEditorId !== newCategoryEditorId) {
             this.ceRequest.stop();
-            this.ceRequest = this.createCeRequest(newMatch.params.categoryEditorId);
+            this.ceRequest = this.createCeRequest(newCategoryEditorId);
             this.ceRequest.start();
         }
     }
@@ -210,7 +213,7 @@ export default class CategoryEditor extends React.PureComponent {
 
         const { activeCategoryId, categories } = this.props;
         this.saveCeRequest = this.createCeSaveRequest({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             categoryEditor: {
                 activeCategoryId,
                 categories,
@@ -227,7 +230,7 @@ export default class CategoryEditor extends React.PureComponent {
         try {
             const ngram = JSON.parse(data);
             addSubcategoryNGram({
-                categoryEditorId: this.props.match.params.categoryEditorId,
+                categoryEditorId: this.props.categoryEditorId,
                 level,
                 subcategoryId,
                 ngram,
@@ -244,7 +247,7 @@ export default class CategoryEditor extends React.PureComponent {
     handleSubcategoryClick = (level, subcategoryId) => {
         const { updateSelectedSubcategories } = this.props;
         updateSelectedSubcategories({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             level,
             subcategoryId,
         });
@@ -255,7 +258,7 @@ export default class CategoryEditor extends React.PureComponent {
     handleCategorySelectChange = (value) => {
         const { setActiveCategoryId } = this.props;
         setActiveCategoryId({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             id: value,
         });
     }
@@ -265,7 +268,7 @@ export default class CategoryEditor extends React.PureComponent {
     // ADDTION HELPERS
     handleRemoveCategory = () => {
         this.props.removeCategory({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             id: this.props.activeCategoryId,
         });
     }
@@ -273,7 +276,7 @@ export default class CategoryEditor extends React.PureComponent {
     addNewCategory = (title) => {
         const key = randomString();
         const newCategory = {
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             id: key,
             title,
         };
@@ -282,7 +285,7 @@ export default class CategoryEditor extends React.PureComponent {
 
     editCategory = (title) => {
         const newCategory = {
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             id: this.props.activeCategoryId,
             values: { title },
         };
@@ -293,7 +296,7 @@ export default class CategoryEditor extends React.PureComponent {
         const { newSubcategoryLevel: level } = this;
         const id = randomString();
         this.props.addNewSubcategory({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             level,
             id,
             title,
@@ -303,7 +306,7 @@ export default class CategoryEditor extends React.PureComponent {
 
     addNewManualNgram = (keyword) => {
         this.props.addManualSubcategoryNGram({
-            categoryEditorId: this.props.match.params.categoryEditorId,
+            categoryEditorId: this.props.categoryEditorId,
             ngram: {
                 n: keyword.split(' ').length,
                 keyword,
@@ -430,7 +433,6 @@ export default class CategoryEditor extends React.PureComponent {
         const {
             categories,
             activeCategoryId,
-            match,
             categoryEditorViewPristine,
             categoryEditorViewTitle,
         } = this.props;
@@ -520,7 +522,6 @@ export default class CategoryEditor extends React.PureComponent {
                         </div>
                         <SubcategoryPropertyPanel
                             onNewManualNGram={this.handleNewManualNGram}
-                            match={match}
                         />
                     </div>
                 </div>

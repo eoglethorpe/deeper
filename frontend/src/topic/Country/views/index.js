@@ -32,6 +32,7 @@ import {
 } from '../../../common/rest';
 import {
     regionsListSelector,
+    countryIdFromRouteSelector,
 
     setRegionsAction,
     activeUserSelector,
@@ -44,14 +45,10 @@ import styles from './styles.scss';
 
 const propTypes = {
     countries: PropTypes.array, // eslint-disable-line
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            countryId: PropTypes.string,
-        }),
-    }).isRequired,
     setRegions: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    countryId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -59,9 +56,10 @@ const defaultProps = {
     countries: [],
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     countries: regionsListSelector(state),
     activeUser: activeUserSelector(state),
+    countryId: countryIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -126,7 +124,7 @@ export default class CountryPanel extends React.PureComponent {
     };
 
     getStyleName = (countryId) => {
-        const linkId = this.props.match.params.countryId;
+        const linkId = this.props.countryId;
 
         const styleNames = [];
         styleNames.push('list-item');
@@ -178,7 +176,7 @@ export default class CountryPanel extends React.PureComponent {
     calcCountryListItemKey = country => country.id;
 
     renderCountryListItem = (key, country) => {
-        const { match: { params: { countryId } } } = this.props;
+        const { countryId } = this.props;
         const activeCountryId = +countryId;
         const isActive = country.id === activeCountryId;
         return (
@@ -193,11 +191,11 @@ export default class CountryPanel extends React.PureComponent {
 
     renderCountryDetail = () => {
         const {
-            match,
+            countryId,
             countries,
         } = this.props;
 
-        const activeCountryId = +match.params.countryId;
+        const activeCountryId = +countryId;
 
         if (countries.length <= 0) {
             return (
@@ -222,7 +220,6 @@ export default class CountryPanel extends React.PureComponent {
         if (activeCountryIndex >= 0) {
             return (
                 <CountryDetail
-                    match={this.props.match}
                     countryId={activeCountryId}
                     key={activeCountryId}
                     styleName="country-detail"

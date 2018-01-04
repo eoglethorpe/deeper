@@ -30,6 +30,7 @@ import {
 import {
     currentUserAdminProjectsSelector,
     setActiveProjectAction,
+    projectIdFromRouteSelector,
 } from '../../../common/redux';
 
 import UserProjectAdd from '../../../common/components/UserProjectAdd';
@@ -37,12 +38,6 @@ import ProjectDetails from '../components/ProjectDetails';
 import styles from './styles.scss';
 
 const propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            countryId: PropTypes.string,
-            projectId: PropTypes.string,
-        }),
-    }).isRequired,
     history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setActiveProject: PropTypes.func.isRequired,
     userProjects: PropTypes.arrayOf(
@@ -51,6 +46,7 @@ const propTypes = {
             title: PropTypes.string,
         }),
     ),
+    projectId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -60,6 +56,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     userProjects: currentUserAdminProjectsSelector(state, props),
+    projectId: projectIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -101,8 +98,7 @@ export default class ProjectPanel extends React.PureComponent {
     }
 
     getStyleName = (projectId) => {
-        const { match } = this.props;
-        const { projectId: projectIdFromUrl } = match.params;
+        const { projectId: projectIdFromUrl } = this.props;
 
         const styleNames = [];
         styleNames.push(styles['list-item']);
@@ -157,7 +153,7 @@ export default class ProjectPanel extends React.PureComponent {
             showAddProjectModal,
         } = this.state;
 
-        const { projectId } = this.props.match.params;
+        const { projectId } = this.props;
         const {
             history,
         } = this.props;
@@ -218,7 +214,6 @@ export default class ProjectPanel extends React.PureComponent {
                 {
                     projectId ? (
                         <ProjectDetails
-                            match={this.props.match}
                             key={projectId}
                             styleName="project-details"
                             projectId={+projectId}

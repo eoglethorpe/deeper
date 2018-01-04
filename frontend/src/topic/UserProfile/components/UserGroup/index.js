@@ -46,6 +46,7 @@ import {
     setUserGroupsAction,
     activeUserSelector,
     unSetUserGroupAction,
+    userIdFromRouteSelector,
 } from '../../../../common/redux';
 import notify from '../../../../common/notify';
 
@@ -56,21 +57,14 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string,
-        }),
-    }),
     setUserGroups: PropTypes.func.isRequired,
     userGroups: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
     unSetUserGroup: PropTypes.func.isRequired,
+    userId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    match: {
-        params: {},
-    },
     userGroups: [],
 };
 
@@ -78,6 +72,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userGroups: userGroupsSelector(state, props),
     activeUser: activeUserSelector(state),
+    userId: userIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -134,7 +129,7 @@ export default class UserGroup extends React.PureComponent {
                 label: 'Rights',
                 order: 2,
                 modifier: (row) => {
-                    const { userId } = this.props.match.params;
+                    const { userId } = this.props;
                     const { memberships = [] } = row;
                     const membership = memberships.find(d => d.member === +userId);
                     return membership && membership.role ? membership.role : '-';
@@ -147,7 +142,7 @@ export default class UserGroup extends React.PureComponent {
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.joinedAt, b.joinedAt),
                 modifier: (row) => {
-                    const { userId } = this.props.match.params;
+                    const { userId } = this.props;
                     const { memberships = [] } = row;
                     const membership = memberships.find(d => d.member === +userId);
                     const { joinedAt } = membership || {};
@@ -205,14 +200,14 @@ export default class UserGroup extends React.PureComponent {
     }
 
     componentWillMount() {
-        const { userId } = this.props.match.params;
+        const { userId } = this.props;
         this.userGroupsRequest = this.createRequestForUserGroups(userId);
         this.userGroupsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { userId } = nextProps.match.params;
-        if (this.props.match.params.userId !== userId) {
+        const { userId } = nextProps;
+        if (this.props.userId !== userId) {
             this.userGroupsRequest.stop();
             this.userGroupsRequest = this.createRequestForUserGroups(userId);
             this.userGroupsRequest.start();
@@ -330,7 +325,7 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroups, match, activeUser } = this.props;
+        const { userGroups, userId, activeUser } = this.props;
 
         const {
             addUserGroup,
@@ -339,7 +334,7 @@ export default class UserGroup extends React.PureComponent {
             confirmText,
         } = this.state;
 
-        const isCurrentUser = +match.params.userId === activeUser.userId;
+        const isCurrentUser = +userId === activeUser.userId;
 
         return (
             <div styleName="groups">

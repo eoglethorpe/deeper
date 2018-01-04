@@ -47,6 +47,7 @@ import {
     setUserProjectsAction,
     activeUserSelector,
     unSetProjectAction,
+    userIdFromRouteSelector,
 } from '../../../../common/redux';
 
 import UserProjectAdd from '../../../../common/components/UserProjectAdd';
@@ -55,21 +56,14 @@ import notify from '../../../../common/notify';
 import styles from './styles.scss';
 
 const propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string,
-        }),
-    }),
     setUserProjects: PropTypes.func.isRequired,
     unSetProject: PropTypes.func.isRequired,
     userProjects: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    match: {
-        params: {},
-    },
     userProjects: [],
 };
 
@@ -77,6 +71,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userProjects: userProjectsSelector(state, props),
     activeUser: activeUserSelector(state),
+    userId: userIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -224,14 +219,14 @@ export default class UserProject extends React.PureComponent {
     }
 
     componentWillMount() {
-        const { userId } = this.props.match.params;
+        const { userId } = this.props;
         this.projectsRequest = this.createRequestForProjects(userId);
         this.projectsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { userId } = nextProps.match.params;
-        if (this.props.match.params.userId !== userId) {
+        const { userId } = nextProps;
+        if (this.props.userId !== userId) {
             this.projectsRequest.stop();
             this.projectsRequest = this.createRequestForProjects(userId);
             this.projectsRequest.start();
@@ -357,7 +352,7 @@ export default class UserProject extends React.PureComponent {
     }
 
     render() {
-        const { userProjects, match, activeUser } = this.props;
+        const { userProjects, userId, activeUser } = this.props;
 
         const {
             addProject,
@@ -366,7 +361,7 @@ export default class UserProject extends React.PureComponent {
             confirmText,
         } = this.state;
 
-        const isCurrentUser = +match.params.userId === activeUser.userId;
+        const isCurrentUser = +userId === activeUser.userId;
 
         return (
             <div styleName="projects">

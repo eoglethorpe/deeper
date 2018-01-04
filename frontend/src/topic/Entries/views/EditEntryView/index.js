@@ -68,7 +68,6 @@ import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
-    match: PropTypes.object, // eslint-disable-line
     leadId: PropTypes.string.isRequired,
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -578,7 +577,6 @@ export default class EditEntryView extends React.PureComponent {
             leadId,
             entries,
             selectedEntryId,
-            match,
         } = this.props;
         const {
             pendingSaveAll,
@@ -620,7 +618,6 @@ export default class EditEntryView extends React.PureComponent {
                             <Overview
                                 {...props}
                                 api={this.api}
-                                match={match}
                                 leadId={leadId}
                                 selectedEntryId={selectedEntryId}
                                 entries={entries}

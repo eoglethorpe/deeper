@@ -79,7 +79,6 @@ const propTypes = {
     filters: PropTypes.object.isRequired, // eslint-disable-line
     hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
     leads: PropTypes.array, // eslint-disable-line
-    match: PropTypes.object.isRequired, // eslint-disable-line
 
     activePage: PropTypes.number.isRequired,
     activeSort: PropTypes.string.isRequired,
@@ -608,10 +607,7 @@ export default class Leads extends React.PureComponent {
         return (
             <div styleName="leads">
                 <header styleName="header">
-                    <FilterLeadsForm
-                        styleName="filters"
-                        match={this.props.match}
-                    />
+                    <FilterLeadsForm styleName="filters" />
                     <PrimaryButton
                         styleName="add-lead-button"
                         onClick={this.handleAddLeadClick}
@@ -637,7 +633,6 @@ export default class Leads extends React.PureComponent {
                     ) : (
                         <Visualizations
                             styleName="viz-container"
-                            match={this.props.match}
                         />
                     )
                 }

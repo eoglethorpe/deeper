@@ -16,8 +16,7 @@ export const setRouteParamsAction = params => ({
 
 const setRouteParams = (state, action) => {
     const newState = {
-        ...state,
-        params: action.params,
+        ...action.params,
     };
     return newState;
 };

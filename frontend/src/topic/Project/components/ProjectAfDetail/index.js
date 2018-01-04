@@ -47,7 +47,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     afDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    afId: PropTypes.number,
+    analysisFrameworkId: PropTypes.number.isRequired,
     addNewAf: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectAf: PropTypes.func.isRequired,
@@ -56,7 +56,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-    afId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -149,7 +148,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     };
 
     createAfPutRequest = ({ title, description }) => {
-        const { afId } = this.props;
+        const { analysisFrameworkId: afId } = this.props;
         const afPutRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(afId))
             .params(() => createParamsForAnalysisFrameworkEdit({ title, description }))
@@ -266,12 +265,12 @@ export default class ProjectAfDetail extends React.PureComponent {
 
     handleAfEditClick = () => {
         const {
-            afId,
+            analysisFrameworkId,
             mainHistory,
         } = this.props;
 
         const params = {
-            analysisFrameworkId: afId,
+            analysisFrameworkId,
         };
 
         mainHistory.push(reverseRoute(pathNames.analysisFramework, params));
@@ -280,7 +279,7 @@ export default class ProjectAfDetail extends React.PureComponent {
     render() {
         const {
             afDetails,
-            afId,
+            analysisFrameworkId,
             projectDetails,
         } = this.props;
 
@@ -294,7 +293,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             formValues,
         } = this.state;
 
-        const isProjectAf = afId === projectDetails.analysisFramework;
+        const isProjectAf = analysisFrameworkId === projectDetails.analysisFramework;
         const snapshots = [];
         if (afDetails.snapshotOne) {
             snapshots.push(afDetails.snapshotOne);
@@ -339,7 +338,8 @@ export default class ProjectAfDetail extends React.PureComponent {
                     <Confirm
                         show={useConfirmModalShow}
                         onClose={useConfirm => this.handleAfUse(
-                            useConfirm, afId, projectDetails.id)}
+                            useConfirm, analysisFrameworkId, projectDetails.id,
+                        )}
                     >
                         <p>{`Are you sure you want to use ${afDetails.title}?`}</p>
                         <p>If you use this analysis framework, you will recieve
@@ -348,7 +348,8 @@ export default class ProjectAfDetail extends React.PureComponent {
                     <Confirm
                         show={cloneConfirmModalShow}
                         onClose={cloneConfirm => this.handleAfClone(
-                            cloneConfirm, afId, projectDetails.id)}
+                            cloneConfirm, analysisFrameworkId, projectDetails.id,
+                        )}
                     >
                         <p>{`Are you sure you want to clone ${afDetails.title}?`}</p>
                         <p>After cloning and editing this analysis framework,

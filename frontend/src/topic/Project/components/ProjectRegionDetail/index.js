@@ -44,7 +44,7 @@ import styles from './styles.scss';
 const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    regionId: PropTypes.number.isRequired,
+    countryId: PropTypes.number.isRequired,
     regionDetails: PropTypes.object.isRequired, // eslint-disable-line
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
@@ -75,7 +75,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.regionRequest = this.createRegionRequest(props.regionId);
+        this.regionRequest = this.createRegionRequest(props.countryId);
         this.state = {
             dataLoading: true,
             deleteConfirmModalShow: false,
@@ -227,7 +227,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
     render() {
         const {
-            regionId,
+            countryId,
             regionDetails,
             activeProject,
             projectDetails,
@@ -266,7 +266,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         show={this.state.deleteConfirmModalShow}
                         closeOnEscape
                         onClose={deleteConfirm => this.handleRegionRemove(
-                            deleteConfirm, projectDetails, regionId)}
+                            deleteConfirm, projectDetails, countryId,
+                        )}
                     >
                         <p>{`Are you sure you want to remove
                             ${regionDetails.title} from project ${projectDetails.title}?`}</p>
@@ -274,7 +275,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
                     <Confirm
                         show={this.state.cloneConfirmModalShow}
                         onClose={cloneConfirm => this.handleRegionClone(
-                            cloneConfirm, regionId, activeProject)}
+                            cloneConfirm, countryId, activeProject,
+                        )}
                     >
                         <p>{`Are you sure you want to clone ${regionDetails.title}?`}</p>
                         <p>After cloning and editing this region,
@@ -287,26 +289,26 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             <div styleName="detail-map-container">
                                 <RegionDetail
                                     dataLoading={dataLoading}
-                                    regionId={regionId}
+                                    countryId={countryId}
                                     styleName="region-detail-form"
                                 />
                                 <div styleName="map-container">
-                                    <RegionMap regionId={regionId} />
+                                    <RegionMap countryId={countryId} />
                                 </div>
                             </div>
                             <RegionAdminLevel
                                 styleName="admin-levels"
-                                regionId={regionId}
+                                countryId={countryId}
                             />
                         </div>
                     ) : (
                         <div styleName="region-details-non-edit">
                             <RegionDetailView
                                 styleName="region-detail-box"
-                                regionId={regionId}
+                                countryId={countryId}
                             />
                             <div styleName="map-container-non-edit">
-                                <RegionMap regionId={regionId} />
+                                <RegionMap countryId={countryId} />
                             </div>
                         </div>
                     )

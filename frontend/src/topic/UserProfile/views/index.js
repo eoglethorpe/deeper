@@ -42,35 +42,29 @@ import {
     setUserInformationAction,
     unsetUserAction,
     activeUserSelector,
+    userIdFromRouteSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    match: PropTypes.shape({
-        params: PropTypes.shape({
-            userId: PropTypes.string,
-            userGroupId: PropTypes.string,
-        }),
-    }),
     setUserInformation: PropTypes.func.isRequired,
     unsetUser: PropTypes.func.isRequired,
     user: PropTypes.object, // eslint-disable-line
     userInformation: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    match: {
-        params: {},
-    },
     user: {},
 };
 
 
 const mapStateToProps = (state, props) => ({
-    userInformation: userInformationSelector(state, props), // uses props.match
+    userInformation: userInformationSelector(state, props),
     activeUser: activeUserSelector(state),
+    userId: userIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -93,15 +87,15 @@ export default class UserProfile extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        const { userId } = this.props.match.params;
+    componentDidMount() {
+        const { userId } = this.props;
         this.userRequest = this.createRequestForUser(userId);
         this.userRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { userId } = nextProps.match.params;
-        if (this.props.match.params.userId !== userId) {
+        const { userId } = nextProps;
+        if (this.props.userId !== userId) {
             this.userRequest.stop();
             this.userRequest = this.createRequestForUser(userId);
             this.userRequest.start();
@@ -156,14 +150,13 @@ export default class UserProfile extends React.PureComponent {
     render() {
         const {
             userInformation,
-            match,
+            userId,
             activeUser,
         } = this.props;
 
         const { pending } = this.state;
-        const { userId } = match.params;
 
-        const isCurrentUser = +match.params.userId === activeUser.userId;
+        const isCurrentUser = +userId === activeUser.userId;
 
         if (pending) {
             return (
@@ -243,8 +236,8 @@ export default class UserProfile extends React.PureComponent {
                 <div styleName="stats">
                     <h2>Stats</h2>
                 </div>
-                <UserProject match={match} />
-                <UserGroup match={match} />
+                <UserProject />
+                <UserGroup />
             </div>
         );
     }

@@ -47,7 +47,7 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
-    regionId: PropTypes.number,
+    countryId: PropTypes.number.isRequired,
     adminLevelsOfRegion: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     adminLevelDetail: PropTypes.shape({
         id: PropTypes.number,
@@ -67,7 +67,6 @@ const propTypes = {
 
 const defaultProps = {
     adminLevelDetail: {},
-    regionId: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -271,17 +270,17 @@ export default class EditAdminLevel extends React.PureComponent {
             this.requestForAlForRegion.stop();
         }
 
-        const regionId = this.props.regionId || this.props.adminLevelDetail.region;
+        const countryId = this.props.countryId || this.props.adminLevelDetail.region;
         const adminLevelId = this.props.adminLevelDetail.id;
 
         if (adminLevelId) {
             // UPDATE
             this.requestForAlForRegion = this.createAlForRegionUpdateRequest(
-                { ...values, region: regionId }, adminLevelId);
+                { ...values, region: countryId }, adminLevelId);
         } else {
             // CREATE
             this.requestForAlForRegion = this.createAlForRegionCreateRequest(
-                { ...values, region: regionId });
+                { ...values, region: countryId });
         }
         this.requestForAlForRegion.start();
     };

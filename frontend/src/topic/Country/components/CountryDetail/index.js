@@ -184,10 +184,10 @@ export default class CountryDetail extends React.PureComponent {
                     <div styleName="details-no-edit">
                         <RegionDetailView
                             styleName="region-detail-box"
-                            regionId={countryDetail.id}
+                            countryId={countryDetail.id}
                         />
                         <div styleName="map-container">
-                            <RegionMap regionId={countryDetail.id} />
+                            <RegionMap countryId={countryDetail.id} />
                         </div>
                     </div>
                 ) : (
@@ -234,19 +234,13 @@ export default class CountryDetail extends React.PureComponent {
                             for="general"
                             styleName="tab-content"
                         >
-                            <CountryGeneral
-                                countryId={countryDetail.id}
-                                match={this.props.match}
-                            />
+                            <CountryGeneral countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="key-figures"
                             styleName="tab-content"
                         >
-                            <CountryKeyFigures
-                                match={this.props.match}
-                                countryId={countryDetail.id}
-                            />
+                            <CountryKeyFigures countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="population-data"

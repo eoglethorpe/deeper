@@ -6,7 +6,6 @@ import {
     countryIdFromRoute,
     projectIdFromRoute,
 
-    regionIdFromRoute,
     afIdFromRoute,
     ceIdFromRoute,
 } from './props';
@@ -44,7 +43,6 @@ const userSelector = createSelector(
 
 // OTHERS
 
-
 // countryIdFromRoute
 export const countryDetailSelector = createSelector(
     regionsListSelector,
@@ -53,6 +51,22 @@ export const countryDetailSelector = createSelector(
         regions.find(
             country => country.id === +activeCountry,
         ) || emptyObject
+    ),
+);
+
+// countryIdFromRoute
+export const regionDetailForRegionSelector = createSelector(
+    regionsSelector,
+    countryIdFromRoute,
+    (regions, regionId) => (regions[regionId] || emptyObject),
+);
+
+// countryIdFromRoute
+export const adminLevelForRegionSelector = createSelector(
+    adminLevelsSelector,
+    countryIdFromRoute,
+    (adminLevels, regionId) => (
+        adminLevels[regionId] || emptyList
     ),
 );
 
@@ -167,22 +181,6 @@ export const projectOptionsSelector = createSelector(
     projectsOptionsSelector,
     projectIdFromRoute,
     (projectsOptions, activeProject) => projectsOptions[activeProject] || emptyObject,
-);
-
-// regionIdFromRoute
-export const regionDetailForRegionSelector = createSelector(
-    regionsSelector,
-    regionIdFromRoute,
-    (regions, regionId) => (regions[regionId] || emptyObject),
-);
-
-// regionIdFromRoute
-export const adminLevelForRegionSelector = createSelector(
-    adminLevelsSelector,
-    regionIdFromRoute,
-    (adminLevels, regionId) => (
-        adminLevels[regionId] || emptyList
-    ),
 );
 
 // afIdFromRoute
