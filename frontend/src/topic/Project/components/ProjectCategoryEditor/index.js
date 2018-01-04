@@ -221,7 +221,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                 match={this.props.match}
                 mainHistory={this.props.mainHistory}
                 key={selectedCe}
-                ceId={selectedCe}
+                categoryEditorId={selectedCe}
             />
         );
     }

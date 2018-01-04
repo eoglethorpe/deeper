@@ -6,10 +6,9 @@ import {
     countryIdFromRoute,
     projectIdFromRoute,
 
-    regionIdFromProps,
-    userGroupIdFromProps,
-    afIdFromProps,
-    ceIdFromProps,
+    regionIdFromRoute,
+    afIdFromRoute,
+    ceIdFromRoute,
 } from './props';
 import {
     leadFilterOptionsSelector,
@@ -170,44 +169,35 @@ export const projectOptionsSelector = createSelector(
     (projectsOptions, activeProject) => projectsOptions[activeProject] || emptyObject,
 );
 
-// OTHER
-
-// userGroupIdFromProps
-export const userGroupDetailsSelector = createSelector(
-    groupsSelector,
-    userGroupIdFromProps,
-    (userGroups, userGroupId) => (userGroups[userGroupId] || emptyObject),
-);
-
-// regionIdFromProps
+// regionIdFromRoute
 export const regionDetailForRegionSelector = createSelector(
     regionsSelector,
-    regionIdFromProps,
+    regionIdFromRoute,
     (regions, regionId) => (regions[regionId] || emptyObject),
 );
 
-// regionIdFromProps
+// regionIdFromRoute
 export const adminLevelForRegionSelector = createSelector(
     adminLevelsSelector,
-    regionIdFromProps,
+    regionIdFromRoute,
     (adminLevels, regionId) => (
         adminLevels[regionId] || emptyList
     ),
 );
 
-// afIdFromProps
+// afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,
-    afIdFromProps,
+    afIdFromRoute,
     (analysisFrameworks, afId) => (
         analysisFrameworks[afId] || emptyObject
     ),
 );
 
-// ceIdFromProps
+// ceIdFromRoute
 export const categoryEditorDetailSelector = createSelector(
     categoryEditorsSelector,
-    ceIdFromProps,
+    ceIdFromRoute,
     (categoryEditors, ceId) => (
         categoryEditors[ceId] || emptyObject
     ),
