@@ -128,16 +128,8 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         Object.keys(attribute).forEach((key) => {
             const dimension = attribute[key];
-            console.warn('starting new');
-            const dimensionData = this.props.data.dimensions.find((d) => {
-                console.log(d);
-                console.log(d.id);
-                console.log(key);
-                console.log(d.id === key);
-                return d.id === key;
-            });
+            const dimensionData = this.props.data.dimensions.find(d => d.id === key);
             if (!dimensionData) {
-                console.warn('here');
                 return;
             }
 
