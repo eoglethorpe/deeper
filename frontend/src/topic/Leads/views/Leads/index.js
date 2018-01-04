@@ -652,7 +652,7 @@ export default class Leads extends React.PureComponent {
                         styleName="view-mode-button"
                         data={this.viewModes}
                         selected={viewMode}
-                        onClick={this.handleLeadViewChange}
+                        onChange={this.handleLeadViewChange}
                         backgroundHighlight
                     />
                     <div>

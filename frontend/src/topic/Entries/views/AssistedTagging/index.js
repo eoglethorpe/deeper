@@ -63,9 +63,6 @@ export default class AssistedTagging extends React.PureComponent {
             assitedActionsVisible: false,
             activeHighlightRef: undefined,
             activeHighlightDetails: emptyObject,
-            nlpLoaded: false,
-            ceLoaded: false,
-            nerLoaded: false,
             nlpSectorOptions: emptyList,
             nlpSelectedSectors: emptyList,
             ceSectorOptions: emptyList,
@@ -95,6 +92,20 @@ export default class AssistedTagging extends React.PureComponent {
     componentDidMount() {
         if (this.primaryContainer) {
             this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.nlpClassifyRequest) {
+            this.nlpClassifyRequest.stop();
+        }
+
+        if (this.ceClassifyRequest) {
+            this.ceClassifyRequest.stop();
+        }
+
+        if (this.nerClassifyRequest) {
+            this.nerClassifyRequest.stop();
         }
     }
 
@@ -179,6 +190,13 @@ export default class AssistedTagging extends React.PureComponent {
 
         this.ceClassifyRequest = this.createCeClassifyRequest(leadPreview.previewId);
         this.ceClassifyRequest.start();
+
+        if (this.nerClassifyRequest) {
+            this.nerClassifyRequest.stop();
+        }
+
+        this.nerClassifyRequest = this.createNerClassifyRequest(leadPreview.text);
+        this.nerClassifyRequest.start();
     }
 
     createNlpClassifyRequest = (docId) => {
@@ -213,15 +231,13 @@ export default class AssistedTagging extends React.PureComponent {
         return request;
     }
 
-    createNlpClassifyRequest = (text) => {
+    createNerClassifyRequest = (text) => {
         const request = new FgRestBuilder()
             .url(urlForNer)
-            .params(createParamsForNer({
-                text,
-            }))
+            .params(createParamsForNer(text))
             .success((response) => {
                 try {
-                    console.warn(response);
+                    this.extractNerClassifications(response);
                 } catch (err) {
                     console.error(err);
                 }
@@ -276,6 +292,58 @@ export default class AssistedTagging extends React.PureComponent {
         return request;
     }
 
+    extractNlpClassifications = (data) => {
+        const classification = data.classification;
+        const nlpSectorOptions = classification.map(c => ({
+            key: c[0],
+            label: c[0],
+        }));
+        const nlpSelectedSectors = nlpSectorOptions.length > 0 ?
+            [nlpSectorOptions[0].key] : emptyList;
+
+        this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
+            startPos: excerpt.start_pos,
+            length: excerpt.end_pos - excerpt.start_pos,
+            sectors: [{
+                label: excerpt.classification[0][0],
+                confidence: `${Math.round(excerpt.classification[0][1] * 100)}%`,
+            }],
+            /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
+                label: c[0],
+                confidence: `${Math.round(c[1] * 100)}%`,
+            })) */
+        })).filter(c => c.sectors.length > 0);
+
+
+        this.setState({
+            nlpSectorOptions,
+            nlpSelectedSectors,
+        }, () => this.refreshSelections());
+    }
+
+    extractNerClassifications = (data) => {
+        const nerSectorOptions = [];
+        const filteredData = data.filter(d => (d[1] !== 'O'));
+        filteredData.forEach((d) => {
+            if (nerSectorOptions.findIndex(o => o.key === d[1]) === -1) {
+                nerSectorOptions.push({
+                    key: d[1],
+                    label: d[1],
+                });
+            }
+        });
+
+        this.nerClassifications = filteredData.map(d => ({
+            text: d[0],
+            sector: d[1],
+        }));
+
+        this.setState({
+            nerSectorOptions,
+            nerSelectedSectors: [nerSectorOptions[0].key],
+        });
+    }
+
     extractCeClassifications = (data) => {
         const classifications = data.classifications;
         const ceSectorOptions = classifications.map(c => ({
@@ -290,8 +358,43 @@ export default class AssistedTagging extends React.PureComponent {
         this.setState({
             ceSectorOptions,
             ceSelectedSectors,
-            ceLoaded: true,
         }, () => this.refreshSelections);
+    }
+
+    refreshSelections = () => {
+        const {
+            selectedAssitedTaggingSource,
+        } = this.state;
+
+        if (selectedAssitedTaggingSource === 'nlp') {
+            this.refreshNlpClassifications();
+        } else if (selectedAssitedTaggingSource === 'ce') {
+            this.refreshCeClassifications();
+        } else if (selectedAssitedTaggingSource === 'ner') {
+            this.refreshNlpClassifications();
+        }
+    }
+
+    refreshNlpClassifications = () => {
+        const { nlpSelectedSectors } = this.state;
+        const { nlpClassifications } = this;
+
+        if (!nlpClassifications) {
+            this.setState({ highlights: emptyList });
+            return;
+        }
+
+        const filteredClassifications = nlpClassifications.filter(excerpt => (
+            nlpSelectedSectors.reduce((acc, sector) => acc ||
+                excerpt.sectors.find(s => s.label === sector), false)
+        ));
+
+        const highlights = filteredClassifications.map(excerpt => ({
+            ...excerpt,
+            color: getHexFromString(excerpt.sectors[0].label),
+            source: 'NLP',
+        }));
+        this.setState({ highlights });
     }
 
     refreshCeClassifications = () => {
@@ -322,79 +425,10 @@ export default class AssistedTagging extends React.PureComponent {
         });
     }
 
-    extractNlpClassifications = (data) => {
-        const classification = data.classification;
-        const nlpSectorOptions = classification.map(c => ({
-            key: c[0],
-            label: c[0],
-        }));
-        const nlpSelectedSectors = nlpSectorOptions.length > 0 ?
-            [nlpSectorOptions[0].key] : emptyList;
-
-        this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
-            startPos: excerpt.start_pos,
-            length: excerpt.end_pos - excerpt.start_pos,
-            sectors: [{
-                label: excerpt.classification[0][0],
-                confidence: `${Math.round(excerpt.classification[0][1] * 100)}%`,
-            }],
-            /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
-                label: c[0],
-                confidence: `${Math.round(c[1] * 100)}%`,
-            })) */
-        })).filter(c => c.sectors.length > 0);
-
-
-        this.setState({
-            nlpSectorOptions,
-            nlpSelectedSectors,
-            nlpLoaded: true,
-        }, () => this.refreshSelections());
-    }
-
     handleNlpSectorSelect = (nlpSelectedSectors) => {
         this.setState({ nlpSelectedSectors }, () => {
             this.refreshSelections();
         });
-    }
-
-    refreshSelections = () => {
-        const {
-            selectedAssitedTaggingSource,
-            nlpLoaded,
-            ceLoaded,
-            nerLoaded,
-        } = this.state;
-
-        if (selectedAssitedTaggingSource === 'nlp' && nlpLoaded) {
-            this.refreshNlpClassifications();
-        } else if (selectedAssitedTaggingSource === 'ce' && ceLoaded) {
-            this.refreshCeClassifications();
-        } else if (selectedAssitedTaggingSource === 'ner' && nerLoaded) {
-            this.refreshNlpClassifications();
-        }
-    }
-
-    refreshNlpClassifications = () => {
-        const { nlpSelectedSectors } = this.state;
-        const { nlpClassifications } = this;
-
-        if (!nlpClassifications) {
-            this.setState({ highlights: emptyList });
-            return;
-        }
-
-        const filteredClassifications = nlpClassifications.filter(excerpt => (
-            nlpSelectedSectors.reduce((acc, sector) => acc ||
-                excerpt.sectors.find(s => s.label === sector), false)
-        ));
-
-        const highlights = filteredClassifications.map(excerpt => ({
-            ...excerpt,
-            color: getHexFromString(excerpt.sectors[0].label),
-            source: 'NLP',
-        }));
-        this.setState({ highlights });
     }
 
     calcSectorKey = d => d.label;
