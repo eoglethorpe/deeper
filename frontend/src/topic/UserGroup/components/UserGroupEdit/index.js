@@ -34,6 +34,7 @@ import {
 } from '../../../../common/redux';
 import {
     notificationStrings,
+    userStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -202,9 +203,9 @@ export default class UserGroupEdit extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Title"
+                    label={userStrings.addUserGroupModalLabel}
                     formname="title"
-                    placeholder="ACAPS"
+                    placeholder={userStrings.addUserGroupModalPlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
@@ -215,10 +216,10 @@ export default class UserGroupEdit extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        Cancel
+                        {userStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Save
+                        {userStrings.modalSave}
                     </PrimaryButton>
                 </div>
             </Form>

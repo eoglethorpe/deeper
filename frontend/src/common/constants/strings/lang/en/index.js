@@ -163,15 +163,26 @@ const strings = {
     180: 'Project Title',
     181: 'Enter Project Name',
 
-    182: 'First Name',
-    183: 'First Name',
-    184: 'First Name',
-    185: 'First Name',
-    186: 'First Name',
-    187: 'First Name',
-    188: 'First Name',
-    189: 'First Name',
-    190: 'First Name',
+    182: 'Edit User Group',
+
+    183: 'Name',
+    184: 'Email',
+    185: 'Start Date',
+    186: 'Countries',
+
+    187: 'View Member',
+    188: 'Revoke Admin Rights',
+    189: 'Grant Admin Rights',
+    190: 'Delete Member',
+
+    191: 'Search',
+    192: 'Add Member',
+
+    193: 'Are you sure you want to delete the project',
+    194: 'Are you sure you want to',
+    195: 'revoke admin rights form',
+    196: 'grant admin rights to',
+    197: 'Are you sure you want to remove',
 
     // Notification strings
 

@@ -31,6 +31,7 @@ import {
     iconNames,
     notificationStrings,
     pathNames,
+    userStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -95,28 +96,28 @@ export default class MembersTable extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'memberName',
-                label: 'Name',
+                label: userStrings.tableHeaderName,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
                 key: 'memberEmail',
-                label: 'Email',
+                label: userStrings.tableHeaderEmail,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
             },
             {
                 key: 'role',
-                label: 'Rights',
+                label: userStrings.tableHeaderRights,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.role.localeCompare(b.role),
             },
             {
                 key: 'joinedAt',
-                label: 'Joined At',
+                label: userStrings.tableHeaderJoinedAt,
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.joinedAt - b.joinedAt,
@@ -124,7 +125,7 @@ export default class MembersTable extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: userStrings.tableHeaderActions,
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -133,7 +134,7 @@ export default class MembersTable extends React.PureComponent {
                         return (
                             <div>
                                 <Link
-                                    title="View Member"
+                                    title={userStrings.viewMemberLinkTitle}
                                     key={row.member}
                                     to={reverseRoute(pathNames.userProfile, { userId: row.member })}
                                 >
@@ -147,7 +148,11 @@ export default class MembersTable extends React.PureComponent {
                     return (
                         <div>
                             <TransparentPrimaryButton
-                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
+                                title={
+                                    isAdmin ?
+                                        userStrings.revokeAdminLinkTitle :
+                                        userStrings.grantAdminLinkTitle
+                                }
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
                             >
                                 {
@@ -156,7 +161,7 @@ export default class MembersTable extends React.PureComponent {
                                 }
                             </TransparentPrimaryButton>
                             <TransparentDangerButton
-                                title="Delete Member"
+                                title={userStrings.deleteMemberLinkTitle}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                             >
                                 <i className={iconNames.delete} />
@@ -315,10 +320,10 @@ export default class MembersTable extends React.PureComponent {
 
     handleToggleMemberRoleClick = (member) => {
         const accessRight = member.role === 'admin' ?
-            'revoke admin rights form' :
-            'grant admin rights to';
+            userStrings.confirmTextRevokeAdmin :
+            userStrings.confirmTextGrantAdmin;
 
-        const confirmText = `Are you sure you want to ${accessRight} ${member.memberName}?`;
+        const confirmText = `${userStrings.confirmTextGrantAdmin} ${accessRight} ${member.memberName}?`;
         this.setState({
             toggleRoleConfirmShow: true,
             confirmText,
@@ -361,11 +366,11 @@ export default class MembersTable extends React.PureComponent {
                 { actionPending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
-                        Members
+                        {userStrings.tableHeaderMembers}
                     </h2>
                     <div styleName="pusher" />
                     <TextInput
-                        placeholder="Search"
+                        placeholder={userStrings.placeholderSearch}
                         onChange={this.handleSearchMemberChange}
                         value={searchMemberInputValue}
                         type="search"
@@ -378,7 +383,7 @@ export default class MembersTable extends React.PureComponent {
                         <PrimaryButton
                             onClick={this.handleAddMemberClick}
                         >
-                            Add Member
+                            {userStrings.addMemberButtonLabel}
                         </PrimaryButton>
                     }
                 </div>
@@ -408,7 +413,7 @@ export default class MembersTable extends React.PureComponent {
                     show={showAddMemberModal}
                 >
                     <ModalHeader
-                        title="Add New Member"
+                        title={userStrings.addMemberButtonLabel}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddMemberModalClose}

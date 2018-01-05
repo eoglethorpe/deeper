@@ -22,6 +22,11 @@ const userStrings = {
     tableHeaderStatus: string[165],
     tableHeaderMembers: string[166],
 
+    tableHeaderName: string[183],
+    tableHeaderEmail: string[184],
+    tableHeaderStartDate: string[185],
+    tableHeaderCountries: string[186],
+
     viewUsergroupLinkTitle: string[167],
     editUsergroupLinkTitle: string[168],
     deleteUsergroupLinkTitle: string[169],
@@ -41,6 +46,21 @@ const userStrings = {
     addProjectModalLabel: string[180],
     addProjectModalPlaceholder: string[181],
 
+    userGroupEditModalLabel: string[182],
+
+    viewMemberLinkTitle: string[187],
+    revokeAdminLinkTitle: string[188],
+    grantAdminLinkTitle: string[189],
+    deleteMemberLinkTitle: string[190],
+
+    placeholderSearch: string[191],
+    addMemberButtonLabel: string[192],
+
+    confirmTextDeleteProject: string[193],
+    confirmText: string[194],
+    confirmTextRevokeAdmin: string[195],
+    confirmTextGrantAdmin: string[196],
+    confirmTextRemove: string[197],
 
 };
 
