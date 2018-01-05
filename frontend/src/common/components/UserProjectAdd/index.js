@@ -35,6 +35,7 @@ import {
 } from '../../../common/redux';
 import {
     notificationStrings,
+    userStrings,
 } from '../../constants';
 import notify from '../../notify';
 
@@ -212,9 +213,9 @@ export default class UserProjectAdd extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Project Title"
+                    label={userStrings.addProjectModalLabel}
                     formname="title"
-                    placeholder="Enter project name"
+                    placeholder={userStrings.addProjectModalPlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
@@ -225,10 +226,10 @@ export default class UserProjectAdd extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        Cancel
+                        {userStrings.modalCreate}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Create
+                        {userStrings.modalCreate}
                     </PrimaryButton>
                 </div>
             </Form>

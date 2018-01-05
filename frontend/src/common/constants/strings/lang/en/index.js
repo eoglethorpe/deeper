@@ -1,7 +1,7 @@
 const strings = {
     // IMPORTANT: Before adding a new string, remember to search for existing duplicate string
 
-    // For Sources
+    // For Sources / Leads
     1: 'Owner',
     2: 'Date Created',
     3: 'Date Published',
@@ -122,9 +122,61 @@ const strings = {
     116: 'Enter UN Geographical Sub Region',
 
 
+    // User Profile and User Group
+
+    150: 'First Name',
+    151: 'John',
+    152: 'Last Name',
+    153: 'Doe',
+    154: 'Organization',
+    155: 'ToggleCorp',
+    156: 'Save',
+    157: 'Cancel',
+
+    158: 'Edit Profile',
+
+    159: 'Title',
+    160: 'Rights',
+    161: 'Joined At',
+    162: 'Actions',
+    163: 'Created At',
+    164: 'Last Modified At',
+    165: 'Status',
+    166: 'Members',
+
+    167: 'View User Group',
+    168: 'Edit User Group',
+    169: 'Delete User Group',
+    170: 'View Project',
+    171: 'Edit Project',
+    172: 'Delete Project',
+
+    173: 'Projects',
+    174: 'Add Project',
+    175: 'Groups',
+    176: 'Add User Group',
+
+    177: 'Title',
+    178: 'ACAPS',
+    179: 'Create',
+
+    180: 'Project Title',
+    181: 'Enter Project Name',
+
+    182: 'First Name',
+    183: 'First Name',
+    184: 'First Name',
+    185: 'First Name',
+    186: 'First Name',
+    187: 'First Name',
+    188: 'First Name',
+    189: 'First Name',
+    190: 'First Name',
+
     // Notification strings
 
     // User Profile
+
     900: 'User Profile Edit',
     901: 'User Edit Successful',
     902: 'Error. User Edit Failure.',
