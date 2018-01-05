@@ -12,15 +12,13 @@ const projectListFields = ['id', 'title'];
 export const createUrlForProjectList = () => (
     `${wsEndpoint}/projects/?${p({ fields: projectListFields })}`
 );
-
-export const createUrlForProjectOptions = projectId => `${wsEndpoint}/project-options/?project=${projectId}`;
-
 export const createParamsForProjectList = () => ({
     method: GET,
     headers: commonHeader,
 });
 
-export const createParamsForProjectOptions = () => ({
+export const createUrlForLeadOptions = projectId => `${wsEndpoint}/lead-options/?project=${projectId}`;
+export const createParamsForLeadOptions = () => ({
     method: GET,
     headers: commonHeader,
 });
@@ -33,4 +31,11 @@ export const createParamsForTokenRefresh = ({ refresh }) => ({
     body: JSON.stringify({
         refresh,
     }),
+});
+
+export const urlForLeadCreate = `${wsEndpoint}/leads/`;
+export const createParamsForLeadCreate = data => ({
+    method: POST,
+    headers: commonHeader,
+    body: JSON.stringify(data),
 });

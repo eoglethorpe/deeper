@@ -43,18 +43,16 @@ class App extends React.PureComponent {
         super(props);
 
         this.state = {
-            pending: true,
+            pendingTabInfo: true,
+            pendingRefresh: true,
         };
-
-        this.getCurrentTabInfo();
-        // this.projectListRequest = this.createRequestForProjectList();
-        this.tokenRefreshRequest = this.createRequestForTokenRefresh(props.token);
     }
 
     componentWillMount() {
-        if (this.tokenRefreshRequest) {
-            this.tokenRefreshRequest.start();
-        }
+        this.getCurrentTabInfo();
+
+        this.tokenRefreshRequest = this.createRequestForTokenRefresh(this.props.token);
+        this.tokenRefreshRequest.start();
     }
 
     componentWillUnmount() {
@@ -65,10 +63,8 @@ class App extends React.PureComponent {
 
     getCurrentTabInfo = () => {
         const queryInfo = { active: true, currentWindow: true };
-        chrome.tabs.query(queryInfo, (tabs) => {
-            const {
-                setCurrentTabInfo,
-            } = this.props;
+        const queryCallback = (tabs) => {
+            const { setCurrentTabInfo } = this.props;
 
             const tab = tabs[0];
             const url = tab.url;
@@ -79,10 +75,10 @@ class App extends React.PureComponent {
                 url,
             });
 
-            this.setState({
-                pending: false,
-            });
-        });
+            this.setState({ pendingTabInfo: false });
+        };
+
+        chrome.tabs.query(queryInfo, queryCallback);
     }
 
     createRequestForTokenRefresh = (token) => {
@@ -90,17 +86,14 @@ class App extends React.PureComponent {
             .url(urlForTokenRefresh)
             .params(() => createParamsForTokenRefresh(token))
             .success((response) => {
-                const {
-                    setToken,
-                } = this.props;
+                const { setToken } = this.props;
 
                 const params = {
-                    token: {
-                        access: response.access,
-                    },
+                    token: { access: response.access },
                 };
 
                 setToken(params);
+                this.setState({ pendingRefresh: false });
             })
             .build();
         return tokenRefreshRequest;
@@ -108,10 +101,11 @@ class App extends React.PureComponent {
 
     render() {
         const {
-            pending,
+            pendingTabInfo,
+            pendingRefresh,
         } = this.state;
 
-        if (pending) {
+        if (pendingTabInfo || pendingRefresh) {
             return (
                 <div>Loading...</div>
             );

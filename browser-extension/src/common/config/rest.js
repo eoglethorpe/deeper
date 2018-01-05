@@ -38,7 +38,7 @@ export const commonHeaderForPostExternal = {
 export const commonHeader = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoic2FmYXJAdGVzdC5jb20iLCJleHAiOjE1MTUwNTg0OTEsImRpc3BsYXlOYW1lIjoiU2FmYXIgTGlnYWwiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpc1N1cGVydXNlciI6ZmFsc2V9.oWbgW4W11rTfj3EyGZm9sBlKJ7R4quDi_NyvjaHifFc',
+    Authorization: undefined,
 };
 
 
@@ -48,10 +48,12 @@ store.subscribe(() => {
     const token = tokenSelector(store.getState());
     currentAccess = token.access;
     if (prevAccess !== currentAccess) {
+        // console.warn(prevAccess);
+        // console.warn(currentAccess);
         if (currentAccess) {
             commonHeader.Authorization = `Bearer ${currentAccess}`;
         } else {
-            // commonHeader.Authorization = undefined;
+            commonHeader.Authorization = undefined;
         }
     }
 });

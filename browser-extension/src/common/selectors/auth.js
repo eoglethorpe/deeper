@@ -13,3 +13,6 @@ export const projectListSelector = ({ auth }) => (
     auth.projects || emptyList
 );
 
+export const leadOptionsSelector = ({ auth }) => (
+    auth.leadOptions || emptyObject
+);

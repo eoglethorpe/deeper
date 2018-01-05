@@ -1,10 +1,14 @@
 const initialAuthState = {
     token: {
-        access: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsInVzZXJuYW1lIjoic2FmYXJAdGVzdC5jb20iLCJleHAiOjE1MTUwNTg0OTEsImRpc3BsYXlOYW1lIjoiU2FmYXIgTGlnYWwiLCJ0b2tlblR5cGUiOiJhY2Nlc3MiLCJpc1N1cGVydXNlciI6ZmFsc2V9.oWbgW4W11rTfj3EyGZm9sBlKJ7R4quDi_NyvjaHifFc',
-        refresh: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjQsInRva2VuVHlwZSI6InJlZnJlc2gifQ.8mB4KQuYqoAYWJXHjVV9b5cUgEJHRplzXWKeWP5WYxU',
+        access: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImV4cCI6MTUxNTEzNDc4OCwiaXNTdXBlcnVzZXIiOnRydWUsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiam9obmRvZUB0ZXN0LmNvbSIsImRpc3BsYXlOYW1lIjoiSm9obiBEb2UifQ.ZdtY7XYDNEELOA08xQT52Y5ETEbljOTz8aRU58gZGIo',
+        refresh: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlblR5cGUiOiJyZWZyZXNoIiwidXNlcklkIjoxfQ.dH2RQopZqJcDtFgHFm_X767n9yk4goGBTNsMNjma3xY',
     },
 
     projects: [],
+
+    // by projectId
+    leadOptions: {
+    },
 };
 
 export default initialAuthState;

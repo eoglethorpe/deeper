@@ -8,6 +8,7 @@ import initialDomainDataState from '../initial-state/domainData';
 
 // export const LOGIN_ACTION = 'auth/LOGIN';
 export const UPDATE_INPUT_VALUE_ACTION = 'extension/UPDATE_INPUT_VALUES';
+export const CLEAR_INPUT_VALUE_ACTION = 'extension/CLEAR_INPUT_VALUES';
 
 // ACTION-CREATOR
 
@@ -18,7 +19,22 @@ export const updateInputValueAction = ({ tabId, id, value }) => ({
     value,
 });
 
+export const clearInputValueAction = ({ tabId }) => ({
+    type: CLEAR_INPUT_VALUE_ACTION,
+    tabId,
+});
+
 // REDUCER
+const clearInputValue = (state, action) => {
+    const { tabId } = action;
+
+    const settings = {
+        [tabId]: { $set: undefined },
+    };
+
+    const newState = update(state, settings);
+    return newState;
+};
 
 const updateInputValue = (state, action) => {
     const {
@@ -43,6 +59,7 @@ const updateInputValue = (state, action) => {
 
 export const domainDataReducers = {
     [UPDATE_INPUT_VALUE_ACTION]: updateInputValue,
+    [CLEAR_INPUT_VALUE_ACTION]: clearInputValue,
     // [LOGIN_ACTION]: login,
 };
 

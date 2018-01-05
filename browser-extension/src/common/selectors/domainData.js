@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'; // eslint-disable-line no-unused-vars
+import { leadOptionsSelector } from './auth';
 
 // NOTE: Use these to make sure reference don't change
 const emptyList = []; // eslint-disable-line no-unused-vars
@@ -18,7 +19,7 @@ export const analysisFrameworkDetailSelector = createSelector(
 );
 */
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line
 export const inputValuesForTabSelector = ({ domainData, mem }) => {
     const { currentTabId } = mem;
 
