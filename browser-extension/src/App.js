@@ -37,7 +37,6 @@ const mapDispatchToProps = dispatch => ({
     setProjectList: params => dispatch(setProjectListAction(params)),
 });
 
-
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends React.PureComponent {
     constructor(props) {
@@ -61,10 +60,6 @@ class App extends React.PureComponent {
     componentWillUnmount() {
         if (this.tokenRefreshRequest) {
             this.tokenRefreshRequest.stop();
-        }
-
-        if (this.projectListRequest) {
-            this.projectListRequest.stop();
         }
     }
 
@@ -106,47 +101,9 @@ class App extends React.PureComponent {
                 };
 
                 setToken(params);
-
-                this.projectListRequest = this.createRequestForProjectList();
-                this.projectListRequest.start();
             })
             .build();
         return tokenRefreshRequest;
-    }
-
-    createRequestForProjectList = () => {
-        const projectListUrl = createUrlForProjectList();
-        const projectListRequest = new FgRestBuilder()
-            .url(projectListUrl)
-            .params(() => createParamsForProjectList())
-            // .preLoad(() => this.setState({ pending: true }))
-            // .postLoad(() => this.setState({ pending: false }))
-            .success((response) => {
-                const {
-                    setProjectList,
-                } = this.props;
-
-                const params = {
-                    projects: response.results,
-                };
-
-                setProjectList(params);
-            })
-            .build();
-        return projectListRequest;
-    }
-
-    handleInputValueChange = (id, value) => {
-        const {
-            currentTabId,
-            updateInputValue,
-        } = this.props;
-
-        updateInputValue({
-            tabId: currentTabId,
-            id,
-            value,
-        });
     }
 
     render() {
@@ -159,18 +116,8 @@ class App extends React.PureComponent {
                 <div>Loading...</div>
             );
         }
-
-        const {
-            inputValues,
-            projects,
-        } = this.props;
-
         return (
-            <AddLead
-                inputValues={inputValues}
-                onChange={this.handleInputValueChange}
-                projects={projects}
-            />
+            <AddLead />
         );
     }
 }

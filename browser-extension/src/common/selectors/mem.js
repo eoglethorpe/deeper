@@ -8,4 +8,3 @@ const emptyObject = {}; // eslint-disable-line no-unused-vars
 export const currentTabIdSelector = ({ mem }) => (
     mem.currentTabId
 );
-
