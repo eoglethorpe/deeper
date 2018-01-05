@@ -187,7 +187,7 @@ export default class CountryDetail extends React.PureComponent {
                             countryId={countryDetail.id}
                         />
                         <div styleName="map-container">
-                            <RegionMap countryId={countryDetail.id} />
+                            <RegionMap regionId={countryDetail.id} />
                         </div>
                     </div>
                 ) : (

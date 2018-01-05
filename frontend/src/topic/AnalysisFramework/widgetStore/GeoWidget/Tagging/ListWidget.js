@@ -31,6 +31,8 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
 
 };
@@ -91,6 +93,17 @@ export default class GeoTaggingList extends React.PureComponent {
         }
     }
 
+    createFilterData = attribute => ({
+        values: attribute.values.map(v => v.key),
+        number: undefined,
+    })
+
+    createExportData = attribute => ({
+        excel: {
+            values: attribute.values.map(v => v.key),
+        },
+    })
+
     mapRegionsList = (key, data) => (
         <div
             className={styles['region-content']}
@@ -128,11 +141,14 @@ export default class GeoTaggingList extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
-        const { api, id, entryId } = this.props;
+        const { api, id, entryId, filters, exportable } = this.props;
+        const attribute = {
+            values: this.state.values,
+        };
         api.getEntryModifier(entryId)
-            .setAttribute(id, {
-                values: this.state.values,
-            })
+            .setAttribute(id, attribute)
+            .setFilterData(filters[0].id, this.createFilterData(attribute))
+            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
         this.setState({
             showMapModal: false,
@@ -256,7 +272,7 @@ export default class GeoTaggingList extends React.PureComponent {
                     <ModalBody>
                         <RegionMap
                             styleName="map-content"
-                            countryId={selectedRegion}
+                            regionId={selectedRegion}
                             onChange={this.handleMapSelect}
                             onLocationsChange={this.handleMapLocationsChange}
                             selections={values}

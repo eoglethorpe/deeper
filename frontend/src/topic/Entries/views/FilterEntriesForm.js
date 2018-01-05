@@ -165,6 +165,20 @@ export default class EntriesFilter extends React.PureComponent {
                     disabled={this.props.pending}
                 />
             );
+        } else if (filter.type === 'geo') {
+            // User GeoSelect component
+            return (
+                <SelectInput
+                    key={key}
+                    className={styles.filter}
+                    label={title}
+                    showHintAndError={false}
+                    onChange={values => this.handleFilterChange(key, values)}
+                    value={filters[key]}
+                    disabled={this.props.pending}
+                    multiple
+                />
+            );
         }
 
         return null;

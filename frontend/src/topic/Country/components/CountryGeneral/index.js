@@ -99,7 +99,7 @@ export default class CountryGeneral extends React.PureComponent {
                         />
                         <div styleName="map-container">
                             <RegionMap
-                                countryId={countryDetail.id}
+                                regionId={countryDetail.id}
                             />
                         </div>
                     </div>
