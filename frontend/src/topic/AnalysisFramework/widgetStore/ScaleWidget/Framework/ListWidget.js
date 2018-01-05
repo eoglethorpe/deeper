@@ -32,7 +32,6 @@ import { randomString } from '../../../../../public/utils/common';
 
 import styles from './styles.scss';
 
-
 const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, //eslint-disable-line
