@@ -22,6 +22,8 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.object,      // eslint-disable-line
 };
@@ -55,6 +57,31 @@ export default class OrganigramTaggingList extends React.PureComponent {
         }
     }
 
+    getSelectedNodes = (node, activeKeys) => {
+        const selected = node.organs.reduce((acc, o) => (
+            acc.concat(this.getSelectedNodes(o, activeKeys))
+        ), []);
+
+        if (selected.length > 0 || activeKeys.indexOf(node.key) >= 0) {
+            selected.push(node.key);
+        }
+
+        return selected;
+    }
+
+    createFilterData = (attribute) => {
+        const { data } = this.props;
+        return {
+            values: this.getSelectedNodes(data, attribute.values.map(v => v.id)),
+            number: undefined,
+        };
+    }
+
+    createExportData = attribute => ({
+        type: 'list',
+        value: attribute.values.map(v => v.name),
+    })
+
     handleShowModal = () => {
         this.setState({ showEditModal: true });
     }
@@ -69,9 +96,13 @@ export default class OrganigramTaggingList extends React.PureComponent {
     handleSaveClick = () => {
         this.setState({ showEditModal: false });
 
-        const { api, id, entryId } = this.props;
+        const { api, id, entryId, filters, exportable } = this.props;
+        const attribute = { values: this.state.values };
+
         api.getEntryModifier(entryId)
-            .setAttribute(id, { values: this.state.values })
+            .setAttribute(id, attribute)
+            .setFilterData(filters[0].id, this.createFilterData(attribute))
+            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 

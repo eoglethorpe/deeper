@@ -100,8 +100,6 @@ export default class EntriesFilter extends React.PureComponent {
                 this.handleApplyFilter();
             }
         });
-
-        console.warn(key, values);
     }
 
 

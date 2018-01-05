@@ -12,9 +12,9 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
+    attribute: PropTypes.object,      // eslint-disable-line
     filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.object,      // eslint-disable-line
 };
 

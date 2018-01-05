@@ -27,6 +27,8 @@ import styles from './styles.scss';
 
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
@@ -83,6 +85,35 @@ export default class Multiselect extends React.PureComponent {
         </div>
     )
 
+    createFilters = (values) => {
+        const { title, widgetKey } = this.props;
+        return [{
+            title,
+            widgetKey,
+            key: widgetKey,
+            filterType: 'list',
+            properties: {
+                type: 'multiselect',
+                options: values,
+            },
+        }];
+    }
+
+    createExportable = () => {
+        const { title, widgetKey } = this.props;
+
+        const excel = {
+            title,
+        };
+
+        return {
+            widgetKey,
+            data: {
+                excel,
+            },
+        };
+    }
+
     handleEdit = () => {
         this.setState({ showEditModal: true });
     }
@@ -136,7 +167,11 @@ export default class Multiselect extends React.PureComponent {
             showEditModal: false,
         });
 
-        this.props.onChange(this.state.values);
+        this.props.onChange(
+            this.state.values,
+            this.createFilters(this.state.values),
+            this.createExportable(),
+        );
     }
 
     render() {
