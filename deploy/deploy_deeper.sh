@@ -151,18 +151,25 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     REACT_APP_MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN}
     REACT_APP_MAPBOX_STYLE=${MAPBOX_STYLE}
     " > frontend/.env
-    echo "::::::  >> Generating Reacts Builds"
+    echo "::::::  >> Clearing Older Reacts Builds"
+    rm -rf frontend/build
+    echo "::::::  >> Generating New Reacts Builds"
     set -e;
     docker-compose exec react bash -c "cd frontend && yarn install && yarn build"
     set +e;
     rm frontend/.env
 
-    echo "::::::  >> Uploading Builds Files To S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
+    echo "::::::  >> Remove Previous Builds Files [js, css] From S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
+    aws s3 rm s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/static/js --recursive
+    aws s3 rm s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/static/css --recursive
+    echo "::::::  >> Uploading New Builds Files To S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 sync frontend/build/ s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC
+    aws s3 cp s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/index.html s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/index.html \
+        --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html --acl public-read
     echo "::::::  >> Settings Configs for Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 website s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC --index-document index.html --error-document index.html
 
-    # Clear cloudflare cache
+    # Clear cloudflare cache [only for deeper.togglecorp.com ]
     echo ":::::: Clear cloudflare cache"
     # Get the zones
     CLOUDFLARE_ZONES=($(curl -X GET "https://api.cloudflare.com/client/v4/zones" \
