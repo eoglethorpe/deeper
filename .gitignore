@@ -138,6 +138,7 @@ typings/
 .env*
 !.env-sample
 !.env-dev.enc
+!.env-prod.enc
 
 # Sensitive Deploy Files
 deploy/eb/

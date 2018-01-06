@@ -13,5 +13,9 @@ if [ "${TRAVIS_PULL_REQUEST}" == "false" ]; then
     elif [ "${TRAVIS_BRANCH}" == "${DEEP_DEVELOP_BRANCH}" ] && [ "${TRAVIS_EVENT_TYPE}" == "cron" ]; then
         echo "Deploying using Develop branch ${DEEP_DEVELOP_BRANCH}";
         ./deploy/deploy_deeper.sh .env-dev ;
+    # finally if it is for production, deploy to production
+    elif [ "${TRAVIS_BRANCH}" == "${DEEP_RC_PROD_BRANCH}" ]; then
+        echo "Deploying using Production Release Candidate ${DEEP_RC_PROD_BRANCH}";
+        ./deploy/deploy_deeper.sh .env-prod ;
     fi
 fi

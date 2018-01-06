@@ -13,7 +13,7 @@ before_install:
     - sudo pip install --upgrade awscli
     - sudo pip install --upgrade awsebcli
 
-    - openssl aes-256-cbc -K $encrypted_01c53514ef27_key -iv $encrypted_01c53514ef27_iv -in .env-dev.enc -out .env-dev -d
+    - ./deploy/scripts/travis_decrypt.sh
 
     - git clone https://github.com/toggle-corp/react-store.git frontend/src/public
     - mkdir -p frontend/src/vendor
