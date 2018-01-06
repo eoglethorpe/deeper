@@ -45,7 +45,6 @@ export default class NGram extends React.PureComponent {
 
     render() {
         const { keywords } = this.props;
-        console.log(keywords);
 
         return (
             <ListView

@@ -8,7 +8,6 @@ import { reverseRoute } from '../../../public/utils/common';
 
 import logo from '../../../img/deep-logo-grey.png';
 import {
-    iconNames,
     pathNames,
 } from '../../../common/constants';
 import {

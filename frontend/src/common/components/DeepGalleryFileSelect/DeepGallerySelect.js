@@ -77,7 +77,7 @@ export default class DgSelect extends React.PureComponent {
         this.galleryFilesHeader = [
             {
                 key: 'actions',
-                label: 'Action',
+                label: 'Select',
                 order: 1,
                 modifier: row => this.renderCheckbox(row),
             },
@@ -285,7 +285,7 @@ export default class DgSelect extends React.PureComponent {
                 />
                 <TextInput
                     onChange={this.handleSearchInputChange}
-                    placeholder="Search Gallery Files"
+                    placeholder="Search gallery files"
                     styleName="search-input"
                     type="search"
                     label="Search"
@@ -304,16 +304,17 @@ export default class DgSelect extends React.PureComponent {
                     />
                 </ModalBody>
                 <ModalFooter>
-                    <PrimaryButton
-                        onClick={this.onAdd}
-                    >
-                        Add
-                    </PrimaryButton>
                     <Button
                         onClick={this.onClose}
                     >
                         Cancel
                     </Button>
+                    <PrimaryButton
+                        styleName="add-button"
+                        onClick={this.onAdd}
+                    >
+                        Add
+                    </PrimaryButton>
                 </ModalFooter>
             </div>
         );

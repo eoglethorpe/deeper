@@ -14,8 +14,8 @@
     }
 
     .search-input {
-        padding: $spacing-extra-small;
-        width: 200px;
+        margin: $spacing-medium-alt;
+        width: 240px;
     }
 
     .modal-body {
@@ -30,5 +30,8 @@
         }
     }
 
+    .add-button {
+        min-width: 72px;
+    }
 }
 

@@ -8,7 +8,7 @@ import {
     ListItem,
 } from '../../../../public/components/View';
 import {
-    PrimaryButton,
+    Button,
     TransparentDangerButton,
 } from '../../../../public/components/Action';
 
@@ -163,19 +163,19 @@ export default class DocumentSelect extends React.PureComponent {
                     keyExtractor={this.keyExtractorForGalleryFiles}
                 />
                 <div styleName="bottom-bar">
-                    <PrimaryButton
+                    <Button
                         styleName="button"
                         onClick={() => this.setState({ showGallerySelectModal: true })}
                     >
                         Select From Gallery
-                    </PrimaryButton>
-                    <PrimaryButton
+                    </Button>
+                    <Button
                         styleName="button"
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >
                         Apply
-                    </PrimaryButton>
+                    </Button>
                 </div>
                 <DeepGalleryFileSelect
                     show={showGallerySelectModal}
