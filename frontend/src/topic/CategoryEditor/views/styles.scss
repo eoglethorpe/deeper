@@ -73,15 +73,10 @@
                 flex-shrink: 0;
                 justify-content: space-between;
 
-                .document-tab {
+                .tab-header {
                     @extend %tab;
                     padding: $spacing-medium;
                     text-transform: uppercase;
-                }
-
-                :global .tab-link-active {
-                    border-bottom-color: $color-accent;
-                    color: $color-accent;
                 }
             }
 
@@ -91,14 +86,19 @@
                 flex-direction: column;
                 flex-grow: 1;
 
-                %tab-content {
-                    flex-grow: 1;
+                .tab-content {
+                    display: none;
+
+                    &.active {
+                        display: flex;
+                        flex-grow: 1;
+                    }
                 }
 
                 .document-tab {
-                    @extend %tab-content;
                     display: flex;
                     flex-direction: column;
+                    flex-grow: 1;
 
                     .file-list-view {
                         display: flex;
@@ -137,14 +137,13 @@
                 }
 
                 .simplified-tab {
-                    @extend %tab-content;
+                    flex-grow: 1;
                     padding: $spacing-medium;
                     text-align: justify;
                     overflow-y: auto;
                 }
 
                 .ngrams-tab {
-                    @extend %tab-content;
                     display: flex;
                     flex-direction: column;
                     flex-grow: 1;

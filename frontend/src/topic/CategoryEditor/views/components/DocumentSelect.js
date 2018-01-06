@@ -116,22 +116,26 @@ export default class DocumentSelect extends React.PureComponent {
 
     keyExtractorForGalleryFiles = file => file.id
 
-    renderGalleryFilesListItem = (fileId, file) => (
-        <ListItem
-            className={styles['file-list-item']}
-            key={fileId}
-        >
-            <span className={styles.title} >
-                {file.title}
-            </span>
-            <TransparentDangerButton
-                className={styles.icon}
-                onClick={() => this.handleRemoveFiles(fileId)}
+    renderGalleryFilesListItem = (fileId, file) => {
+        console.log('rendering gallery file list item');
+
+        return (
+            <ListItem
+                className={styles['file-list-item']}
+                key={fileId}
             >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
-        </ListItem>
-    )
+                <span className={styles.title} >
+                    {file.title}
+                </span>
+                <TransparentDangerButton
+                    className={styles.icon}
+                    onClick={() => this.handleRemoveFiles(fileId)}
+                >
+                    <span className={iconNames.delete} />
+                </TransparentDangerButton>
+            </ListItem>
+        );
+    }
 
     render() {
         const {
@@ -144,6 +148,8 @@ export default class DocumentSelect extends React.PureComponent {
             selectedFiles,
             showGallerySelectModal,
         } = this.state;
+
+        console.log('rendering document select');
 
         return (
             <div

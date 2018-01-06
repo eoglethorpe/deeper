@@ -14,10 +14,12 @@ import {
 import styles from '../styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     ngrams: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
+    className: '',
 };
 
 const mapStateToProps = (state, props) => ({
@@ -97,6 +99,7 @@ export default class DocumentNGram extends React.PureComponent {
 
     render() {
         const {
+            className,
             ngrams,
         } = this.props;
 
@@ -109,7 +112,10 @@ export default class DocumentNGram extends React.PureComponent {
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
-            <div styleName="ngrams-tab" >
+            <div
+                styleName="ngrams-tab"
+                className={className}
+            >
                 <ListView
                     styleName="ngram-list"
                     data={selectedNGram}

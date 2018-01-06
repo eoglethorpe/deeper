@@ -27,15 +27,16 @@ const mapStateToProps = state => ({
 });
 
 const propTypes = {
-    activeProject: PropTypes.number.isRequired, // eslint-disable-line
-    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
-    location: PropTypes.object.isRequired, // eslint-disable-line
+    activeProject: PropTypes.number,
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
 };
 
 const defaultProps = {
+    activeProject: undefined,
     activeUser: {},
 };
 
@@ -68,28 +69,22 @@ export default class HomeScreen extends React.PureComponent {
 
         return (
             <div styleName="home-screen">
-                <h>
-                    Welcome to DEEP
-                </h>
                 <img
+                    styleName="deep-logo"
                     src={logo}
                     alt="DEEP"
                     draggable="false"
                 />
                 <p>
-                    Seems like you have no projects yet.
+                    <span styleName="welcome-message">
+                        Welcome to the <strong>DEEP</strong><br />
+                    </span>
+                    Seems like you do not have any projects yet<br />
+                    To get started, create a project from your profile<br />
                 </p>
-                <p>
-                    <Link
-                        to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })}
-                    >
-                        To get started, go to your profile.
-                        <span
-                            className={iconNames.person}
-                            styleName="icon"
-                        />
-                    </Link>
-                </p>
+                <Link to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })} >
+                    Goto your profile
+                </Link>
             </div>
         );
     }

@@ -8,7 +8,7 @@ import {
     Modal,
 } from '../../../public/components/View';
 
-import DgSelect from './DgSelect';
+import DeepGallerySelect from './DeepGallerySelect';
 
 const propTypes = {
     show: PropTypes.bool,
@@ -42,7 +42,7 @@ export default class DeepGallery extends React.PureComponent {
                 onClose={onClose}
                 show={show}
             >
-                <DgSelect
+                <DeepGallerySelect
                     {...this.props}
                 />
             </Modal>

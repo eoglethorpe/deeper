@@ -2,15 +2,12 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+// import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
 import {
-    ListItem,
+    List,
     LoadingAnimation,
 } from '../../../../public/components/View';
-import {
-    TransparentDangerButton,
-} from '../../../../public/components/Action';
 
 import {
     categoryEditorDocumentsSelector,
@@ -25,7 +22,6 @@ import SimplifiedFilePreview from '../../../../common/components/SimplifiedFileP
 import DocumentNGram from './DocumentNGram';
 import DocumentSelect from './DocumentSelect';
 
-import iconNames from '../../../../common/constants/iconNames';
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -73,7 +69,14 @@ export default class DocumentPanel extends React.PureComponent {
             selectedFiles: [],
             showGallerySelectModal: false,
             fileIds: props.selectedFiles.map(file => file.id),
+            activeTabIndex: 0,
         };
+
+        this.tabs = [
+            { key: 'document', title: 'Document' },
+            { key: 'simplified', title: 'Simplified' },
+            { key: 'ngrams', title: 'Extracted words' },
+        ];
     }
 
     componentWillReceiveProps(nextProps) {
@@ -83,6 +86,23 @@ export default class DocumentPanel extends React.PureComponent {
             });
         }
     }
+
+    getTabClassName = (base, i) => {
+        const classNames = [base];
+
+        const {
+            activeTabIndex,
+        } = this.state;
+
+        if (activeTabIndex === i) {
+            classNames.push(styles.active);
+        }
+
+        return classNames.join(' ');
+    }
+
+    getTabHeaderClassName = i => this.getTabClassName(styles['tab-header'], i)
+    getTabContentClassName = i => this.getTabClassName(styles['tab-content'], i)
 
     // Simplification callback
     handleFilesPreviewLoad = (response) => {
@@ -136,22 +156,23 @@ export default class DocumentPanel extends React.PureComponent {
         }
     }
 
-    keyExtractorForGalleryFiles = file => file.id
+    handleTabHeaderClick = (i) => {
+        this.setState({
+            activeTabIndex: i,
+        });
+    }
 
-    renderGalleryFilesListItem = (fileId, file) => (
-        <ListItem
-            key={fileId}
+    keyExtractorForGalleryFiles = file => file.id
+    keyExtractorForTabs = d => d.key
+
+    renderTabHeader = (key, data, i) => (
+        <button
+            key={key}
+            className={this.getTabHeaderClassName(i)}
+            onClick={() => { this.handleTabHeaderClick(i); }}
         >
-            {file.title}
-            <TransparentDangerButton
-                onClick={() => this.handleRemoveFiles(fileId)}
-            >
-                <span
-                    // styleName="icon"
-                    className={iconNames.delete}
-                />
-            </TransparentDangerButton>
-        </ListItem>
+            { data.title }
+        </button>
     )
 
     render() {
@@ -163,63 +184,44 @@ export default class DocumentPanel extends React.PureComponent {
         const { previewId } = this.props;
 
         return (
-            <Tabs
-                activeLinkStyle={{ none: 'none' }}
-                styleName="document-panel"
-            >
-                <div styleName="header">
-                    <TabLink
-                        styleName="document-tab"
-                        to="document-view"
-                    >
-                        Document
-                    </TabLink>
-                    <TabLink
-                        styleName="document-tab"
-                        to="simplified-view"
-                    >
-                        Simplified
-                    </TabLink>
-                    <TabLink
-                        styleName="document-tab"
-                        to="ngram-view"
-                    >
-                        Extracted Words
-                    </TabLink>
-                    {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                    <div styleName="empty-tab" />
-                </div>
+            <div styleName="document-panel">
+                <header
+                    styleName="header"
+                >
+                    <List
+                        data={this.tabs}
+                        keyExtractor={this.keyExtractorForTabs}
+                        modifier={this.renderTabHeader}
+                    />
+                </header>
                 <div styleName="content">
                     { pending && <LoadingAnimation /> }
-                    <TabContent
-                        styleName="document-tab"
-                        for="document-view"
+                    <div
+                        styleName="tab-content"
+                        className={this.getTabContentClassName(0)}
                     >
-                        <DocumentSelect />
-                    </TabContent>
-                    <TabContent
-                        styleName="simplified-tab"
-                        for="simplified-view"
+                        <DocumentSelect />,
+                    </div>
+                    <div
+                        styleName="tab-content"
+                        className={this.getTabContentClassName(1)}
                     >
-                        <div styleName="simplified-tab">
-                            <SimplifiedFilePreview
-                                // styleName="text"
-                                fileIds={fileIds}
-                                previewId={previewId}
-                                onLoad={this.handleFilesPreviewLoad}
-                                preLoad={this.handlePreLoad}
-                                postLoad={this.handlePostLoad}
-                            />
-                        </div>
-                    </TabContent>
-                    <TabContent
-                        styleName="ngrams-tab"
-                        for="ngram-view"
+                        <SimplifiedFilePreview
+                            fileIds={fileIds}
+                            previewId={previewId}
+                            onLoad={this.handleFilesPreviewLoad}
+                            preLoad={this.handlePreLoad}
+                            postLoad={this.handlePostLoad}
+                        />
+                    </div>
+                    <div
+                        styleName="tab-content"
+                        className={this.getTabContentClassName(2)}
                     >
                         <DocumentNGram />
-                    </TabContent>
+                    </div>
                 </div>
-            </Tabs>
+            </div>
         );
     }
 }

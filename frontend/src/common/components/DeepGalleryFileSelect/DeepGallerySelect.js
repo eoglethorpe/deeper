@@ -79,7 +79,7 @@ export default class DgSelect extends React.PureComponent {
                 key: 'actions',
                 label: 'Action',
                 order: 1,
-                modifier: row => this.showCheckbox(row),
+                modifier: row => this.renderCheckbox(row),
             },
             {
                 key: 'mimeType',
@@ -87,7 +87,7 @@ export default class DgSelect extends React.PureComponent {
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
-                modifier: row => this.showGalleryFileType(row),
+                modifier: row => this.renderGalleryFileType(row),
             },
             {
                 key: 'title',
@@ -121,11 +121,15 @@ export default class DgSelect extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.userGalleryFilesRequest.start();
+        if (this.userGalleryFilesRequest) {
+            this.userGalleryFilesRequest.start();
+        }
     }
 
     componentWillUnmount() {
-        this.userGalleryFilesRequest.stop();
+        if (this.userGalleryFilesRequest) {
+            this.userGalleryFilesRequest.stop();
+        }
     }
 
     onClose = () => {
@@ -219,7 +223,9 @@ export default class DgSelect extends React.PureComponent {
         });
     };
 
-    showGalleryFileType = (row) => {
+    keyExtractor = file => file.id
+
+    renderGalleryFileType = (row) => {
         const icon = leadTypeIconMap[row.mimeType] || iconNames.documentText;
         const url = row.file;
         if (!url) {
@@ -234,32 +240,16 @@ export default class DgSelect extends React.PureComponent {
         );
     }
 
-    showCheckbox = row => (
-        <div>
-            <TransparentPrimaryButton
-                title={row.selected ? 'Unselect' : 'Select'}
-                onClick={() => this.handleFileSelection(row)}
-            >
-                {
-                    row.selected ? <i className={iconNames.checkbox} />
-                        : <i className={iconNames.checkboxOutlineBlank} />
-                }
-            </TransparentPrimaryButton>
-        </div>
-    )
-
-    keyExtractor = file => file.id
-
-    renderFileName = ({ fileName, fileUrl }) => (
-        fileUrl ?
-            <a
-                styleName="gallery-file-name"
-                href={fileUrl}
-                target="_blank"
-            >
-                {fileName}
-            </a>
-            : <span />
+    renderCheckbox = row => (
+        <TransparentPrimaryButton
+            title={row.selected ? 'Unselect' : 'Select'}
+            onClick={() => this.handleFileSelection(row)}
+        >
+            {
+                row.selected ? <i className={iconNames.checkbox} />
+                    : <i className={iconNames.checkboxOutlineBlank} />
+            }
+        </TransparentPrimaryButton>
     )
 
     render() {
@@ -278,6 +268,8 @@ export default class DgSelect extends React.PureComponent {
             selected,
             searchInputValue,
         });
+
+        console.log('rendering dg select');
 
         return (
             <div>
