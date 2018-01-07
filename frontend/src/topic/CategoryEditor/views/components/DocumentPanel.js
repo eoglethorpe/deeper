@@ -126,9 +126,7 @@ export default class DocumentPanel extends React.PureComponent {
     }
 
     handlePostLoad = () => {
-        this.setState({
-            pending: false,
-        });
+        this.setState({ pending: false });
     }
 
     // Document Select Callback
@@ -200,7 +198,7 @@ export default class DocumentPanel extends React.PureComponent {
                         styleName="tab-content"
                         className={this.getTabContentClassName(0)}
                     >
-                        <DocumentSelect />,
+                        <DocumentSelect />
                     </div>
                     <div
                         styleName="tab-content"

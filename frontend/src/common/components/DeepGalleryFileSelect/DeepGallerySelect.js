@@ -102,7 +102,12 @@ export default class DgSelect extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.createdAt.localeCompare(b.createdAt),
-                modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
+                modifier: row => (
+                    <FormattedDate
+                        date={row.createdAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
             },
         ];
 
@@ -112,7 +117,7 @@ export default class DgSelect extends React.PureComponent {
         };
 
         this.state = {
-            pending: false,
+            pending: true,
             selected: [],
             searchInputValue: undefined,
         };
@@ -259,39 +264,32 @@ export default class DgSelect extends React.PureComponent {
             searchInputValue,
         } = this.state;
 
-        const {
-            galleryFiles,
-        } = this.props;
+        const { galleryFiles } = this.props;
 
+        // FIXME: performance problem
         const tableData = this.getTableData({
             galleryFiles,
             selected,
             searchInputValue,
         });
 
-        console.log('rendering dg select');
-
         return (
             <div>
                 <ModalHeader
                     title="Select Gallery Files"
                     rightComponent={
-                        <TransparentPrimaryButton
-                            onClick={this.onClose}
-                        >
-                            <span className={iconNames.close} />
-                        </TransparentPrimaryButton>
+                        <TextInput
+                            onChange={this.handleSearchInputChange}
+                            placeholder="Search gallery files"
+                            styleName="search-input"
+                            type="search"
+                            label="Search"
+                            value={searchInputValue}
+                            showLabel={false}
+                            showHintAndError={false}
+                            disabled={pending}
+                        />
                     }
-                />
-                <TextInput
-                    onChange={this.handleSearchInputChange}
-                    placeholder="Search gallery files"
-                    styleName="search-input"
-                    type="search"
-                    label="Search"
-                    value={searchInputValue}
-                    showLabel={false}
-                    showHintAndError={false}
                 />
                 <ModalBody styleName="modal-body">
                     { pending && <LoadingAnimation /> }
@@ -312,6 +310,7 @@ export default class DgSelect extends React.PureComponent {
                     <PrimaryButton
                         styleName="add-button"
                         onClick={this.onAdd}
+                        disabled={pending}
                     >
                         Add
                     </PrimaryButton>

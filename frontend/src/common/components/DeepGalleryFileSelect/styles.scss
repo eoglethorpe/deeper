@@ -14,11 +14,11 @@
     }
 
     .search-input {
-        margin: $spacing-medium-alt;
         width: 240px;
     }
 
     .modal-body {
+        position: relative;
         padding: 0;
         height: 72vh;
     }

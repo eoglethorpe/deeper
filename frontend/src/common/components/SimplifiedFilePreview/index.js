@@ -58,14 +58,33 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
+        // NOTE: checking this.previewId is intentional
+        // don't confuse with this.props.previewId
         if (this.props.fileIds !== nextProps.fileIds ||
-            this.props.previewId !== nextProps.previewId) {
+            this.previewId !== nextProps.previewId) {
             this.create(nextProps);
         }
     }
 
     componentWillUnmount() {
         this.destroy();
+    }
+
+    startProcess = () => {
+        this.setState({ pending: true });
+        if (this.props.preLoad()) {
+            this.props.preLoad();
+        }
+    }
+
+    endProcess = (values) => {
+        this.setState({
+            pending: false,
+            ...values,
+        });
+        if (this.props.postLoad) {
+            this.props.postLoad();
+        }
     }
 
     destroy() {
@@ -78,6 +97,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         if (this.previewRequest) {
             this.previewRequest.stop();
         }
+        this.previewId = undefined;
     }
 
     reset = (previewId) => {
@@ -107,7 +127,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             return;
         }
 
-        this.setState({ pending: true });
+        this.startProcess();
 
         if (previewId) {
             this.createPreviewRequest(previewId);
@@ -122,8 +142,8 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             triggerUrl,
             triggerParams,
             (response) => {
+                console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
                 this.createPreviewRequest(response.extractionTriggered);
-                console.log(`Triggered file extraction for ${fileIds.join(', ')}`);
             },
         );
 
@@ -145,14 +165,14 @@ export default class SimplifiedFilePreview extends React.PureComponent {
                         this.tryPreviewRequest();
                     }, 1000);
                 } else {
-                    this.setState({
-                        pending: false,
-                        error: undefined,
-                        extractedText: response.text,
-                    });
+                    this.previewId = response.id;
                     if (onLoad) {
                         onLoad(response);
                     }
+                    this.endProcess({
+                        error: undefined,
+                        extractedText: response.text,
+                    });
                 }
             },
         );
@@ -166,11 +186,9 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
 
         if (this.previewRequestCount === maxCount) {
-            this.setState({
-                pending: false,
+            this.endProcess({
                 error: undefined,
                 extractedText: null,
-                extractedImages: [],
             });
             return;
         }
@@ -183,16 +201,6 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         new FgRestBuilder()
             .url(url)
             .params(params)
-            .preLoad(() => {
-                if (this.props.preLoad) {
-                    this.props.preLoad();
-                }
-            })
-            .postLoad(() => {
-                if (this.props.postLoad) {
-                    this.props.postLoad();
-                }
-            })
             .success((response) => {
                 try {
                     onSuccess(response);
@@ -201,16 +209,14 @@ export default class SimplifiedFilePreview extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.log(response);
-                this.setState({
-                    pending: false,
+                console.error(response);
+                this.endProcess({
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
-                this.setState({
-                    pending: false,
+                console.error(response);
+                this.endProcess({
                     error: 'Failed connecting to server',
                 });
             })
@@ -248,13 +254,8 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     }
 
     render() {
-        const {
-            className,
-        } = this.props;
-
-        const {
-            pending,
-        } = this.state;
+        const { className } = this.props;
+        const { pending } = this.state;
 
         return (
             <div
@@ -262,9 +263,9 @@ export default class SimplifiedFilePreview extends React.PureComponent {
                 styleName="file-preview"
             >
                 {
-                    (pending && (
+                    pending ? (
                         <LoadingAnimation />
-                    )) || (
+                    ) : (
                         this.renderContent()
                     )
                 }

@@ -66,6 +66,11 @@ export default class HomeScreen extends React.PureComponent {
             );
         }
 
+        const linkToProfile = reverseRoute(
+            pathNames.userProfile,
+            { userId: activeUser.userId },
+        );
+
         return (
             <div styleName="home-screen">
                 <img
@@ -76,13 +81,16 @@ export default class HomeScreen extends React.PureComponent {
                 />
                 <p>
                     <span styleName="welcome-message">
-                        Welcome to the <strong>DEEP</strong><br />
+                        Welcome to the <strong>DEEP</strong>
+                        <br />
                     </span>
-                    Seems like you do not have any projects yet<br />
-                    To get started, create a project from your profile<br />
+                    Seems like you do not have any projects yet
+                    <br />
+                    To get started, create a project from your profile
+                    <br />
                 </p>
-                <Link to={reverseRoute(pathNames.userProfile, { userId: activeUser.userId })} >
-                    Goto your profile
+                <Link to={linkToProfile}>
+                    Go to your profile
                 </Link>
             </div>
         );

@@ -9,6 +9,7 @@ import {
 } from '../../../../public/components/View';
 import {
     Button,
+    PrimaryButton,
     TransparentDangerButton,
 } from '../../../../public/components/Action';
 
@@ -114,28 +115,28 @@ export default class DocumentSelect extends React.PureComponent {
         });
     }
 
+    handleSelectFromGallery = () => {
+        this.setState({ showGallerySelectModal: true });
+    }
+
     keyExtractorForGalleryFiles = file => file.id
 
-    renderGalleryFilesListItem = (fileId, file) => {
-        console.log('rendering gallery file list item');
-
-        return (
-            <ListItem
-                className={styles['file-list-item']}
-                key={fileId}
+    renderGalleryFilesListItem = (fileId, file) => (
+        <ListItem
+            className={styles['file-list-item']}
+            key={fileId}
+        >
+            <span className={styles.title} >
+                {file.title}
+            </span>
+            <TransparentDangerButton
+                className={styles.icon}
+                onClick={() => this.handleRemoveFiles(fileId)}
             >
-                <span className={styles.title} >
-                    {file.title}
-                </span>
-                <TransparentDangerButton
-                    className={styles.icon}
-                    onClick={() => this.handleRemoveFiles(fileId)}
-                >
-                    <span className={iconNames.delete} />
-                </TransparentDangerButton>
-            </ListItem>
-        );
-    }
+                <span className={iconNames.delete} />
+            </TransparentDangerButton>
+        </ListItem>
+    );
 
     render() {
         const {
@@ -148,8 +149,6 @@ export default class DocumentSelect extends React.PureComponent {
             selectedFiles,
             showGallerySelectModal,
         } = this.state;
-
-        console.log('rendering document select');
 
         return (
             <div
@@ -165,17 +164,17 @@ export default class DocumentSelect extends React.PureComponent {
                 <div styleName="bottom-bar">
                     <Button
                         styleName="button"
-                        onClick={() => this.setState({ showGallerySelectModal: true })}
+                        onClick={this.handleSelectFromGallery}
                     >
-                        Select From Gallery
+                        Select from Gallery
                     </Button>
-                    <Button
+                    <PrimaryButton
                         styleName="button"
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >
                         Apply
-                    </Button>
+                    </PrimaryButton>
                 </div>
                 <DeepGalleryFileSelect
                     show={showGallerySelectModal}
