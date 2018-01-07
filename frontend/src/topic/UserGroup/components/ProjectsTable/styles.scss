@@ -9,12 +9,11 @@
     >.header {
         display: flex;
         flex-shrink: 0;
-        flex-wrap: wrap;
         align-items: center;
-        padding: $spacing-medium;
+        padding: $spacing-small $spacing-medium;
 
-        h2 {
-            flex-basis: 20%;
+        >* {
+            flex-shrink: 0;
         }
 
         .pusher {
@@ -22,33 +21,13 @@
         }
 
         .search-input {
-            flex-basis: 15%;
-            align-self: flex-end;
             margin: 0 $spacing-medium;
         }
-
     }
 
     .content {
         flex-basis: 100%;
         flex-grow: 1;
         overflow-y: auto;
-
-        :global .header {
-            position: sticky;
-            top: 0;
-            border-bottom: $width-separator-medium solid $color-separator;
-            padding: $spacing-small $spacing-medium-alt;
-            text-align: left;
-            user-select: none;
-
-            &:not(.actions) {
-                cursor: pointer;
-
-                &:hover {
-                    background-color: $color-background-hover;
-                }
-            }
-        }
     }
 }

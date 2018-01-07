@@ -15,7 +15,7 @@
             align-items: center;
             outline: none;
             border: 0;
-            border-bottom: $width-separator-normal solid $color-separator;
+            border-bottom: $width-separator-medium solid $color-separator;
             background-color: transparent;
             cursor: pointer;
             padding: $spacing-medium $spacing-large;
@@ -23,7 +23,7 @@
             color: $color-label;
             font-family: inherit;
             font-size: $font-size-medium;
-            font-weight: $font-weight-normal;
+            font-weight: $font-weight-medium;
 
             &.active {
                 border-bottom-color: $color-accent;
@@ -34,7 +34,7 @@
         .empty-tab {
             flex-grow: 1;
             align-self: stretch;
-            border-bottom: $width-separator-normal solid $color-separator;
+            border-bottom: $width-separator-medium solid $color-separator;
         }
 
         :global .tab-link-active {

@@ -237,8 +237,8 @@ export default class UserProfile extends React.PureComponent {
                 <div styleName="stats">
                     <h2>Stats</h2>
                 </div>
-                <UserProject />
-                <UserGroup />
+                <UserProject styleName="projects" />
+                <UserGroup styleName="groups" />
             </div>
         );
     }

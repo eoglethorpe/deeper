@@ -16,129 +16,43 @@
     grid-template-rows: $info-height 3fr 2fr;
 
     >* {
-        border: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
-        padding: $spacing-large;
-
-        h2 {
-            margin-bottom: $spacing-medium;
-        }
     }
 }
 
 .info {
     display: flex;
     align-items: flex-start;
+    border-right: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    padding: $spacing-large;
     grid-area: info;
 
-    .title {
-        display: flex;
-        flex-shrink: 0;
-        background-color: $color-foreground;
-        padding: $spacing-medium $spacing-large;
+    .name {
+        color: $color-text;
+        font-size: $font-size-super-large;
+    }
 
-        .name {
-            color: $color-text;
-            font-size: $font-size-super-large;
-        }
-
-        button {
-            margin-left: $spacing-small;
-
-            .ion-edit {
-                margin: $spacing-small;
-            }
-
-            &:hover {
-                background-color: $color-background-hover;
-            }
-
-        }
+    button {
+        margin-left: $spacing-small;
     }
 }
 
 .stats {
+    border-right: $width-separator-thin solid $color-separator;
+    padding: $spacing-medium;
     grid-area: stats;
 }
 
 .projects {
+    border-bottom: $width-separator-thin solid $color-separator;
     grid-area: projects;
 }
 
 .members {
     grid-area: groups;
 }
-/*
-.usergroup {
-    display: flex;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
 
-    .left {
-        display: flex;
-        flex-basis: 70%;
-        flex-direction: column;
-
-        .title {
-            display: flex;
-            flex-shrink: 0;
-            background-color: $color-foreground;
-            padding: $spacing-medium $spacing-large;
-
-            button {
-                margin-left: $spacing-small;
-
-                .ion-edit {
-                    margin: $spacing-small;
-                }
-
-                &:hover {
-                    background-color: $color-background-hover;
-                }
-
-            }
-        }
-
-        .tabs-container {
-            display: flex;
-            flex-basis: 100%;
-            flex-direction: column;
-            flex-grow: 1;
-            background-color: $color-foreground;
-
-            .tabs-header-container {
-                flex-shrink: 0;
-            }
-
-            .tab {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-            }
-        }
-    }
-
-    .right {
-        flex-basis: 30%;
-        border-left: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground;
-        padding: $spacing-small;
-    }
-
-    .usergroup-alt {
-        @include shadow-medium;
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: center;
-        background-color: $color-foreground;
-        padding: $spacing-medium-alt;
-        color: $color-label;
-        font-size: $font-size-extra-large;
-    }
-}
-*/
 .user-group-edit-modal {
     width: 480px;
 }

@@ -1,13 +1,17 @@
-$font-size-normal: 13px;
-$font-size-medium: 13px;
-$font-size-normal-alt: 14px;
-$font-size-medium-alt: 14px;
-$font-size-small: 11px;
 $font-size-extra-small: 9px;
-$font-size-large: 17px;
+$font-size-extra-small-alt: 10px;
+$font-size-small: 11px;
+$font-size-small-alt: 12px;
+$font-size-medium: 13px;
+$font-size-medium-alt: 14px;
+$font-size-large: 16px;
+$font-size-large-alt: 18px;
 $font-size-extra-large: 20px;
-$font-size-super-large: 24px;
-$font-size-default: $font-size-normal;
+$font-size-extra-large-alt: 22px;
+$font-size-super-large: 26px;
+$font-size-super-large-alt: 28px;
+
+$font-size-default: $font-size-medium;
 
 $font-weight-light: 300;
 $font-weight-normal: 400;
@@ -15,28 +19,27 @@ $font-weight-medium: 400;
 $font-weight-bold: 600;
 $font-weight-default: $font-weight-medium;
 
-$spacing-extra-small: 3px;
+$spacing-extra-small: 2px;
+$spacing-extra-small-alt: 3px;
 $spacing-small: 6px;
+$spacing-small-alt: 8px;
 $spacing-medium: 10px;
 $spacing-medium-alt: 12px;
 $spacing-large: 18px;
-$spacing-extra-large: 24px;
-$spacing-super-large: 32px;
-$spacing-horizontal-default: $spacing-medium;
-$spacing-vertical-default: $spacing-small;
+$spacing-large-alt: 22px;
+$spacing-extra-large: 26px;
+$spacing-extra-large-alt: 30px;
+$spacing-super-large: 36px;
+$spacing-super-large-alt: 42px;
+
 $spacing-default: $spacing-medium;
 
 $height-navbar: 48px;
 $height-progress-bar: 3px;
 
 $width-separator-thin: 1px;
-$width-separator-normal: 2px;
 $width-separator-medium: 2px;
 $width-separator-thick: 4px;
-
-
-$width-segment-button: 42px;
-$height-segment-button: 32px;
 
 $width-icon-medium: 16px;
 $width-icon-large-alt: 24px;
@@ -45,24 +48,8 @@ $width-icon-extra-large: 32px;
 $width-icon-extra-large-alt: 40px;
 $width-icon-super-large: 48px;
 
-// High Low Indicator
-$height-indicator-line: 4px;
-$height-indicator: 10px;
-$width-indicator: 10px;
-
-$height-header: 48px;
-
-$width-modal-medium: 600px;
-$height-modal-header: 64px;
-$height-modal-footer: 64px;
-$height-tabbar: 40px;
-
 $width-login-form: 360px;
 $width-register-form: 520px;
-
-$width-loading-icon: 54px;
-$height-loading-icon: 54px;
-$font-size-loading-icon: 48px;
 
 $width-matrix-1d-title: 108px;
 

@@ -52,6 +52,7 @@ import UserProjectAdd from '../../../../common/components/UserProjectAdd';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     userGroup: PropTypes.object.isRequired, // eslint-disable-line
     projects: PropTypes.array.isRequired,// eslint-disable-line
     setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
@@ -61,6 +62,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
 };
 
 const mapStateToProps = (state, props) => ({
@@ -321,7 +323,10 @@ export default class ProjectsTable extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="projects">
+            <div
+                className={this.props.className}
+                styleName="projects"
+            >
                 {deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
