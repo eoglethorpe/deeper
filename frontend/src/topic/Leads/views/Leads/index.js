@@ -210,9 +210,10 @@ export default class Leads extends React.PureComponent {
                 order: 7,
             },
             {
-                key: 'noOfEntries',
+                key: 'no_of_entries',
                 label: leadsString.tableHeaderNoOfEntries,
                 order: 8,
+                modifier: row => row.noOfEntries,
             },
             {
                 key: 'status',
