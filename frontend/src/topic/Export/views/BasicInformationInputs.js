@@ -9,6 +9,10 @@ import {
 
 import update from '../../../public/utils/immutable-update';
 
+import {
+    exportStrings,
+} from '../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -57,21 +61,21 @@ export default class BasicInformationInputs extends React.PureComponent {
                 className={styles.title}
                 key="title"
             >
-                Basic Information
+                {exportStrings.basicInformationLabel}
             </h4>,
             <TextInput
                 className={styles.excerpt}
                 key="excerpt"
-                label="Search Excerpt"
+                label={exportStrings.searchExcerptLabel}
                 onChange={(value) => { this.handleInputChange('excerpt', value); }}
-                placeholder="Words in excerpt"
+                placeholder={exportStrings.searchExcerptPlaceholder}
                 showHintAndError={false}
                 value={excerpt}
             />,
             <SelectInput
                 className={styles['created-by']}
                 key="created-by"
-                label="Created by"
+                label={exportStrings.createdByLabel}
                 multiple
                 onChange={(value) => { this.handleInputChange('createdBy', value); }}
                 showHintAndError={false}
@@ -80,7 +84,7 @@ export default class BasicInformationInputs extends React.PureComponent {
             <DateFilter
                 className={styles['created-at']}
                 key="created-at"
-                label="Created at"
+                label={exportStrings.createdAtLabel}
                 onChange={(value) => { this.handleInputChange('createdAt', value); }}
                 showHintAndError={false}
                 value={createdAt}

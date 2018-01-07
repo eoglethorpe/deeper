@@ -328,6 +328,31 @@ const strings = {
     429: 'Category',
     430: 'Category',
 
+    // Export strings
+
+    600: 'Export',
+    601: 'Show Preview',
+    602: 'Start Export',
+
+    603: 'DOCX',
+    604: 'PDF',
+    605: 'XLXS',
+    606: 'JSON',
+    607: 'Select Export Type',
+
+    608: 'Select Filters',
+
+    609: 'Entry Attributes',
+    610: 'Lead Attributes',
+    611: 'Basic Information',
+
+    612: 'Export Preview',
+
+    613: 'Search Excerpt',
+    614: 'Words in excerpt',
+    615: 'Created By',
+    616: 'Created At',
+
 
     // Notification strings
 

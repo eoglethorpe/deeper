@@ -16,7 +16,9 @@ import {
 } from '../../../public/components/View';
 import update from '../../../public/utils/immutable-update';
 import { listToMap } from '../../../public/utils/common';
-
+import {
+    exportStrings,
+} from '../../../common/constants';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -96,22 +98,22 @@ export default class Export extends React.PureComponent {
             {
                 key: 'word',
                 img: wordIcon,
-                title: 'DOCX',
+                title: exportStrings.docxLabel,
             },
             {
                 key: 'pdf',
                 img: pdfIcon,
-                title: 'PDF',
+                title: exportStrings.pdfLabel,
             },
             {
                 key: 'excel',
-                title: 'XLXS',
+                title: exportStrings.xlxsLabel,
                 img: excelIcon,
             },
             {
                 key: 'json',
                 img: jsonIcon,
-                title: 'JSON',
+                title: exportStrings.jsonLabel,
             },
         ];
 
@@ -395,17 +397,17 @@ export default class Export extends React.PureComponent {
         return (
             <div styleName="export">
                 <header styleName="header">
-                    <h2>Export</h2>
+                    <h2>{exportStrings.headerExport}</h2>
                     <div styleName="action-buttons">
                         <Button
                             onClick={this.handlePreview}
                         >
-                            Show preview
+                            {exportStrings.showPreviewButtonLabel}
                         </Button>
                         <Button
                             onClick={this.handleExport}
                         >
-                            Start export
+                            {exportStrings.startExportButtonLabel}
                         </Button>
                     </div>
                 </header>
@@ -415,7 +417,7 @@ export default class Export extends React.PureComponent {
                     >
                         <header styleName="header">
                             <h4 styleName="heading">
-                                Select export type
+                                {exportStrings.electExportTypeLabel}
                             </h4>
                         </header>
                         <div styleName="content">
@@ -440,7 +442,7 @@ export default class Export extends React.PureComponent {
                     >
                         <header styleName="header">
                             <h4>
-                                Select filters
+                                {exportStrings.selectFiltersLabel}
                             </h4>
                         </header>
                         <div styleName="content">
@@ -453,7 +455,7 @@ export default class Export extends React.PureComponent {
                                 </div>
                                 <div styleName="entry-attributes">
                                     <h4>
-                                        Entry Attributes
+                                        {exportStrings.entryAttributesLabel}
                                     </h4>
                                     <FilterEntriesForm
                                         applyOnChange
@@ -464,7 +466,7 @@ export default class Export extends React.PureComponent {
                             <div styleName="right">
                                 <div styleName="lead-attributes">
                                     <h4>
-                                        Lead Attributes
+                                        {exportStrings.leadAttributesLabel}
                                     </h4>
                                     <FilterLeadsForm applyOnChange />
                                 </div>
