@@ -36,12 +36,14 @@ export default class NumberMatrixList extends React.PureComponent {
                 const obj = {
                     title: col.title,
                     value: value || '-',
+                    key: col.key,
                 };
                 columnList.push(obj);
             });
             const rowObj = {
                 title: row.title,
                 columns: columnList,
+                key: row.key,
             };
             dataRows.push(rowObj);
         });
@@ -84,7 +86,6 @@ export default class NumberMatrixList extends React.PureComponent {
     render() {
         const { attribute, data } = this.props;
         const dataRows = this.getRowsData(data, attribute);
-        console.warn(dataRows);
 
         return (
             <ListView
