@@ -17,6 +17,10 @@ import {
     ceIdFromRouteSelector,
 } from '../../../../common/redux';
 
+import {
+    ceStrings,
+} from '../../../../common/constants';
+
 import SimplifiedFilePreview from '../../../../common/components/SimplifiedFilePreview';
 
 import DocumentNGram from './DocumentNGram';
@@ -73,9 +77,18 @@ export default class DocumentPanel extends React.PureComponent {
         };
 
         this.tabs = [
-            { key: 'document', title: 'Document' },
-            { key: 'simplified', title: 'Simplified' },
-            { key: 'ngrams', title: 'Extracted words' },
+            {
+                key: 'document',
+                title: ceStrings.documentTabLabel,
+            },
+            {
+                key: 'simplified',
+                title: ceStrings.simplifiedTabLabel,
+            },
+            {
+                key: 'ngrams',
+                title: ceStrings.ngramsTabLabel,
+            },
         ];
     }
 

@@ -12,6 +12,10 @@ import {
 } from '../../../../public/components/Action';
 import { TextInput } from '../../../../public/components/Input';
 
+import {
+    ceStrings,
+} from '../../../../common/constants';
+
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -63,31 +67,31 @@ export default class NewSubcategoryModal extends React.PureComponent {
         return ([
             <ModalHeader
                 key="header"
-                title="Add new subcategory"
+                title={ceStrings.addNewSubCategoryModalTitle}
             />,
             <ModalBody key="body">
                 <TextInput
-                    label="Title"
-                    placeholder="Wash"
+                    label={ceStrings.addSubCategoryTitleLabel}
+                    placeholder={ceStrings.addSubCategoryTitlePlaceholder}
                     onChange={this.handleTitleValueChange}
                     value={this.state.titleValue}
                 />
                 <TextInput
-                    label="Description"
-                    placeholder="Wash your own plates"
+                    label={ceStrings.addSubCategoryDescriptionLabel}
+                    placeholder={ceStrings.addSubCategoryDescriptionPlaceholder}
                     onChange={this.handleDescriptionValueChange}
                     value={this.state.descriptionValue}
                 />
             </ModalBody>,
             <ModalFooter key="footer">
                 <Button onClick={this.handleModalClose}>
-                    Cancel
+                    {ceStrings.modalCancel}
                 </Button>
                 <PrimaryButton
                     onClick={this.handleModalOk}
                     className={styles['ok-button']}
                 >
-                    Ok
+                    {ceStrings.modalOk}
                 </PrimaryButton>
             </ModalFooter>,
         ]);

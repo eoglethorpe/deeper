@@ -15,6 +15,10 @@ import {
 import { ListView } from '../../../../public/components/View';
 
 import {
+    ceStrings,
+} from '../../../../common/constants';
+
+import {
     selectedSubcategorySelector,
     updateSelectedSubcategoryAction,
     removeSelectedSubcategoryAction,
@@ -175,7 +179,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         if (!subcategory) {
             return (
                 <div styleName="property-panel">
-                    <p styleName="empty">Such empty</p>
+                    <p styleName="empty">{ceStrings.nothingHereText}</p>
                 </div>
             );
         }
@@ -192,26 +196,26 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
             >
                 <header styleName="header" >
                     <h3 styleName="heading" >
-                        Subcategory details
+                        {ceStrings.subCategoryDetailsText}
                     </h3>
                     <div styleName="action-buttons">
                         <DangerButton
                             onClick={this.handleSubcategoryRemove}
                         >
-                            Remove
+                            {ceStrings.removeCategoryButtonLabel}
                         </DangerButton>
                     </div>
                 </header>
                 <section styleName="properties" >
                     <TextInput
-                        label="Title"
-                        placeholder="eg: Wash"
+                        label={ceStrings.subCategoryTitleLabel}
+                        placeholder={ceStrings.subCategoryTitlePlaceholder}
                         value={title}
                         onChange={this.handleSubcategoryTitleInputChange}
                     />
                     <TextArea
-                        label="Description"
-                        placeholder="Description of the subcategory"
+                        label={ceStrings.subCategoryDescriptionLabel}
+                        placeholder={ceStrings.subCategoryDescriptionPlaceholder}
                         value={description}
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
@@ -221,7 +225,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         {
                             (ngramKeys.length > 0) && (
                                 <h4 styleName="heading">
-                                    Number of words:
+                                    {ceStrings.numberOfWordsLabel}
                                 </h4>
                             )
                         }
@@ -245,7 +249,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                             />
                         ) : (
                             <div styleName="empty">
-                                No words yet.
+                                {ceStrings.noWordsText}
                             </div>
                         )
                     }
@@ -253,7 +257,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         <PrimaryButton
                             onClick={onNewManualNGram}
                         >
-                            Add word manually
+                            {ceStrings.addWordManuallyButtonLabel}
                         </PrimaryButton>
                     </div>
                 </section>

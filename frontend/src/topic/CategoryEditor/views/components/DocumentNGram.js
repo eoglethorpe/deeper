@@ -11,6 +11,10 @@ import {
     categoryEditorNgramsSelector,
 } from '../../../../common/redux';
 
+import {
+    ceStrings,
+} from '../../../../common/constants';
+
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -124,7 +128,7 @@ export default class DocumentNGram extends React.PureComponent {
                 />
                 <div styleName="ngram-selects">
                     <h4 styleName="heading">
-                        Number of words:
+                        {ceStrings.numberOfWordsLabel}
                     </h4>
                     <ListView
                         styleName="ngram-select-list"
