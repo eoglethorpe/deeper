@@ -368,6 +368,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
             columnHeaders,
         } = this.state;
 
+        const { SortableColumnList, SortableRowList } = this;
+
         return (
             <div styleName="number-matrix-widget">
                 {this.renderMatrix(rowHeaders, columnHeaders)}
@@ -390,7 +392,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     Add row unit
                                 </PrimaryButton>
                             </header>
-                            <this.SortableRowList
+                            <SortableRowList
                                 items={rowHeaders}
                                 onSortEnd={this.onRowSortEnd}
                                 lockAxis="y"
@@ -410,7 +412,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     Add column unit
                                 </PrimaryButton>
                             </header>
-                            <this.SortableColumnList
+                            <SortableColumnList
                                 items={columnHeaders}
                                 onSortEnd={this.onColumnSortEnd}
                                 lockAxis="y"

@@ -28,11 +28,6 @@ export default class Matrix2dOverview extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            showEditModal: false,
-            data: props.data || {},
-        };
-
         const color = this.getHighlightColor(props.attribute);
 
         if (color) {

@@ -2,6 +2,10 @@ import {
     FrameworkOverviewWidget,
     FrameworkListWidget,
 } from './Framework';
+import {
+    TaggingOverviewWidget,
+    TaggingListWidget,
+} from './Tagging';
 
 const numberMatrixWidget = {
     id: 'numberMatrixWidget',
@@ -11,6 +15,10 @@ const numberMatrixWidget = {
         listComponent: FrameworkListWidget,
         overviewMinSize: { width: 240, height: 108 },
         listMinSize: { width: 240, height: 108 },
+    },
+    tagging: {
+        overviewComponent: TaggingOverviewWidget,
+        listComponent: TaggingListWidget,
     },
 };
 
