@@ -1,10 +1,9 @@
 @import '../../../stylesheets/base';
 
 .export {
+    @extend %main-content;
     display: flex;
     flex-direction: column;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
 
     >.header {
         display: flex;

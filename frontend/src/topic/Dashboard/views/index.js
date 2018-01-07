@@ -7,13 +7,11 @@ import {
     currentUserActiveProjectSelector,
 } from '../../../common/redux';
 
-import notify from '../../../common/notify';
-
-
 import styles from './styles.scss';
 
 const propTypes = {
-    currentUserActiveProject: PropTypes.object.isRequired, // eslint-disable-line
+    // eslint-disable-next-line react/forbid-prop-types
+    currentUserActiveProject: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -25,22 +23,12 @@ const mapStateToProps = (state, props) => ({
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
 
-    componentDidMount() {
-        setTimeout(() => {
-            notify.send({
-                message: 'Sending message from homescreen',
-                duration: 3000,
-            });
-        }, 1000);
-    }
-
     render() {
         const { currentUserActiveProject } = this.props;
+
         return (
             <div styleName="dashboard">
-                <p>
-                    Dashboard of {currentUserActiveProject.title}
-                </p>
+                Dashboard of {currentUserActiveProject.title}
             </div>
         );
     }

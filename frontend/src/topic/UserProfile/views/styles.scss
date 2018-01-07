@@ -1,11 +1,10 @@
 @import '../../../stylesheets/base';
 
-.user-profile {
-    $info-height: 144px;
+$info-height: 144px;
 
+.user-profile {
+    @extend %main-content;
     display: grid;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
     grid-template-areas:
         "info projects"
         "stats projects"
@@ -14,18 +13,15 @@
     grid-template-rows: $info-height 3fr 2fr;
 
     >* {
-        border: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
-        padding: $spacing-large;
-
-        h2 {
-            margin-bottom: $spacing-medium;
-        }
     }
 
     .info {
         display: flex;
         align-items: flex-start;
+        border-right: $width-separator-thin solid $color-separator;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-large;
         grid-area: info;
 
         .display-picture {
@@ -83,10 +79,13 @@
     }
 
     .stats {
+        border-right: $width-separator-thin solid $color-separator;
+        padding: $spacing-medium;
         grid-area: stats;
     }
 
     .projects {
+        border-bottom: $width-separator-thin solid $color-separator;
         grid-area: projects;
     }
 

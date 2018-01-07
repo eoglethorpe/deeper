@@ -249,7 +249,7 @@ export default class Login extends React.PureComponent {
                     </Form>
                     <div styleName="login-link-container">
                         <p>
-                            Already have an account yet?
+                            Already have an account?
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}

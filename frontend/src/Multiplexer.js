@@ -192,15 +192,23 @@ export default class Multiplexer extends React.PureComponent {
         } = this.props;
 
         return ([
-            <Navbar key="navbar" />,
+            <Navbar
+                key="navbar"
+                className="navbar"
+            />,
             <Toast
                 notification={lastNotify}
                 key="toast"
                 onClose={this.handleToastClose}
             />,
-            <Switch key="switch">
-                { this.getRoutes() }
-            </Switch>,
+            <div
+                className="deep-main-content"
+                key="main"
+            >
+                <Switch>
+                    { this.getRoutes() }
+                </Switch>
+            </div>,
         ]);
     }
 }

@@ -58,6 +58,7 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     setUserGroups: PropTypes.func.isRequired,
     userGroups: PropTypes.array, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
@@ -66,6 +67,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     userGroups: [],
 };
 
@@ -326,7 +328,12 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroups, userId, activeUser } = this.props;
+        const {
+            className,
+            userGroups,
+            userId,
+            activeUser,
+        } = this.props;
 
         const {
             addUserGroup,
@@ -338,20 +345,21 @@ export default class UserGroup extends React.PureComponent {
         const isCurrentUser = +userId === activeUser.userId;
 
         return (
-            <div styleName="groups">
+            <div
+                styleName="groups"
+                className={className}
+            >
                 {deletePending && <LoadingAnimation />}
                 <div styleName="header">
                     <h2>{userStrings.headerGroups}</h2>
-                    <div styleName="pusher" />
                     {
-                        isCurrentUser &&
-                        <div>
+                        isCurrentUser && (
                             <PrimaryButton
                                 onClick={this.handleAddUserGroupClick}
                             >
                                 {userStrings.addUserGroupButtonLabel}
                             </PrimaryButton>
-                        </div>
+                        )
                     }
                 </div>
                 <Modal

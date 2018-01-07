@@ -1,10 +1,11 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
 import { pathNames } from '../../../common/constants';
 
 import styles from './styles.scss';
-import logo from '../../../img/deep-logo-white.png';
+import logo from '../../../img/deep-logo.svg';
 
 const propTypes = {
 };
@@ -20,23 +21,22 @@ export default class FourHundredFour extends React.PureComponent {
     render() {
         return (
             <div styleName="four-hundred-four">
-                <div styleName="error-404">ERROR 404</div>
-                <img
-                    styleName="icon"
-                    src={logo}
-                    alt="DEEP"
-                    draggable="false"
+                <ReactSVG
+                    styleName="deep-logo"
+                    path={logo}
                 />
-                <div styleName="error-msg">
-                    Oops! You have come too DEEP.
-                    This is where the DEEP Kraken rests.
-                </div>
+                <h1 styleName="heading">
+                    Error 404
+                </h1>
+                <p styleName="message">
+                    Oops! You have come too DEEP<br />
+                    This is where the DEEP Kraken rests
+                </p>
                 <Link
-                    title="Go back to DEEP"
                     to={pathNames.homeScreen}
-                    styleName="link"
+                    styleName="home-screen-link"
                 >
-                Go back to DEEP
+                    Go to DEEP
                 </Link>
             </div>
         );

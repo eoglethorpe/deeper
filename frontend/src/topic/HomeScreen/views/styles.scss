@@ -1,16 +1,21 @@
 @import '../../../stylesheets/base';
 
 .home-screen {
+    @extend %main-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - #{$height-navbar});
+    background-color: $color-foreground-alt;
 
     .deep-logo {
         margin: 0 0 $spacing-large;
         width: 256px;
         height: 256px;
+
+        path {
+            fill: $color-primary;
+        }
     }
 
     p {

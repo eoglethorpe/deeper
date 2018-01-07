@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { connect } from 'react-redux';
 
 import {
@@ -49,7 +50,7 @@ import {
 } from '../../constants';
 
 import Cloak from '../Cloak';
-import logo from '../../../img/black-logo.png';
+import logo from '../../../img/deep-logo-simplified.svg';
 
 import NavMenu from './NavMenu';
 import styles from './styles.scss';
@@ -70,6 +71,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    className: PropTypes.string,
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
@@ -92,6 +94,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     activeProject: undefined,
     activeCountry: undefined,
     activeUser: {},
@@ -255,6 +258,7 @@ export default class Navbar extends React.PureComponent {
 
     render() {
         const {
+            className,
             activeProject,
             activeCountry,
             activeUser,
@@ -266,23 +270,23 @@ export default class Navbar extends React.PureComponent {
         const match = this.getCurrentMatch();
         const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
         if (hideNavbar[currentPath]) {
-            return null;
+            return <span className="no-nav" />;
         }
 
         const userName = userInformation.displayName || activeUser.displayName || 'Anon';
         return (
             <nav
+                className={className}
                 styleName="navbar"
             >
                 <Link
                     to={reverseRoute(pathNames.homeScreen, {})}
                     styleName="brand"
                 >
-                    <img
-                        styleName="icon"
-                        src={logo}
-                        alt="DEEP"
-                        draggable="false"
+                    <ReactSVG
+                        wrapperClassName={styles['icon-wrapper']}
+                        className={styles.icon}
+                        path={logo}
                     />
                     <span styleName="title">Deep</span>
                 </Link>

@@ -57,6 +57,7 @@ import notify from '../../../../common/notify';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     setUserProjects: PropTypes.func.isRequired,
     unSetProject: PropTypes.func.isRequired,
     userProjects: PropTypes.array, // eslint-disable-line
@@ -65,9 +66,9 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     userProjects: [],
 };
-
 
 const mapStateToProps = (state, props) => ({
     userProjects: userProjectsSelector(state, props),
@@ -353,7 +354,12 @@ export default class UserProject extends React.PureComponent {
     }
 
     render() {
-        const { userProjects, userId, activeUser } = this.props;
+        const {
+            className,
+            userProjects,
+            userId,
+            activeUser,
+        } = this.props;
 
         const {
             addProject,
@@ -365,21 +371,22 @@ export default class UserProject extends React.PureComponent {
         const isCurrentUser = +userId === activeUser.userId;
 
         return (
-            <div styleName="projects">
-                {deletePending && <LoadingAnimation />}
+            <div
+                styleName="projects"
+                className={className}
+            >
+                { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
                         {userStrings.headerProjects}
                     </h2>
-                    <div styleName="pusher" />
                     {
 
-                        isCurrentUser &&
-                        <div>
+                        isCurrentUser && (
                             <PrimaryButton onClick={this.handleAddProjectClick} >
                                 {userStrings.addProjectButtonLabel}
                             </PrimaryButton>
-                        </div>
+                        )
                     }
                 </div>
                 <Modal

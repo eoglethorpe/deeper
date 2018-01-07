@@ -198,24 +198,24 @@ export default class UserGroup extends React.PureComponent {
         return (
             <div styleName="usergroup">
                 <div styleName="info">
-                    <div styleName="title">
-                        <span styleName="name">{ userGroup.title }</span>
-                        {
-                            isCurrentUserAdmin &&
+                    <span styleName="name">{ userGroup.title }</span>
+                    {
+                        isCurrentUserAdmin &&
                             <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
                                 <span className={iconNames.edit} />
                             </TransparentPrimaryButton>
-                        }
-                    </div>
+                    }
                 </div>
                 <div styleName="stats">
                     Activity Log
                 </div>
                 <ProjectsTable
+                    styleName="projects"
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     userGroup={userGroup}
                 />
                 <MembersTable
+                    styleName="members"
                     memberData={userGroup.memberships || emptyList}
                     userGroupId={+userGroupId}
                     isCurrentUserAdmin={isCurrentUserAdmin}

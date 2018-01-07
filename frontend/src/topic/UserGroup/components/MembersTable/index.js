@@ -52,6 +52,7 @@ import AddUserGroupMembers from '../AddUserGroupMembers';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     memberData: PropTypes.array.isRequired, // eslint-disable-line
     users: PropTypes.array.isRequired, // eslint-disable-line
     unSetMembership: PropTypes.func.isRequired, // eslint-disable-line
@@ -62,6 +63,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
 };
 
 const mapStateToProps = (state, props) => ({
@@ -362,7 +364,10 @@ export default class MembersTable extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="members">
+            <div
+                className={this.props.className}
+                styleName="members"
+            >
                 { actionPending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
