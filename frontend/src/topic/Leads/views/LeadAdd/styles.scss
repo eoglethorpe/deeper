@@ -1,10 +1,9 @@
 @import '../../../../stylesheets/base';
 
 .add-lead {
+    @extend %main-content;
     display: flex;
     flex-direction: column;
-    border: $width-separator-thin solid $color-separator;
-    height: 100%;
 
     > .header {
         display: flex;

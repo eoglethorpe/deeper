@@ -20,10 +20,17 @@
         color: $color-text-on-navbar;
         font-size: $font-size-super-large;
 
-        .icon {
+        .icon-wrapper {
             margin-right: $spacing-small;
-            width: 24px;
-            height: 24px;
+
+            .icon {
+                width: 24px;
+                height: 24px;
+
+                path {
+                    fill: $color-text-on-primary;
+                }
+            }
         }
 
         .title {
@@ -36,10 +43,18 @@
         flex-basis: 240px;
         flex-shrink: 0;
         margin: 0 5%;
-        color: $color-text;
 
-        input::placeholder {
-            color: $color-label;
+        :global {
+            .input-wrapper {
+                .input {
+                    border-bottom-color: $color-separator-light;
+                    color: $color-text-on-primary;
+
+                    &::placeholder {
+                        color: $color-text-on-primary;
+                    }
+                }
+            }
         }
     }
 

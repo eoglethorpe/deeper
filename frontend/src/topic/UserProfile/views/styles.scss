@@ -1,11 +1,10 @@
 @import '../../../stylesheets/base';
 
-.user-profile {
-    $info-height: 144px;
+$info-height: 144px;
 
+.user-profile {
+    @extend %main-content;
     display: grid;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
     grid-template-areas:
         "info projects"
         "stats projects"
@@ -20,9 +19,9 @@
     .info {
         display: flex;
         align-items: flex-start;
-        padding: $spacing-large;
         border-right: $width-separator-thin solid $color-separator;
         border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-large;
         grid-area: info;
 
         .display-picture {

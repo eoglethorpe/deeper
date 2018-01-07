@@ -6,7 +6,7 @@ import { Redirect, Link } from 'react-router-dom';
 
 import { reverseRoute } from '../../../public/utils/common';
 
-import logo from '../../../img/deep-logo-grey.png';
+import logo from '../../../img/deep-logo.svg';
 import {
     pathNames,
 } from '../../../common/constants';

@@ -32,7 +32,7 @@ import {
     urlForUserPasswordReset,
 } from '../../../../common/rest';
 
-import logo from '../../../../img/deep-logo-white.png';
+import logo from '../../../../img/deep-logo.svg';
 
 import styles from './styles.scss';
 

@@ -1,12 +1,10 @@
 @import '../../../stylesheets/base';
 
 .entries {
-    @include shadow-large;
+    @extend %main-content;
     display: flex;
     position: relative;
     flex-direction: column;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
 
     .filters {
         display: flex;

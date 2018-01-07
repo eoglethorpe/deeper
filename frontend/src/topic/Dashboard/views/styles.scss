@@ -1,21 +1,9 @@
 @import '../../../stylesheets/base';
 
 .dashboard {
+    @extend %main-content;
     display: flex;
-    flex-wrap: wrap;
-    align-content: center;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: calc(100vh - #{$height-navbar});
-
-    p {
-        flex-basis: 100%;
-        text-align: center;
-    }
-
-    >div {
-        flex-basis: 50%;
-        padding: $spacing-extra-large;
-    }
+    background-color: $color-foreground-alt;
 }

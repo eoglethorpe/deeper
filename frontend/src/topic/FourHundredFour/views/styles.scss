@@ -1,35 +1,39 @@
 @import '../../../stylesheets/base';
 
 .four-hundred-four {
+    @extend %main-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: $color-primary;
-    // background: linear-gradient(to top, darken($color-accent, 15%), lighten($color-accent, 15%));
-    height: 100vh;
+    line-height: 2;
 
-    .error-msg {
+    .deep-logo {
+        margin-bottom: $spacing-large;
+        width: 256px;
+        height: 256px;
+
+        path {
+            fill: $color-text-on-primary;
+        }
+    }
+
+    .heading {
+        color: $color-danger;
+        font-size: $font-size-super-large-alt;
+        font-weight: $font-weight-bold;
+    }
+
+    .message {
         margin: $spacing-large 0;
+        text-align: center;
         color: $color-text-on-primary;
-        font-size: $font-size-super-large;
+        font-size: $font-size-large-alt;
     }
 
-    .error-404 {
-        text-transform: uppercase;
-        color: $color-text-on-primary;
-        font-size: 48px;
-    }
-
-    .icon {
-        opacity: .8;
-        width: 360px;
-        height: 360px;
-    }
-
-    .link {
-        border-bottom: $width-separator-thin solid $color-text-on-primary;
-        color: $color-text-on-primary;
-        font-size: $font-size-super-large;
+    .home-screen-link {
+        color: $color-accent;
+        font-size: $font-size-large;
     }
 }

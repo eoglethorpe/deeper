@@ -1,13 +1,11 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/tabs';
 
+$info-height: 144px;
 
 .usergroup {
-    $info-height: 144px;
-
+    @extend %main-content;
     display: grid;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
     grid-template-areas:
         "info projects"
         "stats projects"

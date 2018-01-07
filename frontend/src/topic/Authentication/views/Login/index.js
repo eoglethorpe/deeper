@@ -46,7 +46,7 @@ import {
 import {
     startSiloBackgroundTasksAction,
 } from '../../../../common/middlewares/siloBackgroundTasks';
-import logo from '../../../../img/deep-logo-white.png';
+import logo from '../../../../img/deep-logo.svg';
 import hidLogo from '../../../../img/hid-logo.png';
 
 import {

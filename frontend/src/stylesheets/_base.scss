@@ -63,6 +63,11 @@ body {
             height: calc(100vh - #{$height-navbar});
             overflow-y: auto;
         }
+
+        .no-nav + .deep-main-content {
+            padding: 0;
+            height: 100vh;
+        }
     }
 }
 
@@ -70,5 +75,3 @@ body {
     border: $width-separator-thin solid $color-separator;
     height: 100%;
 }
-
-
