@@ -29,6 +29,7 @@ import {
 } from '../../../../common/redux';
 import {
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -199,9 +200,9 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Title"
+                    label={projectStrings.addAfTitleLabel}
                     formname="title"
-                    placeholder="ACAPS framework"
+                    placeholder={projectStrings.addAfTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
@@ -211,10 +212,10 @@ export default class AddAnalysisFramework extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {projectStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Add
+                        {projectStrings.modalAdd}
                     </PrimaryButton>
                 </div>
             </Form>

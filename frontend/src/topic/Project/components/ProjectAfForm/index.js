@@ -14,6 +14,10 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
+import {
+    projectStrings,
+} from '../../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -81,19 +85,19 @@ export default class ProjectAfForm extends React.PureComponent {
                         type="button"
                         disabled={pending || !pristine}
                     >
-                        Revert
+                        {projectStrings.modalRevert}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                     >
-                        Save
+                        {projectStrings.modalSave}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Title"
+                    label={projectStrings.addAfTitleLabel}
                     formname="title"
-                    placeholder="Enter Analysis Framework Name"
+                    placeholder={projectStrings.addAfTitlePlaceholder}
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}

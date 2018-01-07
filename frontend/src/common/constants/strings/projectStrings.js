@@ -71,6 +71,26 @@ const projectStrings = {
     confirmCloneText: string[354],
     cloneText: string[355],
 
+    addAfButtonLabel: string[356],
+    searchAfPlaceholder: string[357],
+    addAfModalTitle: string[358],
+    noAfText: string[359],
+
+    addAfTitleLabel: string[360],
+    addAfTitlePlaceholder: string[361],
+
+    useAfButtonLabel: string[362],
+    editAfButtonLabel: string[363],
+    cloneEditAfButtonLabel: string[364],
+
+    confirmUseAf: string[365],
+    confirmUseAfText: string[366],
+    confirmCloneAf: string[367],
+    confirmCloneAfText: string[368],
+
+    addAfDescriptionLabel: string[330],
+    addAfDescriptionPlaceholder: string[331],
+
 
 };
 

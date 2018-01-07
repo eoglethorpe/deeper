@@ -256,19 +256,25 @@ const strings = {
     353: 'Are you sure you want to remove',
     354: 'Are you sure you want to clone',
     355: 'After cloning and editing this region, you will not recieve any updates in this public region.',
-    356: 'Projects',
-    357: 'Projects',
-    358: 'Projects',
-    359: 'Projects',
-    360: 'Projects',
-    361: 'Projects',
-    362: 'Projects',
-    363: 'Projects',
-    364: 'Projects',
-    365: 'Projects',
-    366: 'Projects',
-    367: 'Projects',
-    368: 'Projects',
+
+    356: 'Add',
+    357: 'Search Analysis Framework',
+    358: 'Add New Analysis Framework',
+
+    359: 'There are no analysis frameworks.',
+
+    360: 'Title',
+    361: 'ACAPS framework',
+
+    362: 'Use',
+    363: 'Edit',
+    364: 'Clone & Edit',
+
+    365: 'Are you sure you want to use ',
+    366: 'If you use this analysis framework,you will recieve updates if the owner updates it',
+    367: 'Are you sure you want to clone',
+    368: 'After cloning and editing this analysis framework,you will not recieve any updates made by owner.',
+
     369: 'Projects',
     370: 'Projects',
     // Notification strings
