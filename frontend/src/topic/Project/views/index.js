@@ -172,15 +172,20 @@ export default class ProjectPanel extends React.PureComponent {
                         >
                             Add
                         </PrimaryButton>
-                        <TextInput
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Project"
-                            styleName="search-input"
-                            type="search"
-                            value={this.state.searchInputValue}
-                            showLabel={false}
-                            showHintAndError={false}
-                        />
+                        <div styleName="search-wrapper">
+                            <div styleName="search-icon">
+                                <i className={iconNames.search} />
+                            </div>
+                            <TextInput
+                                onChange={this.handleSearchInputChange}
+                                placeholder="Search Project"
+                                styleName="search-input"
+                                type="search"
+                                value={this.state.searchInputValue}
+                                showLabel={false}
+                                showHintAndError={false}
+                            />
+                        </div>
                         <Modal
                             closeOnEscape
                             onClose={this.handleAddProjectModalClose}

@@ -244,13 +244,18 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             <div styleName="project-category-editor">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <TextInput
-                            styleName="search-input"
-                            value={searchInputValue}
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Category Editor"
-                            type="search"
-                        />
+                        <div styleName="search-wrapper">
+                            <div styleName="search-icon">
+                                <i className={iconNames.search} />
+                            </div>
+                            <TextInput
+                                styleName="search-input"
+                                value={searchInputValue}
+                                onChange={this.handleSearchInputChange}
+                                placeholder="Search Category Editor"
+                                type="search"
+                            />
+                        </div>
                         <PrimaryButton
                             styleName="add-btn"
                             iconName={iconNames.add}
@@ -288,4 +293,3 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         );
     }
 }
-

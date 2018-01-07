@@ -67,11 +67,36 @@
         height: 700px;
 
         .search-box {
+            display: flex;
+            flex-wrap: wrap;
             padding: $spacing-medium;
 
             h3 {
+                flex-basis: 100%;
                 margin-bottom: $spacing-medium;
-             }
+            }
+
+            .search-wrapper {
+                display: flex;
+                flex-basis: 100%;
+
+                .search-icon {
+                    flex-shrink: 0;
+                    padding: $spacing-extra-small $spacing-small;
+                    padding-left: 0;
+                    color: $color-text-disabled;
+                    font-size: $font-size-large;
+                }
+
+                .search-input {
+                    flex-grow: 1;
+
+                    :global .error {
+                        display: none;
+                    }
+                }
+            }
+
         }
 
         .regions-table {

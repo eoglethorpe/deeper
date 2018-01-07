@@ -28,9 +28,22 @@
                 flex-grow: 1;
             }
 
-            .search-input {
+            .search-wrapper {
+                display: flex;
                 flex-basis: 100%;
-                padding: 0;
+                align-self: flex-end;
+                margin-top: $spacing-small;
+
+                .search-icon {
+                    padding: $spacing-extra-small $spacing-small;
+                    padding-left: 0;
+                    color: $color-text-disabled;
+                    font-size: $font-size-large;
+                }
+
+                .search-input {
+                    flex-basis: 100%;
+                }
             }
         }
 

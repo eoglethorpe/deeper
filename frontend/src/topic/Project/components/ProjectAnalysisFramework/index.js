@@ -244,13 +244,18 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <div styleName="project-analysis-framework">
                 <div styleName="list-container">
                     <div styleName="list-header">
-                        <TextInput
-                            styleName="search-input"
-                            value={searchInputValue}
-                            onChange={this.handleSearchInputChange}
-                            placeholder="Search Analysis Framework"
-                            type="search"
-                        />
+                        <div styleName="search-wrapper">
+                            <div styleName="search-icon">
+                                <i className={iconNames.search} />
+                            </div>
+                            <TextInput
+                                styleName="search-input"
+                                value={searchInputValue}
+                                onChange={this.handleSearchInputChange}
+                                placeholder="Search Analysis Framework"
+                                type="search"
+                            />
+                        </div>
                         <PrimaryButton
                             styleName="add-btn"
                             iconName={iconNames.add}
@@ -288,4 +293,3 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         );
     }
 }
-
