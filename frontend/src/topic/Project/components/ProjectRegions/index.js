@@ -19,6 +19,7 @@ import {
 } from '../../../../public/components/View';
 import {
     iconNames,
+    projectStrings,
 } from '../../../../common/constants';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
@@ -65,11 +66,11 @@ export default class ProjectRegions extends React.PureComponent {
         this.addRegionOptions = [
             {
                 key: 'new',
-                label: 'Create new region',
+                label: projectStrings.createNewRegionText,
             },
             {
                 key: 'old',
-                label: 'Use existing region',
+                label: projectStrings.useExistingRegionText,
             },
         ];
 
@@ -170,7 +171,7 @@ export default class ProjectRegions extends React.PureComponent {
 
         return (
             <h1 styleName="no-regions">
-                There are no regions in this project.
+                {projectStrings.noRegionText}
             </h1>
         );
     }
@@ -198,7 +199,7 @@ export default class ProjectRegions extends React.PureComponent {
                         <TextInput
                             styleName="search-input"
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Regions"
+                            placeholder={projectStrings.searchRegionPlaceholder}
                             type="search"
                             value={searchInputValue}
                         />
@@ -207,7 +208,7 @@ export default class ProjectRegions extends React.PureComponent {
                             styleName="add-btn"
                             onClick={this.handleAddRegionButtonClick}
                         >
-                            Add
+                            {projectStrings.addRegionButtonLabel}
                         </PrimaryButton>
                         <Modal
                             styleName="add-region-modal"
@@ -215,7 +216,7 @@ export default class ProjectRegions extends React.PureComponent {
                             show={addRegionModal}
                             closeOnEscape
                         >
-                            <ModalHeader title="Add Region" />
+                            <ModalHeader title={projectStrings.addRegionModalTitle} />
                             <ModalBody>
                                 <RadioInput
                                     styleName="radio-input"

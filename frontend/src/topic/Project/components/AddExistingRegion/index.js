@@ -32,6 +32,7 @@ import {
 } from '../../../../common/redux';
 import {
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -96,14 +97,14 @@ export default class AddExistingRegion extends React.PureComponent {
         this.regionsHeader = [
             {
                 key: 'value',
-                label: 'Name',
+                label: projectStrings.tableHeaderName,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.value.localeCompare(b.value),
             },
             {
                 key: 'key',
-                label: 'id',
+                label: projectStrings.tableHeaderId,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.key - b.key,
@@ -268,10 +269,10 @@ export default class AddExistingRegion extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {projectStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Update
+                        {projectStrings.modalUpdate}
                     </PrimaryButton>
                 </div>
             </Form>

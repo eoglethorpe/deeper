@@ -25,6 +25,7 @@ import {
     pathNames,
     countriesString,
     notificationStrings,
+    projectStrings,
 } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
@@ -243,16 +244,16 @@ export default class AddRegion extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Region Title"
+                    label={projectStrings.addRegionTitleLabel}
                     formname="title"
-                    placeholder="Nepal"
+                    placeholder={projectStrings.addRegionTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.name}
                 />
                 <TextInput
-                    label="Code"
+                    label={projectStrings.addRegionCodeLabel}
                     formname="code"
-                    placeholder="NPL"
+                    placeholder={projectStrings.addRegionCodePlaceholder}
                     value={formValues.code}
                     error={formFieldErrors.code}
                 />

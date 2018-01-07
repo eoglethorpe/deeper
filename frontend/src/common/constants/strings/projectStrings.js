@@ -49,6 +49,28 @@ const projectStrings = {
     projectUserGroupLabel: string[338],
     projectUserGroupPlaceholder: string[339],
 
+    addRegionButtonLabel: string[340],
+    searchRegionPlaceholder: string[341],
+    addRegionModalTitle: string[342],
+
+    noRegionText: string[343],
+    createNewRegionText: string[344],
+    useExistingRegionText: string[345],
+
+    addRegionTitleLabel: string[346],
+    addRegionTitlePlaceholder: string[347],
+    addRegionCodeLabel: string[348],
+    addRegionCodePlaceholder: string[349],
+
+    tableHeaderId: string[350],
+
+    removeRegionButtonLabel: string[351],
+    cloneEditButtonLabel: string[352],
+
+    confirmRemoveText: string[353],
+    confirmCloneText: string[354],
+    cloneText: string[355],
+
 
 };
 
