@@ -6,6 +6,7 @@ import {
     TaggingOverviewWidget,
     TaggingListWidget,
 } from './Tagging';
+import { ViewListWidget } from './View';
 
 const numberMatrixWidget = {
     id: 'numberMatrixWidget',
@@ -19,6 +20,9 @@ const numberMatrixWidget = {
     tagging: {
         overviewComponent: TaggingOverviewWidget,
         listComponent: TaggingListWidget,
+    },
+    view: {
+        listComponent: ViewListWidget,
     },
 };
 
