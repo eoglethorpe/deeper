@@ -28,6 +28,7 @@ import {
 
 import {
     iconNames,
+    userStrings,
 } from '../../../common/constants';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
@@ -207,7 +208,7 @@ export default class UserProfile extends React.PureComponent {
                                 styleName="user-profile-edit-modal"
                             >
                                 <ModalHeader
-                                    title="Edit profile"
+                                    title={userStrings.editProfileModalHeader}
                                     rightComponent={
                                         <TransparentPrimaryButton
                                             onClick={this.handleEditProfileClose}

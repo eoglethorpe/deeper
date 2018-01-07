@@ -30,6 +30,7 @@ import {
     iconNames,
     notificationStrings,
     pathNames,
+    userStrings,
 } from '../../../../common/constants';
 import {
     userGroupProjectSelector,
@@ -94,26 +95,26 @@ export default class ProjectsTable extends React.PureComponent {
         this.projectHeaders = [
             {
                 key: 'title',
-                label: 'Title',
+                label: userStrings.tableHeaderTitle,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: 'Created at',
+                label: userStrings.tableHeaderCreatedAt,
                 order: 2,
                 modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'startDate',
-                label: 'Start Date',
+                label: userStrings.tableHeaderStartDate,
                 order: 3,
                 modifier: row => <FormattedDate date={row.startDate} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'countries',
-                label: 'Countries',
+                label: userStrings.tableHeaderStartDate,
                 order: 4,
                 sortable: true,
                 modifier: d => ((d.regions || []).length),
@@ -121,7 +122,7 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: 'Status',
+                label: userStrings.tableHeaderStatus,
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
                 // sortable: true,
@@ -129,13 +130,13 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'modifiedAt',
-                label: 'Last Modified at',
+                label: userStrings.tableHeaderLastModifiedAt,
                 order: 6,
                 modifier: row => <FormattedDate date={row.modifiedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'members',
-                label: 'Members',
+                label: userStrings.tableHeaderMembers,
                 order: 7,
                 sortable: true,
                 modifier: d => ((d.memberships || []).length),
@@ -143,14 +144,14 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: userStrings.tableHeaderActions,
                 order: 8,
                 modifier: row => (
                     <div>
                         {
                             this.props.isCurrentUserAdmin &&
                             <TransparentDangerButton
-                                title="Delete Project"
+                                title={userStrings.deleteProjectLinkTitle}
                                 onClick={() => this.handleDeleteProjectClick(row)}
 
                             >
@@ -158,7 +159,7 @@ export default class ProjectsTable extends React.PureComponent {
                             </TransparentDangerButton>
                         }
                         <Link
-                            title="View Project"
+                            title={userStrings.viewProjectLinkTitle}
                             key={row.id}
                             to={reverseRoute(pathNames.projects, { projectId: row.id })}
                         >
@@ -261,8 +262,8 @@ export default class ProjectsTable extends React.PureComponent {
     }
 
     handleDeleteProjectClick = (project) => {
-        const confirmText = `Are you sure you want to delete
-            the project ${project.title}?`;
+        const confirmText = `${userStrings.confirmTextDeleteProject}
+        ${project.title}?`;
 
         this.setState({
             showDeleteProjectModal: true,
@@ -324,11 +325,11 @@ export default class ProjectsTable extends React.PureComponent {
                 {deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
-                        Projects
+                        {userStrings.headerProjects}
                     </h2>
                     <div styleName="pusher" />
                     <TextInput
-                        placeholder="Search"
+                        placeholder={userStrings.placeholderSearch}
                         onChange={this.handleSearchProjectChange}
                         value={searchProjectInputValue}
                         type="search"
@@ -342,7 +343,7 @@ export default class ProjectsTable extends React.PureComponent {
                             onClick={this.handleAddProjectClick}
                             title="Project"
                         >
-                            Add Project
+                            {userStrings.addProjectButtonLabel}
                         </PrimaryButton>
                     }
                 </div>
@@ -359,7 +360,7 @@ export default class ProjectsTable extends React.PureComponent {
                     show={showAddProjectModal}
                 >
                     <ModalHeader
-                        title="Add New Project"
+                        title={userStrings.addProjectButtonLabel}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddProjectModalClose}

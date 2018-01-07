@@ -31,6 +31,7 @@ import {
     iconNames,
     notificationStrings,
     pathNames,
+    userStrings,
 } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
@@ -119,14 +120,14 @@ export default class UserProject extends React.PureComponent {
         this.projectTableHeaders = [
             {
                 key: 'title',
-                label: 'Title',
+                label: userStrings.tableHeaderTitle,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
-                label: 'Rights',
+                label: userStrings.tableHeaderRights,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.role.localeCompare(b.role),
@@ -134,7 +135,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'createdAt',
-                label: 'Created at',
+                label: userStrings.tableHeaderCreatedAt,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.createdAt, b.createdAt),
@@ -147,7 +148,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'modifiedAt',
-                label: 'Last Modified at',
+                label: userStrings.tableHeaderLastModifiedAt,
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.modifiedAt, b.modifiedAt),
@@ -160,13 +161,13 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: 'Status',
+                label: userStrings.tableHeaderStatus,
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
                 key: 'members',
-                label: 'Members',
+                label: userStrings.tableHeaderMembers,
                 order: 6,
                 sortable: true,
                 comparator: (a, b) => a.memberships.length || [] - b.memberships.length || [],
@@ -174,7 +175,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: userStrings.tableHeaderActions,
                 order: 7,
                 modifier: (d) => {
                     const { activeUser } = this.props;
@@ -184,7 +185,7 @@ export default class UserProject extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
-                                title="View Project"
+                                title={userStrings.viewProjectLinkTitle}
                                 to={reverseRoute(pathNames.projects, { projectId: d.id })}
                             >
                                 <TransparentPrimaryButton>
@@ -196,7 +197,7 @@ export default class UserProject extends React.PureComponent {
 
                     return ([
                         <Link
-                            title="Edit Project"
+                            title={userStrings.editProjectLinkTitle}
                             key="project-panel"
                             to={reverseRoute(pathNames.projects, { projectId: d.id })}
                         >
@@ -205,8 +206,8 @@ export default class UserProject extends React.PureComponent {
                             </TransparentPrimaryButton>
                         </Link>,
                         <TransparentDangerButton
+                            title={userStrings.deleteProjectLinkTitle}
                             key="delete"
-                            title="Delete Project"
                             onClick={() => this.handleDeleteProjectClick(d)}
                         >
                             <i className={iconNames.delete} />
@@ -368,7 +369,7 @@ export default class UserProject extends React.PureComponent {
                 {deletePending && <LoadingAnimation />}
                 <div styleName="header">
                     <h2>
-                        Projects
+                        {userStrings.headerProjects}
                     </h2>
                     <div styleName="pusher" />
                     {
@@ -376,7 +377,7 @@ export default class UserProject extends React.PureComponent {
                         isCurrentUser &&
                         <div>
                             <PrimaryButton onClick={this.handleAddProjectClick} >
-                                Add Project
+                                {userStrings.addProjectButtonLabel}
                             </PrimaryButton>
                         </div>
                     }
@@ -387,7 +388,7 @@ export default class UserProject extends React.PureComponent {
                     show={addProject}
                 >
                     <ModalHeader
-                        title="Add Project"
+                        title={userStrings.addProjectButtonLabel}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddProjectClose}

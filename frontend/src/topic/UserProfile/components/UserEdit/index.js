@@ -42,6 +42,7 @@ import {
 } from '../../../../common/redux';
 import {
     notificationStrings,
+    userStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -288,25 +289,25 @@ export default class UserEdit extends React.PureComponent {
                     disabled={pending}
                 />
                 <TextInput
-                    label="First Name"
+                    label={userStrings.firstNameLabel}
                     formname="firstName"
-                    placeholder="John"
+                    placeholder={userStrings.firstNamePlaceholder}
                     value={formValues.firstName}
                     error={formFieldErrors.firstName}
                     disabled={pending}
                 />
                 <TextInput
-                    label="Last Name"
+                    label={userStrings.lastNameLabel}
                     formname="lastName"
-                    placeholder="Doe"
+                    placeholder={userStrings.lastNamePlaceholder}
                     value={formValues.lastName}
                     error={formFieldErrors.lastName}
                     disabled={pending}
                 />
                 <TextInput
-                    label="Organization"
+                    label={userStrings.organizationLabel}
                     formname="organization"
-                    placeholder="Baroque Works"
+                    placeholder={userStrings.organizationPlaceholder}
                     value={formValues.organization}
                     error={formFieldErrors.organization}
                     disabled={pending}
@@ -317,10 +318,10 @@ export default class UserEdit extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {userStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Save
+                        {userStrings.modalSave}
                     </PrimaryButton>
                 </div>
             </Form>

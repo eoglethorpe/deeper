@@ -30,6 +30,7 @@ import {
 
 import {
     iconNames,
+    userStrings,
 } from '../../../common/constants';
 
 import {
@@ -227,7 +228,7 @@ export default class UserGroup extends React.PureComponent {
                     styleName="user-group-edit-modal"
                 >
                     <ModalHeader
-                        title={`Edit User Group: ${userGroup.title}`}
+                        title={`${userStrings.userGroupEditModalLabel}: ${userGroup.title}`}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleUserGroupEditModalClose}

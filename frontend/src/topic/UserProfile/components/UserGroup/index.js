@@ -31,6 +31,7 @@ import {
     iconNames,
     notificationStrings,
     pathNames,
+    userStrings,
 } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
@@ -119,14 +120,14 @@ export default class UserGroup extends React.PureComponent {
         this.userGroupsTableHeaders = [
             {
                 key: 'title',
-                label: 'Title',
+                label: userStrings.tableHeaderTitle,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
-                label: 'Rights',
+                label: userStrings.tableHeaderRights,
                 order: 2,
                 modifier: (row) => {
                     const { userId } = this.props;
@@ -137,7 +138,7 @@ export default class UserGroup extends React.PureComponent {
             },
             {
                 key: 'joinedAt',
-                label: 'Joined At',
+                label: userStrings.tableHeaderJoinedAt,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.joinedAt, b.joinedAt),
@@ -156,7 +157,7 @@ export default class UserGroup extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: userStrings.tableHeaderActions,
                 order: 4,
                 modifier: (d) => {
                     const { activeUser } = this.props;
@@ -166,7 +167,7 @@ export default class UserGroup extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
-                                title="View UserGroup"
+                                title={userStrings.viewUsergroupLinkTitle}
                                 to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                             >
                                 <TransparentPrimaryButton>
@@ -177,7 +178,7 @@ export default class UserGroup extends React.PureComponent {
                     }
                     return ([
                         <Link
-                            title="Edit UserGroup"
+                            title={userStrings.editUsergroupLinkTitle}
                             key="usergroup-panel"
                             to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
                         >
@@ -187,7 +188,7 @@ export default class UserGroup extends React.PureComponent {
                         </Link>,
                         <TransparentDangerButton
                             key="delete"
-                            title="Delete UserGroup"
+                            title={userStrings.deleteUsergroupLinkTitle}
                             onClick={() => this.handleDeleteUserGroupClick(d)}
                         >
                             <span className={iconNames.delete} />
@@ -340,7 +341,7 @@ export default class UserGroup extends React.PureComponent {
             <div styleName="groups">
                 {deletePending && <LoadingAnimation />}
                 <div styleName="header">
-                    <h2>Groups</h2>
+                    <h2>{userStrings.headerGroups}</h2>
                     <div styleName="pusher" />
                     {
                         isCurrentUser &&
@@ -348,7 +349,7 @@ export default class UserGroup extends React.PureComponent {
                             <PrimaryButton
                                 onClick={this.handleAddUserGroupClick}
                             >
-                                Add User Group
+                                {userStrings.addUserGroupButtonLabel}
                             </PrimaryButton>
                         </div>
                     }
@@ -359,7 +360,7 @@ export default class UserGroup extends React.PureComponent {
                     show={addUserGroup}
                 >
                     <ModalHeader
-                        title="Add User Group"
+                        title={userStrings.addUserGroupButtonLabel}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddUserGroupClose}

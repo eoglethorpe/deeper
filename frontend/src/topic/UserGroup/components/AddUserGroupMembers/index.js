@@ -20,6 +20,7 @@ import {
 import {
     iconNames,
     notificationStrings,
+    userStrings,
 } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
@@ -371,10 +372,10 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {userStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine}>
-                        Update
+                        {userStrings.modalSave}
                     </PrimaryButton>
                 </div>
             </Form>
