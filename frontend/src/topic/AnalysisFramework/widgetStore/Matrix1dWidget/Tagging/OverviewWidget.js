@@ -36,7 +36,6 @@ export default class Matrix1dOverview extends React.PureComponent {
         super(props);
 
         this.state = {
-            showEditModal: false,
             rows: props.data || [],
         };
     }
