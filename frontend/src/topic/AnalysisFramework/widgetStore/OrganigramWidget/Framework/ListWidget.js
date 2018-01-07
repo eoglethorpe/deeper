@@ -29,6 +29,8 @@ import styles from './styles.scss';
 
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -81,6 +83,46 @@ export default class Organigram extends React.PureComponent {
         }
     }
 
+    getValuesForOrgan = (organ, parentLabel) => {
+        const label = parentLabel ? `${parentLabel} / ${organ.title}` : organ.title;
+        return [
+            {
+                key: organ.key,
+                label,
+            },
+            ...organ.organs.reduce((acc, o) => acc.concat(this.getValuesForOrgan(o, label)), []),
+        ];
+    }
+
+    createFilters = (organigram) => {
+        const { title, widgetKey } = this.props;
+        return [{
+            title,
+            widgetKey,
+            key: widgetKey,
+            filterType: 'list',
+            properties: {
+                type: 'multiselect',
+                options: this.getValuesForOrgan(organigram),
+            },
+        }];
+    }
+
+    createExportable = () => {
+        const { title, widgetKey } = this.props;
+
+        const excel = {
+            title,
+        };
+
+        return {
+            widgetKey,
+            data: {
+                excel,
+            },
+        };
+    }
+
     handleEditClick = () => {
         this.setState({ showEditModal: true });
     }
@@ -98,7 +140,11 @@ export default class Organigram extends React.PureComponent {
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        this.props.onChange(this.state.organigram);
+        this.props.onChange(
+            this.state.organigram,
+            this.createFilters(this.state.organigram),
+            this.createExportable(),
+        );
     }
 
 
@@ -122,7 +168,6 @@ export default class Organigram extends React.PureComponent {
             [[j, 1]],
             wrapper,
         );
-        console.log(organsSetting);
         const newOrganigram = update(this.state.organigram, organsSetting);
         this.setState({ organigram: newOrganigram });
     };

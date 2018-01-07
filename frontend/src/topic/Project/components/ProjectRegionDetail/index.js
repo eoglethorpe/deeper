@@ -293,7 +293,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                     styleName="region-detail-form"
                                 />
                                 <div styleName="map-container">
-                                    <RegionMap countryId={countryId} />
+                                    <RegionMap regionId={countryId} />
                                 </div>
                             </div>
                             <RegionAdminLevel
@@ -308,7 +308,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                 countryId={countryId}
                             />
                             <div styleName="map-container-non-edit">
-                                <RegionMap countryId={countryId} />
+                                <RegionMap regionId={countryId} />
                             </div>
                         </div>
                     )

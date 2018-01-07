@@ -27,6 +27,8 @@ import {
 } from './modals';
 
 const propTypes = {
+    title: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
+    widgetKey: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, // eslint-disable-line react/no-unused-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types

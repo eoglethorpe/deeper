@@ -5,6 +5,96 @@ export default class Handler {
         this.parent = parent;
     }
 
+    createFilters = (data) => {
+        const { title, widgetKey } = this.parent.props;
+
+        const dimensionOptions = [];
+        data.dimensions.forEach((dimension) => {
+            dimensionOptions.push({
+                label: dimension.title,
+                key: dimension.id,
+            });
+
+            dimension.subdimensions.forEach((subdimension) => {
+                dimensionOptions.push({
+                    label: `${dimension.title} / ${subdimension.title}`,
+                    key: subdimension.id,
+                });
+            });
+        });
+
+        const dimensionsFilter = {
+            title: `${title} Dimensions`,
+            widgetKey,
+            key: `${widgetKey}-dimensions`,
+            filterType: 'list',
+            properties: {
+                type: 'multiselect',
+                options: dimensionOptions,
+            },
+        };
+
+        const sectorOptions = [];
+        data.sectors.forEach((sector) => {
+            sectorOptions.push({
+                label: sector.title,
+                key: sector.id,
+            });
+
+            sector.subsectors.forEach((subsector) => {
+                sectorOptions.push({
+                    label: `${sector.title} / ${subsector.title}`,
+                    key: subsector.id,
+                });
+            });
+        });
+
+        const sectorsFilter = {
+            title: `${title} Sectors`,
+            widgetKey,
+            key: `${widgetKey}-sectors`,
+            filterType: 'list',
+            properties: {
+                type: 'multiselect',
+                options: sectorOptions,
+            },
+        };
+        return [
+            dimensionsFilter,
+            sectorsFilter,
+        ];
+    }
+
+    createExportable = (data) => {
+        const excel = {
+            type: 'multiple',
+            titles: ['Dimension', 'Subdimension', 'Sector', 'Subsectors'],
+        };
+
+        const report = {
+            levels: data.sectors.map(sector => ({
+                id: sector.id,
+                title: sector.title,
+                sublevels: data.dimensions.map(dimension => ({
+                    id: `${sector.id}-${dimension.id}`,
+                    title: dimension.title,
+                    sublevels: dimension.subdimensions.map(subdimension => ({
+                        id: `${sector.id}-${dimension.id}-${subdimension.id}`,
+                        title: subdimension.title,
+                    })),
+                })),
+            })),
+        };
+
+        return {
+            widgetKey: this.parent.props.widgetKey,
+            data: {
+                excel,
+                report,
+            },
+        };
+    }
+
     widgetTitleInputChange = (value) => {
         const settings = {
             title: {
@@ -19,7 +109,11 @@ export default class Handler {
             onChange,
         } = this.parent.props;
 
-        onChange(this.parent.state.data);
+        onChange(
+            this.parent.state.data,
+            this.createFilters(this.parent.state.data),
+            this.createExportable(this.parent.state.data),
+        );
 
         this.parent.setState({
             showEditWidgetModal: false,
@@ -109,7 +203,11 @@ export default class Handler {
         };
 
         const newData = update(data, settings);
-        onChange(newData);
+        onChange(
+            newData,
+            this.createFilters(newData),
+            this.createExportable(newData),
+        );
     }
 
     widgetEdit = () => {
@@ -143,7 +241,11 @@ export default class Handler {
             onChange,
         } = this.parent.props;
 
-        onChange(this.parent.state.data);
+        onChange(
+            this.parent.state.data,
+            this.createFilters(this.parent.state.data),
+            this.createExportable(this.parent.state.data),
+        );
 
         this.parent.setState({
             showEditSectorsModal: false,

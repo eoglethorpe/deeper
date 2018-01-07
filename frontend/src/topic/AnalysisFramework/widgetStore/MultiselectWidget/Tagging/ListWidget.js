@@ -17,6 +17,8 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
+    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.array,      // eslint-disable-line
 };
@@ -32,12 +34,32 @@ export default class Multiselect extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    createFilterData = attribute => ({
+        values: attribute.value,
+        number: undefined,
+    })
+
+    createExportData = (attribute) => {
+        const { data } = this.props;
+
+        return {
+            excel: {
+                type: 'list',
+                value: attribute.value.map(key => data.find(d => d.key === key).label),
+            },
+        };
+    }
+
     handleChange = (value) => {
-        const { api, id, entryId } = this.props;
+        const { api, id, entryId, filters, exportable } = this.props;
+        const attribute = {
+            value,
+        };
+
         api.getEntryModifier(entryId)
-            .setAttribute(id, {
-                value,
-            })
+            .setAttribute(id, attribute)
+            .setFilterData(filters[0].id, this.createFilterData(attribute))
+            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 
