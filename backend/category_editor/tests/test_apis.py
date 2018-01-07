@@ -85,3 +85,63 @@ class CategoryEditorTests(AuthMixin, ProjectMixin, CategoryEditorMixin,
                             category_editor.id)
 
         self.assertEqual(project.category_editor.id, response.data['id'])
+
+    def test_classify(self):
+        """
+        First create a dummy category edtior and then test classifying
+        text with it
+        """
+
+        project = self.create_or_get_project()
+        category_editor = self.create_or_get_category_editor()
+        project.category_editor = category_editor
+        project.save()
+
+        ce_data = {
+            'categories': [
+                {
+                    'title': 'Sector',
+                    'subcategories': [
+                        {
+                            'title': 'WASH',
+                            'ngrams': {
+                                1: ['affected', 'water'],
+                                2: ['affected not', 'water not'],
+                            },
+                        },
+                    ],
+                },
+            ],
+        }
+        category_editor.data = ce_data
+        category_editor.save()
+
+        text = 'My water aaloooo'
+
+        url = '/api/v1/projects/{}/category-editor/classify/'.format(
+            project.id
+        )
+        data = {
+            'text': text,
+            'category': 'sector',
+        }
+
+        response = self.client.post(url, data,
+                                    HTTP_AUTHORIZATION=self.auth,
+                                    format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected = [
+            {
+                'title': 'WASH',
+                'keywords': [
+                    {'start': 3, 'length': 5, 'subcategory': 'WASH'},
+                ],
+            },
+        ]
+        got = [dict(c) for c in response.data.get('classifications')]
+        for g in got:
+            g['keywords'] = [
+                dict(k) for k in g['keywords']
+            ]
+        self.assertEqual(got, expected)

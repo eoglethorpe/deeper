@@ -7,6 +7,7 @@ import {
     TransparentPrimaryButton,
     TransparentSuccessButton,
     TransparentWarningButton,
+    SegmentButton,
 } from '../../../../public/components/Action';
 import {
     FloatingContainer,
@@ -27,7 +28,11 @@ import {
 } from '../../../../common/constants';
 import {
     urlForLeadClassify,
+    urlForNer,
+    createUrlForCeClassify,
     createParamsForLeadClassify,
+    createParamsForCeClassify,
+    createParamsForNer,
 } from '../../../../common/rest';
 
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
@@ -58,15 +63,49 @@ export default class AssistedTagging extends React.PureComponent {
             assitedActionsVisible: false,
             activeHighlightRef: undefined,
             activeHighlightDetails: emptyObject,
-            sectorOptions: emptyList,
-            selectedSectors: emptyList,
+            nlpSectorOptions: emptyList,
+            nlpSelectedSectors: emptyList,
+            ceSectorOptions: emptyList,
+            ceSelectedSectors: emptyList,
+            nerSectorOptions: emptyList,
+            nerSelectedSectors: emptyList,
+            selectedAssitedTaggingSource: 'nlp',
             highlights: [],
         };
+
+        this.assitedTaggingSources = [
+            {
+                label: 'NLP',
+                value: 'nlp',
+            },
+            {
+                label: 'Entities',
+                value: 'ner',
+            },
+            {
+                label: 'Category Editor',
+                value: 'ce',
+            },
+        ];
     }
 
     componentDidMount() {
         if (this.primaryContainer) {
             this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.nlpClassifyRequest) {
+            this.nlpClassifyRequest.stop();
+        }
+
+        if (this.ceClassifyRequest) {
+            this.ceClassifyRequest.stop();
+        }
+
+        if (this.nerClassifyRequest) {
+            this.nerClassifyRequest.stop();
         }
     }
 
@@ -102,6 +141,12 @@ export default class AssistedTagging extends React.PureComponent {
         return newStyle;
     }
 
+    handleAssitedTaggingSourceChange = (newSource) => {
+        this.setState({
+            selectedAssitedTaggingSource: newSource,
+        }, () => this.refreshSelections());
+    }
+
     handleOnHighlightClick = (e, activeHighlightDetails) => {
         if (this.primaryContainer) {
             this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
@@ -133,14 +178,28 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     handleLeadPreviewLoad = (leadPreview) => {
-        if (this.leadClassifyRequest) {
-            this.leadClassifyRequest.stop();
+        if (this.nlpClassifyRequest) {
+            this.nlpClassifyRequest.stop();
         }
-        this.leadClassifyRequest = this.createLeadClassifyRequest(leadPreview.classifiedDocId);
-        this.leadClassifyRequest.start();
+        this.nlpClassifyRequest = this.createNlpClassifyRequest(leadPreview.classifiedDocId);
+        this.nlpClassifyRequest.start();
+
+        if (this.ceClassifyRequest) {
+            this.ceClassifyRequest.stop();
+        }
+
+        this.ceClassifyRequest = this.createCeClassifyRequest(leadPreview.previewId);
+        this.ceClassifyRequest.start();
+
+        if (this.nerClassifyRequest) {
+            this.nerClassifyRequest.stop();
+        }
+
+        this.nerClassifyRequest = this.createNerClassifyRequest(leadPreview.text);
+        this.nerClassifyRequest.start();
     }
 
-    createLeadClassifyRequest = (docId) => {
+    createNlpClassifyRequest = (docId) => {
         const request = new FgRestBuilder()
             .url(urlForLeadClassify)
             .params(createParamsForLeadClassify({
@@ -149,20 +208,20 @@ export default class AssistedTagging extends React.PureComponent {
             }))
             .success((response) => {
                 try {
-                    this.extractClassifications(response);
+                    this.extractNlpClassifications(response);
                 } catch (err) {
                     console.error(err);
                 }
             })
             .failure((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Failed connecting to server',
@@ -172,13 +231,75 @@ export default class AssistedTagging extends React.PureComponent {
         return request;
     }
 
-    extractClassifications = (data) => {
+    createNerClassifyRequest = (text) => {
+        const request = new FgRestBuilder()
+            .url(urlForNer)
+            .params(createParamsForNer(text))
+            .success((response) => {
+                try {
+                    this.extractNerClassifications(response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: 'Server error',
+                });
+            })
+            .fatal((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: 'Failed connecting to server',
+                });
+            })
+            .build();
+        return request;
+    }
+
+    createCeClassifyRequest = (previewId) => {
+        const request = new FgRestBuilder()
+            .url(createUrlForCeClassify(this.props.api.getProject().id))
+            .params(createParamsForCeClassify({
+                category: 'Sector',
+                previewId,
+            }))
+            .success((response) => {
+                try {
+                    this.extractCeClassifications(response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: 'Server error',
+                });
+            })
+            .fatal((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: 'Failed connecting to server',
+                });
+            })
+            .build();
+        return request;
+    }
+
+    extractNlpClassifications = (data) => {
         const classification = data.classification;
-        const sectorOptions = classification.map(c => ({
+        const nlpSectorOptions = classification.map(c => ({
             key: c[0],
             label: c[0],
         }));
-        const selectedSectors = sectorOptions.length > 0 ? [sectorOptions[0].key] : emptyList;
+        const nlpSelectedSectors = nlpSectorOptions.length > 0 ?
+            [nlpSectorOptions[0].key] : emptyList;
 
         this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
             startPos: excerpt.start_pos,
@@ -194,28 +315,79 @@ export default class AssistedTagging extends React.PureComponent {
         })).filter(c => c.sectors.length > 0);
 
 
-        this.setState({ sectorOptions, selectedSectors });
-
-        this.refreshClassifications();
+        this.setState({
+            nlpSectorOptions,
+            nlpSelectedSectors,
+        }, () => this.refreshSelections());
     }
 
-    handleSectorSelect = (selectedSectors) => {
-        this.setState({ selectedSectors }, () => {
-            this.refreshClassifications();
+    extractNerClassifications = (data) => {
+        const nerSectorOptions = [];
+        const filteredData = data.filter(d => (d[1] !== 'O'));
+        filteredData.forEach((d) => {
+            if (nerSectorOptions.findIndex(o => o.key === d[1]) === -1) {
+                nerSectorOptions.push({
+                    key: d[1],
+                    label: d[1],
+                });
+            }
+        });
+
+        this.nerClassifications = filteredData.map(d => ({
+            text: d[0],
+            sector: d[1],
+        }));
+
+        this.setState({
+            nerSectorOptions,
+            nerSelectedSectors: [nerSectorOptions[0].key],
         });
     }
 
-    refreshClassifications = () => {
-        const { selectedSectors } = this.state;
+    extractCeClassifications = (data) => {
+        const classifications = data.classifications;
+        const ceSectorOptions = classifications.map(c => ({
+            key: c.title,
+            label: c.title,
+        }));
+
+        const ceSelectedSectors = ceSectorOptions.length > 0 ?
+            [ceSectorOptions[0].key] : emptyList;
+        this.ceClassifications = classifications;
+
+        this.setState({
+            ceSectorOptions,
+            ceSelectedSectors,
+        }, () => this.refreshSelections);
+    }
+
+    refreshSelections = () => {
+        const {
+            selectedAssitedTaggingSource,
+        } = this.state;
+
+        if (selectedAssitedTaggingSource === 'nlp') {
+            this.refreshNlpClassifications();
+        } else if (selectedAssitedTaggingSource === 'ce') {
+            this.refreshCeClassifications();
+        } else if (selectedAssitedTaggingSource === 'ner') {
+            this.refreshNlpClassifications();
+        }
+    }
+
+    refreshNlpClassifications = () => {
+        const { nlpSelectedSectors } = this.state;
         const { nlpClassifications } = this;
 
-        const filteredClassifications = (selectedSectors.length === 0) ?
-            nlpClassifications : (
-                nlpClassifications.filter(excerpt => (
-                    selectedSectors.reduce((acc, sector) => acc ||
-                        excerpt.sectors.find(s => s.label === sector), false)
-                ))
-            );
+        if (!nlpClassifications) {
+            this.setState({ highlights: emptyList });
+            return;
+        }
+
+        const filteredClassifications = nlpClassifications.filter(excerpt => (
+            nlpSelectedSectors.reduce((acc, sector) => acc ||
+                excerpt.sectors.find(s => s.label === sector), false)
+        ));
 
         const highlights = filteredClassifications.map(excerpt => ({
             ...excerpt,
@@ -223,6 +395,40 @@ export default class AssistedTagging extends React.PureComponent {
             source: 'NLP',
         }));
         this.setState({ highlights });
+    }
+
+    refreshCeClassifications = () => {
+        const { ceSelectedSectors } = this.state;
+        const { ceClassifications } = this;
+
+        if (!ceClassifications) {
+            this.setState({ highlights: emptyList });
+            return;
+        }
+
+        const keywords = ceClassifications.filter(c => (
+            ceSelectedSectors.find(t => t === c.title)
+        )).reduce((acc, c) => acc.concat(c.keywords), []);
+
+        const highlights = keywords.map(keyword => ({
+            startPos: keyword.start,
+            length: keyword.length,
+            color: getHexFromString(keyword.subcategory),
+            source: 'Category Editor',
+        }));
+        this.setState({ highlights });
+    }
+
+    handleCeSectorSelect = (ceSelectedSectors) => {
+        this.setState({ ceSelectedSectors }, () => {
+            this.refreshSelections();
+        });
+    }
+
+    handleNlpSectorSelect = (nlpSelectedSectors) => {
+        this.setState({ nlpSelectedSectors }, () => {
+            this.refreshSelections();
+        });
     }
 
     calcSectorKey = d => d.label;
@@ -255,8 +461,13 @@ export default class AssistedTagging extends React.PureComponent {
         const {
             activeHighlightDetails,
             assitedActionsVisible,
-            sectorOptions,
-            selectedSectors,
+            nlpSectorOptions,
+            nlpSelectedSectors,
+            ceSectorOptions,
+            ceSelectedSectors,
+            nerSectorOptions,
+            nerSelectedSectors,
+            selectedAssitedTaggingSource,
             highlights,
         } = this.state;
 
@@ -272,16 +483,53 @@ export default class AssistedTagging extends React.PureComponent {
                     highlightModifier={this.highlightSimplifiedExcerpt}
                     onLoad={this.handleLeadPreviewLoad}
                 />
-                <div styleName="suggestion-select">
-                    <span>Show suggestions for:</span>
-                    <SelectInput
-                        styleName="select-input"
-                        options={sectorOptions}
-                        showHintAndError={false}
-                        value={selectedSectors}
-                        onChange={this.handleSectorSelect}
-                        multiple
+                <div styleName="bottom-box">
+                    <SegmentButton
+                        styleName="assisted-source-change-btn"
+                        data={this.assitedTaggingSources}
+                        selected={selectedAssitedTaggingSource}
+                        onChange={this.handleAssitedTaggingSourceChange}
+                        backgroundHighlight
                     />
+                    <div styleName="details">
+                        <span>Show suggestions for:</span>
+                        {
+                            selectedAssitedTaggingSource === 'nlp' && (
+                                <SelectInput
+                                    styleName="select-input"
+                                    options={nlpSectorOptions}
+                                    showHintAndError={false}
+                                    value={nlpSelectedSectors}
+                                    onChange={this.handleNlpSectorSelect}
+                                    multiple
+                                />
+                            )
+                        }
+                        {
+                            selectedAssitedTaggingSource === 'ce' && (
+                                <SelectInput
+                                    styleName="select-input"
+                                    options={ceSectorOptions}
+                                    showHintAndError={false}
+                                    value={ceSelectedSectors}
+                                    onChange={this.handleCeSectorSelect}
+                                    multiple
+                                />
+                            )
+                        }
+                        {
+                            selectedAssitedTaggingSource === 'ner' && (
+                                <SelectInput
+                                    styleName="select-input"
+                                    options={nerSectorOptions}
+                                    showHintAndError={false}
+                                    value={nerSelectedSectors}
+                                    onChange={this.handleNerSectorSelect}
+                                    multiple
+                                />
+                            )
+                        }
+                    </div>
                 </div>
                 <FloatingContainer
                     closeOnBlur
