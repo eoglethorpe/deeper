@@ -212,9 +212,19 @@ export const calcEntriesDiff = (locals, remotes) => {
     return [...actionsFoo, ...actionsBar];
 };
 
-export const getApplicableDiffCount = diffs => diffs.filter(
+export const getApplicableDiffs = diffs => diffs.filter(
     diff => diff.action !== DIFF_ACTION.noop && !diff.skip,
-).length;
+);
+
+export const getApplicableDiffCount = diffs => getApplicableDiffs(diffs).length;
+
+export const getApplicableAndModifyingDiffs = diffs => (
+    getApplicableDiffs(diffs).filter(diff => diff.action !== DIFF_ACTION.add)
+);
+
+export const getApplicableAndModifyingDiffCount = diffs => (
+    getApplicableDiffs(diffs).filter(diff => diff.action !== DIFF_ACTION.add)
+);
 
 export const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
     (acc, diff) => {
