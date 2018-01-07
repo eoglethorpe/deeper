@@ -3,10 +3,9 @@
 @import '../../../stylesheets/tabs';
 
 .category-editor {
+    @extend %main-content;
     display: flex;
     position: relative;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
 
     %tab {
         flex-grow: 1;

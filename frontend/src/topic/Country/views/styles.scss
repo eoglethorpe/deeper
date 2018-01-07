@@ -1,10 +1,10 @@
 @import '../../../stylesheets/base';
 
+$width-sidebar: 320px;
+
 .country-panel {
+    @extend %main-content;
     display: flex;
-    padding: $spacing-medium-alt;
-    $width-list: 320px;
-    height: calc(100vh - #{$height-navbar});
 
     .sidebar {
         display: flex;
@@ -13,7 +13,7 @@
         flex-direction: column;
         border-right: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
-        min-width: 320px;
+        min-width: $width-sidebar;
 
         .header {
             display: flex;

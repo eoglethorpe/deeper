@@ -70,6 +70,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    className: PropTypes.string,
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
@@ -92,6 +93,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     activeProject: undefined,
     activeCountry: undefined,
     activeUser: {},
@@ -255,6 +257,7 @@ export default class Navbar extends React.PureComponent {
 
     render() {
         const {
+            className,
             activeProject,
             activeCountry,
             activeUser,
@@ -266,12 +269,13 @@ export default class Navbar extends React.PureComponent {
         const match = this.getCurrentMatch();
         const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
         if (hideNavbar[currentPath]) {
-            return null;
+            return <span className="no-nav" />;
         }
 
         const userName = userInformation.displayName || activeUser.displayName || 'Anon';
         return (
             <nav
+                className={className}
                 styleName="navbar"
             >
                 <Link

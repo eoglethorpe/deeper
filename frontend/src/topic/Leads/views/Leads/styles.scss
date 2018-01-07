@@ -3,16 +3,15 @@
 .leads {
     display: flex;
     flex-direction: column;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
+    height: 100%;
 
     .header {
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        border-bottom: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground-alt;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
         padding: $spacing-small;
 
         .add-lead-button {
@@ -32,14 +31,14 @@
     .table-container {
         position: relative;
         flex-grow: 1;
-        background-color: $color-foreground;
+        background-color: $color-background-row-alt;
         overflow-y: auto;
 
         .leads-table {
             :global .header {
                 position: sticky;
                 top: 0;
-                border-bottom: $width-separator-medium solid $color-separator;
+                border-bottom: $width-separator-thin solid $color-separator;
                 padding: $spacing-medium $spacing-medium-alt;
                 text-align: left;
                 user-select: none;
@@ -67,6 +66,7 @@
         display: flex;
         flex-shrink: 0;
         justify-content: space-between;
+        border-top: $width-separator-thin solid $color-separator;
         background-color: $color-foreground-alt;
         padding: $spacing-small $spacing-medium-alt;
 

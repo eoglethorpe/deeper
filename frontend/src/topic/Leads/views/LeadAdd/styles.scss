@@ -3,21 +3,21 @@
 .add-lead {
     display: flex;
     flex-direction: column;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
+    border: $width-separator-thin solid $color-separator;
+    height: 100%;
 
     > .header {
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        border-bottom: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground-alt;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
         padding: $spacing-small;
 
         .action-buttons {
             button {
-                margin: $spacing-small;
+                margin: $spacing-extra-small-alt;
             }
         }
 
@@ -44,6 +44,7 @@
             display: flex;
             flex-basis: 30%;
             flex-direction: column;
+            border-right: $width-separator-thin solid $color-separator;
             background-color: $color-foreground-alt;
             overflow-y: hidden;
 
@@ -94,8 +95,7 @@
                 .heading {
                     flex-basis: 100%;
                     margin: 0;
-                    border-top: $width-separator-medium solid $color-separator;
-                    // border-bottom: $width-separator-thin solid $color-separator;
+                    border-top: $width-separator-thin solid $color-separator;
                     padding: $spacing-medium $spacing-large;
                     color: $color-label;
                     font-size: $font-size-small;
@@ -129,7 +129,7 @@
             display: flex;
             flex-basis: 70%;
             flex-direction: column;
-            background-color: $color-foreground;
+            background-color: $color-background-alt;
             overflow-y: auto;
 
             .add-lead-form {
@@ -148,7 +148,7 @@
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
-                border-top: $width-separator-medium solid $color-separator;
+                border-top: $width-separator-thin solid $color-separator;
                 overflow-y: auto;
 
                 .gallery-file {

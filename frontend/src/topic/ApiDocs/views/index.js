@@ -213,7 +213,7 @@ export default class ApiDocs extends React.PureComponent {
         }
 
         return (
-            <div>
+            <div className={styles['api-docs']}>
                 { content }
             </div>
         );

@@ -2,9 +2,8 @@
 @import '../../../stylesheets/tabs';
 
 .project-panel {
+    @extend %main-content;
     display: flex;
-    margin: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar + $spacing-medium-alt * 2});
 
     .sidebar {
         display: flex;
