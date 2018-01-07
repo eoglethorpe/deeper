@@ -21,6 +21,8 @@ const exportStrings = {
     searchExcerptPlaceholder: string[614],
     createdByLabel: string[615],
     createdAtLabel: string[616],
+
+    previewNotAvailableLabel: string[617],
 };
 
 export default exportStrings;
