@@ -284,6 +284,49 @@ const strings = {
     374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
     376: 'Pro',
 
+    // Category Editor
+
+    400: 'Save',
+    401: 'Category',
+    402: 'Select Category',
+    403: 'Add Category',
+    404: 'Edit Category',
+    405: 'Delete Category',
+
+    406: 'Nothing Here',
+
+    407: 'Title',
+    408: 'eg: Sector, Affected Groups, etc.',
+
+    409: 'Cancel',
+    410: 'Ok',
+
+    411: 'eg: Wash',
+    412: 'Description',
+    413: 'eg: Wash sector is for Water, Sanitation and Hygiene...',
+
+    414: 'Add new Sub-Category',
+
+    415: 'Add New Word',
+    416: 'Word',
+    417: 'eg: people affected',
+
+    418: 'Sub-Category Details',
+    419: 'Remove',
+
+    420: 'Number of Words:',
+    421: 'No words yet',
+    422: 'Add Word Manually',
+
+    423: 'Category',
+    424: 'Category',
+    425: 'Category',
+    426: 'Category',
+    427: 'Category',
+    428: 'Category',
+    429: 'Category',
+    430: 'Category',
+
 
     // Notification strings
 

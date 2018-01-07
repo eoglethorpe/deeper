@@ -20,7 +20,10 @@ import {
     randomString,
 } from '../../../public/utils/common';
 
-import { iconNames } from '../../../common/constants';
+import {
+    iconNames,
+    ceStrings,
+} from '../../../common/constants';
 
 import DocumentPanel from './components/DocumentPanel';
 import SubcategoryColumn from './components/SubcategoryColumn';
@@ -462,16 +465,16 @@ export default class CategoryEditor extends React.PureComponent {
                                 disabled={categoryEditorViewPristine || pending}
                                 onClick={this.handleCategoryEditorSaveButtonClick}
                             >
-                                Save
+                                {ceStrings.saveCeButtonLabel}
                             </SuccessButton>
                         </div>
                         <div styleName="action-btn">
                             <SelectInput
-                                label="Category"
+                                label={ceStrings.headerCategoryLabel}
                                 styleName="category-select"
                                 options={categories}
                                 onChange={this.handleCategorySelectChange}
-                                placeholder="Select category"
+                                placeholder={ceStrings.selectCategoryPlaceholder}
                                 showHintAndError={false}
                                 value={activeCategoryId}
                                 keySelector={d => d.id}
@@ -484,7 +487,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 onClick={this.handleNewCategory}
                                 disabled={pending}
                                 iconName={iconNames.add}
-                                title="Add Category"
+                                title={ceStrings.addCategoryTooltip}
                             />
                             { isTruthy(activeCategoryId) &&
                                 [
@@ -494,7 +497,7 @@ export default class CategoryEditor extends React.PureComponent {
                                         onClick={this.handleEditCategory}
                                         disabled={pending}
                                         iconName={iconNames.edit}
-                                        title="Edit Category"
+                                        title={ceStrings.editCategoryTooltip}
                                     />,
                                     <DangerButton
                                         key="remove"
@@ -502,7 +505,7 @@ export default class CategoryEditor extends React.PureComponent {
                                         onClick={this.handleRemoveCategory}
                                         disabled={pending}
                                         iconName={iconNames.delete}
-                                        title="Delete Category"
+                                        title={ceStrings.deleteCategoryTooltip}
                                     />,
                                 ]
                             }
@@ -515,7 +518,7 @@ export default class CategoryEditor extends React.PureComponent {
                                     this.renderSubcategoryColumns()
                                 ) : (
                                     <p styleName="empty">
-                                        Such empty
+                                        {ceStrings.nothingHereText}
                                     </p>
                                 )
                             }

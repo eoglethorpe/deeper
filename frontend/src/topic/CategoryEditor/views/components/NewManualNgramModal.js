@@ -12,6 +12,10 @@ import {
 } from '../../../../public/components/Action';
 import { TextInput } from '../../../../public/components/Input';
 
+import {
+    ceStrings,
+} from '../../../../common/constants';
+
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -52,28 +56,27 @@ export default class NewManualNgramModal extends React.PureComponent {
         return ([
             <ModalHeader
                 key="header"
-                title="Add new word"
+                title={ceStrings.addNewWordModalTitle}
             />,
             <ModalBody key="body">
                 <TextInput
-                    label="Word"
-                    placeholder="Wash your hand"
+                    label={ceStrings.addNewWordLabel}
+                    placeholder={ceStrings.addNewWordPlaceholder}
                     onChange={this.handleWordValueChange}
                     value={this.state.wordValue}
                 />
             </ModalBody>,
             <ModalFooter key="footer">
                 <Button onClick={this.handleModalClose}>
-                    Cancel
+                    {ceStrings.modalCancel}
                 </Button>
                 <PrimaryButton
                     onClick={this.handleModalOk}
                     className={styles['ok-button']}
                 >
-                    Ok
+                    {ceStrings.modalOk}
                 </PrimaryButton>
             </ModalFooter>,
         ]);
     }
 }
-
