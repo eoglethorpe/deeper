@@ -60,6 +60,7 @@ import {
     calcEntryState,
     calcEntriesDiff,
     getApplicableDiffCount,
+    getApplicableAndModifyingDiffCount,
 } from '../../../../common/entities/entry';
 
 import styles from './styles.scss';
@@ -271,17 +272,20 @@ export default class EditEntryView extends React.PureComponent {
                     schema.validate(response, 'entriesGetResponse');
                     const entries = response.results.entries;
                     const diffs = calcEntriesDiff(this.props.entries, entries);
-                    const applicableDiffCount = getApplicableDiffCount(diffs);
-                    if (applicableDiffCount > 0) {
-                        // TODO: don't consider addition as applicableDiffCount
-                        notify.send({
-                            type: notify.type.WARNING,
-                            title: `${applicableDiffCount} entries was updated in server.`,
-                            message: 'Your copy was overridden by server\'s copy',
-                            duration: notify.duration.SLOW,
-                        });
-                        this.props.diffEntries({ leadId, diffs });
+                    if (getApplicableDiffCount(diffs) <= 0) {
+                        return;
                     }
+                    this.props.diffEntries({ leadId, diffs });
+
+                    if (getApplicableAndModifyingDiffCount(diffs) <= 0) {
+                        return;
+                    }
+                    notify.send({
+                        type: notify.type.WARNING,
+                        title: 'Some entries were updated in server.',
+                        message: 'Your copy was overridden by server\'s copy',
+                        duration: notify.duration.SLOW,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
