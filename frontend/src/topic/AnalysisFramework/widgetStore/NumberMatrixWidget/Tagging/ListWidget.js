@@ -2,42 +2,24 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import update from '../../../../../public/utils/immutable-update';
-
-import {
-    TextInput,
-    NumberInput,
-} from '../../../../../public/components/Input';
-import {
-    TransparentDangerButton,
-    Button,
-    PrimaryButton,
-} from '../../../../../public/components/Action';
 import {
     ListView,
-    List,
 } from '../../../../../public/components/View';
-
-import { iconNames } from '../../../../../common/constants';
-import { randomString } from '../../../../../public/utils/common';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    id: PropTypes.number.isRequired,
-    entryId: PropTypes.string.isRequired,
-    data: PropTypes.object, //eslint-disable-line
-    api: PropTypes.object.isRequired, // eslint-disable-line
     attribute: PropTypes.object, // eslint-disable-line
+    data: PropTypes.object,      // eslint-disable-line
 };
 
 const defaultProps = {
     data: {},
-    attribute: undefined,
+    attribute: {},
 };
 
-const emptyObject = {};
 const emptyList = [];
+const emptyObject = {};
 
 @CSSModules(styles)
 export default class NumberMatrixList extends React.PureComponent {
@@ -45,17 +27,73 @@ export default class NumberMatrixList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        const { id, entryId } = props;
-        console.log();
+    getRowsData = (data, attribute) => {
+        const dataRows = [];
+        (data.rowHeaders || emptyList).forEach((row) => {
+            const columnList = [];
+            (data.columnHeaders || emptyList).forEach((col) => {
+                const value = (attribute[row.key] || emptyObject)[col.key];
+                const obj = {
+                    title: col.title,
+                    value: value || '-',
+                };
+                columnList.push(obj);
+            });
+            const rowObj = {
+                title: row.title,
+                columns: columnList,
+            };
+            dataRows.push(rowObj);
+        });
+
+        return dataRows;
     }
 
+    renderDataRow = (key, data) => (
+        <div
+            className={styles.row}
+            key={key}
+        >
+            <span className={styles['row-title']}>
+                {data.title}
+            </span>
+            <ListView
+                className={styles['cols-container']}
+                data={data.columns}
+                modifier={this.renderDataColumns}
+                keyExtractor={NumberMatrixList.rowKeyExtractor}
+                emptyComponent="-"
+            />
+        </div>
+    )
+
+    renderDataColumns = (key, data) => (
+        <div
+            className={styles.col}
+            key={key}
+        >
+            <span className={styles['col-title']}>
+                {data.title}
+            </span>
+            <span className={styles['col-value']}>
+                {data.value}
+            </span>
+        </div>
+    )
+
     render() {
+        const { attribute, data } = this.props;
+        const dataRows = this.getRowsData(data, attribute);
+        console.warn(dataRows);
+
         return (
-            <div styleName="number-matrix-tagging">
-                asd
-            </div>
+            <ListView
+                styleName="number-matrix-list"
+                data={dataRows}
+                modifier={this.renderDataRow}
+                keyExtractor={NumberMatrixList.rowKeyExtractor}
+                emptyComponent="-"
+            />
         );
     }
 }

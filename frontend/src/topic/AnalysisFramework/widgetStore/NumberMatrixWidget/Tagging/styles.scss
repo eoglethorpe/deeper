@@ -1,5 +1,32 @@
 @import '../../../../../stylesheets/base';
 
-.number-matrix-tagging {
+.number-matrix-list {
     display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .row {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+
+        .row-title {
+            font-weight: $font-weight-bold;
+        }
+
+        .cols-container {
+            .col {
+                display: flex;
+                justify-content: space-between;
+
+                .col-title {
+                    color: $color-label;
+                }
+
+                .col-value {
+                    font-family: monospace;
+                }
+            }
+        }
+    }
 }

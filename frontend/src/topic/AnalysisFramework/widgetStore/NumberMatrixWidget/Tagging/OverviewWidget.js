@@ -5,27 +5,16 @@ import React from 'react';
 import update from '../../../../../public/utils/immutable-update';
 
 import {
-    TextInput,
     NumberInput,
 } from '../../../../../public/components/Input';
 import {
-    TransparentDangerButton,
-    Button,
-    PrimaryButton,
-} from '../../../../../public/components/Action';
-import {
-    ListView,
     List,
 } from '../../../../../public/components/View';
-
-import { iconNames } from '../../../../../common/constants';
-import { randomString } from '../../../../../public/utils/common';
 
 import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
-    entryId: PropTypes.string.isRequired,
     data: PropTypes.object, //eslint-disable-line
     api: PropTypes.object.isRequired, // eslint-disable-line
     attribute: PropTypes.object, // eslint-disable-line
@@ -33,11 +22,11 @@ const propTypes = {
 
 const defaultProps = {
     data: {},
-    attribute: undefined,
+    attribute: {},
 };
 
-const emptyObject = {};
 const emptyList = [];
+const emptyObject = {};
 
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {
@@ -45,10 +34,19 @@ export default class NumberMatrixOverview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        const { id, entryId } = props;
-        console.log();
+    onChangeNumberField = (rowKey, colKey, value) => {
+        const { api, id } = this.props;
+        const { attribute } = this.props;
+        const settings = {
+            [rowKey]: { $auto: {
+                [colKey]: { $set: value },
+            } },
+        };
+        const newAttribute = update(attribute, settings);
+
+        api.getEntryModifier()
+            .setAttribute(id, newAttribute)
+            .apply();
     }
 
     renderRow = (key, rowData) => {
@@ -70,22 +68,29 @@ export default class NumberMatrixOverview extends React.PureComponent {
         <th scope="col" key={key}>{data.title}</th>
     )
 
-    renderColElement = (key, data, rowKey) => (
-        <td key={`${rowKey}-${key}`}>
-            <NumberInput
-                placeholder="999 999"
-                showLabel={false}
-                showHintAndError={false}
-                separator=" "
-            />
-        </td>
-    )
+    renderColElement = (key, data, rowKey) => {
+        const { attribute } = this.props;
+        const value = (attribute[rowKey] || emptyObject)[key];
+
+        return (
+            <td key={`${rowKey}-${key}`}>
+                <NumberInput
+                    placeholder="999 999"
+                    showLabel={false}
+                    onChange={newValue => this.onChangeNumberField(rowKey, key, newValue)}
+                    value={value}
+                    showHintAndError={false}
+                    separator=" "
+                />
+            </td>
+        );
+    }
 
     render() {
         const { data } = this.props;
         return (
-            <div styleName="number-matrix-tagging">
-                <table>
+            <table>
+                <tbody>
                     <tr>
                         <td />
                         <List
@@ -99,8 +104,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         modifier={this.renderRow}
                         keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                     />
-                </table>
-            </div>
+                </tbody>
+            </table>
         );
     }
 }

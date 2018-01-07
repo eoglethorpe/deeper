@@ -185,6 +185,10 @@ export default class NumberMatrixOverview extends React.PureComponent {
         this.setState({ showEditModal: true });
     }
 
+    handleEditModalClose = () => {
+        this.setState({ showEditModal: false });
+    }
+
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
