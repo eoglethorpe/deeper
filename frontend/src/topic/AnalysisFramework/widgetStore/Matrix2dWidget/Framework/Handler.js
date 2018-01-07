@@ -41,6 +41,9 @@ export default class Handler {
                 key: sector.id,
             });
 
+            if (!sector.subsectors) {
+                return;
+            }
             sector.subsectors.forEach((subsector) => {
                 sectorOptions.push({
                     label: `${sector.title} / ${subsector.title}`,
