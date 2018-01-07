@@ -117,8 +117,7 @@ export default class LeadAdd extends React.PureComponent {
             leadDropboxRests: {},
             pendingSubmitAll: false,
 
-            confirmText: '',
-            removeLead: false,
+            showRemoveLeadModal: false,
         };
         // Store references to lead forms
         this.leadRefs = { };
@@ -247,18 +246,23 @@ export default class LeadAdd extends React.PureComponent {
         this.props.addLeadViewLeadPrev();
     }
 
-    handleRemove = () => {
-        const confirmText = 'Are you sure you want to delete the lead?';
+    handleRemove = (leadId) => {
+        const removeLeadModalText = 'Are you sure you want to delete this lead?';
         this.setState({
-            confirmText,
-            removeLead: true,
+            removeLeadModalText,
+            showRemoveLeadModal: true,
+            leadIdForRemoval: leadId || this.props.activeLeadId,
         });
     }
 
     handleRemoveLeadClose = (confirm) => {
-        this.setState({ removeLead: false });
+        const leadId = this.state.leadIdForRemoval;
+        this.setState({
+            showRemoveLeadModal: false,
+            removeLeadModalText: undefined,
+            leadIdForRemoval: undefined,
+        });
 
-        const leadId = this.props.activeLeadId;
         if (confirm) {
             this.uploadCoordinator.remove(leadId);
             this.props.addLeadViewLeadRemove(leadId);
@@ -372,8 +376,8 @@ export default class LeadAdd extends React.PureComponent {
         const {
             leadUploads,
             pendingSubmitAll,
-            removeLead,
-            confirmText,
+            showRemoveLeadModal,
+            removeLeadModalText,
         } = this.state;
         const {
             activeLead,
@@ -439,6 +443,7 @@ export default class LeadAdd extends React.PureComponent {
                         <LeadList
                             leadUploads={leadUploads}
                             choices={this.choices}
+                            onLeadRemove={this.handleRemove}
                         />
                         <LeadButtons
                             onDropboxSelect={this.handleDropboxSelect}
@@ -454,9 +459,9 @@ export default class LeadAdd extends React.PureComponent {
                 </div>
                 <Confirm
                     onClose={this.handleRemoveLeadClose}
-                    show={removeLead}
+                    show={showRemoveLeadModal}
                 >
-                    <p>{confirmText}</p>
+                    <p>{removeLeadModalText}</p>
                 </Confirm>
             </div>
         );

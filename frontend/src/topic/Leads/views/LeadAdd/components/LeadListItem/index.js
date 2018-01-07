@@ -28,10 +28,14 @@ const propTypes = {
     leadKey: PropTypes.string.isRequired,
 
     choice: PropTypes.string.isRequired,
-    upload: PropTypes.object, // eslint-disable-line
+    upload: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+
+    onRemove: PropTypes.func.isRequired,
+    isRemoveDisabled: PropTypes.bool,
 };
 
 const defaultProps = {
+    isRemoveDisabled: true,
     active: false,
     className: '',
     upload: undefined,
@@ -128,28 +132,38 @@ export default class LeadListItem extends React.PureComponent {
     render() {
         console.log('Rendering LeadListItem');
 
-        const { active, className } = this.props;
+        const { active, className, isRemoveDisabled, onRemove, leadKey } = this.props;
 
         const { choice, upload, lead } = this.props;
         const type = leadAccessor.getType(lead);
         const { title } = leadAccessor.getValues(lead);
 
         return (
-            <button
-                styleName={`add-lead-list-item ${active ? 'active' : ''}`}
-                className={className}
-                onClick={this.handleClick}
-            >
-                <span
-                    styleName="icon"
-                    className={this.getIconClassName(type)}
-                />
-                <span styleName="title" >
-                    { title }
-                </span>
-                { this.renderIcon(choice) }
-                { this.renderUploadProgress(choice, upload) }
-            </button>
+            <div>
+                <button
+                    key="first-btn"
+                    styleName={`add-lead-list-item ${active ? 'active' : ''}`}
+                    className={className}
+                    onClick={this.handleClick}
+                >
+                    <span
+                        styleName="icon"
+                        className={this.getIconClassName(type)}
+                    />
+                    <span styleName="title" >
+                        { title }
+                    </span>
+                    { this.renderIcon(choice) }
+                    { this.renderUploadProgress(choice, upload) }
+                </button>
+                <button
+                    key="second-btn"
+                    disabled={isRemoveDisabled}
+                    onClick={() => onRemove(leadKey)}
+                >
+                    Remove
+                </button>
+            </div>
         );
     }
 }
