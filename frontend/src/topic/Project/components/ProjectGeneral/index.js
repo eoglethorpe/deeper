@@ -27,6 +27,7 @@ import {
     pathNames,
     iconNames,
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -124,28 +125,28 @@ export default class ProjectGeneral extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'memberName',
-                label: 'Name',
+                label: projectStrings.tableHeaderName,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
                 key: 'memberEmail',
-                label: 'Email',
+                label: projectStrings.tableHeaderEmail,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
             },
             {
                 key: 'role',
-                label: 'Rights',
+                label: projectStrings.tableHeaderRights,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.role.localeCompare(b.role),
             },
             {
                 key: 'joinedAt',
-                label: 'Joined At',
+                label: projectStrings.tableHeaderJoinedAt,
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.joinedAt - b.joinedAt,
@@ -153,7 +154,7 @@ export default class ProjectGeneral extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: projectStrings.tableHeaderActions,
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -469,10 +470,10 @@ export default class ProjectGeneral extends React.PureComponent {
 
     handleToggleMemberRoleClick = (member) => {
         const accessRight = member.role === 'admin' ?
-            'revoke admin rights form' :
-            'grant admin rights to';
+            projectStrings.confirmTextRevokeAdmin :
+            projectStrings.confirmTextGrantAdmin;
 
-        const confirmText = `Are you sure you want to ${accessRight} ${member.memberName}?`;
+        const confirmText = `${projectStrings.confirmText} ${accessRight} ${member.memberName}?`;
         this.setState({
             toggleRoleConfirmShow: true,
             confirmText,
@@ -496,7 +497,7 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     handleDeleteMemberClick = (member) => {
-        const confirmText = `Are you sure you remove ${member.memberName} from this project?`;
+        const confirmText = `${projectStrings.confirmTextRemove} ${member.memberName} from this project?`;
         this.setState({
             deleteMemberConfirmShow: true,
             confirmText,
@@ -559,13 +560,13 @@ export default class ProjectGeneral extends React.PureComponent {
                 />
                 <div styleName="members">
                     <header styleName="header">
-                        <h2>Members</h2>
+                        <h2>{projectStrings.headerMembers}</h2>
                         <div styleName="action-buttons">
                             <PrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddMemberClick}
                             >
-                                Add
+                                {projectStrings.addMemberButtonLabel}
                             </PrimaryButton>
                         </div>
                     </header>

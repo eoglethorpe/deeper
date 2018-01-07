@@ -19,6 +19,10 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
+import {
+    projectStrings,
+} from '../../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -98,52 +102,52 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         type="button"
                         disabled={pending || !pristine}
                     >
-                        Revert
+                        {projectStrings.modalRevert}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                     >
-                        Save
+                        {projectStrings.modalSave}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Name"
+                    label={projectStrings.projectNameLabel}
                     formname="title"
-                    placeholder="Enter Project Name"
+                    placeholder={projectStrings.projectNamePlaceholder}
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
                 <TextArea
-                    label="Description"
+                    label={projectStrings.projectDescriptionLabel}
                     formname="description"
-                    placeholder="Enter Project Description"
+                    placeholder={projectStrings.projectDescriptionPlaceholder}
                     styleName="description"
                     rows={3}
                     value={formValues.description}
                     error={formFieldErrors.description}
                 />
                 <DateInput
-                    label="Start Date"
+                    label={projectStrings.projectStartDateLabel}
                     formname="startDate"
-                    placeholder="Enter Project Start Date"
+                    placeholder={projectStrings.projectStartDatePlaceholder}
                     styleName="start-date"
                     value={formValues.startDate}
                     error={formFieldErrors.startDate}
                 />
                 <DateInput
-                    label="End Date"
+                    label={projectStrings.projectEndDateLabel}
                     formname="endDate"
-                    placeholder="Enter Project End Date"
+                    placeholder={projectStrings.projectEndDatePlaceholder}
                     styleName="end-date"
                     value={formValues.endDate}
                     error={formFieldErrors.endDate}
                 />
                 <SelectInput
-                    label="Regions"
+                    label={projectStrings.projectRegionLabel}
                     formname="regions"
-                    placeholder="Select regions"
+                    placeholder={projectStrings.projectRegionPlaceholder}
                     styleName="regions"
                     value={formValues.regions}
                     options={regionOptions}
@@ -153,9 +157,9 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     multiple
                 />
                 <SelectInput
-                    label="User Groups"
+                    label={projectStrings.projectUserGroupLabel}
                     formname="userGroups"
-                    placeholder="Select user groups"
+                    placeholder={projectStrings.projectUserGroupPlaceholder}
                     styleName="user-groups"
                     value={formValues.userGroups}
                     options={userGroupsOptions}

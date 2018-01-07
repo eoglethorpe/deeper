@@ -8,3 +8,4 @@ export { default as leadsString } from './strings/leadsString';
 export { default as countriesString } from './strings/countriesString';
 export { default as notificationStrings } from './strings/notificationStrings';
 export { default as userStrings } from './strings/userStrings';
+export { default as projectStrings } from './strings/projectStrings';

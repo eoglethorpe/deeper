@@ -184,6 +184,68 @@ const strings = {
     196: 'grant admin rights to',
     197: 'Are you sure you want to remove',
 
+
+    // Project Panel strings
+
+    300: 'Projects',
+    301: 'Add',
+    302: 'Search Project',
+    303: 'Add New Project',
+
+    304: 'Select a project to view its details',
+    305: 'You do not have enough permissions to view / edit this project',
+
+    306: 'Name',
+    307: 'Email',
+    308: 'Rights',
+    309: 'Joined At',
+    310: 'Actions',
+    311: 'Remove',
+
+    312: 'View Member',
+    313: 'Delete Member',
+    314: 'Revoke Admin Rights',
+    315: 'Grant Admin Rights',
+
+    316: 'Are you sure you want to',
+    317: 'revoke admin rights form',
+    318: 'grant admin rights to',
+    319: 'Are you sure you want to remove',
+
+    320: 'Members',
+    321: 'Add Member',
+
+    322: 'Cancel',
+    323: 'Update',
+    324: 'Revert',
+    325: 'Save',
+    326: 'Add',
+    327: 'Create',
+
+    328: 'Name',
+    329: 'Nepal Monitoring',
+    330: 'Description',
+    331: 'Enter Project Description',
+    332: 'Start Date',
+    333: 'Enter Project Start Date',
+    334: 'End Date',
+    335: 'Enter Project End Date',
+    336: 'Regions',
+    337: 'Select regions',
+    338: 'User Groups',
+    339: 'Select user groups',
+    340: 'Projects',
+
+    341: 'Projects',
+    342: 'Projects',
+    343: 'Projects',
+    344: 'Projects',
+    345: 'Projects',
+    346: 'Projects',
+    347: 'Projects',
+    348: 'Projects',
+    349: 'Projects',
+    350: 'Projects',
     // Notification strings
 
     // User Profile
