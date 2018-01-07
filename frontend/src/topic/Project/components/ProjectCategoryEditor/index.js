@@ -34,6 +34,7 @@ import {
 
 import {
     iconNames,
+    projectStrings,
 } from '../../../../common/constants';
 
 import ProjectCeDetail from '../ProjectCeDetail';
@@ -211,7 +212,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         if (categoryEditorList.length <= 0) {
             return (
                 <h1 styleName="no-category-editor">
-                    There are no category editors.
+                    {projectStrings.noCeText}
                 </h1>
             );
         }
@@ -248,7 +249,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             styleName="search-input"
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Category Editor"
+                            placeholder={projectStrings.searchCePlaceholder}
                             type="search"
                         />
                         <PrimaryButton
@@ -256,7 +257,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             iconName={iconNames.add}
                             onClick={this.handleAddCeButtonClick}
                         >
-                            Add
+                            {projectStrings.addCeButtonLabel}
                         </PrimaryButton>
                         <Modal
                             closeOnEscape
@@ -264,7 +265,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             show={this.state.addCeModalShow}
                             closeOnBlur
                         >
-                            <ModalHeader title="Add new category editor" />
+                            <ModalHeader title={projectStrings.addCeModalTitle} />
                             <ModalBody>
                                 <AddCategoryEditor
                                     projectId={projectId}
@@ -288,4 +289,3 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         );
     }
 }
-

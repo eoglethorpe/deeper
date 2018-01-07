@@ -91,6 +91,23 @@ const projectStrings = {
     addAfDescriptionLabel: string[330],
     addAfDescriptionPlaceholder: string[331],
 
+    addCeTitleLabel: string[360],
+    addCeTitlePlaceholder: string[369],
+
+    useCeButtonLabel: string[362],
+    editCeButtonLabel: string[363],
+    cloneEditCeButtonLabel: string[364],
+
+    addCeButtonLabel: string[356],
+    searchCePlaceholder: string[370],
+    addCeModalTitle: string[371],
+    noCeText: string[372],
+
+    confirmUseCe: string[365],
+    confirmUseCeText: string[373],
+    confirmCloneCe: string[367],
+    confirmCloneCeText: string[374],
+
 
 };
 

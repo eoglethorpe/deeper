@@ -275,8 +275,16 @@ const strings = {
     367: 'Are you sure you want to clone',
     368: 'After cloning and editing this analysis framework,you will not recieve any updates made by owner.',
 
-    369: 'Projects',
-    370: 'Projects',
+    369: 'ACAPS Category Editor',
+    370: 'Search Category Editor',
+    371: 'Add New Category Editor',
+    372: 'There are no category editors.',
+
+    373: 'If you use this category editor, you will recieve updates if the owner updates it.',
+    374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
+    376: 'Pro',
+
+
     // Notification strings
 
     // User Profile
