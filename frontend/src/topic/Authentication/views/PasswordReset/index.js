@@ -4,7 +4,6 @@
 
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
 
 import {
@@ -32,8 +31,6 @@ import {
     createParamsForUserPasswordReset,
     urlForUserPasswordReset,
 } from '../../../../common/rest';
-
-import logo from '../../../../img/deep-logo.svg';
 
 import styles from './styles.scss';
 
