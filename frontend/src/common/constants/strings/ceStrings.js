@@ -41,6 +41,13 @@ const ceStrings = {
 
     addWordManuallyButtonLabel: string[422],
 
+    documentTabLabel: string[423],
+    simplifiedTabLabel: string[424],
+    ngramsTabLabel: string[425],
+
+    selectFromGalleryButtonLabel: string[426],
+    applyButtonLabel: string[427],
+
 };
 
 export default ceStrings;

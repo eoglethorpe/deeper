@@ -318,11 +318,12 @@ const strings = {
     421: 'No words yet',
     422: 'Add Word Manually',
 
-    423: 'Category',
-    424: 'Category',
-    425: 'Category',
-    426: 'Category',
-    427: 'Category',
+    423: 'Document',
+    424: 'Simplified',
+    425: 'Extracted Words',
+
+    426: 'Select From Gallery',
+    427: 'Apply',
     428: 'Category',
     429: 'Category',
     430: 'Category',

@@ -20,7 +20,11 @@ import {
 } from '../../../../common/redux';
 
 import DeepGalleryFileSelect from '../../../../common/components/DeepGalleryFileSelect';
-import iconNames from '../../../../common/constants/iconNames';
+
+import {
+    iconNames,
+    ceStrings,
+} from '../../../../common/constants';
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -166,14 +170,14 @@ export default class DocumentSelect extends React.PureComponent {
                         styleName="button"
                         onClick={this.handleSelectFromGallery}
                     >
-                        Select from Gallery
+                        {ceStrings.selectFromGalleryButtonLabel}
                     </Button>
                     <PrimaryButton
                         styleName="button"
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >
-                        Apply
+                        {ceStrings.applyButtonLabel}
                     </PrimaryButton>
                 </div>
                 <DeepGalleryFileSelect
