@@ -214,14 +214,14 @@ export default class AssistedTagging extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Failed connecting to server',
@@ -243,14 +243,14 @@ export default class AssistedTagging extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Failed connecting to server',
@@ -275,14 +275,14 @@ export default class AssistedTagging extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Server error',
                 });
             })
             .fatal((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
                     pending: false,
                     error: 'Failed connecting to server',
