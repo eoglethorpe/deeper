@@ -2,51 +2,35 @@
 
 .home-screen {
     display: flex;
-    flex-wrap: wrap;
-    align-content: center;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
     height: calc(100vh - #{$height-navbar});
 
+    .deep-logo {
+        margin: 0 0 $spacing-large;
+        width: 256px;
+        height: 256px;
+    }
+
     p {
-        flex-basis: 100%;
-        margin: $spacing-extra-large 0;
         text-align: center;
-        text-transform: uppercase;
-        font-size: 42px;
-    }
+        line-height: 2;
+        font-size: $font-size-large;
 
-    h2 {
-        flex-basis: 100%;
-        margin-bottom: $spacing-extra-large;
-        text-align: center;
-    }
+        .welcome-message {
+            margin-bottom: $spacing-large;
+            font-size: $font-size-super-large;
 
-    img {
-        margin: $spacing-super-large 0;
-        width: 400px;
-        height: 400px;
+            strong {
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 
     a {
-        &:hover {
-            font-weight: $font-weight-normal;
-        }
-    }
-
-    .icon {
-        margin-left: $spacing-medium;
-    }
-
-    >div {
-        flex-basis: 50%;
-        padding: $spacing-extra-large;
-    }
-
-    .image-input {
-        :global .image-input-preview {
-            height: 500px;
-        }
+        cursor: pointer;
+        color: $color-accent;
+        font-size: $font-size-large;
     }
 }

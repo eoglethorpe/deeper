@@ -14,11 +14,11 @@
     }
 
     .search-input {
-        padding: $spacing-extra-small;
-        width: 200px;
+        width: 240px;
     }
 
     .modal-body {
+        position: relative;
         padding: 0;
         height: 72vh;
     }
@@ -30,5 +30,8 @@
         }
     }
 
+    .add-button {
+        min-width: 72px;
+    }
 }
 

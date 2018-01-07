@@ -17,6 +17,10 @@ export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_N
 export const CE__REMOVE_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__REMOVE_SUBCATEGORY_NGRAM';
 export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_MANUAL_SUBCATEGORY_NGRAM';
 
+export const CE__SET_FILES = 'domain-data/CE__SET_FILES';
+export const CE__SET_NGRAMS = 'domain-data/CE__ADD_NGRAMS';
+export const CE__SET_SIMPLIFIED_PREVIEW_ID = 'domain-data/CE__SET_SIMPLIFIED_PREVIEW_ID';
+
 // ACTION-CREATOR
 
 export const setCategoryEditorAction = ({ categoryEditor }) => ({
@@ -104,6 +108,24 @@ export const addManualSubcategoryNGramAction = ({ categoryEditorId, ngram }) => 
     type: CE__ADD_MANUAL_SUBCATEGORY_NGRAM,
     categoryEditorId,
     ngram, // n, keyword
+});
+
+export const setCeFilesAction = ({ categoryEditorId, files }) => ({
+    type: CE__SET_FILES,
+    categoryEditorId,
+    files,
+});
+
+export const setCeNgramsAction = ({ categoryEditorId, ngrams }) => ({
+    type: CE__SET_NGRAMS,
+    categoryEditorId,
+    ngrams,
+});
+
+export const setCeSimplifiedPreviewIdAction = ({ categoryEditorId, previewId }) => ({
+    type: CE__SET_SIMPLIFIED_PREVIEW_ID,
+    categoryEditorId,
+    previewId,
 });
 
 // HELPERS
@@ -693,6 +715,52 @@ const ceAddSubcategoryNGram = (state, action) => {
     return update(state, settings);
 };
 
+const ceSetFiles = (state, action) => {
+    const { categoryEditorId, files } = action;
+
+    const settings = {
+        categoryEditorDocument: {
+            [categoryEditorId]: { $auto: {
+                documents: { $autoArray: {
+                    $set: files,
+                } },
+                previewId: {
+                    $set: undefined,
+                },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const setCeNgrams = (state, action) => {
+    const { categoryEditorId, ngrams } = action;
+    const settings = {
+        categoryEditorDocument: {
+            [categoryEditorId]: { $auto: {
+                extractedWords: { $auto: {
+                    $set: ngrams,
+                } },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
+const setCeSimplifiedPreviewId = (state, action) => {
+    const { categoryEditorId, previewId } = action;
+    const settings = {
+        categoryEditorDocument: {
+            [categoryEditorId]: { $auto: {
+                previewId: {
+                    $set: previewId,
+                },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -708,5 +776,9 @@ const reducers = {
     [CE__ADD_SUBCATEGORY_NGRAM]: ceAddSubcategoryNGram,
     [CE__REMOVE_SUBCATEGORY_NGRAM]: ceRemoveSubcategoryNGram,
     [CE__ADD_MANUAL_SUBCATEGORY_NGRAM]: ceAddManualSubcategoryNGram,
+
+    [CE__SET_FILES]: ceSetFiles,
+    [CE__SET_NGRAMS]: setCeNgrams,
+    [CE__SET_SIMPLIFIED_PREVIEW_ID]: setCeSimplifiedPreviewId,
 };
 export default reducers;

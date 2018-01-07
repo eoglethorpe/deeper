@@ -3,6 +3,11 @@ import { ceIdFromRoute } from '../domainData';
 
 const emptyList = [];
 const emptyObject = {};
+const emptyNGrams = {
+    '1grams': [],
+    '2grams': [],
+    '3grams': [],
+};
 
 const categoryEditorsViewSelector = ({ siloDomainData }) => (
     siloDomainData.categoryEditorView || emptyObject
@@ -66,4 +71,29 @@ export const selectedSubcategorySelector = createSelector(
         });
         return subcategory;
     },
+);
+
+export const categoryEditorsDocumentsSelector = ({ siloDomainData }) => (
+    siloDomainData.categoryEditorDocument || emptyObject
+);
+
+export const categoryEditorDocumentsViewSelector = createSelector(
+    ceIdFromRoute,
+    categoryEditorsDocumentsSelector,
+    (id, documents) => documents[id] || emptyObject,
+);
+
+export const categoryEditorDocumentsSelector = createSelector(
+    categoryEditorDocumentsViewSelector,
+    view => view.documents || emptyList,
+);
+
+export const categoryEditorSimplifiedPreviewIdSelector = createSelector(
+    categoryEditorDocumentsViewSelector,
+    view => view.previewId,
+);
+
+export const categoryEditorNgramsSelector = createSelector(
+    categoryEditorDocumentsViewSelector,
+    view => view.extractedWords || emptyNGrams,
 );

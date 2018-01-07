@@ -1,22 +1,38 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
-    LoadingAnimation,
     ListView,
 } from '../../../../public/components/View';
+
+import {
+    categoryEditorNgramsSelector,
+} from '../../../../common/redux';
 
 import styles from '../styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     ngrams: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
+    className: '',
 };
 
+const mapStateToProps = (state, props) => ({
+    ngrams: categoryEditorNgramsSelector(state, props),
+});
+
+
+const mapDispatchToProps = dispatch => ({
+    dispatch,
+});
+
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class DocumentNGram extends React.PureComponent {
     static propTypes = propTypes;
@@ -83,13 +99,9 @@ export default class DocumentNGram extends React.PureComponent {
 
     render() {
         const {
+            className,
             ngrams,
-            pending,
         } = this.props;
-
-        if (pending) {
-            return <LoadingAnimation />;
-        }
 
         const { selectedNGramIndex } = this.state;
 
@@ -100,7 +112,10 @@ export default class DocumentNGram extends React.PureComponent {
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
-            <div styleName="ngrams-tab" >
+            <div
+                styleName="ngrams-tab"
+                className={className}
+            >
                 <ListView
                     styleName="ngram-list"
                     data={selectedNGram}
