@@ -24,6 +24,7 @@ import {
 import {
     iconNames,
     pathNames,
+    projectStrings,
 } from '../../../common/constants';
 import {
 } from '../../../common/rest';
@@ -164,17 +165,17 @@ export default class ProjectPanel extends React.PureComponent {
                     {pending && <LoadingAnimation />}
                     <header styleName="header">
                         <h3 styleName="heading">
-                            Projects
+                            {projectStrings.headerProjects}
                         </h3>
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
                             iconName={iconNames.add}
                         >
-                            Add
+                            {projectStrings.addProjectButtonLabel}
                         </PrimaryButton>
                         <TextInput
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Project"
+                            placeholder={projectStrings.searchProjectPlaceholder}
                             styleName="search-input"
                             type="search"
                             value={this.state.searchInputValue}
@@ -187,7 +188,7 @@ export default class ProjectPanel extends React.PureComponent {
                             show={showAddProjectModal}
                         >
                             <ModalHeader
-                                title="Add New Project"
+                                title={projectStrings.addProjectModalTitle}
                                 rightComponent={
                                     <TransparentPrimaryButton
                                         onClick={this.handleAddProjectModalClose}
@@ -220,7 +221,7 @@ export default class ProjectPanel extends React.PureComponent {
                             mainHistory={history}
                         />
                     ) : (
-                        <p styleName="no-project-text">Select a project to view its details</p>
+                        <p styleName="no-project-text">{projectStrings.noProjectText}</p>
                     )
                 }
             </div>

@@ -40,6 +40,7 @@ import {
     iconNames,
     pathNames,
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import ProjectAfForm from '../ProjectAfForm';
@@ -316,7 +317,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                                 onClick={this.handleAfUseClick}
                                 disabled={pending}
                             >
-                                Use
+                                {projectStrings.useAfButtonLabel}
                             </PrimaryButton>
                         }
                         {afDetails.isAdmin &&
@@ -325,14 +326,14 @@ export default class ProjectAfDetail extends React.PureComponent {
                                 onClick={this.handleAfEditClick}
                                 disabled={pending}
                             >
-                                Edit
+                                {projectStrings.editAfButtonLabel}
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleAfCloneClick}
                             disabled={pending}
                         >
-                            {'Clone & Edit'}
+                            {projectStrings.cloneEditAfButtonLabel}
                         </PrimaryButton>
                     </div>
                     <Confirm
@@ -341,9 +342,8 @@ export default class ProjectAfDetail extends React.PureComponent {
                             useConfirm, analysisFrameworkId, projectDetails.id,
                         )}
                     >
-                        <p>{`Are you sure you want to use ${afDetails.title}?`}</p>
-                        <p>If you use this analysis framework, you will recieve
-                            updates if the owner updates it</p>
+                        <p>{`${projectStrings.confirmUseAf}${afDetails.title}?`}</p>
+                        <p>{projectStrings.confirmUseAfText}</p>
                     </Confirm>
                     <Confirm
                         show={cloneConfirmModalShow}
@@ -351,9 +351,8 @@ export default class ProjectAfDetail extends React.PureComponent {
                             cloneConfirm, analysisFrameworkId, projectDetails.id,
                         )}
                     >
-                        <p>{`Are you sure you want to clone ${afDetails.title}?`}</p>
-                        <p>After cloning and editing this analysis framework,
-                            you will not recieve any updates made by owner.</p>
+                        <p>{`${projectStrings.confirmCloneAf} ${afDetails.title}?`}</p>
+                        <p>{projectStrings.confirmCloneAf}</p>
                     </Confirm>
                 </header>
                 <div styleName="af-details">

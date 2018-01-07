@@ -13,6 +13,10 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
+import {
+    projectStrings,
+} from '../../../../common/constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -79,19 +83,19 @@ export default class ProjectCeForm extends React.PureComponent {
                         type="button"
                         disabled={pending || !pristine}
                     >
-                        Revert
+                        {projectStrings.modalRevert}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                     >
-                        Save
+                        {projectStrings.modalSave}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Title"
+                    label={projectStrings.addCeTitleLabel}
                     formname="title"
-                    placeholder="Enter Category Editor Name"
+                    placeholder={projectStrings.addCeTitlePlaceholder}
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}

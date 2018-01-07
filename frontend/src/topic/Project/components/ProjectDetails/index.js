@@ -14,6 +14,7 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { projectStrings } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
 import {
@@ -276,7 +277,7 @@ export default class ProjectDetails extends React.PureComponent {
                             />,
                         ]) : (
                             <p styleName="forbidden-text">
-                                You do not have enough permissions to view / edit this project
+                                {projectStrings.forbiddenText}
                             </p>
                         )
                     }

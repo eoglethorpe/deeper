@@ -20,6 +20,7 @@ import {
 import {
     iconNames,
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
@@ -373,10 +374,10 @@ export default class AddProjectMembers extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {projectStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine}>
-                        Update
+                        {projectStrings.modalUpdate}
                     </PrimaryButton>
                 </div>
             </Form>

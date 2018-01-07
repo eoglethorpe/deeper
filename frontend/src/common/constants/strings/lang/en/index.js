@@ -184,6 +184,107 @@ const strings = {
     196: 'grant admin rights to',
     197: 'Are you sure you want to remove',
 
+
+    // Project Panel strings
+
+    300: 'Projects',
+    301: 'Add',
+    302: 'Search Project',
+    303: 'Add New Project',
+
+    304: 'Select a project to view its details',
+    305: 'You do not have enough permissions to view / edit this project',
+
+    306: 'Name',
+    307: 'Email',
+    308: 'Rights',
+    309: 'Joined At',
+    310: 'Actions',
+    311: 'Remove',
+
+    312: 'View Member',
+    313: 'Delete Member',
+    314: 'Revoke Admin Rights',
+    315: 'Grant Admin Rights',
+
+    316: 'Are you sure you want to',
+    317: 'revoke admin rights form',
+    318: 'grant admin rights to',
+    319: 'Are you sure you want to remove',
+
+    320: 'Members',
+    321: 'Add Member',
+
+    322: 'Cancel',
+    323: 'Update',
+    324: 'Revert',
+    325: 'Save',
+    326: 'Add',
+    327: 'Create',
+
+    328: 'Name',
+    329: 'Nepal Monitoring',
+    330: 'Description',
+    331: 'Enter Project Description',
+    332: 'Start Date',
+    333: 'Enter Project Start Date',
+    334: 'End Date',
+    335: 'Enter Project End Date',
+    336: 'Regions',
+    337: 'Select regions',
+    338: 'User Groups',
+    339: 'Select user groups',
+
+    340: 'Add',
+    341: 'Search Regions',
+    342: 'Add Region',
+
+    343: 'There are no regions in this project.',
+    344: 'Create new region',
+    345: 'Use existing regions',
+
+    346: 'Region Title',
+    347: 'Nepal',
+    348: 'Code',
+    349: 'NPL',
+
+    350: 'ID',
+
+    351: 'Remove Region',
+    352: 'Clone and Edit',
+
+    353: 'Are you sure you want to remove',
+    354: 'Are you sure you want to clone',
+    355: 'After cloning and editing this region, you will not recieve any updates in this public region.',
+
+    356: 'Add',
+    357: 'Search Analysis Framework',
+    358: 'Add New Analysis Framework',
+
+    359: 'There are no analysis frameworks.',
+
+    360: 'Title',
+    361: 'ACAPS framework',
+
+    362: 'Use',
+    363: 'Edit',
+    364: 'Clone & Edit',
+
+    365: 'Are you sure you want to use ',
+    366: 'If you use this analysis framework,you will recieve updates if the owner updates it',
+    367: 'Are you sure you want to clone',
+    368: 'After cloning and editing this analysis framework,you will not recieve any updates made by owner.',
+
+    369: 'ACAPS Category Editor',
+    370: 'Search Category Editor',
+    371: 'Add New Category Editor',
+    372: 'There are no category editors.',
+
+    373: 'If you use this category editor, you will recieve updates if the owner updates it.',
+    374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
+    376: 'Pro',
+
+
     // Notification strings
 
     // User Profile

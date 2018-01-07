@@ -27,7 +27,9 @@ import {
 import {
     addNewCeAction,
 } from '../../../../common/redux';
-
+import {
+    projectStrings,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 
@@ -181,9 +183,9 @@ export default class AddCategoryEditor extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label="Title"
+                    label={projectStrings.addAfTitleLabel}
                     formname="title"
-                    placeholder="ACAPS category editor"
+                    placeholder={projectStrings.addCeTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
@@ -193,10 +195,10 @@ export default class AddCategoryEditor extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        Cancel
+                        {projectStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        Add
+                        {projectStrings.modalAdd}
                     </PrimaryButton>
                 </div>
             </Form>

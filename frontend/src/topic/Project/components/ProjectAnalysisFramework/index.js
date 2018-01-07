@@ -34,6 +34,7 @@ import {
 
 import {
     iconNames,
+    projectStrings,
 } from '../../../../common/constants';
 
 import ProjectAfDetail from '../ProjectAfDetail';
@@ -211,7 +212,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         if (analysisFrameworkList.length <= 0) {
             return (
                 <h1 styleName="no-analysis-framework">
-                    There are no analysis frameworks.
+                    {projectStrings.noAfText}
                 </h1>
             );
         }
@@ -248,7 +249,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             styleName="search-input"
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search Analysis Framework"
+                            placeholder={projectStrings.searchAfPlaceholder}
                             type="search"
                         />
                         <PrimaryButton
@@ -256,7 +257,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             iconName={iconNames.add}
                             onClick={this.handleAddAfButtonClick}
                         >
-                            Add
+                            {projectStrings.addAfButtonLabel}
                         </PrimaryButton>
                         <Modal
                             closeOnEscape
@@ -264,7 +265,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             show={this.state.addAfModalShow}
                             closeOnBlur
                         >
-                            <ModalHeader title="Add new analysis framework" />
+                            <ModalHeader title={projectStrings.addAfModalTitle} />
                             <ModalBody>
                                 <AddAnalysisFramework
                                     projectId={projectId}
@@ -288,4 +289,3 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         );
     }
 }
-

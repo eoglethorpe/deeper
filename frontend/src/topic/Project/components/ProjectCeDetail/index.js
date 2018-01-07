@@ -38,6 +38,7 @@ import {
 import {
     iconNames,
     pathNames,
+    projectStrings,
 } from '../../../../common/constants';
 
 import ProjectCeForm from '../ProjectCeForm';
@@ -285,7 +286,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeUseClick}
                                 disabled={pending}
                             >
-                                Use
+                                {projectStrings.useCeButtonLabel}
                             </PrimaryButton>
                         }
                         {ceDetails.isAdmin &&
@@ -294,14 +295,14 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeEditClick}
                                 disabled={pending}
                             >
-                                Edit
+                                {projectStrings.editCeButtonLabel}
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleCeCloneClick}
                             disabled={pending}
                         >
-                            {'Clone & Edit'}
+                            {projectStrings.cloneEditCeButtonLabel}
                         </PrimaryButton>
                     </div>
                     <Confirm
@@ -310,9 +311,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                             useConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`Are you sure you want to use ${ceDetails.title}?`}</p>
-                        <p>If you use this category editor, you will recieve
-                            updates if the owner updates it</p>
+                        <p>{`${projectStrings.confirmUseCe} ${ceDetails.title}?`}</p>
+                        <p>{projectStrings.confirmUseCeText}</p>
                     </Confirm>
                     <Confirm
                         show={cloneConfirmModalShow}
@@ -320,9 +320,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                             cloneConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`Are you sure you want to clone ${ceDetails.title}?`}</p>
-                        <p>Ceter cloning and editing this category editor,
-                            you will not recieve any updates made by owner.</p>
+                        <p>{`${projectStrings.confirmCloneCe} ${ceDetails.title}?`}</p>
+                        <p>{projectStrings.confirmCloneCeText}.</p>
                     </Confirm>
                 </header>
                 <div styleName="ce-details">

@@ -31,6 +31,7 @@ import {
 import schema from '../../../../common/schema';
 import {
     notificationStrings,
+    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -248,7 +249,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             disabled={dataLoading}
                             onClick={this.handleRegionRemoveClick}
                         >
-                            Remove Region
+                            {projectStrings.removeRegionButtonLabel}
                         </DangerButton>
                         {
                             isPublic && (
@@ -257,7 +258,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                     styleName="clone-btn"
                                     onClick={this.handleRegionCloneClick}
                                 >
-                                    Clone and Edit
+                                    {projectStrings.cloneEditButtonLabel}
                                 </PrimaryButton>
                             )
                         }
@@ -269,7 +270,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             deleteConfirm, projectDetails, countryId,
                         )}
                     >
-                        <p>{`Are you sure you want to remove
+                        <p>{`${projectStrings.confirmRemoveText}
                             ${regionDetails.title} from project ${projectDetails.title}?`}</p>
                     </Confirm>
                     <Confirm
@@ -279,8 +280,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         )}
                     >
                         <p>{`Are you sure you want to clone ${regionDetails.title}?`}</p>
-                        <p>After cloning and editing this region,
-                            you will not recieve any updates in this public region.</p>
+                        <p>{projectStrings.cloneText}</p>
                     </Confirm>
                 </header>
                 {
