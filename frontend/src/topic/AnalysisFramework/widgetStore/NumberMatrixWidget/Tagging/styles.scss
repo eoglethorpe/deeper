@@ -1,5 +1,33 @@
 @import '../../../../../stylesheets/base';
 
+.number-matrix-overview {
+    display: flex;
+
+    .table-header {
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-medium;
+    }
+
+    .table-header-row {
+        background-color: $color-success;
+        padding: $spacing-small $spacing-medium;
+        color: $color-text-on-primary;
+
+        &.not-similar {
+            background-color: $color-danger;
+        }
+    }
+
+    .table-cell {
+        background-color: $color-foreground;
+        padding: $spacing-extra-small $spacing-small;
+
+        .number-input {
+            background-color: transparent;
+        }
+    }
+}
+
 .number-matrix-list {
     display: flex;
     flex-direction: column;

@@ -2,6 +2,20 @@
 
 .number-matrix-widget {
     display: flex;
+
+    .table-header {
+        background-color: $color-foreground-alt;
+        padding: $spacing-small $spacing-medium;
+    }
+
+    .table-cell {
+        background-color: $color-foreground;
+        padding: $spacing-extra-small $spacing-small;
+
+        .number-input {
+            background-color: transparent;
+        }
+    }
 }
 
 .row-col-element {

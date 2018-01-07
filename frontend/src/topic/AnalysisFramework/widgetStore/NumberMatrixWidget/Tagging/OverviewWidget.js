@@ -50,11 +50,23 @@ export default class NumberMatrixOverview extends React.PureComponent {
     }
 
     renderRow = (key, rowData) => {
-        const { data } = this.props;
+        const { data, attribute } = this.props;
+        const values = Object.values(attribute[key] || emptyObject)
+            .filter(v => v);
+        const isSame = values.length === 0 || (new Set(values).size === 1);
 
         return (
-            <tr key={key}>
-                <th scope="row">{rowData.title}</th>
+            <tr key={key} >
+                <th
+                    className={isSame ? (
+                        styles['table-header-row']
+                    ) : (
+                        `${styles['table-header-row']} ${styles['not-similar']}`
+                    )}
+                    scope="row"
+                >
+                    {rowData.title}
+                </th>
                 <List
                     data={data.columnHeaders || emptyList}
                     modifier={(colKey, colData) => this.renderColElement(colKey, colData, key)}
@@ -65,7 +77,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
     }
 
     renderColHeader = (key, data) => (
-        <th scope="col" key={key}>{data.title}</th>
+        <th
+            className={styles['table-header']}
+            scope="col"
+            key={key}
+        >
+            {data.title}
+        </th>
     )
 
     renderColElement = (key, data, rowKey) => {
@@ -73,7 +91,10 @@ export default class NumberMatrixOverview extends React.PureComponent {
         const value = (attribute[rowKey] || emptyObject)[key];
 
         return (
-            <td key={`${rowKey}-${key}`}>
+            <td
+                className={styles['table-cell']}
+                key={`${rowKey}-${key}`}
+            >
                 <NumberInput
                     placeholder="999 999"
                     showLabel={false}
@@ -89,10 +110,10 @@ export default class NumberMatrixOverview extends React.PureComponent {
     render() {
         const { data } = this.props;
         return (
-            <table>
+            <table styleName="number-matrix-overview">
                 <tbody>
                     <tr>
-                        <td />
+                        <td styleName="table-header" />
                         <List
                             data={data.columnHeaders || emptyList}
                             modifier={this.renderColHeader}

@@ -313,12 +313,22 @@ export default class NumberMatrixOverview extends React.PureComponent {
     }
 
     renderColHeader = (key, data) => (
-        <th scope="col" key={key}>{data.title}</th>
+        <th
+            className={styles['table-header']}
+            scope="col"
+            key={key}
+        >
+            {data.title}
+        </th>
     )
 
     renderColElement = (key, data, rowKey) => (
-        <td key={`${rowKey}-${key}`}>
+        <td
+            className={styles['table-cell']}
+            key={`${rowKey}-${key}`}
+        >
             <NumberInput
+                className={styles['number-input']}
                 placeholder="999 999"
                 showLabel={false}
                 showHintAndError={false}
@@ -333,7 +343,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
         return (
             <tr key={key}>
-                <th scope="row">{data.title}</th>
+                <th
+                    className={styles['table-header']}
+                    scope="row"
+                >
+                    {data.title}
+                </th>
                 <List
                     data={columnHeaders}
                     modifier={(colKey, colData) => this.renderColElement(colKey, colData, key)}
@@ -348,19 +363,21 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
         return (
             <table>
-                <tr>
-                    <td />
+                <tbody>
+                    <tr>
+                        <td />
+                        <List
+                            data={columnHeaders}
+                            modifier={this.renderColHeader}
+                            keyExtractor={NumberMatrixOverview.rowKeyExtractor}
+                        />
+                    </tr>
                     <List
-                        data={columnHeaders}
-                        modifier={this.renderColHeader}
+                        data={rowHeaders}
+                        modifier={this.renderRow}
                         keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                     />
-                </tr>
-                <List
-                    data={rowHeaders}
-                    modifier={this.renderRow}
-                    keyExtractor={NumberMatrixOverview.rowKeyExtractor}
-                />
+                </tbody>
             </table>
         );
     }
