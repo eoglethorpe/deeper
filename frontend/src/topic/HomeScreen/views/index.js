@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 
@@ -73,11 +74,9 @@ export default class HomeScreen extends React.PureComponent {
 
         return (
             <div styleName="home-screen">
-                <img
+                <ReactSVG
                     styleName="deep-logo"
-                    src={logo}
-                    alt="DEEP"
-                    draggable="false"
+                    path={logo}
                 />
                 <p>
                     <span styleName="welcome-message">

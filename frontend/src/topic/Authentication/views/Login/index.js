@@ -5,6 +5,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -263,18 +264,20 @@ export default class Login extends React.PureComponent {
             pending,
             pristine,
         } = this.state;
+
         return (
             <div styleName="login">
                 <div styleName="deep-container">
-                    <img
+                    <ReactSVG
                         styleName="logo"
-                        src={logo}
-                        alt="DEEP"
-                        draggable="false"
+                        path={logo}
                     />
-                    <h2 styleName="heading">Data entry and exploration platform</h2>
+                    <h2 styleName="heading">
+                        <small>Welcome to</small><br />
+                        Data entry and exploration platform
+                    </h2>
                 </div>
-                <div styleName="login-box">
+                <div styleName="login-form-container">
                     <div styleName="hid-link-container">
                         <a
                             styleName="hid-link"

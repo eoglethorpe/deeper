@@ -1,32 +1,44 @@
 @import '../../../../stylesheets/base';
 
 .login {
+    @extend %main-content;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     background-color: $color-primary;
-    width: 100%;
-    height: 100vh;
 
     .deep-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-right: 12vw;
+        padding: $spacing-extra-large;
 
         .logo {
-            width: 20vw;
+            margin-bottom: $spacing-extra-large;
+            width: 256px;
+            height: 256px;
+
+            path {
+                fill: $color-accent;
+            }
         }
 
         .heading {
             color: $color-text-on-primary;
+            font-weight: $font-weight-medium;
+
+            small {
+                text-transform: none;
+                font-weight: $font-weight-light;
+            }
         }
     }
 
-    .login-box {
+    .login-form-container {
         display: flex;
         flex-direction: column;
+        padding: $spacing-extra-large;
         width: $width-login-form;
 
         .hid-link-container {
@@ -112,10 +124,7 @@
             }
 
             .register-link {
-                text-transform: capitalize;
                 color: $color-accent;
-                font-size: $font-size-medium-alt;
-                font-weight: $font-weight-medium;
             }
         }
     }

@@ -4,6 +4,7 @@
 
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
 
 import {
@@ -155,16 +156,7 @@ export default class PasswordReset extends React.PureComponent {
 
         return (
             <div styleName="reset-password">
-                <div styleName="deep-container">
-                    <img
-                        styleName="logo"
-                        src={logo}
-                        alt="DEEP"
-                        draggable="false"
-                    />
-                    <h2 styleName="heading">Data entry and exploration platform</h2>
-                </div>
-                <div styleName="left-box">
+                <div styleName="form-container">
                     {
                         resetSuccess ?
                             <div styleName="info">
