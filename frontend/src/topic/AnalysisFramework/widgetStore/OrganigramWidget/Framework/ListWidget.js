@@ -23,7 +23,7 @@ import {
 } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
 
-// import { iconNames } from '../../../../../common/constants';
+import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -198,7 +198,7 @@ export default class Organigram extends React.PureComponent {
                         value={organ.title}
                         styleName="title-input"
                         showHintAndError={false}
-                        placeholder="Organ"
+                        placeholder={afStrings.organPlaceholder}
                         showLabel={false}
                         disabled={isFatherOrgan}
                         onChange={this.handleChange(nextIndices)}
@@ -249,16 +249,16 @@ export default class Organigram extends React.PureComponent {
                     show={showEditModal}
                     onClose={this.handleEditModalClose}
                 >
-                    <ModalHeader title="Edit Organigram" />
+                    <ModalHeader title={afStrings.editOrganigramModaltitle} />
                     <ModalBody>
                         { this.renderOrgan(organigram) }
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={this.handleModalCancelButtonClick}>
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

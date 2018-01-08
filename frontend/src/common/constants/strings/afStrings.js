@@ -62,11 +62,17 @@ const afStrings = {
     columnsLabel: string[750],
     addColumnUnitButtonLabel: string[751],
 
-    numberWidgetLabel: string[709],
+    numberWidgetLabel: string[752],
 
-    organigramWidgetLabel: string[709],
+    organigramWidgetLabel: string[753],
+    organPlaceholder: string[754],
+    editOrganigramModaltitle: string[755],
+    applyButtonLabel: string[756],
 
-    scaleWidgetLabel: string[709],
+    scaleWidgetLabel: string[757],
+    titlePlaceholderScale: string[758],
+    editScaleModalTitle: string[759],
+    addscaleUnitButtonLabel: string[760],
 
 
 };

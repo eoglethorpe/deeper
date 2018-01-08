@@ -27,7 +27,10 @@ import {
     ModalFooter,
     ListView,
 } from '../../../../../public/components/View';
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
 
 import styles from './styles.scss';
@@ -144,8 +147,8 @@ export default class ScaleFrameworkList extends React.PureComponent {
             </div>
             <TextInput
                 className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Reliable"
+                label={afStrings.titleLabel}
+                placeholder={afStrings.titlePlaceholderScale}
                 onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
                 onFocus={() => this.handleTextInputOnFocus(key)}
                 value={data.title}
@@ -313,13 +316,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Edit scales"
+                        title={afStrings.editScaleModalTitle}
                         rightComponent={
                             <TransparentPrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddScaleUnitButtonClick}
                             >
-                                Add scale unit
+                                {afStrings.addscaleUnitButtonLabel}
                             </TransparentPrimaryButton>
                         }
                     />
@@ -342,12 +345,12 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

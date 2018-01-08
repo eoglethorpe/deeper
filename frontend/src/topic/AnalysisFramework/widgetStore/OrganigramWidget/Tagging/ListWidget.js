@@ -17,6 +17,8 @@ import {
 import {
     OrgChart,
 } from '../../../../../public/components/Visualization';
+import { afStrings } from '../../../../../common/constants';
+
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -135,7 +137,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
                     styleName="edit-value-modal"
                     show={this.state.showEditModal}
                 >
-                    <ModalHeader title="Organigram" />
+                    <ModalHeader title={afStrings.organigramWidgetLabel} />
                     <ModalBody>
                         <OrgChart
                             data={this.props.data}
@@ -148,10 +150,10 @@ export default class OrganigramTaggingList extends React.PureComponent {
                     </ModalBody>
                     <ModalFooter>
                         <Button onClick={this.handleCancelClick} >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton onClick={this.handleSaveClick} >
-                            Apply
+                            {afStrings.applyButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

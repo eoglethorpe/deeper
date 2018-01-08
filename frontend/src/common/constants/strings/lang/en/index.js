@@ -417,25 +417,17 @@ const strings = {
     750: 'Columns',
     751: 'Add Column Unit',
 
-    752: 'Analysis',
-    753: 'Analysis',
-    754: 'Analysis',
-    755: 'Analysis',
-    756: 'Analysis',
-    757: 'Analysis',
-    758: 'Analysis',
-    759: 'Analysis',
-    760: 'Analysis',
-    761: 'Analysis',
-    762: 'Analysis',
-    763: 'Analysis',
-    764: 'Analysis',
-    765: 'Analysis',
-    766: 'Analysis',
-    767: 'Analysis',
-    768: 'Analysis',
-    769: 'Analysis',
-    770: 'Analysis',
+    752: 'Number',
+
+    753: 'Organigram',
+    754: 'Organ',
+    755: 'Edit Organigram',
+    756: 'Apply',
+
+    757: 'Scale',
+    758: 'eg: Reliable',
+    759: 'Edit Scales',
+    760: 'Add Scale Unit',
     // Notification strings
 
     // User Profile
