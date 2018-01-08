@@ -1123,7 +1123,7 @@ test('should add not add duplicate ngram to any given subcategory', () => {
                                                     title: 'baby 5',
                                                     description: '',
                                                     ngrams: {
-                                                        0: ['wash', 'fwash'],
+                                                        1: ['wash', 'fwash'],
                                                     },
                                                     subcategories: [],
                                                 },
@@ -1148,7 +1148,7 @@ test('should add not add duplicate ngram to any given subcategory', () => {
     const action = addSubcategoryNGramAction({
         level: 3,
         subcategoryId: 104,
-        ngram: { n: 0, keyword: 'WASH' },
+        ngram: { n: 1, keyword: 'WASH' },
         categoryEditorId: 1,
     });
     const after = {
@@ -1183,7 +1183,7 @@ test('should add not add duplicate ngram to any given subcategory', () => {
                                                     title: 'baby 5',
                                                     description: '',
                                                     ngrams: {
-                                                        0: ['wash', 'fwash'],
+                                                        1: ['wash', 'fwash'],
                                                     },
                                                     subcategories: [],
                                                 },
@@ -1252,7 +1252,7 @@ test('should add ngram to any given subcategory', () => {
                                     title: 'new subcategory',
                                     description: '',
                                     ngrams: {
-                                        0: ['old'],
+                                        1: ['old'],
                                     },
                                     subcategories: [],
                                 },
@@ -1266,7 +1266,7 @@ test('should add ngram to any given subcategory', () => {
     const action = addSubcategoryNGramAction({
         level: 0,
         subcategoryId: 100,
-        ngram: { n: 0, keyword: 'wash' },
+        ngram: { n: 1, keyword: 'wash' },
         categoryEditorId: 1,
     });
     const after = {
@@ -1312,7 +1312,7 @@ test('should add ngram to any given subcategory', () => {
                                     title: 'new subcategory',
                                     description: '',
                                     ngrams: {
-                                        0: ['wash', 'old'],
+                                        1: ['wash', 'old'],
                                     },
                                     subcategories: [],
                                 },
@@ -1382,7 +1382,7 @@ test('should add ngram to any given subcategory', () => {
     const action = addSubcategoryNGramAction({
         level: 0,
         subcategoryId: 100,
-        ngram: { n: 0, keyword: 'wash' },
+        ngram: { n: 1, keyword: 'wash' },
         categoryEditorId: 1,
     });
     const after = {
@@ -1428,7 +1428,7 @@ test('should add ngram to any given subcategory', () => {
                                     title: 'new subcategory',
                                     description: '',
                                     ngrams: {
-                                        0: ['wash'],
+                                        1: ['wash'],
                                     },
                                     subcategories: [],
                                 },
@@ -1463,7 +1463,7 @@ test('should remove ngram to any given subcategory', () => {
                                     title: 'new subcategory',
                                     description: '',
                                     ngrams: {
-                                        0: ['gram', 'wash'],
+                                        1: ['gram', 'wash'],
                                     },
                                     subcategories: [],
                                 },
@@ -1476,7 +1476,7 @@ test('should remove ngram to any given subcategory', () => {
     };
     const action = removeSubcategoryNGramAction({
         ngram: {
-            n: 0,
+            n: 1,
             keyword: 'wash',
         },
         categoryEditorId: 1,
@@ -1501,7 +1501,7 @@ test('should remove ngram to any given subcategory', () => {
                                     title: 'new subcategory',
                                     description: '',
                                     ngrams: {
-                                        0: ['gram'],
+                                        1: ['gram'],
                                     },
                                     subcategories: [],
                                 },
