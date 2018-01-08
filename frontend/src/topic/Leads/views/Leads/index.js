@@ -336,20 +336,20 @@ export default class Leads extends React.PureComponent {
             switch (key) {
                 case 'created_at':
                     if (filter) {
-                        requestFilters.created_at__gte = FormattedDate.format(
+                        requestFilters.created_at__gt = FormattedDate.format(
                             new Date(filter.startDate), 'yyyy-MM-dd',
                         );
-                        requestFilters.created_at__lte = FormattedDate.format(
+                        requestFilters.created_at__lt = FormattedDate.format(
                             new Date(filter.endDate), 'yyyy-MM-dd',
                         );
                     }
                     break;
                 case 'published_on':
                     if (filter) {
-                        requestFilters.published_on__gte = FormattedDate.format(
+                        requestFilters.published_on__gt = FormattedDate.format(
                             new Date(filter.startDate), 'yyyy-MM-dd',
                         );
-                        requestFilters.published_on__lte = FormattedDate.format(
+                        requestFilters.published_on__lt = FormattedDate.format(
                             new Date(filter.endDate), 'yyyy-MM-dd',
                         );
                     }

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import { isObjectEmpty } from '../../../public/utils/common';
 import {
+    TextInput,
     DateFilter,
     SelectInput,
 } from '../../../public/components/Input';
@@ -194,6 +195,35 @@ export default class EntriesFilter extends React.PureComponent {
                 key="filters"
                 styleName="filters"
             >
+                <TextInput
+                    className={styles.filter}
+                    key="search"
+                    label="Search"
+                    onChange={(value) => { this.handleFilterChange('search', value); }}
+                    placeholder="Search excerpt"
+                    showHintAndError={false}
+                    value={filters.search}
+                    disabled={this.props.pending}
+                />
+                <SelectInput
+                    className={styles.filter}
+                    key="created-by"
+                    label="Created By"
+                    multiple
+                    onChange={(value) => { this.handleFilterChange('created_by', value); }}
+                    showHintAndError={false}
+                    value={filters.created_by}
+                    disabled={this.props.pending}
+                />
+                <DateFilter
+                    className={styles.filter}
+                    key="created-at"
+                    label="Created At"
+                    onChange={(value) => { this.handleFilterChange('created_at', value); }}
+                    showHintAndError={false}
+                    value={filters.created_at}
+                    disabled={this.props.pending}
+                />
                 { this.props.filters.map(this.renderFilter) }
                 <div styleName="action-buttons">
                     { this.props.filters.length > 0 && !this.props.applyOnChange &&

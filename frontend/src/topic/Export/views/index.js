@@ -40,7 +40,6 @@ import jsonIcon from '../../../img/json.svg';
 
 import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
-import BasicInformationInputs from './BasicInformationInputs';
 import ExportPreview from '../../../common/components/ExportPreview';
 import styles from './styles.scss';
 
@@ -73,14 +72,6 @@ export default class Export extends React.PureComponent {
             activeExportTypeKey: 'word',
             reportStructure: this.createReportStructure(props.analysisFramework),
             selectedLeads: [],
-            values: {
-                excerpt: '',
-                createdBy: [],
-                createdAt: {},
-                leadTitle: '',
-                leadSource: '',
-                leadCreatedAt: {},
-            },
         };
 
         // this.options = [
@@ -256,22 +247,6 @@ export default class Export extends React.PureComponent {
         });
     }
 
-    handleFilterInputsChange = (newValues) => {
-        const {
-            values: oldValues,
-        } = this.state;
-
-        const settings = {
-            $merge: newValues,
-        };
-
-        const values = update(oldValues, settings);
-
-        this.setState({
-            values,
-        });
-    }
-
     handleSelectLeadChange = (key, value) => {
         const settings = {
             [key]: {
@@ -391,7 +366,6 @@ export default class Export extends React.PureComponent {
         const {
             activeExportTypeKey,
             leads,
-            values,
         } = this.state;
 
         return (
@@ -437,9 +411,7 @@ export default class Export extends React.PureComponent {
                             </div>
                         </div>
                     </section>
-                    <section
-                        styleName="filters"
-                    >
+                    <section styleName="filters" >
                         <header styleName="header">
                             <h4>
                                 {exportStrings.selectFiltersLabel}
@@ -447,12 +419,6 @@ export default class Export extends React.PureComponent {
                         </header>
                         <div styleName="content">
                             <div styleName="left">
-                                <div styleName="basic-information">
-                                    <BasicInformationInputs
-                                        onChange={this.handleFilterInputsChange}
-                                        values={values}
-                                    />
-                                </div>
                                 <div styleName="entry-attributes">
                                     <h4>
                                         {exportStrings.entryAttributesLabel}
