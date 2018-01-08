@@ -30,6 +30,7 @@ const propTypes = {
         params: PropTypes.shape({
             dummy: PropTypes.string,
         }),
+        url: PropTypes.string,
     }).isRequired,
 
     history: PropTypes.shape({
