@@ -570,6 +570,10 @@ const ceAddManualSubcategoryNGram = (state, action) => {
         ngram: { n: ngramN, keyword: ngramKeyword },
         categoryEditorId,
     } = action;
+    if (ngramN <= 0) {
+        return state;
+    }
+
     const {
         categoryEditorView: {
             [categoryEditorId]: {
@@ -643,6 +647,9 @@ const ceAddSubcategoryNGram = (state, action) => {
         subcategoryId,
         ngram: { n: ngramN, keyword: ngramKeyword },
     } = action;
+    if (ngramN <= 0) {
+        return state;
+    }
     const {
         categoryEditorView: {
             [categoryEditorId]: {
