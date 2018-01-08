@@ -1,95 +1,119 @@
 @import '../../../../../../stylesheets/base';
 
-.add-lead-list-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    outline: none;
-    border: 0;
-    border-bottom: $width-separator-thin solid $color-separator;
-    border-left: $width-separator-thick solid transparent;
-    background-color: transparent;
-    cursor: pointer;
-    padding: $spacing-small;
-    width: 100%;
-    overflow: hidden;
-    color: $color-text;
-    font-family: inherit;
-    font-size: inherit;
-    user-select: none;
+.lead-list-item {
+    position: relative;
 
-    .icon {
-        flex-shrink: 0;
-        margin: 0 $spacing-small;
-        padding: 0;
-        width: $width-icon-large;
-        font-size: $font-size-large;
-    }
-
-    &.active {
-        border-left: $width-separator-thick solid $color-accent;
-        background-color: $color-hover;
-    }
-
-    .title {
-        flex-basis: calc(100% - #{($width-icon-large + $spacing-small * 2) * 2});
-        margin: 0;
-        padding: $spacing-small 0;
-        text-align: left;
-        word-break: break-all;
-    }
-
-    .warning,
-    .pending,
-    .error,
-    .complete,
-    .pristine {
-        flex-shrink: 0;
-        margin: 0 $spacing-small;
-        padding: 0;
-        width: $width-icon-large;
-        color: $color-label;
-        font-size: $font-size-medium-alt;
-    }
-
-    .pending {
-        animation: spin 1s linear infinite;
-    }
-
-    .warning {
-        color: $color-warning;
-    }
-
-    .error {
-        color: $color-danger;
-    }
-
-    .complete {
-        color: $color-success;
-    }
-
-    .progress-bar {
-        display: block;
-        flex-basis: 100%;
-        transition: 1s opacity ease-in-out;
-        opacity: 1;
-        background-color: $color-background;
+    .add-lead-list-item {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        outline: none;
+        border: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+        border-left: $width-separator-thick solid transparent;
+        background-color: transparent;
+        cursor: pointer;
+        padding: $spacing-small;
         width: 100%;
-        height: $height-progress-bar;
+        overflow: hidden;
+        color: $color-text;
+        font-family: inherit;
+        font-size: inherit;
+        user-select: none;
 
-        .progress {
+        .icon {
+            flex-shrink: 0;
+            margin: 0 $spacing-small;
+            padding: 0;
+            width: $width-icon-large;
+            font-size: $font-size-large;
+        }
+
+        &.active {
+            border-left: $width-separator-thick solid $color-accent;
+            background-color: $color-hover;
+        }
+
+        .title {
+            flex-basis: calc(100% - #{($width-icon-large + $spacing-small * 2) * 2});
+            margin: 0;
+            padding: $spacing-small 0;
+            text-align: left;
+            word-break: break-all;
+        }
+
+        .warning,
+        .pending,
+        .error,
+        .complete,
+        .pristine {
+            flex-shrink: 0;
+            margin: 0 $spacing-small;
+            padding: 0;
+            width: $width-icon-large;
+            color: $color-label;
+            font-size: $font-size-medium-alt;
+        }
+
+        .pending {
+            animation: spin 1s linear infinite;
+        }
+
+        .warning {
+            color: $color-warning;
+        }
+
+        .error {
+            color: $color-danger;
+        }
+
+        .complete {
+            color: $color-success;
+        }
+
+        .progress-bar {
             display: block;
-            transition: .6s width ease-in-out;
-            background-color: $color-accent;
-            height: 100%;
+            flex-basis: 100%;
+            transition: 1s opacity ease-in-out;
+            opacity: 1;
+            background-color: $color-background;
+            width: 100%;
+            height: $height-progress-bar;
+
+            .progress {
+                display: block;
+                transition: .6s width ease-in-out;
+                background-color: $color-accent;
+                height: 100%;
+            }
+
+            &.completed {
+                opacity: 0;
+            }
+
+            &.hide {
+                opacity: 0;
+            }
+        }
+    }
+
+    .remove-button {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: $spacing-medium;
+        transform: translateY(-50%);
+    }
+
+    &:hover {
+        .add-lead-list-item {
+            .status-icon {
+                display: none;
+            }
         }
 
-        &.completed {
-            opacity: 0;
-        }
-
-        &.hide {
-            opacity: 0;
+        .remove-button {
+            display: initial;
         }
     }
 }
