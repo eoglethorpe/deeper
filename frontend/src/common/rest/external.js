@@ -1,6 +1,7 @@
 import {
     POST,
     commonHeaderForPostExternal,
+    p,
 } from '../config/rest';
 
 export const urlForKeywordExtraction = 'https://deepl.togglecorp.com/api/keywords-extraction/';
@@ -34,3 +35,13 @@ export const createParamsForLeadClassify = body => ({
         'Content-Type': 'application/json',
     },
 });
+
+export const createUrlForGoogleViewer = docUrl =>
+    `https://drive.google.com/viewerng/viewer?${p({
+        url: docUrl,
+        pid: 'explorer',
+        efh: false,
+        a: 'v',
+        chrome: false,
+        embedded: true,
+    })}`;

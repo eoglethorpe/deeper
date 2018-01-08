@@ -2,6 +2,10 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import {
+    createUrlForGoogleViewer,
+} from '../../../../../common/rest/external';
+
 import styles from './styles.scss';
 
 export const supportedMimeType = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -36,8 +40,7 @@ export default class GalleryDocs extends React.PureComponent {
             isSameOrigin,
         } = this.props;
 
-        const googleDriveViewerUrl = 'https://drive.google.com/viewerng/viewer' +
-            `?url=${docUrl}&pid=explorer&efh=false&a=v&chrome=false&embedded=true`;
+        const googleDriveViewerUrl = createUrlForGoogleViewer(docUrl);
 
         return (
             <div
