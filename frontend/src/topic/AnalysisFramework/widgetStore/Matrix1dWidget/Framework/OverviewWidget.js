@@ -11,7 +11,10 @@ import {
 
 import MatrixRow from './MatrixRow';
 
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
 import {
     TransparentPrimaryButton,
@@ -371,12 +374,12 @@ export default class Matrix1dOverview extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Edit row"
+                        title={afStrings.editRowModalTitle}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddRowButtonClick}
                             >
-                                Add row
+                                {afStrings.addRowButtonLabel}
                             </TransparentPrimaryButton>
                         }
                     />
@@ -399,12 +402,12 @@ export default class Matrix1dOverview extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

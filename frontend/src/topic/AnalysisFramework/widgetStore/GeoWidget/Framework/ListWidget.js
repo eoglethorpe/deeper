@@ -4,6 +4,7 @@ import React from 'react';
 
 import {
     iconNames,
+    afStrings,
 } from '../../../../../common/constants';
 
 import styles from './styles.scss';
@@ -73,7 +74,7 @@ export default class GeoFrameworkList extends React.PureComponent {
         return (
             <div styleName="geo-list">
                 <TransparentButton>
-                    Location <i className={iconNames.globe} />
+                    {afStrings.geoAreaButtonLabel} <i className={iconNames.globe} />
                 </TransparentButton>
             </div>
         );

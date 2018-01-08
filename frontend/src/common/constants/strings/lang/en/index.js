@@ -355,7 +355,79 @@ const strings = {
 
     617: 'Preview Not Available',
 
+    // Aanalysis Framework Strings
 
+    700: 'Widgets',
+    701: 'Goto List',
+    702: 'Save',
+    703: 'Goto Overview',
+
+    704: 'Date',
+    705: 'Excerpt',
+    706: 'Text or Image Excerpt',
+    707: 'Text',
+    708: 'Image',
+
+    709: 'Geo Location',
+    710: 'Region',
+    711: 'Action',
+    712: 'Click to select a Geo Area',
+    713: 'Geo Area',
+    714: 'Select a Region',
+    715: 'Selected Regions',
+    716: 'Search a Location',
+    717: 'Cancel',
+
+    718: 'Matrix 1D',
+    719: 'Add / edit cell',
+    720: 'Add Cell',
+    721: 'Edit row',
+    722: 'Add row',
+
+    723: 'Matrix 2D',
+    724: 'Sector',
+    725: 'Add Sector',
+    726: 'Dimensions',
+    727: 'Add Dimension',
+    728: 'Subsectors',
+    729: 'Add Subsectors',
+    730: 'Add',
+
+    731: 'Sector Title',
+    732: 'eg: Wash',
+    733: 'Tooltip',
+    734: 'Dimension Title',
+    735: 'eg: space',
+    736: 'Subsector Title',
+
+    737: 'Multiselect',
+    738: 'Option',
+    739: 'eg: Context',
+    740: 'Edit Multiselect',
+    741: 'Add Option',
+
+    742: 'Number Matrix',
+    743: 'Title',
+    744: 'eg: Row',
+    745: 'eg: Its a tooltip',
+    746: 'eg: Column',
+    747: 'Edit number matrix',
+    748: 'Rows',
+    749: 'Add Row Unit',
+    750: 'Columns',
+    751: 'Add Column Unit',
+
+    752: 'Number',
+
+    753: 'Organigram',
+    754: 'Organ',
+    755: 'Edit Organigram',
+    756: 'Apply',
+
+    757: 'Scale',
+    758: 'eg: Reliable',
+    759: 'Edit Scales',
+    760: 'Add Scale Unit',
     // Notification strings
 
     // User Profile

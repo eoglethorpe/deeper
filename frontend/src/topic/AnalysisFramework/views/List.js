@@ -15,6 +15,7 @@ import {
 
 import {
     iconNames,
+    afStrings,
 } from '../../../common/constants';
 import {
     randomString,
@@ -225,14 +226,14 @@ export default class List extends React.PureComponent {
                 <div styleName="bottom">
                     <header styleName="header">
                         <h2>
-                            Widgets
+                            {afStrings.headerWidgets}
                         </h2>
                         <div styleName="action-buttons">
                             <Button onClick={this.handleGotoOverviewButtonClick}>
-                                Go to overview
+                                {afStrings.gotoOverviewButtonLabel}
                             </Button>
                             <SuccessButton onClick={this.props.onSave}>
-                                Save
+                                {afStrings.saveButtonLabel}
                             </SuccessButton>
                         </div>
                     </header>

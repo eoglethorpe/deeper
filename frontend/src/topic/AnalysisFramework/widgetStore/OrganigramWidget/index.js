@@ -7,10 +7,11 @@ import {
 import {
     ViewListWidget,
 } from './View';
+import { afStrings } from '../../../../common/constants';
 
 const multiselectWidget = {
     id: 'organigramWidget',
-    title: 'Organigram',
+    title: afStrings.organigramWidgetLabel,
     analysisFramework: {
         listComponent: FrameworkListWidget,
         listMinSize: { width: 216, height: 108 },

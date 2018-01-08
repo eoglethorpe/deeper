@@ -28,7 +28,10 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 import update from '../../../../../public/utils/immutable-update';
 
 import styles from './styles.scss';
@@ -218,13 +221,13 @@ export default class MatrixRow extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Add / edit cell"
+                        title={afStrings.matrix1DModalTitle}
                         rightComponent={
                             <TransparentPrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddCellButtonClick}
                             >
-                                Add cell
+                                {afStrings.addCellButtonLabel}
                             </TransparentPrimaryButton>
                         }
                     />
@@ -241,12 +244,12 @@ export default class MatrixRow extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

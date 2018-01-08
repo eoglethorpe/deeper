@@ -27,7 +27,10 @@ import {
     ListView,
     List,
 } from '../../../../../public/components/View';
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
 
 import styles from './styles.scss';
@@ -93,16 +96,16 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Row"
+                label={afStrings.titleLabel}
+                placeholder={afStrings.titlePlaceholderRow}
                 onChange={(value) => { this.handleRowUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
             />
             <TextInput
                 className={styles['title-input']}
-                label="Tooltip"
-                placeholder="eg: Its a tooltip"
+                label={afStrings.tooltipTitle}
+                placeholder={afStrings.tooltipPlaceholder}
                 onChange={(value) => { this.handleRowUnitTooltipInputChange(key, value); }}
                 value={data.tooltip}
                 showHintAndError={false}
@@ -124,16 +127,16 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Column"
+                label={afStrings.titleLabel}
+                placeholder={afStrings.titlePlaceholderColumn}
                 onChange={(value) => { this.handleColUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
             />
             <TextInput
                 className={styles['title-input']}
-                label="Tooltip"
-                placeholder="eg: Its a tooltip"
+                label={afStrings.tooltipTitle}
+                placeholder={afStrings.tooltipPlaceholder}
                 onChange={(value) => { this.handleColUnitTooltipInputChange(key, value); }}
                 value={data.tooltip}
                 showHintAndError={false}
@@ -399,18 +402,18 @@ export default class NumberMatrixOverview extends React.PureComponent {
                     show={showEditModal}
                     onClose={this.handleEditModalClose}
                 >
-                    <ModalHeader title="Edit number matrix" />
+                    <ModalHeader title={afStrings.editNumberMatrixModalTitle} />
                     <ModalBody styleName="modal-body">
                         <div styleName="modal-unit-container">
                             <header styleName="header">
                                 <h3 styleName="heading">
-                                    Rows
+                                    {afStrings.rowsLabel}
                                 </h3>
                                 <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddRowButtonClick}
                                 >
-                                    Add row unit
+                                    {afStrings.addRowUnitButtonLabel}
                                 </PrimaryButton>
                             </header>
                             <SortableRowList
@@ -424,13 +427,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         <div styleName="modal-unit-container">
                             <header styleName="header">
                                 <h3 styleName="heading">
-                                    Columns
+                                    {afStrings.columnsLabel}
                                 </h3>
                                 <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddColumnButtonClick}
                                 >
-                                    Add column unit
+                                    {afStrings.addColumnUnitButtonLabel}
                                 </PrimaryButton>
                             </header>
                             <SortableColumnList
@@ -446,12 +449,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

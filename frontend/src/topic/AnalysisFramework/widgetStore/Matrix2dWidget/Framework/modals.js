@@ -17,6 +17,8 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
+import { afStrings } from '../../../../../common/constants';
+
 const emptyList = [];
 
 export const getEditWidgetModal = (parent) => {
@@ -49,12 +51,12 @@ export const getEditWidgetModal = (parent) => {
                 <section styleName="edit-sectors">
                     <header styleName="header">
                         <h4 styleName="heading">
-                            Sectors
+                            {afStrings.sectorLabel}
                         </h4>
                         <TransparentButton
                             onClick={parent.handler.addSectorButtonClick}
                         >
-                            Add sector
+                            {afStrings.addSectorButtonLabel}
                         </TransparentButton>
                     </header>
                     <ListView
@@ -67,13 +69,13 @@ export const getEditWidgetModal = (parent) => {
                 <section styleName="edit-dimensions">
                     <header styleName="header">
                         <h4 styleName="heading">
-                            Dimensions
+                            {afStrings.dimensionLabel}
                         </h4>
                         <TransparentButton
                             tabIndex="-1"
                             onClick={parent.handler.addDimensionButtonClick}
                         >
-                            Add dimension
+                            {afStrings.addDimensionButtonLabel}
                         </TransparentButton>
                     </header>
                     <ListView
@@ -88,12 +90,12 @@ export const getEditWidgetModal = (parent) => {
                 <Button
                     onClick={parent.handler.editWidgetModalCancelButtonClick}
                 >
-                    Cancel
+                    {afStrings.cancelButtonLabel}
                 </Button>
                 <PrimaryButton
                     onClick={parent.handler.editWidgetModalSaveButtonClick}
                 >
-                    Save
+                    {afStrings.saveButtonLabel}
                 </PrimaryButton>
             </ModalFooter>
         </Modal>
@@ -118,7 +120,7 @@ export const getEditSectorsModal = (parent) => {
             onClose={parent.handler.editSectorsModalClose}
         >
             <ModalHeader
-                title="Add subsectors"
+                title={afStrings.addSubsectorModalTitle}
             />
             <ModalBody styleName="modal-body">
                 <ListView
@@ -130,12 +132,12 @@ export const getEditSectorsModal = (parent) => {
                 <div styleName="edit-subsectors">
                     <header styleName="header">
                         <h4>
-                            Subsectors
+                            {afStrings.subsectorsLabel}
                         </h4>
                         <TransparentButton
                             onClick={parent.handler.addSubsectorButtonClick}
                         >
-                            Add
+                            {afStrings.addButtonLabel}
                         </TransparentButton>
                     </header>
                     <ListView
@@ -152,12 +154,12 @@ export const getEditSectorsModal = (parent) => {
                 <Button
                     onClick={parent.handler.editSectorsModalCancelButtonClick}
                 >
-                    Cancel
+                    {afStrings.cancelButtonLabel}
                 </Button>
                 <PrimaryButton
                     onClick={parent.handler.editSectorsModalSaveButtonClick}
                 >
-                    Save
+                    {afStrings.saveButtonLabel}
                 </PrimaryButton>
             </ModalFooter>
         </Modal>

@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 
 import {
     TransparentButton,
@@ -26,14 +29,14 @@ export default class Renderer {
             className={styles['edit-sector']}
         >
             <TextInput
-                label="Sector title"
-                placeholder="eg: wash"
+                label={afStrings.sectorTitleLabel}
+                placeholder={afStrings.sectorTitlePlaceholder}
                 onChange={(value) => { this.handler.sectorTitleInputChange(i, value); }}
                 showHintAndError={false}
                 value={data.title}
             />
             <TextInput
-                label="Tooltip"
+                label={afStrings.tooltipTitle}
                 onChange={(value) => { this.handler.sectorTooltipInputChange(i, value); }}
                 showHintAndError={false}
                 value={data.tooltip}
@@ -53,14 +56,14 @@ export default class Renderer {
             className={styles['edit-dimension']}
         >
             <TextInput
-                label="Dimension title"
-                placeholder="eg: space"
+                label={afStrings.dimensionTitleLabel}
+                placeholder={afStrings.dimensionTitlePlaceholder}
                 showHintAndError={false}
                 onChange={(value) => { this.handler.dimensionTitleInputChange(i, value); }}
                 value={data.title}
             />
             <TextInput
-                label="Tooltip"
+                label={afStrings.tooltipTitle}
                 showHintAndError={false}
                 onChange={(value) => { this.handler.dimensionTooltipInputChange(i, value); }}
                 value={data.tooltip}
@@ -81,7 +84,7 @@ export default class Renderer {
 
     editSubsector = (key, data, i) => (
         <TextInput
-            label="Subsector title"
+            label={afStrings.subsectorTitleLabel}
             className={styles['edit-subsector-input']}
             onChange={(value) => { this.handler.subsectorTitleInputValueChange(i, value); }}
             key={data.id}

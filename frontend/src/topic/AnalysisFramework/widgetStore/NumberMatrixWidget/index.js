@@ -8,9 +8,12 @@ import {
 } from './Tagging';
 import { ViewListWidget } from './View';
 
+import { afStrings } from '../../../../common/constants';
+
+
 const numberMatrixWidget = {
     id: 'numberMatrixWidget',
-    title: 'Number Matrix',
+    title: afStrings.numberMatrixWidgetLabel,
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
