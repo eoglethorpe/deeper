@@ -8,9 +8,12 @@ import {
 } from './Tagging';
 import { ViewListWidget } from './View';
 
+import { afStrings } from '../../../../common/constants';
+
+
 const excerptWidget = {
     id: 'matrix1dWidget',
-    title: 'Matrix 1D',
+    title: afStrings.matrix1DWidgetLabel,
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,

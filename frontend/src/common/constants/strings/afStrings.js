@@ -24,8 +24,26 @@ const afStrings = {
     searchLocationPlaceholder: string[716],
 
     matrix1DWidgetLabel: string[718],
+    matrix1DModalTitle: string[719],
+    addCellButtonLabel: string[720],
+    editRowModalTitle: string[721],
+    addRowButtonLabel: string[722],
 
-    matrix2DWidgetLabel: string[709],
+    matrix2DWidgetLabel: string[723],
+    sectorLabel: string[724],
+    addSectorButtonLabel: string[725],
+    dimensionLabel: string[726],
+    addDimensionButtonLabel: string[727],
+    subsectorsLabel: string[728],
+    addSubsectorModalTitle: string[729],
+    addButtonLabel: string[730],
+
+    sectorTitleLabel: string[731],
+    sectorTitlePlaceholder: string[732],
+    dimensionTitleLabel: string[734],
+    dimensionTitlePlaceholder: string[735],
+    subsectorTitleLabel: string[736],
+    tooltipTitle: string[733],
 
     multiselectWidgetLabel: string[709],
 

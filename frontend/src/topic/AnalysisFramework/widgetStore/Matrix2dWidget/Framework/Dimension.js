@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 import {
     randomString,
     getColorOnBgColor,
@@ -15,7 +18,6 @@ import {
     Button,
     PrimaryButton,
 } from '../../../../../public/components/Action';
-
 import {
     TextInput,
 } from '../../../../../public/components/Input';
@@ -266,12 +268,12 @@ export default class Dimension extends React.PureComponent {
                         <Button
                             onClick={this.handleEditDimensionModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleEditDimensionModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>
