@@ -140,7 +140,6 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     cd $ROOT_DIR
     echo "::::::  >> Starting docker contaniners"
     docker-compose up -d
-    # TODO: Use better way to pass variables
     echo "
     REACT_APP_API_HTTPS=${DEEP_HTTPS}
     REACT_APP_API_END=${DJANGO_ALLOWED_HOST_API}
@@ -151,9 +150,9 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     REACT_APP_MAPBOX_ACCESS_TOKEN=${MAPBOX_ACCESS_TOKEN}
     REACT_APP_MAPBOX_STYLE=${MAPBOX_STYLE}
     " > frontend/.env
-    echo "::::::  >> Clearing Older Reacts Builds"
-    rm -rf frontend/build
-    echo "::::::  >> Generating New Reacts Builds"
+    echo "::::::  >> Clearing Older Reacts Builds [Locally]"
+    docker-compose exec react bash -c "cd frontend && rm -rf frontend/build"
+    echo "::::::  >> Generating New Reacts Builds [Locally]"
     set -e;
     docker-compose exec react bash -c "cd frontend && yarn install && yarn build"
     set +e;
@@ -164,9 +163,14 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     aws s3 rm s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/static/css --recursive
     echo "::::::  >> Uploading New Builds Files To S3 Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
     aws s3 sync frontend/build/ s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC
-    aws s3 cp s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/index.html s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/index.html \
-        --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html --acl public-read
     echo "::::::  >> Settings Configs for Bucket [$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC]"
+    # disable index.html cache
+    aws s3 cp frontend/build/index.html s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/index.html \
+        --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type text/html --acl public-read
+    # disable service-worker.js cache
+    aws s3 cp frontend/build/service-worker.js s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC/service-worker.js \
+        --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate --content-type application/javascript --acl public-read
+    # S3 website settings config
     aws s3 website s3://$DJANGO_AWS_STORAGE_BUCKET_NAME_STATIC --index-document index.html --error-document index.html
 
     # Clear cloudflare cache [only for deeper.togglecorp.com ]

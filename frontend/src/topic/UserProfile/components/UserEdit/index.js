@@ -215,7 +215,7 @@ export default class UserEdit extends React.PureComponent {
         const uploader = new Uploader(
             files[0],
             urlForUpload,
-            () => createParamsForFileUpload(),
+            () => createParamsForFileUpload({ is_public: true }),
         );
 
         uploader.success = (response) => {

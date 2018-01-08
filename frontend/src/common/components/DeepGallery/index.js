@@ -76,7 +76,7 @@ export default class DeepGallery extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.galleryFilterRequest) {
+        if (this.galleryFileRequest) {
             this.galleryFileRequest.stop();
         }
     }
