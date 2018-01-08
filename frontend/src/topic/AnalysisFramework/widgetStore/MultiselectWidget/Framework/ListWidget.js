@@ -21,7 +21,10 @@ import {
 } from '../../../../../public/components/View';
 import { randomString } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -71,8 +74,8 @@ export default class Multiselect extends React.PureComponent {
         >
             <TextInput
                 className={styles['title-input']}
-                label="Option"
-                placeholder="eg: Context"
+                label={afStrings.optionLabel}
+                placeholder={afStrings.optionPlaceholder}
                 onChange={(value) => { this.handleValueInputChange(key, value); }}
                 value={data.label}
             />
@@ -194,12 +197,12 @@ export default class Multiselect extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Edit Multiselect"
+                        title={afStrings.editMultiselectModalTitle}
                         rightComponent={
                             <TransparentPrimaryButton
                                 onClick={this.handleAddOptionButtonClick}
                             >
-                                Add Option
+                                {afStrings.addOptionButtonLabel}
                             </TransparentPrimaryButton>
                         }
                     />
@@ -215,12 +218,12 @@ export default class Multiselect extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

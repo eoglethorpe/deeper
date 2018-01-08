@@ -45,9 +45,22 @@ const afStrings = {
     subsectorTitleLabel: string[736],
     tooltipTitle: string[733],
 
-    multiselectWidgetLabel: string[709],
+    multiselectWidgetLabel: string[737],
+    optionLabel: string[738],
+    optionPlaceholder: string[739],
+    editMultiselectModalTitle: string[740],
+    addOptionButtonLabel: string[741],
 
-    numberMatrixWidgetLabel: string[709],
+    numberMatrixWidgetLabel: string[742],
+    titleLabel: string[743],
+    titlePlaceholderRow: string[744],
+    tooltipPlaceholder: string[745],
+    titlePlaceholderColumn: string[746],
+    editNumberMatrixModalTitle: string[747],
+    rowsLabel: string[748],
+    addRowUnitButtonLabel: string[749],
+    columnsLabel: string[750],
+    addColumnUnitButtonLabel: string[751],
 
     numberWidgetLabel: string[709],
 
