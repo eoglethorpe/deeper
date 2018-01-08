@@ -154,7 +154,6 @@ export default class EditEntryView extends React.PureComponent {
         this.api = new API(
             this.handleAddEntryWithValues,
             this.handleSelectEntry,
-            this.handleChangeEntryData,
             this.handleChangeEntryValues,
         );
     }
@@ -489,25 +488,13 @@ export default class EditEntryView extends React.PureComponent {
         });
     }
 
-    handleChangeEntryData = (entryId, data) => {
-        this.props.changeEntry({
-            leadId: this.props.leadId,
-            entryId,
-            data,
-            uiState: {
-                pristine: false,
-                error: false,
-            },
-        });
-    }
-
-    handleChangeEntryValues = (entryId, values) => {
+    handleChangeEntryValues = (entryId, values, pristine) => {
         this.props.changeEntry({
             leadId: this.props.leadId,
             entryId,
             values,
             uiState: {
-                pristine: false,
+                pristine,
                 error: false,
             },
         });

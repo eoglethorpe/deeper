@@ -38,29 +38,21 @@ export default class ExcerptTextOverview extends React.PureComponent {
         this.options = options;
     }
 
-    componentWillMount() {
-        this.update(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.update(nextProps);
-    }
-
-    update = (props) => {
-        const { id, attribute, api } = props;
-
+    getAttribute = () => {
+        const { api, attribute } = this.props;
         if (!attribute) {
-            const attr = {
+            return {
                 type: api.getEntryType(),
                 excerpt: api.getEntryExcerpt(),
                 image: api.getEntryImage(),
             };
-            api.getEntryModifier().setAttribute(id, attr).apply();
         }
+        return attribute;
     }
 
     handleEntryTypeChange = (value) => {
-        const { id, api, attribute } = this.props;
+        const { id, api } = this.props;
+        const attribute = this.getAttribute();
         api.getEntryModifier()
             .setType(value)
             .setAttribute(id, { ...attribute, type: value })
@@ -68,7 +60,8 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     handleExcerptChange = (value) => {
-        const { id, api, attribute } = this.props;
+        const { id, api } = this.props;
+        const attribute = this.getAttribute();
         api.getEntryModifier()
             .setExcerpt(value)
             .setAttribute(id, { ...attribute, excerpt: value })
@@ -76,10 +69,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     render() {
-        const {
-            attribute,
-        } = this.props;
-
+        const attribute = this.getAttribute();
         if (!attribute) {
             return null;
         }

@@ -184,7 +184,9 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entryId: value,
         });
-        this.setState({ currentTab: this.state.oldTab });
+        // TODO: Changing tab when changing entry may not be
+        // required.
+        // this.setState({ currentTab: this.state.oldTab });
     }
 
     handleTabSelect = (selectedTab) => {
