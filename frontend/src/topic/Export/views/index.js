@@ -72,6 +72,7 @@ export default class Export extends React.PureComponent {
         this.state = {
             activeExportTypeKey: 'word',
             reportStructure: this.createReportStructure(props.analysisFramework),
+            decoupledEntries: true,
             selectedLeads: [],
         };
 
@@ -161,6 +162,7 @@ export default class Export extends React.PureComponent {
             activeExportTypeKey,
             selectedLeads,
             reportStructure,
+            decoupledEntries,
         } = this.state;
 
         let exportType;
@@ -174,6 +176,7 @@ export default class Export extends React.PureComponent {
             project: projectId,
             export_type: exportType,
             ...entriesFilters,
+            decoupled: decoupledEntries,
             lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
             report_structure: this.createReportStructureForExport(reportStructure),
         };
@@ -272,6 +275,12 @@ export default class Export extends React.PureComponent {
         });
     }
 
+    handleDecoupledEntriesChange = (value) => {
+        this.setState({
+            decoupledEntries: value,
+        });
+    }
+
     handleExport = () => {
         this.export((exportId) => {
             console.log(exportId);
@@ -359,9 +368,13 @@ export default class Export extends React.PureComponent {
         />
     )
 
-    renderExcelOptions = () => {
-
-    }
+    renderExcelOptions = () => (
+        <Checkbox
+            label="Decoupled Entries"
+            onChange={this.handleDecoupledEntriesChange}
+            value={this.state.decoupledEntries}
+        />
+    )
 
     render() {
         const {
