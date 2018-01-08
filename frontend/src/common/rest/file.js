@@ -12,8 +12,9 @@ export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
 export const createUrlForGalleryFile = fileId => `${wsEndpoint}/files/${fileId}/`;
 
-export const createParamsForFileUpload = () => ({
+export const createParamsForFileUpload = (body = {}) => ({
     headers: authorizationHeaderForPost,
+    body,
 });
 
 export const createHeaderForGoogleDriveFileUpload = ({
