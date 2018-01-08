@@ -79,16 +79,14 @@ class RouteSynchronizer extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const newUrlParams = this.getNewUrlParams(nextProps);
         if (this.props.match !== nextProps.match) {
             this.props.setRouteParams(nextProps.match);
         }
 
+        const newUrlParams = this.getNewUrlParams(nextProps);
         if (newUrlParams) {
-            console.log('Syncing url');
             this.syncUrl(nextProps, newUrlParams);
         } else {
-            console.log('Syncing state');
             this.syncState(nextProps);
         }
     }
@@ -130,9 +128,15 @@ class RouteSynchronizer extends React.PureComponent {
     syncUrl = (nextProps, newUrlParams) => {
         const { history, match: { path } } = nextProps;
         const { location } = this.props;
+        const newPath = reverseRoute(path, newUrlParams);
+        if (newPath === this.props.match.url) {
+            console.warn('No need to sync url');
+            return;
+        }
+        console.warn('Syncing url');
         history.push({
             ...location,
-            pathname: reverseRoute(path, newUrlParams),
+            pathname: newPath,
         });
     }
 
@@ -147,8 +151,10 @@ class RouteSynchronizer extends React.PureComponent {
             match: {
                 path: newMatchPath,
                 url: newMatchUrl,
-                projectId: newMatchProjectId,
-                countryId: newMatchCountryId,
+                params: {
+                    projectId: newMatchProjectId,
+                    countryId: newMatchCountryId,
+                },
             },
         } = newProps;
 
@@ -165,9 +171,11 @@ class RouteSynchronizer extends React.PureComponent {
         }
 
         if (newMatchProjectId && oldActiveProjectId !== +newMatchProjectId) {
+            console.warn('Syncing state: projectId');
             newProps.setActiveProject({ activeProject: +newMatchProjectId });
         }
         if (newMatchCountryId && oldActiveCountryId !== +newMatchCountryId) {
+            console.warn('Syncing state: countryId');
             newProps.setActiveCountry({ activeCountry: +newMatchCountryId });
         }
     }

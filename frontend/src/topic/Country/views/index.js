@@ -48,12 +48,13 @@ const propTypes = {
     setRegions: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired, // eslint-disable-line
     activeUser: PropTypes.object.isRequired, // eslint-disable-line
-    countryId: PropTypes.string.isRequired,
+    countryId: PropTypes.string,
 };
 
 const defaultProps = {
     location: {},
     countries: [],
+    countryId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
