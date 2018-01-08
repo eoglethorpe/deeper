@@ -84,7 +84,7 @@ export default class UserProfile extends React.PureComponent {
 
         this.state = {
             editProfile: false,
-            pending: false,
+            pending: true,
         };
     }
 
@@ -171,7 +171,7 @@ export default class UserProfile extends React.PureComponent {
             return (
                 <div styleName="user-profile">
                     <div styleName="user-detail-alt">
-                        User Not Found....
+                        User Not Found
                     </div>
                 </div>
             );
