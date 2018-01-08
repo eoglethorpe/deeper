@@ -417,7 +417,7 @@ export default class Export extends React.PureComponent {
                     >
                         <header styleName="header">
                             <h4 styleName="heading">
-                                {exportStrings.electExportTypeLabel}
+                                {exportStrings.selectExportTypeLabel}
                             </h4>
                         </header>
                         <div styleName="content">

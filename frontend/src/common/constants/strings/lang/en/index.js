@@ -338,7 +338,7 @@ const strings = {
     604: 'PDF',
     605: 'XLXS',
     606: 'JSON',
-    607: 'Select Export Type',
+    607: 'Select Export Type :',
 
     608: 'Select Filters',
 
