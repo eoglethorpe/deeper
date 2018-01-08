@@ -12,6 +12,10 @@ import {
     iconNames,
 } from '../../../../../../common/constants';
 
+import {
+    DangerButton,
+} from '../../../../../../public/components/Action';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -71,7 +75,7 @@ export default class LeadListItem extends React.PureComponent {
             case LEAD_STATUS.warning:
                 return (
                     <span
-                        styleName="warning"
+                        styleName="status-icon warning"
                         className={iconNames.warning}
                     />
                 );
@@ -79,28 +83,28 @@ export default class LeadListItem extends React.PureComponent {
             case LEAD_STATUS.uploading:
                 return (
                     <span
-                        styleName="pending"
+                        styleName="status-icon pending"
                         className={iconNames.loading}
                     />
                 );
             case LEAD_STATUS.invalid:
                 return (
                     <span
-                        styleName="error"
+                        styleName="status-icon error"
                         className={iconNames.error}
                     />
                 );
             case LEAD_STATUS.nonPristine:
                 return (
                     <span
-                        styleName="pristine"
+                        styleName="status-icon pristine"
                         className={iconNames.codeWorking}
                     />
                 );
             case LEAD_STATUS.complete:
                 return (
                     <span
-                        styleName="complete"
+                        styleName="status-icon complete"
                         className={iconNames.checkCircle}
                     />
                 );
@@ -130,8 +134,6 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering LeadListItem');
-
         const { active, className, isRemoveDisabled, onRemove, leadKey } = this.props;
 
         const { choice, upload, lead } = this.props;
@@ -139,9 +141,9 @@ export default class LeadListItem extends React.PureComponent {
         const { title } = leadAccessor.getValues(lead);
 
         return (
-            <div>
+            <div styleName="lead-list-item">
                 <button
-                    key="first-btn"
+                    key="lead-item"
                     styleName={`add-lead-list-item ${active ? 'active' : ''}`}
                     className={className}
                     onClick={this.handleClick}
@@ -156,13 +158,14 @@ export default class LeadListItem extends React.PureComponent {
                     { this.renderIcon(choice) }
                     { this.renderUploadProgress(choice, upload) }
                 </button>
-                <button
-                    key="second-btn"
+                <DangerButton
+                    key="remove-button"
+                    styleName="remove-button"
                     disabled={isRemoveDisabled}
                     onClick={() => onRemove(leadKey)}
                 >
                     Remove
-                </button>
+                </DangerButton>
             </div>
         );
     }
