@@ -362,6 +362,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             type="number"
                             error={formFieldErrors.level}
                             disabled={pending}
+                            min={0}
                         />
                         <TextInput
                             value={formValues.title}
