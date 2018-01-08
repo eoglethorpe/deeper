@@ -15,6 +15,10 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
+import {
+    exportStrings,
+} from '../../../common/constants';
+
 const propTypes = {
     className: PropTypes.string,
     exportId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
@@ -176,7 +180,7 @@ export default class ExportPreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Preview not Available
+                {exportStrings.previewNotAvailableLabel}
             </div>
         );
     }
