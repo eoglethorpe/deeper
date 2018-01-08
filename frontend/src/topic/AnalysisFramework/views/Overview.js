@@ -16,6 +16,7 @@ import {
 
 import {
     iconNames,
+    afStrings,
 } from '../../../common/constants';
 import {
     randomString,
@@ -228,7 +229,7 @@ export default class Overview extends React.PureComponent {
             <div styleName="overview">
                 <div styleName="left">
                     <header styleName="header">
-                        <h2>Widgets</h2>
+                        <h2>{afStrings.headerWidgets}</h2>
                     </header>
                     <div styleName="widget-list">
                         {
@@ -262,10 +263,10 @@ export default class Overview extends React.PureComponent {
                         <div styleName="entry-actions" />
                         <div styleName="action-buttons">
                             <Button onClick={this.handleGotoListButtonClick} >
-                                Goto list
+                                {afStrings.gotoListButtonLabel}
                             </Button>
                             <SuccessButton onClick={this.props.onSave} >
-                                Save
+                                {afStrings.saveButtonLabel}
                             </SuccessButton>
                         </div>
                     </header>
