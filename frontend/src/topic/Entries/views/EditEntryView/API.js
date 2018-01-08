@@ -10,6 +10,7 @@ class EntryModifier {
         changeEntryValues,
     ) {
         this.entry = entry;
+        this.pristine = entryAccessor.getUiState(entry).pristine;
         this.values = entry && entryAccessor.getValues(entry);
         this.changeEntryValues = changeEntryValues;
     }
@@ -24,6 +25,7 @@ class EntryModifier {
             entryType: { $set: 'excerpt' },
         };
 
+        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -38,6 +40,7 @@ class EntryModifier {
             entryType: { $set: 'image' },
         };
 
+        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -51,6 +54,7 @@ class EntryModifier {
             entryType: { $set: type },
         };
 
+        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -101,6 +105,7 @@ class EntryModifier {
             };
         }
 
+        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -184,6 +189,7 @@ class EntryModifier {
             this.changeEntryValues(
                 entryAccessor.getKey(this.entry),
                 this.values,
+                this.pristine,
             );
         }
     }
@@ -255,7 +261,7 @@ class EntryBuilder {
             excerpt: this.excerpt,
             image: this.image,
             attributes: this.attributes,
-            filterData: this.filterData,
+            fta: this.filterData,
             exportData: this.exportData,
             color: this.color,
         };
@@ -269,7 +275,6 @@ export default class API {
     constructor(
         addEntry,
         selectEntry,
-        changeEntryData,
         changeEntryValues,
         entries = [],
     ) {
@@ -278,7 +283,6 @@ export default class API {
 
         this.addEntry = addEntry;
         this.selectEntry = selectEntry;
-        this.changeEntryData = changeEntryData;
         this.changeEntryValues = changeEntryValues;
     }
 

@@ -116,6 +116,7 @@ export default class Overview extends React.PureComponent {
         }
 
         if (this.props.saveAllPending !== nextProps.saveAllPending) {
+            console.warn('here');
             if (nextProps.saveAllPending && this.state.currentTab !== 'entries-listing') {
                 this.setState({
                     currentTab: 'entries-listing',
@@ -179,12 +180,19 @@ export default class Overview extends React.PureComponent {
         window.location.hash = '/list/';
     }
 
-    handleEntrySelectChange = (value) => {
+    handleEntryItemClick = (value) => {
         this.props.setActiveEntry({
             leadId: this.props.leadId,
             entryId: value,
         });
         this.setState({ currentTab: this.state.oldTab });
+    }
+
+    handleEntrySelectChange = (value) => {
+        this.props.setActiveEntry({
+            leadId: this.props.leadId,
+            entryId: value,
+        });
     }
 
     handleTabSelect = (selectedTab) => {
@@ -280,7 +288,7 @@ export default class Overview extends React.PureComponent {
             >
                 <button
                     className="button"
-                    onClick={() => this.handleEntrySelectChange(currentEntryId)}
+                    onClick={() => this.handleEntryItemClick(currentEntryId)}
                 >
                     {this.calcEntryLabel(entry)}
                     <div className="status-icons">

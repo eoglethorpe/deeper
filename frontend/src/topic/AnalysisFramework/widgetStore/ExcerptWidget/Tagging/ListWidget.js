@@ -12,6 +12,7 @@ const TEXT = 'excerpt';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
+    entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
 };
@@ -25,19 +26,29 @@ export default class ExcerptList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    getAttribute = () => {
+        const { api, attribute, entryId } = this.props;
+        if (!attribute) {
+            return {
+                type: api.getEntryType(entryId),
+                excerpt: api.getEntryExcerpt(entryId),
+                image: api.getEntryImage(entryId),
+            };
+        }
+        return attribute;
+    }
+
     handleExcerptChange = (value) => {
-        const { id, api, attribute } = this.props;
-        api.getEntryModifier()
+        const { id, api, entryId } = this.props;
+        const attribute = this.getAttribute();
+        api.getEntryModifier(entryId)
             .setExcerpt(value)
             .setAttribute(id, { ...attribute, excerpt: value })
             .apply();
     }
 
     render() {
-        const {
-            attribute,
-        } = this.props;
-
+        const attribute = this.getAttribute();
         if (!attribute) {
             return null;
         }
