@@ -22,6 +22,7 @@ import {
 } from '../../../../../public/components/View';
 import {
     iconNames,
+    afStrings,
 } from '../../../../../common/constants';
 import RegionMap from '../../../../../common/components/RegionMap';
 
@@ -55,14 +56,14 @@ export default class GeoTaggingList extends React.PureComponent {
         this.tableHeaders = [
             {
                 key: 'title',
-                label: 'Region',
+                label: afStrings.tableHeaderRegion,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: afStrings.tableHeaderActions,
                 order: 2,
                 modifier: row => (
                     <div className="actions">
@@ -236,9 +237,9 @@ export default class GeoTaggingList extends React.PureComponent {
                     <TransparentButton
                         onClick={this.handleModalOpen}
                         styleName="location-button"
-                        title="Click to select a Geo Area"
+                        title={afStrings.electGeoAreaButtonTitle}
                     >
-                        Geo Area <span className={iconNames.globe} />
+                        {afStrings.geoAreaButtonLabel} <span className={iconNames.globe} />
                     </TransparentButton>
                 </div>
                 <ListView
@@ -253,12 +254,12 @@ export default class GeoTaggingList extends React.PureComponent {
                     onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
-                        title="Geographic Location"
+                        title={afStrings.geoWidgetLabel}
                         rightComponent={
                             <SelectInput
                                 showHintAndError={false}
                                 showLabel={false}
-                                placeholder="Select a region"
+                                placeholder={afStrings.selectRegionPlaceholder}
                                 options={this.props.api.getProject().regions}
                                 keySelector={this.regionKeySelector}
                                 labelSelector={this.regionLabelSelector}
@@ -279,11 +280,11 @@ export default class GeoTaggingList extends React.PureComponent {
                         />
                         <div styleName="content">
                             <div styleName="search-box">
-                                <h3>Selected Regions</h3>
+                                <h3>{afStrings.selectedRegionsLabel}</h3>
                                 <SelectInput
                                     showHintAndError={false}
                                     showLabel={false}
-                                    placeholder="Search a location"
+                                    placeholder={afStrings.searchLocationPlaceholder}
                                     options={locations[selectedRegion]}
                                     optionsIdentifier="location-select-options"
                                     onChange={this.handleLocationSelection}
@@ -303,12 +304,12 @@ export default class GeoTaggingList extends React.PureComponent {
                         <Button
                             onClick={this.handleModalCancelButtonClick}
                         >
-                            Cancel
+                            {afStrings.cancelButtonLabel}
                         </Button>
                         <PrimaryButton
                             onClick={this.handleModalSaveButtonClick}
                         >
-                            Save
+                            {afStrings.saveButtonLabel}
                         </PrimaryButton>
                     </ModalFooter>
                 </Modal>

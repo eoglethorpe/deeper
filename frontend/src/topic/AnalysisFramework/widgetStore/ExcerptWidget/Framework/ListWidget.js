@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
+import { afStrings } from '../../../../../common/constants';
 
 const propTypes = {
     editAction: PropTypes.func.isRequired,
@@ -24,7 +25,7 @@ export default class ExcerptTextList extends React.PureComponent {
     render() {
         return (
             <div styleName="excerpt-list">
-                Text or image excerpt
+                {afStrings.textOrexcerptWidgetLabel}
             </div>
         );
     }

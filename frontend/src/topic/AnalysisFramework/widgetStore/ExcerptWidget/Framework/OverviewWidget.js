@@ -6,6 +6,7 @@ import {
     TextArea,
     RadioInput,
 } from '../../../../../public/components/Input';
+import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -24,8 +25,8 @@ export default class ExcerptTextOverview extends React.PureComponent {
         super(props);
 
         const options = [
-            { key: TEXT, label: 'Text' },
-            { key: IMAGE, label: 'Image' },
+            { key: TEXT, label: afStrings.textWidgetLabel },
+            { key: IMAGE, label: afStrings.imageWidgetLabel },
         ];
 
         this.options = options;
@@ -71,7 +72,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                         />
                     ) : (
                         <div styleName="image">
-                            Image
+                            {afStrings.imageWidgetLabel}
                         </div>
                     )
                 }
