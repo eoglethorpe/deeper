@@ -9,6 +9,8 @@ import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
 
 import schema from './common/schema';
+
+import { commonStrings } from './common/constants';
 import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
@@ -61,10 +63,21 @@ export default class App extends React.PureComponent {
     static propTypes = propTypes;
 
     static loadingMessages = [
-        'Locating the required gigapixels to render ...',
-        'Programming the flux capacitor ...',
-        'Shovelling coal into the server ...',
-        'Spinning up the hamster ...',
+        commonStrings.loadingMessages1,
+        commonStrings.loadingMessages2,
+        commonStrings.loadingMessages3,
+        commonStrings.loadingMessages4,
+        commonStrings.loadingMessages5,
+        commonStrings.loadingMessages6,
+        commonStrings.loadingMessages7,
+        commonStrings.loadingMessages8,
+        commonStrings.loadingMessages9,
+        commonStrings.loadingMessages10,
+        commonStrings.loadingMessages11,
+        commonStrings.loadingMessages12,
+        commonStrings.loadingMessages13,
+        commonStrings.loadingMessages14,
+        commonStrings.loadingMessages15,
     ];
 
     constructor(props) {

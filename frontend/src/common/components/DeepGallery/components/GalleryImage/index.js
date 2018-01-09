@@ -4,7 +4,10 @@ import React from 'react';
 
 import styles from './styles.scss';
 
-import { iconNames } from '../../../../../common/constants';
+import {
+    iconNames,
+    commonStrings,
+} from '../../../../../common/constants';
 
 export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig'];
 
@@ -37,7 +40,7 @@ export default class GalleryImage extends React.PureComponent {
                 {
                     imageUrl ? (
                         <img
-                            alt="user"
+                            alt={commonStrings.altUser}
                             className="image"
                             styleName="image"
                             src={imageUrl}

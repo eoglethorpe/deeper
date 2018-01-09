@@ -83,6 +83,13 @@ const countriesString = {
     selectCountryText: string[118],
     countryNotFoundText: string[119],
 
+    levelLabel: string[120],
+    adminLevelNameText: string[121],
+    actionsLabel: string[122],
+    adminLevelsHeader: string[122],
+
+    editAdminLevelModalTitle: string[956],
+
 };
 
 export default countriesString;

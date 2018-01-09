@@ -23,6 +23,9 @@ const exportStrings = {
     createdAtLabel: string[616],
 
     previewNotAvailableLabel: string[617],
+
+    serverErrorText: string[618],
+    connectionFailureText: string[619],
 };
 
 export default exportStrings;

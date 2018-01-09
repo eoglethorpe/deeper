@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 
 import { TransparentButton } from '../../../public/components/Action';
+import { commonStrings } from '../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -201,7 +202,7 @@ export default class GooglePicker extends React.Component {
                 {
                     this.props.children ?
                         this.props.children :
-                        <button>Open google chooser</button>
+                        <button>{commonStrings.openGoogleChooserText}</button>
                 }
             </TransparentButton>
         );

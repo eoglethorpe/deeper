@@ -5,6 +5,9 @@ import { notifySendAction } from './redux';
 import {
     NOTIFICATION,
 } from '../public/components/View';
+import {
+    commonStrings,
+} from './constants';
 
 const notify = {
     type: NOTIFICATION,
@@ -16,7 +19,7 @@ const notify = {
 
     defaultNotification: {
         type: NOTIFICATION.INFO,
-        title: 'Notification',
+        title: commonStrings.notificationLabel,
         message: 'Test notification',
         dismissable: true,
         duration: 2000,

@@ -47,6 +47,7 @@ import {
     pathNames,
     validLinks,
     hideNavbar,
+    commonStrings,
 } from '../../constants';
 
 import Cloak from '../Cloak';
@@ -297,7 +298,8 @@ export default class Navbar extends React.PureComponent {
         const projectSelectInputLink = currentValidLinks.projectSelect;
         const adminPanelLink = currentValidLinks.adminPanel;
 
-        const userName = userInformation.displayName || activeUser.displayName || 'Anon';
+        const userName = userInformation.displayName || activeUser.displayName
+        || commonStrings.anonymousLabel;
         return (
             <nav
                 className={className}
@@ -313,7 +315,7 @@ export default class Navbar extends React.PureComponent {
                         path={logo}
                     />
                     <span styleName="title">
-                        Deep
+                        {commonStrings.deepLabel}
                     </span>
                 </Link>
                 <Cloak
@@ -328,7 +330,7 @@ export default class Navbar extends React.PureComponent {
                                 labelSelector={this.projectLabelSelector}
                                 onChange={this.handleProjectChange}
                                 options={userProjects}
-                                placeholder="Select Event"
+                                placeholder={commonStrings.selectEventPlaceholder}
                                 showHintAndError={false}
                                 showLabel={false}
                                 className={styles['project-select-input']}
@@ -369,7 +371,7 @@ export default class Navbar extends React.PureComponent {
                                         target="_blank"
                                     >
                                         <span className={`${styles.icon} ${iconNames.locked}`} />
-                                        Admin Panel
+                                        {commonStrings.adminPanelLabel}
                                     </a>
                                 )
                             }
@@ -385,7 +387,7 @@ export default class Navbar extends React.PureComponent {
                                         onClick={this.handleLogoutButtonClick}
                                     >
                                         <span className={`${styles.icon} ${iconNames.logout}`} />
-                                        Logout
+                                        {commonStrings.logoutLabel}
                                     </button>
                                 </DropdownGroup>
                             )

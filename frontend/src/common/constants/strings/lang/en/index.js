@@ -138,7 +138,12 @@ const strings = {
     117: 'There are no countries.',
     118: 'Select a country to view its detail.',
     119: 'Selected county is not found.',
-
+    120: 'Level',
+    121: 'Admin Level Name',
+    122: 'Actions',
+    123: 'Admin Levels',
+    124: 'Level',
+    125: 'Level',
 
     // User Profile and User Group
 
@@ -431,6 +436,9 @@ const strings = {
 
     617: 'Preview Not Available',
 
+    618: 'Server error',
+    619: 'Failed connecting to server',
+
     // Aanalysis Framework Strings
 
     700: 'Widgets',
@@ -681,38 +689,54 @@ const strings = {
 
     987: 'Some entries were updated in server.',
     988: 'Analysis',
-    989: 'Analysis',
-    990: 'Analysis',
-    991: 'Analysis',
-    992: 'Analysis',
-    993: 'Analysis',
-    994: 'Analysis',
-    995: 'Analysis',
-    996: 'Analysis',
-    997: 'Analysis',
-    998: 'Analysis',
-    999: 'Analysis',
-    1000: 'Analysis',
-    1001: 'Analysis',
-    1002: 'Analysis',
-    1003: 'Analysis',
-    1004: 'Analysis',
-    1005: 'Analysis',
-    1006: 'Analysis',
-    1007: 'Analysis',
-    1008: 'Analysis',
-    1009: 'Analysis',
-    1010: 'Analysis',
-    1011: 'Analysis',
-    1012: 'Analysis',
-    1013: 'Analysis',
-    1014: 'Analysis',
-    1015: 'Analysis',
-    1016: 'Analysis',
-    1017: 'Analysis',
-    1018: 'Analysis',
-    1019: 'Analysis',
-    1020: 'Analysis',
+
+
+    // Common Components Strings
+
+    1200: 'User',
+    1201: 'Select',
+    1202: 'Type',
+    1203: 'Name',
+    1204: 'Date Created',
+
+    1205: 'Search',
+    1206: 'Search Gallery Files',
+    1207: 'Cancel',
+    1208: 'Add',
+
+    1209: 'Loading File',
+
+    1210: 'Open Dropbox chooser',
+    1211: 'Open Google chooser',
+
+    1212: 'Server error',
+    1213: 'Failed connecting to server',
+    1214: 'Map Not Available',
+
+    1215: 'Preview Not Available',
+    1216: 'Notification',
+
+    1217: 'Anon',
+    1218: 'DEEP',
+    1219: 'Select Event',
+    1220: 'Admin Panel',
+    1221: 'Logout',
+
+    1222: 'Locating the required gigapixels to render ...',
+    1223: 'Programming the flux capacitor ...',
+    1224: 'Shovelling coal into the server ...',
+    1225: 'Spinning up the hamster ...',
+    1226: 'Checking the gravitational constant in your locale ...',
+    1227: 'The server is powered by a lemon and two electrodes ...',
+    1228: 'Don\'t think of purple hippos ...',
+    1229: 'Dividing eternity by zero, please be patient... ...',
+    1230: 'Photographing cats... Attaching signs... MEME complete!e ...',
+    1231: 'Nobody exists on purpose, nobody belongs anywhere ...',
+    1232: 'Photographing cats... Attaching signs... MEME complete!e ...',
+    1233: 'Greetings Earthling!! ...',
+    1234: 'I am Mr. Meeseeks!! Look at me ...',
+    1235: 'Oh, yeaahhhh! You gotta get schwifty. ...',
+    1236: 'Shhhh!!! The Kraken is sleeping ...',
 };
 
 export default strings;

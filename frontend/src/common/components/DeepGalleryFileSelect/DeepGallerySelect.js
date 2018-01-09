@@ -34,7 +34,10 @@ import {
     setUserGalleryFilesAction,
 } from '../../../common/redux';
 
-import { iconNames } from '../../../common/constants';
+import {
+    iconNames,
+    commonStrings,
+} from '../../../common/constants';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 
@@ -77,13 +80,13 @@ export default class DgSelect extends React.PureComponent {
         this.galleryFilesHeader = [
             {
                 key: 'actions',
-                label: 'Select',
+                label: commonStrings.tableHeaderSelect,
                 order: 1,
                 modifier: row => this.renderCheckbox(row),
             },
             {
                 key: 'mimeType',
-                label: 'Type',
+                label: commonStrings.tableHeaderType,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
@@ -91,14 +94,14 @@ export default class DgSelect extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: 'Name',
+                label: commonStrings.tableHeaderName,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: 'Date Created',
+                label: commonStrings.tableHeaderDateCreated,
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.createdAt.localeCompare(b.createdAt),
@@ -280,10 +283,10 @@ export default class DgSelect extends React.PureComponent {
                     rightComponent={
                         <TextInput
                             onChange={this.handleSearchInputChange}
-                            placeholder="Search gallery files"
+                            placeholder={commonStrings.searchGalleryPlaceholder}
                             styleName="search-input"
                             type="search"
-                            label="Search"
+                            label={commonStrings.searchGalleryLabel}
                             value={searchInputValue}
                             showLabel={false}
                             showHintAndError={false}
@@ -305,14 +308,14 @@ export default class DgSelect extends React.PureComponent {
                     <Button
                         onClick={this.onClose}
                     >
-                        Cancel
+                        {commonStrings.cancelButtonLabel}
                     </Button>
                     <PrimaryButton
                         styleName="add-button"
                         onClick={this.onAdd}
                         disabled={pending}
                     >
-                        Add
+                        {commonStrings.addButtonLabel}
                     </PrimaryButton>
                 </ModalFooter>
             </div>

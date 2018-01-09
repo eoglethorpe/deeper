@@ -86,37 +86,37 @@ export default class RegionAdminLevel extends React.PureComponent {
         this.adminLevelHeaders = [
             {
                 key: 'level',
-                label: 'Level',
+                label: countriesString.levelLabel,
                 order: 1,
             },
             {
                 key: 'title',
-                label: 'Admin Level Name',
+                label: countriesString.adminLevelNameText,
                 order: 2,
             },
             {
                 key: 'nameProp',
-                label: 'Name Property',
+                label: countriesString.namePropertyLabel,
                 order: 3,
             },
             {
                 key: 'codeProp',
-                label: 'Pcode Property',
+                label: countriesString.pcodePropertyLabel,
                 order: 4,
             },
             {
                 key: 'parentNameProp',
-                label: 'Parent Name Property',
+                label: countriesString.parentNamePropPlaceholder,
                 order: 5,
             },
             {
                 key: 'parentCodeProp',
-                label: 'Parent Pcode Property',
+                label: countriesString.parentCodePropLabel,
                 order: 6,
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: countriesString.actionsLabel,
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
@@ -277,7 +277,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             >
                 { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
-                    <h5>Admin Levels</h5>
+                    <h5>{countriesString.adminLevelsHeader}</h5>
                     <PrimaryButton
                         iconName={iconNames.add}
                         disabled={deletePending}
@@ -291,7 +291,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                         show={this.state.addAdminLevel}
                     >
                         <ModalHeader
-                            title="Add admin level"
+                            title={countriesString.addAdminLevelButtonLabel}
                             rightComponent={
                                 <TransparentPrimaryButton
                                     onClick={this.handleModalClose}
@@ -321,7 +321,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                         show={this.state.editAdminLevel}
                     >
                         <ModalHeader
-                            title="Edit admin level"
+                            title={countriesString.editAdminLevelModalTitle}
                             rightComponent={
                                 <TransparentPrimaryButton
                                     onClick={this.handleModalClose}

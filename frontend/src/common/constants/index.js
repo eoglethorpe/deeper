@@ -17,3 +17,4 @@ export { default as apiStrings } from './strings/apiStrings';
 export { default as entryStrings } from './strings/entryStrings';
 export { default as fourHundredFourStrings } from './strings/fourHundredFourStrings';
 export { default as homescreenStrings } from './strings/homescreenStrings';
+export { default as commonStrings } from './strings/commonStrings';
