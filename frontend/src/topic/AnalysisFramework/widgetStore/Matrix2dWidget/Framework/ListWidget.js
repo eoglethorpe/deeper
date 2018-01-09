@@ -1,12 +1,17 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import { afStrings } from '../../../../../common/constants';
 
-// eslint-disable-next-line react/prefer-stateless-function
+const propTypes = {
+    title: PropTypes.string.isRequired,
+};
+
 export default class Matrix2dList extends React.PureComponent {
+    static propTypes = propTypes;
+
     render() {
         return (
             <div>
-                {afStrings.matrix2DWidgetLabel}
+                {this.props.title}
             </div>
         );
     }

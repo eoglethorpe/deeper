@@ -16,12 +16,12 @@ import styles from './styles.scss';
 const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line
 };
 
 const defaultProps = {
-    data: [],
+    data: {},
     attribute: undefined,
 };
 
@@ -34,16 +34,18 @@ export default class Matrix1dOverview extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const data = this.props.data || { rows: [] };
         this.state = {
-            rows: props.data || [],
+            data,
         };
         updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
+        const data = nextProps.data || { rows: [] };
         if (this.props.data !== nextProps.data) {
             this.setState({
-                rows: nextProps.data || [],
+                data,
             });
         }
 
@@ -118,13 +120,13 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     render() {
         const {
-            rows,
+            data,
         } = this.state;
 
         return (
             <div styleName="tagging-matrix-1d">
                 <ListView
-                    data={rows}
+                    data={data.rows}
                     className={styles.rows}
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
                     modifier={this.renderRow}

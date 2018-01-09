@@ -23,27 +23,27 @@ export const createFilterData = (attribute) => {
     };
 };
 
-export const createHighlightColor = (attribute, data) => {
+export const createHighlightColor = (attribute, { rows }) => {
     let color;
     Object.keys(attribute || {}).forEach((key) => {
         const row = attribute[key];
 
         const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);
         if (rowExists) {
-            color = data.find(d => d.key === key).color;
+            color = rows.find(d => d.key === key).color;
         }
     });
 
     return color;
 };
 
-export const createExportData = (attribute, data) => {
+export const createExportData = (attribute, { rows }) => {
     const excelValues = [];
     const reportValues = [];
 
     Object.keys(attribute).forEach((key) => {
         const row = attribute[key];
-        const rowData = data.find(r => r.key === key);
+        const rowData = rows.find(r => r.key === key);
 
         Object.keys(row).forEach((cellKey) => {
             if (row[cellKey]) {
