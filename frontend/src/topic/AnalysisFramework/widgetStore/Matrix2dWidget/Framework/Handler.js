@@ -99,12 +99,7 @@ export default class Handler {
     }
 
     widgetTitleInputChange = (value) => {
-        const settings = {
-            title: {
-                $set: value,
-            },
-        };
-        this.parent.updateData(settings);
+        this.parent.updateTitle(value);
     }
 
     editWidgetModalSaveButtonClick = () => {
@@ -116,6 +111,7 @@ export default class Handler {
             this.parent.state.data,
             this.createFilters(this.parent.state.data),
             this.createExportable(this.parent.state.data),
+            this.parent.state.title,
         );
 
         this.parent.setState({
@@ -136,6 +132,7 @@ export default class Handler {
     editWidgetModalCancelButtonClick = () => {
         this.parent.setState({
             data: this.parent.props.data,
+            title: this.parent.props.title,
             showEditWidgetModal: false,
         });
     }

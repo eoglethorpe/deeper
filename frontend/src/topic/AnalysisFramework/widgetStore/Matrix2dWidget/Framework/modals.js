@@ -23,6 +23,7 @@ const emptyList = [];
 
 export const getEditWidgetModal = (parent) => {
     const {
+        title,
         data,
         showEditWidgetModal,
     } = parent.state;
@@ -38,14 +39,14 @@ export const getEditWidgetModal = (parent) => {
             onClose={parent.handler.editWidgetModalClose}
         >
             <ModalHeader
-                title={`Edit ${data.title || 'title'}`}
+                title={`Edit ${title || 'title'}`}
             />
             <ModalBody styleName="modal-body">
                 <TextInput
                     styleName="title-input"
                     onChange={parent.handler.widgetTitleInputChange}
                     label="Title"
-                    value={data.title}
+                    value={title}
                     showHintAndError={false}
                 />
                 <section styleName="edit-sectors">

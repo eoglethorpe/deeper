@@ -58,6 +58,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         this.renderer = new Renderer(this);
 
         this.state = {
+            title: props.title,
             data: props.data,
             showEditWidgetModal: false,
             showEditSectorsModal: false,
@@ -70,6 +71,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
+            title: nextProps.title,
             data: nextProps.data,
         });
     }
@@ -158,6 +160,12 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         this.setState({
             data: newData,
+        });
+    }
+
+    updateTitle = (title) => {
+        this.setState({
+            title,
         });
     }
 
