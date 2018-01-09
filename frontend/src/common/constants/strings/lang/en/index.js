@@ -302,6 +302,11 @@ const strings = {
     374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
     376: 'Pro',
 
+    377: 'General Details',
+    378: 'Regions',
+    379: 'Analysis Framework',
+    380: 'Category Editor',
+
     // Category Editor
 
     400: 'Save',

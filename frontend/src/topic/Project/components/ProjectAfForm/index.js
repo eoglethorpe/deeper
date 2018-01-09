@@ -104,9 +104,9 @@ export default class ProjectAfForm extends React.PureComponent {
                     disabled={pending}
                 />
                 <TextArea
-                    label="Description"
+                    label={projectStrings.projectDescriptionLabel}
                     formname="description"
-                    placeholder="Enter Project Description"
+                    placeholder={projectStrings.projectDescriptionPlaceholder}
                     styleName="description"
                     rows={3}
                     value={formValues.description}

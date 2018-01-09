@@ -163,7 +163,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         return (
                             <div>
                                 <Link
-                                    title="View Member"
+                                    title={projectStrings.viewMemberLinkTitle}
                                     key={row.member}
                                     to={reverseRoute(pathNames.userProfile, { userId: row.member })}
                                 >
@@ -177,7 +177,8 @@ export default class ProjectGeneral extends React.PureComponent {
                     return (
                         <div>
                             <TransparentPrimaryButton
-                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
+                                title={isAdmin ? projectStrings.revokeAdminRightsTitle :
+                                    projectStrings.grantAdminRightsTitle}
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
                             >
                                 {
@@ -186,7 +187,7 @@ export default class ProjectGeneral extends React.PureComponent {
                                 }
                             </TransparentPrimaryButton>
                             <TransparentDangerButton
-                                title="Delete Member"
+                                title={projectStrings.deleteMemberLinkTitle}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                             >
                                 <span className={iconNames.delete} />
@@ -577,7 +578,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         closeOnEscape
                     >
                         <ModalHeader
-                            title="Add Members"
+                            title={projectStrings.addMemberButtonLabel}
                             rightComponent={
                                 <TransparentButton
                                     onClick={this.handleModalClose}

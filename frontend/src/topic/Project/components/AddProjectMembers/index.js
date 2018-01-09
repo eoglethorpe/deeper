@@ -110,21 +110,21 @@ export default class AddProjectMembers extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'displayName',
-                label: 'Name',
+                label: projectStrings.tableHeaderName,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.displayName.localeCompare(b.displayName),
             },
             {
                 key: 'email',
-                label: 'Email',
+                label: projectStrings.tableHeaderEmail,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.email.localeCompare(b.email),
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: projectStrings.tableHeaderActions,
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';

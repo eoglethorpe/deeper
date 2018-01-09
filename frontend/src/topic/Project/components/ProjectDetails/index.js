@@ -74,10 +74,10 @@ const views = {
 };
 
 const titles = {
-    generalDetails: 'General details',
-    regions: 'Regions',
-    analysisFramework: 'Analysis Framework',
-    categoryEditor: 'Category Editor',
+    generalDetails: projectStrings.generalDetailsLabel,
+    regions: projectStrings.regionsLabel,
+    analysisFramework: projectStrings.analysisFrameworkLabel,
+    categoryEditor: projectStrings.categoryEditorLabel,
 };
 
 const keyExtractor = d => d;
