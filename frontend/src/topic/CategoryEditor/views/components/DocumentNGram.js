@@ -4,16 +4,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    ListView,
-} from '../../../../public/components/View';
+    trimWhitespace,
+    splitInWhitespace,
+} from '../../../../public/utils/common';
+import { ListView } from '../../../../public/components/View';
 
-import {
-    categoryEditorNgramsSelector,
-} from '../../../../common/redux';
-
-import {
-    ceStrings,
-} from '../../../../common/constants';
+import { categoryEditorNgramsSelector } from '../../../../common/redux';
+import { ceStrings } from '../../../../common/constants';
 
 import styles from '../styles.scss';
 
@@ -64,9 +61,12 @@ export default class DocumentNGram extends React.PureComponent {
     }
 
     handleOnDragStart = keyword => (e) => {
+        const n = splitInWhitespace(keyword).length;
+        const sanitizedKeyword = trimWhitespace(keyword);
+
         const data = JSON.stringify({
-            n: keyword.split(' ').length,
-            keyword,
+            n,
+            keyword: sanitizedKeyword,
         });
 
         e.dataTransfer.setData('text/plain', data);

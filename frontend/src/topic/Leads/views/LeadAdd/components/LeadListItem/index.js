@@ -12,6 +12,10 @@ import {
     iconNames,
 } from '../../../../../../common/constants';
 
+import {
+    DangerButton,
+} from '../../../../../../public/components/Action';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -28,10 +32,14 @@ const propTypes = {
     leadKey: PropTypes.string.isRequired,
 
     choice: PropTypes.string.isRequired,
-    upload: PropTypes.object, // eslint-disable-line
+    upload: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+
+    onRemove: PropTypes.func.isRequired,
+    isRemoveDisabled: PropTypes.bool,
 };
 
 const defaultProps = {
+    isRemoveDisabled: true,
     active: false,
     className: '',
     upload: undefined,
@@ -67,7 +75,7 @@ export default class LeadListItem extends React.PureComponent {
             case LEAD_STATUS.warning:
                 return (
                     <span
-                        styleName="warning"
+                        styleName="status-icon warning"
                         className={iconNames.warning}
                     />
                 );
@@ -75,28 +83,28 @@ export default class LeadListItem extends React.PureComponent {
             case LEAD_STATUS.uploading:
                 return (
                     <span
-                        styleName="pending"
+                        styleName="status-icon pending"
                         className={iconNames.loading}
                     />
                 );
             case LEAD_STATUS.invalid:
                 return (
                     <span
-                        styleName="error"
+                        styleName="status-icon error"
                         className={iconNames.error}
                     />
                 );
             case LEAD_STATUS.nonPristine:
                 return (
                     <span
-                        styleName="pristine"
+                        styleName="status-icon pristine"
                         className={iconNames.codeWorking}
                     />
                 );
             case LEAD_STATUS.complete:
                 return (
                     <span
-                        styleName="complete"
+                        styleName="status-icon complete"
                         className={iconNames.checkCircle}
                     />
                 );
@@ -126,30 +134,39 @@ export default class LeadListItem extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering LeadListItem');
-
-        const { active, className } = this.props;
+        const { active, className, isRemoveDisabled, onRemove, leadKey } = this.props;
 
         const { choice, upload, lead } = this.props;
         const type = leadAccessor.getType(lead);
         const { title } = leadAccessor.getValues(lead);
 
         return (
-            <button
-                styleName={`add-lead-list-item ${active ? 'active' : ''}`}
-                className={className}
-                onClick={this.handleClick}
-            >
-                <span
-                    styleName="icon"
-                    className={this.getIconClassName(type)}
-                />
-                <span styleName="title" >
-                    { title }
-                </span>
-                { this.renderIcon(choice) }
-                { this.renderUploadProgress(choice, upload) }
-            </button>
+            <div styleName="lead-list-item">
+                <button
+                    key="lead-item"
+                    styleName={`add-lead-list-item ${active ? 'active' : ''}`}
+                    className={className}
+                    onClick={this.handleClick}
+                >
+                    <span
+                        styleName="icon"
+                        className={this.getIconClassName(type)}
+                    />
+                    <span styleName="title" >
+                        { title }
+                    </span>
+                    { this.renderIcon(choice) }
+                    { this.renderUploadProgress(choice, upload) }
+                </button>
+                <DangerButton
+                    key="remove-button"
+                    styleName="remove-button"
+                    disabled={isRemoveDisabled}
+                    onClick={() => onRemove(leadKey)}
+                >
+                    Remove
+                </DangerButton>
+            </div>
         );
     }
 }

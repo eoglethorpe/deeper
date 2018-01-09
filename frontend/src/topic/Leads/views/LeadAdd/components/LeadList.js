@@ -54,10 +54,11 @@ const statusMatches = (leadStatus, status) => {
 const propTypes = {
     activeLeadId: PropTypes.string,
     setActiveLeadId: PropTypes.func.isRequired,
-    leads: PropTypes.array.isRequired, // eslint-disable-line
-    filters: PropTypes.object.isRequired, // eslint-disable-line
-    leadUploads: PropTypes.object.isRequired, // eslint-disable-line
-    choices: PropTypes.object.isRequired, // eslint-disable-line
+    leads: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadUploads: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    onLeadRemove: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -126,6 +127,7 @@ export default class LeadList extends React.PureComponent {
             activeLeadId,
             choices,
             setActiveLeadId,
+            onLeadRemove,
         } = this.props;
 
         return (
@@ -137,6 +139,8 @@ export default class LeadList extends React.PureComponent {
                 choice={choices[key].choice}
                 upload={leadUploads[key]}
                 onClick={setActiveLeadId}
+                isRemoveDisabled={choices[key].isRemoveDisabled}
+                onRemove={onLeadRemove}
             />
         );
     }

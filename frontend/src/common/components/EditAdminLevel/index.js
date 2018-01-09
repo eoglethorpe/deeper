@@ -15,6 +15,8 @@ import {
     Form,
     TextInput,
     requiredCondition,
+    integerCondition,
+    greaterThanOrEqualToCondition,
     NonFieldErrors,
     HiddenInput,
     FileInput,
@@ -105,7 +107,7 @@ export default class EditAdminLevel extends React.PureComponent {
 
         this.validations = {
             title: [requiredCondition],
-            level: [],
+            level: [requiredCondition, integerCondition, greaterThanOrEqualToCondition(0)],
             nameProp: [],
             codeProp: [],
             parentNameProp: [],
@@ -360,6 +362,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             type="number"
                             error={formFieldErrors.level}
                             disabled={pending}
+                            min={0}
                         />
                         <TextInput
                             value={formValues.title}

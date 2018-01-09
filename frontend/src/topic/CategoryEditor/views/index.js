@@ -18,6 +18,8 @@ import {
     isTruthy,
     isFalsy,
     randomString,
+    trimWhitespace,
+    splitInWhitespace,
 } from '../../../public/utils/common';
 
 import {
@@ -308,11 +310,13 @@ export default class CategoryEditor extends React.PureComponent {
     }
 
     addNewManualNgram = (keyword) => {
+        const n = splitInWhitespace(keyword).length;
+        const sanitizedKeyword = trimWhitespace(keyword);
         this.props.addManualSubcategoryNGram({
             categoryEditorId: this.props.categoryEditorId,
             ngram: {
-                n: keyword.split(' ').length,
-                keyword,
+                n,
+                keyword: sanitizedKeyword,
             },
         });
     }
