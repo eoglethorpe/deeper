@@ -67,16 +67,19 @@ export default class NavMenu extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            navLinks: nextProps.links,
-        }, () => { this.computeSize(); });
+        this.setState(
+            { navLinks: nextProps.links },
+            () => {
+                this.computeSize();
+            },
+        );
     }
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.handleWindowResize);
     }
 
-    getNavItem = (item, className) => {
+    getNavItem = (key, item, className) => {
         const {
             projectId,
             countryId,
@@ -88,38 +91,36 @@ export default class NavMenu extends React.PureComponent {
             analysisFrameworkId: 1,
         };
 
-        // TODO: specify requireLogin and requireProject for each item
         return (
             <Cloak
-                key={item}
-                requireLogin
-                requireProject
+                key={key}
+                requireLogin={item.requireLogin}
+                requireProject={item.requireProject}
+                requireAdminRights={item.requireAdminRights}
             >
                 <NavLink
                     activeClassName={styles.active}
-                    to={reverseRoute(pathNames[item], params)}
+                    to={reverseRoute(pathNames[key], params)}
                     className={className}
                     exact
                 >
-                    { pageTitles[item] }
+                    { pageTitles[key] }
                 </NavLink>
             </Cloak>
         );
     }
 
     getNavbarItem = (key, item) => (
-        this.getNavItem(item, styles['menu-item'])
+        this.getNavItem(key, item, styles['menu-item'])
     )
 
     getOverflowMenuItem = (key, item) => (
-        this.getNavItem(item, styles['overflow-menu-item'])
+        this.getNavItem(key, item, styles['overflow-menu-item'])
     )
 
     computeSize = () => {
         const menu = this.menu;
-        const {
-            navLinks,
-        } = this.state;
+        const { navLinks } = this.state;
 
         const overflowMenuLinks = [];
 
@@ -174,16 +175,14 @@ export default class NavMenu extends React.PureComponent {
         });
     }
 
-    keyExtractor = d => d
+    keyExtractor = d => d.key
 
     handleWindowResize = () => {
         this.computeSize();
     }
 
     render() {
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         const {
             navLinks,

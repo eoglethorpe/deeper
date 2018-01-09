@@ -113,25 +113,52 @@ export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.userProjects !== nextProps.userProjects
-            && nextProps.userProjects.length > 0) {
-            const activeProjectIndex = nextProps.userProjects.findIndex(p => (
-                p.id === nextProps.activeProject));
+    constructor(props) {
+        super(props);
+        this.setLinksForLocation(props.location);
+    }
 
-            // if active project id is not in userProjects,
-            // then set first project id from users project
+    componentWillReceiveProps(nextProps) {
+        const { userProjects: oldUserProjects } = this.props;
+        const {
+            userProjects: newUserProjects,
+            activeProject,
+            userProjects,
+        } = nextProps;
+
+        // NOTE: if active project id is not in userProjects,
+        // then set first project id from users project
+        if (oldUserProjects !== newUserProjects) {
+            const activeProjectIndex = newUserProjects.findIndex(
+                p => p.id === activeProject,
+            );
             if (activeProjectIndex === -1) {
-                this.props.setActiveProject({ activeProject: nextProps.userProjects[0].id });
+                this.props.setActiveProject({
+                    activeProject: (newUserProjects.length > 0) ? userProjects[0].id : undefined,
+                });
             }
         }
+
+        const { location: oldLocation } = this.props;
+        const { location: newLocation } = nextProps;
+        if (oldLocation !== newLocation) {
+            this.setLinksForLocation(newLocation);
+        }
+    }
+
+    setLinksForLocation = (location) => {
+        this.currentMatch = this.getCurrentMatch(location);
+        this.currentPath = this.currentMatch
+            ? getKeyByValue(pathNames, this.currentMatch.path)
+            : 'fourHundredFour';
+        this.validNavLinks = this.getValidNavLinks(this.currentPath);
+        this.validDropLinks = this.getValidDropLinks(this.currentPath);
+        console.warn(this.validDropLinks);
     }
 
     // UTILS
 
-    getCurrentMatch = () => {
-        const { location } = this.props;
-
+    getCurrentMatch = (location) => {
         const links = Object.keys(pathNames);
         const paths = Object.values(pathNames);
 
@@ -149,11 +176,7 @@ export default class Navbar extends React.PureComponent {
         return null;
     }
 
-    // NAV links
-
     getValidNavLinks = (currentPath) => {
-        const currentValidLinks = validLinks[currentPath];
-
         const navLinks = [
             'leads',
             'entries',
@@ -163,18 +186,14 @@ export default class Navbar extends React.PureComponent {
             'export',
         ];
 
-        const validNavLinks = navLinks.filter(
-            link => currentValidLinks.findIndex(d => d === link) !== -1,
-        );
-
+        const currentValidLinks = validLinks[currentPath];
+        const validNavLinks = navLinks
+            .map(link => ({ key: link, ...currentValidLinks[link] }))
+            .filter(d => !!d);
         return validNavLinks;
     }
 
-    // DROPDOWN links
-
     getValidDropLinks = (currentPath) => {
-        const currentValidLinks = validLinks[currentPath];
-
         const dropLinks = [
             'userProfile',
         ];
@@ -183,16 +202,18 @@ export default class Navbar extends React.PureComponent {
             dropLinks.push('apiDocs');
         }
 
-        const validDropLinks = dropLinks.filter(
-            link => currentValidLinks.findIndex(d => d === link) !== -1,
-        );
-
+        const currentValidLinks = validLinks[currentPath];
+        const validDropLinks = dropLinks
+            .map(link => ({ key: link, ...currentValidLinks[link] }))
+            .filter(d => !!d);
         return validDropLinks;
     }
 
-    getDropItemKey = item => item
+    // DROPDOWN
 
-    getDropItem = (item) => {
+    getDropItemKey = item => item.key
+
+    getDropItem = (key, item) => {
         const {
             activeProject,
             activeCountry,
@@ -209,34 +230,35 @@ export default class Navbar extends React.PureComponent {
         const dropdownItemIcons = {
             apiDocs: iconNames.code,
             userProfile: iconNames.person,
-            categoryEditor: iconNames.text,
         };
-        const iconName = dropdownItemIcons[item];
 
-        // TODO: specify requireLogin and requireProject for each item
+        console.warn(item);
+
+        const iconName = dropdownItemIcons[key];
+        const link = reverseRoute(pathNames[key], params);
+
         return (
             <Cloak
-                key={item}
-                requireLogin
-                requireProject
+                key={key}
+                requireLogin={item.requireLogin}
+                requireAdminRights={item.requireAdminRights}
+                requireProject={item.requireProject}
             >
                 <Link
-                    to={reverseRoute(pathNames[item], params)}
+                    to={link}
                     className={styles['dropdown-item']}
                 >
                     {
                         iconName &&
-                        <span
-                            className={`${iconName} ${styles.icon}`}
-                        />
+                        <span className={`${iconName} ${styles.icon}`} />
                     }
-                    { pageTitles[item] }
+                    { pageTitles[key] }
                 </Link>
             </Cloak>
         );
     }
 
-    // LOGOUT button
+    // LOGOUT
 
     handleLogoutButtonClick = () => {
         this.props.stopRefresh();
@@ -244,17 +266,18 @@ export default class Navbar extends React.PureComponent {
         this.props.logout();
     }
 
-    // SELECT input
+    // SELECTINPUT
 
     handleProjectChange = (key) => {
         if (isTruthy(key)) {
-            this.props.setActiveProject({ activeProject: key });
+            this.props.setActiveProject({
+                activeProject: key,
+            });
         }
     }
 
-    selectProjectKey = (option = {}) => (option.id)
-
-    selectProjectLabel = (option = {}) => (option.title)
+    projectKeySelector = (option = {}) => (option.id)
+    projectLabelSelector = (option = {}) => (option.title)
 
     render() {
         const {
@@ -266,13 +289,16 @@ export default class Navbar extends React.PureComponent {
             userInformation,
         } = this.props;
 
-
-        const match = this.getCurrentMatch();
-        const currentPath = match ? getKeyByValue(pathNames, match.path) : 'fourHundredFour';
-        if (hideNavbar[currentPath]) {
+        // Hide navbar
+        if (hideNavbar[this.currentPath]) {
             return <span className="no-nav" />;
         }
 
+        const currentValidLinks = validLinks[this.currentPath];
+        const projectSelectInputLink = currentValidLinks.projectSelect;
+        const adminPanelLink = currentValidLinks.adminPanel;
+
+        const linkToHomeScreen = reverseRoute(pathNames.homeScreen, {});
         const userName = userInformation.displayName || activeUser.displayName || 'Anon';
         return (
             <nav
@@ -280,7 +306,7 @@ export default class Navbar extends React.PureComponent {
                 styleName="navbar"
             >
                 <Link
-                    to={reverseRoute(pathNames.homeScreen, {})}
+                    to={linkToHomeScreen}
                     styleName="brand"
                 >
                     <ReactSVG
@@ -288,29 +314,33 @@ export default class Navbar extends React.PureComponent {
                         className={styles.icon}
                         path={logo}
                     />
-                    <span styleName="title">Deep</span>
+                    <span styleName="title">
+                        Deep
+                    </span>
                 </Link>
 
                 <Cloak
-                    requireLogin
-                    requireProject
+                    requireLogin={projectSelectInputLink.requireLogin}
+                    requireAdminRights={projectSelectInputLink.requireAdminRights}
+                    requireProject={projectSelectInputLink.requireAdminRights}
                 >
                     <SelectInput
                         clearable={false}
-                        keySelector={this.selectProjectKey}
-                        labelSelector={this.selectProjectLabel}
+                        keySelector={this.projectKeySelector}
+                        labelSelector={this.projectLabelSelector}
                         onChange={this.handleProjectChange}
                         options={userProjects}
                         placeholder="Select Event"
                         showHintAndError={false}
                         showLabel={false}
                         styleName="project-select-input"
+                        disabled={userProjects.length <= 0}
                         value={activeProject}
                     />
                 </Cloak>
 
                 <NavMenu
-                    links={this.getValidNavLinks(currentPath)}
+                    links={this.validNavLinks}
                     styleName="main-menu"
                     projectId={activeProject}
                     countryId={activeCountry}
@@ -323,19 +353,15 @@ export default class Navbar extends React.PureComponent {
                 >
                     <DropdownGroup>
                         <List
-                            data={this.getValidDropLinks(currentPath)}
+                            data={this.validDropLinks}
                             keyExtractor={this.getDropItemKey}
                             modifier={this.getDropItem}
                         />
                         <Cloak
-                            requireLogin
+                            requireLogin={adminPanelLink.requireLogin}
+                            requireAdminRights={adminPanelLink.requireAdminRights}
+                            requireProject={adminPanelLink.requireProject}
                         >
-                            {/*
-                            <button
-                                onClick={this.handleLogoutButtonClick}
-                            >
-                            </button>
-                            */}
                             <a
                                 styleName="dropdown-item"
                                 href={adminEndpoint}
