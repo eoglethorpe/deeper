@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -20,8 +19,6 @@ import {
     unsetEntriesViewFilterAction,
     filtersForProjectSelector,
 } from '../../../common/redux';
-
-import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
     entriesFilters: entriesViewFilterSelector(state, props),
@@ -49,7 +46,6 @@ const defaultProps = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class EntriesFilter extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -115,7 +111,7 @@ export default class EntriesFilter extends React.PureComponent {
             return (
                 <SelectInput
                     key={key}
-                    className={styles.filter}
+                    className="entries-filter"
                     options={filter.options}
                     label={title}
                     showHintAndError={false}
@@ -131,11 +127,11 @@ export default class EntriesFilter extends React.PureComponent {
 
             return (
                 <div
-                    className={`${styles['range-filter-container']} ${styles.filter}`}
+                    className="range-filter-container"
                     key={key}
                 >
                     <SelectInput
-                        className={styles.filter}
+                        className="entries-filter"
                         options={filter.options}
                         label={`${title} From`}
                         showHintAndError={false}
@@ -144,7 +140,7 @@ export default class EntriesFilter extends React.PureComponent {
                         disabled={this.props.pending}
                     />
                     <SelectInput
-                        className={styles.filter}
+                        className="entries-filter"
                         options={filter.options}
                         label={`${title} To`}
                         showHintAndError={false}
@@ -158,7 +154,7 @@ export default class EntriesFilter extends React.PureComponent {
             return (
                 <DateFilter
                     key={key}
-                    className={styles.filter}
+                    className="entries-filter"
                     label={title}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
@@ -171,7 +167,7 @@ export default class EntriesFilter extends React.PureComponent {
             return (
                 <SelectInput
                     key={key}
-                    className={styles.filter}
+                    className="entries-filter"
                     label={title}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
@@ -193,10 +189,10 @@ export default class EntriesFilter extends React.PureComponent {
         return (
             <div
                 key="filters"
-                styleName="filters"
+                className="entries-filters"
             >
                 <TextInput
-                    className={styles.filter}
+                    className="entries-filter"
                     key="search"
                     label="Search"
                     onChange={(value) => { this.handleFilterChange('search', value); }}
@@ -206,7 +202,7 @@ export default class EntriesFilter extends React.PureComponent {
                     disabled={this.props.pending}
                 />
                 <SelectInput
-                    className={styles.filter}
+                    className="entries-filter"
                     key="created-by"
                     label="Created By"
                     multiple
@@ -216,7 +212,7 @@ export default class EntriesFilter extends React.PureComponent {
                     disabled={this.props.pending}
                 />
                 <DateFilter
-                    className={styles.filter}
+                    className="entries-filter"
                     key="created-at"
                     label="Created At"
                     onChange={(value) => { this.handleFilterChange('created_at', value); }}
@@ -225,27 +221,29 @@ export default class EntriesFilter extends React.PureComponent {
                     disabled={this.props.pending}
                 />
                 { this.props.filters.map(this.renderFilter) }
-                <div styleName="action-buttons">
-                    { this.props.filters.length > 0 && !this.props.applyOnChange &&
+                {
+                    this.props.filters.length > 0 && !this.props.applyOnChange && (
                         <Button
-                            styleName="filter-btn"
+                            className="button apply-filter-button"
                             onClick={this.handleApplyFilter}
                             disabled={pending || pristine}
                         >
-                            Apply Filter
+                            Apply
                         </Button>
-                    }
-                    { this.props.filters.length > 0 &&
+                    )
+                }
+                {
+                    this.props.filters.length > 0 && (
                         <DangerButton
-                            styleName="filter-btn"
+                            className="button reset-filter-button"
                             onClick={this.handleClearFilter}
                             type="button"
                             disabled={pending || isFilterEmpty}
                         >
-                            Clear Filter
+                            Clear
                         </DangerButton>
-                    }
-                </div>
+                    )
+                }
             </div>
         );
     }
