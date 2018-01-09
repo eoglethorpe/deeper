@@ -53,6 +53,21 @@ const strings = {
     49: 'Gathering Website Information to Preview',
     50: '',
 
+    130: 'Apply this value to all',
+    131: 'Apply this value to all below',
+    132: 'Preview Not Available',
+    133: 'Are you sure you want to delete this lead?',
+    134: 'Failed to upload file :',
+
+    135: 'Search Similar Lead',
+    136: 'Edit lead',
+    137: 'Remove lead',
+    138: 'Add entry from this lead',
+    139: 'Table',
+    140: 'Visualizations',
+    141: 'Are you sure you want to remove this lead? The lead along with all the associated entries will be removed.',
+
+
     // For Countries
     51: 'Countries',
     52: 'Search Country',

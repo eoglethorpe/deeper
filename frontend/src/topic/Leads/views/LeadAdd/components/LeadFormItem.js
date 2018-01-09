@@ -161,7 +161,7 @@ export default class LeadFormItem extends React.PureComponent {
                         />
                     ) :
                         <div styleName="preview-text">
-                            <h1>Preview Not Available</h1>
+                            <h1>{leadsString.previewNotAvailable}</h1>
                         </div>
                 }
             </div>

@@ -298,8 +298,8 @@ export default class LeadForm extends React.PureComponent {
                             error={fieldErrors.url}
                             formname="url"
                             key="url"
-                            label="URL"
-                            placeholder="https://deeper.togglecorp.com"
+                            label={leadsString.urlLabel}
+                            placeholder={leadsString.urlPlaceholderLabel}
                             styleName="url"
                             value={values.url}
                             disabled={isFormDisabled}

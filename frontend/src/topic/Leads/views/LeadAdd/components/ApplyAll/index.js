@@ -7,7 +7,10 @@ import {
     TransparentWarningButton,
 } from '../../../../../../public/components/Action';
 
-import { iconNames } from '../../../../../../common/constants';
+import {
+    iconNames,
+    leadsString,
+} from '../../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -45,7 +48,7 @@ export default class ApplyAll extends React.PureComponent {
                     <TransparentAccentButton
                         styleName="apply-button"
                         type="button"
-                        title="Apply this value to all"
+                        title={leadsString.applyAllButtonTitle}
                         disabled={disabled}
                         onClick={() => onApplyAllClick(identiferName)}
                         tabIndex="-1"
@@ -55,7 +58,7 @@ export default class ApplyAll extends React.PureComponent {
                     <TransparentWarningButton
                         styleName="apply-button"
                         type="button"
-                        title="Apply this value to all below"
+                        title={leadsString.applyAllBelowButtonTitle}
                         disabled={disabled}
                         onClick={() => onApplyAllBelowClick(identiferName)}
                         tabIndex="-1"

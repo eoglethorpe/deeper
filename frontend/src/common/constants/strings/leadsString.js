@@ -74,6 +74,24 @@ const leadsString = {
 
     gatheringWebsiteInfoLabel: string[49],
 
+    applyAllButtonTitle: string[130],
+    applyAllBelowButtonTitle: string[131],
+
+    previewNotAvailable: string[132],
+    deleteLeadConfirmText: string[133],
+
+    fileUploadFailText: string[134],
+
+    searchSimilarLeadButtonTitle: string[135],
+    editLeadButtonTitle: string[136],
+    removeLeadLeadButtonTitle: string[137],
+    addEntryFromLeadButtonTitle: string[138],
+    tableLabel: string[139],
+    visualizationsLabel: string[140],
+
+    leadDeleteConfirmText: string[141],
+
+
 };
 
 export default leadsString;

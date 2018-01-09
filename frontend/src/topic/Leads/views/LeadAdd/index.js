@@ -247,7 +247,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleRemove = (leadId) => {
-        const removeLeadModalText = 'Are you sure you want to delete this lead?';
+        const removeLeadModalText = leadsString.deleteLeadConfirmText;
         this.setState({
             removeLeadModalText,
             showRemoveLeadModal: true,

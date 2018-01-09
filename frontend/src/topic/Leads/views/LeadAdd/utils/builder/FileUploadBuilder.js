@@ -5,6 +5,9 @@ import {
     urlForUpload,
     createParamsForFileUpload,
 } from '../../../../../../common/rest';
+import {
+    leadsString,
+} from '../../../../../../common/constants';
 
 export default class FileUploadBuilder {
     constructor(parent) {
@@ -70,7 +73,7 @@ export default class FileUploadBuilder {
         addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            formErrors: [`Failed to upload file: ${response.errors.file[0]}`],
+            formErrors: [`${leadsString.fileUploadFailText} ${response.errors.file[0]}`],
         });
 
         // FOR UPLAOD
@@ -103,4 +106,3 @@ export default class FileUploadBuilder {
         });
     }
 }
-
