@@ -357,9 +357,13 @@ const addLeadViewCopyAll = behavior => (state, action) => {
     for (let i = start; i < leads.length; i += 1) {
         const currValues = leadAccessor.getValues(leads[i]);
         const currProjectId = currValues.project;
-
         // assignee should only be applied to leads within same project
         if (attrName === 'assignee' && currProjectId !== leadProjectId) {
+            continue; // eslint-disable-line no-continue
+        }
+
+        // Don't set value which hasn't changed
+        if (currValues[attrName] === valueToCopy) {
             continue; // eslint-disable-line no-continue
         }
 
