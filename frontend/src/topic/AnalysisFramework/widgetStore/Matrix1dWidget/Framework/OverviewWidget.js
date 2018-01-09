@@ -45,7 +45,9 @@ const propTypes = {
 };
 
 const defaultProps = {
-    data: {},
+    data: {
+        rows: [],
+    },
 };
 
 const emptyObject = {};
@@ -228,7 +230,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 },
             },
         };
-        const newData = update(data.rows, settings);
+        const newData = update(data, settings);
         this.setState({
             data: newData,
             activeRow: newData.rows[rowIndex],
