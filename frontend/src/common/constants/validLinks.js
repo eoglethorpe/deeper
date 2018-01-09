@@ -1,50 +1,44 @@
-const allLinks = [
-    'login',
-    'register',
-    'passwordReset',
-    'homeScreen',
-    'dashboard',
-    'leads',
-    'addLeads',
-    'entries',
-    'editEntries',
-    'ary',
-    'editAry',
-    'export',
-    'userProfile',
-    'userGroup',
-    'projects',
-    'countries',
-    'analysisFramework',
-    'categoryEditor',
-    'weeklySnapshot',
-    'apiDocs',
-    'fourHundredFour',
-];
+// eslint-disable-next-line no-unused-vars
+const lap = { requireLogin: true, requireAdminRights: true, requireProject: true };
+const la = { requireLogin: true, requireAdminRights: true };
+const lp = { requireLogin: true, requireProject: true };
+const l = { requireLogin: true };
+// eslint-disable-next-line no-unused-vars
+const x = { requireLogin: false };
+
+const noLinks = {};
+const allLinks = {
+    leads: lp,
+    entries: lp,
+    ary: lp,
+    projects: l,
+    countries: l,
+    export: lp,
+
+    userProfile: l,
+    apiDocs: l,
+
+    adminPanel: la,
+    projectSelect: l,
+};
 
 // eslint-disable-next-line no-unused-vars
 const blacklistLinks = (links, blacklist) => {
-    const newLinks = [...links];
-
+    const newLinks = { ...links };
     blacklist.forEach((link) => {
-        const linkIndex = newLinks.findIndex(d => d === link);
-
-        if (linkIndex !== -1) {
-            newLinks.splice(linkIndex, 1);
-        }
+        newLinks[link] = undefined;
     });
-
     return newLinks;
 };
 
 const validLinks = {
-    login: [],
-    register: [],
-    passwordReset: [],
+    login: noLinks,
+    register: noLinks,
+    passwordReset: noLinks,
+    fourHundredFour: noLinks,
 
     homeScreen: allLinks,
 
-    // dashboard: blacklistLinks(allLinks, ['entries']),
     dashboard: allLinks,
 
     leads: allLinks,
@@ -71,8 +65,6 @@ const validLinks = {
     weeklySnapshot: allLinks,
 
     apiDocs: allLinks,
-
-    fourHundredFour: [],
 };
 
 export default validLinks;

@@ -22,14 +22,16 @@ const propTypes = {
             name: PropTypes.string,
         }),
     ),
+    requireAdminRights: PropTypes.bool,
     requireProject: PropTypes.bool,
     requireLogin: PropTypes.bool,
-    children: PropTypes.node.isRequired,
+    render: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     activeUser: {},
     userProjects: [],
+    requireAdminRights: false,
     requireProject: false,
     requireLogin: false,
 };
@@ -44,16 +46,19 @@ export default class Navbar extends React.PureComponent {
             activeUser,
             userProjects,
 
+            requireAdminRights,
             requireProject,
             requireLogin,
-            children,
+            render,
         } = this.props;
 
         if (requireProject && userProjects.length <= 0) {
             return null;
         } else if (requireLogin && !activeUser.userId) {
             return null;
+        } else if (requireAdminRights && !activeUser.isSuperuser) {
+            return null;
         }
-        return children;
+        return render();
     }
 }
