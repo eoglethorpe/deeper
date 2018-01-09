@@ -41,14 +41,13 @@ const propTypes = {
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    data: [],
+    data: {},
 };
 
-const emptyList = [];
 const emptyObject = {};
 
 const DragHandle = SortableHandle(() => (
@@ -64,21 +63,22 @@ export default class Matrix1dOverview extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const rows = this.props.data || emptyList;
+        const data = this.props.data || { rows: [] };
 
         this.state = {
             showEditModal: false,
-            activeRow: rows[0] || emptyObject,
-            rows,
+            activeRow: data.rows[0] || emptyObject,
+            data,
         };
 
         this.props.editAction(this.handleEdit);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.state.rows !== nextProps.data) {
-            this.setState({ rows: nextProps.data || emptyList });
-        }
+        const data = nextProps.data || { rows: [] };
+        this.setState({
+            data,
+        });
     }
 
     onSortEnd = ({ oldIndex, newIndex }) => {
@@ -97,7 +97,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    createFilters = (rows) => {
+    createFilters = ({ rows }) => {
         const filterOptions = [];
         rows.forEach((row) => {
             filterOptions.push({
@@ -125,7 +125,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         }];
     }
 
-    createExportable = (rows) => {
+    createExportable = ({ rows }) => {
         const excel = {
             type: 'multiple',
             titles: ['Dimension', 'Subdimension'],
@@ -152,29 +152,31 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleColorBoxClick = (key) => {
-        const { rows } = this.state;
-        const index = rows.findIndex(d => d.key === key);
+        const { data } = this.state;
+        const index = data.rows.findIndex(d => d.key === key);
 
         this.setState({
-            activeRow: rows[index],
+            activeRow: data.rows[index],
         });
     }
 
     handleColorChange = (newColor) => {
-        const { activeRow } = this.state;
-        const rowIndex = this.state.rows.findIndex(d => d.key === activeRow.key);
+        const { activeRow, data } = this.state;
+        const rowIndex = data.rows.findIndex(d => d.key === activeRow.key);
 
         const settings = {
-            [rowIndex]: {
-                color: { $set: newColor.hex },
+            rows: {
+                [rowIndex]: {
+                    color: { $set: newColor.hex },
+                },
             },
         };
 
-        const newRows = update(this.state.rows, settings);
+        const newData = update(this.state.data, settings);
 
         this.setState({
-            rows: newRows,
-            activeRow: newRows[rowIndex],
+            data: newData,
+            activeRow: newData.rows[rowIndex],
         });
     }
 
@@ -183,60 +185,65 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     handleRowDataChange = (key, cells) => {
-        const { rows } = this.state;
-        const rowIndex = rows.findIndex(d => d.key === key);
+        const { data } = this.state;
+        const rowIndex = data.rows.findIndex(d => d.key === key);
         const settings = {
-            [rowIndex]: {
-                cells: { $set: cells },
+            rows: {
+                [rowIndex]: {
+                    cells: { $set: cells },
+                },
             },
         };
-        const newRows = update(rows, settings);
+        const newData = update(data, settings);
 
         this.props.onChange(
-            newRows,
-            this.createFilters(newRows),
-            this.createExportable(newRows),
+            newData,
+            this.createFilters(newData),
+            this.createExportable(newData),
         );
     }
 
     handleRowRemoveButtonClick = (key) => {
-        const { rows } = this.state;
-        const rowIndex = rows.findIndex(d => d.key === key);
+        const { data } = this.state;
+        const rowIndex = data.rows.findIndex(d => d.key === key);
         const settings = {
-            $splice: [[rowIndex, 1]],
+            rows: {
+                $splice: [[rowIndex, 1]],
+            },
         };
-        const newRows = update(rows, settings);
+        const newData = update(data, settings);
         this.setState({
-            rows: newRows,
-            activeRow: newRows[0] || emptyObject,
+            data: newData,
+            activeRow: newData.rows[0] || emptyObject,
         });
     }
 
     handleRowValueInputChange = (key, value, name) => {
-        const rowIndex = this.state.rows.findIndex(d => d.key === key);
+        const { data } = this.state;
+        const rowIndex = data.rows.findIndex(d => d.key === key);
         const settings = {
-            [rowIndex]: {
-                [name]: { $set: value },
+            rows: {
+                [rowIndex]: {
+                    [name]: { $set: value },
+                },
             },
         };
-        const newRows = update(this.state.rows, settings);
+        const newData = update(data.rows, settings);
         this.setState({
-            rows: newRows,
-            activeRow: newRows[rowIndex],
+            data: newData,
+            activeRow: newData.rows[rowIndex],
         });
     }
 
     handleTextInputOnFocus = (key) => {
-        const { rows } = this.state;
-        const index = rows.findIndex(d => d.key === key);
-
+        const { data } = this.state;
         this.setState({
-            activeRow: rows[index],
+            activeRow: data.rows.find(d => d.key === key),
         });
     }
 
     handleAddRowButtonClick = () => {
-        const { rows } = this.state;
+        const { data } = this.state;
 
         const newRow = {
             key: randomString(16).toLowerCase(),
@@ -246,11 +253,13 @@ export default class Matrix1dOverview extends React.PureComponent {
             cells: [],
         };
         const settings = {
-            $push: [newRow],
+            rows: {
+                $push: [newRow],
+            },
         };
-        const newRows = update(rows, settings);
+        const newData = update(data, settings);
         this.setState({
-            rows: newRows,
+            data: newData,
             activeRow: newRow,
         });
     }
@@ -258,7 +267,7 @@ export default class Matrix1dOverview extends React.PureComponent {
     handleEdit = () => {
         this.setState({
             showEditModal: true,
-            activeRow: this.state.rows[0] || emptyObject,
+            activeRow: this.state.data.rows[0] || emptyObject,
         });
     }
 
@@ -269,7 +278,7 @@ export default class Matrix1dOverview extends React.PureComponent {
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
-            rows: this.props.data,
+            data: this.props.data,
         });
     }
 
@@ -278,9 +287,9 @@ export default class Matrix1dOverview extends React.PureComponent {
             showEditModal: false,
         });
         this.props.onChange(
-            this.state.rows,
-            this.createFilters(this.state.rows),
-            this.createExportable(this.state.rows),
+            this.state.data,
+            this.createFilters(this.state.data),
+            this.createExportable(this.state.data),
         );
     }
 
@@ -355,7 +364,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     render() {
         const {
-            rows,
+            data,
             showEditModal,
             activeRow,
         } = this.state;
@@ -363,7 +372,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         return (
             <div styleName="framework-matrix-1d">
                 <ListView
-                    data={rows}
+                    data={data.rows}
                     className={styles.rows}
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
                     modifier={this.renderRow}
@@ -384,14 +393,14 @@ export default class Matrix1dOverview extends React.PureComponent {
                         }
                     />
                     <ModalBody styleName="edit-row-body">
-                        { rows.length > 0 &&
+                        { data.rows.length > 0 &&
                             <SketchPicker
                                 color={activeRow.color}
                                 onChange={this.handleColorChange}
                             />
                         }
                         <this.SortableList
-                            items={rows}
+                            items={data.rows}
                             onSortEnd={this.onSortEnd}
                             lockAxis="y"
                             lockToContainerEdges

@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './styles.scss';
 
 import {
     SelectInput,
@@ -11,14 +10,15 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
+import styles from './styles.scss';
+import { updateAttribute } from './utils';
+
 const emptyList = [];
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.array,      // eslint-disable-line
 };
@@ -34,32 +34,25 @@ export default class Multiselect extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    createFilterData = attribute => ({
-        values: attribute.value,
-        number: undefined,
-    })
+    constructor(props) {
+        super(props);
+        updateAttribute(props);
+    }
 
-    createExportData = (attribute) => {
-        const { data } = this.props;
-
-        return {
-            excel: {
-                type: 'list',
-                value: attribute.value.map(key => data.find(d => d.key === key).label),
-            },
-        };
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
     }
 
     handleChange = (value) => {
-        const { api, id, entryId, filters, exportable } = this.props;
+        const { api, id, entryId } = this.props;
         const attribute = {
             value,
         };
 
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
-            .setFilterData(filters[0].id, this.createFilterData(attribute))
-            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 

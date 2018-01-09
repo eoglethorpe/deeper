@@ -7,14 +7,13 @@ import {
 } from '../../../../../public/components/View';
 
 import styles from './styles.scss';
+import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
     attribute: PropTypes.object,      // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object,      // eslint-disable-line
 };
 
@@ -31,6 +30,17 @@ export default class ScaleTaggingList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+        updateAttribute(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
+    }
 
     getActiveSelectionStyle = (key) => {
         const { selectedScale } = this.props.attribute || emptyObject;
@@ -73,12 +83,10 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     handleScaleClick = (selectedScale) => {
-        const { api, id, entryId, filters, exportable } = this.props;
+        const { api, id, entryId } = this.props;
         const attribute = { selectedScale };
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
-            .setFilterData(filters[0].id, this.createFilterData(attribute))
-            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 

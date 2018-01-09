@@ -2,16 +2,15 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styles from './styles.scss';
-
 import update from '../../../../../public/utils/immutable-update';
 import { getColorOnBgColor } from '../../../../../public/utils/common';
+
+import { updateAttribute } from './utils';
+import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line
 };
@@ -29,140 +28,18 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
-        const color = this.getHighlightColor(props.attribute);
-
-        if (color) {
-            props.api.getEntryModifier()
-                .setHighlightColor(color)
-                .apply();
-        }
+        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { api, attribute, data } = nextProps;
-
-        if (this.props.data !== data) {
+        if (this.props.data !== nextProps.data) {
             this.setState({
-                rows: data || [],
+                rows: nextProps.data || [],
             });
         }
-        if (this.props.attribute !== attribute) {
-            const color = this.getHighlightColor(attribute);
-
-            if (color) {
-                api.getEntryModifier()
-                    .setHighlightColor(color)
-                    .apply();
-            }
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
         }
-    }
-
-    getHighlightColor = (attribute) => {
-        const keys = Object.keys(attribute || {});
-
-        if (keys.length > 0) {
-            const { dimensions } = this.props.data;
-            const dimension = dimensions && dimensions.find(d => d.id === keys[0]);
-            return dimension && dimension.color;
-        }
-
-        return undefined;
-    }
-
-    createDimensionFilterData = (attribute) => {
-        const filterValues = [];
-        Object.keys(attribute).forEach((key) => {
-            const dimension = attribute[key];
-            let dimensionExists = false;
-
-            Object.keys(dimension).forEach((subKey) => {
-                if (Object.values(dimension[subKey].length > 0)) {
-                    filterValues.push(subKey);
-                    dimensionExists = true;
-                }
-            });
-
-            if (dimensionExists) {
-                filterValues.push(key);
-            }
-        });
-
-
-        return {
-            values: filterValues,
-            number: undefined,
-        };
-    }
-
-    createSectorFilterData = (attribute) => {
-        const filterValues = [];
-        Object.keys(attribute).forEach((key) => {
-            const dimension = attribute[key];
-
-            Object.keys(dimension).forEach((subKey) => {
-                const subdimension = dimension[subKey];
-
-                Object.keys(subdimension).forEach((sectorKey) => {
-                    const subsectors = subdimension[sectorKey];
-                    if (subsectors) {
-                        if (filterValues.indexOf(sectorKey) === -1) {
-                            filterValues.push(sectorKey);
-                        }
-
-                        filterValues.push(...subsectors);
-                    }
-                });
-            });
-        });
-
-        return {
-            values: filterValues,
-            number: undefined,
-        };
-    }
-
-    createExportData = (attribute) => {
-        const excelValues = [];
-        const reportValues = [];
-
-        Object.keys(attribute).forEach((key) => {
-            const dimension = attribute[key];
-            const dimensionData = this.props.data.dimensions.find(d => d.id === key);
-            if (!dimensionData) {
-                return;
-            }
-
-            Object.keys(dimension).forEach((subKey) => {
-                const subdimension = dimension[subKey];
-                const subdimensionData = dimensionData.subdimensions.find(d => d.id === subKey);
-
-                Object.keys(subdimension).forEach((sectorKey) => {
-                    const sectorData = this.props.data.sectors.find(s => s.id === sectorKey);
-                    const subsectors = subdimension[sectorKey];
-
-                    if (subsectors) {
-                        excelValues.push([
-                            dimensionData.title,
-                            subdimensionData.title,
-                            sectorData.title,
-                            subsectors.map(ss => sectorData.subsectors.find(sd => sd.id === ss)).join(','),
-                        ]);
-                        reportValues.push(`${sectorKey}-${key}-${subKey}`);
-                    }
-                });
-            });
-        });
-
-        return {
-            excel: {
-                type: 'lists',
-                values: excelValues,
-            },
-            report: {
-                keys: reportValues,
-            },
-        };
     }
 
     isCellActive = (dimensionId, subdimensionId, sectorId) => {
@@ -181,8 +58,6 @@ export default class Matrix2dOverview extends React.PureComponent {
             attribute,
             api,
             id,
-            filters,
-            exportable,
         } = this.props;
 
         let settings;
@@ -210,9 +85,6 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         api.getEntryModifier()
             .setAttribute(id, newAttribute)
-            .setFilterData(filters[0].id, this.createDimensionFilterData(newAttribute))
-            .setFilterData(filters[1].id, this.createSectorFilterData(newAttribute))
-            .setExportData(exportable.id, this.createExportData(newAttribute))
             .apply();
     }
 
@@ -232,8 +104,6 @@ export default class Matrix2dOverview extends React.PureComponent {
         const {
             api,
             id,
-            filters,
-            exportable,
         } = this.props;
         const existing = api.getEntryForData(formattedData);
 
@@ -253,9 +123,6 @@ export default class Matrix2dOverview extends React.PureComponent {
             api.selectEntry(existing.data.id);
             api.getEntryModifier(existing.data.id)
                 .setAttribute(id, attribute)
-                .setFilterData(filters[0].id, this.createDimensionFilterData(attribute))
-                .setFilterData(filters[1].id, this.createSectorFilterData(attribute))
-                .setExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         } else {
             const attribute = {
@@ -268,9 +135,6 @@ export default class Matrix2dOverview extends React.PureComponent {
             api.getEntryBuilder()
                 .setData(formattedData)
                 .addAttribute(id, attribute)
-                .addFilterData(filters[0].id, this.createDimensionFilterData(attribute))
-                .addFilterData(filters[1].id, this.createSectorFilterData(attribute))
-                .addExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         }
     }

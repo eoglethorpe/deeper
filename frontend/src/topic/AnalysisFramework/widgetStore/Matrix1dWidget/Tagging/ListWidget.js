@@ -2,23 +2,23 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
 import {
     ListView,
 } from '../../../../../public/components/View';
 
+import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
     attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.array,      // eslint-disable-line
+    data: PropTypes.object,      // eslint-disable-line
 };
 
 const defaultProps = {
     attribute: {},
-    data: [],
+    data: {},
 };
-
-const emptyList = [];
 
 @CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
@@ -26,9 +26,22 @@ export default class Matrix1dList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    constructor(props) {
+        super(props);
+        this.selectedRows = this.getSelectedRowsTitles(props.data, props.attribute);
+        updateAttribute(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.selectedRows = this.getSelectedRowsTitles(nextProps.data, nextProps.attribute);
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
+    }
+
     getSelectedRowsTitles = (data, attribute) => {
         const selectedRows = [];
-        data.forEach((row) => {
+        data.rows.forEach((row) => {
             const attributeRow = attribute[row.key];
             const selectedCells = [];
 
@@ -62,7 +75,7 @@ export default class Matrix1dList extends React.PureComponent {
             <span className={styles['row-title']}>{data.title}</span>
             <ListView
                 className={styles['cell-container']}
-                data={data.selectedCells || emptyList}
+                data={data.selectedCells}
                 keyExtractor={Matrix1dList.rowKeyExtractor}
                 modifier={this.renderCellData}
             />
@@ -79,14 +92,11 @@ export default class Matrix1dList extends React.PureComponent {
     )
 
     render() {
-        const { data, attribute } = this.props;
-        const selectedRows = this.getSelectedRowsTitles(data, attribute);
-
         return (
             <div styleName="matrix-1d-list">
                 <ListView
                     styleName="list"
-                    data={selectedRows || emptyList}
+                    data={this.selectedRows}
                     keyExtractor={Matrix1dList.rowKeyExtractor}
                     modifier={this.renderRowData}
                 />

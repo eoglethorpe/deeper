@@ -27,13 +27,12 @@ import {
 import RegionMap from '../../../../../common/components/RegionMap';
 
 import styles from './styles.scss';
+import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
 
 };
@@ -84,6 +83,8 @@ export default class GeoTaggingList extends React.PureComponent {
             values: (props.attribute && props.attribute.values) || emptyList,
             locations: {},
         };
+
+        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -91,19 +92,10 @@ export default class GeoTaggingList extends React.PureComponent {
             this.setState({
                 values: (nextProps.attribute && nextProps.attribute.values) || emptyList,
             });
+
+            updateAttribute(nextProps);
         }
     }
-
-    createFilterData = attribute => ({
-        values: attribute.values.map(v => v.key),
-        number: undefined,
-    })
-
-    createExportData = attribute => ({
-        excel: {
-            values: attribute.values.map(v => v.key),
-        },
-    })
 
     mapRegionsList = (key, data) => (
         <div
@@ -142,14 +134,12 @@ export default class GeoTaggingList extends React.PureComponent {
     }
 
     handleModalSaveButtonClick = () => {
-        const { api, id, entryId, filters, exportable } = this.props;
+        const { api, id, entryId } = this.props;
         const attribute = {
             values: this.state.values,
         };
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
-            .setFilterData(filters[0].id, this.createFilterData(attribute))
-            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
         this.setState({
             showMapModal: false,

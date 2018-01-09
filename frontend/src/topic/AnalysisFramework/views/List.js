@@ -108,8 +108,8 @@ export default class List extends React.PureComponent {
                 widgetKey={item.key}
                 data={item.data}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={(data, filters, exportable) => {
-                    this.handleItemChange(item.key, data, filters, exportable);
+                onChange={(data, filters, exportable, title) => {
+                    this.handleItemChange(item.key, data, filters, exportable, title);
                 }}
                 className={styles.component}
             />
@@ -183,9 +183,10 @@ export default class List extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data, filters, exportable) => {
+    handleItemChange = (key, data, filters, exportable, title) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
+            title: { $set: title || originalItem.title },
             properties: {
                 data: { $set: data },
             },

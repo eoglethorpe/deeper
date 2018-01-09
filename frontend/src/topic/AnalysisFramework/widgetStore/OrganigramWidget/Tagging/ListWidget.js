@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import styles from './styles.scss';
 
 import {
     Button,
@@ -20,12 +19,13 @@ import {
 import { afStrings } from '../../../../../common/constants';
 
 
+import styles from './styles.scss';
+import { updateAttribute } from './utils';
+
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired,      // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object,      // eslint-disable-line
     data: PropTypes.object,      // eslint-disable-line
 };
@@ -43,11 +43,14 @@ export default class OrganigramTaggingList extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
         const { attribute: { values = [] } = {} } = props;
         this.state = {
             showEditModal: false,
             values,
         };
+
+        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -56,33 +59,10 @@ export default class OrganigramTaggingList extends React.PureComponent {
             this.setState({
                 values,
             });
+
+            updateAttribute(nextProps);
         }
     }
-
-    getSelectedNodes = (node, activeKeys) => {
-        const selected = node.organs.reduce((acc, o) => (
-            acc.concat(this.getSelectedNodes(o, activeKeys))
-        ), []);
-
-        if (selected.length > 0 || activeKeys.indexOf(node.key) >= 0) {
-            selected.push(node.key);
-        }
-
-        return selected;
-    }
-
-    createFilterData = (attribute) => {
-        const { data } = this.props;
-        return {
-            values: this.getSelectedNodes(data, attribute.values.map(v => v.id)),
-            number: undefined,
-        };
-    }
-
-    createExportData = attribute => ({
-        type: 'list',
-        value: attribute.values.map(v => v.name),
-    })
 
     handleShowModal = () => {
         this.setState({ showEditModal: true });
@@ -98,13 +78,11 @@ export default class OrganigramTaggingList extends React.PureComponent {
     handleSaveClick = () => {
         this.setState({ showEditModal: false });
 
-        const { api, id, entryId, filters, exportable } = this.props;
+        const { api, id, entryId } = this.props;
         const attribute = { values: this.state.values };
 
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
-            .setFilterData(filters[0].id, this.createFilterData(attribute))
-            .setExportData(exportable.id, this.createExportData(attribute))
             .apply();
     }
 

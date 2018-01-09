@@ -10,7 +10,7 @@ class EntryModifier {
         changeEntryValues,
     ) {
         this.entry = entry;
-        this.pristine = entryAccessor.getUiState(entry).pristine;
+        this.pristine = entry && entryAccessor.getUiState(entry).pristine;
         this.values = entry && entryAccessor.getValues(entry);
         this.changeEntryValues = changeEntryValues;
     }
@@ -413,6 +413,29 @@ export default class API {
             image,
             entryType: 'image',
             widget: widgetId && data && [{ widget: widgetId, data }],
+        });
+    }
+
+    setAttributeToAll(widgetId, data) {
+        this.entries.forEach((entry) => {
+            this.getEntryModifier(entry.data.id)
+                .setAttribute(widgetId, data)
+                .apply();
+        });
+    }
+
+    setAttributeToBelow(widgetId, data, id) {
+        const selectedId = id || this.selectedId;
+        const index = selectedId ? this.entries.findIndex(e => e.data.id === selectedId) : -1;
+        if (index === -1) {
+            return;
+        }
+
+        const belowEntries = this.entries.slice(index);
+        belowEntries.forEach((entry) => {
+            this.getEntryModifier(entry.data.id)
+                .setAttribute(widgetId, data)
+                .apply();
         });
     }
 }
