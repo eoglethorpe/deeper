@@ -588,9 +588,10 @@ const strings = {
     982: 'Your copy was overridden by server\'s copy',
     983: 'Successfully saved the framework',
 
-    984: 'Analysis',
-    985: 'Analysis',
-    986: 'Analysis',
+    984: 'Category editor was updated in server.',
+    985: 'Invalid drop source',
+    986: 'Only drop from Extracted Words are valid.',
+
     987: 'Analysis',
     988: 'Analysis',
     989: 'Analysis',

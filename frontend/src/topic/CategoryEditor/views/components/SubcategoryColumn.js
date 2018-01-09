@@ -4,7 +4,10 @@ import React from 'react';
 
 import { TransparentAccentButton } from '../../../../public/components/Action';
 import { ListView } from '../../../../public/components/View';
-import { iconNames } from '../../../../common/constants';
+import {
+    iconNames,
+    ceStrings,
+} from '../../../../common/constants';
 
 import styles from '../styles.scss';
 
@@ -29,7 +32,7 @@ const propTypes = {
 
 const defaultProps = {
     subcategories: [],
-    title: 'Title',
+    title: ceStrings.titleLabel,
     selectedSubcategoryId: undefined,
     isLastColumn: false,
 };

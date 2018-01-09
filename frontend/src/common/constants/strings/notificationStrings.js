@@ -114,6 +114,11 @@ const notificationStrings = {
     afUpdateOverridden: string[982],
     afSaveSuccess: string[983],
 
+    // Category Editor
+    ceUpdate: string[984],
+    ceUpdateOverridden: string[982],
+    invalidDropSource: string[986],
+    validDropAlert: string[987],
 };
 
 export default notificationStrings;
