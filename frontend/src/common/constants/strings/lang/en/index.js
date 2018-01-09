@@ -529,13 +529,17 @@ const strings = {
     850: 'Request Schema',
     851: 'Response Schema',
     852: 'Loading ...',
-
     // 404 Page
     870: 'Error 404',
     871: 'Oops! You have come too DEEP',
     872: 'This is where the DEEP Kraken rests',
     873: 'Go to DEEP',
     // Home Screen
+    875: 'Welcome to the',
+    876: 'DEEP',
+    877: 'Seems like you do not have any projects yet',
+    878: 'To get started, create a project from your profile',
+    879: 'Go to your profile',
     // Notification strings
 
     // User Profile
