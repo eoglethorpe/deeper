@@ -428,6 +428,55 @@ const strings = {
     758: 'eg: Reliable',
     759: 'Edit Scales',
     760: 'Add Scale Unit',
+
+    // Login/Register strings
+
+    800: 'Form has combined validation error.',
+    801: 'Email must be longer than password',
+    802: 'Password must be shorter than email',
+    803: 'Welcome to',
+    804: 'Data entry and exploration platform',
+    805: 'Login with HID',
+    806: 'Or',
+    807: 'Email',
+    808: 'Password',
+    809: 'Forgot Password ?',
+    810: 'Do not have an account yet?',
+    811: 'Register',
+
+    812: 'Check your inbox:',
+    813: 'john.doe@mail.com',
+    814: 'Login',
+    815: 'Login*',
+    816: 'Register*',
+
+    817: 'Go back to login',
+
+    818: 'First Name',
+    819: 'John',
+    820: 'Last Name',
+    821: 'Doe',
+    822: 'Organization',
+    823: 'Togglecorp',
+
+    824: 'Password should be more than four characters long.',
+    825: 'Already have an account?',
+
+    826: 'Login',
+    827: 'Login',
+    828: 'Login',
+    829: 'Login',
+    830: 'Login',
+    831: 'Login',
+    832: 'Login',
+    833: 'Login',
+    834: 'Login',
+    835: 'Login',
+    836: 'Login',
+    837: 'Login',
+    838: 'Login',
+    839: 'Login',
+    840: 'Login',
     // Notification strings
 
     // User Profile

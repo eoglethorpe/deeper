@@ -27,6 +27,7 @@ import { reverseRoute } from '../../../../public/utils/common';
 
 import {
     pathNames,
+    loginStrings,
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import {
@@ -206,36 +207,36 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.firstname}
                             formname="firstname"
                             value={formValues.firstname}
-                            label="First name"
-                            placeholder="John"
+                            label={loginStrings.firstNameLabel}
+                            placeholder={loginStrings.firstNamePlaceholder}
                         />
                         <TextInput
                             error={formFieldErrors.lastname}
                             formname="lastname"
                             value={formValues.lastname}
-                            label="Last name"
-                            placeholder="Doe"
+                            label={loginStrings.lastNameLabel}
+                            placeholder={loginStrings.lastNamePlaceholder}
                         />
                         <TextInput
                             error={formFieldErrors.organization}
                             formname="organization"
                             value={formValues.organization}
-                            label="Organization"
-                            placeholder="Togglecorp"
+                            label={loginStrings.organizationLabel}
+                            placeholder={loginStrings.organizationPlaceholder}
                         />
                         <TextInput
                             error={formFieldErrors.email}
                             formname="email"
                             value={formValues.email}
-                            label="Email"
-                            placeholder="john.doe@mail.com"
+                            label={loginStrings.emailLabel}
+                            placeholder={loginStrings.emailPlaceholder}
                         />
                         <TextInput
                             error={formFieldErrors.password}
                             formname="password"
-                            hint="Password should be more than four characters long."
+                            hint={loginStrings.passwordHint}
                             value={formValues.password}
-                            label="Password"
+                            label={loginStrings.passwordLabel}
                             required
                             type="password"
                         />
@@ -243,19 +244,20 @@ export default class Login extends React.PureComponent {
                             <PrimaryButton
                                 disabled={pending}
                             >
-                                { pristine ? 'Register*' : 'Register' }
+                                { pristine ? loginStrings.registerPristineLabel
+                                    : loginStrings.registerLabel }
                             </PrimaryButton>
                         </div>
                     </Form>
                     <div styleName="login-link-container">
                         <p>
-                            Already have an account?
+                            {loginStrings.alreadyHaveAccountText}
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}
                             styleName="login-link"
                         >
-                            Login
+                            {loginStrings.loginLabel}
                         </Link>
                     </div>
                 </div>

@@ -30,6 +30,7 @@ import { reverseRoute } from '../../../../public/utils/common';
 
 import {
     pathNames,
+    loginStrings,
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
@@ -117,10 +118,10 @@ export default class Login extends React.PureComponent {
             if (password.length > email.length) {
                 return {
                     ok: false,
-                    formErrors: ['Form has combined validation error.'],
+                    formErrors: [loginStrings.formErrors],
                     formFieldErrors: {
-                        email: 'Email must be longer than password',
-                        password: 'Password must be shorter than email',
+                        email: loginStrings.formFieldErrorsEmail,
+                        password: loginStrings.formFieldErrorsPassword,
                     },
                 };
             }
@@ -273,8 +274,8 @@ export default class Login extends React.PureComponent {
                         path={logo}
                     />
                     <h2 styleName="heading">
-                        <small>Welcome to</small><br />
-                        Data entry and exploration platform
+                        <small>{loginStrings.welcomeToText}</small><br />
+                        {loginStrings.deepLabel}
                     </h2>
                 </div>
                 <div styleName="login-form-container">
@@ -287,14 +288,14 @@ export default class Login extends React.PureComponent {
                             <img
                                 styleName="logo"
                                 src={hidLogo}
-                                alt="Login with HID"
+                                alt={loginStrings.deepLabel}
                                 draggable="false"
                             />
-                            <span>Login with HID</span>
+                            <span>{loginStrings.deepLabel}</span>
                         </a>
                         <div styleName="or-container">
                             <hr />
-                            <span styleName="or">Or</span>
+                            <span styleName="or">{loginStrings.orText}</span>
                         </div>
                     </div>
                     <Form
@@ -313,7 +314,7 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.email}
                             formname="email"
                             value={formValues.email}
-                            label="Email"
+                            label={loginStrings.emailLabel}
                             placeholder="john.doe@mail.com"
                         />
                         <TextInput
@@ -321,7 +322,7 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.password}
                             formname="password"
                             value={formValues.password}
-                            label="Password"
+                            label={loginStrings.passwordLabel}
                             placeholder="**********"
                             required
                             type="password"
@@ -331,24 +332,25 @@ export default class Login extends React.PureComponent {
                                 styleName="forgot-password-link"
                                 to={reverseRoute(pathNames.passwordReset, {})}
                             >
-                                Forget Password?
+                                {loginStrings.forgotPasswordText}
                             </Link>
                             <PrimaryButton
                                 disabled={pending}
                             >
-                                { pristine ? 'Login*' : 'Login' }
+                                { pristine ?
+                                    loginStrings.loginPristineLabel : loginStrings.loginLabel }
                             </PrimaryButton>
                         </div>
                     </Form>
                     <div styleName="register-link-container">
                         <p>
-                            Do not have an account yet?
+                            {loginStrings.noAccountYetText}
                         </p>
                         <Link
                             styleName="register-link"
                             to={reverseRoute(pathNames.register, {})}
                         >
-                            Register
+                            {loginStrings.registerLabel}
                         </Link>
                     </div>
                 </div>
