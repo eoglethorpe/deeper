@@ -6,27 +6,27 @@
     position: relative;
     flex-direction: column;
 
-    .filters {
-        display: flex;
-        flex-shrink: 0;
-        align-items: flex-end;
-        border-bottom: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground-alt;
-        padding: $spacing-medium-alt;
-
-        .filter {
-            +.filter {
-                margin-left: $spacing-small;
-            }
-        }
-
-        .range-filter-container {
+    :global {
+        .entries-filters {
             display: flex;
-        }
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border-bottom: $width-separator-medium solid $color-separator;
+            background-color: $color-foreground-alt;
+            padding: $spacing-small;
 
-        .action-buttons {
-            .filter-btn {
-                margin-left: $spacing-small;
+            .entries-filter {
+                margin: $spacing-small;
+            }
+
+            .range-filter-container {
+                display: flex;
+            }
+
+            .button {
+                flex-shrink: 0;
+                margin: $spacing-small;
             }
         }
     }

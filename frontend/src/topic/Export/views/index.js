@@ -10,6 +10,7 @@ import {
 } from '../../../public/components/Input';
 import {
     Button,
+    PrimaryButton,
 } from '../../../public/components/Action';
 import {
     List,
@@ -40,7 +41,6 @@ import jsonIcon from '../../../img/json.svg';
 
 import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
-import BasicInformationInputs from './BasicInformationInputs';
 import ExportPreview from '../../../common/components/ExportPreview';
 import styles from './styles.scss';
 
@@ -73,14 +73,6 @@ export default class Export extends React.PureComponent {
             activeExportTypeKey: 'word',
             reportStructure: this.createReportStructure(props.analysisFramework),
             selectedLeads: [],
-            values: {
-                excerpt: '',
-                createdBy: [],
-                createdAt: {},
-                leadTitle: '',
-                leadSource: '',
-                leadCreatedAt: {},
-            },
         };
 
         // this.options = [
@@ -256,22 +248,6 @@ export default class Export extends React.PureComponent {
         });
     }
 
-    handleFilterInputsChange = (newValues) => {
-        const {
-            values: oldValues,
-        } = this.state;
-
-        const settings = {
-            $merge: newValues,
-        };
-
-        const values = update(oldValues, settings);
-
-        this.setState({
-            values,
-        });
-    }
-
     handleSelectLeadChange = (key, value) => {
         const settings = {
             [key]: {
@@ -391,7 +367,6 @@ export default class Export extends React.PureComponent {
         const {
             activeExportTypeKey,
             leads,
-            values,
         } = this.state;
 
         return (
@@ -400,83 +375,59 @@ export default class Export extends React.PureComponent {
                     <h2>{exportStrings.headerExport}</h2>
                     <div styleName="action-buttons">
                         <Button
+                            styleName="button"
                             onClick={this.handlePreview}
                         >
                             {exportStrings.showPreviewButtonLabel}
                         </Button>
-                        <Button
+                        <PrimaryButton
+                            styleName="button"
                             onClick={this.handleExport}
                         >
                             {exportStrings.startExportButtonLabel}
-                        </Button>
+                        </PrimaryButton>
                     </div>
                 </header>
                 <div styleName="main-content">
-                    <section
-                        styleName="export-types"
-                    >
-                        <header styleName="header">
-                            <h4 styleName="heading">
-                                {exportStrings.selectExportTypeLabel}
-                            </h4>
-                        </header>
-                        <div styleName="content">
-                            <div styleName="export-type-select-list">
-                                <List
-                                    styleName="export-type-select-list"
-                                    data={this.exportTypes}
-                                    modifier={this.renderExportType}
-                                    keyExtractor={this.exportTypeKeyExtractor}
-                                />
-                            </div>
-                            <div styleName="export-type-options">
-                                { (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
-                                        && this.renderReportOptions()
-                                }
-                                { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
-                            </div>
+                    <section styleName="export-types">
+                        <div styleName="export-type-select-list">
+                            <List
+                                styleName="export-type-select-list"
+                                data={this.exportTypes}
+                                modifier={this.renderExportType}
+                                keyExtractor={this.exportTypeKeyExtractor}
+                            />
+                        </div>
+                        <div styleName="export-type-options">
+                            { (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
+                                    && this.renderReportOptions()
+                            }
+                            { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
                         </div>
                     </section>
-                    <section
-                        styleName="filters"
-                    >
-                        <header styleName="header">
-                            <h4>
-                                {exportStrings.selectFiltersLabel}
+                    <section styleName="filters" >
+                        <div styleName="entry-filters">
+                            <h4 styleName="heading">
+                                {exportStrings.entryAttributesLabel}
                             </h4>
-                        </header>
-                        <div styleName="content">
-                            <div styleName="left">
-                                <div styleName="basic-information">
-                                    <BasicInformationInputs
-                                        onChange={this.handleFilterInputsChange}
-                                        values={values}
-                                    />
-                                </div>
-                                <div styleName="entry-attributes">
-                                    <h4>
-                                        {exportStrings.entryAttributesLabel}
-                                    </h4>
-                                    <FilterEntriesForm
-                                        applyOnChange
-                                        pending={false}
-                                    />
-                                </div>
+                            <FilterEntriesForm
+                                applyOnChange
+                                pending={false}
+                            />
+                        </div>
+                        <div styleName="lead-filters">
+                            <div styleName="lead-attributes">
+                                <h4 styleName="heading">
+                                    {exportStrings.leadAttributesLabel}
+                                </h4>
+                                <FilterLeadsForm applyOnChange />
                             </div>
-                            <div styleName="right">
-                                <div styleName="lead-attributes">
-                                    <h4>
-                                        {exportStrings.leadAttributesLabel}
-                                    </h4>
-                                    <FilterLeadsForm applyOnChange />
-                                </div>
-                                <div styleName="leads">
-                                    <List
-                                        data={leads}
-                                        modifier={this.renderSelectLead}
-                                        keyExtractor={this.leadKeyExtractor}
-                                    />
-                                </div>
+                            <div styleName="leads">
+                                <List
+                                    data={leads}
+                                    modifier={this.renderSelectLead}
+                                    keyExtractor={this.leadKeyExtractor}
+                                />
                             </div>
                         </div>
                     </section>

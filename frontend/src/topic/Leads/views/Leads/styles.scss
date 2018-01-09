@@ -23,8 +23,20 @@
         }
 
         .filters {
+            display: flex;
             flex-grow: 1;
-            align-items: flex-end;
+
+            :global {
+                .leads-filter {
+                    margin: $spacing-small;
+                }
+
+                .button {
+                    flex-shrink: 0;
+                    align-self: flex-end;
+                    margin: $spacing-small;
+                }
+            }
         }
     }
 

@@ -182,7 +182,6 @@ export default class Login extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            pristine,
         } = this.state;
 
         if (this.state.redirectTo) {
@@ -244,8 +243,7 @@ export default class Login extends React.PureComponent {
                             <PrimaryButton
                                 disabled={pending}
                             >
-                                { pristine ? loginStrings.registerPristineLabel
-                                    : loginStrings.registerLabel }
+                                { loginStrings.registerLabel }
                             </PrimaryButton>
                         </div>
                     </Form>
