@@ -198,9 +198,12 @@ const strings = {
 
     193: 'Are you sure you want to delete the project',
     194: 'Are you sure you want to',
-    195: 'revoke admin rights form',
-    196: 'grant admin rights to',
+    195: 'Revoke admin rights form',
+    196: 'Grant admin rights to',
     197: 'Are you sure you want to remove',
+
+    198: 'User Group Not Found....',
+    199: 'User Not Found',
 
 
     // Project Panel strings

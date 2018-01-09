@@ -226,7 +226,7 @@ export default class UserProjectAdd extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        {userStrings.modalCreate}
+                        {userStrings.modalCancel}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
                         {userStrings.modalCreate}

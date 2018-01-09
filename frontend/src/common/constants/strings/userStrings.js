@@ -62,6 +62,9 @@ const userStrings = {
     confirmTextGrantAdmin: string[196],
     confirmTextRemove: string[197],
 
+    userGroupNotFound: string[198],
+    userNotFound: string[199],
+
 };
 
 export default userStrings;

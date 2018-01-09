@@ -171,7 +171,7 @@ export default class UserProfile extends React.PureComponent {
             return (
                 <div styleName="user-profile">
                     <div styleName="user-detail-alt">
-                        User Not Found
+                        {userStrings.userNotFound}
                     </div>
                 </div>
             );

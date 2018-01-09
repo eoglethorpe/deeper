@@ -346,7 +346,7 @@ export default class ProjectsTable extends React.PureComponent {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
-                            title="Project"
+                            title={userStrings.addProjectButtonLabel}
                         >
                             {userStrings.addProjectButtonLabel}
                         </PrimaryButton>
