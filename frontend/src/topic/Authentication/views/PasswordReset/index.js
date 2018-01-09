@@ -24,6 +24,7 @@ import { reverseRoute } from '../../../../public/utils/common';
 
 import {
     pathNames,
+    loginStrings,
 } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import {
@@ -157,7 +158,8 @@ export default class PasswordReset extends React.PureComponent {
                     {
                         resetSuccess ?
                             <div styleName="info">
-                                <p> Check your inbox: {formValues.email || 'john.doe@mail.com'} </p>
+                                <p> {loginStrings.checkInboxText}
+                                    {formValues.email || loginStrings.emailPlaceholder} </p>
                             </div>
                             :
                             <Form
@@ -176,14 +178,16 @@ export default class PasswordReset extends React.PureComponent {
                                     error={formFieldErrors.email}
                                     formname="email"
                                     value={formValues.email}
-                                    label="Email"
-                                    placeholder="john.doe@mail.com"
+                                    label={loginStrings.emailLabel}
+                                    placeholder={loginStrings.emailPlaceholder}
                                 />
                                 <div styleName="action-buttons">
                                     <PrimaryButton
                                         disabled={pending}
                                     >
-                                        { pristine ? 'Reset Password*' : 'Reset Password' }
+                                        { pristine ?
+                                            loginStrings.registerPristineLabel :
+                                            loginStrings.registerLabel }
                                     </PrimaryButton>
                                 </div>
                             </Form>
@@ -193,7 +197,7 @@ export default class PasswordReset extends React.PureComponent {
                             styleName="go-back-link"
                             to={reverseRoute(pathNames.login, {})}
                         >
-                            Go back to login
+                            {loginStrings.goBackToLoginText}
                         </Link>
                     </div>
                 </div>

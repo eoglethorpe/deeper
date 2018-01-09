@@ -12,3 +12,4 @@ export { default as projectStrings } from './strings/projectStrings';
 export { default as ceStrings } from './strings/ceStrings';
 export { default as exportStrings } from './strings/exportStrings';
 export { default as afStrings } from './strings/afStrings';
+export { default as loginStrings } from './strings/loginStrings';
