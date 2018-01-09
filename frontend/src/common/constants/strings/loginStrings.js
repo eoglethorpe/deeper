@@ -22,7 +22,17 @@ const loginStrings = {
     loginPristineLabel: string[815],
     registerPristineLabel: string[816],
 
-    goBackToLoginText: string[816],
+    goBackToLoginText: string[817],
+
+    firstNameLabel: string[818],
+    firstNamePlaceholder: string[819],
+    lastNameLabel: string[820],
+    lastNamePlaceholder: string[821],
+    organizationLabel: string[822],
+    organizationPlaceholder: string[823],
+
+    passwordHint: string[824],
+    alreadyHaveAccountText: string[825],
 
 
 };
