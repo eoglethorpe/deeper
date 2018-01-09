@@ -15,3 +15,4 @@ export { default as afStrings } from './strings/afStrings';
 export { default as loginStrings } from './strings/loginStrings';
 export { default as apiStrings } from './strings/apiStrings';
 export { default as entryStrings } from './strings/entryStrings';
+export { default as fourHundredFourStrings } from './strings/fourHundredFourStrings';
