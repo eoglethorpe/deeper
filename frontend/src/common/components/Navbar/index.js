@@ -153,7 +153,6 @@ export default class Navbar extends React.PureComponent {
             : 'fourHundredFour';
         this.validNavLinks = this.getValidNavLinks(this.currentPath);
         this.validDropLinks = this.getValidDropLinks(this.currentPath);
-        console.warn(this.validDropLinks);
     }
 
     // UTILS
@@ -232,10 +231,7 @@ export default class Navbar extends React.PureComponent {
             userProfile: iconNames.person,
         };
 
-        console.warn(item);
-
         const iconName = dropdownItemIcons[key];
-        const link = reverseRoute(pathNames[key], params);
 
         return (
             <Cloak
@@ -243,18 +239,21 @@ export default class Navbar extends React.PureComponent {
                 requireLogin={item.requireLogin}
                 requireAdminRights={item.requireAdminRights}
                 requireProject={item.requireProject}
-            >
-                <Link
-                    to={link}
-                    className={styles['dropdown-item']}
-                >
-                    {
-                        iconName &&
-                        <span className={`${iconName} ${styles.icon}`} />
-                    }
-                    { pageTitles[key] }
-                </Link>
-            </Cloak>
+                render={
+                    () => (
+                        <Link
+                            to={reverseRoute(pathNames[key], params)}
+                            className={styles['dropdown-item']}
+                        >
+                            {
+                                iconName &&
+                                    <span className={`${iconName} ${styles.icon}`} />
+                            }
+                            { pageTitles[key] }
+                        </Link>
+                    )
+                }
+            />
         );
     }
 
@@ -298,7 +297,6 @@ export default class Navbar extends React.PureComponent {
         const projectSelectInputLink = currentValidLinks.projectSelect;
         const adminPanelLink = currentValidLinks.adminPanel;
 
-        const linkToHomeScreen = reverseRoute(pathNames.homeScreen, {});
         const userName = userInformation.displayName || activeUser.displayName || 'Anon';
         return (
             <nav
@@ -306,7 +304,7 @@ export default class Navbar extends React.PureComponent {
                 styleName="navbar"
             >
                 <Link
-                    to={linkToHomeScreen}
+                    to={reverseRoute(pathNames.homeScreen, {})}
                     styleName="brand"
                 >
                     <ReactSVG
@@ -318,26 +316,28 @@ export default class Navbar extends React.PureComponent {
                         Deep
                     </span>
                 </Link>
-
                 <Cloak
                     requireLogin={projectSelectInputLink.requireLogin}
                     requireAdminRights={projectSelectInputLink.requireAdminRights}
                     requireProject={projectSelectInputLink.requireAdminRights}
-                >
-                    <SelectInput
-                        clearable={false}
-                        keySelector={this.projectKeySelector}
-                        labelSelector={this.projectLabelSelector}
-                        onChange={this.handleProjectChange}
-                        options={userProjects}
-                        placeholder="Select Event"
-                        showHintAndError={false}
-                        showLabel={false}
-                        styleName="project-select-input"
-                        disabled={userProjects.length <= 0}
-                        value={activeProject}
-                    />
-                </Cloak>
+                    render={
+                        () => (
+                            <SelectInput
+                                clearable={false}
+                                keySelector={this.projectKeySelector}
+                                labelSelector={this.projectLabelSelector}
+                                onChange={this.handleProjectChange}
+                                options={userProjects}
+                                placeholder="Select Event"
+                                showHintAndError={false}
+                                showLabel={false}
+                                className={styles['project-select-input']}
+                                disabled={userProjects.length <= 0}
+                                value={activeProject}
+                            />
+                        )
+                    }
+                />
 
                 <NavMenu
                     links={this.validNavLinks}
@@ -361,36 +361,36 @@ export default class Navbar extends React.PureComponent {
                             requireLogin={adminPanelLink.requireLogin}
                             requireAdminRights={adminPanelLink.requireAdminRights}
                             requireProject={adminPanelLink.requireProject}
-                        >
-                            <a
-                                styleName="dropdown-item"
-                                href={adminEndpoint}
-                                target="_blank"
-                            >
-                                <span
-                                    className={iconNames.locked}
-                                    styleName="icon"
-                                />
-                                Admin Panel
-                            </a>
-                        </Cloak>
+                            render={
+                                () => (
+                                    <a
+                                        className={styles['dropdown-item']}
+                                        href={adminEndpoint}
+                                        target="_blank"
+                                    >
+                                        <span className={`${styles.icon} ${iconNames.locked}`} />
+                                        Admin Panel
+                                    </a>
+                                )
+                            }
+                        />
                     </DropdownGroup>
                     <Cloak
                         requireLogin
-                    >
-                        <DropdownGroup>
-                            <button
-                                styleName="dropdown-item"
-                                onClick={this.handleLogoutButtonClick}
-                            >
-                                <span
-                                    className={iconNames.logout}
-                                    styleName="icon"
-                                />
-                                Logout
-                            </button>
-                        </DropdownGroup>
-                    </Cloak>
+                        render={
+                            () => (
+                                <DropdownGroup>
+                                    <button
+                                        className={styles['dropdown-item']}
+                                        onClick={this.handleLogoutButtonClick}
+                                    >
+                                        <span className={`${styles.icon} ${iconNames.logout}`} />
+                                        Logout
+                                    </button>
+                                </DropdownGroup>
+                            )
+                        }
+                    />
                 </DropdownMenu>
             </nav>
         );

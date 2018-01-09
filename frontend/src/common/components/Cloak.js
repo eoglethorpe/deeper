@@ -25,7 +25,7 @@ const propTypes = {
     requireAdminRights: PropTypes.bool,
     requireProject: PropTypes.bool,
     requireLogin: PropTypes.bool,
-    children: PropTypes.node.isRequired,
+    render: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -49,7 +49,7 @@ export default class Navbar extends React.PureComponent {
             requireAdminRights,
             requireProject,
             requireLogin,
-            children,
+            render,
         } = this.props;
 
         if (requireProject && userProjects.length <= 0) {
@@ -59,6 +59,6 @@ export default class Navbar extends React.PureComponent {
         } else if (requireAdminRights && !activeUser.isSuperuser) {
             return null;
         }
-        return children;
+        return render();
     }
 }

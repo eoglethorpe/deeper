@@ -19,9 +19,8 @@
 }
 
 .edit-entry {
+    @extend %main-content;
     position: relative;
-    padding: $spacing-medium-alt;
-    height: calc(100vh - #{$height-navbar});
 
     %grid-item {
         .header {

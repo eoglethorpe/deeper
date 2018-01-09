@@ -5,16 +5,17 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    GridLayout,
     FormattedDate,
+    GridLayout,
     ListView,
     LoadingAnimation,
+    Pager,
 } from '../../../public/components/View';
 import { reverseRoute } from '../../../public/utils/common';
 import { PrimaryButton } from '../../../public/components/Action';
 import {
-    pathNames,
     iconNames,
+    pathNames,
 } from '../../../common/constants';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
@@ -435,6 +436,14 @@ export default class Entries extends React.PureComponent {
                         />
                     }
                 </div>
+                <footer styleName="footer">
+                    <Pager
+                        activePage={1}
+                        itemsCount={30}
+                        maxItemsPerPage={10}
+                        onPageClick={() => {}}
+                    />
+                </footer>
             </div>
         );
     }

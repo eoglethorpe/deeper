@@ -47,12 +47,13 @@ const propTypes = {
             title: PropTypes.string,
         }),
     ),
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.string,
 };
 
 const defaultProps = {
     activeUser: {},
     userProjects: {},
+    projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({

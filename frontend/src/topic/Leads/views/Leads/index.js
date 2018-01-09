@@ -9,18 +9,18 @@ import {
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
-    Pager,
-    RawTable,
+    Confirm,
     FormattedDate,
     LoadingAnimation,
-    Confirm,
+    Pager,
+    RawTable,
 } from '../../../../public/components/View';
 import {
     PrimaryButton,
-    TransparentAccentButton,
-    TransparentDangerButton,
-    TransparentButton,
     SegmentButton,
+    TransparentAccentButton,
+    TransparentButton,
+    TransparentDangerButton,
 } from '../../../../public/components/Action';
 
 import {

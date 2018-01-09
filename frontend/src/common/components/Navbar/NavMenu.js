@@ -27,7 +27,7 @@ import Cloak from '../Cloak';
 
 const propTypes = {
     links: PropTypes.arrayOf(
-        PropTypes.string,
+        PropTypes.object,
     ),
     projectId: PropTypes.number,
     countryId: PropTypes.number,
@@ -97,16 +97,19 @@ export default class NavMenu extends React.PureComponent {
                 requireLogin={item.requireLogin}
                 requireProject={item.requireProject}
                 requireAdminRights={item.requireAdminRights}
-            >
-                <NavLink
-                    activeClassName={styles.active}
-                    to={reverseRoute(pathNames[key], params)}
-                    className={className}
-                    exact
-                >
-                    { pageTitles[key] }
-                </NavLink>
-            </Cloak>
+                render={
+                    () => (
+                        <NavLink
+                            activeClassName={styles.active}
+                            to={reverseRoute(pathNames[key], params)}
+                            className={className}
+                            exact
+                        >
+                            { pageTitles[key] }
+                        </NavLink>
+                    )
+                }
+            />
         );
     }
 
