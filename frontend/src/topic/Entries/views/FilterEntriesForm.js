@@ -12,7 +12,9 @@ import {
     Button,
     DangerButton,
 } from '../../../public/components/Action';
-
+import {
+    entryStrings,
+} from '../../../common/constants';
 import {
     entriesViewFilterSelector,
     setEntriesViewFilterAction,
@@ -228,7 +230,7 @@ export default class EntriesFilter extends React.PureComponent {
                             onClick={this.handleApplyFilter}
                             disabled={pending || pristine}
                         >
-                            Apply
+                            {entryStrings.applyFilterButtonLabel}
                         </Button>
                     )
                 }
@@ -240,7 +242,7 @@ export default class EntriesFilter extends React.PureComponent {
                             type="button"
                             disabled={pending || isFilterEmpty}
                         >
-                            Clear
+                            {entryStrings.clearFilterButtonLabel}
                         </DangerButton>
                     )
                 }

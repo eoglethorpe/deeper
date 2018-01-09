@@ -331,6 +331,56 @@ const strings = {
     429: 'Category',
     430: 'Category',
 
+
+    // Entry Page strings
+
+    500: 'Server Error',
+    501: 'Failed connecting to server',
+    502: 'NLP',
+    503: 'Category Editor',
+    504: 'It\'s Accurate',
+    505: 'It\'s not Accurate',
+    506: 'Show suggestions for :',
+    507: 'Add',
+    508: 'Entities',
+
+    509: 'Goto Overview',
+    510: 'Save',
+    511: 'Goto List',
+    512: 'Entry',
+
+    513: 'Image',
+    514: 'Excerpt',
+    515: 'Preview Not Available',
+    516: 'Simplified',
+    517: 'Assisted',
+    518: 'Original',
+    519: 'Images',
+    520: 'Entries',
+
+    521: 'Select an excerpt',
+    522: 'Add Entry',
+    523: 'Mark current entry for removal',
+    524: 'Remove',
+    525: 'Unmark current entry for removal',
+    526: 'Undo Remove',
+
+    527: 'Apply Filter',
+    528: 'Clear Filter',
+
+    529: 'Edit',
+    530: 'Edit Entry',
+
+    531: 'Entry',
+    532: 'Entry',
+    533: 'Entry',
+    534: 'Entry',
+    535: 'Entry',
+    536: 'Entry',
+    537: 'Entry',
+    538: 'Entry',
+    539: 'Entry',
+    540: 'Entry',
     // Export strings
 
     600: 'Export',
@@ -595,7 +645,7 @@ const strings = {
     985: 'Invalid drop source',
     986: 'Only drop from Extracted Words are valid.',
 
-    987: 'Analysis',
+    987: 'Some entries were updated in server.',
     988: 'Analysis',
     989: 'Analysis',
     990: 'Analysis',

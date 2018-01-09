@@ -10,7 +10,9 @@ import {
     Button,
     SuccessButton,
 } from '../../../../public/components/Action';
-
+import {
+    entryStrings,
+} from '../../../../common/constants';
 import { entryAccessor } from '../../../../common/entities/entry';
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';
@@ -146,20 +148,20 @@ export default class List extends React.PureComponent {
                 { widgetDisabled && <LoadingAnimation /> }
                 <header styleName="header">
                     <h3>
-                        LEAD_TITLE
+                        *Update_Lead_Title_Here*
                     </h3>
                     <div styleName="action-buttons">
                         <Button
                             onClick={this.handleGotoOverviewButtonClick}
                         >
-                            Goto overview
+                            {entryStrings.gotoOverviewButtonLabel}
                         </Button>
                         <SuccessButton
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}
                             styleName="save-button"
                         >
-                            Save
+                            {entryStrings.saveButtonLabel}
                         </SuccessButton>
                     </div>
                 </header>

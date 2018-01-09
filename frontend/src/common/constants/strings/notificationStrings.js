@@ -119,6 +119,10 @@ const notificationStrings = {
     ceUpdateOverridden: string[982],
     invalidDropSource: string[986],
     validDropAlert: string[987],
+
+    // Entries
+    entryUpdate: string[987],
+    entryUpdateOverridden: string[982],
 };
 
 export default notificationStrings;

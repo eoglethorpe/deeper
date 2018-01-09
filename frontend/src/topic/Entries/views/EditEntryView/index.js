@@ -51,6 +51,9 @@ import {
     createUrlForDeleteEntry,
     createParamsForDeleteEntry,
 } from '../../../../common/rest';
+import {
+    notificationStrings,
+} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import schema from '../../../../common/schema';
 
@@ -282,8 +285,8 @@ export default class EditEntryView extends React.PureComponent {
                     }
                     notify.send({
                         type: notify.type.WARNING,
-                        title: 'Some entries were updated in server.',
-                        message: 'Your copy was overridden by server\'s copy',
+                        title: notificationStrings.entryUpdate,
+                        message: notificationStrings.entryUpdateOverridden,
                         duration: notify.duration.SLOW,
                     });
                 } catch (er) {
