@@ -120,6 +120,9 @@ const strings = {
     114: 'Enter UN Geographical Region',
     115: 'UN Geographical Sub Region',
     116: 'Enter UN Geographical Sub Region',
+    117: 'There are no countries.',
+    118: 'Select a country to view its detail.',
+    119: 'Selected county is not found.',
 
 
     // User Profile and User Group

@@ -79,6 +79,10 @@ const countriesString = {
     unGeoSubregionLabel: string[115],
     unGeoSubregionPlaceholer: string[116],
 
+    noCountriesText: string[117],
+    selectCountryText: string[118],
+    countryNotFoundText: string[119],
+
 };
 
 export default countriesString;
