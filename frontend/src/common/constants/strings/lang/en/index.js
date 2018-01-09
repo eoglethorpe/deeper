@@ -471,7 +471,11 @@ const strings = {
     824: 'Password should be more than four characters long.',
     825: 'Already have an account?',
 
+    // API docs
 
+    850: 'Request Schema',
+    851: 'Response Schema',
+    852: 'Loading ...',
     // Notification strings
 
     // User Profile

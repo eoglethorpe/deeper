@@ -7,6 +7,7 @@ import {
 } from '../../../public/components/View';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
+import { apiStrings } from '../../../common/constants';
 
 import { urlForApiDocs } from '../../../common/rest';
 
@@ -173,7 +174,7 @@ export default class ApiDocs extends React.PureComponent {
             {!isObjectEmpty(method.requestSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        Request Schema
+                        {apiStrings.requestSchemaLabel}
                     </h5>
                     {this.renderSchema(method.requestSchema)}
                 </div>
@@ -182,7 +183,7 @@ export default class ApiDocs extends React.PureComponent {
             {!isObjectEmpty(method.responseSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        Response Schema
+                        {apiStrings.responseSchemaLabel}
                     </h5>
                     {this.renderSchema(method.responseSchema)}
                 </div>
@@ -205,7 +206,7 @@ export default class ApiDocs extends React.PureComponent {
         if (pending) {
             content = (
                 <p styleName="message">
-                    Loading ...
+                    {apiStrings.loadingLabel}
                 </p>
             );
         } else {

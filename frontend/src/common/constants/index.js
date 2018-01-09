@@ -13,3 +13,4 @@ export { default as ceStrings } from './strings/ceStrings';
 export { default as exportStrings } from './strings/exportStrings';
 export { default as afStrings } from './strings/afStrings';
 export { default as loginStrings } from './strings/loginStrings';
+export { default as apiStrings } from './strings/apiStrings';
