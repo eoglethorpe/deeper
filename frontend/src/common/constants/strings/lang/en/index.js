@@ -429,6 +429,15 @@ const strings = {
     759: 'Edit Scales',
     760: 'Add Scale Unit',
 
+    761: 'Entry',
+    762: 'Remove Location',
+    763: 'eg: Overview',
+    764: 'Color',
+    765: 'Add Subdimension',
+    766: 'Add Child',
+    767: 'Remove Element',
+    768: '999 999',
+
     // Login/Register strings
 
     800: 'Form has combined validation error.',
@@ -462,21 +471,7 @@ const strings = {
     824: 'Password should be more than four characters long.',
     825: 'Already have an account?',
 
-    826: 'Login',
-    827: 'Login',
-    828: 'Login',
-    829: 'Login',
-    830: 'Login',
-    831: 'Login',
-    832: 'Login',
-    833: 'Login',
-    834: 'Login',
-    835: 'Login',
-    836: 'Login',
-    837: 'Login',
-    838: 'Login',
-    839: 'Login',
-    840: 'Login',
+
     // Notification strings
 
     // User Profile
@@ -584,6 +579,48 @@ const strings = {
     979: 'Error.Cannot delete lead. Please check your network connection and try again',
 
     980: 'Add',
+
+    981: 'Analysis Framework was updated in server.',
+    982: 'Your copy was overridden by server\'s copy',
+    983: 'Successfully saved the framework',
+
+    984: 'Analysis',
+    985: 'Analysis',
+    986: 'Analysis',
+    987: 'Analysis',
+    988: 'Analysis',
+    989: 'Analysis',
+    990: 'Analysis',
+    991: 'Analysis',
+    992: 'Analysis',
+    993: 'Analysis',
+    994: 'Analysis',
+    995: 'Analysis',
+    996: 'Analysis',
+    997: 'Analysis',
+    998: 'Analysis',
+    999: 'Analysis',
+    1000: 'Analysis',
+    1001: 'Analysis',
+    1002: 'Analysis',
+    1003: 'Analysis',
+    1004: 'Analysis',
+    1005: 'Analysis',
+    1006: 'Analysis',
+    1007: 'Analysis',
+    1008: 'Analysis',
+    1009: 'Analysis',
+    1010: 'Analysis',
+    1011: 'Analysis',
+    1012: 'Analysis',
+    1013: 'Analysis',
+    1014: 'Analysis',
+    1015: 'Analysis',
+    1016: 'Analysis',
+    1017: 'Analysis',
+    1018: 'Analysis',
+    1019: 'Analysis',
+    1020: 'Analysis',
 };
 
 export default strings;

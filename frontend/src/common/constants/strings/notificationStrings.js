@@ -108,6 +108,12 @@ const notificationStrings = {
     leadDeleteFailure: string[978],
     leadDeleteFatal: string[979],
 
+    // Analysis Framework
+    afTitle: string[964],
+    afUpdate: string[981],
+    afUpdateOverridden: string[982],
+    afSaveSuccess: string[983],
+
 };
 
 export default notificationStrings;

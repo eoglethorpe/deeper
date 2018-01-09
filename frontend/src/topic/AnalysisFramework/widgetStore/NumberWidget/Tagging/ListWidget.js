@@ -5,6 +5,7 @@ import React from 'react';
 import {
     NumberInput,
 } from '../../../../../public/components/Input';
+import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -53,7 +54,7 @@ export default class NumberTaggingList extends React.PureComponent {
                     onChange={this.handleChange}
                     styleName="number-input"
                     value={value}
-                    placeholder="999 999"
+                    placeholder={afStrings.numberPlaceholder}
                     showLabel={false}
                     showHintAndError={false}
                     separator=" "

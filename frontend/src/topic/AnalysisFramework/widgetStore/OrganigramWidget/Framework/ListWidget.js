@@ -207,7 +207,7 @@ export default class Organigram extends React.PureComponent {
                         <TransparentPrimaryButton
                             styleName="action-button"
                             onClick={this.handleAdd(nextIndices)}
-                            title="Add child"
+                            title={afStrings.addChildButtonTitle}
                             tabIndex="-1"
                         >
                             <span className="ion-fork-repo" />
@@ -216,7 +216,7 @@ export default class Organigram extends React.PureComponent {
                             <TransparentDangerButton
                                 styleName="action-button"
                                 onClick={this.handleRemove(indices, j)}
-                                title="Remove"
+                                title={afStrings.removeElementButtonTitle}
                                 tabIndex="-1"
                             >
                                 <span className="ion-trash-b" />

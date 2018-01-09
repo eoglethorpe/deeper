@@ -6,7 +6,9 @@ import {
     TextArea,
     RadioInput,
 } from '../../../../../public/components/Input';
-
+import {
+    afStrings,
+} from '../../../../../common/constants';
 import styles from './styles.scss';
 
 const TEXT = 'excerpt';
@@ -96,7 +98,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                         <img
                             styleName="image"
                             src={attribute.image}
-                            alt="Entry"
+                            alt={afStrings.altEntryLabel}
                         />
                     )
                 }

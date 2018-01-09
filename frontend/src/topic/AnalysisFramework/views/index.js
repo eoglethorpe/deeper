@@ -28,6 +28,7 @@ import {
 } from '../../../common/redux';
 
 import notify from '../../../common/notify';
+import { notificationStrings } from '../../../common/constants';
 
 import styles from './styles.scss';
 import Overview from './Overview';
@@ -95,8 +96,8 @@ export default class AnalysisFramework extends React.PureComponent {
                     } else if (analysisFramework.versionId < response.versionId) {
                         notify.send({
                             type: notify.type.WARNING,
-                            title: 'Analysis Framework was updated in server.',
-                            message: 'Your copy was overridden by server\'s copy',
+                            title: notificationStrings.afUpdate,
+                            message: notificationStrings.afUpdateOverridden,
                             duration: notify.duration.SLOW,
                         });
                         this.props.setAnalysisFramework({
@@ -126,9 +127,9 @@ export default class AnalysisFramework extends React.PureComponent {
                     });
                     notify.send({
                         dismissable: false,
-                        title: 'Analysis Framework',
+                        title: notificationStrings.afTitle,
                         type: notify.type.SUCCESS,
-                        message: 'Successfully saved the framework',
+                        message: notificationStrings.afSaveSuccess,
                         duration: 5000,
                     });
                 } catch (er) {

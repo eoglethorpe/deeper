@@ -302,7 +302,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         >
             <DragHandle />
             <div className={styles['color-box-container']}>
-                <span className={styles['color-label']}>Color</span>
+                <span className={styles['color-label']}>{afStrings.colorLabel}</span>
                 <button
                     className={styles['color-box']}
                     onClick={() => this.handleColorBoxClick(key)}
@@ -311,17 +311,17 @@ export default class Matrix1dOverview extends React.PureComponent {
             </div>
             <TextInput
                 className={styles['title-input']}
-                label="Title"
+                label={afStrings.titleLabel}
                 onFocus={() => this.handleTextInputOnFocus(key)}
-                placeholder="eg: Context"
+                placeholder={afStrings.optionPlaceholder}
                 onChange={value => this.handleRowValueInputChange(key, value, 'title')}
                 value={data.title}
             />
             <TextInput
                 className={styles['title-input']}
-                label="Tooltip"
+                label={afStrings.tooltipTitle}
                 onFocus={() => this.handleTextInputOnFocus(key)}
-                placeholder="I am the context"
+                placeholder={afStrings.tooltipPlaceholder}
                 onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
                 value={data.tooltip}
             />

@@ -68,7 +68,7 @@ export default class GeoTaggingList extends React.PureComponent {
                     <div className="actions">
                         <TransparentDangerButton
                             onClick={() => this.handleRemoveButtonClick(row.key)}
-                            title="Remove Location"
+                            title={afStrings.removeLocationButtonTitle}
                         >
                             <span className={iconNames.close} />
                         </TransparentDangerButton>

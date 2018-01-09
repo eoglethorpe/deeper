@@ -332,7 +332,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
         >
             <NumberInput
                 className={styles['number-input']}
-                placeholder="999 999"
+                placeholder={afStrings.numberPlaceholder}
                 showLabel={false}
                 showHintAndError={false}
                 separator=" "

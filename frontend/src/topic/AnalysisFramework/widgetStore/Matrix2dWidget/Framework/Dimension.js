@@ -76,10 +76,10 @@ export default class Dimension extends React.PureComponent {
         } = this.props;
 
         if (data.title) {
-            return `Add dimension to ${data.title}`;
+            return `${afStrings.addDimensionButtonLabel} ${data.title}`;
         }
 
-        return 'Add dimension';
+        return afStrings.addDimensionButtonLabel;
     }
 
     getStyleName = () => {
@@ -193,12 +193,12 @@ export default class Dimension extends React.PureComponent {
             className={styles['edit-subdimension']}
         >
             <TextInput
-                label="title"
+                label={afStrings.titleLabel}
                 onChange={(value) => { this.handleSubdimensionTitleInputChange(i, value); }}
                 value={data.title}
             />
             <TextInput
-                label="tooltip"
+                label={afStrings.tooltipTitle}
                 onChange={(value) => { this.handleSubdimensionTooltipInputChange(i, value); }}
                 value={data.tooltip}
             />
@@ -252,7 +252,7 @@ export default class Dimension extends React.PureComponent {
                             <TransparentButton
                                 onClick={this.handleAddSubdimensionButtonClick}
                             >
-                                Add subdimension
+                                {afStrings.addSubDimensionButtonLabel}
                             </TransparentButton>
                         }
                     />

@@ -39,14 +39,14 @@ export const getEditWidgetModal = (parent) => {
             onClose={parent.handler.editWidgetModalClose}
         >
             <ModalHeader
-                title={`Edit ${title || 'title'}`}
+                title={`Edit ${title || afStrings.titleLabel}`}
             />
             <ModalBody styleName="modal-body">
                 <TextInput
                     styleName="title-input"
                     onChange={parent.handler.widgetTitleInputChange}
-                    label="Title"
                     value={title}
+                    label={afStrings.titleLabel}
                     showHintAndError={false}
                 />
                 <section styleName="edit-sectors">

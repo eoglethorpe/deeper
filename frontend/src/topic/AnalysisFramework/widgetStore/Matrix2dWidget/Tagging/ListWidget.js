@@ -11,6 +11,9 @@ import {
 } from '../../../../../public/components/Input';
 
 import { updateAttribute } from './utils';
+import { afStrings } from '../../../../../common/constants';
+
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -231,8 +234,8 @@ export default class Matrix2dList extends React.PureComponent {
                     options={data.sector.subsectors}
                     keySelector={Matrix2dList.subsectorKeySelector}
                     labelSelector={Matrix2dList.subsectorLabelSelector}
-                    placeholder="Select subsectors"
-                    label="Sub-sectors"
+                    placeholder={afStrings.subsectorsLabel}
+                    label={afStrings.subsectorsLabel}
                     onChange={subsectors => this.handleSelectSubsectorChange(
                         data.dimension.id,
                         data.subdimension.id,
