@@ -401,7 +401,7 @@ test('should copy values in all lead', () => {
                 {
                     data: { id: 1, serverId: 1, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 2, serverId: 2, type: 'file' },
@@ -410,13 +410,13 @@ test('should copy values in all lead', () => {
                 },
                 {
                     data: { id: 3, serverId: 3, type: 'file' },
-                    form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 5, serverId: undefined, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
             ],
         },
@@ -442,7 +442,7 @@ test('should copy values in all lead', () => {
                 {
                     data: { id: 3, serverId: 3, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 5, serverId: undefined, type: 'file' },
@@ -463,7 +463,7 @@ test('should copy values in leads below', () => {
                 {
                     data: { id: 1, serverId: 1, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 2, serverId: 2, type: 'file' },
@@ -472,13 +472,13 @@ test('should copy values in leads below', () => {
                 },
                 {
                     data: { id: 3, serverId: 3, type: 'file' },
-                    form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    form: { errors: [], fieldErrors: {}, values: { title: 'md' } },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 5, serverId: undefined, type: 'file' },
-                    form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
+                    uiState: { error: false, pristine: true },
                 },
             ],
         },
@@ -494,7 +494,7 @@ test('should copy values in leads below', () => {
                 {
                     data: { id: 1, serverId: 1, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
                 {
                     data: { id: 2, serverId: 2, type: 'file' },
@@ -509,7 +509,7 @@ test('should copy values in leads below', () => {
                 {
                     data: { id: 5, serverId: undefined, type: 'file' },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: true },
                 },
             ],
         },
@@ -518,6 +518,7 @@ test('should copy values in leads below', () => {
 });
 
 test('should copy values in all lead, for assignee', () => {
+    console.warn('I am here');
     const state = {
         addLeadView: {
             activeLeadId: 1,
@@ -560,8 +561,8 @@ test('should copy values in all lead, for assignee', () => {
                 },
                 {
                     data: { id: 2, serverId: 2, type: 'file' },
-                    form: { errors: [], fieldErrors: {}, values: { assignee: 'ld', project: 1 } },
-                    uiState: { error: false, pristine: false },
+                    form: { errors: [], fieldErrors: { assignee: 'error' }, values: { assignee: 'ld', project: 1 } },
+                    uiState: { error: true, pristine: false },
                 },
                 {
                     data: { id: 3, serverId: 3, type: 'file' },
