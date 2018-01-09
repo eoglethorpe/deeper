@@ -2,10 +2,12 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
 import {
     ListView,
 } from '../../../../../public/components/View';
 
+import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -25,6 +27,17 @@ export default class Matrix1dList extends React.PureComponent {
     static rowKeyExtractor = d => d.title;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+        updateAttribute(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
+    }
 
     getSelectedRowsTitles = (data, attribute) => {
         const selectedRows = [];

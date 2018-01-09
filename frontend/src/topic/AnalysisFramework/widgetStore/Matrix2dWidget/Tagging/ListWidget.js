@@ -10,13 +10,12 @@ import {
     SelectInput,
 } from '../../../../../public/components/Input';
 
+import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line
     attribute: PropTypes.object, // eslint-disable-line
@@ -36,6 +35,17 @@ export default class Matrix2dList extends React.PureComponent {
     static subsectorLabelSelector = d => d.title;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+        updateAttribute(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
+    }
 
     getSelectedSectors = (data, attribute) => {
         const selectedSectors = [];
@@ -175,8 +185,6 @@ export default class Matrix2dList extends React.PureComponent {
     handleSelectSubsectorChange = (dimensionId, subdimensionId, sectorId, subsectors) => {
         const {
             attribute,
-            filters,
-            exportable,
             api,
             id,
             entryId,
@@ -196,9 +204,6 @@ export default class Matrix2dList extends React.PureComponent {
 
         api.getEntryModifier(entryId)
             .setAttribute(id, newAttribute)
-            .setFilterData(filters[0].id, this.createDimensionFilterData(newAttribute))
-            .setFilterData(filters[1].id, this.createSectorFilterData(newAttribute))
-            .setExportData(exportable.id, this.createExportData(newAttribute))
             .apply();
     }
 

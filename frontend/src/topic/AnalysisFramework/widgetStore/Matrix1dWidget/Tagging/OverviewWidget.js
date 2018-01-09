@@ -2,8 +2,6 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styles from './styles.scss';
-
 import {
     ListView,
 } from '../../../../../public/components/View';
@@ -11,12 +9,13 @@ import {
 import update from '../../../../../public/utils/immutable-update';
 
 import MatrixRow from './MatrixRow';
+import { updateAttribute } from './utils';
+
+import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line
-    filters: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    exportable: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line
 };
@@ -38,93 +37,23 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.state = {
             rows: props.data || [],
         };
+        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { api, attribute, data } = nextProps;
-
-        if (this.props.data !== data) {
+        if (this.props.data !== nextProps.data) {
             this.setState({
-                rows: data || [],
+                rows: nextProps.data || [],
             });
         }
-        if (this.props.attribute !== attribute) {
-            api.getEntryModifier()
-                .setHighlightColor(this.createHighlightColor(attribute))
-                .apply();
+
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
         }
-    }
-
-    createFilterData = (attribute) => {
-        const filterValues = [];
-
-        Object.keys(attribute).forEach((key) => {
-            const row = attribute[key];
-
-            let rowExists = false;
-            Object.keys(row).forEach((cellKey) => {
-                if (row[cellKey]) {
-                    rowExists = true;
-                    filterValues.push(cellKey);
-                }
-            });
-
-            if (rowExists) {
-                filterValues.push(key);
-            }
-        });
-
-        return {
-            values: filterValues,
-            number: undefined,
-        };
-    }
-
-    createHighlightColor = (attribute) => {
-        let color;
-        Object.keys(attribute || {}).forEach((key) => {
-            const row = attribute[key];
-
-            const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);
-            if (rowExists) {
-                color = this.props.data.find(d => d.key === key).color;
-            }
-        });
-
-        return color;
-    }
-
-    createExportData = (attribute) => {
-        const excelValues = [];
-        const reportValues = [];
-
-        Object.keys(attribute).forEach((key) => {
-            const row = attribute[key];
-            const rowData = this.props.data.find(r => r.key === key);
-
-            Object.keys(row).forEach((cellKey) => {
-                if (row[cellKey]) {
-                    const cellData = rowData.cells.find(c => c.key === cellKey);
-
-                    excelValues.push([rowData.title, cellData.value]);
-                    reportValues.push(`${key}-${cellKey}`);
-                }
-            });
-        });
-
-        return {
-            excel: {
-                type: 'lists',
-                values: excelValues,
-            },
-            report: {
-                keys: reportValues,
-            },
-        };
     }
 
     handleCellClick = (key, cellKey) => {
-        const { api, id, filters, exportable, attribute } = this.props;
+        const { api, id, attribute } = this.props;
         const settings = { $auto: {
             [key]: { $auto: {
                 [cellKey]: {
@@ -140,13 +69,11 @@ export default class Matrix1dOverview extends React.PureComponent {
 
         api.getEntryModifier()
             .setAttribute(id, newAttribute)
-            .setFilterData(filters[0].id, this.createFilterData(newAttribute))
-            .setExportData(exportable.id, this.createExportData(newAttribute))
             .apply();
     }
 
     handleCellDrop = (key, cellKey, droppedData) => {
-        const { api, id, filters, exportable } = this.props;
+        const { api, id } = this.props;
         const existing = api.getEntryForData(droppedData);
 
         if (existing) {
@@ -163,8 +90,6 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.selectEntry(existing.data.id);
             api.getEntryModifier(existing.data.id)
                 .setAttribute(id, attribute)
-                .setFilterData(filters[0].id, this.createFilterData(attribute))
-                .setExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         } else {
             const attribute = {
@@ -175,8 +100,6 @@ export default class Matrix1dOverview extends React.PureComponent {
             api.getEntryBuilder()
                 .setData(droppedData)
                 .addAttribute(id, attribute)
-                .addFilterData(filters[0].id, this.createFilterData(attribute))
-                .addExportData(exportable.id, this.createExportData(attribute))
                 .apply();
         }
     }
