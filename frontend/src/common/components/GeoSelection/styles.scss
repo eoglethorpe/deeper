@@ -1,0 +1,71 @@
+@import '../../../stylesheets/base';
+
+.geo-selection {
+    display: flex;
+    position: relative;
+    align-items: flex-end;
+
+    .map-modal-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding-top: $spacing-extra-small;
+        padding-right: $spacing-small;
+    }
+
+    .flat-select-input {
+        margin: 0;
+    }
+}
+
+.modal {
+    :global .modal-content {
+        width: 720px;
+    }
+
+    .location-selects {
+        display: flex;
+
+        .map-selection-select {
+            margin-left: $spacing-small;
+        }
+    }
+
+    .map-modal {
+        display: flex;
+        padding: 0;
+
+        .map {
+            flex-grow: 0;
+            border-right: $width-separator-thin solid $color-separator;
+            width: 512px;
+            height: 512px;
+        }
+
+        .map-selections {
+            flex-grow: 1;
+            padding: 0;
+
+            .map-selections-list {
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+                height: 512px;
+                overflow-y: auto;
+
+                .region-item {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: center;
+                    justify-content: space-between;
+                    background-color: $color-background-row;
+                    padding: $spacing-small $spacing-medium;
+
+                    &:nth-child(even) {
+                        background-color: $color-background-row-alt;
+                    }
+                }
+            }
+        }
+    }
+}

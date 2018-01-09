@@ -45,6 +45,11 @@ const entryStrings = {
     editEntryLinkTitle: string[529],
     editEntryButtonLabel: string[530],
 
+    setGeoSelectionButtonLabel: string[531],
+    cancelGeoSelectionButtonLabel: string[532],
+    regionSelectPlaceholder: string[533],
+    geoOptionsFatalMessage: string[534],
+    locationSelectPlaceholder: string[535],
 };
 
 export default entryStrings;

@@ -265,7 +265,7 @@ export default class Entries extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: 'Entries', // FIXME: strings
+                    title: entryStrings.entriesTabLabel,
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -273,7 +273,7 @@ export default class Entries extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Entries', // FIXME: strings
+                    title: entryStrings.entriesTabLabel,
                     type: notify.type.ERROR,
                     message: 'Couldn\'t load entries', // FIXME: strings
                     duration: notify.duration.MEDIUM,

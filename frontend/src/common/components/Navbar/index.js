@@ -180,7 +180,6 @@ export default class Navbar extends React.PureComponent {
         const navLinks = [
             'leads',
             'entries',
-            'ary',
             'projects',
             'countries',
             'export',

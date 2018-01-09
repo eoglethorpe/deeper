@@ -19,6 +19,10 @@
             .entries-filter,
             .select-input {
                 margin: $spacing-small;
+
+                &.flat-select-input {
+                    margin: 0;
+                }
             }
 
             .range-filter-container {

@@ -21,11 +21,16 @@ import {
     setEntriesViewFilterAction,
     unsetEntriesViewFilterAction,
     filtersForProjectSelector,
+
+    projectDetailsSelector,
 } from '../../../common/redux';
+
+import GeoSelection from '../../../common/components/GeoSelection';
 
 const mapStateToProps = (state, props) => ({
     entriesFilters: entriesViewFilterSelector(state, props),
     filters: filtersForProjectSelector(state, props),
+    projectDetails: projectDetailsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -40,6 +45,7 @@ const propTypes = {
     unsetEntriesViewFilter: PropTypes.func.isRequired,
     pending: PropTypes.bool,
     applyOnChange: PropTypes.bool,
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -47,6 +53,8 @@ const defaultProps = {
     filters: [],
     applyOnChange: false,
 };
+
+const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class EntriesFilter extends React.PureComponent {
@@ -152,15 +160,15 @@ export default class EntriesFilter extends React.PureComponent {
         } else if (filter.type === 'geo') {
             // User GeoSelect component
             return (
-                <SelectInput
+                <GeoSelection
                     key={key}
                     className="entries-filter"
                     label={title}
-                    showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
-                    value={filters[key]}
+                    projectId={this.props.projectDetails.id}
+                    regions={this.props.projectDetails.regions}
+                    value={filters[key] || emptyList}
                     disabled={this.props.pending}
-                    multiple
                 />
             );
         }

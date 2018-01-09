@@ -10,10 +10,7 @@ import {
 const propTypes = {
     className: PropTypes.string,
     onAreaClick: PropTypes.func,
-    selections: PropTypes.arrayOf(PropTypes.shape({
-        key: PropTypes.string,
-        title: PropTypes.string,
-    })),
+    selections: PropTypes.arrayOf(PropTypes.string),
     geoJson: PropTypes.object,  // eslint-disable-line
     geoJsonBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
 };
@@ -91,10 +88,9 @@ export default class GeoJsonMap extends React.PureComponent {
         map.on('click', 'geojson', (e) => {
             if (this.props.onAreaClick) {
                 const feature = e.features[0];
-                this.props.onAreaClick({
-                    key: feature.properties.pk,
-                    title: feature.properties.title,
-                });
+                this.props.onAreaClick(
+                    feature.properties.pk,
+                );
             }
         });
     }
@@ -139,7 +135,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 map.setFilter('geojson-selected', [
                     'in',
                     'pk',
-                    ...selections.map(s => s.key),
+                    ...selections,
                 ]);
             }
         }

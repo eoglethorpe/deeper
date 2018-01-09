@@ -20,6 +20,10 @@ export const projectsSelector = ({ domainData }) => (
     domainData.projects || emptyObject
 );
 
+export const geoOptionsSelector = ({ domainData }) => (
+    domainData.geoOptions || emptyObject
+);
+
 export const projectsOptionsSelector = ({ domainData }) => (
     domainData.projectsOptions || emptyObject
 );

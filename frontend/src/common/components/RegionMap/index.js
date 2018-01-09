@@ -31,10 +31,7 @@ import {
 const propTypes = {
     className: PropTypes.string,
     regionId: PropTypes.number,
-    selections: PropTypes.arrayOf(PropTypes.shape({
-        key: PropTypes.string,
-        title: PropTypes.string,
-    })),
+    selections: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
     onLocationsChange: PropTypes.func,
 };
@@ -199,7 +196,7 @@ export default class RegionMap extends React.PureComponent {
 
     handleAreaClick = (selection) => {
         const selections = [...this.props.selections];
-        const index = selections.findIndex(s => s.key === selection.key);
+        const index = selections.indexOf(selection);
 
         if (index === -1) {
             selections.push(selection);

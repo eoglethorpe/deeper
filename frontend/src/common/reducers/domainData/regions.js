@@ -7,6 +7,7 @@ export const ADD_NEW_REGION = 'domain-data/ADD_NEW_REGION';
 export const REMOVE_PROJECT_REGION = 'domain-data/REMOVE_PROJECT_REGION';
 export const SET_REGIONS = 'domain-data/SET_REGIONS';
 export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
+export const SET_GEO_OPTIONS = 'domain-data/SET_GEO_OPTIONS';
 export const SET_ADMIN_LEVELS_FOR_REGION = 'domain-data/SET_ADMIN_LEVELS_FOR_REGION';
 export const ADD_ADMIN_LEVEL_FOR_REGION = 'domain-data/ADD_ADMIN_LEVEL_FOR_REGION';
 export const UNSET_ADMIN_LEVEL_FOR_REGION = 'domain-data/UNSET_ADMIN_LEVEL_FOR_REGION';
@@ -22,6 +23,12 @@ export const setAdminLevelsForRegionAction = ({ adminLevels, regionId }) => ({
     type: SET_ADMIN_LEVELS_FOR_REGION,
     adminLevels,
     regionId,
+});
+
+export const setGeoOptionsAction = ({ projectId, locations }) => ({
+    type: SET_GEO_OPTIONS,
+    projectId,
+    locations,
 });
 
 export const addAdminLevelForRegionAction = ({ adminLevel, regionId }) => ({
@@ -164,6 +171,18 @@ const setAdminLevelsForRegion = (state, action) => {
     return update(state, settings);
 };
 
+const setGeoOptions = (state, action) => {
+    const { projectId, locations } = action;
+    const settings = {
+        geoOptions: { $auto: {
+            [projectId]: { $autoArray: {
+                $set: locations,
+            } },
+        } },
+    };
+    return update(state, settings);
+};
+
 const addAdminLevelForRegion = (state, action) => {
     const { adminLevel, regionId } = action;
     const index = (state.adminLevels[regionId]
@@ -210,6 +229,7 @@ const removeAdminLevelForRegion = (state, action) => {
 
 const reducers = {
     [SET_REGIONS]: setRegions,
+    [SET_GEO_OPTIONS]: setGeoOptions,
     [SET_REGION_DETAILS]: setRegionDetails,
     [UNSET_REGION]: unsetRegion,
     [REMOVE_PROJECT_REGION]: removeProjectRegion,
