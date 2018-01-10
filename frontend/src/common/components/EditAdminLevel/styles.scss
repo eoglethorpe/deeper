@@ -6,7 +6,6 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            padding: $spacing-medium;
 
             .text-input {
                 flex-basis: 100%;
@@ -14,8 +13,27 @@
             }
 
             .geo-file {
-                flex-basis: 100%;
-                background-color: transparent;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                margin-top: $spacing-medium;
+
+                .load {
+                    background-color: $color-separator;
+                    padding: $spacing-small;
+                }
+
+                .show {
+                    padding: $spacing-small;
+                }
+
+                i {
+                    margin-right: $spacing-small;
+                }
+
+                p {
+                    visibility: hidden;
+                }
             }
         }
 

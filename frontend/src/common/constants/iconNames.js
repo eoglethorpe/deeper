@@ -44,6 +44,8 @@ const iconNames = {
     jpeg: 'fa fa-file-image-o',
     fig: 'fa fa-file-image-o',
 
+    uploadFa: 'fa fa-upload',
+
     dropbox: 'ion-social-dropbox',
     edit: 'ion-edit',
     error: 'ion-android-alert',
