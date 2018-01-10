@@ -16,8 +16,10 @@ export const createFilterData = (attribute, data) => ({
 });
 
 export const createExportData = attribute => ({
-    type: 'list',
-    value: attribute.values.map(v => v.name),
+    excel: {
+        type: 'list',
+        value: attribute.values.map(v => v.name),
+    },
 });
 
 export const updateAttribute = ({ entryId, api, attribute, data, filters, exportable }) => {
