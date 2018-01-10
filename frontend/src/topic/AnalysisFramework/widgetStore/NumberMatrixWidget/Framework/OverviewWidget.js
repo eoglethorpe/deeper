@@ -36,6 +36,8 @@ import { randomString } from '../../../../../public/utils/common';
 import styles from './styles.scss';
 
 const propTypes = {
+    title: PropTypes.string.isRequired,
+    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, //eslint-disable-line
     data: PropTypes.object, //eslint-disable-line
@@ -87,6 +89,45 @@ export default class NumberMatrixOverview extends React.PureComponent {
     getEditColumnUnits = (key, data, index) => (
         <this.SortableColumnUnit key={key} index={index} value={{ key, data }} />
     )
+
+    createFilters = () => {
+        const { title, widgetKey } = this.props;
+
+        return [{
+            title,
+            widgetKey,
+            key: widgetKey,
+            filterType: 'list',
+            properties: {
+                type: 'number-2d',
+            },
+        }];
+    }
+
+    createExportable = (data) => {
+        const { widgetKey } = this.props;
+        const titles = [];
+
+        data.rowHeaders.forEach((rowHeader) => {
+            data.columnHeaders.forEach((columnHeader) => {
+                titles.push(`${rowHeader.title} - ${columnHeader.title}`);
+            });
+
+            titles.push(`${rowHeader.title} - Matches`);
+        });
+
+        const excel = {
+            type: 'multiple',
+            titles,
+        };
+
+        return {
+            widgetKey,
+            data: {
+                excel,
+            },
+        };
+    }
 
     SortableRowUnit = SortableElement(({ value: { data, key } }) => (
         <div
@@ -208,7 +249,11 @@ export default class NumberMatrixOverview extends React.PureComponent {
             rowHeaders,
             columnHeaders,
         };
-        this.props.onChange(newData);
+        this.props.onChange(
+            newData,
+            this.createFilters(),
+            this.createExportable(newData),
+        );
     }
 
     handleRowUnitTitleInputChange = (key, value) => {

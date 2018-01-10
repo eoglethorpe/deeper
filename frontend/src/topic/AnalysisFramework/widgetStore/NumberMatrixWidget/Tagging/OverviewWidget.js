@@ -13,6 +13,7 @@ import {
 import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
+import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -34,6 +35,17 @@ export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+        updateAttribute(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.attribute !== nextProps.attribute) {
+            updateAttribute(nextProps);
+        }
+    }
 
     onChangeNumberField = (rowKey, colKey, value) => {
         const { api, id } = this.props;

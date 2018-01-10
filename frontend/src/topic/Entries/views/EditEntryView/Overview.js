@@ -118,7 +118,6 @@ export default class Overview extends React.PureComponent {
         }
 
         if (this.props.saveAllPending !== nextProps.saveAllPending) {
-            console.warn('here');
             if (nextProps.saveAllPending && this.state.currentTab !== 'entries-listing') {
                 this.setState({
                     currentTab: 'entries-listing',
