@@ -201,7 +201,7 @@ export default class CountryPanel extends React.PureComponent {
         if (countries.length <= 0) {
             return (
                 <div styleName="country-detail-alt">
-                    There are no countries.
+                    {countriesString.noCountriesText}
                 </div>
             );
         }
@@ -209,7 +209,7 @@ export default class CountryPanel extends React.PureComponent {
         if (!activeCountryId) {
             return (
                 <div styleName="country-detail-alt">
-                    Select a country to view its detail.
+                    {countriesString.selectCountryText}
                 </div>
             );
         }
@@ -230,7 +230,7 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-detail-alt">
-                Selected county is not found.
+                {countriesString.countryNotFoundText}
             </div>
         );
     }

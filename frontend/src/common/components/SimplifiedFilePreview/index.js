@@ -15,6 +15,10 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
+import {
+    commonStrings,
+} from '../../../common/constants';
+
 const propTypes = {
     className: PropTypes.string,
     fileIds: PropTypes.arrayOf(
@@ -211,13 +215,13 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             .failure((response) => {
                 console.error(response);
                 this.endProcess({
-                    error: 'Server error',
+                    error: commonStrings.serverErrorText,
                 });
             })
             .fatal((response) => {
                 console.error(response);
                 this.endProcess({
-                    error: 'Failed connecting to server',
+                    error: commonStrings.connectionFailureText,
                 });
             })
             .build()
@@ -248,7 +252,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Preview Not Available
+                {commonStrings.previewNotAvailable}
             </div>
         );
     }

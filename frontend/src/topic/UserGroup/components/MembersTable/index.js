@@ -325,7 +325,7 @@ export default class MembersTable extends React.PureComponent {
             userStrings.confirmTextRevokeAdmin :
             userStrings.confirmTextGrantAdmin;
 
-        const confirmText = `${userStrings.confirmTextGrantAdmin} ${accessRight} ${member.memberName}?`;
+        const confirmText = `${accessRight} ${member.memberName}?`;
         this.setState({
             toggleRoleConfirmShow: true,
             confirmText,

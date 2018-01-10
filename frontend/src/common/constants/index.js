@@ -13,3 +13,8 @@ export { default as ceStrings } from './strings/ceStrings';
 export { default as exportStrings } from './strings/exportStrings';
 export { default as afStrings } from './strings/afStrings';
 export { default as loginStrings } from './strings/loginStrings';
+export { default as apiStrings } from './strings/apiStrings';
+export { default as entryStrings } from './strings/entryStrings';
+export { default as fourHundredFourStrings } from './strings/fourHundredFourStrings';
+export { default as homescreenStrings } from './strings/homescreenStrings';
+export { default as commonStrings } from './strings/commonStrings';

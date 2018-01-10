@@ -5,6 +5,7 @@ import styles from './styles.scss';
 import {
     NumberInput,
 } from '../../../../../public/components/Input';
+import { afStrings } from '../../../../../common/constants';
 
 const propTypes = {
 };
@@ -22,7 +23,7 @@ export default class NumberFrameworkList extends React.PureComponent {
             <div styleName="number-list">
                 <NumberInput
                     styleName="number-input"
-                    placeholder="999 999"
+                    placeholder={afStrings.numberPlaceholder}
                     showLabel={false}
                     showHintAndError={false}
                     separator=" "

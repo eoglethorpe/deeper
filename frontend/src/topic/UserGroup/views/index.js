@@ -189,7 +189,7 @@ export default class UserGroup extends React.PureComponent {
             return (
                 <div styleName="usergroup">
                     <div styleName="usergroup-alt">
-                        User Group Not Found....
+                        {userStrings.userGroupNotFound}
                     </div>
                 </div>
             );

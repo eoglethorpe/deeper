@@ -3,6 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styles from './styles.scss';
+import {
+    afStrings,
+} from '../../../../../common/constants';
 
 const TEXT = 'excerpt';
 
@@ -55,7 +58,7 @@ export default class ExcerptTextList extends React.PureComponent {
                         <img
                             styleName="image"
                             src={attribute.image}
-                            alt="Entry"
+                            alt={afStrings.altEntryLabel}
                         />
                     )
                 }

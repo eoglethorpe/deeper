@@ -2,7 +2,10 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
-import { pathNames } from '../../../common/constants';
+import {
+    pathNames,
+    fourHundredFourStrings,
+} from '../../../common/constants';
 
 import styles from './styles.scss';
 import logo from '../../../img/deep-logo.svg';
@@ -26,17 +29,17 @@ export default class FourHundredFour extends React.PureComponent {
                     path={logo}
                 />
                 <h1 styleName="heading">
-                    Error 404
+                    {fourHundredFourStrings.errorFourHundredFour}
                 </h1>
                 <p styleName="message">
-                    Oops! You have come too DEEP<br />
-                    This is where the DEEP Kraken rests
+                    {fourHundredFourStrings.message1}<br />
+                    {fourHundredFourStrings.message2}
                 </p>
                 <Link
                     to={pathNames.homeScreen}
                     styleName="home-screen-link"
                 >
-                    Go to DEEP
+                    {fourHundredFourStrings.goToDeep}
                 </Link>
             </div>
         );

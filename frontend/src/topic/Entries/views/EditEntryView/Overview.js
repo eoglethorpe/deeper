@@ -24,6 +24,7 @@ import {
 
 import {
     iconNames,
+    entryStrings,
 } from '../../../../common/constants';
 import {
     setActiveEntryAction,
@@ -225,7 +226,7 @@ export default class Overview extends React.PureComponent {
                 <img
                     className="image"
                     src={values.image}
-                    alt="Entry"
+                    alt={entryStrings.altLabel}
                 />
             );
         }
@@ -239,13 +240,13 @@ export default class Overview extends React.PureComponent {
     calcEntryLabelLimited = (entry) => {
         const values = entryAccessor.getValues(entry);
         if (values.entryType === 'image') {
-            return 'Image';
+            return entryStrings.imageLabel;
         }
         const characterLimit = 32;
         const text = values.excerpt;
 
         if (!text) {
-            return 'Excerpt';
+            return entryStrings.excerptLabel;
         }
 
         const limitedEntry = text.slice(0, characterLimit);
@@ -349,7 +350,7 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="preview-text">
                 <h1>
-                    Preview not Available
+                    {entryStrings.previewNotAvailableText}
                 </h1>
             </div>
         );
@@ -408,19 +409,19 @@ export default class Overview extends React.PureComponent {
                                     styleName="tab-header"
                                     to="simplified-preview"
                                 >
-                                    Simplified
+                                    {entryStrings.simplifiedTabLabel}
                                 </TabLink>
                                 <TabLink
                                     styleName="tab-header"
                                     to="assisted-tagging"
                                 >
-                                    Assisted
+                                    {entryStrings.assistedTabLabel}
                                 </TabLink>
                                 <TabLink
                                     styleName="tab-header"
                                     to="original-preview"
                                 >
-                                    Original
+                                    {entryStrings.originalTabLabel}
                                 </TabLink>
                                 {
                                     this.state.images.length > 0 &&
@@ -428,19 +429,15 @@ export default class Overview extends React.PureComponent {
                                         styleName="tab-header"
                                         to="images-preview"
                                     >
-                                        Images
+                                        {entryStrings.imagesTabLabel}
                                     </TabLink>
                                 }
                                 <TabLink
                                     styleName="tab-header"
                                     to="entries-listing"
                                 >
-                                    Entries
+                                    {entryStrings.entriesTabLabel}
                                 </TabLink>
-                                {/*
-                                    Essential for border bottom,
-                                    for more info contact AdityaKhatri
-                                */}
                                 <div styleName="empty-tab" />
                             </div>
                             <div styleName="tabs-content">
@@ -503,7 +500,7 @@ export default class Overview extends React.PureComponent {
                         <div styleName="entry-actions">
                             <SelectInput
                                 styleName="select-input"
-                                placeholder="Select an excerpt"
+                                placeholder={entryStrings.selectExcerptPlaceholder}
                                 showHintAndError={false}
                                 showLabel={false}
                                 clearable={false}
@@ -514,25 +511,25 @@ export default class Overview extends React.PureComponent {
                                 onChange={this.handleEntrySelectChange}
                             />
                             <PrimaryButton
-                                title="Add entry"
+                                title={entryStrings.addEntryButtonTitle}
                                 onClick={this.props.onEntryAdd}
                             >
-                                Add
+                                {entryStrings.addEntryButtonLabel}
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
-                                    title="Mark current entry for removal"
+                                    title={entryStrings.removeEntryButtonTitle}
                                     onClick={() => this.props.onEntryDelete(true)}
                                 >
-                                    Remove
+                                    {entryStrings.removeEntryButtonLabel}
                                 </DangerButton>
                             }
                             { selectedEntry && isMarkedForDelete &&
                                 <Button
-                                    title="Unmark current entry for removal"
+                                    title={entryStrings.undoRemoveEntryButtonTitle}
                                     onClick={() => this.props.onEntryDelete(false)}
                                 >
-                                    Undo Remove
+                                    {entryStrings.undoRemoveEntryButtonLabel}
                                 </Button>
                             }
                         </div>
@@ -540,14 +537,14 @@ export default class Overview extends React.PureComponent {
                             <Button
                                 onClick={this.handleGotoListButtonClick}
                             >
-                                Goto list
+                                {entryStrings.gotoListButtonLabel}
                             </Button>
                             <SuccessButton
                                 styleName="save-button"
                                 onClick={onSaveAll}
                                 disabled={saveAllDisabled}
                             >
-                                Save
+                                {entryStrings.saveButtonLabel}
                             </SuccessButton>
                         </div>
                     </header>

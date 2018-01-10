@@ -10,6 +10,7 @@ import {
 import {
     List,
 } from '../../../../../public/components/View';
+import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -96,7 +97,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 key={`${rowKey}-${key}`}
             >
                 <NumberInput
-                    placeholder="999 999"
+                    placeholder={afStrings.numberPlaceholder}
                     showLabel={false}
                     onChange={newValue => this.onChangeNumberField(rowKey, key, newValue)}
                     value={value}

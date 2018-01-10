@@ -18,6 +18,7 @@ import {
 
 import {
     iconNames,
+    commonStrings,
 } from '../../constants';
 import {
     createParamsForAdminLevelsForRegionGET,
@@ -181,14 +182,14 @@ export default class RegionMap extends React.PureComponent {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: commonStrings.erverErrorText,
                 });
             })
             .fatal((response) => {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: commonStrings.connectionFailureText,
                 });
             })
             .build()
@@ -354,7 +355,7 @@ export default class RegionMap extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Map not available
+                {commonStrings.mapNotAvailable}
             </div>
         );
     }

@@ -48,6 +48,8 @@ const ceStrings = {
     selectFromGalleryButtonLabel: string[426],
     applyButtonLabel: string[427],
 
+    titleLabel: string[407],
+
 };
 
 export default ceStrings;

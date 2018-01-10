@@ -9,7 +9,10 @@ import {
     createHeaderForGalleryFile,
 } from '../../../common/rest';
 
-import { iconNames } from '../../../common/constants';
+import {
+    iconNames,
+    commonStrings,
+} from '../../../common/constants';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 
@@ -36,7 +39,7 @@ const defaultProps = {
     className: '',
     galleryId: undefined,
     onlyFileName: false,
-    label: 'Loading file',
+    label: commonStrings.loadingFileLabel,
 };
 
 @CSSModules(styles, { allowMultiple: true })

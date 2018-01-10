@@ -279,7 +279,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             cloneConfirm, countryId, activeProject,
                         )}
                     >
-                        <p>{`Are you sure you want to clone ${regionDetails.title}?`}</p>
+                        <p>{`${projectStrings.confirmCloneText} ${regionDetails.title}?`}</p>
                         <p>{projectStrings.cloneText}</p>
                     </Confirm>
                 </header>

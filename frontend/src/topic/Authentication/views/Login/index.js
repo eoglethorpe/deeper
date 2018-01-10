@@ -287,10 +287,10 @@ export default class Login extends React.PureComponent {
                             <img
                                 styleName="logo"
                                 src={hidLogo}
-                                alt={loginStrings.deepLabel}
+                                alt={loginStrings.logInWIthHid}
                                 draggable="false"
                             />
-                            <span>{loginStrings.deepLabel}</span>
+                            <span>{loginStrings.logInWIthHid}</span>
                         </a>
                         <div styleName="or-container">
                             <hr />

@@ -17,6 +17,9 @@ import {
 import {
     isFalsy,
 } from '../../../public/utils/common';
+import {
+    commonStrings,
+} from '../../../common/constants';
 
 const propTypes = {
     className: PropTypes.string,
@@ -193,14 +196,14 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: commonStrings.serverErrorText,
                 });
             })
             .fatal((response) => {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: commonStrings.connectionFailureText,
                 });
             })
             .build()
@@ -234,7 +237,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                Preview not Available
+                {commonStrings.previewNotAvailable}
             </div>
         );
     }

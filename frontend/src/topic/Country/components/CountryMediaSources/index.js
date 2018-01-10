@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import styles from './styles.scss';
+import { countriesString } from '../../../../common/constants';
+
 
 const propTypes = {
     countryId: PropTypes.number.isRequired,
@@ -15,7 +17,7 @@ export default class CountryMediaSources extends React.PureComponent {
     render() {
         const { countryId } = this.props;
         return (
-            <div>Media Sources {countryId}</div>
+            <div>{countriesString.mediaTabLabel}{countryId}</div>
         );
     }
 }

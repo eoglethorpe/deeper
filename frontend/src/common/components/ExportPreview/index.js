@@ -141,14 +141,14 @@ export default class ExportPreview extends React.PureComponent {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: exportStrings.erverErrorText,
                 });
             })
             .fatal((response) => {
                 console.log(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: exportStrings.connectionFailureText,
                 });
             })
             .build()

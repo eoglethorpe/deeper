@@ -177,8 +177,8 @@ export default class CategoryEditor extends React.PureComponent {
                     } else if (categoryEditorViewVersionId < response.versionId) {
                         notify.send({
                             type: notify.type.WARNING,
-                            title: 'Category editor was updated in server.',
-                            message: 'Your copy was overridden by server\'s copy',
+                            title: ceStrings.ceUpdate,
+                            message: ceStrings.ceUpdateOverridden,
                             duration: notify.duration.SLOW,
                         });
                         this.props.setCategoryEditor({ categoryEditor: response });
@@ -243,8 +243,8 @@ export default class CategoryEditor extends React.PureComponent {
         } catch (ex) {
             notify.send({
                 type: notify.type.WARNING,
-                title: 'Invalid drop source',
-                message: 'Only drop from Extracted Words are valid.',
+                title: ceStrings.invalidDropSource,
+                message: ceStrings.validDropAlert,
             });
         }
     }

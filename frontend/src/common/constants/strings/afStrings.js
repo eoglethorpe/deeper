@@ -28,6 +28,7 @@ const afStrings = {
     addCellButtonLabel: string[720],
     editRowModalTitle: string[721],
     addRowButtonLabel: string[722],
+    titlePlaceholderOverview: string[763],
 
     matrix2DWidgetLabel: string[723],
     sectorLabel: string[724],
@@ -37,6 +38,8 @@ const afStrings = {
     subsectorsLabel: string[728],
     addSubsectorModalTitle: string[729],
     addButtonLabel: string[730],
+    addSubDimensionButtonLabel: string[765],
+
 
     sectorTitleLabel: string[731],
     sectorTitlePlaceholder: string[732],
@@ -73,6 +76,15 @@ const afStrings = {
     titlePlaceholderScale: string[758],
     editScaleModalTitle: string[759],
     addscaleUnitButtonLabel: string[760],
+
+    altEntryLabel: string[761],
+    removeLocationButtonTitle: string[762],
+    colorLabel: string[764],
+
+    addChildButtonTitle: string[766],
+    removeElementButtonTitle: string[767],
+
+    numberPlaceholder: string[768],
 
 
 };

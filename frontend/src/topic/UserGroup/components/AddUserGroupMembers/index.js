@@ -110,28 +110,29 @@ export default class AddUserGroupMembers extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'displayName',
-                label: 'Name',
+                label: userStrings.tableHeaderName,
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.displayName.localeCompare(b.displayName),
             },
             {
                 key: 'email',
-                label: 'Email',
+                label: userStrings.tableHeaderEmail,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.email.localeCompare(b.email),
             },
             {
                 key: 'actions',
-                label: 'Actions',
+                label: userStrings.tableHeaderActions,
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
                     return (
                         <div className="actions">
                             <TransparentPrimaryButton
-                                title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
+                                title={isAdmin ? userStrings.revokeAdminLinkTitle :
+                                    userStrings.grantAdminLinkTitle}
                                 type="button"
                                 onClick={() =>
                                     this.handleRoleChangeForNewMember({

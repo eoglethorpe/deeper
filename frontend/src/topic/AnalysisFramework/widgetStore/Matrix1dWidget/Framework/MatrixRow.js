@@ -160,8 +160,8 @@ export default class MatrixRow extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label="Title"
-                placeholder="eg: Overview"
+                label={afStrings.titleLabel}
+                placeholder={afStrings.titlePlaceholderOverview}
                 onChange={value => this.handleCellValueInputChange(key, value)}
                 value={data.value}
             />

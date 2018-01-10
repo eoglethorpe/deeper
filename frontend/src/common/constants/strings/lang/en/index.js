@@ -53,6 +53,21 @@ const strings = {
     49: 'Gathering Website Information to Preview',
     50: '',
 
+    130: 'Apply this value to all',
+    131: 'Apply this value to all below',
+    132: 'Preview Not Available',
+    133: 'Are you sure you want to delete this lead?',
+    134: 'Failed to upload file :',
+
+    135: 'Search Similar Lead',
+    136: 'Edit lead',
+    137: 'Remove lead',
+    138: 'Add entry from this lead',
+    139: 'Table',
+    140: 'Visualizations',
+    141: 'Are you sure you want to remove this lead? The lead along with all the associated entries will be removed.',
+
+
     // For Countries
     51: 'Countries',
     52: 'Search Country',
@@ -120,7 +135,15 @@ const strings = {
     114: 'Enter UN Geographical Region',
     115: 'UN Geographical Sub Region',
     116: 'Enter UN Geographical Sub Region',
-
+    117: 'There are no countries.',
+    118: 'Select a country to view its detail.',
+    119: 'Selected county is not found.',
+    120: 'Level',
+    121: 'Admin Level Name',
+    122: 'Actions',
+    123: 'Admin Levels',
+    124: 'Level',
+    125: 'Level',
 
     // User Profile and User Group
 
@@ -180,9 +203,12 @@ const strings = {
 
     193: 'Are you sure you want to delete the project',
     194: 'Are you sure you want to',
-    195: 'revoke admin rights form',
-    196: 'grant admin rights to',
+    195: 'Revoke admin rights form',
+    196: 'Grant admin rights to',
     197: 'Are you sure you want to remove',
+
+    198: 'User Group Not Found....',
+    199: 'User Not Found',
 
 
     // Project Panel strings
@@ -284,6 +310,11 @@ const strings = {
     374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
     376: 'Pro',
 
+    377: 'General Details',
+    378: 'Regions',
+    379: 'Analysis Framework',
+    380: 'Category Editor',
+
     // Category Editor
 
     400: 'Save',
@@ -328,6 +359,56 @@ const strings = {
     429: 'Category',
     430: 'Category',
 
+
+    // Entry Page strings
+
+    500: 'Server Error',
+    501: 'Failed connecting to server',
+    502: 'NLP',
+    503: 'Category Editor',
+    504: 'It\'s Accurate',
+    505: 'It\'s not Accurate',
+    506: 'Show suggestions for :',
+    507: 'Add',
+    508: 'Entities',
+
+    509: 'Goto Overview',
+    510: 'Save',
+    511: 'Goto List',
+    512: 'Entry',
+
+    513: 'Image',
+    514: 'Excerpt',
+    515: 'Preview Not Available',
+    516: 'Simplified',
+    517: 'Assisted',
+    518: 'Original',
+    519: 'Images',
+    520: 'Entries',
+
+    521: 'Select an excerpt',
+    522: 'Add Entry',
+    523: 'Mark current entry for removal',
+    524: 'Remove',
+    525: 'Unmark current entry for removal',
+    526: 'Undo Remove',
+
+    527: 'Apply Filter',
+    528: 'Clear Filter',
+
+    529: 'Edit',
+    530: 'Edit Entry',
+
+    531: 'Entry',
+    532: 'Entry',
+    533: 'Entry',
+    534: 'Entry',
+    535: 'Entry',
+    536: 'Entry',
+    537: 'Entry',
+    538: 'Entry',
+    539: 'Entry',
+    540: 'Entry',
     // Export strings
 
     600: 'Export',
@@ -354,6 +435,9 @@ const strings = {
     616: 'Created At',
 
     617: 'Preview Not Available',
+
+    618: 'Server error',
+    619: 'Failed connecting to server',
 
     // Aanalysis Framework Strings
 
@@ -429,6 +513,15 @@ const strings = {
     759: 'Edit Scales',
     760: 'Add Scale Unit',
 
+    761: 'Entry',
+    762: 'Remove Location',
+    763: 'eg: Overview',
+    764: 'Color',
+    765: 'Add Subdimension',
+    766: 'Add Child',
+    767: 'Remove Element',
+    768: '999 999',
+
     // Login/Register strings
 
     800: 'Form has combined validation error.',
@@ -462,21 +555,22 @@ const strings = {
     824: 'Password should be more than four characters long.',
     825: 'Already have an account?',
 
-    826: 'Login',
-    827: 'Login',
-    828: 'Login',
-    829: 'Login',
-    830: 'Login',
-    831: 'Login',
-    832: 'Login',
-    833: 'Login',
-    834: 'Login',
-    835: 'Login',
-    836: 'Login',
-    837: 'Login',
-    838: 'Login',
-    839: 'Login',
-    840: 'Login',
+    // API docs
+
+    850: 'Request Schema',
+    851: 'Response Schema',
+    852: 'Loading ...',
+    // 404 Page
+    870: 'Error 404',
+    871: 'Oops! You have come too DEEP',
+    872: 'This is where the DEEP Kraken rests',
+    873: 'Go to DEEP',
+    // Home Screen
+    875: 'Welcome to the',
+    876: 'DEEP',
+    877: 'Seems like you do not have any projects yet',
+    878: 'To get started, create a project from your profile',
+    879: 'Go to your profile',
     // Notification strings
 
     // User Profile
@@ -584,6 +678,65 @@ const strings = {
     979: 'Error.Cannot delete lead. Please check your network connection and try again',
 
     980: 'Add',
+
+    981: 'Analysis Framework was updated in server.',
+    982: 'Your copy was overridden by server\'s copy',
+    983: 'Successfully saved the framework',
+
+    984: 'Category editor was updated in server.',
+    985: 'Invalid drop source',
+    986: 'Only drop from Extracted Words are valid.',
+
+    987: 'Some entries were updated in server.',
+    988: 'Analysis',
+
+
+    // Common Components Strings
+
+    1200: 'User',
+    1201: 'Select',
+    1202: 'Type',
+    1203: 'Name',
+    1204: 'Date Created',
+
+    1205: 'Search',
+    1206: 'Search Gallery Files',
+    1207: 'Cancel',
+    1208: 'Add',
+
+    1209: 'Loading File',
+
+    1210: 'Open Dropbox chooser',
+    1211: 'Open Google chooser',
+
+    1212: 'Server error',
+    1213: 'Failed connecting to server',
+    1214: 'Map Not Available',
+
+    1215: 'Preview Not Available',
+    1216: 'Notification',
+
+    1217: 'Anon',
+    1218: 'DEEP',
+    1219: 'Select Event',
+    1220: 'Admin Panel',
+    1221: 'Logout',
+
+    1222: 'Locating the required gigapixels to render ...',
+    1223: 'Programming the flux capacitor ...',
+    1224: 'Shovelling coal into the server ...',
+    1225: 'Spinning up the hamster ...',
+    1226: 'Checking the gravitational constant in your locale ...',
+    1227: 'The server is powered by a lemon and two electrodes ...',
+    1228: 'Don\'t think of purple hippos ...',
+    1229: 'Dividing eternity by zero, please be patient... ...',
+    1230: 'Photographing cats... Attaching signs... MEME complete ...',
+    1231: 'Nobody exists on purpose, nobody belongs anywhere ...',
+    1232: 'Swapping time and space...',
+    1233: 'Greetings Earthling!! ...',
+    1234: 'I am Mr. Meeseeks!! Look at me ...',
+    1235: 'Oh, yeaahhhh! You gotta get schwifty. ...',
+    1236: 'Shhhh!!! The Kraken is sleeping ...',
 };
 
 export default strings;

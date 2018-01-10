@@ -108,6 +108,21 @@ const notificationStrings = {
     leadDeleteFailure: string[978],
     leadDeleteFatal: string[979],
 
+    // Analysis Framework
+    afTitle: string[964],
+    afUpdate: string[981],
+    afUpdateOverridden: string[982],
+    afSaveSuccess: string[983],
+
+    // Category Editor
+    ceUpdate: string[984],
+    ceUpdateOverridden: string[982],
+    invalidDropSource: string[986],
+    validDropAlert: string[987],
+
+    // Entries
+    entryUpdate: string[987],
+    entryUpdateOverridden: string[982],
 };
 
 export default notificationStrings;

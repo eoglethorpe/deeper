@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import {
     TextArea,
 } from '../../../../../public/components/Input';
+import {
+    afStrings,
+} from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -68,7 +71,7 @@ export default class ExcerptList extends React.PureComponent {
                         <img
                             styleName="image"
                             src={attribute.image}
-                            alt="Entry"
+                            alt={afStrings.altEntryLabel}
                         />
                     )
                 }

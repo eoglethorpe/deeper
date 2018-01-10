@@ -25,6 +25,7 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 
 import {
     iconNames,
+    entryStrings,
 } from '../../../../common/constants';
 import {
     urlForLeadClassify,
@@ -75,15 +76,15 @@ export default class AssistedTagging extends React.PureComponent {
 
         this.assitedTaggingSources = [
             {
-                label: 'NLP',
+                label: entryStrings.nlpLabel,
                 value: 'nlp',
             },
             {
-                label: 'Entities',
+                label: entryStrings.entitiesLabel,
                 value: 'ner',
             },
             {
-                label: 'Category Editor',
+                label: entryStrings.ceLabel,
                 value: 'ce',
             },
         ];
@@ -217,14 +218,14 @@ export default class AssistedTagging extends React.PureComponent {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: entryStrings.serverErrorText,
                 });
             })
             .fatal((response) => {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: entryStrings.connectionFailureText,
                 });
             })
             .build();
@@ -246,14 +247,14 @@ export default class AssistedTagging extends React.PureComponent {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: entryStrings.serverErrorText,
                 });
             })
             .fatal((response) => {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: entryStrings.connectionFailureText,
                 });
             })
             .build();
@@ -278,14 +279,14 @@ export default class AssistedTagging extends React.PureComponent {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Server error',
+                    error: entryStrings.serverErrorText,
                 });
             })
             .fatal((response) => {
                 console.error(response);
                 this.setState({
                     pending: false,
-                    error: 'Failed connecting to server',
+                    error: entryStrings.connectionFailureText,
                 });
             })
             .build();
@@ -392,7 +393,7 @@ export default class AssistedTagging extends React.PureComponent {
         const highlights = filteredClassifications.map(excerpt => ({
             ...excerpt,
             color: getHexFromString(excerpt.sectors[0].label),
-            source: 'NLP',
+            source: entryStrings.sourceNLP,
         }));
         this.setState({ highlights });
     }
@@ -414,7 +415,7 @@ export default class AssistedTagging extends React.PureComponent {
             startPos: keyword.start,
             length: keyword.length,
             color: getHexFromString(keyword.subcategory),
-            source: 'Category Editor',
+            source: entryStrings.sourceCE,
         }));
         this.setState({ highlights });
     }
@@ -443,12 +444,12 @@ export default class AssistedTagging extends React.PureComponent {
             </div>
             <div className={styles['feedback-buttons']}>
                 <TransparentSuccessButton
-                    title="Its accurate"
+                    title={entryStrings.accurateTextTitle}
                 >
                     <span className={iconNames.thumbsUp} />
                 </TransparentSuccessButton>
                 <TransparentWarningButton
-                    title="Its not accurate"
+                    title={entryStrings.notAccurateTextTitle}
                 >
                     <span className={iconNames.thumbsDown} />
                 </TransparentWarningButton>
@@ -492,7 +493,7 @@ export default class AssistedTagging extends React.PureComponent {
                         backgroundHighlight
                     />
                     <div styleName="details">
-                        <span>Show suggestions for:</span>
+                        <span>{entryStrings.showSuggestionText}</span>
                         {
                             selectedAssitedTaggingSource === 'nlp' && (
                                 <SelectInput
@@ -567,7 +568,7 @@ export default class AssistedTagging extends React.PureComponent {
                                 activeHighlightDetails.text,
                             )}
                         >
-                            Add
+                            {entryStrings.addEntryButtonLabel}
                         </PrimaryButton>
                     </div>
                 </FloatingContainer>

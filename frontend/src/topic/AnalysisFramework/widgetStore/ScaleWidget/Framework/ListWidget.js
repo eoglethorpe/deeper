@@ -138,7 +138,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         >
             <DragHandle />
             <div className={styles['color-box-container']}>
-                <span className={styles['color-label']}>Color</span>
+                <span className={styles['color-label']}>{afStrings.colorLabel}</span>
                 <button
                     className={styles['color-box']}
                     onClick={() => this.handleColorBoxClick(key)}

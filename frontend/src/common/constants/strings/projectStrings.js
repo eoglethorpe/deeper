@@ -108,6 +108,11 @@ const projectStrings = {
     confirmCloneCe: string[367],
     confirmCloneCeText: string[374],
 
+    generalDetailsLabel: string[377],
+    regionsLabel: string[378],
+    analysisFrameworkLabel: string[379],
+    categoryEditorLabel: string[380],
+
 
 };
 

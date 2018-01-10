@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 
 import { TransparentButton } from '../../../public/components/Action';
-
+import {
+    commonStrings,
+} from '../../../common/constants';
 import styles from './styles.scss';
 
 import { DROPBOX_SDK_URL, SCRIPT_ID } from '../../../common/config/dropbox';
@@ -156,7 +158,7 @@ export default class DropboxChooser extends React.Component {
                 {
                     children ||
                     <button>
-                        Open dropbox chooser
+                        {commonStrings.openDropboxChooserText}
                     </button>
                 }
             </TransparentButton>

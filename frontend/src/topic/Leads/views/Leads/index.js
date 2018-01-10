@@ -227,25 +227,25 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton
-                            title="Search similar lead"
+                            title={leadsString.searchSimilarLeadButtonTitle}
                             onClick={() => this.handleSearchSimilarLead(row)}
                         >
                             <i className={iconNames.search} />
                         </TransparentButton>
                         <TransparentButton
-                            title="Edit lead"
+                            title={leadsString.editLeadButtonTitle}
                             onClick={() => this.handleEditLeadClick(row)}
                         >
                             <i className={iconNames.edit} />
                         </TransparentButton>
                         <TransparentDangerButton
-                            title="Remove lead"
+                            title={leadsString.removeLeadLeadButtonTitle}
                             onClick={() => this.handleRemoveLead(row)}
                         >
                             <i className={iconNames.delete} />
                         </TransparentDangerButton>
                         <TransparentAccentButton
-                            title="Add entry from this lead"
+                            title={leadsString.addEntryFromLeadButtonTitle}
                             onClick={() => this.handleAddEntryClick(row)}
                         >
                             <i className={iconNames.forward} />
@@ -257,11 +257,11 @@ export default class Leads extends React.PureComponent {
 
         this.viewModes = [
             {
-                label: 'Table',
+                label: leadsString.tableLabel,
                 value: 'table',
             },
             {
-                label: 'Visualizations',
+                label: leadsString.visualizationsLabel,
                 value: 'Viz',
             },
         ];
@@ -412,9 +412,9 @@ export default class Leads extends React.PureComponent {
             })
             .success(() => {
                 notify.send({
-                    title: 'Remove Success',
+                    title: leadsString.leadDelete,
                     type: notify.type.SUCCESS,
-                    message: 'Lead was successfully removed.',
+                    message: leadsString.leadDeleteSuccess,
                     duration: notify.duration.MEDIUM,
                 });
 
@@ -432,9 +432,9 @@ export default class Leads extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: 'Remove Error',
+                    title: leadsString.leadDelete,
                     type: notify.type.ERROR,
-                    message: 'Lead couldn\'t be deleted.',
+                    message: leadsString.leadDeleteFailure,
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -643,9 +643,7 @@ export default class Leads extends React.PureComponent {
                     onClose={this.handleDeleteModalClose}
                 >
                     <p>
-                        Are you sure you want to remove this lead?
-                        The lead along with all the associated entries will be
-                        removed.
+                        {leadsString.leadDeleteConfirmText}
                     </p>
                 </Confirm>
                 <footer styleName="footer">

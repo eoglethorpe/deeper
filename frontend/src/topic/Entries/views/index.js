@@ -16,6 +16,7 @@ import { PrimaryButton } from '../../../public/components/Action';
 import {
     iconNames,
     pathNames,
+    entryStrings,
 } from '../../../common/constants';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
@@ -394,11 +395,11 @@ export default class Entries extends React.PureComponent {
                     </div>
                     <div className={styles['action-buttons']}>
                         <Link
-                            title="Edit Entry"
+                            title={entryStrings.editEntryLinkTitle}
                             to={route}
                         >
                             <PrimaryButton iconName={iconNames.edit} >
-                                Edit
+                                {entryStrings.editEntryButtonLabel}
                             </PrimaryButton>
                         </Link>
                     </div>

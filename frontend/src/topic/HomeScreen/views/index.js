@@ -10,6 +10,7 @@ import { reverseRoute } from '../../../public/utils/common';
 import logo from '../../../img/deep-logo.svg';
 import {
     pathNames,
+    homescreenStrings,
 } from '../../../common/constants';
 import {
     activeProjectSelector,
@@ -80,16 +81,17 @@ export default class HomeScreen extends React.PureComponent {
                 />
                 <p>
                     <span styleName="welcome-message">
-                        Welcome to the <strong>DEEP</strong>
+                        {homescreenStrings.welcomeText}
+                        <strong>{homescreenStrings.deepLabel}</strong>
                         <br />
                     </span>
-                    Seems like you do not have any projects yet
+                    {homescreenStrings.message1}
                     <br />
-                    To get started, create a project from your profile
+                    {homescreenStrings.message2}
                     <br />
                 </p>
                 <Link to={linkToProfile}>
-                    Go to your profile
+                    {homescreenStrings.goToProfile}
                 </Link>
             </div>
         );
