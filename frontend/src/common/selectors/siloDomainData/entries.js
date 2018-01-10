@@ -87,15 +87,23 @@ export const filtersForProjectSelector = createSelector(
     },
 );
 
+
+const getAttribute = (attributes = [], widgetId) => {
+    const attribute = attributes.find(attr => attr.widget === widgetId);
+    return attribute ? attribute.data : undefined;
+};
+
+const getMiniEntry = entry => ({
+    id: entry.id,
+    excerpt: entry.excerpt,
+    image: entry.image,
+    entryType: entry.entryType,
+});
+
 export const gridItemsForProjectSelector = createSelector(
     entriesForProjectSelector,
     itemsForProjectSelector,
     (entries, items) => {
-        const getAttribute = (attributes = [], widgetId) => {
-            const attribute = attributes.find(attr => attr.widget === widgetId);
-            return attribute ? attribute.data : undefined;
-        };
-
         const gridItems = {};
         entries.forEach((entryGroup) => {
             entryGroup.entries.forEach((entry) => {
@@ -106,6 +114,7 @@ export const gridItemsForProjectSelector = createSelector(
                         title: item.title,
                         layout: item.properties.listGridLayout,
                         attribute: getAttribute(entry.attributes, item.id),
+                        entry: getMiniEntry(entry),
                         data: item.properties.data,
                     }),
                 );

@@ -340,6 +340,7 @@ export default class Entries extends React.PureComponent {
             <ListComponent
                 data={item.data}
                 attribute={item.attribute}
+                entry={item.entry}
             />
         );
     }

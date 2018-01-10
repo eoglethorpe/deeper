@@ -7,6 +7,12 @@ import styles from './styles.scss';
 const TEXT = 'excerpt';
 
 const propTypes = {
+    entry: PropTypes.shape({
+        id: PropTypes.number,
+        excerpt: PropTypes.string,
+        image: PropTypes.string,
+        entryType: PropTypes.string,
+    }).isRequired,
     attribute: PropTypes.object,      // eslint-disable-line
 };
 
@@ -19,11 +25,21 @@ export default class ExcerptTextList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    render() {
-        const {
-            attribute,
-        } = this.props;
+    getAttribute() {
+        const { attribute, entry } = this.props;
+        if (!attribute) {
+            return {
+                type: entry.entryType,
+                excerpt: entry.excerpt,
+                image: entry.image,
+            };
+        }
 
+        return attribute;
+    }
+
+    render() {
+        const attribute = this.getAttribute();
         if (!attribute) {
             return null;
         }
