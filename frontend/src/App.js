@@ -94,6 +94,8 @@ export default class App extends React.PureComponent {
             display: 'flex',
             height: '100vh',
             justifyContent: 'center',
+            color: 'rgba(0, 0, 0, 0.5)',
+            fontSize: '2em',
         };
     }
 
