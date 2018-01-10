@@ -47,25 +47,33 @@
         overflow-y: auto;
 
         .leads-table {
-            :global .header {
-                position: sticky;
-                top: 0;
-                border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-medium $spacing-medium-alt;
-                text-align: left;
-                user-select: none;
+            :global {
+                .header {
+                    position: sticky;
+                    top: 0;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium $spacing-medium-alt;
+                    text-align: left;
+                    user-select: none;
 
-                &:not(.actions) {
-                    cursor: pointer;
+                    &:not(.actions) {
+                        cursor: pointer;
 
-                    &:hover {
-                        background-color: $color-background-hover;
+                        &:hover {
+                            background-color: $color-background-hover;
+                        }
                     }
                 }
-            }
 
-            :global .title {
-                width: 20%;
+                .icon-wrapper {
+                    padding-left: $spacing-medium-alt;
+                    font-size: $font-size-large;
+
+                }
+
+                .title {
+                    width: 20%;
+                }
             }
         }
     }
