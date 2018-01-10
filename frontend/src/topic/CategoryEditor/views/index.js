@@ -57,6 +57,7 @@ import {
     createUrlForCategoryEditor,
     createParamsForUser,
     createParamsForCeViewPatch,
+    transformResponseErrorToFormError,
 } from '../../../common/rest';
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
@@ -208,9 +209,33 @@ export default class CategoryEditor extends React.PureComponent {
                     this.props.setCategoryEditor({
                         categoryEditor: response,
                     });
+
+                    notify.send({
+                        title: 'Category Editor', // FIXME: write
+                        type: notify.type.SUCCESS,
+                        message: 'Category Editor saved successfully',
+                        duration: notify.duration.SLOW,
+                    });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).nonFieldErrors.join(' ');
+                notify.send({
+                    title: 'Category Editor', // FIXME: write
+                    type: notify.type.ERROR,
+                    message, // FIXME: write
+                    duration: notify.duration.SLOW,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Category Editor', // FIXME: write
+                    type: notify.type.ERROR,
+                    message: 'Save unsuccessful', // FIXME: write
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
         return cesRequest;
