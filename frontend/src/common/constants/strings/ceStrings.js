@@ -50,6 +50,8 @@ const ceStrings = {
 
     titleLabel: string[407],
 
+    confirmTextDeleteCategory: string[428],
+
 };
 
 export default ceStrings;

@@ -13,6 +13,7 @@ import {
 import {
     LoadingAnimation,
     Modal,
+    Confirm,
 } from '../../../public/components/View';
 import {
     isTruthy,
@@ -25,6 +26,7 @@ import {
 import {
     iconNames,
     ceStrings,
+    notificationStrings,
 } from '../../../common/constants';
 
 import DocumentPanel from './components/DocumentPanel';
@@ -134,6 +136,9 @@ export default class CategoryEditor extends React.PureComponent {
             showEditCategoryModal: false,
             showNewSubcategoryModal: false,
             showNewManualNGramModal: false,
+
+            confirmText: '',
+            deleteCategory: false,
         };
     }
 
@@ -177,8 +182,8 @@ export default class CategoryEditor extends React.PureComponent {
                     } else if (categoryEditorViewVersionId < response.versionId) {
                         notify.send({
                             type: notify.type.WARNING,
-                            title: ceStrings.ceUpdate,
-                            message: ceStrings.ceUpdateOverridden,
+                            title: notificationStrings.ceUpdate,
+                            message: notificationStrings.ceUpdateOverridden,
                             duration: notify.duration.SLOW,
                         });
                         this.props.setCategoryEditor({ categoryEditor: response });
@@ -272,12 +277,25 @@ export default class CategoryEditor extends React.PureComponent {
 
     // ADDTION HELPERS
     handleRemoveCategory = () => {
-        this.props.removeCategory({
-            categoryEditorId: this.props.categoryEditorId,
-            id: this.props.activeCategoryId,
+        const { activeCategoryId, categories } = this.props;
+        const activeCategory = categories.find(cat => cat.id === activeCategoryId);
+        const confirmText = `${ceStrings.confirmTextDeleteCategory} ${activeCategory.title} ?`;
+
+        this.setState({
+            deleteCategory: true,
+            confirmText,
         });
     }
-
+    // Close Delete Modal
+    handleRemoveCategoryClose = (confirm) => {
+        if (confirm) {
+            this.props.removeCategory({
+                categoryEditorId: this.props.categoryEditorId,
+                id: this.props.activeCategoryId,
+            });
+        }
+        this.setState({ deleteCategory: false });
+    }
     addNewCategory = (title) => {
         const key = randomString();
         const newCategory = {
@@ -445,6 +463,8 @@ export default class CategoryEditor extends React.PureComponent {
         } = this.props;
         const {
             pending,
+            confirmText,
+            deleteCategory,
             showNewCategoryModal,
             showEditCategoryModal,
             showNewSubcategoryModal,
@@ -574,6 +594,12 @@ export default class CategoryEditor extends React.PureComponent {
                         onClose={this.handleNewManualNgramModalClose}
                     />
                 </Modal>
+                <Confirm
+                    onClose={this.handleRemoveCategoryClose}
+                    show={deleteCategory}
+                >
+                    <p>{confirmText}</p>
+                </Confirm>
             </div>
         );
     }
