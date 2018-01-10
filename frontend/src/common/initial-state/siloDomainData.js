@@ -111,6 +111,7 @@ const initialSiloDomainData = {
     //     subCategories: <SubCategory>[],
     // }
     categoryEditorView: {
+        /*
         1: {
             title: '',
             versionId: 0,
@@ -126,6 +127,7 @@ const initialSiloDomainData = {
                 ],
             },
         },
+        */
     },
 
     categoryEditorDocument: {
