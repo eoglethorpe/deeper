@@ -39,7 +39,7 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired, //eslint-disable-line
+    onChange: PropTypes.func.isRequired,
     data: PropTypes.object, //eslint-disable-line
 };
 
@@ -101,16 +101,16 @@ export default class ScaleFrameworkList extends React.PureComponent {
         const { title, widgetKey } = this.props;
         const { scaleUnits } = attribute;
 
-        const filterOptions = scaleUnits.map((s, i) => ({
+        const filterOptions = scaleUnits.map(s => ({
             label: s.title,
-            key: (i + 1),
+            key: s.key,
         }));
 
         return [{
             title,
             widgetKey,
             key: widgetKey,
-            filterType: 'number',
+            filterType: 'list',
             properties: {
                 type: 'multiselect-range',
                 options: filterOptions,

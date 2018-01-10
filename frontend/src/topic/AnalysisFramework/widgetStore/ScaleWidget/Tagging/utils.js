@@ -1,8 +1,6 @@
-export const createFilterData = (attribute, data) => ({
-    values: undefined,
-    number: attribute.selectedScale && (
-        data.scaleUnits.findIndex(s => s.key === attribute.selectedScale) + 1
-    ),
+export const createFilterData = attribute => ({
+    values: [attribute.selectedScale],
+    number: undefined,
 });
 
 export const createExportData = (attribute, data) => {

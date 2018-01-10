@@ -16,7 +16,8 @@
             background-color: $color-foreground-alt;
             padding: $spacing-small;
 
-            .entries-filter {
+            .entries-filter,
+            .select-input {
                 margin: $spacing-small;
             }
 
