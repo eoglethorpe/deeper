@@ -142,8 +142,8 @@ const strings = {
     121: 'Admin Level Name',
     122: 'Actions',
     123: 'Admin Levels',
-    124: 'Level',
-    125: 'Level',
+    124: 'GEO Shape File :',
+    125: 'Load GEO Shape File',
 
     // User Profile and User Group
 

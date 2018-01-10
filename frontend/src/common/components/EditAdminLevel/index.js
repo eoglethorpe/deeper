@@ -30,6 +30,7 @@ import DeepGallery from '../../../common/components/DeepGallery';
 import {
     countriesString,
     notificationStrings,
+    iconNames,
 } from '../../../common/constants';
 import notify from '../../notify';
 
@@ -430,7 +431,18 @@ export default class EditAdminLevel extends React.PureComponent {
                             error={formFieldErrors.geoShapeFile}
                             disabled={pending}
                         >
-                            {formValues.geoShapeFile ? 'GEO Shape File: ' : 'Load GEO Shape File'}
+                            {
+                                formValues.geoShapeFile ?
+                                    <span styleName="show">
+                                        <i className={iconNames.documentText} />
+                                        {countriesString.geoShapeFile}
+                                    </span>
+                                    :
+                                    <span styleName="load">
+                                        <i className={iconNames.uploadFa} />
+                                        {countriesString.loadGeoShapeFile}
+                                    </span>
+                            }
                             <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
                         </FileInput>
                         <HiddenInput
