@@ -75,6 +75,7 @@ export default class FormSaveBuilder {
         });
     }
     handleLeadSaveSuccess = leadId => (response) => {
+        // FIXME: write schema
         notify.send({
             title: notificationStrings.leadSave,
             type: notify.type.SUCCESS,

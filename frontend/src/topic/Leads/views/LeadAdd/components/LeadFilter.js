@@ -110,6 +110,7 @@ export default class LeadFilter extends React.PureComponent {
             .url(createUrlForLeadFilterOptions(activeProject))
             .params(() => createParamsForUser())
             .success((response) => {
+                // FIXME: write schema
                 this.props.setLeadFilterOptions({
                     projectId: activeProject,
                     leadFilterOptions: response,

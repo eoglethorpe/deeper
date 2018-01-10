@@ -70,10 +70,7 @@ export default class ExportPreview extends React.PureComponent {
     }
 
     create(props) {
-        const {
-            exportId,
-            onLoad,
-        } = props;
+        const { exportId } = props;
 
         this.destroy();
 
@@ -87,27 +84,7 @@ export default class ExportPreview extends React.PureComponent {
         }
 
         this.previewRequestCount = 0;
-        this.previewRequest = this.createRequest(
-            createUrlForExport(exportId),
-            createParamsForGenericGet(),
-            (response) => {
-                if (response.pending) {
-                    this.previewRequestTimeout = setTimeout(() => {
-                        this.tryPreviewRequest();
-                    }, 1000);
-                } else {
-                    this.setState({
-                        pending: false,
-                        error: undefined,
-                        exportObj: response,
-                    });
-
-                    if (onLoad) {
-                        onLoad(response);
-                    }
-                }
-            },
-        );
+        this.previewRequest = this.createPreviewRequest(exportId);
 
         this.tryPreviewRequest();
     }
@@ -126,13 +103,28 @@ export default class ExportPreview extends React.PureComponent {
         this.previewRequest.start();
     }
 
-    createRequest = (url, params, onSuccess) => (
+    createPreviewRequest = exportId => (
         new FgRestBuilder()
-            .url(url)
-            .params(params)
+            .url(createUrlForExport(exportId))
+            .params(createParamsForGenericGet)
             .success((response) => {
                 try {
-                    onSuccess(response);
+                    // FIXME: write schema
+                    if (response.pending) {
+                        this.previewRequestTimeout = setTimeout(() => {
+                            this.tryPreviewRequest();
+                        }, 1000);
+                    } else {
+                        this.setState({
+                            pending: false,
+                            error: undefined,
+                            exportObj: response,
+                        });
+
+                        if (this.props.onLoad) {
+                            this.props.onLoad(response);
+                        }
+                    }
                 } catch (err) {
                     console.error(err);
                 }

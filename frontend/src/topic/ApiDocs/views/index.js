@@ -53,6 +53,7 @@ export default class ApiDocs extends React.PureComponent {
                 this.setState({ pending: false });
             })
             .success((response) => {
+                // FIXME: write schema
                 this.setState(
                     { docs: this.preprocessDocs(response) },
                     () => console.log(this.state.docs),

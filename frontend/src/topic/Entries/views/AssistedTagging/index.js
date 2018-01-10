@@ -209,6 +209,7 @@ export default class AssistedTagging extends React.PureComponent {
             }))
             .success((response) => {
                 try {
+                    // FIXME: write schema
                     this.extractNlpClassifications(response);
                 } catch (err) {
                     console.error(err);
@@ -238,6 +239,7 @@ export default class AssistedTagging extends React.PureComponent {
             .params(createParamsForNer(text))
             .success((response) => {
                 try {
+                    // FIXME: write schema
                     this.extractNerClassifications(response);
                 } catch (err) {
                     console.error(err);
@@ -270,6 +272,7 @@ export default class AssistedTagging extends React.PureComponent {
             }))
             .success((response) => {
                 try {
+                    // FIXME: write schema
                     this.extractCeClassifications(response);
                 } catch (err) {
                     console.error(err);

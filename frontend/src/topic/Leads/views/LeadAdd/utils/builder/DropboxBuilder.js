@@ -22,6 +22,7 @@ export default class DropboxBuilder {
     }
 
     handleLeadDropboxUploadSuccess = leadId => (response) => {
+        // FIXME: write schema
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
         addLeadViewLeadChange({

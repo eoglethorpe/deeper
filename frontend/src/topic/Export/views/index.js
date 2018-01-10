@@ -204,6 +204,7 @@ export default class Export extends React.PureComponent {
             .url(urlForExportTrigger)
             .params(() => createParamsForExportTrigger(filters))
             .success((response) => {
+                // FIXME: write schema
                 onSuccess(response.exportTriggered);
             })
             .build();
@@ -223,8 +224,7 @@ export default class Export extends React.PureComponent {
                 this.setState({ loadingLeads: true });
             })
             .success((response) => {
-                // TODO
-                // schema.validate(response, 'leadsGetResponse');
+                // FIXME: write schema
                 this.setState({
                     leads: response.results,
                     selectedLeads: listToMap(response.results, d => d.id, () => true),

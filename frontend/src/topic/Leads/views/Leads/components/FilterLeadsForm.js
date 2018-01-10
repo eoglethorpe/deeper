@@ -148,8 +148,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    // TODO:
-                    // schema.validate(response, 'leadFilterOptionsGetResponse');
+                    // FIXME: write schema
                     this.props.setLeadFilterOptions({
                         projectId: activeProject,
                         leadFilterOptions: response,

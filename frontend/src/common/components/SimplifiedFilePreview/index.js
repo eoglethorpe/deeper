@@ -146,6 +146,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             triggerUrl,
             triggerParams,
             (response) => {
+                // FIXME: write schema
                 console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
                 this.createPreviewRequest(response.extractionTriggered);
             },
@@ -163,6 +164,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             previewUrl,
             params,
             (response) => {
+                // FIXME: write schema
                 if (!response.extracted) {
                     // Keep trying
                     this.previewRequestTimeout = setTimeout(() => {

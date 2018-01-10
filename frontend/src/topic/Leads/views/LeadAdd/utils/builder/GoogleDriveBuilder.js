@@ -24,6 +24,7 @@ export default class GoogleDriveUploadModule {
     }
 
     handleLeadGoogleDriveUploadSuccess = leadId => (response) => {
+        // FIXME: write schema
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
         addLeadViewLeadChange({

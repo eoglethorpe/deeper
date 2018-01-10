@@ -112,6 +112,7 @@ export default class RegionMap extends React.PureComponent {
             triggerUrl,
             params,
             () => {
+                // FIXME: write schema
                 console.log(`Triggered geo areas loading task for ${regionId}`);
                 this.tryRequestToCheckStale();
             },
@@ -121,6 +122,7 @@ export default class RegionMap extends React.PureComponent {
             adminLevelsUrl,
             params,
             (response) => {
+                // FIXME: write schema
                 const stale = response.results.reduce((acc, adminLevel) => (
                     adminLevel.staleGeoAreas || acc
                 ), false);
@@ -247,6 +249,7 @@ export default class RegionMap extends React.PureComponent {
                     .url(url)
                     .params(params)
                     .success((response) => {
+                        // FIXME: write schema
                         const geoJsons = {
                             [adminLevel.id]: response,
                             ...this.state.geoJsons,
@@ -272,6 +275,7 @@ export default class RegionMap extends React.PureComponent {
                     .url(url)
                     .params(params)
                     .success((response) => {
+                        // FIXME: write schema
                         const bounds = response.bounds;
                         const geoJsonBounds = {
                             [adminLevel.id]: bounds && [[

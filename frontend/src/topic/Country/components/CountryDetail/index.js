@@ -93,6 +93,7 @@ export default class CountryDetail extends React.PureComponent {
                 this.setState({ deletePending: true });
             })
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unSetRegion({ regionId });
                     notify.send({

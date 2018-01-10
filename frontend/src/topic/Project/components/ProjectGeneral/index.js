@@ -364,6 +364,7 @@ export default class ProjectGeneral extends React.PureComponent {
                 this.setState({ actionPending: false });
             })
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unsetUserProjectMembership({
                         memberId,

@@ -125,6 +125,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             triggerUrl,
             params,
             () => {
+                // FIXME: write schema
                 console.log(`Triggered lead extraction for ${leadId}`);
                 this.tryPreviewRequest();
             },
@@ -134,6 +135,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             previewUrl,
             params,
             (response) => {
+                // FIXME: write schema
                 if (isFalsy(response.text) && response.images.length === 0) {
                     // There is no preview
                     if (this.previewRequestCount === 0) {

@@ -100,7 +100,7 @@ export default class DeepGallery extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    // TODO: validate schema
+                    // FIXME: write schema
                     this.setState({
                         fileUrl: response.file,
                         fileName: response.title,
