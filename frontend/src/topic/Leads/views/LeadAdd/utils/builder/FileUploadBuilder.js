@@ -43,7 +43,6 @@ export default class FileUploadBuilder {
         });
     }
     handleLeadUploadSuccess = leadId => (response) => {
-        // FIXME: write schema
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
         addLeadViewLeadChange({

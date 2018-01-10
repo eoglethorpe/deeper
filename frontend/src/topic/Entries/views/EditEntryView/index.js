@@ -425,7 +425,6 @@ export default class EditEntryView extends React.PureComponent {
                 this.saveRequestCoordinator.notifyComplete(id);
             })
             .success(() => {
-                // FIXME: write schema
                 this.props.removeEntry({
                     leadId,
                     entryId: id,

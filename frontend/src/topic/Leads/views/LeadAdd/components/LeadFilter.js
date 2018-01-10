@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import schema from '../../../../../common/schema';
 import {
     SelectInput,
     TextInput,
@@ -110,11 +111,15 @@ export default class LeadFilter extends React.PureComponent {
             .url(createUrlForLeadFilterOptions(activeProject))
             .params(() => createParamsForUser())
             .success((response) => {
-                // FIXME: write schema
-                this.props.setLeadFilterOptions({
-                    projectId: activeProject,
-                    leadFilterOptions: response,
-                });
+                try {
+                    schema.validate(response, 'projectLeadFilterOptions');
+                    this.props.setLeadFilterOptions({
+                        projectId: activeProject,
+                        leadFilterOptions: response,
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
             })
             .build();
 

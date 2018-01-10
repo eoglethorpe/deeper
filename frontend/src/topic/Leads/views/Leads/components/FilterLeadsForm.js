@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import schema from '../../../../../common/schema';
 import {
     Button,
     DangerButton,
@@ -148,13 +149,13 @@ export default class FilterLeadsForm extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    // FIXME: write schema
+                    schema.validate(response, 'projectLeadFilterOptions');
                     this.props.setLeadFilterOptions({
                         projectId: activeProject,
                         leadFilterOptions: response,
                     });
-                } catch (er) {
-                    console.error(er);
+                } catch (err) {
+                    console.error(err);
                 }
             })
             .build();

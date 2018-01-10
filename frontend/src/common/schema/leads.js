@@ -43,4 +43,21 @@ const leadSchema = [];
     leadSchema.push({ name, schema });
 }
 
+{
+    const name = 'projectLeadFilterOptions';
+    const schema = {
+        doc: {
+            name: 'Project Lead Filter Options',
+            description: 'Filter options of leads for project',
+        },
+        fields: {
+            assignee: { type: 'array.keyValuePair' },
+            status: { type: 'array.keyValuePairSS' },
+            project: { type: 'array.keyValuePair' },
+            confidentiality: { type: 'array.keyValuePairSS' },
+        },
+    };
+    leadSchema.push({ name, schema });
+}
+
 export default leadSchema;

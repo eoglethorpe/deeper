@@ -433,7 +433,6 @@ export default class Leads extends React.PureComponent {
                 this.setState({ loadingLeads: true });
             })
             .success(() => {
-                // FIXME: write schema
                 notify.send({
                     title: leadsString.leadDelete,
                     type: notify.type.SUCCESS,
