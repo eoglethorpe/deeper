@@ -13,6 +13,20 @@ $info-height: 144px;
     grid-template-columns: 3fr 7fr;
     grid-template-rows: $info-height 3fr 2fr;
 
+    .usergroup-alt {
+        @include shadow-medium;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-foreground;
+        padding: $spacing-medium-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+        grid-area: info / info / groups / groups;
+    }
+
     >* {
         background-color: $color-foreground;
     }
