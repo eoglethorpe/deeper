@@ -12,7 +12,10 @@ import {
     TextInput,
     TextArea,
 } from '../../../../public/components/Input';
-import { ListView } from '../../../../public/components/View';
+import {
+    ListView,
+    Confirm,
+} from '../../../../public/components/View';
 
 import {
     ceStrings,
@@ -76,6 +79,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         this.state = {
             selectedNGramIndex: 0,
             ngramKeys,
+
+            confirmText: '',
+            deleteSubCategory: false,
         };
     }
 
@@ -144,10 +150,25 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
     };
 
     handleSubcategoryRemove = () => {
-        this.props.removeSelectedSubcategory({
-            categoryEditorId: this.props.categoryEditorId,
+        const { subcategory } = this.props;
+        // const activeSubCategory = subcategory.find(cat => cat.id === activeSubCategoryId);
+        const confirmText = `${ceStrings.confirmTextDeleteSubCategory} ${subcategory.title} ?`;
+
+        this.setState({
+            deleteSubCategory: true,
+            confirmText,
         });
     };
+
+    // Close Delete Modal
+    handleRemoveSubCategoryClose = (confirm) => {
+        if (confirm) {
+            this.props.removeSelectedSubcategory({
+                categoryEditorId: this.props.categoryEditorId,
+            });
+        }
+        this.setState({ deleteSubCategory: false });
+    }
 
     handleNgramRemove = (ngram) => {
         this.props.removeSubcategoryNGram({
@@ -174,6 +195,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         const {
             selectedNGramIndex,
             ngramKeys,
+            deleteSubCategory,
+            confirmText,
         } = this.state;
 
         if (!subcategory) {
@@ -261,6 +284,12 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </section>
+                <Confirm
+                    onClose={this.handleRemoveSubCategoryClose}
+                    show={deleteSubCategory}
+                >
+                    <p>{confirmText}</p>
+                </Confirm>
             </div>
         );
     }

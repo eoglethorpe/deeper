@@ -356,7 +356,7 @@ const strings = {
     426: 'Select From Gallery',
     427: 'Apply',
     428: 'Are you sure you want to delete category',
-    429: 'Category',
+    429: 'Are you sure you want to delete  subcategory',
     430: 'Category',
 
 

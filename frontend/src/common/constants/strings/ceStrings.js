@@ -51,6 +51,7 @@ const ceStrings = {
     titleLabel: string[407],
 
     confirmTextDeleteCategory: string[428],
+    confirmTextDeleteSubCategory: string[429],
 
 };
 
