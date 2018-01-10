@@ -36,16 +36,23 @@ import {
     maxHeightForProjectSelector,
 
     projectIdFromRouteSelector,
+
+    entriesViewActivePageSelector,
+    totalEntriesCountForProjectSelector,
+    setEntriesViewActivePageAction,
 } from '../../../common/redux';
 
 import {
-    urlForFilteredEntries,
+    createUrlForFilteredEntries,
 
     createParamsForUser,
     createParamsForFilteredEntries,
     createUrlForAnalysisFramework,
     createUrlForProject,
+
+    transformResponseErrorToFormError,
 } from '../../../common/rest';
+import notify from '../../../common/notify';
 
 import FilterEntriesForm from './FilterEntriesForm';
 // import widgetStore from '../../AnalysisFramework/widgetStore';
@@ -59,6 +66,8 @@ const mapStateToProps = (state, props) => ({
     widgets: widgetsSelector(state, props),
     maxHeight: maxHeightForProjectSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
+    activePage: entriesViewActivePageSelector(state, props),
+    totalEntriesCount: totalEntriesCountForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,9 +75,11 @@ const mapDispatchToProps = dispatch => ({
     setProject: params => dispatch(setProjectAction(params)),
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     unsetEntriesViewFilter: params => dispatch(unsetEntriesViewFilterAction(params)),
+    setEntriesViewActivePage: params => dispatch(setEntriesViewActivePageAction(params)),
 });
 
 const propTypes = {
+    activePage: PropTypes.number.isRequired,
     setProject: PropTypes.func.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -82,12 +93,16 @@ const propTypes = {
     gridItems: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     widgets: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     maxHeight: PropTypes.number,
+    totalEntriesCount: PropTypes.number,
+    setEntriesViewActivePage: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     maxHeight: 0,
+    totalEntriesCount: 0,
 };
 
+const MAX_ENTRIES_PER_REQUEST = 5;
 const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -101,7 +116,7 @@ export default class Entries extends React.PureComponent {
         super(props);
 
         this.state = {
-            pendingEntries: true,
+            pendingEntries: false,
             pendingAf: true,
         };
     }
@@ -118,11 +133,13 @@ export default class Entries extends React.PureComponent {
             projectId: oldProjectId,
             analysisFramework: oldAf,
             entriesFilter: oldFilter,
+            activePage: oldActivePage,
         } = this.props;
         const {
             projectId: newProjectId,
             analysisFramework: newAf,
             entriesFilter: newFilter,
+            activePage: newActivePage,
         } = nextProps;
 
 
@@ -140,11 +157,6 @@ export default class Entries extends React.PureComponent {
 
             this.projectRequest = this.createRequestForProject(newProjectId);
             this.projectRequest.start();
-
-            this.setState({
-                pendingEntries: true,
-                pendingAf: true,
-            });
             return;
         }
 
@@ -153,7 +165,7 @@ export default class Entries extends React.PureComponent {
             this.props.unsetEntriesViewFilter();
         }
 
-        if (oldFilter !== newFilter) {
+        if (oldFilter !== newFilter || oldActivePage !== newActivePage) {
             // Make request for new entries after filter has changed
             if (this.entriesRequest) {
                 this.entriesRequest.stop();
@@ -161,6 +173,7 @@ export default class Entries extends React.PureComponent {
             this.entriesRequest = this.createRequestForEntries(
                 newProjectId,
                 newFilter,
+                newActivePage,
             );
             this.entriesRequest.start();
         }
@@ -209,17 +222,24 @@ export default class Entries extends React.PureComponent {
         );
     }
 
-    createRequestForEntries = (projectId, filters = {}) => {
+    createRequestForEntries = (projectId, filters = {}, activePage) => {
+        const entriesRequestOffset = (activePage - 1) * MAX_ENTRIES_PER_REQUEST;
+        const entriesRequestLimit = MAX_ENTRIES_PER_REQUEST;
+
         const entryRequest = new FgRestBuilder()
-            .url(urlForFilteredEntries)
+            .url(createUrlForFilteredEntries({
+                offset: entriesRequestOffset,
+                limit: entriesRequestLimit,
+            }))
             .params(() => createParamsForFilteredEntries({
                 project: projectId,
                 ...filters,
             }))
             .preLoad(() => {
-                this.setState({
-                    pendingEntries: true,
-                });
+                this.setState({ pendingEntries: true });
+            })
+            .postLoad(() => {
+                this.setState({ pendingEntries: false });
             })
             .success((response) => {
                 try {
@@ -235,14 +255,29 @@ export default class Entries extends React.PureComponent {
                     this.props.setEntries({
                         projectId,
                         entries,
+                        totalEntriesCount: response.count,
                     });
-                    this.setState({
-                        pendingEntries: false,
-                        pristine: true,
-                    });
+                    this.setState({ pristine: true });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: 'Entries', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Entries', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Couldn\'t load entries', // FIXME: strings
+                    duration: notify.duration.MEDIUM,
+                });
             })
             .build();
         return entryRequest;
@@ -252,6 +287,11 @@ export default class Entries extends React.PureComponent {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForUser())
+            .preLoad(() => {
+                this.setState({
+                    pendingAf: true,
+                });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
@@ -265,6 +305,29 @@ export default class Entries extends React.PureComponent {
                     console.error(er);
                 }
             })
+            .failure((response) => {
+                this.setState({
+                    pendingAf: false,
+                });
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: 'Project', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                this.setState({
+                    pendingAf: false,
+                });
+                notify.send({
+                    title: 'Project', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Couldn\'t load project', // FIXME: strings
+                    duration: notify.duration.MEDIUM,
+                });
+            })
             .build();
         return projectRequest;
     };
@@ -277,6 +340,12 @@ export default class Entries extends React.PureComponent {
             .url(urlForAnalysisFramework)
             .params(() => createParamsForUser())
             .delay(0)
+            .preLoad(() => {
+                this.setState({ pendingAf: true });
+            })
+            .postLoad(() => {
+                this.setState({ pendingAf: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -285,52 +354,37 @@ export default class Entries extends React.PureComponent {
                     this.entriesRequest = this.createRequestForEntries(
                         this.props.projectId,
                         this.props.entriesFilter,
+                        this.props.activePage,
                     );
                     this.entriesRequest.start();
-
-                    this.setState({ pendingAf: false });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                console.warn(response);
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: 'Analysis Framework', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Analysis Framework', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Couldn\'t load analysis framework', // FIXME: strings
+                    duration: notify.duration.MEDIUM,
+                });
             })
             .build();
         return analysisFrameworkRequest;
     }
 
-    createRequestForEntries = (projectId, filters = {}) => {
-        const entryRequest = new FgRestBuilder()
-            .url(urlForFilteredEntries)
-            .params(() => createParamsForFilteredEntries({
-                project: projectId,
-                ...filters,
-            }))
-            .preLoad(() => {
-                this.setState({
-                    pendingEntries: true,
-                });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'entriesGetResponse');
-                    const responseEntries = response.results.entries;
-                    const responseLeads = response.results.leads;
-
-                    const entries = responseLeads.map(lead => ({
-                        ...lead,
-                        entries: responseEntries.filter(e => e.lead === lead.id),
-                    }));
-
-                    this.props.setEntries({
-                        projectId,
-                        entries,
-                    });
-                    this.setState({ pendingEntries: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return entryRequest;
+    handlePageClick = (page) => {
+        this.props.setEntriesViewActivePage({ activePage: page });
     }
 
     renderItemView = (item) => {
@@ -414,7 +468,11 @@ export default class Entries extends React.PureComponent {
     }
 
     render() {
-        const { entries = [] } = this.props;
+        const {
+            entries = [],
+            activePage,
+            totalEntriesCount,
+        } = this.props;
 
         const {
             pendingEntries,
@@ -438,14 +496,16 @@ export default class Entries extends React.PureComponent {
                         />
                     }
                 </div>
-                <footer styleName="footer">
-                    <Pager
-                        activePage={1}
-                        itemsCount={30}
-                        maxItemsPerPage={10}
-                        onPageClick={() => {}}
-                    />
-                </footer>
+                { totalEntriesCount > 0 &&
+                    <footer styleName="footer">
+                        <Pager
+                            activePage={activePage}
+                            itemsCount={totalEntriesCount}
+                            maxItemsPerPage={MAX_ENTRIES_PER_REQUEST}
+                            onPageClick={this.handlePageClick}
+                        />
+                    </footer>
+                }
             </div>
         );
     }

@@ -209,7 +209,7 @@ export default class EntriesFilter extends React.PureComponent {
                 />
                 { this.props.filters.map(this.renderFilter) }
                 {
-                    this.props.filters.length > 0 && !this.props.applyOnChange && (
+                    !this.props.applyOnChange && (
                         <Button
                             className="button apply-filter-button"
                             onClick={this.handleApplyFilter}
@@ -219,18 +219,14 @@ export default class EntriesFilter extends React.PureComponent {
                         </Button>
                     )
                 }
-                {
-                    this.props.filters.length > 0 && (
-                        <DangerButton
-                            className="button reset-filter-button"
-                            onClick={this.handleClearFilter}
-                            type="button"
-                            disabled={pending || isFilterEmpty}
-                        >
-                            {entryStrings.clearFilterButtonLabel}
-                        </DangerButton>
-                    )
-                }
+                <DangerButton
+                    className="button reset-filter-button"
+                    onClick={this.handleClearFilter}
+                    type="button"
+                    disabled={pending || isFilterEmpty}
+                >
+                    {entryStrings.clearFilterButtonLabel}
+                </DangerButton>
             </div>
         );
     }
