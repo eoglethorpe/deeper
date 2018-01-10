@@ -149,15 +149,17 @@ export default class Leads extends React.PureComponent {
                     }
                     if (!url) {
                         return (
-                            <i className={icon} />
-                        );
-                    }
-                    return (
-                        <a href={url} target="_blank">
                             <div className="icon-wrapper">
                                 <i className={icon} />
                             </div>
-                        </a>
+                        );
+                    }
+                    return (
+                        <div className="icon-wrapper">
+                            <a href={url} target="_blank">
+                                <i className={icon} />
+                            </a>
+                        </div>
                     );
                 },
             },
