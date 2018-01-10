@@ -39,8 +39,8 @@ const entryStrings = {
     undoRemoveEntryButtonTitle: string[525],
     undoRemoveEntryButtonLabel: string[526],
 
-    applyFilterButtonLabel: string[528],
-    clearFilterButtonLabel: string[529],
+    applyFilterButtonLabel: string[527],
+    clearFilterButtonLabel: string[528],
 
     editEntryLinkTitle: string[529],
     editEntryButtonLabel: string[530],
