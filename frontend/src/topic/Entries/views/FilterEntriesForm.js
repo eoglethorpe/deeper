@@ -6,6 +6,7 @@ import { isObjectEmpty } from '../../../public/utils/common';
 import {
     TextInput,
     DateFilter,
+    RangeFilter,
     SelectInput,
 } from '../../../public/components/Input';
 import {
@@ -124,33 +125,17 @@ export default class EntriesFilter extends React.PureComponent {
                 />
             );
         } else if (filter.type === 'multiselect-range') {
-            const keyGt = `${key}__gt`;
-            const keyLt = `${key}__lt`;
-
             return (
-                <div
+                <RangeFilter
                     className="range-filter-container"
                     key={key}
-                >
-                    <SelectInput
-                        className="entries-filter"
-                        options={filter.options}
-                        label={`${title} From`}
-                        showHintAndError={false}
-                        onChange={values => this.handleFilterChange(keyGt, values)}
-                        value={filters[keyGt]}
-                        disabled={this.props.pending}
-                    />
-                    <SelectInput
-                        className="entries-filter"
-                        options={filter.options}
-                        label={`${title} To`}
-                        showHintAndError={false}
-                        onChange={values => this.handleFilterChange(keyLt, values)}
-                        value={filters[keyLt]}
-                        disabled={this.props.pending}
-                    />
-                </div>
+                    options={filter.options}
+                    label={title}
+                    showHintAndError={false}
+                    onChange={values => this.handleFilterChange(key, values)}
+                    value={filters[key]}
+                    disabled={this.props.pending}
+                />
             );
         } else if (filter.type === 'date') {
             return (
