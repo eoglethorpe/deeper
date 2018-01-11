@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import {
     BrowserRouter,
@@ -101,6 +102,7 @@ export default class App extends React.PureComponent {
 
     componentWillMount() {
         console.log('Mounting App');
+        ReactGA.initialize('UA-112330910-1', { debug: true });
 
         // If there is no refresh token, no need to get a new access token
         const { token: { refresh: refreshToken } } = this.props;
