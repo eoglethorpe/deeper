@@ -8,13 +8,18 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
-    Button,
+    TransparentAccentButton,
+    TransparentWarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
+
 import {
     entryStrings,
+    iconNames,
+    leadsString, // FIXME: don't use this here
 } from '../../../../common/constants';
 import { entryAccessor } from '../../../../common/entities/entry';
+
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';
 
@@ -126,6 +131,32 @@ export default class List extends React.PureComponent {
                 data: item.properties.data,
                 attribute: this.props.api.getEntryAttribute(item.id, entryId),
                 entryId,
+                headerRightComponent: (
+                    <div className={styles['apply-buttons']}>
+                        <TransparentAccentButton
+                            className={styles['apply-button']}
+                            type="button"
+                            title={leadsString.applyAllButtonTitle}
+                            onClick={() => {
+                                this.props.api.setAttributeToAll(item.id, entryId);
+                            }}
+                            tabIndex="-1"
+                        >
+                            <span className={iconNames.applyAll} />
+                        </TransparentAccentButton>
+                        <TransparentWarningButton
+                            className={styles['apply-button']}
+                            type="button"
+                            title={leadsString.applyAllBelowButtonTitle}
+                            onClick={() => {
+                                this.props.api.setAttributeToBelow(item.id, entryId);
+                            }}
+                            tabIndex="-1"
+                        >
+                            <span className={iconNames.applyAllBelow} />
+                        </TransparentWarningButton>
+                    </div>
+                ),
             }));
         });
     }
