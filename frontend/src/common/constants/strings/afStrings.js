@@ -10,7 +10,7 @@ const afStrings = {
 
     dateWidgetLabel: string[704],
     excerptWidgetLabel: string[705],
-    textOrexcerptWidgetLabel: string[706],
+    textOrImageExcerptWidgetLabel: string[706],
     textWidgetLabel: string[707],
     imageWidgetLabel: string[708],
 

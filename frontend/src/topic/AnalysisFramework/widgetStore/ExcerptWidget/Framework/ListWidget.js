@@ -25,7 +25,7 @@ export default class ExcerptTextList extends React.PureComponent {
     render() {
         return (
             <div styleName="excerpt-list">
-                {afStrings.textOrexcerptWidgetLabel}
+                {afStrings.textOrImageExcerptWidgetLabel}
             </div>
         );
     }

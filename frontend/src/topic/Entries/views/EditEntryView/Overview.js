@@ -362,8 +362,10 @@ export default class Overview extends React.PureComponent {
             w => w.id === item.widgetId,
         );
         const OverviewComponent = widget.overviewComponent;
+
         return (
             <OverviewComponent
+                entryId={this.props.selectedEntryId}
                 id={item.id}
                 filters={item.filters}
                 exportable={item.exportable}
@@ -385,7 +387,7 @@ export default class Overview extends React.PureComponent {
             widgetDisabled,
         } = this.props;
 
-        const selectedEntry = this.props.entries.find(
+        const selectedEntry = entries.find(
             e => entryAccessor.getKey(e) === selectedEntryId,
         );
         const isMarkedForDelete = selectedEntryId && entryAccessor.isMarkedForDelete(selectedEntry);
