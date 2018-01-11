@@ -30,11 +30,13 @@ import {
     logoutAction,
     tokenSelector,
     currentUserProjectsSelector,
+    activeUserSelector,
 } from './common/redux';
 
 import Multiplexer from './Multiplexer';
 
 const mapStateToProps = state => ({
+    activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
     token: tokenSelector(state),
 });
@@ -50,6 +52,7 @@ const mapDispatchToProps = dispatch => ({
 
 const propTypes = {
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line
     setAccessToken: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
@@ -102,7 +105,17 @@ export default class App extends React.PureComponent {
 
     componentWillMount() {
         console.log('Mounting App');
-        ReactGA.initialize('UA-112330910-1', { debug: true });
+        // TODO: move this
+        ReactGA.initialize('UA-112330910-1', {
+            gaOptions: {
+                forceSSL: true,
+                userId: this.props.activeUser.userId,
+                cookieDomain: 'none',
+            },
+        });
+
+        // TODO: Add this to after login
+        // ReactGA.set({ userId: this.props.activeUser.userId });
 
         // If there is no refresh token, no need to get a new access token
         const { token: { refresh: refreshToken } } = this.props;

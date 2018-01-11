@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     Bundle,
+    withTracker,
 } from '../../public/components/General';
 import {
     getKeyByValue,
@@ -62,6 +63,8 @@ const mapDispatchToProps = dispatch => ({
     setRouteParams: params => dispatch(setRouteParamsAction(params)),
 });
 
+
+@withTracker
 @connect(mapStateToProps, mapDispatchToProps)
 class RouteSynchronizer extends React.PureComponent {
     static propTypes = propTypes;

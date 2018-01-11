@@ -10,7 +10,6 @@ import { connect } from 'react-redux';
 import {
     ExclusivelyPublicRoute,
     PrivateRoute,
-    withTracker,
 } from './public/components/General';
 
 import Navbar from './common/components/Navbar';
@@ -143,7 +142,7 @@ export default class Multiplexer extends React.PureComponent {
                 case ROUTE.exclusivelyPublic:
                     return (
                         <ExclusivelyPublicRoute
-                            component={withTracker(view)}
+                            component={view}
                             key={routeId}
                             path={path}
                             authenticated={authenticated}
@@ -154,7 +153,7 @@ export default class Multiplexer extends React.PureComponent {
                 case ROUTE.private:
                     return (
                         <PrivateRoute
-                            component={withTracker(view)}
+                            component={view}
                             key={routeId}
                             path={path}
                             authenticated={authenticated}
@@ -165,7 +164,7 @@ export default class Multiplexer extends React.PureComponent {
                 case ROUTE.public:
                     return (
                         <Route
-                            component={withTracker(view)}
+                            component={view}
                             key={routeId}
                             path={path}
                             exact
