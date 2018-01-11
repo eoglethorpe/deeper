@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import update from 'immutability-helper';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
@@ -201,10 +202,6 @@ export default class Overview extends React.PureComponent {
         this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
     }
 
-    handleGotoListButtonClick = () => {
-        window.location.hash = '/list/';
-    }
-
     // TODO: use this from selector
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
@@ -263,9 +260,12 @@ export default class Overview extends React.PureComponent {
                     <header styleName="header">
                         <div styleName="entry-actions" />
                         <div styleName="action-buttons">
-                            <Button onClick={this.handleGotoListButtonClick} >
+                            <Link
+                                to="/list"
+                                replace
+                            >
                                 {afStrings.gotoListButtonLabel}
-                            </Button>
+                            </Link>
                             <SuccessButton onClick={this.props.onSave} >
                                 {afStrings.saveButtonLabel}
                             </SuccessButton>
