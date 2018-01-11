@@ -71,6 +71,16 @@ body {
     }
 }
 
+:global {
+    .modal-shown {
+        #root {
+            filter: brightness(50%);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+}
+
 %main-content {
     border: $width-separator-thin solid $color-separator;
     height: 100%;
