@@ -1,9 +1,13 @@
 export const createHighlightColor = (attribute, data) => {
-    const keys = Object.keys(attribute || {});
+    const selectedKey = Object.keys(attribute || {}).find(d => (
+        Object.keys(attribute[d]).find(s => (
+            Object.keys(attribute[d][s]).length > 0
+        ))
+    ));
 
-    if (keys.length > 0) {
+    if (selectedKey) {
         const { dimensions } = data;
-        const dimension = dimensions && dimensions.find(d => d.id === keys[0]);
+        const dimension = dimensions && dimensions.find(d => d.id === selectedKey);
         return dimension && dimension.color;
     }
 
@@ -105,9 +109,10 @@ export const createExportData = (attribute, data) => {
     };
 };
 
-export const updateAttribute = ({ entryId, api, attribute, data, filters, exportable }) => {
+export const updateAttribute = ({ id, entryId, api, attribute, data, filters, exportable }) => {
     if (!attribute || !data) {
         api.getEntryModifier(entryId)
+            .setHighlightColor(id, undefined)
             .setFilterData(filters[0].id, undefined)
             .setFilterData(filters[1].id, undefined)
             .setExportData(exportable.id, undefined)
@@ -116,7 +121,7 @@ export const updateAttribute = ({ entryId, api, attribute, data, filters, export
     }
 
     api.getEntryModifier(entryId)
-        .setHighlightColor(createHighlightColor(attribute, data))
+        .setHighlightColor(id, createHighlightColor(attribute, data))
         .setFilterData(filters[0].id, createDimensionFilterData(attribute, data))
         .setFilterData(filters[1].id, createSectorFilterData(attribute, data))
         .setExportData(exportable.id, createExportData(attribute, data))

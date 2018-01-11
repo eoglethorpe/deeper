@@ -35,6 +35,7 @@ export const entryAccessor = {
 
     getWidget: entry => entry.widget,
     getValues: entry => entry.widget && entry.widget.values,
+    getColors: entry => entry.widget && entry.widget.colors,
 
     getUiState: entry => entry.uiState,
     getError: entry => entry.uiState && entry.uiState.error,
