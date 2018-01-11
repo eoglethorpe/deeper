@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
@@ -13,6 +14,9 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
+import {
+    editEntryViewCurrentLeadSelector,
+} from '../../../../common/redux';
 import {
     entryStrings,
     iconNames,
@@ -32,12 +36,18 @@ const propTypes = {
     onSaveAll: PropTypes.func.isRequired,
     widgetDisabled: PropTypes.bool,
     saveAllDisabled: PropTypes.bool.isRequired,
+    leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     widgetDisabled: false,
 };
 
+const mapStateToProps = (state, props) => ({
+    leadDetails: editEntryViewCurrentLeadSelector(state, props),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
@@ -167,6 +177,7 @@ export default class List extends React.PureComponent {
             onSaveAll,
             saveAllDisabled,
             widgetDisabled,
+            leadDetails,
         } = this.props;
 
         const entryStyle = { height: this.getMaxHeight() + 16 };
@@ -176,10 +187,11 @@ export default class List extends React.PureComponent {
                 { widgetDisabled && <LoadingAnimation /> }
                 <header styleName="header">
                     <h3>
-                        *Update_Lead_Title_Here*
+                        {leadDetails.title}
                     </h3>
                     <div styleName="action-buttons">
                         <Link
+                            styleName="primary-link-button"
                             to="/overview"
                             replace
                         >

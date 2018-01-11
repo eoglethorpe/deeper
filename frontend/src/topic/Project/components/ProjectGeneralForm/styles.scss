@@ -26,4 +26,10 @@
         flex-basis: 100%;
         margin: 0 $spacing-large;
     }
+
+    .description {
+        :global .input {
+            resize: none;
+        }
+    }
 }

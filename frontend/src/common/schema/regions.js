@@ -122,5 +122,16 @@ const regionSchema = [];
     };
     regionSchema.push({ name, schema });
 }
+{
+    const name = 'geoOptions';
+    const schema = {
+        doc: {
+            name: 'Geo Options GET Response',
+            description: 'GET Response for Geo Options',
+        },
+        fields: {},
+    };
+    regionSchema.push({ name, schema });
+}
 
 export default regionSchema;

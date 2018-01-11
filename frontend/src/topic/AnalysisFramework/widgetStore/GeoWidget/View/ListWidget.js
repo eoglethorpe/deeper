@@ -23,12 +23,12 @@ export default class GeoViewList extends React.PureComponent {
     static defaultProps = defaultProps;
 
     mapRegionsList = (key, data) => (
-        <div
-            className={styles['region-content']}
+        <span
             key={key}
+            className={styles['region-name']}
         >
-            <span className={styles['region-name']}>{data.title}</span>
-        </div>
+            {data.label}
+        </span>
     )
 
     render() {
@@ -45,6 +45,7 @@ export default class GeoViewList extends React.PureComponent {
                     className={styles['region-list']}
                     keyExtractor={GeoViewList.valueKeyExtractor}
                     modifier={this.mapRegionsList}
+                    emptyComponent="-"
                 />
             </div>
         );

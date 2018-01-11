@@ -1,36 +1,6 @@
 @import '../../../../../stylesheets/base';
 
-.excerpt-overview {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: auto;
-
-    .radio-input {
-        flex-shrink: 0;
-        padding: $spacing-small;
-    }
-
-    .textarea {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: $spacing-small;
-
-        :global .input {
-            flex-grow: 1;
-            resize: none;
-        }
-    }
-
-    .image {
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: center;
-    }
-}
-
+.excerpt-overview,
 .excerpt-list {
     display: flex;
     align-items: center;

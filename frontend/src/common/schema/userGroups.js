@@ -26,6 +26,7 @@ const userGroupSchema = [];
             globalCrisisMonitoring: { type: 'boolean', required: true },
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
+            description: { type: 'string' },
             memberships: { type: 'array.userGroupMembership', required: true },
             customProjectFields: { type: 'object' },
             role: { type: 'string', required: true },

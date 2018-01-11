@@ -4,15 +4,10 @@
     &.sortable {
         cursor: pointer;
 
-        &:hover {
-            background-color: $color-background-header-alt;
-        }
-
         &::before {
             display: inline-block;
             transform: rotate(90deg);
             margin-right: $spacing-small;
-            // width: $width-icon-medium;
             font-family: 'Ionicons';
             content: '\f268';
         }

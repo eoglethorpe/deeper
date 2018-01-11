@@ -2,25 +2,21 @@
 
 .geo-list {
     padding: 0;
-    overflow: auto;
 
     .region-list {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        margin-top: $spacing-medium;
-        overflow: auto;
+        overflow-y: auto;
 
-        .region-content {
-            display: flex;
-            flex-grow: 1;
-
-            .region-name {
-                flex-grow: 1;
-                margin-bottom: $spacing-small;
-                padding: $spacing-extra-small $spacing-small;
-            }
+        .region-name {
+            flex-shrink: 0;
+            padding: $spacing-extra-small 0;
         }
 
+        :global .empty {
+            justify-content: flex-start;
+            padding: 0 $spacing-small;
+        }
     }
 }

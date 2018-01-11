@@ -47,6 +47,7 @@ const userStrings = {
     addProjectModalPlaceholder: string[181],
 
     userGroupEditModalLabel: string[182],
+    userGroupModalDescriptionLabel: string[200],
 
     viewMemberLinkTitle: string[187],
     revokeAdminLinkTitle: string[188],
@@ -65,6 +66,9 @@ const userStrings = {
     userGroupNotFound: string[198],
     userNotFound: string[199],
 
+    userGroupTitle: string[201],
+    userGroupActivtyLogTitle: string[202],
+    userGroupDescriptionLabel: string[203],
 };
 
 export default userStrings;

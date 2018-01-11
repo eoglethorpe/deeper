@@ -19,13 +19,6 @@
     height: 100%;
     overflow: auto;
 
-    .radio-input {
-        flex-shrink: 0;
-        border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-small;
-        height: 32px;
-    }
-
     .textarea {
         @extend %textarea;
     }
@@ -36,7 +29,7 @@
         align-items: center;
         justify-content: center;
         max-width: 100%;
-        max-height: calc(100% - 32px);
+        max-height: 100%;
         object-fit: contain;
     }
 }

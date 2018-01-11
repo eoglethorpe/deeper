@@ -11,6 +11,7 @@ import {
     Form,
     NonFieldErrors,
     TextInput,
+    TextArea,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -45,6 +46,7 @@ const propTypes = {
     userGroup: PropTypes.shape({
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
     }).isRequired,
     setUserGroup: PropTypes.func.isRequired,
 };
@@ -68,13 +70,17 @@ export default class UserGroupEdit extends React.PureComponent {
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues: { title: props.userGroup.title },
+            formValues: {
+                title: props.userGroup.title,
+                description: props.userGroup.description,
+            },
             pending: false,
             pristine: false,
         };
 
         this.elements = [
             'title',
+            'description',
         ];
 
         this.validations = {
@@ -88,11 +94,11 @@ export default class UserGroupEdit extends React.PureComponent {
         }
     }
 
-    createRequestForUserGroupPatch = (userGroupId, { title }) => {
+    createRequestForUserGroupPatch = (userGroupId, { title, description }) => {
         const urlForUserGroup = createUrlForUserGroup(userGroupId);
         const userGroupCreateRequest = new FgRestBuilder()
             .url(urlForUserGroup)
-            .params(() => createParamsForUserGroupsPatch({ title }))
+            .params(() => createParamsForUserGroupsPatch({ title, description }))
             .preLoad(() => {
                 this.setState({ pending: true });
             })
@@ -209,6 +215,15 @@ export default class UserGroupEdit extends React.PureComponent {
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
+                />
+                <TextArea
+                    label={userStrings.userGroupModalDescriptionLabel}
+                    formname="description"
+                    styleName="description"
+                    placeholder={userStrings.addUserGroupModalPlaceholder}
+                    rows={3}
+                    value={formValues.description}
+                    error={formFieldErrors.description}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

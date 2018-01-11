@@ -6,6 +6,7 @@ export const urlForAdminLevels = `${wsEndpoint}/admin-levels/`;
 export const createUrlForRegion = regionId => `${wsEndpoint}/regions/${regionId}/`;
 export const createUrlForRegionClone = regionId => `${wsEndpoint}/clone-region/${regionId}/`;
 export const createUrlForAdminLevel = adminLevelId => `${wsEndpoint}/admin-levels/${adminLevelId}/`;
+export const createUrlForGeoOptions = projectId => `${wsEndpoint}/geo-options/?project=${projectId}`;
 
 const regionsUrlFields = ['id', 'code', 'title', 'public', 'created_at', 'modified_at', 'version_id'];
 export const urlForRegions = `${wsEndpoint}/regions/?${p({ fields: regionsUrlFields })}`;
@@ -21,6 +22,11 @@ export const createUrlForRegionWithField = (regionId, fields) => {
 };
 
 export const createParamsForAdminLevelsForRegionGET = () => ({
+    method: GET,
+    headers: commonHeaderForPost,
+});
+
+export const createParamsForGeoOptionsGET = () => ({
     method: GET,
     headers: commonHeaderForPost,
 });

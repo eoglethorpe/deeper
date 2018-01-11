@@ -209,6 +209,10 @@ const strings = {
 
     198: 'User Group Not Found....',
     199: 'User Not Found',
+    200: 'Description',
+    201: 'User Group',
+    202: 'Activity Log',
+    203: 'Description',
 
 
     // Project Panel strings
@@ -399,11 +403,11 @@ const strings = {
     529: 'Edit',
     530: 'Edit Entry',
 
-    531: 'Entry',
-    532: 'Entry',
-    533: 'Entry',
-    534: 'Entry',
-    535: 'Entry',
+    531: 'Set',
+    532: 'Cancel',
+    533: 'Select geo region',
+    534: 'Couldn\'t load geo filter options',
+    535: 'Select locations',
     536: 'Entry',
     537: 'Entry',
     538: 'Entry',

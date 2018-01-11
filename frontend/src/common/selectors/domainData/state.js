@@ -3,6 +3,9 @@ import { createSelector } from 'reselect';
 const emptyList = [];
 const emptyObject = {};
 
+export const leadsSelector = ({ domainData }) => (
+    domainData.leads || emptyObject
+);
 
 export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
@@ -18,6 +21,10 @@ export const regionsSelector = ({ domainData }) => (
 
 export const projectsSelector = ({ domainData }) => (
     domainData.projects || emptyObject
+);
+
+export const geoOptionsSelector = ({ domainData }) => (
+    domainData.geoOptions || emptyObject
 );
 
 export const projectsOptionsSelector = ({ domainData }) => (

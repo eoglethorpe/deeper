@@ -26,11 +26,12 @@ export const createParamsForUserGroupsCreate = ({ title }) => ({
     }),
 });
 
-export const createParamsForUserGroupsPatch = ({ title }) => ({
+export const createParamsForUserGroupsPatch = ({ title, description }) => ({
     method: PATCH,
     headers: commonHeaderForPost,
     body: JSON.stringify({
         title,
+        description,
     }),
 });
 

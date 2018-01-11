@@ -179,6 +179,9 @@ export default class UserProfile extends React.PureComponent {
 
         return (
             <div styleName="user-profile">
+                <header styleName="header">
+                    <h2>User Profile</h2>
+                </header>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
                     <DeepGallery

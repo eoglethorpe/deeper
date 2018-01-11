@@ -22,4 +22,10 @@
     .description {
         width: 540px;
     }
+
+    .description {
+        :global .input {
+            resize: none;
+        }
+    }
 }
