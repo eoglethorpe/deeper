@@ -8,6 +8,7 @@ import {
 
 import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
+import { getTrackingId } from './common/config/google-analytics';
 
 import schema from './common/schema';
 
@@ -106,11 +107,12 @@ export default class App extends React.PureComponent {
     componentWillMount() {
         console.log('Mounting App');
         // TODO: move this
-        ReactGA.initialize('UA-112330910-1', {
+        ReactGA.initialize(getTrackingId(), {
+            // debug: true,
             gaOptions: {
                 forceSSL: true,
                 userId: this.props.activeUser.userId,
-                cookieDomain: 'none',
+                hostname: window.location.hostname,
             },
         });
 
