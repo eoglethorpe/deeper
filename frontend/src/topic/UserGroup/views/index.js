@@ -197,17 +197,24 @@ export default class UserGroup extends React.PureComponent {
 
         return (
             <div styleName="usergroup">
+                <header styleName="header">
+                    <h2>{userStrings.userGroupTitle}</h2>
+                </header>
                 <div styleName="info">
-                    <span styleName="name">{ userGroup.title }</span>
-                    {
-                        isCurrentUserAdmin &&
-                            <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
-                                <span className={iconNames.edit} />
-                            </TransparentPrimaryButton>
-                    }
+                    <div styleName="title-container">
+                        <span styleName="name">{ userGroup.title }</span>
+                        {
+                            isCurrentUserAdmin &&
+                                <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
+                                    <span className={iconNames.edit} />
+                                </TransparentPrimaryButton>
+                        }
+                    </div>
+                    <p styleName="label">{userStrings.userGroupDescriptionLabel}</p>
+                    <p styleName="description">{ userGroup.description }</p>
                 </div>
                 <div styleName="stats">
-                    Activity Log
+                    <h2>{userStrings.userGroupActivtyLogTitle}</h2>
                 </div>
                 <ProjectsTable
                     styleName="projects"

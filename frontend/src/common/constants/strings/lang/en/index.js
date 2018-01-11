@@ -209,6 +209,10 @@ const strings = {
 
     198: 'User Group Not Found....',
     199: 'User Not Found',
+    200: 'Description',
+    201: 'User Group',
+    202: 'Activity Log',
+    203: 'Description',
 
 
     // Project Panel strings
