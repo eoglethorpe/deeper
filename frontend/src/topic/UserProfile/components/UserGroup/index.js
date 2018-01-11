@@ -229,6 +229,7 @@ export default class UserGroup extends React.PureComponent {
             .url(urlForUserGroup)
             .params(() => createParamsForUserGroupsDelete())
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unSetUserGroup({
                         userGroupId,

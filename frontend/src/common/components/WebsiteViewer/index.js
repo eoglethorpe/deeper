@@ -84,6 +84,7 @@ export default class DeepGallery extends React.PureComponent {
             .params(() => createParamsForWebsiteFetch(url))
             .success((response) => {
                 try {
+                    // FIXME: write schema
                     const isSameOrigin = !!(response.headers['X-Frame-Options'] || '').toLowerCase().match('sameorigin');
                     const isSecure = !!(response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
                     const mimeType = response.headers['Content-Type'];

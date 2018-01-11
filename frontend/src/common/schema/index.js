@@ -10,6 +10,7 @@ import userGroups from './userGroups';
 import users from './users';
 import analysisFrameworks from './analysisFrameworks';
 import categoryEditors from './categoryEditors';
+import galleryFile from './galleryFile';
 
 // ATTACHING BEHAVIORS
 attachValidator(dict);
@@ -54,6 +55,20 @@ const userDefinedSchemas = [];
     };
     userDefinedSchemas.push({ name, schema });
 }
+{
+    const name = 'keyValuePairSS';
+    const schema = {
+        doc: {
+            name: 'Key Value Pair',
+            description: 'Defines key value pair where key and value both are strings',
+        },
+        fields: {
+            key: { type: 'string', required: true },
+            value: { type: 'string', required: true },
+        },
+    };
+    userDefinedSchemas.push({ name, schema });
+}
 
 [
     ...userDefinedSchemas,
@@ -66,6 +81,7 @@ const userDefinedSchemas = [];
     ...users,
     ...analysisFrameworks,
     ...categoryEditors,
+    ...galleryFile,
 ].forEach(({ name, schema }) => dict.put(name, schema));
 
 export default dict;

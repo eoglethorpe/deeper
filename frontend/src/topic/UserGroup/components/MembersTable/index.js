@@ -191,6 +191,7 @@ export default class MembersTable extends React.PureComponent {
             .preLoad(() => { this.setState({ actionPending: true }); })
             .postLoad(() => { this.setState({ actionPending: false }); })
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unSetMembership({
                         membershipId,

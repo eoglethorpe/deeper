@@ -247,6 +247,7 @@ export default class UserProject extends React.PureComponent {
             .url(urlForProject)
             .params(() => createParamsForProjectDelete())
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unSetProject({
                         userId,

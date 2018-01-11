@@ -1,5 +1,6 @@
 import { FgRestBuilder } from '../../../../../../public/utils/rest';
 import update from '../../../../../../public/utils/immutable-update';
+import schema from '../../../../../../common/schema';
 
 import {
     transformResponseErrorToFormError,
@@ -75,17 +76,23 @@ export default class FormSaveBuilder {
         });
     }
     handleLeadSaveSuccess = leadId => (response) => {
-        notify.send({
-            title: notificationStrings.leadSave,
-            type: notify.type.SUCCESS,
-            message: notificationStrings.leadSaveSuccess,
-            duration: notify.duration.MEDIUM,
-        });
-        this.parent.props.addLeadViewLeadSave({
-            leadId,
-            serverId: response.id,
-        });
-        this.parent.formCoordinator.notifyComplete(leadId);
+        try {
+            schema.validate(response, 'galleryFile');
+
+            notify.send({
+                title: notificationStrings.leadSave,
+                type: notify.type.SUCCESS,
+                message: notificationStrings.leadSaveSuccess,
+                duration: notify.duration.MEDIUM,
+            });
+            this.parent.props.addLeadViewLeadSave({
+                leadId,
+                serverId: response.id,
+            });
+            this.parent.formCoordinator.notifyComplete(leadId);
+        } catch (err) {
+            console.warn(err);
+        }
     }
     handleLeadSaveFailure = leadId => (response) => {
         // console.error('Failed lead request:', response);

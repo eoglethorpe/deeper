@@ -188,6 +188,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             .postLoad(() => { this.setState({ deletePending: false }); })
             .success(() => {
                 try {
+                    // FIXME: write schema
                     this.props.unsetAdminLevelForRegion({
                         adminLevelId,
                         regionId,

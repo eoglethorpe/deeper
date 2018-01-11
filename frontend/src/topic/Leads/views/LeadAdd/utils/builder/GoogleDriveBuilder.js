@@ -1,5 +1,6 @@
 import { FgRestBuilder } from '../../../../../../public/utils/rest';
 import update from '../../../../../../public/utils/immutable-update';
+import schema from '../../../../../../common/schema';
 
 import {
     urlForGoogleDriveFileUpload,
@@ -25,28 +26,34 @@ export default class GoogleDriveUploadModule {
 
     handleLeadGoogleDriveUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
-        const { addLeadViewLeadChange } = this.parent.props;
-        addLeadViewLeadChange({
-            leadId,
-            values: { attachment: { id: response.id } },
-            upload: {
-                title: response.title,
-                url: response.file,
-            },
-            uiState: { pristine: false },
-        });
+        try {
+            schema.validate(response, 'galleryFile');
 
-        // FOR UPLAOD
-        this.parent.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    pending: { $set: undefined },
-                } },
-            };
-            const leadDriveRests = update(state.leadDriveRests, uploadSettings);
-            return { leadDriveRests };
-        });
+            const { addLeadViewLeadChange } = this.parent.props;
+            addLeadViewLeadChange({
+                leadId,
+                values: { attachment: { id: response.id } },
+                upload: {
+                    title: response.title,
+                    url: response.file,
+                },
+                uiState: { pristine: false },
+            });
 
-        this.parent.driveUploadCoordinator.notifyComplete(leadId);
+            // FOR UPLAOD
+            this.parent.setState((state) => {
+                const uploadSettings = {
+                    [leadId]: { $auto: {
+                        pending: { $set: undefined },
+                    } },
+                };
+                const leadDriveRests = update(state.leadDriveRests, uploadSettings);
+                return { leadDriveRests };
+            });
+
+            this.parent.driveUploadCoordinator.notifyComplete(leadId);
+        } catch (err) {
+            console.error(err);
+        }
     }
 }

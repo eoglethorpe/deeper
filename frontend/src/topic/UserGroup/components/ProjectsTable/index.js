@@ -232,6 +232,7 @@ export default class ProjectsTable extends React.PureComponent {
                 this.setState({ deletePending: false });
             })
             .success(() => {
+                // FIXME: write schema
                 try {
                     this.props.unSetProject({
                         projectId,

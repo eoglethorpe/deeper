@@ -183,7 +183,7 @@ export default class DgSelect extends React.PureComponent {
             })
             .success((response) => {
                 try {
-                    // TODO: validate schema
+                    // FIXME: write schema
                     this.props.setUserGalleryFiles({
                         galleryFiles: response.results,
                     });
