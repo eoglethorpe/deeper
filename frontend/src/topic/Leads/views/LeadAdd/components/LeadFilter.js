@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 
 import schema from '../../../../../common/schema';
 import {
+    MultiSelectInput,
     SelectInput,
     TextInput,
 } from '../../../../../public/components/Input';
@@ -183,12 +184,11 @@ export default class LeadFilter extends React.PureComponent {
                     onChange={this.handleLeadStatusFilterChange}
                     showHintAndError={false}
                 />
-                <SelectInput
+                <MultiSelectInput
                     label={leadsString.filterSourceType}
                     showLabel
                     options={leadTypeOptions}
                     placeholder={leadsString.placeholderAny}
-                    multiple
                     value={filters.type}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadTypeFilterChange}

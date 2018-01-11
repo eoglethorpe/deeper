@@ -9,7 +9,7 @@ import {
 } from '../../../../../public/components/Action';
 import {
     Form,
-    SelectInput,
+    MultiSelectInput,
     TextInput,
     DateFilter,
 } from '../../../../../public/components/Input';
@@ -226,12 +226,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                 changeCallback={this.handleChange}
                 elements={this.formElements}
             >
-                <SelectInput
+                <MultiSelectInput
                     formname="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsString.assigneeLabel}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
-                    multiple
                     options={assignee}
                     placeholder={leadsString.placeholderAnybody}
                     showHintAndError={false}
@@ -257,12 +256,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                     value={formValues.published_on}
                 />
-                <SelectInput
+                <MultiSelectInput
                     formname="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsString.filterConfidentiality}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
-                    multiple
                     options={confidentiality}
                     placeholder={leadsString.placeholderAny}
                     showHintAndError={false}
@@ -270,12 +268,11 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                     value={formValues.confidentiality}
                 />
-                <SelectInput
+                <MultiSelectInput
                     formname="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsString.filterStatus}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
-                    multiple
                     options={status}
                     placeholder={leadsString.placeholderAny}
                     showHintAndError={false}

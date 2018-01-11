@@ -7,7 +7,7 @@ import {
     TextInput,
     DateFilter,
     RangeFilter,
-    SelectInput,
+    MultiSelectInput,
 } from '../../../public/components/Input';
 import {
     Button,
@@ -120,7 +120,7 @@ export default class EntriesFilter extends React.PureComponent {
 
         if (filter.type === 'multiselect') {
             return (
-                <SelectInput
+                <MultiSelectInput
                     key={key}
                     className="entries-filter"
                     options={filter.options}
@@ -129,7 +129,6 @@ export default class EntriesFilter extends React.PureComponent {
                     onChange={values => this.handleFilterChange(key, values)}
                     value={filters[key]}
                     disabled={this.props.pending}
-                    multiple
                 />
             );
         } else if (filter.type === 'multiselect-range') {
@@ -196,11 +195,10 @@ export default class EntriesFilter extends React.PureComponent {
                     value={filters.search}
                     disabled={this.props.pending}
                 />
-                <SelectInput
+                <MultiSelectInput
                     className="entries-filter"
                     key="created-by"
                     label="Created By"
-                    multiple
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}
                     value={filters.created_by}

@@ -11,7 +11,7 @@ import {
     NonFieldErrors,
     TextInput,
     TextArea,
-    SelectInput,
+    MultiSelectInput,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -144,7 +144,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     value={formValues.endDate}
                     error={formFieldErrors.endDate}
                 />
-                <SelectInput
+                <MultiSelectInput
                     label={projectStrings.projectRegionLabel}
                     formname="regions"
                     placeholder={projectStrings.projectRegionPlaceholder}
@@ -154,9 +154,8 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.regions}
-                    multiple
                 />
-                <SelectInput
+                <MultiSelectInput
                     label={projectStrings.projectUserGroupLabel}
                     formname="userGroups"
                     placeholder={projectStrings.projectUserGroupPlaceholder}
@@ -166,7 +165,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.userGroups}
-                    multiple
                 />
             </Form>
         );

@@ -14,7 +14,7 @@ import {
     ListView,
 } from '../../../../public/components/View';
 import {
-    SelectInput,
+    MultiSelectInput,
 } from '../../../../public/components/Input';
 
 import {
@@ -499,37 +499,34 @@ export default class AssistedTagging extends React.PureComponent {
                         <span>{entryStrings.showSuggestionText}</span>
                         {
                             selectedAssitedTaggingSource === 'nlp' && (
-                                <SelectInput
+                                <MultiSelectInput
                                     styleName="select-input"
                                     options={nlpSectorOptions}
                                     showHintAndError={false}
                                     value={nlpSelectedSectors}
                                     onChange={this.handleNlpSectorSelect}
-                                    multiple
                                 />
                             )
                         }
                         {
                             selectedAssitedTaggingSource === 'ce' && (
-                                <SelectInput
+                                <MultiSelectInput
                                     styleName="select-input"
                                     options={ceSectorOptions}
                                     showHintAndError={false}
                                     value={ceSelectedSectors}
                                     onChange={this.handleCeSectorSelect}
-                                    multiple
                                 />
                             )
                         }
                         {
                             selectedAssitedTaggingSource === 'ner' && (
-                                <SelectInput
+                                <MultiSelectInput
                                     styleName="select-input"
                                     options={nerSectorOptions}
                                     showHintAndError={false}
                                     value={nerSelectedSectors}
                                     onChange={this.handleNerSectorSelect}
-                                    multiple
                                 />
                             )
                         }
