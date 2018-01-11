@@ -357,6 +357,10 @@ export default class Entries extends React.PureComponent {
                         this.props.activePage,
                     );
                     this.entriesRequest.start();
+
+                    this.setState({
+                        pendingEntries: true,
+                    });
                 } catch (er) {
                     console.error(er);
                 }

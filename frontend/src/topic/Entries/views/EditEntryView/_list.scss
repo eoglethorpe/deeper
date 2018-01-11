@@ -30,6 +30,15 @@
             border-bottom: $width-separator-medium solid $color-separator;
             background-color: $color-foreground;
 
+            .apply-buttons {
+                display: flex;
+
+                .apply-button {
+                    padding: 0 $spacing-extra-small 0 $spacing-extra-small;
+                    margin: 0;
+                }
+            }
+
             :global .grid-item {
                 .header {
                     display: flex;

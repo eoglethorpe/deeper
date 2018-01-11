@@ -416,22 +416,27 @@ export default class API {
         });
     }
 
-    setAttributeToAll(widgetId, data) {
+    setAttributeToAll(widgetId, id) {
+        const data = this.getEntryAttribute(widgetId, id);
         this.entries.forEach((entry) => {
-            this.getEntryModifier(entry.data.id)
-                .setAttribute(widgetId, data)
-                .apply();
+            if (entry.data.id !== id) {
+                this.getEntryModifier(entry.data.id)
+                    .setAttribute(widgetId, data)
+                    .apply();
+            }
         });
     }
 
-    setAttributeToBelow(widgetId, data, id) {
+    setAttributeToBelow(widgetId, id) {
+        const data = this.getEntryAttribute(widgetId, id);
+
         const selectedId = id || this.selectedId;
         const index = selectedId ? this.entries.findIndex(e => e.data.id === selectedId) : -1;
         if (index === -1) {
             return;
         }
 
-        const belowEntries = this.entries.slice(index);
+        const belowEntries = this.entries.slice(index + 1);
         belowEntries.forEach((entry) => {
             this.getEntryModifier(entry.data.id)
                 .setAttribute(widgetId, data)
