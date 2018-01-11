@@ -3,6 +3,9 @@ import { createSelector } from 'reselect';
 const emptyList = [];
 const emptyObject = {};
 
+export const leadsSelector = ({ domainData }) => (
+    domainData.leads || emptyObject
+);
 
 export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject

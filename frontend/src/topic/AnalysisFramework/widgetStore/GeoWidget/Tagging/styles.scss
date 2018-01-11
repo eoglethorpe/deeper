@@ -13,7 +13,6 @@
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        border: $width-separator-thin solid $color-separator;
         overflow-y: auto;
 
         .region-name {

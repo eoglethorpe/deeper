@@ -16,6 +16,10 @@
         width: 100%;
 
         .action-buttons {
+            .primary-link-button {
+                @extend %button-like-link;
+            }
+
             .save-button {
                 margin-left: $spacing-medium;
             }

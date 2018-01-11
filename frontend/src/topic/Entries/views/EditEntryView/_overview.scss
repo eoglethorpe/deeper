@@ -179,6 +179,10 @@
             }
 
             .action-buttons {
+                .goto-link {
+                    @extend %button-like-link;
+                }
+
                 .save-button {
                     margin-left: $spacing-medium;
                 }

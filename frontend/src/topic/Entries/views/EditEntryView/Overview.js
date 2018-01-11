@@ -532,6 +532,7 @@ export default class Overview extends React.PureComponent {
                         </div>
                         <div styleName="action-buttons">
                             <Link
+                                styleName="goto-link"
                                 to="/list"
                                 replace
                             >

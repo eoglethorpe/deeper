@@ -1,7 +1,6 @@
 @import '../../../../../stylesheets/base';
 
 .geo-list {
-    border: $width-separator-thin solid $color-separator;
     padding: 0;
 
     .region-list {
@@ -12,12 +11,7 @@
 
         .region-name {
             flex-shrink: 0;
-            background-color: $color-background-row;
-            padding: $spacing-small $spacing-medium-alt;
-
-            &:nth-child(odd) {
-                background-color: $color-background-row-alt;
-            }
+            padding: $spacing-extra-small 0;
         }
 
         :global .empty {

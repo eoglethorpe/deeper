@@ -74,6 +74,7 @@
                     z-index: 10;
                     border-bottom: $width-separator-thin solid $color-separator;
                     background-color: $color-background-row-alt;
+                    padding: $spacing-extra-small;
 
                     .grid-layout {
                         min-height: 100%;
@@ -88,6 +89,7 @@
                                 justify-content: space-between;
                                 background-color: transparent;
                                 height: 18px;
+                                color: $color-primary;
 
                                 .heading {
                                     background-color: transparent;

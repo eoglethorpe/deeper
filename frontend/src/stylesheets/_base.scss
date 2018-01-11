@@ -75,3 +75,19 @@ body {
     border: $width-separator-thin solid $color-separator;
     height: 100%;
 }
+
+%button-like-link {
+    border-radius: 3px;
+    background-color: $color-primary;
+    padding: $spacing-small $spacing-medium;
+    text-transform: uppercase;
+    color: $color-text-on-primary;
+    font-family: inherit;
+    font-size: $font-size-medium-alt;
+    font-weight: $font-weight-normal;
+
+    &:active {
+        @include shadow-small;
+        transform: translateY(1px);
+    }
+}
