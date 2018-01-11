@@ -16,7 +16,7 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired, //eslint-disable-line
+    onChange: PropTypes.func.isRequired,
 };
 
 @CSSModules(styles)
