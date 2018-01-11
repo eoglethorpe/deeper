@@ -1,26 +1,28 @@
 @import '../../../../../stylesheets/base';
 
 .geo-list {
+    border: $width-separator-thin solid $color-separator;
     padding: 0;
-    overflow: auto;
 
     .region-list {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        margin-top: $spacing-medium;
-        overflow: auto;
+        overflow-y: auto;
 
-        .region-content {
-            display: flex;
-            flex-grow: 1;
+        .region-name {
+            flex-shrink: 0;
+            background-color: $color-background-row;
+            padding: $spacing-small $spacing-medium-alt;
 
-            .region-name {
-                flex-grow: 1;
-                margin-bottom: $spacing-small;
-                padding: $spacing-extra-small $spacing-small;
+            &:nth-child(odd) {
+                background-color: $color-background-row-alt;
             }
         }
 
+        :global .empty {
+            justify-content: flex-start;
+            padding: 0 $spacing-small;
+        }
     }
 }

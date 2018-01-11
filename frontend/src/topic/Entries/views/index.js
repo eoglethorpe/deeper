@@ -200,15 +200,6 @@ export default class Entries extends React.PureComponent {
         return attribute && attribute.data;
     }
 
-    getMaxHeight = () => this.items.reduce(
-        (acc, item) => {
-            const { height, top } = item.properties.listGridLayout;
-            // To add little padding at bottom
-            return Math.max(acc, height + top + 12);
-        },
-        0,
-    );
-
     getItemView = (item) => {
         const Component = this.widgets.find(
             w => w.id === item.widgetId,

@@ -1,108 +1,34 @@
 @import '../../../../../stylesheets/base';
 
 .geo-list {
+    display: flex;
+    flex-direction: column;
     padding: 0;
-    overflow: auto;
 
-    .geo-button-wrapper {
-        display: flex;
-        flex-basis: 100%;
-        align-items: center;
-        justify-content: center;
-
-        .location-button {
-            margin-bottom: $spacing-small;
-            color: $color-accent;
-        }
+    .geo-select {
+        flex-shrink: 0;
     }
 
     .region-list {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        overflow: auto;
+        border: $width-separator-thin solid $color-separator;
+        overflow-y: auto;
 
-        .region-content {
-            display: flex;
-            flex-grow: 1;
+        .region-name {
+            flex-shrink: 0;
+            background-color: $color-background-row;
+            padding: $spacing-small $spacing-medium-alt;
 
-            .region-name {
-                flex-grow: 1;
-                margin-bottom: $spacing-small;
-                padding: $spacing-extra-small $spacing-small;
+            &:nth-child(odd) {
+                background-color: $color-background-row-alt;
             }
         }
 
-    }
-}
-
-%modal {
-    :global {
-        .modal-content {
-            width: auto;
-            min-width: 1200px;
-            max-width: 96vw;
-
-            .modal-body {
-                display: flex;
-                padding: 0;
-            }
+        :global .empty {
+            justify-content: flex-start;
+            padding: 0 $spacing-small;
         }
     }
-}
-
-.map-modal {
-    @extend %modal;
-
-    .map-content {
-        flex-basis: 70%;
-        height: 700px;
-    }
-
-    .content {
-        display: flex;
-        flex-basis: 30%;
-        flex-direction: column;
-        background-color: $color-foreground-alt;
-        height: 700px;
-
-        .search-box {
-            padding: $spacing-medium;
-
-            h3 {
-                margin-bottom: $spacing-medium;
-             }
-        }
-
-        .regions-table {
-            flex-grow: 1;
-            margin-top: $spacing-large;
-            overflow-y: auto;
-        }
-
-        .region-list {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: $spacing-medium;
-
-            .selected-regions {
-                @include shadow-small;
-                display: flex;
-                margin-right: $spacing-medium;
-                background-color: $color-background-disabled;
-                padding: $spacing-extra-small;
-                font-size: $font-size-medium;
-
-                .region-name {
-                    display: flex;
-                }
-            }
-        }
-    }
-}
-
-:global #region-select-options,
-:global #location-select-options {
-    z-index: 1111;
 }

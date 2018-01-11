@@ -44,7 +44,7 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     projectId: PropTypes.number.isRequired,
-    label: PropTypes.string.isRequired,
+    label: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired, //eslint-disable-line
     regions: PropTypes.array.isRequired, //eslint-disable-line
@@ -56,6 +56,7 @@ const propTypes = {
 const defaultProps = {
     className: '',
     geoOptions: {},
+    label: '',
 };
 
 const emptyList = [];
@@ -242,9 +243,12 @@ export default class GeoSelection extends React.PureComponent {
     }
 
     handleModalSetButtonClick = () => {
-        const { flatValues } = this.state;
+        const { flatValues, flatLocations } = this.state;
+        const flatValuesWithTitle = flatValues.map(v => (
+            flatLocations.find(l => l.key === v)
+        ));
         if (this.props.onChange) {
-            this.props.onChange(flatValues);
+            this.props.onChange(flatValues, flatValuesWithTitle);
         }
         this.setState({ showMapModal: false });
     }
@@ -275,8 +279,12 @@ export default class GeoSelection extends React.PureComponent {
     }
 
     handleFlatSelectChange = (newFlatValues) => {
+        const { flatLocations } = this.state;
+        const flatValuesWithTitle = newFlatValues.map(v => (
+            flatLocations.find(l => l.key === v)
+        ));
         if (this.props.onChange) {
-            this.props.onChange(newFlatValues);
+            this.props.onChange(newFlatValues, flatValuesWithTitle);
         }
 
         const { locations } = this.state;
@@ -335,6 +343,7 @@ export default class GeoSelection extends React.PureComponent {
             >
                 <SelectInput
                     className="flat-select-input"
+                    styleName="flat-select-input"
                     label={label}
                     showHintAndError={false}
                     onChange={this.handleFlatSelectChange}

@@ -3,29 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    Button,
-    PrimaryButton,
-    TransparentButton,
-    TransparentDangerButton,
-} from '../../../../../public/components/Action';
-import {
-    SelectInput,
-} from '../../../../../public/components/Input';
-import update from '../../../../../public/utils/immutable-update';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
     ListView,
-    Table,
 } from '../../../../../public/components/View';
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
-import RegionMap from '../../../../../common/components/RegionMap';
 
+import GeoSelection from '../../../../../common/components/GeoSelection';
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
 
@@ -49,39 +30,18 @@ export default class GeoTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static calcFlatValues = values => (
+        values.map(v => v.key)
+    )
+
     constructor(props) {
         super(props);
-
-        this.tableHeaders = [
-            {
-                key: 'title',
-                label: afStrings.tableHeaderRegion,
-                order: 1,
-                sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
-            },
-            {
-                key: 'actions',
-                label: afStrings.tableHeaderActions,
-                order: 2,
-                modifier: row => (
-                    <div className="actions">
-                        <TransparentDangerButton
-                            onClick={() => this.handleRemoveButtonClick(row.key)}
-                            title={afStrings.removeLocationButtonTitle}
-                        >
-                            <span className={iconNames.close} />
-                        </TransparentDangerButton>
-                    </div>
-                ),
-            },
-        ];
+        const values = (props.attribute && props.attribute.values) || emptyList;
+        const flatValues = GeoTaggingList.calcFlatValues(values);
 
         this.state = {
-            showMapModal: false,
-            selectedRegion: undefined,
-            values: (props.attribute && props.attribute.values) || emptyList,
-            locations: {},
+            values,
+            flatValues,
         };
 
         updateAttribute(props);
@@ -89,8 +49,12 @@ export default class GeoTaggingList extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.attribute !== nextProps.attribute) {
+            const values = (nextProps.attribute && nextProps.attribute.values) || emptyList;
+            const flatValues = GeoTaggingList.calcFlatValues(values);
+
             this.setState({
-                values: (nextProps.attribute && nextProps.attribute.values) || emptyList,
+                values,
+                flatValues,
             });
 
             updateAttribute(nextProps);
@@ -98,211 +62,50 @@ export default class GeoTaggingList extends React.PureComponent {
     }
 
     mapRegionsList = (key, data) => (
-        <div
-            className={styles['region-content']}
+        <span
             key={key}
+            className={styles['region-name']}
         >
-            <span className={styles['region-name']}>{data.title}</span>
-        </div>
+            {data.label}
+        </span>
     )
 
-    handleRemoveButtonClick = (key) => {
-        const newValues = this.state.values.filter(d => d.key !== key);
+    handleGeoSelectionChange = (flatValues, values) => {
         this.setState({
-            values: newValues,
+            values,
+            flatValues,
         });
-    }
 
-    handleModalOpen = () => {
-        if (this.props.api.getProject().regions.length > 0) {
-            this.setState({
-                selectedRegion: this.props.api.getProject().regions[0].id,
-            });
-        }
-        this.setState({ showMapModal: true });
-    }
-
-    handleEditModalClose = () => {
-        this.setState({ showMapModal: false });
-    }
-
-    handleModalCancelButtonClick = () => {
-        this.setState({
-            showMapModal: false,
-            values: (this.props.attribute && this.props.attribute.values) || emptyList,
-        });
-    }
-
-    handleModalSaveButtonClick = () => {
         const { api, id, entryId } = this.props;
-        const attribute = {
-            values: this.state.values,
-        };
+        const attribute = { values };
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
             .apply();
-        this.setState({
-            showMapModal: false,
-        });
     }
-
-    handleMapSelect = (values) => {
-        const locations = this.state.locations;
-        const settings = {
-            [this.state.selectedRegion]: { $autoArray: {
-                $filter: l => !values.find(v => v.key === l.key),
-            } },
-        };
-        this.setState({
-            values,
-            locations: update(locations, settings),
-        });
-    }
-
-    handleMapLocationsChange = (newLocations) => {
-        const { locations, selectedRegion, values } = this.state;
-        const settings = {
-            [selectedRegion]: { $autoArray: {
-                $set: newLocations.filter(l => !values.find(v => v.key === l.key)),
-            } },
-        };
-
-        this.setState({
-            locations: update(locations, settings),
-        });
-    }
-
-    handleRegionSelection = (selectedRegion) => {
-        this.setState({
-            selectedRegion,
-        });
-    }
-
-    handleLocationSelection = (selection) => {
-        if (!selection) {
-            return;
-        }
-
-        if (!this.state.values.find(v => v.key === selection)) {
-            const { locations, selectedRegion } = this.state;
-            const location = locations[selectedRegion].find(
-                l => l.key === selection,
-            );
-            const values = [
-                ...this.state.values,
-                {
-                    key: location.key,
-                    title: location.label,
-                },
-            ];
-
-            const settings = {
-                [selectedRegion]: {
-                    $filter: l => !values.find(v => v.key === l.key),
-                },
-            };
-
-            this.setState({
-                values,
-                locations: update(locations, settings),
-            });
-        }
-    }
-
-    regionKeySelector = d => d.id
-
-    regionLabelSelector = d => d.title
 
     render() {
         const {
-            locations,
-            showMapModal,
-            selectedRegion,
             values,
+            flatValues,
         } = this.state;
 
         return (
             <div styleName="geo-list">
-                <div styleName="geo-button-wrapper">
-                    <TransparentButton
-                        onClick={this.handleModalOpen}
-                        styleName="location-button"
-                        title={afStrings.electGeoAreaButtonTitle}
-                    >
-                        {afStrings.geoAreaButtonLabel} <span className={iconNames.globe} />
-                    </TransparentButton>
-                </div>
+                <GeoSelection
+                    styleName="geo-select"
+                    onChange={this.handleGeoSelectionChange}
+                    projectId={this.props.api.getProject().id}
+                    regions={this.props.api.getProject().regions}
+                    value={flatValues}
+                    disabled={false}
+                />
                 <ListView
                     data={values}
                     className={styles['region-list']}
                     keyExtractor={GeoTaggingList.valueKeyExtractor}
                     modifier={this.mapRegionsList}
+                    emptyComponent="-"
                 />
-                <Modal
-                    styleName="map-modal"
-                    show={showMapModal}
-                    onClose={this.handleEditModalClose}
-                >
-                    <ModalHeader
-                        title={afStrings.geoWidgetLabel}
-                        rightComponent={
-                            <SelectInput
-                                showHintAndError={false}
-                                showLabel={false}
-                                placeholder={afStrings.selectRegionPlaceholder}
-                                options={this.props.api.getProject().regions}
-                                keySelector={this.regionKeySelector}
-                                labelSelector={this.regionLabelSelector}
-                                onChange={this.handleRegionSelection}
-                                optionsIdentifier="region-select-options"
-                                value={selectedRegion}
-                                clearable={false}
-                            />
-                        }
-                    />
-                    <ModalBody>
-                        <RegionMap
-                            styleName="map-content"
-                            regionId={selectedRegion}
-                            onChange={this.handleMapSelect}
-                            onLocationsChange={this.handleMapLocationsChange}
-                            selections={values}
-                        />
-                        <div styleName="content">
-                            <div styleName="search-box">
-                                <h3>{afStrings.selectedRegionsLabel}</h3>
-                                <SelectInput
-                                    showHintAndError={false}
-                                    showLabel={false}
-                                    placeholder={afStrings.searchLocationPlaceholder}
-                                    options={locations[selectedRegion]}
-                                    optionsIdentifier="location-select-options"
-                                    onChange={this.handleLocationSelection}
-                                    value="invalid"
-                                />
-                            </div>
-                            <div styleName="regions-table">
-                                <Table
-                                    data={values}
-                                    headers={this.tableHeaders}
-                                    keyExtractor={GeoTaggingList.valueKeyExtractor}
-                                />
-                            </div>
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
             </div>
         );
     }

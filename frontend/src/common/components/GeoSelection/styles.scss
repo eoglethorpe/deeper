@@ -15,6 +15,7 @@
 
     .flat-select-input {
         margin: 0;
+        width: 100%;
     }
 }
 
@@ -68,4 +69,9 @@
             }
         }
     }
+}
+
+:global #region-select-options,
+:global #location-select-options {
+    z-index: 1111;
 }
