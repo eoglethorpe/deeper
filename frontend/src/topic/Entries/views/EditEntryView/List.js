@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import {
     GridLayout,
@@ -80,10 +81,6 @@ export default class List extends React.PureComponent {
         );
     }
 
-    handleGotoOverviewButtonClick = () => {
-        window.location.hash = '/overview/';
-    }
-
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.listComponent)
@@ -151,11 +148,12 @@ export default class List extends React.PureComponent {
                         *Update_Lead_Title_Here*
                     </h3>
                     <div styleName="action-buttons">
-                        <Button
-                            onClick={this.handleGotoOverviewButtonClick}
+                        <Link
+                            to="/overview"
+                            replace
                         >
                             {entryStrings.gotoOverviewButtonLabel}
-                        </Button>
+                        </Link>
                         <SuccessButton
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}

@@ -10,7 +10,9 @@ import {
 
 export const urlForEntry = `${wsEndpoint}/entries/`;
 export const urlForEntryCreate = `${wsEndpoint}/entries/`;
-export const urlForFilteredEntries = `${wsEndpoint}/entries/filter/`;
+export const createUrlForFilteredEntries = params => (
+    `${wsEndpoint}/entries/filter/?${p(params)}`
+);
 
 export const createUrlForEntryEdit = entryId => (
     `${wsEndpoint}/entries/${entryId}/`

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { getColorOnBgColor } from '../../../../public/utils/common';
 
@@ -175,10 +176,6 @@ export default class Overview extends React.PureComponent {
             data: item.properties.data,
             attribute: this.props.api.getEntryAttribute(item.id),
         }));
-    }
-
-    handleGotoListButtonClick = () => {
-        window.location.hash = '/list/';
     }
 
     handleEntryItemClick = (value) => {
@@ -534,11 +531,12 @@ export default class Overview extends React.PureComponent {
                             }
                         </div>
                         <div styleName="action-buttons">
-                            <Button
-                                onClick={this.handleGotoListButtonClick}
+                            <Link
+                                to="/list"
+                                replace
                             >
                                 {entryStrings.gotoListButtonLabel}
-                            </Button>
+                            </Link>
                             <SuccessButton
                                 styleName="save-button"
                                 onClick={onSaveAll}

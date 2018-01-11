@@ -33,6 +33,7 @@ import {
     createUrlForLeadsOfProject,
     createUrlForLeadDelete,
     createParamsForLeadDelete,
+    transformResponseErrorToFormError,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -402,6 +403,23 @@ export default class Leads extends React.PureComponent {
                     console.error(er);
                 }
             })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: 'Leads', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Couldn\'t load leads', // FIXME: strings
+                    duration: notify.duration.MEDIUM,
+                });
+            })
             .build();
         return leadRequest;
     }
@@ -434,7 +452,16 @@ export default class Leads extends React.PureComponent {
                 });
                 this.leadRequest.start();
             })
-            .failure(() => {
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: leadsString.leadDelete,
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
                 notify.send({
                     title: leadsString.leadDelete,
                     type: notify.type.ERROR,
