@@ -182,7 +182,8 @@ export default class Overview extends React.PureComponent {
             leadId: this.props.leadId,
             entryId: value,
         });
-        this.setState({ currentTab: this.state.oldTab });
+        // NOTE: change to last selected on click
+        // this.setState({ currentTab: this.state.oldTab });
     }
 
     handleEntrySelectChange = (value) => {

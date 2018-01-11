@@ -518,7 +518,6 @@ test('should copy values in leads below', () => {
 });
 
 test('should copy values in all lead, for assignee', () => {
-    console.warn('I am here');
     const state = {
         addLeadView: {
             activeLeadId: 1,

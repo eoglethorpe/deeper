@@ -297,6 +297,7 @@ export default class Entries extends React.PureComponent {
                     schema.validate(response, 'projectGetResponse');
                     this.props.setProject({ project: response });
 
+                    // TODO: check if analysisFramework is undefined
                     this.analysisFramework = this.createRequestForAnalysisFramework(
                         response.analysisFramework,
                     );
