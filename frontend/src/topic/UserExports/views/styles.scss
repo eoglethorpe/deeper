@@ -15,52 +15,76 @@
         padding: $spacing-small $spacing-medium-alt;
     }
 
-    .table-container {
+    .main-container {
         display: flex;
-        flex-direction: column;
-        overflow-y: auto;
+        flex-grow: 1;
 
-        .user-exports-table {
+        .table-container {
+            display: flex;
+            flex-direction: column;
             flex-grow: 1;
-            background-color: $color-background-row-alt;
-        }
+            background-color: $color-background-row;
+            overflow-y: auto;
 
-        :global {
-            .raw-table {
-                .headers {
-                    .mime-type {
-                        width: 96px;
+
+            :global {
+                .raw-table {
+                    .headers {
+                        .mime-type {
+                            width: 96px;
+                        }
+
+                        .file {
+                            width: 64px;
+                        }
                     }
 
-                    .file {
-                        width: 64px;
-                    }
-                }
+                    .body {
+                        cursor: pointer;
 
-                .body {
-                    .cell {
-                        position: relative;
+                        .row {
+                            &.highlighted {
+                                background-color: $color-accent;
 
-                        .loading {
-                            span {
-                                width: $font-size-medium-alt;
-                                height: $font-size-medium-alt;
-                                font-size: $font-size-medium-alt;
+                                .file-download {
+                                    color: $color-text-on-accent;
+                                }
+                            }
+                        }
+
+                        .cell {
+                            position: relative;
+
+                            .loading {
+                                span {
+                                    width: $font-size-medium-alt;
+                                    height: $font-size-medium-alt;
+                                    font-size: $font-size-medium-alt;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            .icon-wrapper {
-                display: flex;
-                justify-content: center;
-            }
+                .icon-wrapper {
+                    display: flex;
+                    justify-content: center;
+                }
 
-            .file-download {
-                display: flex;
-                justify-content: center;
+                .file-download {
+                    display: flex;
+                    justify-content: center;
+                    color: $color-accent;
+                    font-size: $font-size-large;
+                }
             }
+        }
+
+        .preview {
+            flex-basis: 32%;
+            flex-grow: 0;
+            flex-shrink: 0;
+            border-left: $width-separator-thin solid $color-separator;
         }
     }
 }

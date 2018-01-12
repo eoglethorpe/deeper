@@ -16,7 +16,7 @@ const iconNames = {
     close: 'ion-close',
     code: 'ion-code',
     codeWorking: 'ion-code-working',
-    download: 'ion-android-download',
+    download: 'ion-ios-download-outline',
     delete: 'ion-android-delete',
     refresh: 'ion-android-refresh',
     calendar: 'ion-ios-calendar-outline',

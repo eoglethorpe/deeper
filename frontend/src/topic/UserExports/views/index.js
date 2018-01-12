@@ -23,6 +23,7 @@ import {
 
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
+import ExportPreview from '../../../common/components/ExportPreview';
 import {
     exportStrings,
     iconNames,
@@ -52,9 +53,14 @@ const emptyList = [];
 @CSSModules(styles, { allowMultiple: true })
 export default class UserExports extends React.PureComponent {
     static propTypes = propTypes;
+    static tableKeyExtractor = d => d.id;
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            selectedExport: 0,
+        };
 
         this.exportsTableHeader = [
             {
@@ -196,8 +202,13 @@ export default class UserExports extends React.PureComponent {
         return userExportsRequest;
     };
 
+    handleRowClick = (rowKey) => {
+        this.setState({ selectedExport: rowKey });
+    }
+
     render() {
         const { userExports } = this.props;
+        const { selectedExport } = this.state;
 
         return (
             <div styleName="user-exports">
@@ -206,12 +217,19 @@ export default class UserExports extends React.PureComponent {
                         {exportStrings.userExportsHeader}
                     </h2>
                 </header>
-                <div styleName="table-container">
-                    <Table
-                        styleName="user-exports-table"
-                        data={userExports || emptyList}
-                        headers={this.exportsTableHeader}
-                        keyExtractor={u => u.id}
+                <div styleName="main-container">
+                    <div styleName="table-container">
+                        <Table
+                            data={userExports || emptyList}
+                            headers={this.exportsTableHeader}
+                            keyExtractor={UserExports.tableKeyExtractor}
+                            highlightRowKey={selectedExport}
+                            onBodyClick={this.handleRowClick}
+                        />
+                    </div>
+                    <ExportPreview
+                        styleName="preview"
+                        exportId={selectedExport}
                     />
                 </div>
             </div>
