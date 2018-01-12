@@ -77,7 +77,7 @@ export default class FormSaveBuilder {
     }
     handleLeadSaveSuccess = leadId => (response) => {
         try {
-            schema.validate(response, 'galleryFile');
+            schema.validate(response, 'lead');
 
             notify.send({
                 title: notificationStrings.leadSave,
