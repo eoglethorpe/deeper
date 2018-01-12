@@ -12,6 +12,7 @@ import {
 } from '../../../public/components/View';
 import {
     SelectInput,
+    MultiSelectInput,
 } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
@@ -347,7 +348,7 @@ export default class GeoSelection extends React.PureComponent {
                 className={className}
                 styleName="geo-selection"
             >
-                <SelectInput
+                <MultiSelectInput
                     className="flat-select-input"
                     styleName="flat-select-input"
                     label={label}
@@ -356,7 +357,6 @@ export default class GeoSelection extends React.PureComponent {
                     options={flatLocations}
                     value={flatValues}
                     disabled={disabled}
-                    multiple
                 />
                 <TransparentAccentButton
                     styleName="map-modal-button"
@@ -386,7 +386,7 @@ export default class GeoSelection extends React.PureComponent {
                                     value={selectedRegion}
                                     hideClearButton
                                 />
-                                <SelectInput
+                                <MultiSelectInput
                                     styleName="map-selection-select"
                                     onChange={this.handleLocationSelection}
                                     options={locations[selectedRegion]}
@@ -396,7 +396,6 @@ export default class GeoSelection extends React.PureComponent {
                                     showHintAndError={false}
                                     showLabel={false}
                                     value={values[selectedRegion]}
-                                    multiple
                                 />
                             </div>
                         }

@@ -124,7 +124,7 @@ export default class AssistedTagging extends React.PureComponent {
         </span>
     );
 
-    handleDynamicStyleOverride = (popupContainer) => {
+    handleAssitedBoxInvalidate = (popupContainer) => {
         const popupRect = popupContainer.getBoundingClientRect();
         const primaryContainerRect = this.primaryContainerRect || (
             this.primaryContainer && this.primaryContainer.getBoundingClientRect());
@@ -532,46 +532,44 @@ export default class AssistedTagging extends React.PureComponent {
                         )
                     }
                 </div>
-                <FloatingContainer
-                    closeOnBlur
-                    parentContainer={this.state.activeHighlightRef}
-                    onDynamicStyleOverride={this.handleDynamicStyleOverride}
-                    containerId="assisted-actions-container"
-                    onClose={this.handleOnCloseAssistedActions}
-                    show={assitedActionsVisible}
-                >
-                    <div styleName="assisted-actions">
-                        <header styleName="header">
-                            <div styleName="title">
-                                <span styleName="label">Source:</span>
-                                <span styleName="source">{activeHighlightDetails.source}</span>
+                {assitedActionsVisible &&
+                    <FloatingContainer
+                        parent={this.state.activeHighlightRef}
+                        onInvalidate={this.handleAssitedBoxInvalidate}
+                    >
+                        <div styleName="assisted-actions">
+                            <header styleName="header">
+                                <div styleName="title">
+                                    <span styleName="label">Source:</span>
+                                    <span styleName="source">{activeHighlightDetails.source}</span>
+                                </div>
+                                <TransparentPrimaryButton
+                                    onClick={this.handleOnCloseAssistedActions}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            </header>
+                            <div styleName="info-bar">
+                                <span>{activeHighlightDetails.text}</span>
                             </div>
-                            <TransparentPrimaryButton
-                                onClick={this.handleOnCloseAssistedActions}
+                            <ListView
+                                styleName="sectors"
+                                modifier={this.renderSectorList}
+                                data={activeHighlightDetails.sectors}
+                                keyExtractor={this.calcSectorKey}
+                            />
+                            <PrimaryButton
+                                iconName={iconNames.add}
+                                className={styles['add-button']}
+                                onClick={() => this.handleEntryAdd(
+                                    activeHighlightDetails.text,
+                                )}
                             >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        </header>
-                        <div styleName="info-bar">
-                            <span>{activeHighlightDetails.text}</span>
+                                {entryStrings.addEntryButtonLabel}
+                            </PrimaryButton>
                         </div>
-                        <ListView
-                            styleName="sectors"
-                            modifier={this.renderSectorList}
-                            data={activeHighlightDetails.sectors}
-                            keyExtractor={this.calcSectorKey}
-                        />
-                        <PrimaryButton
-                            iconName={iconNames.add}
-                            className={styles['add-button']}
-                            onClick={() => this.handleEntryAdd(
-                                activeHighlightDetails.text,
-                            )}
-                        >
-                            {entryStrings.addEntryButtonLabel}
-                        </PrimaryButton>
-                    </div>
-                </FloatingContainer>
+                    </FloatingContainer>
+                }
             </div>
         );
     }
