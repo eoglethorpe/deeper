@@ -11,7 +11,7 @@ const propTypes = {
     className: PropTypes.string,
     onAreaClick: PropTypes.func,
     selections: PropTypes.arrayOf(PropTypes.string),
-    geoJson: PropTypes.object,  // eslint-disable-line
+    geoJson: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     geoJsonBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
 };
 

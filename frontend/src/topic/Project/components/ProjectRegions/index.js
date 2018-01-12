@@ -33,7 +33,7 @@ import ProjectRegionDetail from '../ProjectRegionDetail';
 import styles from './styles.scss';
 
 const propTypes = {
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

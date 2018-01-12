@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect'; // eslint-disable-line no-unused-vars
+import { createSelector } from 'reselect';
 
 const emptyObject = {};
 

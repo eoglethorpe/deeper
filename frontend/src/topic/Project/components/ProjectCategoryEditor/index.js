@@ -42,8 +42,7 @@ import AddCategoryEditor from '../AddCategoryEditor';
 import styles from './styles.scss';
 
 const propTypes = {
-    // eslint-disable-next-line react/forbid-prop-types
-    categoryEditorList: PropTypes.array.isRequired,
+    categoryEditorList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,

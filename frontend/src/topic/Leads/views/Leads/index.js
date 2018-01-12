@@ -40,8 +40,6 @@ import {
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
 
-    hierarchialDataSelector,
-
     setLeadsAction,
 
     leadPageFilterSelector,
@@ -77,9 +75,8 @@ import Visualizations from './components/Visualizations';
 import styles from './styles.scss';
 
 const propTypes = {
-    filters: PropTypes.object.isRequired, // eslint-disable-line
-    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
-    leads: PropTypes.array, // eslint-disable-line
+    filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leads: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 
     activePage: PropTypes.number.isRequired,
     activeSort: PropTypes.string.isRequired,
@@ -101,7 +98,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
-    hierarchicalData: hierarchialDataSelector(state),
 
     leads: leadsForProjectSelector(state, props),
     totalLeadsCount: totalLeadsCountForProjectSelector(state, props),

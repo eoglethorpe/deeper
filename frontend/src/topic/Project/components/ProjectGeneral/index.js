@@ -56,12 +56,12 @@ import styles from './styles.scss';
 
 const propTypes = {
     projectId: PropTypes.number.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    projectOptions: PropTypes.object.isRequired, // eslint-disable-line
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProject: PropTypes.func.isRequired,
     unsetUserProjectMembership: PropTypes.func.isRequired,
     setUserProjectMembership: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
 };
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    SelectInput,
+    MultiSelectInput,
 } from '../../../../../public/components/Input';
 
 import {
@@ -18,9 +18,9 @@ const emptyList = [];
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    api: PropTypes.object.isRequired,      // eslint-disable-line
-    attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.array,      // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -61,15 +61,15 @@ export default class Multiselect extends React.PureComponent {
             className={styles['multiselect-content']}
             key={key}
         >
-            <span className={styles['multiselect-name']}>{data.label}</span>
+            <span className={styles['multiselect-name']}>
+                {data.label}
+            </span>
         </div>
     )
 
     render() {
         const {
-            attribute: {
-                value = emptyList,
-            } = {},
+            attribute: { value = emptyList } = {},
             data = emptyList,
         } = this.props;
 
@@ -77,11 +77,10 @@ export default class Multiselect extends React.PureComponent {
 
         return (
             <div styleName="multiselect-list">
-                <SelectInput
+                <MultiSelectInput
                     onChange={this.handleChange}
                     options={data}
-                    multiple
-                    clearable={false}
+                    hideClearButton
                     styleName="multiselect"
                     value={value}
                     keyExtractor={Multiselect.valueKeyExtractor}

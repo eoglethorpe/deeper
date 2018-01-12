@@ -11,7 +11,7 @@ import {
     NonFieldErrors,
     TextInput,
     TextArea,
-    SelectInput,
+    MultiSelectInput,
     requiredCondition,
 } from '../../../../public/components/Input';
 import {
@@ -27,12 +27,12 @@ import styles from './styles.scss';
 
 const propTypes = {
     changeCallback: PropTypes.func.isRequired,
-    regionOptions: PropTypes.array.isRequired, //eslint-disable-line
-    userGroupsOptions: PropTypes.array.isRequired, //eslint-disable-line
+    regionOptions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    userGroupsOptions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     failureCallback: PropTypes.func.isRequired,
-    formErrors: PropTypes.array.isRequired, //eslint-disable-line
-    formFieldErrors: PropTypes.object.isRequired, //eslint-disable-line
-    formValues: PropTypes.object.isRequired, //eslint-disable-line
+    formErrors: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    formFieldErrors: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    formValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     handleFormCancel: PropTypes.func.isRequired,
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,
@@ -144,7 +144,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     value={formValues.endDate}
                     error={formFieldErrors.endDate}
                 />
-                <SelectInput
+                <MultiSelectInput
                     label={projectStrings.projectRegionLabel}
                     formname="regions"
                     placeholder={projectStrings.projectRegionPlaceholder}
@@ -154,9 +154,8 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.regions}
-                    multiple
                 />
-                <SelectInput
+                <MultiSelectInput
                     label={projectStrings.projectUserGroupLabel}
                     formname="userGroups"
                     placeholder={projectStrings.projectUserGroupPlaceholder}
@@ -166,7 +165,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
                     error={formFieldErrors.userGroups}
-                    multiple
                 />
             </Form>
         );

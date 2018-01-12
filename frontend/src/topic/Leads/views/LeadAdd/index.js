@@ -79,9 +79,9 @@ const mapDispatchToProps = dispatch => ({
 
 const propTypes = {
     activeLeadId: PropTypes.string,
-    activeLead: PropTypes.object, // eslint-disable-line
-    addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line
-    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line
+    activeLead: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     addLeadViewLeadNext: PropTypes.func.isRequired,
     addLeadViewLeadPrev: PropTypes.func.isRequired,

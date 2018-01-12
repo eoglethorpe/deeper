@@ -36,7 +36,6 @@ import {
 import notify from '../../../../common/notify';
 
 import {
-    usersInformationListSelector,
     unSetMembershipAction,
     setUsersMembershipAction,
     setUserMembershipAction,
@@ -53,12 +52,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    memberData: PropTypes.array.isRequired, // eslint-disable-line
-    users: PropTypes.array.isRequired, // eslint-disable-line
-    unSetMembership: PropTypes.func.isRequired, // eslint-disable-line
+    memberData: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    unSetMembership: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
     userGroupId: PropTypes.number.isRequired,
     setUserMembership: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     isCurrentUserAdmin: PropTypes.bool.isRequired,
 };
 
@@ -66,17 +64,13 @@ const defaultProps = {
     className: '',
 };
 
-const mapStateToProps = (state, props) => ({
-    users: usersInformationListSelector(state, props),
-});
-
 const mapDispatchToProps = dispatch => ({
     unSetMembership: params => dispatch(unSetMembershipAction(params)),
     setUsersMembership: params => dispatch(setUsersMembershipAction(params)),
     setUserMembership: params => dispatch(setUserMembershipAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class MembersTable extends React.PureComponent {
     static propTypes = propTypes;

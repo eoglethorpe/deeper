@@ -10,7 +10,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    attribute: PropTypes.object, // eslint-disable-line
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

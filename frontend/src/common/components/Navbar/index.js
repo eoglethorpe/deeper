@@ -82,7 +82,7 @@ const propTypes = {
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
-    userInformation: PropTypes.object, // eslint-disable-line
+    userInformation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     userProjects: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.number,
@@ -324,7 +324,7 @@ export default class Navbar extends React.PureComponent {
                     render={
                         () => (
                             <SelectInput
-                                clearable={false}
+                                hideClearButton
                                 keySelector={this.projectKeySelector}
                                 labelSelector={this.projectLabelSelector}
                                 onChange={this.handleProjectChange}

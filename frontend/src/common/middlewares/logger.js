@@ -1,5 +1,5 @@
-// eslint-disable-next-line
-const logger = store => next => action => {
+// eslint-disable-next-line no-unused-vars
+const logger = store => next => (action) => {
     if (action) {
         console.info(`DISPATCHING ${action.type}`);
     }

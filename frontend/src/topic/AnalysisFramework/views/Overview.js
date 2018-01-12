@@ -32,7 +32,7 @@ import widgetStore from '../widgetStore';
 import styles from './styles.scss';
 
 const propTypes = {
-    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addWidget: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,

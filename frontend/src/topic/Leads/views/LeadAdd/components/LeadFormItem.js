@@ -29,12 +29,10 @@ import styles from '../styles.scss';
 const propTypes = {
     leadKey: PropTypes.string.isRequired,
     active: PropTypes.bool.isRequired,
-    lead: PropTypes.object.isRequired, // eslint-disable-line
-    leadOptions: PropTypes.object.isRequired, // eslint-disable-line
+    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     onFormSubmitFailure: PropTypes.func.isRequired,
-    // TODO: remove disable later
-    // eslint-disable-next-line
     onFormSubmitSuccess: PropTypes.func.isRequired,
 
     addLeadViewLeadChange: PropTypes.func.isRequired,

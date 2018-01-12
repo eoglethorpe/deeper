@@ -41,8 +41,8 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     onModalClose: PropTypes.func.isRequired,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
-    projectOptions: PropTypes.object.isRequired, // eslint-disable-line
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
 };

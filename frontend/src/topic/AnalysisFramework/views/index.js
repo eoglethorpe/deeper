@@ -35,7 +35,7 @@ import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
-    analysisFramework: PropTypes.object, // eslint-disable-line
+    analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     analysisFrameworkId: PropTypes.string.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
 };

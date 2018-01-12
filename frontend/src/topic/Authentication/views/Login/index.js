@@ -62,8 +62,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
-    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
-    location: PropTypes.object.isRequired, // eslint-disable-line
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     login: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,

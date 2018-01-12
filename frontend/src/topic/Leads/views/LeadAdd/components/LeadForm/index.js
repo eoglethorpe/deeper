@@ -8,6 +8,7 @@ import {
     HiddenInput,
     NonFieldErrors,
     SelectInput,
+    MultiSelectInput,
     TextArea,
     TextInput,
     requiredCondition,
@@ -260,13 +261,12 @@ export default class LeadForm extends React.PureComponent {
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 >
-                    <SelectInput
+                    <MultiSelectInput
                         error={fieldErrors.assignee}
                         formname="assignee"
                         keySelector={this.keySelector}
                         label={leadsString.assigneeLabel}
                         labelSelector={this.labelSelector}
-                        multiple
                         options={leadOptions.assignee}
                         placeholder={leadsString.selectInputPlaceholderLabel}
                         showHintAndError

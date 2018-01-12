@@ -7,7 +7,7 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 import {
-    SelectInput,
+    MultiSelectInput,
 } from '../../../../../public/components/Input';
 
 import { updateAttribute } from './utils';
@@ -20,8 +20,8 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    api: PropTypes.object.isRequired, // eslint-disable-line
-    attribute: PropTypes.object, // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -228,7 +228,7 @@ export default class Matrix2dList extends React.PureComponent {
                 className={styles['tag-sector']}
             >
                 {data.sector.title}
-                <SelectInput
+                <MultiSelectInput
                     className={styles['tag-sector-select']}
                     value={data.subsectors}
                     options={data.sector.subsectors}
@@ -242,7 +242,6 @@ export default class Matrix2dList extends React.PureComponent {
                         data.sector.id,
                         subsectors,
                     )}
-                    multiple
                 />
             </div>
         </div>

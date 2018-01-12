@@ -60,8 +60,8 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     setUserGroups: PropTypes.func.isRequired,
-    userGroups: PropTypes.array, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userGroups: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     unSetUserGroup: PropTypes.func.isRequired,
     userId: PropTypes.string.isRequired,
 };

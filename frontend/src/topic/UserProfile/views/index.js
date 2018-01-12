@@ -51,14 +51,12 @@ import styles from './styles.scss';
 const propTypes = {
     setUserInformation: PropTypes.func.isRequired,
     unsetUser: PropTypes.func.isRequired,
-    user: PropTypes.object, // eslint-disable-line
-    userInformation: PropTypes.object.isRequired, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    user: {},
 };
 
 

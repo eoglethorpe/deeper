@@ -46,9 +46,9 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     onModalClose: PropTypes.func.isRequired,
-    userGroupDetails: PropTypes.object.isRequired, // eslint-disable-line
-    userGroupId: PropTypes.number, // eslint-disable-line
-    users: PropTypes.array.isRequired, // eslint-disable-line
+    userGroupDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    userGroupId: PropTypes.number, // eslint-disable-line react/forbid-prop-types
+    users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setUsers: PropTypes.func.isRequired,
     setUsersMembership: PropTypes.func.isRequired,
 };

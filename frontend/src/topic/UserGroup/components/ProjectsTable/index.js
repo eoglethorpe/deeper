@@ -53,11 +53,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    userGroup: PropTypes.object.isRequired, // eslint-disable-line
-    projects: PropTypes.array.isRequired,// eslint-disable-line
-    setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line
-    unSetProject: PropTypes.func.isRequired, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userGroup: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    setUserGroupProject: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
+    unSetProject: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     isCurrentUserAdmin: PropTypes.bool.isRequired,
 };
 
