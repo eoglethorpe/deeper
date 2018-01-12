@@ -11,7 +11,6 @@ import { GridLayout } from '../../../public/components/View';
 import {
     TransparentButton,
     TransparentDangerButton,
-    Button,
     SuccessButton,
 } from '../../../public/components/Action';
 
@@ -261,6 +260,7 @@ export default class Overview extends React.PureComponent {
                         <div styleName="entry-actions" />
                         <div styleName="action-buttons">
                             <Link
+                                styleName="link-to-list"
                                 to="/list"
                                 replace
                             >

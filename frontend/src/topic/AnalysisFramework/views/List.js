@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { GridLayout } from '../../../public/components/View';
 
 import {
-    Button,
     SuccessButton,
     TransparentButton,
 } from '../../../public/components/Action';
@@ -32,7 +31,7 @@ import widgetStore from '../widgetStore';
 import styles from './styles.scss';
 
 const propTypes = {
-    analysisFramework: PropTypes.object.isRequired,    // eslint-disable-line
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addWidget: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     removeWidget: PropTypes.func.isRequired,
@@ -228,6 +227,7 @@ export default class List extends React.PureComponent {
                         </h2>
                         <div styleName="action-buttons">
                             <Link
+                                styleName="link-to-overview"
                                 to="/overview"
                                 replace
                             >

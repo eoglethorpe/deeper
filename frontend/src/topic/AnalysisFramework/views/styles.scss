@@ -72,6 +72,10 @@
                     >* {
                         margin-left: $spacing-medium;
                     }
+
+                    .link-to-list {
+                        @extend %button-like-link;
+                    }
                 }
             }
 
@@ -138,7 +142,6 @@
                     button {
                         margin-left: $spacing-small;
                         padding: 0 $spacing-small;
-                        height: 24px;
                     }
                 }
             }
@@ -147,19 +150,23 @@
         .bottom {
             display: flex;
             flex-direction: column;
-            border-top: $width-separator-medium solid $color-separator;
             height: calc(100% - #{$height-top});
 
             .header {
                 display: flex;
                 flex-shrink: 0;
+                align-items: center;
                 justify-content: space-between;
                 border-bottom: $width-separator-medium solid $color-separator;
-                padding: $spacing-medium $spacing-medium-alt;
+                padding: $spacing-small $spacing-medium-alt;
 
                 .action-buttons {
                     >* {
                         margin-left: $spacing-medium;
+                    }
+
+                    .link-to-overview {
+                        @extend %button-like-link;
                     }
                 }
             }
