@@ -12,6 +12,7 @@ class EntryModifier {
         this.entry = entry;
         this.pristine = entry && entryAccessor.getUiState(entry).pristine;
         this.values = entry && entryAccessor.getValues(entry);
+        this.colors = entry && entryAccessor.getColors(entry);
         this.changeEntryValues = changeEntryValues;
     }
 
@@ -59,16 +60,16 @@ class EntryModifier {
         return this;
     }
 
-    setHighlightColor(color) {
+    setHighlightColor(widgetId, color) {
         if (!this.entry) {
             return this;
         }
 
-        const settings = {
-            color: { $set: color },
-        };
+        const settings = { $auto: {
+            [widgetId]: { $set: color },
+        } };
 
-        this.values = update(this.values, settings);
+        this.colors = update(this.colors, settings);
         return this;
     }
 
@@ -189,6 +190,7 @@ class EntryModifier {
             this.changeEntryValues(
                 entryAccessor.getKey(this.entry),
                 this.values,
+                this.colors,
                 this.pristine,
             );
         }
@@ -202,7 +204,6 @@ class EntryBuilder {
         this.attributes = [];
         this.filterData = [];
         this.exportData = [];
-        this.color = undefined;
     }
 
     setExcerpt(excerpt) {
@@ -243,10 +244,6 @@ class EntryBuilder {
         return this;
     }
 
-    setHighlightColor(color) {
-        this.color = color;
-    }
-
     addExportData(exportableId, exportData) {
         this.exportData.push({
             exportable: exportableId,
@@ -263,7 +260,6 @@ class EntryBuilder {
             attributes: this.attributes,
             fta: this.filterData,
             exportData: this.exportData,
-            color: this.color,
         };
 
         this.addEntry(values);
@@ -384,12 +380,21 @@ export default class API {
         return this.getEntryForExcerpt(data);
     }
 
+    getHighlightColor = (colorObj) => {
+        if (!colorObj) {
+            return DEFAULT_HIGHLIGHT_COLOR;
+        }
+
+        const validColors = Object.values(colorObj).filter(c => c);
+        return validColors[validColors.length - 1] || DEFAULT_HIGHLIGHT_COLOR;
+    }
+
     getEntryHighlights() {
         return this.entries
             .filter(entry => entryAccessor.getValues(entry).entryType === 'excerpt')
             .map(entry => ({
                 text: entryAccessor.getValues(entry).excerpt,
-                color: entryAccessor.getValues(entry).color || DEFAULT_HIGHLIGHT_COLOR,
+                color: this.getHighlightColor(entryAccessor.getColors(entry)),
             })).filter(h => h.text);
     }
 

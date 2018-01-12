@@ -43,12 +43,13 @@ export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
     values,
 });
 
-export const changeEntryAction = ({ leadId, entryId, data, values, uiState }) => ({
+export const changeEntryAction = ({ leadId, entryId, data, values, colors, uiState }) => ({
     type: EE__ENTRY_CHANGE,
     leadId,
     entryId,
     data,
     values,
+    colors,
     uiState,
 });
 
@@ -163,6 +164,7 @@ const editEntryViewChangeEntry = (state, action) => {
 
         data = {},
         values = {},
+        colors = {},
         uiState = {},
     } = action;
 
@@ -176,6 +178,7 @@ const editEntryViewChangeEntry = (state, action) => {
                         data: { $merge: data },
                         widget: {
                             values: { $merge: values },
+                            colors: { $auto: { $merge: colors } },
                         },
                         uiState: { $merge: uiState },
                     },

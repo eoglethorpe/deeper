@@ -186,9 +186,14 @@ test('should change entry', () => {
                             id: 'flksjal',
                             serverId: 2,
                         },
-                        widget: { values: {
-                            title: 'Entry #1',
-                        } },
+                        widget: {
+                            values: {
+                                title: 'Entry #1',
+                            },
+                            colors: {
+                                id1: '#fff',
+                            },
+                        },
                         uiState: {
                             error: false,
                             pristine: false,
@@ -207,6 +212,10 @@ test('should change entry', () => {
         values: {
             some: 'attribute',
         },
+        colors: {
+            id1: '#f00',
+            id2: '#0f0',
+        },
         uiState: { error: true },
     });
     const after = {
@@ -221,10 +230,16 @@ test('should change entry', () => {
                             serverId: 2,
                             versionId: 1,
                         },
-                        widget: { values: {
-                            title: 'Entry #1',
-                            some: 'attribute',
-                        } },
+                        widget: {
+                            values: {
+                                title: 'Entry #1',
+                                some: 'attribute',
+                            },
+                            colors: {
+                                id1: '#f00',
+                                id2: '#0f0',
+                            },
+                        },
                         uiState: {
                             error: true,
                             pristine: false,
