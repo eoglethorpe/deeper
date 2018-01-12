@@ -35,6 +35,7 @@ const countriesString = {
     informRiskIndexLabel: string[77],
     hazardAndExposureLabel: string[78],
     vulnerabilityLabel: string[79],
+    lackOfCopingCapacityLabel: string[80],
 
     totalPopulationLabel: string[81],
     totalPopulationPlaceholder: string[82],

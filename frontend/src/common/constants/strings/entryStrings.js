@@ -50,6 +50,12 @@ const entryStrings = {
     regionSelectPlaceholder: string[533],
     geoOptionsFatalMessage: string[534],
     locationSelectPlaceholder: string[535],
+
+
+    searchFilterLabel: string[536],
+    searchFilterPlaceholder: string[537],
+    createdByFilterLabel: string[538],
+    createdAtFilterLabel: string[539],
 };
 
 export default entryStrings;
