@@ -442,6 +442,9 @@ const strings = {
 
     618: 'Server error',
     619: 'Failed connecting to server',
+    620: 'View all exports',
+    621: 'User Exports',
+    622: 'Unable to load your previous exports',
 
     // Aanalysis Framework Strings
 

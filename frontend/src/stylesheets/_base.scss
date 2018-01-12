@@ -103,6 +103,7 @@ body {
 }
 
 %button-like-link {
+    @include shadow-medium;
     border-radius: 3px;
     background-color: $color-primary;
     padding: $spacing-small $spacing-medium;

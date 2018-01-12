@@ -160,6 +160,12 @@ export default class GeoSelection extends React.PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
+        }
+    }
+
     createGeoOptionsRequest = (projectId) => {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))

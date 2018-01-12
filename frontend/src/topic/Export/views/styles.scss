@@ -18,6 +18,11 @@
             .button {
                 margin-left: $spacing-small;
             }
+
+            .link {
+                @extend %button-like-link;
+                margin-left: $spacing-small;
+            }
         }
     }
 

@@ -30,6 +30,8 @@ const pathNames = {
 
     apiDocs: '/api-docs/',
 
+    userExports: '/exports/',
+
     homeScreen: '/',
 
     fourHundredFour: undefined,

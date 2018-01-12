@@ -1,0 +1,7 @@
+@import '../../../stylesheets/base';
+
+.user-exports {
+    @extend %main-content;
+    display: flex;
+    flex-direction: column;
+}

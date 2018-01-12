@@ -17,6 +17,7 @@ const allLinks = {
 
     userProfile: l,
     apiDocs: l,
+    userExports: l,
 
     adminPanel: la,
     projectSelect: l,
@@ -70,6 +71,8 @@ const validLinks = {
     weeklySnapshot: allLinksWithProjectDisabled,
 
     apiDocs: allLinksWithProjectDisabled,
+
+    userExports: allLinks,
 };
 
 export default validLinks;

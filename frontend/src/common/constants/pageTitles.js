@@ -30,6 +30,7 @@ const pageTitles = {
     weeklySnapshot: 'Weekly Snapshot',
 
     apiDocs: 'Api Doc',
+    userExports: 'User Exports',
 
     fourHundredFour: '404',
 };
