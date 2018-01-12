@@ -22,6 +22,11 @@ const allLinks = {
     projectSelect: l,
 };
 
+const allLinksWithProjectDisabled = {
+    ...allLinks,
+    projectSelect: { ...l, disable: true },
+};
+
 // eslint-disable-next-line no-unused-vars
 const blacklistLinks = (links, blacklist) => {
     const newLinks = { ...links };
@@ -42,29 +47,29 @@ const validLinks = {
     dashboard: allLinks,
 
     leads: allLinks,
-    addLeads: allLinks,
+    addLeads: allLinksWithProjectDisabled,
 
     entries: allLinks,
-    editEntries: allLinks,
+    editEntries: allLinksWithProjectDisabled,
 
     ary: allLinks,
-    editAry: allLinks,
+    editAry: allLinksWithProjectDisabled,
 
     export: allLinks,
 
-    userProfile: allLinks,
-    userGroup: allLinks,
+    userProfile: allLinksWithProjectDisabled,
+    userGroup: allLinksWithProjectDisabled,
 
     projects: allLinks,
-    countries: allLinks,
+    countries: allLinksWithProjectDisabled,
 
-    analysisFramework: allLinks,
+    analysisFramework: allLinksWithProjectDisabled,
 
-    categoryEditor: allLinks,
+    categoryEditor: allLinksWithProjectDisabled,
 
-    weeklySnapshot: allLinks,
+    weeklySnapshot: allLinksWithProjectDisabled,
 
-    apiDocs: allLinks,
+    apiDocs: allLinksWithProjectDisabled,
 };
 
 export default validLinks;

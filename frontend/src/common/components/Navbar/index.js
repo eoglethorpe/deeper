@@ -320,7 +320,9 @@ export default class Navbar extends React.PureComponent {
                 <Cloak
                     requireLogin={projectSelectInputLink.requireLogin}
                     requireAdminRights={projectSelectInputLink.requireAdminRights}
-                    requireProject={projectSelectInputLink.requireAdminRights}
+                    requireProject={
+                        projectSelectInputLink.requireProject
+                    }
                     render={
                         () => (
                             <SelectInput
@@ -333,7 +335,9 @@ export default class Navbar extends React.PureComponent {
                                 showHintAndError={false}
                                 showLabel={false}
                                 className={styles['project-select-input']}
-                                disabled={userProjects.length <= 0}
+                                disabled={
+                                    userProjects.length <= 0 || projectSelectInputLink.disable
+                                }
                                 value={activeProject}
                             />
                         )
