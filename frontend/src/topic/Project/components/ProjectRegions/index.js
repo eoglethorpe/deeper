@@ -65,19 +65,19 @@ export default class ProjectRegions extends React.PureComponent {
 
         this.addRegionOptions = [
             {
-                key: 'new',
-                label: projectStrings.createNewRegionText,
-            },
-            {
                 key: 'old',
                 label: projectStrings.useExistingRegionText,
+            },
+            {
+                key: 'new',
+                label: projectStrings.createNewRegionText,
             },
         ];
 
         this.state = {
             displayRegionList: projectDetails.regions || emptyList,
             selectedRegion,
-            selectedAddRegionOption: 'new',
+            selectedAddRegionOption: 'old',
             searchInputValue: '',
             addRegionModal: false,
         };
@@ -135,7 +135,7 @@ export default class ProjectRegions extends React.PureComponent {
     handleModalClose = () => {
         this.setState({
             addRegionModal: false,
-            selectedAddRegionOption: 'new',
+            selectedAddRegionOption: 'old',
         });
     };
 
@@ -226,18 +226,18 @@ export default class ProjectRegions extends React.PureComponent {
                                         selectedOption => this.handleRadioInputChange(
                                             selectedOption)
                                     }
-                                    selected="new"
+                                    value="old"
                                 />
-                                {selectedAddRegionOption === 'new' &&
-                                    <AddRegion
-                                        styleName="add-region"
+                                {selectedAddRegionOption === 'old' &&
+                                    <AddExistingRegion
+                                        styleName="add-existing-region"
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}
                                     />
                                 }
-                                {selectedAddRegionOption === 'old' &&
-                                    <AddExistingRegion
-                                        styleName="add-existing-region"
+                                {selectedAddRegionOption === 'new' &&
+                                    <AddRegion
+                                        styleName="add-region"
                                         projectId={projectDetails.id}
                                         onModalClose={this.handleModalClose}
                                     />
