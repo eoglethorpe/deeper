@@ -29,7 +29,7 @@ import styles from './styles.scss';
 
 
 const propTypes = {
-    api: PropTypes.object.isRequired, // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

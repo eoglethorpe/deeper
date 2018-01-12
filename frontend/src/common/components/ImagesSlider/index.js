@@ -15,7 +15,7 @@ import styles from './styles.scss';
 
 
 const propTypes = {
-    galleryIds: PropTypes.array, //eslint-disable-line
+    galleryIds: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
 };
 

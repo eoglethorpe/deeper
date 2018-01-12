@@ -44,15 +44,13 @@ import AddRegion from '../../../common/components/AddRegion';
 import styles from './styles.scss';
 
 const propTypes = {
-    countries: PropTypes.array, // eslint-disable-line
+    countries: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     setRegions: PropTypes.func.isRequired,
-    location: PropTypes.object.isRequired, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.string,
 };
 
 const defaultProps = {
-    location: {},
     countries: [],
     countryId: undefined,
 };

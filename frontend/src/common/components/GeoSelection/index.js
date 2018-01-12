@@ -46,11 +46,11 @@ const propTypes = {
     projectId: PropTypes.number.isRequired,
     label: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.array.isRequired, //eslint-disable-line
-    regions: PropTypes.array.isRequired, //eslint-disable-line
+    value: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
     setGeoOptions: PropTypes.func.isRequired,
-    geoOptions: PropTypes.object, //eslint-disable-line
+    geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

@@ -43,17 +43,15 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import schema from '../../../common/schema';
 
 const propTypes = {
-    userGroup: PropTypes.object, // eslint-disable-line
+    userGroup: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setUserGroup: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
     unSetUserGroup: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userGroupId: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
-    userGroups: [],
-    leads: [],
 };
 
 const mapStateToProps = (state, props) => ({

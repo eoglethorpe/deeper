@@ -44,20 +44,20 @@ import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadP
 import styles from './styles.scss';
 
 const propTypes = {
-    api: PropTypes.object.isRequired, // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
-    lead: PropTypes.object, // eslint-disable-line
+    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setActiveEntry: PropTypes.func.isRequired,
 
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
-    choices: PropTypes.object.isRequired, // eslint-disable-line
+    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     saveAllDisabled: PropTypes.bool.isRequired,
     saveAllPending: PropTypes.bool.isRequired,
@@ -385,6 +385,10 @@ export default class Overview extends React.PureComponent {
 
             saveAllDisabled,
             widgetDisabled,
+            lead,
+            api,
+            onEntryAdd,
+            onEntryDelete,
         } = this.props;
 
         const selectedEntry = entries.find(
@@ -445,8 +449,8 @@ export default class Overview extends React.PureComponent {
                                     for="simplified-preview"
                                 >
                                     <SimplifiedLeadPreview
-                                        leadId={this.props.lead.id}
-                                        highlights={this.props.api.getEntryHighlights()}
+                                        leadId={lead.id}
+                                        highlights={api.getEntryHighlights()}
                                         highlightModifier={this.renderHighlightSimplifiedExcerpt}
                                         onLoad={this.handleLoadImages}
                                     />
@@ -456,8 +460,8 @@ export default class Overview extends React.PureComponent {
                                     for="assisted-tagging"
                                 >
                                     <AssistedTagging
-                                        lead={this.props.lead}
-                                        api={this.props.api}
+                                        lead={lead}
+                                        api={api}
                                     />
                                 </TabContent>
                                 <TabContent
@@ -465,7 +469,7 @@ export default class Overview extends React.PureComponent {
                                     for="original-preview"
                                 >
                                     <div styleName="lead-preview">
-                                        {this.renderLeadPreview(this.props.lead)}
+                                        {this.renderLeadPreview(lead)}
                                     </div>
                                 </TabContent>
                                 {
@@ -474,7 +478,7 @@ export default class Overview extends React.PureComponent {
                                         styleName="tab"
                                         for="images-preview"
                                     >
-                                        {this.renderLeadImages(this.props.lead)}
+                                        {this.renderLeadImages(lead)}
                                     </TabContent>
                                 }
                                 <TabContent
@@ -485,7 +489,7 @@ export default class Overview extends React.PureComponent {
                                         <ListView
                                             styleName="entries-list"
                                             modifier={this.renderEntriesList}
-                                            data={this.props.entries}
+                                            data={entries}
                                             keyExtractor={this.calcEntryKey}
                                         />
                                     </div>
@@ -511,14 +515,14 @@ export default class Overview extends React.PureComponent {
                             />
                             <PrimaryButton
                                 title={entryStrings.addEntryButtonTitle}
-                                onClick={this.props.onEntryAdd}
+                                onClick={onEntryAdd}
                             >
                                 {entryStrings.addEntryButtonLabel}
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
                                     title={entryStrings.removeEntryButtonTitle}
-                                    onClick={() => this.props.onEntryDelete(true)}
+                                    onClick={() => onEntryDelete(true)}
                                 >
                                     {entryStrings.removeEntryButtonLabel}
                                 </DangerButton>
@@ -526,7 +530,7 @@ export default class Overview extends React.PureComponent {
                             { selectedEntry && isMarkedForDelete &&
                                 <Button
                                     title={entryStrings.undoRemoveEntryButtonTitle}
-                                    onClick={() => this.props.onEntryDelete(false)}
+                                    onClick={() => onEntryDelete(false)}
                                 >
                                     {entryStrings.undoRemoveEntryButtonLabel}
                                 </Button>

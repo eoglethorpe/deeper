@@ -14,8 +14,6 @@ import {
 } from '../../../../../../public/components/Visualization';
 
 import {
-    leadsForProjectSelector,
-
     hierarchialDataSelector,
     chordDataSelector,
     correlationDataSelector,
@@ -26,22 +24,18 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    leads: PropTypes.array, // eslint-disable-line
-    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line
-    correlationData: PropTypes.object.isRequired, // eslint-disable-line
-    chordData: PropTypes.object.isRequired, // eslint-disable-line
-    forceDirectedData: PropTypes.object.isRequired, // eslint-disable-line
+    hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    correlationData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    chordData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    forceDirectedData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     className: '',
-    leads: [],
     totalLeadsCount: 0,
 };
 
-const mapStateToProps = (state, props) => ({
-    leads: leadsForProjectSelector(state, props),
-
+const mapStateToProps = state => ({
     hierarchicalData: hierarchialDataSelector(state),
     chordData: chordDataSelector(state),
     correlationData: correlationDataSelector(state),

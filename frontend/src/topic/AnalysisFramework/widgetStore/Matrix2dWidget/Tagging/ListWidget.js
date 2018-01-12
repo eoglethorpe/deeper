@@ -20,8 +20,8 @@ const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    api: PropTypes.object.isRequired, // eslint-disable-line
-    attribute: PropTypes.object, // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

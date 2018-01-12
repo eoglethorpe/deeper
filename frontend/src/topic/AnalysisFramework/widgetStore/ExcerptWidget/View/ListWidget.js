@@ -16,7 +16,7 @@ const propTypes = {
         image: PropTypes.string,
         entryType: PropTypes.string,
     }).isRequired,
-    attribute: PropTypes.object,      // eslint-disable-line
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

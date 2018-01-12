@@ -130,7 +130,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             this.leadFilterOptionsRequest.stop();
         }
 
-        // eslint-disable-next-line
+        // eslint-disable-next-line max-len
         this.leadFilterOptionsRequest = this.createRequestForProjectLeadFilterOptions(activeProject);
         this.leadFilterOptionsRequest.start();
     }

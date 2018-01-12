@@ -19,7 +19,7 @@ import styles from './styles.scss';
 
 
 const propTypes = {
-    images: PropTypes.array, //eslint-disable-line
+    images: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
 };
 

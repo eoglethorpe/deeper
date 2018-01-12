@@ -42,8 +42,8 @@ import styles from './styles.scss';
 // const NLP_THRESHOLD = 0;
 
 const propTypes = {
-    lead: PropTypes.object, // eslint-disable-line
-    api: PropTypes.object.isRequired, // eslint-disable-line
+    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

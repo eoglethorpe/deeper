@@ -52,14 +52,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
-    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setAccessToken: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
     stopSiloTasks: PropTypes.func.isRequired,
-    token: PropTypes.object.isRequired, // eslint-disable-line
+    token: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     logout: PropTypes.func.isRequired,
 };
 

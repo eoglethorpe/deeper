@@ -40,7 +40,7 @@ const propTypes = {
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    data: PropTypes.object, //eslint-disable-line
+    data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const DragHandle = SortableHandle(() => (

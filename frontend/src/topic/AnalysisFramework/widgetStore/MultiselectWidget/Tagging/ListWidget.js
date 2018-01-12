@@ -18,9 +18,9 @@ const emptyList = [];
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    api: PropTypes.object.isRequired,      // eslint-disable-line
-    attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.array,      // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

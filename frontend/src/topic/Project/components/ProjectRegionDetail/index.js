@@ -44,9 +44,9 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.number,
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number.isRequired,
-    regionDetails: PropTypes.object.isRequired, // eslint-disable-line
+    regionDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,

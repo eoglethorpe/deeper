@@ -39,8 +39,12 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired, //eslint-disable-line
-    data: PropTypes.object, //eslint-disable-line
+    onChange: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+};
+
+const defaultProps = {
+    data: undefined,
 };
 
 const DragHandle = SortableHandle(() => (
@@ -54,6 +58,7 @@ const emptyList = [];
 export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);

@@ -55,7 +55,7 @@ const leadStatusFilterOptions = [
 ];
 
 const defaultProps = { }; const propTypes = {
-    filters: PropTypes.object.isRequired, // eslint-disable-line
+    filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     activeProject: PropTypes.number.isRequired,
     setLeadViewFilters: PropTypes.func.isRequired,
     unsetLeadViewFilters: PropTypes.func.isRequired,

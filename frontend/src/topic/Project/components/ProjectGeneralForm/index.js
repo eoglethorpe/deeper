@@ -27,12 +27,12 @@ import styles from './styles.scss';
 
 const propTypes = {
     changeCallback: PropTypes.func.isRequired,
-    regionOptions: PropTypes.array.isRequired, //eslint-disable-line
-    userGroupsOptions: PropTypes.array.isRequired, //eslint-disable-line
+    regionOptions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    userGroupsOptions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     failureCallback: PropTypes.func.isRequired,
-    formErrors: PropTypes.array.isRequired, //eslint-disable-line
-    formFieldErrors: PropTypes.object.isRequired, //eslint-disable-line
-    formValues: PropTypes.object.isRequired, //eslint-disable-line
+    formErrors: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    formFieldErrors: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    formValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     handleFormCancel: PropTypes.func.isRequired,
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,

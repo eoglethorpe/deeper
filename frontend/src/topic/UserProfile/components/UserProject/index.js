@@ -60,8 +60,8 @@ const propTypes = {
     className: PropTypes.string,
     setUserProjects: PropTypes.func.isRequired,
     unSetProject: PropTypes.func.isRequired,
-    userProjects: PropTypes.array, // eslint-disable-line
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    userProjects: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.string.isRequired,
 };
 

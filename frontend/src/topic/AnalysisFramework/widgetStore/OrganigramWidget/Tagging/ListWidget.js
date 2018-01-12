@@ -25,9 +25,9 @@ import { updateAttribute } from './utils';
 const propTypes = {
     id: PropTypes.number.isRequired,
     entryId: PropTypes.string.isRequired,
-    api: PropTypes.object.isRequired,      // eslint-disable-line
-    attribute: PropTypes.object,      // eslint-disable-line
-    data: PropTypes.object,      // eslint-disable-line
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

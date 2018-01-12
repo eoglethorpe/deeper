@@ -233,7 +233,6 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         const {
             error,
             extractedText,
-            images, // eslint-disable-line
         } = this.state;
 
         if (error) {

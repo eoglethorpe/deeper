@@ -45,7 +45,7 @@ const propTypes = {
         title: PropTypes.string,
     }).isRequired,
     unSetRegion: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {

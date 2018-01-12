@@ -63,7 +63,6 @@ export default class MatrixCell extends React.PureComponent {
 
     render() {
         const {
-            onDrop, // eslint-disable-line no-unused-vars
             children,
             onClick,
         } = this.props;

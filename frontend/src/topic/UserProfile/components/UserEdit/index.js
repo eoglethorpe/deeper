@@ -55,7 +55,7 @@ const propTypes = {
     ]).isRequired,
     handleModalClose: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
-    userInformation: PropTypes.object.isRequired, // eslint-disable-line
+    userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
