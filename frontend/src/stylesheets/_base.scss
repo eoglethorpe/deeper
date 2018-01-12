@@ -105,10 +105,10 @@ body {
 %button-like-link {
     @include shadow-medium;
     border-radius: 3px;
-    background-color: $color-primary;
+    background-color: $color-foreground;
     padding: $spacing-small $spacing-medium;
     text-transform: uppercase;
-    color: $color-text-on-primary;
+    color: $color-label;
     font-family: inherit;
     font-size: $font-size-medium-alt;
     font-weight: $font-weight-normal;

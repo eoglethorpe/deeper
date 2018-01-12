@@ -4,4 +4,63 @@
     @extend %main-content;
     display: flex;
     flex-direction: column;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-medium-alt;
+    }
+
+    .table-container {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+
+        .user-exports-table {
+            flex-grow: 1;
+            background-color: $color-background-row-alt;
+        }
+
+        :global {
+            .raw-table {
+                .headers {
+                    .mime-type {
+                        width: 96px;
+                    }
+
+                    .file {
+                        width: 64px;
+                    }
+                }
+
+                .body {
+                    .cell {
+                        position: relative;
+
+                        .loading {
+                            span {
+                                width: $font-size-medium-alt;
+                                height: $font-size-medium-alt;
+                                font-size: $font-size-medium-alt;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .icon-wrapper {
+                display: flex;
+                justify-content: center;
+            }
+
+            .file-download {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
 }

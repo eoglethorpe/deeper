@@ -4,6 +4,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    Table,
+    FormattedDate,
+    LoadingAnimation,
+} from '../../../public/components/View';
+import {
     urlForExports,
     createUrlForExport,
     createParamsForUserExportsGET,
@@ -12,7 +17,7 @@ import {
 } from '../../../common/rest';
 
 import {
-    userExportsSelector,
+    userExportsListSelector,
     setUserExportsAction,
 } from '../../../common/redux';
 
@@ -20,29 +25,130 @@ import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 import {
     exportStrings,
+    iconNames,
 } from '../../../common/constants';
 
+import { leadTypeIconMap } from '../../../common/entities/lead';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    userExports: PropTypes.object.isRequired, //eslint-disable-line
+    userExports: PropTypes.array.isRequired, //eslint-disable-line
     setUserExports: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
-    userExports: userExportsSelector(state, props),
+    userExports: userExportsListSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setUserExports: params => dispatch(setUserExportsAction(params)),
 });
 
+const emptyList = [];
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserExports extends React.PureComponent {
     static propTypes = propTypes;
+
+    constructor(props) {
+        super(props);
+
+        this.exportsTableHeader = [
+            {
+                key: 'mime-type',
+                label: exportStrings.documentTypeHeaderLabel,
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
+                modifier: (row) => {
+                    const icon = leadTypeIconMap[row.mimeType] || iconNames.documentText;
+                    const url = row.file;
+                    return (
+                        <div className="icon-wrapper">
+                            <a href={url} target="_blank">
+                                <i className={icon} />
+                            </a>
+                        </div>
+                    );
+                },
+            },
+            {
+                key: 'exportedAt',
+                label: exportStrings.exportedAtHeaderLabel,
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => a.exportedAt.localeCompare(b.exportedAt),
+                modifier: row => (
+                    <FormattedDate
+                        date={row.exportedAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
+            },
+            {
+                key: 'title',
+                label: exportStrings.exportTitleHeaderLabel,
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
+            },
+            {
+                key: 'pending',
+                label: exportStrings.statusHeaderLabel,
+                order: 4,
+                sortable: true,
+                comparator: (a, b) => {
+                    if (a.pending !== b.pending) {
+                        return a.pending - b.pending;
+                    }
+                    return a.exportedAt.localeCompare(b.exportedAt);
+                },
+                modifier: (row) => {
+                    if (row.pending) {
+                        return exportStrings.pendingStatusLabel;
+                    } else if (!row.file) {
+                        return exportStrings.errorStatusLabel;
+                    }
+                    return exportStrings.completedStatusLabel;
+                },
+            },
+            {
+                key: 'type',
+                label: exportStrings.exportTitleHeaderLabel,
+                order: 5,
+                sortable: true,
+                comparator: (a, b) => a.type.localeCompare(b.type),
+            },
+            {
+                key: 'file',
+                label: exportStrings.exportDownloadHeaderLabel,
+                order: 6,
+                modifier: (row) => {
+                    if (row.pending) {
+                        return (
+                            <LoadingAnimation className="loading" />
+                        );
+                    } else if (!row.pending && !row.file) {
+                        return (
+                            <span className={iconNames.error} />
+                        );
+                    }
+                    return (
+                        <a
+                            href={row.file}
+                            target="_blank"
+                            className="file-download"
+                        >
+                            <span className={iconNames.download} />
+                        </a>
+                    );
+                },
+            },
+        ];
+    }
 
     componentWillMount() {
         this.userExportsRequest = this.createUserExportsRequest();
@@ -91,9 +197,23 @@ export default class UserExports extends React.PureComponent {
     };
 
     render() {
+        const { userExports } = this.props;
+
         return (
             <div styleName="user-exports">
-                Exports view
+                <header styleName="header">
+                    <h2>
+                        {exportStrings.userExportsHeader}
+                    </h2>
+                </header>
+                <div styleName="table-container">
+                    <Table
+                        styleName="user-exports-table"
+                        data={userExports || emptyList}
+                        headers={this.exportsTableHeader}
+                        keyExtractor={u => u.id}
+                    />
+                </div>
             </div>
         );
     }

@@ -445,6 +445,16 @@ const strings = {
     620: 'View all exports',
     621: 'User Exports',
     622: 'Unable to load your previous exports',
+    623: 'Doc. type',
+    624: 'Exported At',
+    625: 'Title',
+    626: 'Status',
+    627: 'Export Type',
+    628: 'Download',
+    629: 'Pending',
+    630: 'Error',
+    631: 'Completed',
+    632: 'Recent Exports',
 
     // Aanalysis Framework Strings
 
