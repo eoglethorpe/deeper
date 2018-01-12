@@ -324,7 +324,7 @@ export default class Navbar extends React.PureComponent {
                     render={
                         () => (
                             <SelectInput
-                                clearable={false}
+                                hideClearButton
                                 keySelector={this.projectKeySelector}
                                 labelSelector={this.projectLabelSelector}
                                 onChange={this.handleProjectChange}

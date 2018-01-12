@@ -528,7 +528,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 value={activeCategoryId}
                                 keySelector={d => d.id}
                                 labelSelector={d => d.title}
-                                clearable={false}
+                                hideClearButton
                                 disabled={pending}
                             />
                             <PrimaryButton

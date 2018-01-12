@@ -61,15 +61,15 @@ export default class Multiselect extends React.PureComponent {
             className={styles['multiselect-content']}
             key={key}
         >
-            <span className={styles['multiselect-name']}>{data.label}</span>
+            <span className={styles['multiselect-name']}>
+                {data.label}
+            </span>
         </div>
     )
 
     render() {
         const {
-            attribute: {
-                value = emptyList,
-            } = {},
+            attribute: { value = emptyList } = {},
             data = emptyList,
         } = this.props;
 
@@ -80,7 +80,7 @@ export default class Multiselect extends React.PureComponent {
                 <MultiSelectInput
                     onChange={this.handleChange}
                     options={data}
-                    clearable={false}
+                    hideClearButton
                     styleName="multiselect"
                     value={value}
                     keyExtractor={Multiselect.valueKeyExtractor}

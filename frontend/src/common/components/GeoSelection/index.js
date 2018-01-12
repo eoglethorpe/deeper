@@ -378,7 +378,7 @@ export default class GeoSelection extends React.PureComponent {
                                     onChange={this.handleRegionSelection}
                                     optionsIdentifier="region-select-options"
                                     value={selectedRegion}
-                                    clearable={false}
+                                    hideClearButton
                                 />
                                 <SelectInput
                                     styleName="map-selection-select"

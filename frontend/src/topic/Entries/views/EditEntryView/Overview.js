@@ -502,7 +502,7 @@ export default class Overview extends React.PureComponent {
                                 placeholder={entryStrings.selectExcerptPlaceholder}
                                 showHintAndError={false}
                                 showLabel={false}
-                                clearable={false}
+                                hideClearButton
                                 keySelector={this.calcEntryKey}
                                 labelSelector={this.calcEntryLabelLimited}
                                 options={entries}
