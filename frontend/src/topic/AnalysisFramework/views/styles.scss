@@ -1,187 +1,88 @@
 @import '../../../stylesheets/base';
 
-.analysis-framework {
-    @extend %main-content;
-    position: relative;
+%widget-list {
+    background-color: $color-background-row;
+    overflow-y: auto;
 
-    %widget-list {
-        flex-grow: 1;
-        overflow-y: auto;
-
-        .widget-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: $color-background-row;
-            padding: $spacing-small $spacing-medium;
-
-            .title {
-                color: $color-text;
-            }
-
-            .actions {
-                background-color: transparent;
-            }
-
-            &:nth-child(odd) {
-                background-color: $color-background-row-alt;
-            }
-        }
-    }
-
-    .overview {
+    .widget-list-item {
         display: flex;
-        height: 100%;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $color-background-row;
+        padding: $spacing-small $spacing-medium;
 
-        .left {
-            display: flex;
-            flex-basis: 26%;
-            flex-direction: column;
-            background-color: $color-foreground;
-
-            .header {
-                flex-shrink: 0;
-                border-bottom: $width-separator-medium solid $color-separator;
-                padding: $spacing-medium;
-            }
-
-            .widget-list {
-                @extend %widget-list;
-            }
+        .title {
+            color: $color-text;
         }
 
-        .right {
-            display: flex;
-            flex-basis: 74%;
-            flex-direction: column;
-            background-color: $color-foreground-alt;
+        .action-buttons {
+            flex-shrink: 0;
+            background-color: transparent;
+        }
 
-            >.header {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                border-bottom: $width-separator-thin solid $color-separator;
-                background-color: $color-background-header;
-                padding: $spacing-small $spacing-medium;
-
-                .entry-actions {
-                    display: flex;
-                }
-
-                .action-buttons {
-                    >* {
-                        margin-left: $spacing-medium;
-                    }
-
-                    .link-to-list {
-                        @extend %button-like-link;
-                    }
-                }
-            }
-
-            .grid-layout {
-                flex-grow: 1;
-                height: auto;
-                overflow: auto;
-
-                :global .grid-item {
-                    .header {
-                        display: flex;
-                        align-items: center;
-                        height: 18px;
-
-                        .heading {
-                            padding: 0 $spacing-small;
-                        }
-                    }
-                }
-
-                .action-buttons {
-                    display: flex;
-                    align-items: center;
-
-                    button {
-                        margin-left: $spacing-small;
-                        padding: 0 $spacing-small;
-                        height: 24px;
-                    }
-                }
-            }
+        &:nth-child(odd) {
+            background-color: $color-background-row-alt;
         }
     }
+}
 
-    .list {
-        background-color: $color-foreground-alt;
-        height: 100%;
+%grid-item {
+    .header {
+        display: flex;
+        align-items: center;
+        height: 18px;
 
-        $height-top: 55vh;
-
-        .top {
-            height: $height-top;
-            overflow-y: auto;
-
-            .grid-layout {
-                overflow: auto;
-
-                :global .grid-item {
-                    .header {
-                        display: flex;
-                        align-items: center;
-                        height: 18px;
-
-                        .heading {
-                            padding: 0 $spacing-small;
-                        }
-                    }
-                }
-
-                .action-buttons {
-                    display: flex;
-                    align-items: center;
-
-                    button {
-                        margin-left: $spacing-small;
-                        padding: 0 $spacing-small;
-                    }
-                }
-            }
+        .heading {
+            padding: 0 $spacing-small;
         }
 
-        .bottom {
+        .action-buttons {
             display: flex;
-            flex-direction: column;
-            height: calc(100% - #{$height-top});
 
-            .header {
-                display: flex;
-                flex-shrink: 0;
-                align-items: center;
-                justify-content: space-between;
-                border-bottom: $width-separator-medium solid $color-separator;
-                padding: $spacing-small $spacing-medium-alt;
-
-                .action-buttons {
-                    >* {
-                        margin-left: $spacing-medium;
-                    }
-
-                    .link-to-overview {
-                        @extend %button-like-link;
-                    }
-                }
-            }
-
-            .widget-list {
-                @extend %widget-list;
-                border-right: $width-separator-medium solid $color-separator;
-                width: 26%;
+            button {
+                padding: 0 $spacing-medium;
             }
         }
     }
 }
 
-.image-widget {
-    width: 100%;
+%page {
+    display: flex;
+    flex-direction: column;
+    background-color: $color-foreground-alt;
     height: 100%;
-    object-fit: contain;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .actions {
+            >* {
+                margin-left: $spacing-medium;
+            }
+
+            .link-to-overview,
+            .link-to-list {
+                @extend %button-like-link;
+            }
+        }
+    }
+
+    .content {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+}
+
+.analysis-framework {
+    @extend %main-content;
+    position: relative;
+
+    @import 'overview';
+    @import 'list';
 }
