@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactGA from 'react-ga';
 import { connect } from 'react-redux';
 import {
     BrowserRouter,
@@ -8,7 +7,7 @@ import {
 
 import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
-import { getTrackingId } from './common/config/google-analytics';
+import { initializeGa } from './common/config/google-analytics';
 
 import schema from './common/schema';
 
@@ -106,18 +105,8 @@ export default class App extends React.PureComponent {
 
     componentWillMount() {
         console.log('Mounting App');
-        // TODO: move this
-        ReactGA.initialize(getTrackingId(), {
-            // debug: true,
-            gaOptions: {
-                forceSSL: true,
-                userId: this.props.activeUser.userId,
-                hostname: window.location.hostname,
-            },
-        });
 
-        // TODO: Add this to after login
-        // ReactGA.set({ userId: this.props.activeUser.userId });
+        initializeGa(this.props.activeUser);
 
         // If there is no refresh token, no need to get a new access token
         const { token: { refresh: refreshToken } } = this.props;
