@@ -200,7 +200,6 @@ export default class Organigram extends React.PureComponent {
                         showHintAndError={false}
                         placeholder={afStrings.organPlaceholder}
                         showLabel={false}
-                        disabled={isFatherOrgan}
                         onChange={this.handleChange(nextIndices)}
                     />
                     <div styleName="action-buttons">
