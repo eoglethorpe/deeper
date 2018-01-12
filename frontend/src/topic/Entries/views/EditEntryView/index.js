@@ -464,7 +464,7 @@ export default class EditEntryView extends React.PureComponent {
                 serverId: undefined,
                 values: {
                     entryType: 'excerpt',
-                    excerpt: `Excerpt ${entryId.toUpperCase()}`,
+                    excerpt: `Excerpt ${(new Date()).toLocaleTimeString()}`,
                     lead: leadId,
                     analysisFramework: analysisFramework.id,
                     attributes: [],

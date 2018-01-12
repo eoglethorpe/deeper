@@ -44,6 +44,7 @@ const iconNames = {
     jpeg: 'fa fa-file-image-o',
     fig: 'fa fa-file-image-o',
 
+    undo: 'fa fa-undo',
     uploadFa: 'fa fa-upload',
 
     dropbox: 'ion-social-dropbox',

@@ -517,14 +517,14 @@ export default class Overview extends React.PureComponent {
                                 title={entryStrings.addEntryButtonTitle}
                                 onClick={onEntryAdd}
                             >
-                                {entryStrings.addEntryButtonLabel}
+                                <i className={iconNames.add} />
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
                                     title={entryStrings.removeEntryButtonTitle}
                                     onClick={() => onEntryDelete(true)}
                                 >
-                                    {entryStrings.removeEntryButtonLabel}
+                                    <i className={iconNames.delete} />
                                 </DangerButton>
                             }
                             { selectedEntry && isMarkedForDelete &&
@@ -532,7 +532,7 @@ export default class Overview extends React.PureComponent {
                                     title={entryStrings.undoRemoveEntryButtonTitle}
                                     onClick={() => onEntryDelete(false)}
                                 >
-                                    {entryStrings.undoRemoveEntryButtonLabel}
+                                    <i className={iconNames.undo} />
                                 </Button>
                             }
                         </div>
