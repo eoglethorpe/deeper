@@ -220,24 +220,32 @@ export default class List extends React.PureComponent {
     render() {
         return (
             <div styleName="list">
-                <div styleName="bottom">
-                    <header styleName="header">
-                        <h2>
-                            {afStrings.headerWidgets}
-                        </h2>
-                        <div styleName="action-buttons">
-                            <Link
-                                styleName="link-to-overview"
-                                to="/overview"
-                                replace
-                            >
-                                {afStrings.gotoOverviewButtonLabel}
-                            </Link>
-                            <SuccessButton onClick={this.props.onSave}>
-                                {afStrings.saveButtonLabel}
-                            </SuccessButton>
-                        </div>
-                    </header>
+                <header styleName="header">
+                    <h2>
+                        {afStrings.headerWidgets}
+                    </h2>
+                    <div styleName="actions">
+                        <Link
+                            styleName="link-to-overview"
+                            to="/overview"
+                            replace
+                        >
+                            {afStrings.gotoOverviewButtonLabel}
+                        </Link>
+                        <SuccessButton onClick={this.props.onSave}>
+                            {afStrings.saveButtonLabel}
+                        </SuccessButton>
+                    </div>
+                </header>
+                <div styleName="content">
+                    <div styleName="grid-layout-wrapper">
+                        <GridLayout
+                            styleName="grid-layout"
+                            modifier={this.getItemView}
+                            items={this.gridItems}
+                            onLayoutChange={this.handleLayoutChange}
+                        />
+                    </div>
                     <div styleName="widget-list">
                         {
                             this.widgets.map(widget => (
@@ -245,14 +253,10 @@ export default class List extends React.PureComponent {
                                     styleName="widget-list-item"
                                     key={widget.id}
                                 >
-                                    <div
-                                        styleName="title"
-                                    >
+                                    <div styleName="title">
                                         {widget.title}
                                     </div>
-                                    <div
-                                        styleName="actions"
-                                    >
+                                    <div styleName="actions">
                                         <TransparentButton
                                             onClick={
                                                 () => {
@@ -267,14 +271,6 @@ export default class List extends React.PureComponent {
                             ))
                         }
                     </div>
-                </div>
-                <div styleName="top">
-                    <GridLayout
-                        styleName="grid-layout"
-                        modifier={this.getItemView}
-                        items={this.gridItems}
-                        onLayoutChange={this.handleLayoutChange}
-                    />
                 </div>
             </div>
         );

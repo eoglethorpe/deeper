@@ -86,9 +86,7 @@ export default class Overview extends React.PureComponent {
         minSize: this.widgets.find(w => w.id === item.widgetId).overviewMinSize,
         data: item.properties.data,
         headerRightComponent: (
-            <div
-                className={`${styles['action-buttons']} action-buttons`}
-            >
+            <div className="action-buttons">
                 <TransparentButton
                     onClick={() => this.handleWidgetEditButtonClick(item.key)}
                 >
@@ -221,13 +219,27 @@ export default class Overview extends React.PureComponent {
         this.gridItems = this.getGridItems();
     }
 
+    renderWidgets
+
     render() {
         return (
             <div styleName="overview">
-                <div styleName="left">
-                    <header styleName="header">
-                        <h2>{afStrings.headerWidgets}</h2>
-                    </header>
+                <header styleName="header">
+                    <h2>{afStrings.headerWidgets}</h2>
+                    <div styleName="actions">
+                        <Link
+                            styleName="link-to-list"
+                            to="/list"
+                            replace
+                        >
+                            {afStrings.gotoListButtonLabel}
+                        </Link>
+                        <SuccessButton onClick={this.props.onSave} >
+                            {afStrings.saveButtonLabel}
+                        </SuccessButton>
+                    </div>
+                </header>
+                <div styleName="content">
                     <div styleName="widget-list">
                         {
                             this.widgets.map(widget => (
@@ -251,32 +263,14 @@ export default class Overview extends React.PureComponent {
                             ))
                         }
                     </div>
-                </div>
-                <div
-                    ref={(el) => { this.gridLayoutContainer = el; }}
-                    styleName="right"
-                >
-                    <header styleName="header">
-                        <div styleName="entry-actions" />
-                        <div styleName="action-buttons">
-                            <Link
-                                styleName="link-to-list"
-                                to="/list"
-                                replace
-                            >
-                                {afStrings.gotoListButtonLabel}
-                            </Link>
-                            <SuccessButton onClick={this.props.onSave} >
-                                {afStrings.saveButtonLabel}
-                            </SuccessButton>
-                        </div>
-                    </header>
-                    <GridLayout
-                        styleName="grid-layout"
-                        modifier={this.getItemView}
-                        items={this.gridItems}
-                        onLayoutChange={this.handleLayoutChange}
-                    />
+                    <div styleName="grid-layout-wrapper">
+                        <GridLayout
+                            styleName="grid-layout"
+                            modifier={this.getItemView}
+                            items={this.gridItems}
+                            onLayoutChange={this.handleLayoutChange}
+                        />
+                    </div>
                 </div>
             </div>
         );

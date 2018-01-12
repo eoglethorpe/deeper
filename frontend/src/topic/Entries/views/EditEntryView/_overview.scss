@@ -195,12 +195,11 @@
             flex-direction: column;
             flex-grow: 1;
             background-color: $color-foreground-alt;
-            overflow-y: auto;
+            padding: $spacing-small;
 
             .grid-layout {
                 flex-grow: 1;
-                background-color: $color-foreground;
-                overflow-y: hidden;
+                overflow-y: auto;
                 overflow-x: auto;
 
                 :global .grid-item {

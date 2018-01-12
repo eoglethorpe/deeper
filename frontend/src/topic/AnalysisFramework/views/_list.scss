@@ -1,0 +1,32 @@
+.list {
+    @extend %page;
+    $height-grid-layout: 50vh;
+
+    .content {
+        display: flex;
+        flex-direction: column;
+
+        .grid-layout-wrapper {
+            border-bottom: $width-separator-thin solid $color-separator;
+            background-color: $color-background-alt;
+            padding: $spacing-small;
+            height: $height-grid-layout;
+
+            .grid-layout {
+                background-color: $color-foreground-alt;
+                overflow: auto;
+
+                :global .grid-item {
+                    @extend %grid-item;
+                }
+            }
+        }
+
+        .widget-list {
+            @extend %widget-list;
+            flex-grow: 1;
+            border-right: $width-separator-thin solid $color-separator;
+            width: 30%;
+        }
+    }
+}
