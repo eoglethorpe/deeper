@@ -59,11 +59,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
         super(props);
 
         const scaleUnits = (this.props.data || emptyObject).scaleUnits || emptyList;
+        const title = this.props.title;
 
         this.state = {
             showEditModal: false,
             activeScaleUnit: scaleUnits[0] || emptyObject,
             scaleUnits,
+            title,
         };
         this.props.editAction(this.handleEdit);
     }
@@ -217,12 +219,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.setState({
             showEditModal: false,
             scaleUnits: (this.props.data || emptyObject).scaleUnits || emptyList,
+            title: this.props.title,
         });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { scaleUnits } = this.state;
+        const { scaleUnits, title } = this.state;
         const newScaleUnits = {
             ...this.props.data,
             scaleUnits,
@@ -231,7 +234,14 @@ export default class ScaleFrameworkList extends React.PureComponent {
             newScaleUnits,
             this.createFilters(newScaleUnits),
             this.createExportable(newScaleUnits),
+            title,
         );
+    }
+
+    handleScaleWidgetTitleChange = (value) => {
+        this.setState({
+            title: value,
+        });
     }
 
     handleScaleUnitValueInputChange = (key, value) => {
@@ -300,6 +310,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
             scaleUnits,
             showEditModal,
             activeScaleUnit,
+            title,
         } = this.state;
 
         return (
@@ -326,20 +337,32 @@ export default class ScaleFrameworkList extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     />
-                    <ModalBody styleName="scale-units-container">
-                        { scaleUnits.length > 0 &&
-                            <SketchPicker
-                                color={activeScaleUnit.color}
-                                onChange={this.handleColorChange}
+                    <ModalBody styleName="scale-modal-body">
+                        <div styleName="general-info-container">
+                            <TextInput
+                                className={styles['title-input']}
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.titlePlaceholderScale}
+                                onChange={this.handleScaleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
                             />
-                        }
-                        <this.SortableList
-                            items={scaleUnits}
-                            onSortEnd={this.onSortEnd}
-                            lockAxis="y"
-                            lockToContainerEdges
-                            useDragHandle
-                        />
+                        </div>
+                        <div styleName="scale-units-container">
+                            { scaleUnits.length > 0 &&
+                                <SketchPicker
+                                    color={activeScaleUnit.color}
+                                    onChange={this.handleColorChange}
+                                />
+                            }
+                            <this.SortableList
+                                items={scaleUnits}
+                                onSortEnd={this.onSortEnd}
+                                lockAxis="y"
+                                lockToContainerEdges
+                                useDragHandle
+                            />
+                        </div>
                     </ModalBody>
                     <ModalFooter>
                         <Button

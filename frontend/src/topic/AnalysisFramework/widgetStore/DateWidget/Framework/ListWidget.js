@@ -8,7 +8,6 @@ import {
 
 import styles from './styles.scss';
 
-
 const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
