@@ -413,6 +413,8 @@ const strings = {
     538: 'Created By',
     539: 'Created At',
     540: 'NER',
+    541: 'Assited tagging feedback',
+    542: 'Thank you for your feedback',
     // Export strings
 
     600: 'Export',

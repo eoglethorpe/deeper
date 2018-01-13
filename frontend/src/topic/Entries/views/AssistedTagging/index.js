@@ -22,6 +22,8 @@ import {
     getHexFromString,
 } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import notify from '../../../../common/notify';
+import schema from '../../../../common/schema';
 
 import {
     iconNames,
@@ -30,10 +32,12 @@ import {
 import {
     urlForLeadClassify,
     urlForNer,
+    urlForFeedback,
     createUrlForCeClassify,
     createParamsForLeadClassify,
     createParamsForCeClassify,
     createParamsForNer,
+    createParamsForFeedback,
 } from '../../../../common/rest';
 
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
@@ -107,6 +111,10 @@ export default class AssistedTagging extends React.PureComponent {
 
         if (this.nerClassifyRequest) {
             this.nerClassifyRequest.stop();
+        }
+
+        if (this.feedbackRequest) {
+            this.feedbackRequest.stop();
         }
     }
 
@@ -272,8 +280,44 @@ export default class AssistedTagging extends React.PureComponent {
             }))
             .success((response) => {
                 try {
-                    // FIXME: write schema
+                    schema.validate(response, 'categoryEditorClassifyList');
                     this.extractCeClassifications(response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: entryStrings.serverErrorText,
+                });
+            })
+            .fatal((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: entryStrings.connectionFailureText,
+                });
+            })
+            .build();
+        return request;
+    }
+
+    createFeedbackRequest = (feedback) => {
+        const request = new FgRestBuilder()
+            .url(urlForFeedback)
+            .params(createParamsForFeedback(feedback))
+            .success((response) => {
+                try {
+                    console.warn('feedback sent', response);
+
+                    notify.send({
+                        title: entryStrings.assitedTaggingFeedbackTitle,
+                        type: notify.type.SUCCESS,
+                        message: entryStrings.assitedTaggingFeedbackMessage,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (err) {
                     console.error(err);
                 }
@@ -466,6 +510,21 @@ export default class AssistedTagging extends React.PureComponent {
         });
     }
 
+    handleFeedbackClick = (classificationLabel, useful) => {
+        const { activeHighlightDetails } = this.state;
+        const feedback = {
+            text: activeHighlightDetails.text,
+            classification_label: classificationLabel,
+            useful,
+        };
+
+        if (this.feedbackRequest) {
+            this.feedbackRequest.stop();
+        }
+        this.feedbackRequest = this.createFeedbackRequest(feedback);
+        this.feedbackRequest.start();
+    }
+
     calcSectorKey = d => d.label;
 
     renderSectorList = (key, sector) => (
@@ -479,11 +538,13 @@ export default class AssistedTagging extends React.PureComponent {
             <div className={styles['feedback-buttons']}>
                 <TransparentSuccessButton
                     title={entryStrings.accurateTextTitle}
+                    onClick={() => this.handleFeedbackClick(sector.label, 'true')}
                 >
                     <span className={iconNames.thumbsUp} />
                 </TransparentSuccessButton>
                 <TransparentWarningButton
                     title={entryStrings.notAccurateTextTitle}
+                    onClick={() => this.handleFeedbackClick(sector.label, 'false')}
                 >
                     <span className={iconNames.thumbsDown} />
                 </TransparentWarningButton>
