@@ -412,7 +412,7 @@ const strings = {
     537: 'Search Excerpt',
     538: 'Created By',
     539: 'Created At',
-    540: 'Entry',
+    540: 'NER',
     // Export strings
 
     600: 'Export',

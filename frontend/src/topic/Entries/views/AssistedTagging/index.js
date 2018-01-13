@@ -327,25 +327,26 @@ export default class AssistedTagging extends React.PureComponent {
 
     extractNerClassifications = (data) => {
         const nerSectorOptions = [];
-        const filteredData = data.filter(d => (d[1] !== 'O'));
-        filteredData.forEach((d) => {
-            if (nerSectorOptions.findIndex(o => o.key === d[1]) === -1) {
+
+        if (data.length < 1) {
+            return;
+        }
+
+        data.forEach((d) => {
+            if (nerSectorOptions.findIndex(o => o.key === d.entity) === -1) {
                 nerSectorOptions.push({
-                    key: d[1],
-                    label: d[1],
+                    key: d.entity,
+                    label: d.entity.charAt(0) + d.entity.slice(1).toLowerCase(),
                 });
             }
         });
 
-        this.nerClassifications = filteredData.map(d => ({
-            text: d[0],
-            sector: d[1],
-        }));
+        this.nerClassifications = data;
 
         this.setState({
             nerSectorOptions,
             nerSelectedSectors: [nerSectorOptions[0].key],
-        });
+        }, () => this.refreshSelections());
     }
 
     extractCeClassifications = (data) => {
@@ -375,7 +376,7 @@ export default class AssistedTagging extends React.PureComponent {
         } else if (selectedAssitedTaggingSource === 'ce') {
             this.refreshCeClassifications();
         } else if (selectedAssitedTaggingSource === 'ner') {
-            this.refreshNlpClassifications();
+            this.refreshNerClassifications();
         }
     }
 
@@ -401,6 +402,29 @@ export default class AssistedTagging extends React.PureComponent {
         this.setState({ highlights });
     }
 
+    refreshNerClassifications = () => {
+        const { nerSelectedSectors } = this.state;
+        const { nerClassifications } = this;
+
+        if (!nerClassifications) {
+            this.setState({ highlights: emptyList });
+            return;
+        }
+
+        const keywords = nerClassifications.filter(c => (
+            nerSelectedSectors.find(t => t === c.entity)
+        )).reduce((acc, c) => acc.concat(c), []);
+
+        const highlights = keywords.map(keyword => ({
+            startPos: keyword.start,
+            length: keyword.length,
+            color: getHexFromString(keyword.entity),
+            source: entryStrings.sourceNER,
+            details: keyword.entity,
+        }));
+        this.setState({ highlights });
+    }
+
     refreshCeClassifications = () => {
         const { ceSelectedSectors } = this.state;
         const { ceClassifications } = this;
@@ -419,8 +443,15 @@ export default class AssistedTagging extends React.PureComponent {
             length: keyword.length,
             color: getHexFromString(keyword.subcategory),
             source: entryStrings.sourceCE,
+            details: keyword.subcategory,
         }));
         this.setState({ highlights });
+    }
+
+    handleNerSectorSelect = (nerSelectedSectors) => {
+        this.setState({ nerSelectedSectors }, () => {
+            this.refreshSelections();
+        });
     }
 
     handleCeSectorSelect = (ceSelectedSectors) => {
@@ -551,13 +582,22 @@ export default class AssistedTagging extends React.PureComponent {
                             </header>
                             <div styleName="info-bar">
                                 <span>{activeHighlightDetails.text}</span>
+                                <div>
+                                    { activeHighlightDetails.details &&
+                                        <span styleName="details">
+                                            {activeHighlightDetails.details.toLowerCase()}
+                                        </span>
+                                    }
+                                </div>
                             </div>
-                            <ListView
-                                styleName="sectors"
-                                modifier={this.renderSectorList}
-                                data={activeHighlightDetails.sectors}
-                                keyExtractor={this.calcSectorKey}
-                            />
+                            {selectedAssitedTaggingSource === 'nlp' && (
+                                <ListView
+                                    styleName="sectors"
+                                    modifier={this.renderSectorList}
+                                    data={activeHighlightDetails.sectors}
+                                    keyExtractor={this.calcSectorKey}
+                                />
+                            )}
                             <PrimaryButton
                                 iconName={iconNames.add}
                                 className={styles['add-button']}
