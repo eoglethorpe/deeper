@@ -397,8 +397,8 @@ const strings = {
     525: 'Unmark current entry for removal',
     526: 'Undo Remove',
 
-    527: 'Apply Filter',
-    528: 'Clear Filter',
+    527: 'Apply',
+    528: 'Clear',
 
     529: 'Edit',
     530: 'Edit Entry',
@@ -408,10 +408,10 @@ const strings = {
     533: 'Select geo region',
     534: 'Couldn\'t load geo filter options',
     535: 'Select locations',
-    536: 'Entry',
-    537: 'Entry',
-    538: 'Entry',
-    539: 'Entry',
+    536: 'Search',
+    537: 'Search Excerpt',
+    538: 'Created By',
+    539: 'Created At',
     540: 'Entry',
     // Export strings
 
@@ -678,8 +678,8 @@ const strings = {
 
     976: 'Delete Lead',
     977: 'Lead Successfully Deleted',
-    978: 'Error. Cannot delete lead.',
-    979: 'Error.Cannot delete lead. Please check your network connection and try again',
+    978: 'Cannot delete lead.',
+    979: 'Cannot delete lead. Please check your network connection and try again',
 
     980: 'Add',
 

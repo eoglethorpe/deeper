@@ -273,8 +273,8 @@ export default class CategoryEditor extends React.PureComponent {
         } catch (ex) {
             notify.send({
                 type: notify.type.WARNING,
-                title: ceStrings.invalidDropSource,
-                message: ceStrings.validDropAlert,
+                title: notificationStrings.invalidDropSource,
+                message: notificationStrings.validDropAlert,
             });
         }
     }

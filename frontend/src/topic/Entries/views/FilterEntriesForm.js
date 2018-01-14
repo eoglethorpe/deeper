@@ -188,9 +188,9 @@ export default class EntriesFilter extends React.PureComponent {
                 <TextInput
                     className="entries-filter"
                     key="search"
-                    label="Search"
+                    label={entryStrings.searchFilterLabel}
                     onChange={(value) => { this.handleFilterChange('search', value); }}
-                    placeholder="Search excerpt"
+                    placeholder={entryStrings.searchFilterPlaceholder}
                     showHintAndError={false}
                     value={filters.search}
                     disabled={this.props.pending}
@@ -198,7 +198,7 @@ export default class EntriesFilter extends React.PureComponent {
                 <MultiSelectInput
                     className="entries-filter"
                     key="created-by"
-                    label="Created By"
+                    label={entryStrings.createdByFilterLabel}
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}
                     value={filters.created_by}
@@ -207,7 +207,7 @@ export default class EntriesFilter extends React.PureComponent {
                 <DateFilter
                     className="entries-filter"
                     key="created-at"
-                    label="Created At"
+                    label={entryStrings.createdAtFilterLabel}
                     onChange={(value) => { this.handleFilterChange('created_at', value); }}
                     showHintAndError={false}
                     value={filters.created_at}
