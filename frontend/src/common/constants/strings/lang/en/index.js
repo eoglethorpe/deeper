@@ -678,8 +678,8 @@ const strings = {
 
     976: 'Delete Lead',
     977: 'Lead Successfully Deleted',
-    978: 'Error. Cannot delete lead.',
-    979: 'Error.Cannot delete lead. Please check your network connection and try again',
+    978: 'Cannot delete lead.',
+    979: 'Cannot delete lead. Please check your network connection and try again',
 
     980: 'Add',
 

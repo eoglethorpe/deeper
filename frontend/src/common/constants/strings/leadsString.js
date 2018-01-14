@@ -90,6 +90,7 @@ const leadsString = {
     visualizationsLabel: string[140],
 
     leadDeleteConfirmText: string[141],
+    leadDeleteSuccess: string[977],
 
 
 };
