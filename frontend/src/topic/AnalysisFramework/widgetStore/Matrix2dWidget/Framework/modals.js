@@ -52,12 +52,12 @@ export const getEditWidgetModal = (parent) => {
                 <section styleName="edit-sectors">
                     <header styleName="header">
                         <h4 styleName="heading">
-                            {afStrings.sectorLabel}
+                            {afStrings.dimensionXLabel}
                         </h4>
                         <TransparentButton
                             onClick={parent.handler.addSectorButtonClick}
                         >
-                            {afStrings.addSectorButtonLabel}
+                            {afStrings.addDimensionXButtonLabel}
                         </TransparentButton>
                     </header>
                     <ListView
@@ -70,13 +70,13 @@ export const getEditWidgetModal = (parent) => {
                 <section styleName="edit-dimensions">
                     <header styleName="header">
                         <h4 styleName="heading">
-                            {afStrings.dimensionLabel}
+                            {afStrings.dimensionYLabel}
                         </h4>
                         <TransparentButton
                             tabIndex="-1"
                             onClick={parent.handler.addDimensionButtonClick}
                         >
-                            {afStrings.addDimensionButtonLabel}
+                            {afStrings.addDimensionYButtonLabel}
                         </TransparentButton>
                     </header>
                     <ListView
@@ -121,7 +121,7 @@ export const getEditSectorsModal = (parent) => {
             onClose={parent.handler.editSectorsModalClose}
         >
             <ModalHeader
-                title={afStrings.addSubsectorModalTitle}
+                title={afStrings.addDimensionModalTitle}
             />
             <ModalBody styleName="modal-body">
                 <ListView
@@ -133,7 +133,7 @@ export const getEditSectorsModal = (parent) => {
                 <div styleName="edit-subsectors">
                     <header styleName="header">
                         <h4>
-                            {afStrings.subsectorsLabel}
+                            {afStrings.subDimensionsLabel}
                         </h4>
                         <TransparentButton
                             onClick={parent.handler.addSubsectorButtonClick}

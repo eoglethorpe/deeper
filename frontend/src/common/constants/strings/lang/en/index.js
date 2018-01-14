@@ -473,19 +473,19 @@ const strings = {
     722: 'Add row',
 
     723: 'Matrix 2D',
-    724: 'Sector',
-    725: 'Add Sector',
-    726: 'Dimensions',
-    727: 'Add Dimension',
-    728: 'Subsectors',
-    729: 'Add Subsectors',
+    724: 'Dimension-Y',
+    725: 'Add Dimension-Y',
+    726: 'Dimension-X',
+    727: 'Add Dimension-X',
+    728: 'Sub Dimension',
+    729: 'Add Dimension',
     730: 'Add',
 
-    731: 'Sector Title',
+    731: 'Dimension-X Title',
     732: 'eg: Wash',
     733: 'Tooltip',
-    734: 'Dimension Title',
-    735: 'eg: space',
+    734: 'Dimension-Y Title',
+    735: 'eg: Space',
     736: 'Subsector Title',
 
     737: 'Multiselect',
@@ -525,6 +525,7 @@ const strings = {
     766: 'Add Child',
     767: 'Remove Element',
     768: '999 999',
+    769: 'Dimension',
 
     // Login/Register strings
 

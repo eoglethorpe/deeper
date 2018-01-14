@@ -76,7 +76,7 @@ export default class Dimension extends React.PureComponent {
         } = this.props;
 
         if (data.title) {
-            return `${afStrings.addDimensionButtonLabel} ${data.title}`;
+            return `${afStrings.dimensionLabel} ${data.title}`;
         }
 
         return afStrings.addDimensionButtonLabel;
