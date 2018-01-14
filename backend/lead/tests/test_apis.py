@@ -4,7 +4,10 @@ from rest_framework.test import APITestCase
 from user.tests.test_apis import AuthMixin
 from project.tests.test_apis import ProjectMixin
 from project.models import Project, ProjectMembership
+from geo.models import Region
 from lead.models import Lead
+
+from datetime import datetime
 
 
 class LeadMixin():
@@ -113,3 +116,60 @@ class LeadTests(AuthMixin, ProjectMixin, LeadMixin, APITestCase):
         self.assertEqual(len(response.data), 2)
         self.assertEqual(response.data[0].get('project'), project1.id)
         self.assertEqual(response.data[1].get('project'), project2.id)
+
+
+# Data to use for testing web info extractor
+# Including, url of the page and its attributes:
+# source, country, date, website
+
+SAMPLE_WEB_INFO_URL = 'https://reliefweb.int/report/yemen/yemen-emergency-food-security-and-nutrition-assessment-efsna-2016-preliminary-results' # noqa
+SAMPLE_WEB_INFO_SOURCE = 'World Food Programme, UN Children\'s Fund, Food and Agriculture Organization of the United Nations' # noqa
+SAMPLE_WEB_INFO_COUNTRY = 'Yemen'
+SAMPLE_WEB_INFO_DATE = datetime(2017, 1, 26)
+SAMPLE_WEB_INFO_WEBSITE = 'reliefweb.int'
+
+
+class WebInfoExtractionTests(AuthMixin, APITestCase):
+    def setUp(self):
+        """
+        Get HTTP_AUTHORIZATION Header
+        """
+        self.auth = self.get_auth()
+
+        # Create a sample project containing the sample country
+        self.sample_region = Region.objects.create(
+            code='TEST',
+            title=SAMPLE_WEB_INFO_COUNTRY,
+            public=True,
+            created_by=self.user,
+        )
+        self.sample_project = Project.objects.create(
+            title='Test project',
+            created_by=self.user,
+        )
+        ProjectMembership.objects.create(
+            project=self.sample_project,
+            member=self.user,
+            role='normal',
+        )
+        self.sample_project.regions.add(self.sample_region)
+
+    def test_extract_web_info(self):
+        url = '/api/v1/web-info-extract/'
+        data = {
+            'url': SAMPLE_WEB_INFO_URL
+        }
+
+        response = self.client.post(url, data,
+                                    format='json',
+                                    HTTP_AUTHORIZATION=self.auth)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        expected = {
+            'project': self.sample_project.id,
+            'date': SAMPLE_WEB_INFO_DATE,
+            'country': SAMPLE_WEB_INFO_COUNTRY,
+            'website': SAMPLE_WEB_INFO_WEBSITE,
+            'source': SAMPLE_WEB_INFO_SOURCE,
+        }
+        self.assertEqual(response.data, expected)
