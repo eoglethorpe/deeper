@@ -66,16 +66,6 @@ export default class UserExports extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { userExports } = props;
-        this.exportPollRequests = [];
-        userExports.forEach((e) => {
-            if (e.pending) {
-                const userPollRequest = this.createExportPollRequest(e.id);
-                userPollRequest.start();
-                this.exportPollRequests.push(userPollRequest);
-            }
-        });
-
         this.state = {
             selectedExport: 0,
         };
@@ -179,6 +169,16 @@ export default class UserExports extends React.PureComponent {
     componentWillMount() {
         this.userExportsRequest = this.createUserExportsRequest();
         this.userExportsRequest.start();
+
+        const { userExports } = this.props;
+        this.exportPollRequests = [];
+        userExports.forEach((e) => {
+            if (e.pending) {
+                const userPollRequest = this.createExportPollRequest(e.id);
+                userPollRequest.start();
+                this.exportPollRequests.push(userPollRequest);
+            }
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -186,6 +186,12 @@ export default class UserExports extends React.PureComponent {
         const { userExports: newExports } = nextProps;
 
         if (oldExports !== newExports) {
+            if (this.exportPollRequests) {
+                this.exportPollRequests.forEach((p) => {
+                    p.stop();
+                });
+            }
+
             this.exportPollRequests = [];
             newExports.forEach((e) => {
                 if (e.pending) {
