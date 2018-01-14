@@ -85,7 +85,7 @@ const propTypes = {
     setAnalysisFramework: PropTypes.func.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.number.isRequired,
     setEntries: PropTypes.func.isRequired,
 
     entriesFilter: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

@@ -112,7 +112,7 @@ const propTypes = {
     addManualSubcategoryNGram: PropTypes.func.isRequired,
     setCategoryEditor: PropTypes.func.isRequired,
 
-    categoryEditorId: PropTypes.string.isRequired,
+    categoryEditorId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {

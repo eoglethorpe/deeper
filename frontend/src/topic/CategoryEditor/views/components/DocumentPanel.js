@@ -36,7 +36,7 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string,
     })),
-    categoryEditorId: PropTypes.string.isRequired,
+    categoryEditorId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {

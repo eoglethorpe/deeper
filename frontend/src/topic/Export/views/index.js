@@ -52,7 +52,7 @@ const mapStateToProps = (state, props) => ({
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    projectId: PropTypes.string.isRequired,
+    projectId: PropTypes.number.isRequired,
     entriesFilters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 

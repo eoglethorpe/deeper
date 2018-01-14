@@ -15,6 +15,7 @@ import update from '../../../../../public/utils/immutable-update';
 
 import {
     TransparentButton,
+    TransparentDangerButton,
     Button,
     PrimaryButton,
 } from '../../../../../public/components/Action';
@@ -76,7 +77,7 @@ export default class Dimension extends React.PureComponent {
         } = this.props;
 
         if (data.title) {
-            return `${afStrings.addDimensionButtonLabel} ${data.title}`;
+            return `${afStrings.dimensionLabel} ${data.title}`;
         }
 
         return afStrings.addDimensionButtonLabel;
@@ -202,11 +203,12 @@ export default class Dimension extends React.PureComponent {
                 onChange={(value) => { this.handleSubdimensionTooltipInputChange(i, value); }}
                 value={data.tooltip}
             />
-            <TransparentButton
+            <TransparentDangerButton
                 onClick={() => { this.handleDeleteSubdimensionButtonClick(i); }}
+                title={afStrings.removeSubdimensionButtonTitle}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     )
 
@@ -249,11 +251,12 @@ export default class Dimension extends React.PureComponent {
                     <ModalHeader
                         title={this.getModalTitle()}
                         rightComponent={
-                            <TransparentButton
+                            <PrimaryButton
                                 onClick={this.handleAddSubdimensionButtonClick}
+                                title={afStrings.addSubDimensionButtonLabel}
                             >
-                                {afStrings.addSubDimensionButtonLabel}
-                            </TransparentButton>
+                                <i className={iconNames.add} />
+                            </PrimaryButton>
                         }
                     />
                     <ModalBody styleName="modal-body">

@@ -6,7 +6,7 @@ import {
 } from '../../../../../common/constants';
 
 import {
-    TransparentButton,
+    TransparentDangerButton,
 } from '../../../../../public/components/Action';
 
 import {
@@ -29,8 +29,8 @@ export default class Renderer {
             className={styles['edit-sector']}
         >
             <TextInput
-                label={afStrings.sectorTitleLabel}
-                placeholder={afStrings.sectorTitlePlaceholder}
+                label={afStrings.dimensionXTitleLabel}
+                placeholder={afStrings.dimensionXTitlePlaceholder}
                 onChange={(value) => { this.handler.sectorTitleInputChange(i, value); }}
                 showHintAndError={false}
                 value={data.title}
@@ -41,12 +41,13 @@ export default class Renderer {
                 showHintAndError={false}
                 value={data.tooltip}
             />
-            <TransparentButton
+            <TransparentDangerButton
                 tabIndex="-1"
                 onClick={() => { this.handler.removeSectorButtonClick(i); }}
+                title={afStrings.removeDimensionXButtonTitle}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     );
 
@@ -56,8 +57,8 @@ export default class Renderer {
             className={styles['edit-dimension']}
         >
             <TextInput
-                label={afStrings.dimensionTitleLabel}
-                placeholder={afStrings.dimensionTitlePlaceholder}
+                label={afStrings.dimensionYTitleLabel}
+                placeholder={afStrings.dimensionYTitlePlaceholder}
                 showHintAndError={false}
                 onChange={(value) => { this.handler.dimensionTitleInputChange(i, value); }}
                 value={data.title}
@@ -73,12 +74,13 @@ export default class Renderer {
                 type="color"
                 value={data.color}
             />
-            <TransparentButton
+            <TransparentDangerButton
                 tabIndex="-1"
                 onClick={() => { this.handler.removeDimensionButtonClick(i); }}
+                title={afStrings.removeDimensionYButtonTitle}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     );
 
