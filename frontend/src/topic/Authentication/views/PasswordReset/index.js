@@ -186,8 +186,8 @@ export default class PasswordReset extends React.PureComponent {
                                         disabled={pending}
                                     >
                                         { pristine ?
-                                            loginStrings.registerPristineLabel :
-                                            loginStrings.registerLabel }
+                                            loginStrings.submitForgetPasswordPristine :
+                                            loginStrings.submitForgetPassword }
                                     </PrimaryButton>
                                 </div>
                             </Form>

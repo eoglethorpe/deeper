@@ -583,6 +583,8 @@ const strings = {
 
     824: 'Password should be more than four characters long.',
     825: 'Already have an account?',
+    826: 'Submit',
+    827: 'Submit*',
 
     // API docs
 

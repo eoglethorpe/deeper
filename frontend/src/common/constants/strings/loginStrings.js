@@ -15,7 +15,7 @@ const loginStrings = {
     noAccountYetText: string[810],
 
     checkInboxText: string[812],
-    emailPlaceholder: string[811],
+    emailPlaceholder: string[813],
 
     loginLabel: string[814],
     registerLabel: string[811],
@@ -33,6 +33,9 @@ const loginStrings = {
 
     passwordHint: string[824],
     alreadyHaveAccountText: string[825],
+
+    submitForgetPassword: string[826],
+    submitForgetPasswordPristine: string[827],
 
 
 };

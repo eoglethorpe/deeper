@@ -237,7 +237,7 @@ export default class Overview extends React.PureComponent {
         if (values.entryType === 'image') {
             return entryStrings.imageLabel;
         }
-        const characterLimit = 32;
+        const characterLimit = 64;
         const text = values.excerpt;
 
         if (!text) {
