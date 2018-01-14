@@ -422,9 +422,10 @@ export default class MembersTable extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     />
-                    <ModalBody>
+                    <ModalBody
+                        styleName="add-member"
+                    >
                         <AddUserGroupMembers
-                            styleName="add-member"
                             userGroupId={this.props.userGroupId}
                             onModalClose={this.handleAddMemberModalClose}
                         />

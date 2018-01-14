@@ -4,6 +4,7 @@
     display: flex;
     position: relative;
     flex-direction: column;
+    flex-grow: 1;
 
     .non-field-errors {
         flex-shrink: 0;
@@ -24,8 +25,4 @@
             margin-left: $spacing-medium;
         }
     }
-}
-
-:global #select-input-inside-modal {
-    z-index: 1001;
 }

@@ -12,6 +12,7 @@
         flex-shrink: 0;
         align-items: center;
         padding: $spacing-small $spacing-medium;
+        height: $height-navbar;
 
         >* {
             flex-shrink: 0;
@@ -36,19 +37,11 @@
 .add-member-modal {
     display: flex;
     flex-direction: column;
-
-    :global {
-        .modal-content {
-            height: 60vh;
-
-            .modal-body {
-                display: flex;
-                flex-direction: column;
-            }
-        }
-    }
+    height: 600px;
 
     .add-member {
+        display: flex;
+        flex-direction: column;
         flex-grow: 1;
     }
 }
