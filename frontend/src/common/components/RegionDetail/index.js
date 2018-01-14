@@ -237,7 +237,7 @@ export default class RegionDetail extends React.PureComponent {
     };
 
     handleFormCancel = () => {
-        // TODO: use prompt
+        // TODO: use user prompt
         this.resetForm(this.props);
     }
 

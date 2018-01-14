@@ -11,14 +11,15 @@ import {
     LoadingAnimation,
     Pager,
 } from '../../../public/components/View';
-import { reverseRoute } from '../../../public/utils/common';
+import { isFalsy, reverseRoute } from '../../../public/utils/common';
 import { PrimaryButton } from '../../../public/components/Action';
+import { FgRestBuilder } from '../../../public/utils/rest';
+
 import {
     iconNames,
     pathNames,
     entryStrings,
 } from '../../../common/constants';
-import { FgRestBuilder } from '../../../public/utils/rest';
 
 import schema from '../../../common/schema';
 
@@ -155,6 +156,11 @@ export default class Entries extends React.PureComponent {
                 this.analysisFrameworkRequest.stop();
             }
 
+            this.setState({
+                pendingEntries: false,
+                pendingAf: true,
+            });
+
             this.projectRequest = this.createRequestForProject(newProjectId);
             this.projectRequest.start();
             return;
@@ -288,11 +294,18 @@ export default class Entries extends React.PureComponent {
                     schema.validate(response, 'projectGetResponse');
                     this.props.setProject({ project: response });
 
-                    // TODO: check if analysisFramework is undefined
-                    this.analysisFramework = this.createRequestForAnalysisFramework(
-                        response.analysisFramework,
-                    );
-                    this.analysisFramework.start();
+                    if (isFalsy(response.analysisFramework)) {
+                        console.warn('There is no analysis framework');
+                        this.setState({
+                            pendingAf: false,
+                            pendingEntries: false,
+                        });
+                    } else {
+                        this.analysisFramework = this.createRequestForAnalysisFramework(
+                            response.analysisFramework,
+                        );
+                        this.analysisFramework.start();
+                    }
                 } catch (er) {
                     console.error(er);
                 }

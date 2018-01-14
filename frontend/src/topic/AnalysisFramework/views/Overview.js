@@ -199,7 +199,6 @@ export default class Overview extends React.PureComponent {
         this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
     }
 
-    // TODO: use this from selector
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.analysisFramework.overviewComponent)

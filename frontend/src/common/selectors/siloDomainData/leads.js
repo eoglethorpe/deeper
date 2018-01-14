@@ -6,7 +6,6 @@ const emptyObject = {};
 
 const leadPageSelector = ({ siloDomainData }) => siloDomainData.leadPage;
 
-// TODO: make this use projectId from route
 const leadPageForProjectSelector = createSelector(
     leadPageSelector,
     projectIdFromRoute,
