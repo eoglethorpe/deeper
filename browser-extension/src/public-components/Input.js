@@ -25,7 +25,10 @@ export { default as TextArea } from '../public/components/Input/TextArea';
 export { default as TextInput } from '../public/components/Input/TextInput';
 */
 
-export { default as SelectInput } from '../public/components/Input/SelectInput';
+export {
+    default as SelectInput,
+    MultiSelectInput,
+} from '../public/components/Input/SelectInput';
 export { default as TextInput } from '../public/components/Input/TextInput';
 export { default as NumberInput } from '../public/components/Input/NumberInput';
 export { default as DateInput } from '../public/components/Input/DateInput';
