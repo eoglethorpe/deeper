@@ -71,6 +71,12 @@
                     justify-content: center;
                 }
 
+                .file-error {
+                    display: flex;
+                    justify-content: center;
+                    color: $color-danger;
+                }
+
                 .file-download {
                     display: flex;
                     justify-content: center;

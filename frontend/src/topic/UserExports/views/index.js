@@ -19,6 +19,7 @@ import {
 import {
     userExportsListSelector,
     setUserExportsAction,
+    setUserExportAction,
 } from '../../../common/redux';
 
 import schema from '../../../common/schema';
@@ -37,6 +38,11 @@ import styles from './styles.scss';
 const propTypes = {
     userExports: PropTypes.array.isRequired, //eslint-disable-line
     setUserExports: PropTypes.func.isRequired,
+    setUserExport: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+    userExports: [],
 };
 
 const mapStateToProps = (state, props) => ({
@@ -45,6 +51,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setUserExports: params => dispatch(setUserExportsAction(params)),
+    setUserExport: params => dispatch(setUserExportAction(params)),
 });
 
 const emptyList = [];
@@ -53,10 +60,21 @@ const emptyList = [];
 @CSSModules(styles, { allowMultiple: true })
 export default class UserExports extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
     static tableKeyExtractor = d => d.id;
 
     constructor(props) {
         super(props);
+
+        const { userExports } = props;
+        this.exportPollRequests = [];
+        userExports.forEach((e) => {
+            if (e.pending) {
+                const userPollRequest = this.createExportPollRequest(e.id);
+                userPollRequest.start();
+                this.exportPollRequests.push(userPollRequest);
+            }
+        });
 
         this.state = {
             selectedExport: 0,
@@ -139,7 +157,9 @@ export default class UserExports extends React.PureComponent {
                         );
                     } else if (!row.pending && !row.file) {
                         return (
-                            <span className={iconNames.error} />
+                            <div className="file-error">
+                                <span className={iconNames.error} />
+                            </div>
                         );
                     }
                     return (
@@ -161,9 +181,31 @@ export default class UserExports extends React.PureComponent {
         this.userExportsRequest.start();
     }
 
+    componentWillReceiveProps(nextProps) {
+        const { userExports: oldExports } = this.props;
+        const { userExports: newExports } = nextProps;
+
+        if (oldExports !== newExports) {
+            this.exportPollRequests = [];
+            newExports.forEach((e) => {
+                if (e.pending) {
+                    const userPollRequest = this.createExportPollRequest(e.id);
+                    userPollRequest.start();
+                    this.exportPollRequests.push(userPollRequest);
+                }
+            });
+        }
+    }
+
     componentWillUnmount() {
         if (this.userExportsRequest) {
             this.userExportsRequest.stop();
+        }
+
+        if (this.exportPollRequests) {
+            this.exportPollRequests.forEach((p) => {
+                p.stop();
+            });
         }
     }
 
@@ -177,6 +219,46 @@ export default class UserExports extends React.PureComponent {
                     this.props.setUserExports({
                         exports: response.results,
                     });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: exportStrings.userExportsTitle,
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: exportStrings.userExportsTitle,
+                    type: notify.type.ERROR,
+                    message: exportStrings.userExportsFataMessage,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return userExportsRequest;
+    };
+
+    createExportPollRequest = (exportId) => {
+        const userExportsRequest = new FgRestBuilder()
+            .url(createUrlForExport(exportId))
+            .params(() => createParamsForUserExportsGET())
+            .pollTime(2000)
+            .maxPollAttempts(200)
+            .shouldPoll(response => response.pending === true)
+            .success((response) => {
+                try {
+                    schema.validate(response, 'export');
+                    if (!response.pending) {
+                        this.props.setUserExport({
+                            userExport: response,
+                        });
+                    }
                 } catch (er) {
                     console.error(er);
                 }
