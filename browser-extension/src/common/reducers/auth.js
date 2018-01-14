@@ -40,7 +40,6 @@ const setToken = (state, action) => {
     };
 
     const newState = update(state, settings);
-    console.warn('reducer', newState);
     return newState;
 };
 

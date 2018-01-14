@@ -46,11 +46,18 @@ class App extends React.PureComponent {
             pendingTabInfo: true,
             pendingRefresh: true,
         };
+
+        chrome.runtime.onMessage.addListener((request, sender) => {
+            if (chrome.runtime.id === sender.id) {
+                if (request.message === 'token') {
+                    props.setToken({ token: request.token });
+                }
+            }
+        });
     }
 
     componentWillMount() {
         this.getCurrentTabInfo();
-
         const { token } = this.props;
 
         if (token.refresh) {

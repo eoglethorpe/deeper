@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
     DateInput,
     SelectInput,
+    MultiSelectInput,
     TextInput,
 } from '../public-components/Input';
 
@@ -213,8 +214,7 @@ export default class AddLead extends React.PureComponent {
                     </TransparentButton>
                 </header>
                 <div styleName="inputs">
-                    <SelectInput
-                        multiple
+                    <MultiSelectInput
                         label="Project"
                         value={inputValues.project}
                         onChange={value => this.handleInputValueChange('project', value)}
@@ -244,8 +244,7 @@ export default class AddLead extends React.PureComponent {
                         labelSelector={d => d.value}
                         disabled={pending}
                     />
-                    <SelectInput
-                        multiple
+                    <MultiSelectInput
                         label="Assigned to"
                         value={inputValues.assignedTo}
                         onChange={value => this.handleInputValueChange('assignedTo', value)}

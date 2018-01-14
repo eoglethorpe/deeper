@@ -54,6 +54,4 @@ store.subscribe(() => {
             commonHeader.Authorization = undefined;
         }
     }
-
-    console.warn(store.getState());
 });

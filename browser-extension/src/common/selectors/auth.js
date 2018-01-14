@@ -4,10 +4,9 @@
 const emptyList = [];
 const emptyObject = {};
 
-export const tokenSelector = (state) => {
-    console.log('selector', state);
-    return state.auth.token || emptyObject;
-};
+export const tokenSelector = ({ auth }) => (
+    auth.token || emptyObject
+);
 
 export const projectListSelector = ({ auth }) => (
     auth.projects || emptyList
