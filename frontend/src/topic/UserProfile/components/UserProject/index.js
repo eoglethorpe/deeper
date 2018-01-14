@@ -369,7 +369,7 @@ export default class UserProject extends React.PureComponent {
             confirmText,
         } = this.state;
 
-        const isCurrentUser = +userId === activeUser.userId;
+        const isCurrentUser = userId === activeUser.userId;
 
         return (
             <div

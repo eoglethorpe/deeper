@@ -176,7 +176,7 @@ export default class CountryPanel extends React.PureComponent {
 
     renderCountryListItem = (key, country) => {
         const { countryId } = this.props;
-        const activeCountryId = +countryId;
+        const activeCountryId = countryId;
         const isActive = country.id === activeCountryId;
         return (
             <CountryListItem
@@ -194,7 +194,7 @@ export default class CountryPanel extends React.PureComponent {
             countries,
         } = this.props;
 
-        const activeCountryId = +countryId;
+        const activeCountryId = countryId;
 
         if (countries.length <= 0) {
             return (

@@ -14,6 +14,6 @@ export const afViewCurrentAnalysisFrameworkSelector = createSelector(
     afIdFromRoute,
     afViewAnalysisFrameworkSelector,
     (id, analysisFramework) => (
-        (analysisFramework && analysisFramework.id === +id) ? analysisFramework : undefined
+        (analysisFramework && analysisFramework.id === id) ? analysisFramework : undefined
     ),
 );

@@ -1,5 +1,6 @@
 import createReducerWithMap from '../utils/createReducerWithMap';
 import initialRouteState from '../initial-state/route';
+import { isTruthy } from '../../public/utils/common';
 
 // TYPE
 
@@ -14,9 +15,33 @@ export const setRouteParamsAction = params => ({
 
 // REDUCER
 
+const urlValues = [
+    'projectId',
+    'leadId',
+    'analysisFrameworkId',
+    'categoryEditorId',
+    'countryId',
+    'userGroupId',
+    'userId',
+];
+
+const transform = (params) => {
+    const newParams = { ...params };
+    urlValues.forEach((urlValue) => {
+        if (isTruthy(newParams[urlValue])) {
+            newParams[urlValue] = +newParams[urlValue];
+        }
+    });
+    return newParams;
+};
+
 const setRouteParams = (state, action) => {
+    const { path, url, isExact, params } = action.params;
     const newState = {
-        ...action.params,
+        path,
+        url,
+        isExact,
+        params: transform(params),
     };
     return newState;
 };

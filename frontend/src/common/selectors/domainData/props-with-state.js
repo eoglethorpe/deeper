@@ -50,7 +50,7 @@ export const countryDetailSelector = createSelector(
     countryIdFromRoute,
     (regions, activeCountry) => (
         regions.find(
-            country => country.id === +activeCountry,
+            country => country.id === activeCountry,
         ) || emptyObject
     ),
 );
@@ -88,7 +88,7 @@ export const userGroupProjectSelector = createSelector(
                 (acc, projectId) => {
                     const userGroups = (projects[projectId] || emptyObject).userGroups;
                     const hasUserGroup = userGroups && userGroups.find(
-                        userGroup => (userGroup.id === +userGroupId),
+                        userGroup => (userGroup.id === userGroupId),
                     );
                     if (hasUserGroup) {
                         return [
