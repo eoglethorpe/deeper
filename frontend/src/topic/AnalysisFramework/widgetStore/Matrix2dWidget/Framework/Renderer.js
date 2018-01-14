@@ -6,7 +6,7 @@ import {
 } from '../../../../../common/constants';
 
 import {
-    TransparentButton,
+    TransparentDangerButton,
 } from '../../../../../public/components/Action';
 
 import {
@@ -41,12 +41,13 @@ export default class Renderer {
                 showHintAndError={false}
                 value={data.tooltip}
             />
-            <TransparentButton
+            <TransparentDangerButton
                 tabIndex="-1"
                 onClick={() => { this.handler.removeSectorButtonClick(i); }}
+                title={afStrings.removeDimensionXButtonTitle}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     );
 
@@ -73,12 +74,13 @@ export default class Renderer {
                 type="color"
                 value={data.color}
             />
-            <TransparentButton
+            <TransparentDangerButton
                 tabIndex="-1"
                 onClick={() => { this.handler.removeDimensionButtonClick(i); }}
+                title={afStrings.removeDimensionYButtonTitle}
             >
                 <span className={iconNames.delete} />
-            </TransparentButton>
+            </TransparentDangerButton>
         </div>
     );
 

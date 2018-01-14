@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    TransparentButton,
     Button,
     PrimaryButton,
 } from '../../../../../public/components/Action';
@@ -17,7 +16,10 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
-import { afStrings } from '../../../../../common/constants';
+import {
+    afStrings,
+    iconNames,
+} from '../../../../../common/constants';
 
 const emptyList = [];
 
@@ -54,11 +56,12 @@ export const getEditWidgetModal = (parent) => {
                         <h4 styleName="heading">
                             {afStrings.dimensionXLabel}
                         </h4>
-                        <TransparentButton
+                        <PrimaryButton
                             onClick={parent.handler.addSectorButtonClick}
+                            title={afStrings.addDimensionXButtonLabel}
                         >
-                            {afStrings.addDimensionXButtonLabel}
-                        </TransparentButton>
+                            <i className={iconNames.add} />
+                        </PrimaryButton>
                     </header>
                     <ListView
                         styleName="list"
@@ -72,12 +75,13 @@ export const getEditWidgetModal = (parent) => {
                         <h4 styleName="heading">
                             {afStrings.dimensionYLabel}
                         </h4>
-                        <TransparentButton
+                        <PrimaryButton
                             tabIndex="-1"
                             onClick={parent.handler.addDimensionButtonClick}
+                            title={afStrings.addDimensionYButtonLabel}
                         >
-                            {afStrings.addDimensionYButtonLabel}
-                        </TransparentButton>
+                            <i className={iconNames.add} />
+                        </PrimaryButton>
                     </header>
                     <ListView
                         styleName="list"
@@ -135,11 +139,12 @@ export const getEditSectorsModal = (parent) => {
                         <h4>
                             {afStrings.subDimensionsLabel}
                         </h4>
-                        <TransparentButton
+                        <PrimaryButton
                             onClick={parent.handler.addSubsectorButtonClick}
+                            title={afStrings.addButtonLabel}
                         >
-                            {afStrings.addButtonLabel}
-                        </TransparentButton>
+                            <i className={iconNames.add} />
+                        </PrimaryButton>
                     </header>
                     <ListView
                         styleName="sub-sector-list"

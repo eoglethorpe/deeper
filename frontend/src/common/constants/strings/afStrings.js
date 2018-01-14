@@ -40,6 +40,9 @@ const afStrings = {
     addButtonLabel: string[730],
     addSubDimensionButtonLabel: string[765],
     dimensionLabel: string[769],
+    removeDimensionXButtonTitle: string[770],
+    removeDimensionYButtonTitle: string[771],
+    removeSubdimensionButtonTitle: string[772],
 
 
     dimensionXTitleLabel: string[731],

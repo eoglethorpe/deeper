@@ -526,6 +526,9 @@ const strings = {
     767: 'Remove Element',
     768: '999 999',
     769: 'Dimension',
+    770: 'Remove Dimension-X',
+    771: 'Remove Dimension-Y',
+    772: 'Remove Subdimension',
 
     // Login/Register strings
 

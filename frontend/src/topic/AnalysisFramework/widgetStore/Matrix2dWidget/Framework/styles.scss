@@ -145,12 +145,14 @@
         section {
             display: flex;
             flex-direction: column;
+            padding: $spacing-medium 0;
 
             .header {
                 display: flex;
                 flex-shrink: 0;
                 align-items: center;
-                padding: 0 $spacing-medium;
+                background-color: $color-background-row;
+                padding: $spacing-small;
 
                 .heading {
                     flex-grow: 1;
@@ -225,6 +227,7 @@
 
         .select-sector-list {
             flex-basis: 40%;
+            border-right: $width-separator-medium solid $color-separator;
             overflow-y: auto;
 
             .select-sector {
@@ -257,7 +260,8 @@
                 flex-shrink: 0;
                 align-items: center;
                 justify-content: space-between;
-                padding: 0 $spacing-medium;
+                padding: $spacing-small $spacing-medium;
+
             }
 
             .sub-sector-list {
