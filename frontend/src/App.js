@@ -180,10 +180,13 @@ export default class App extends React.PureComponent {
                 stopRefresh();
                 stopSiloTasks();
                 logout();
+
+                // TODO: add notify
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: something wrong with the internet or server
+                // TODO: notify
+                // something wrong with the internet or server
             })
             .build();
         return refreshRequest;

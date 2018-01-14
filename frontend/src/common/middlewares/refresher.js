@@ -55,11 +55,13 @@ class Refresher {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: logout and send to login screen
+                // TODO: notify
+                // logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: user couldn't be verfied screen
+                // TODO: notify
+                // user couldn't be verfied screen
             })
             .build();
         return projectsRequest;

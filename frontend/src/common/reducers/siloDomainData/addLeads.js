@@ -93,7 +93,6 @@ export const addLeadViewCopyAllAction = ({ leadId, attrName }) => ({
 const hasError = (state, leadIndex) => {
     const { addLeadView: { leads } } = state;
     const lead = leads[leadIndex];
-    // TODO: check if we actually use errors inside form
     const { form: { errors, fieldErrors } } = lead;
     if (errors && errors.length > 0) {
         return true;

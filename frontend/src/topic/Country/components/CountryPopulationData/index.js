@@ -65,6 +65,7 @@ export default class CountryPopulationData extends React.PureComponent {
         // TODO: do something later
         console.log('Form cancel');
     };
+
     render() {
         const {
             pristine,

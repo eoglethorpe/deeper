@@ -132,7 +132,6 @@ export default class Overview extends React.PureComponent {
         }
     }
 
-    // TODO: these items and grids are calcualted, maybe use them
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
             .filter(widget => widget.tagging.overviewComponent)
@@ -162,7 +161,6 @@ export default class Overview extends React.PureComponent {
         }
     }
 
-    // TODO: these items and grids are calcualted, maybe use them
     updateGridItems() {
         this.gridItems = this.items.map(item => ({
             id: item.id,

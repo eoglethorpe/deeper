@@ -14,7 +14,6 @@ export const createUrlForAdminLevelsForRegion = regionId => `${wsEndpoint}/admin
 
 export const createUrlForRegionWithField = (regionId, fields) => {
     if (fields) {
-        // TODO: must check for unique fields
         const finalFields = regionsUrlFields.concat(fields);
         return `${wsEndpoint}/regions/${regionId}/?${p({ fields: finalFields })}`;
     }

@@ -255,7 +255,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                // TODO: Validate error response with schema
                 notify.send({
                     title: notificationStrings.userMembershipCreate,
                     type: notify.type.ERROR,

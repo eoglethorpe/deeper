@@ -113,6 +113,7 @@ export default class Login extends React.PureComponent {
                 lengthGreaterThanCondition(4),
             ],
         };
+        /*
         // TODO: remove this validation later, just for example
         this.validation = createValidation('email', 'password', (email, password) => {
             if (password.length > email.length) {
@@ -127,6 +128,7 @@ export default class Login extends React.PureComponent {
             }
             return { ok: true };
         });
+        */
     }
 
     componentWillMount() {
@@ -302,7 +304,6 @@ export default class Login extends React.PureComponent {
                         elements={this.elements}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
-                        validation={this.validation}
                         validations={this.validations}
                     >
                         { pending && <LoadingAnimation /> }

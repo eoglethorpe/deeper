@@ -499,7 +499,7 @@ const ceRemoveSelectedSubcategory = (state, action) => {
         },
     };
 
-    // Set parent as selected category (TODO: maybe siblings)
+    // Set parent/siblings as selected category
     settings
         .categoryEditorView[categoryEditorId]
         .data.categories[indices[0]].selectedSubcategories = {

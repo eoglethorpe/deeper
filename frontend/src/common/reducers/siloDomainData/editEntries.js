@@ -94,7 +94,7 @@ const editEntryViewSetLead = (state, action) => {
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
-                // TODO: why not setting leadId here?
+                // FIXME: why not setting leadId here?
                 // but setting it on addEntry
                 lead: { $set: lead },
             } },
@@ -111,7 +111,7 @@ const editEntryViewAddEntry = (state, action) => {
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
-                // TODO: why are we setting leadId here
+                // FIXME: why are we setting leadId here
                 leadId: { $set: leadId },
                 selectedEntryId: { $set: newEntryId },
                 entries: { $autoArray: {
