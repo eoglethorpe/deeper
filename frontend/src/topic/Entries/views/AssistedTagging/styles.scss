@@ -13,33 +13,18 @@
 
     .bottom-box {
         display: flex;
-        flex-direction: column;
         flex-shrink: 0;
+        align-items: flex-end;
         border-top: $width-separator-thin solid $color-separator;
-        padding: $spacing-medium-alt $spacing-medium-alt $spacing-large;
+        padding: $spacing-medium-alt;
 
         .assisted-source-change-btn {
-            display: flex;
-            flex-shrink: 0;
-            width: 100%;
+            flex-basis: 60%;
         }
 
-        .details {
-            display: flex;
-            flex-shrink: 0;
-            align-items: flex-end;
-            justify-content: space-between;
-            padding: $spacing-small 0;
-
-            span {
-                text-transform: uppercase;
-                font-size: $font-size-medium;
-            }
-
-            .select-input {
-                flex-basis: 50%;
-                margin-left: $spacing-small;
-            }
+        .select-input {
+            flex-basis: 40%;
+            margin-left: $spacing-small;
         }
     }
 

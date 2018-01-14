@@ -495,42 +495,42 @@ export default class AssistedTagging extends React.PureComponent {
                         onChange={this.handleAssitedTaggingSourceChange}
                         backgroundHighlight
                     />
-                    <div styleName="details">
-                        <span>{entryStrings.showSuggestionText}</span>
-                        {
-                            selectedAssitedTaggingSource === 'nlp' && (
-                                <MultiSelectInput
-                                    styleName="select-input"
-                                    options={nlpSectorOptions}
-                                    showHintAndError={false}
-                                    value={nlpSelectedSectors}
-                                    onChange={this.handleNlpSectorSelect}
-                                />
-                            )
-                        }
-                        {
-                            selectedAssitedTaggingSource === 'ce' && (
-                                <MultiSelectInput
-                                    styleName="select-input"
-                                    options={ceSectorOptions}
-                                    showHintAndError={false}
-                                    value={ceSelectedSectors}
-                                    onChange={this.handleCeSectorSelect}
-                                />
-                            )
-                        }
-                        {
-                            selectedAssitedTaggingSource === 'ner' && (
-                                <MultiSelectInput
-                                    styleName="select-input"
-                                    options={nerSectorOptions}
-                                    showHintAndError={false}
-                                    value={nerSelectedSectors}
-                                    onChange={this.handleNerSectorSelect}
-                                />
-                            )
-                        }
-                    </div>
+                    {
+                        selectedAssitedTaggingSource === 'nlp' && (
+                            <MultiSelectInput
+                                label={entryStrings.showSuggestionText}
+                                styleName="select-input"
+                                options={nlpSectorOptions}
+                                showHintAndError={false}
+                                value={nlpSelectedSectors}
+                                onChange={this.handleNlpSectorSelect}
+                            />
+                        )
+                    }
+                    {
+                        selectedAssitedTaggingSource === 'ce' && (
+                            <MultiSelectInput
+                                label={entryStrings.showSuggestionText}
+                                styleName="select-input"
+                                options={ceSectorOptions}
+                                showHintAndError={false}
+                                value={ceSelectedSectors}
+                                onChange={this.handleCeSectorSelect}
+                            />
+                        )
+                    }
+                    {
+                        selectedAssitedTaggingSource === 'ner' && (
+                            <MultiSelectInput
+                                label={entryStrings.showSuggestionText}
+                                styleName="select-input"
+                                options={nerSectorOptions}
+                                showHintAndError={false}
+                                value={nerSelectedSectors}
+                                onChange={this.handleNerSectorSelect}
+                            />
+                        )
+                    }
                 </div>
                 <FloatingContainer
                     closeOnBlur
