@@ -1,13 +1,13 @@
-import { createSelector } from 'reselect'; // eslint-disable-line no-unused-vars
+// import { createSelector } from 'reselect';
 
 // NOTE: Use these to make sure reference don't change
-const emptyList = []; // eslint-disable-line no-unused-vars
-const emptyObject = {}; // eslint-disable-line no-unused-vars
+const emptyList = [];
+const emptyObject = {};
 
-// eslint-disable-next-line import/prefer-default-export
-export const tokenSelector = ({ auth }) => (
-    auth.token || emptyObject
-);
+export const tokenSelector = (state) => {
+    console.log('selector', state);
+    return state.auth.token || emptyObject;
+};
 
 export const projectListSelector = ({ auth }) => (
     auth.projects || emptyList

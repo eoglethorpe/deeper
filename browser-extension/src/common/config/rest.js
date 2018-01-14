@@ -48,12 +48,12 @@ store.subscribe(() => {
     const token = tokenSelector(store.getState());
     currentAccess = token.access;
     if (prevAccess !== currentAccess) {
-        // console.warn(prevAccess);
-        // console.warn(currentAccess);
         if (currentAccess) {
             commonHeader.Authorization = `Bearer ${currentAccess}`;
         } else {
             commonHeader.Authorization = undefined;
         }
     }
+
+    console.warn(store.getState());
 });

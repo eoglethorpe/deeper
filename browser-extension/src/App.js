@@ -51,8 +51,28 @@ class App extends React.PureComponent {
     componentWillMount() {
         this.getCurrentTabInfo();
 
-        this.tokenRefreshRequest = this.createRequestForTokenRefresh(this.props.token);
-        this.tokenRefreshRequest.start();
+        const { token } = this.props;
+
+        if (token.refresh) {
+            this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
+            this.tokenRefreshRequest.start();
+        } else {
+            const url = 'localhost:3000/browser-extension';
+            chrome.tabs.create({
+                url,
+                active: false,
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { token: newToken } = nextProps;
+        const { token: oldToken } = this.props;
+
+        if (newToken.refresh !== oldToken.refresh) {
+            this.tokenRefreshRequest = this.createRequestForTokenRefresh(newToken);
+            this.tokenRefreshRequest.start();
+        }
     }
 
     componentWillUnmount() {

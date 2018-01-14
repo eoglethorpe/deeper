@@ -123,6 +123,12 @@ const notificationStrings = {
     // Entries
     entryUpdate: string[987],
     entryUpdateOverridden: string[982],
+
+    // Browser Extension
+    browserExtensionSuccessTitle: string[2000],
+    browserExtensionSuccessMessage: string[2001],
+    browserExtensionFailureTitle: string[2000],
+    browserExtensionFailureMessage: string[2002],
 };
 
 export default notificationStrings;

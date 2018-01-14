@@ -1,18 +1,30 @@
 {
-  "manifest_version": 2,
-  "name": "Browser Extension for Data Entry and Exploration Platform",
-  "short_name": "DEEP Extension",
-  "version": "1.0",
+    "manifest_version": 2,
+    "name": "Browser Extension for Data Entry and Exploration Platform",
+    "short_name": "DEEP Extension",
+    "version": "1.0",
 
-  "description": "Browser Extension for Data Entry and Exploration Platform",
-  "icons": {
-        "192": "favicon.ico"
-  },
-  "browser_action": {
-    "default_icon": {
+    "description": "Browser Extension for Data Entry and Exploration Platform",
+    "icons": {
         "192": "favicon.ico"
     },
-    "default_popup": "index.html",
-    "default_title": "DEEP Extension"
-  }
+
+    "browser_action": {
+        "default_icon": {
+            "192": "favicon.ico"
+        },
+        "default_popup": "index.html",
+        "default_title": "DEEP Extension"
+    },
+
+    "background": {
+        "scripts": ["static/js/background.js"],
+        "persistent": false
+    },
+
+    "permissions": ["activeTab", "<all_urls>", "storage"],
+
+    "externally_connectable": {
+        "matches": ["*://www.thedeep.io/*", "*://*.togglecorp.com/*", "*://localhost:*/*"]
+    }
 }

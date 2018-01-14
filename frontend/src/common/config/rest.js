@@ -1,4 +1,5 @@
 import { RestRequest } from '../../public/utils/rest';
+import { sendToken } from '../utils/browserExtension';
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
@@ -38,6 +39,8 @@ export const commonHeaderForPost = {
     'Content-Type': 'application/json',
 };
 
+const noOp = () => {};
+
 if (process.env.NODE_ENV !== 'test') {
     // eslint-disable-next-line global-require
     const store = require('../store').default;
@@ -45,10 +48,13 @@ if (process.env.NODE_ENV !== 'test') {
     const tokenSelector = require('../selectors/auth').tokenSelector;
 
     let currentAccess;
+    let currentRefresh;
     store.subscribe(() => {
         const prevAccess = currentAccess;
+        const prevRefresh = currentRefresh;
         const token = tokenSelector(store.getState());
         currentAccess = token.access;
+        currentRefresh = token.refresh;
         if (prevAccess !== currentAccess) {
             if (currentAccess) {
                 commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
@@ -57,6 +63,10 @@ if (process.env.NODE_ENV !== 'test') {
                 commonHeaderForPost.Authorization = undefined;
                 authorizationHeaderForPost.Authorization = undefined;
             }
+        }
+
+        if (prevRefresh !== currentRefresh) {
+            sendToken(token).then(noOp, noOp);
         }
     });
 }

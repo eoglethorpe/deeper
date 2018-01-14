@@ -4,6 +4,9 @@
         "browser": true,
         "jest": true,
     },
+    "globals": {
+        "chrome": true
+    },
     "plugins": [
         "react",
     ],

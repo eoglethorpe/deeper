@@ -126,11 +126,10 @@ export default class AnalysisFramework extends React.PureComponent {
                         analysisFramework: response,
                     });
                     notify.send({
-                        dismissable: false,
                         title: notificationStrings.afTitle,
                         type: notify.type.SUCCESS,
                         message: notificationStrings.afSaveSuccess,
-                        duration: 5000,
+                        duration: notify.duration.SLOW,
                     });
                 } catch (er) {
                     console.error(er);

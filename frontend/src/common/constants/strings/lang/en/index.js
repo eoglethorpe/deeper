@@ -776,6 +776,10 @@ const strings = {
     1236: 'Shhhh!!! The Kraken is sleeping ...',
 
     1300: 'Are you sure you want to leave? You may lose your unsaved changes.',
+
+    2000: 'Browser Extension',
+    2001: 'Your extension has been successfully set up',
+    2002: 'An error occured while setting up the extension, please make sure you have installed and enabled the extension and',
 };
 
 export default strings;

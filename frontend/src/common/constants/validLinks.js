@@ -42,6 +42,7 @@ const validLinks = {
     register: noLinks,
     passwordReset: noLinks,
     fourHundredFour: noLinks,
+    browserExtension: allLinksWithProjectDisabled,
 
     homeScreen: allLinks,
 
