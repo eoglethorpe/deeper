@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import { Prompt } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -27,6 +28,7 @@ import {
     iconNames,
     ceStrings,
     notificationStrings,
+    commonStrings,
 } from '../../../common/constants';
 
 import DocumentPanel from './components/DocumentPanel';
@@ -501,6 +503,10 @@ export default class CategoryEditor extends React.PureComponent {
         return (
             <div styleName="category-editor">
                 { pending && <LoadingAnimation /> }
+                <Prompt
+                    when={!categoryEditorViewPristine}
+                    message={commonStrings.youHaveUnsavedChanges}
+                />
                 <div styleName="left">
                     <DocumentPanel />
                 </div>
