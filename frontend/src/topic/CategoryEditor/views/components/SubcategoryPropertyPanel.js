@@ -38,7 +38,7 @@ const propTypes = {
     removeSelectedSubcategory: PropTypes.func.isRequired,
     removeSubcategoryNGram: PropTypes.func.isRequired,
     onNewManualNGram: PropTypes.func.isRequired,
-    categoryEditorId: PropTypes.string.isRequired,
+    categoryEditorId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {

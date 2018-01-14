@@ -47,7 +47,7 @@ const propTypes = {
             title: PropTypes.string,
         }),
     ),
-    projectId: PropTypes.string,
+    projectId: PropTypes.number,
 };
 
 const defaultProps = {

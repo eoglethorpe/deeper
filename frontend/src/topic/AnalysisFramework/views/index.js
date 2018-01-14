@@ -36,7 +36,7 @@ import List from './List';
 
 const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    analysisFrameworkId: PropTypes.string.isRequired,
+    analysisFrameworkId: PropTypes.number.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
 };
 

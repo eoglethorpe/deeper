@@ -34,7 +34,7 @@ const propTypes = {
         title: PropTypes.string,
     })),
     setCeDeepGalleryFiles: PropTypes.func.isRequired,
-    categoryEditorId: PropTypes.string.isRequired,
+    categoryEditorId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {

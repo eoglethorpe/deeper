@@ -47,7 +47,7 @@ const propTypes = {
     countries: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     setRegions: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    countryId: PropTypes.string,
+    countryId: PropTypes.number,
 };
 
 const defaultProps = {
