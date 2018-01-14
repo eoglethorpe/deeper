@@ -1,6 +1,7 @@
 @import '../../../../stylesheets/base';
 
 .register {
+    @extend %main-content;
     display: flex;
     flex-wrap: wrap;
     align-content: center;

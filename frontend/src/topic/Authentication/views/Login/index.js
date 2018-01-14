@@ -227,7 +227,6 @@ export default class Login extends React.PureComponent {
                         this.props.startRefresh();
                         this.props.authenticate();
                     }
-
                     // Start the locked silo tasks
                     this.props.startSiloTasks(() => {
                         console.log('Silo tasks started');

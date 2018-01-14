@@ -10,6 +10,9 @@ import {
 import {
     setUserProjectsAction,
 } from '../../common/reducers/domainData/projects';
+import {
+    setGaUserId,
+} from '../../common/config/google-analytics';
 
 
 export const START_REFRESH = 'refresh/START';
@@ -62,17 +65,21 @@ class Refresher {
         return projectsRequest;
     }
 
-    load = (loadCallback) => {
+    start = (loadCallback) => {
         this.stop();
         this.loadCallback = loadCallback;
         this.projectsRequest = this.createProjectsRequest(this.store);
         this.projectsRequest.start();
+
+        const { userId } = activeUserSelector(this.store.getState());
+        setGaUserId(userId);
     }
 
     stop = () => {
         if (this.projectsRequest) {
             this.projectsRequest.stop();
         }
+        setGaUserId(undefined);
     }
 }
 
@@ -82,7 +89,7 @@ const refresherMiddleware = (store) => {
         // store, next, action
         switch (action.type) {
             case START_REFRESH:
-                refresher.load(action.loadCallback);
+                refresher.start(action.loadCallback);
                 break;
             case STOP_REFRESH:
                 refresher.stop();
