@@ -547,6 +547,7 @@ const strings = {
 
     773: 'Edit Title',
     774: 'Title',
+    775: 'Options',
 
     // Login/Register strings
 

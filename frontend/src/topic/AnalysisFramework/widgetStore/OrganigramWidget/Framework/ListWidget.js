@@ -72,6 +72,7 @@ export default class Organigram extends React.PureComponent {
         this.state = {
             showEditModal: false,
             organigram: props.data || baseOrgan,
+            title: props.title,
         };
 
         this.props.editAction(this.handleEditClick);
@@ -127,14 +128,15 @@ export default class Organigram extends React.PureComponent {
         this.setState({ showEditModal: true });
     }
 
-    handleEditModalClose = () => {
-        this.setState({ showEditModal: false });
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
     }
 
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
             organigram: this.props.data || baseOrgan,
+            title: this.props.title,
         });
     }
 
@@ -144,9 +146,9 @@ export default class Organigram extends React.PureComponent {
             this.state.organigram,
             this.createFilters(this.state.organigram),
             this.createExportable(),
+            this.state.title,
         );
     }
-
 
     handleAdd = nextIndices => () => {
         const wrapper = e => ({ organs: e });
@@ -239,6 +241,7 @@ export default class Organigram extends React.PureComponent {
         const {
             showEditModal,
             organigram,
+            title,
         } = this.state;
 
         return (
@@ -246,10 +249,19 @@ export default class Organigram extends React.PureComponent {
                 <Modal
                     styleName="edit-value-modal"
                     show={showEditModal}
-                    onClose={this.handleEditModalClose}
                 >
                     <ModalHeader title={afStrings.editOrganigramModaltitle} />
-                    <ModalBody>
+                    <ModalBody styleName="modal-body">
+                        <div styleName="general-info-container">
+                            <TextInput
+                                className={styles['title-input']}
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.titlePlaceholderScale}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                        </div>
                         { this.renderOrgan(organigram) }
                     </ModalBody>
                     <ModalFooter>

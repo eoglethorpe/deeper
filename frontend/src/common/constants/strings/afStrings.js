@@ -91,6 +91,7 @@ const afStrings = {
     numberPlaceholder: string[768],
     editTitleModalHeader: string[773],
     widgetTitlePlaceholder: string[774],
+    optionsHeader: string[775],
 };
 
 export default afStrings;
