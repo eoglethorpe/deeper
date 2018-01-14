@@ -5,6 +5,7 @@ import React from 'react';
 import {
     DateInput,
     TextInput,
+    Checkbox,
 } from '../../../../../public/components/Input';
 import {
     Button,
@@ -25,11 +26,19 @@ const propTypes = {
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
+
+const defaultProps = {
+    data: {},
+};
+
+const emptyObject = {};
 
 @CSSModules(styles)
 export default class DateFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -37,16 +46,17 @@ export default class DateFrameworkList extends React.PureComponent {
         this.state = {
             showEditModal: false,
             title: props.title,
+            informationDataSelected: (props.data || emptyObject).informationDataSelected,
         };
 
         this.props.editAction(this.handleEdit);
     }
 
     componentDidMount() {
-        const { onChange } = this.props;
+        const { data, onChange } = this.props;
 
         onChange(
-            undefined,
+            data,
             this.createFilters(),
             this.createExportable(),
         );
@@ -83,6 +93,10 @@ export default class DateFrameworkList extends React.PureComponent {
         this.setState({ title: value });
     }
 
+    handleInformationDataCheck = (value) => {
+        this.setState({ informationDataSelected: value });
+    }
+
     handleEdit = () => {
         this.setState({ showEditModal: true });
     }
@@ -91,15 +105,17 @@ export default class DateFrameworkList extends React.PureComponent {
         this.setState({
             showEditModal: false,
             title: this.props.title,
+            informationDataSelected: this.props.data.informationDataSelected,
         });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { title } = this.state;
+        const { title, informationDataSelected } = this.state;
+        const data = { informationDataSelected };
 
         this.props.onChange(
-            undefined,
+            data,
             this.createFilters(),
             this.createExportable(),
             title,
@@ -107,7 +123,11 @@ export default class DateFrameworkList extends React.PureComponent {
     }
 
     render() {
-        const { showEditModal, title } = this.state;
+        const {
+            showEditModal,
+            title,
+            informationDataSelected,
+        } = this.state;
 
         return (
             <div styleName="date-list">
@@ -120,13 +140,19 @@ export default class DateFrameworkList extends React.PureComponent {
                     <ModalHeader
                         title={afStrings.editTitleModalHeader}
                     />
-                    <ModalBody>
+                    <ModalBody styleName="modal-body">
                         <TextInput
                             label={afStrings.titleLabel}
                             placeholder={afStrings.widgetTitlePlaceholder}
                             onChange={this.handleWidgetTitleChange}
                             value={title}
                             showHintAndError={false}
+                        />
+                        <Checkbox
+                            styleName="checkbox"
+                            onChange={this.handleInformationDataCheck}
+                            value={informationDataSelected}
+                            label={afStrings.informationDateCheckboxLabel}
                         />
                     </ModalBody>
                     <ModalFooter>

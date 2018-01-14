@@ -92,6 +92,8 @@ const afStrings = {
     editTitleModalHeader: string[773],
     widgetTitlePlaceholder: string[774],
     optionsHeader: string[775],
+    otherDetailsHeader: string[776],
+    informationDateCheckboxLabel: string[777],
 };
 
 export default afStrings;
