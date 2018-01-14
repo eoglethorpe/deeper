@@ -35,6 +35,8 @@ import {
     createUrlForLeadDelete,
     createParamsForLeadDelete,
     transformResponseErrorToFormError,
+    urlForLeadTopicModeling,
+    createParamsForLeadTopicModeling,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -56,6 +58,7 @@ import {
     setLeadPageActivePageAction,
 
     addLeadViewAddLeadsAction,
+    setLeadVisualizationAction,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -89,6 +92,7 @@ const propTypes = {
     viewMode: PropTypes.string.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
+    setLeadVisualization: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -116,6 +120,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
+    setLeadVisualization: parms => dispatch(setLeadVisualizationAction(parms)),
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
@@ -306,7 +311,12 @@ export default class Leads extends React.PureComponent {
             activeSort,
             filters,
         });
+        this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
+            activeProject,
+            filters,
+        });
         this.leadRequest.start();
+        this.leadCDIdRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -324,18 +334,25 @@ export default class Leads extends React.PureComponent {
             this.props.activePage !== activePage
         ) {
             this.leadRequest.stop();
+            this.leadCDIdRequest.stop();
             this.leadRequest = this.createRequestForProjectLeads({
                 activeProject,
                 activePage,
                 activeSort,
                 filters,
             });
+            this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
+                activeProject,
+                filters,
+            });
             this.leadRequest.start();
+            this.leadCDIdRequest.start();
         }
     }
 
     componentWillUnmount() {
         this.leadRequest.stop();
+        this.leadCDIdRequest.start();
 
         if (this.leadDeleteRequest) {
             this.leadDeleteRequest.stop();
@@ -384,6 +401,7 @@ export default class Leads extends React.PureComponent {
         const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
         const leadRequestLimit = MAX_LEADS_PER_REQUEST;
 
+        // TODO: add required fields only
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             ordering: activeSort,
@@ -434,6 +452,71 @@ export default class Leads extends React.PureComponent {
         return leadRequest;
     }
 
+    createRequestForProjectLeadsCDId = ({ activeProject, filters }) => {
+        const sanitizedFilters = this.getFiltersForRequest(filters);
+
+        const urlForProjectLeads = createUrlForLeadsOfProject({
+            project: activeProject,
+            fields: 'classified_doc_id',
+            ...sanitizedFilters,
+        });
+
+        const leadRequest = new FgRestBuilder()
+            .url(urlForProjectLeads)
+            .params(() => createParamsForUser())
+            .preLoad(() => {
+                this.setState({ loadingLeads: true });
+            })
+            .postLoad(() => {
+                this.setState({ loadingLeads: false });
+            })
+            .success((response) => {
+                try {
+                    schema.validate(response, 'leadsCDIdGetResponse');
+                    const docIds = response.results.reduce((acc, lead) => {
+                        if (lead.classifiedDocId) {
+                            acc.push(lead.classifiedDocId);
+                        }
+                        return acc;
+                    }, []);
+                    if (this.requestForLeadTopicmodeling) {
+                        this.requestForLeadTopicmodeling.stop();
+                    }
+                    this.requestForLeadTopicmodeling =
+                        this.createRequestForLeadTopicModeling(docIds);
+                    this.requestForLeadTopicmodeling.start();
+                    /*
+                    this.props.setLeads({
+                        projectId: activeProject,
+                        leads: response.results,
+                        totalLeadsCount: response.count,
+                    });
+                    */
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: 'Leads', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Couldn\'t load leads', // FIXME: strings
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return leadRequest;
+    }
+
     createRequestForLeadDelete = (lead) => {
         const { id } = lead;
         const leadRequest = new FgRestBuilder()
@@ -453,6 +536,9 @@ export default class Leads extends React.PureComponent {
                 if (this.leadRequest) {
                     this.leadRequest.stop();
                 }
+                if (this.leadCDIdRequest) {
+                    this.leadCDIdRequest.stop();
+                }
                 const { activeProject, activePage, activeSort, filters } = this.props;
                 this.leadRequest = this.createRequestForProjectLeads({
                     activeProject,
@@ -460,7 +546,12 @@ export default class Leads extends React.PureComponent {
                     activeSort,
                     filters,
                 });
+                this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
+                    activeProject,
+                    filters,
+                });
                 this.leadRequest.start();
+                this.leadCDIdRequest.start();
             })
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
@@ -481,6 +572,35 @@ export default class Leads extends React.PureComponent {
             })
             .build();
         return leadRequest;
+    }
+
+    createRequestForLeadTopicModeling = (docIds) => {
+        const request = new FgRestBuilder()
+            .url(urlForLeadTopicModeling)
+            .params(createParamsForLeadTopicModeling({
+                doc_ids: docIds,
+                number_of_topics: 5,
+                depth: 2,
+                keywords_per_topic: 3,
+            }))
+            .success((response) => {
+                try {
+                    // FIXME: write schema
+                    this.props.setLeadVisualization({ data: response });
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.error(response);
+                // TODO: notify user for failure
+            })
+            .fatal((response) => {
+                console.error(response);
+                // TODO: notify user for failure
+            })
+            .build();
+        return request;
     }
 
     // UI

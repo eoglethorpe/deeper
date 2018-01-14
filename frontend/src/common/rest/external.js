@@ -28,6 +28,9 @@ export const createParamsForNer = text => ({
 export const urlForLeadClassify =
     'https://deepl.togglecorp.com/api/v2/classify/';
 
+export const urlForLeadTopicModeling =
+    'https://deepl.togglecorp.com/api/topic-modeling/';
+
 export const createParamsForLeadClassify = body => ({
     method: POST,
     body: JSON.stringify(body),
@@ -38,6 +41,15 @@ export const createParamsForLeadClassify = body => ({
 });
 
 export const createParamsForFeedback = body => ({
+    method: POST,
+    body: JSON.stringify(body),
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+
+export const createParamsForLeadTopicModeling = body => ({
     method: POST,
     body: JSON.stringify(body),
     headers: {
