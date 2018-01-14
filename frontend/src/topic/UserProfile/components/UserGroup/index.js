@@ -134,7 +134,7 @@ export default class UserGroup extends React.PureComponent {
                 modifier: (row) => {
                     const { userId } = this.props;
                     const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
+                    const membership = memberships.find(d => d.member === userId);
                     return membership && membership.role ? membership.role : '-';
                 },
             },
@@ -147,7 +147,7 @@ export default class UserGroup extends React.PureComponent {
                 modifier: (row) => {
                     const { userId } = this.props;
                     const { memberships = [] } = row;
-                    const membership = memberships.find(d => d.member === +userId);
+                    const membership = memberships.find(d => d.member === userId);
                     const { joinedAt } = membership || {};
                     return (
                         <FormattedDate
@@ -343,7 +343,7 @@ export default class UserGroup extends React.PureComponent {
             confirmText,
         } = this.state;
 
-        const isCurrentUser = +userId === activeUser.userId;
+        const isCurrentUser = userId === activeUser.userId;
 
         return (
             <div

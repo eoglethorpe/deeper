@@ -222,7 +222,7 @@ export default class UserGroup extends React.PureComponent {
                 <MembersTable
                     styleName="members"
                     memberData={userGroup.memberships || emptyList}
-                    userGroupId={+userGroupId}
+                    userGroupId={userGroupId}
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     activeUser={this.props.activeUser}
                 />

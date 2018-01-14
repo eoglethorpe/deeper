@@ -155,7 +155,7 @@ export default class UserProfile extends React.PureComponent {
 
         const { pending } = this.state;
 
-        const isCurrentUser = +userId === activeUser.userId;
+        const isCurrentUser = userId === activeUser.userId;
 
         if (pending) {
             return (

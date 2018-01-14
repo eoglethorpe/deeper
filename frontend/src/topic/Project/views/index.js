@@ -104,7 +104,7 @@ export default class ProjectPanel extends React.PureComponent {
 
         const styleNames = [];
         styleNames.push(styles['list-item']);
-        if (projectId === +projectIdFromUrl) {
+        if (projectId === projectIdFromUrl) {
             styleNames.push(styles.active);
         }
         return styleNames.join(' ');
@@ -218,7 +218,7 @@ export default class ProjectPanel extends React.PureComponent {
                         <ProjectDetails
                             key={projectId}
                             styleName="project-details"
-                            projectId={+projectId}
+                            projectId={projectId}
                             mainHistory={history}
                         />
                     ) : (
