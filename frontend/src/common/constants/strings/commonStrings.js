@@ -50,6 +50,7 @@ const commonStrings = {
     loadingMessages15: string[1236],
 
 
+    youHaveUnsavedChanges: string[1300],
 };
 
 export default commonStrings;

@@ -741,6 +741,8 @@ const strings = {
     1234: 'I am Mr. Meeseeks!! Look at me ...',
     1235: 'Oh, yeaahhhh! You gotta get schwifty. ...',
     1236: 'Shhhh!!! The Kraken is sleeping ...',
+
+    1300: 'Are you sure you want to leave? You may lose your unsaved changes.',
 };
 
 export default strings;
