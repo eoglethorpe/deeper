@@ -7,10 +7,12 @@
 .error-website-msg {
     display: flex;
     flex-direction: column;
+    text-align: center;
     align-items: center;
     justify-content: center;
     margin: auto;
     color: $color-danger;
+    padding: $spacing-medium;
 
     .url {
         display: inline-block;
