@@ -4,7 +4,19 @@ import React from 'react';
 
 import {
     DateInput,
+    TextInput,
 } from '../../../../../public/components/Input';
+import {
+    Button,
+    PrimaryButton,
+} from '../../../../../public/components/Action';
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+} from '../../../../../public/components/View';
+import { afStrings } from '../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -12,7 +24,7 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
+    onChange: PropTypes.func.isRequired,
 };
 
 @CSSModules(styles)
@@ -21,6 +33,11 @@ export default class DateFrameworkList extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            showEditModal: false,
+            title: props.title,
+        };
 
         this.props.editAction(this.handleEdit);
     }
@@ -62,11 +79,36 @@ export default class DateFrameworkList extends React.PureComponent {
         };
     }
 
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
     handleEdit = () => {
-        console.log('Edit Date (List)');
+        this.setState({ showEditModal: true });
+    }
+
+    handleModalCancelButtonClick = () => {
+        this.setState({
+            showEditModal: false,
+            title: this.props.title,
+        });
+    }
+
+    handleModalSaveButtonClick = () => {
+        this.setState({ showEditModal: false });
+        const { title } = this.state;
+
+        this.props.onChange(
+            undefined,
+            this.createFilters(),
+            this.createExportable(),
+            title,
+        );
     }
 
     render() {
+        const { showEditModal, title } = this.state;
+
         return (
             <div styleName="date-list">
                 <DateInput
@@ -74,6 +116,32 @@ export default class DateFrameworkList extends React.PureComponent {
                     showHintAndError={false}
                     disabled
                 />
+                <Modal show={showEditModal}>
+                    <ModalHeader
+                        title={afStrings.editTitleModalHeader}
+                    />
+                    <ModalBody>
+                        <TextInput
+                            label={afStrings.titleLabel}
+                            placeholder={afStrings.widgetTitlePlaceholder}
+                            onChange={this.handleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            onClick={this.handleModalCancelButtonClick}
+                        >
+                            {afStrings.cancelButtonLabel}
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleModalSaveButtonClick}
+                        >
+                            {afStrings.saveButtonLabel}
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
             </div>
         );
     }

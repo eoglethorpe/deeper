@@ -89,8 +89,8 @@ const afStrings = {
     removeElementButtonTitle: string[767],
 
     numberPlaceholder: string[768],
-
-
+    editTitleModalHeader: string[773],
+    widgetTitlePlaceholder: string[774],
 };
 
 export default afStrings;

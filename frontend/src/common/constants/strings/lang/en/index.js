@@ -545,6 +545,9 @@ const strings = {
     771: 'Remove Dimension-Y',
     772: 'Remove Subdimension',
 
+    773: 'Edit Title',
+    774: 'Title',
+
     // Login/Register strings
 
     800: 'Form has combined validation error.',

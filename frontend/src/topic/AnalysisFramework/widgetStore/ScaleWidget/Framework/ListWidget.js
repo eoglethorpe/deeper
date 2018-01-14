@@ -239,9 +239,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleScaleWidgetTitleChange = (value) => {
-        this.setState({
-            title: value,
-        });
+        this.setState({ title: value });
     }
 
     handleScaleUnitValueInputChange = (key, value) => {

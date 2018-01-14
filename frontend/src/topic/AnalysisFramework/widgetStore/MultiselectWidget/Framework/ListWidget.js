@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    MultipleSelectInput,
+    MultiSelectInput,
     TextInput,
 } from '../../../../../public/components/Input';
 import {
@@ -185,10 +185,11 @@ export default class Multiselect extends React.PureComponent {
 
         return (
             <div styleName="multiselect-list">
-                <MultipleSelectInput
+                <MultiSelectInput
                     options={values}
                     styleName="multiselect"
                     keyExtractor={Multiselect.valueKeyExtractor}
+                    disabled
                 />
                 <Modal
                     styleName="edit-value-modal"
