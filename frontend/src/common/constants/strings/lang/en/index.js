@@ -412,7 +412,9 @@ const strings = {
     537: 'Search Excerpt',
     538: 'Created By',
     539: 'Created At',
-    540: 'Entry',
+    540: 'NER',
+    541: 'Assited tagging feedback',
+    542: 'Thank you for your feedback',
     // Export strings
 
     600: 'Export',
@@ -442,6 +444,19 @@ const strings = {
 
     618: 'Server error',
     619: 'Failed connecting to server',
+    620: 'View all exports',
+    621: 'User Exports',
+    622: 'Unable to load your previous exports',
+    623: 'Doc. type',
+    624: 'Exported At',
+    625: 'Title',
+    626: 'Status',
+    627: 'Export Type',
+    628: 'Download',
+    629: 'Pending',
+    630: 'Error',
+    631: 'Completed',
+    632: 'Recent Exports',
 
     // Aanalysis Framework Strings
 
@@ -529,6 +544,12 @@ const strings = {
     770: 'Remove Dimension-X',
     771: 'Remove Dimension-Y',
     772: 'Remove Subdimension',
+
+    773: 'Edit Title',
+    774: 'Title',
+    775: 'Options',
+    776: 'Other Details',
+    777: 'Information date',
 
     // Login/Register strings
 

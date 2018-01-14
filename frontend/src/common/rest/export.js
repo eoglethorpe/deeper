@@ -1,6 +1,7 @@
 import {
     wsEndpoint,
     POST,
+    GET,
     commonHeaderForPost,
 } from '../config/rest';
 import {
@@ -19,4 +20,9 @@ export const createParamsForExportTrigger = filters => ({
     body: JSON.stringify({
         filters: processEntryFilters(Object.entries(filters)),
     }),
+});
+
+export const createParamsForUserExportsGET = () => ({
+    method: GET,
+    headers: commonHeaderForPost,
 });

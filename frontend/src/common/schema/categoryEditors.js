@@ -32,5 +32,47 @@ const categoryEditorSchema = [];
     };
     categoryEditorSchema.push({ name, schema });
 }
+{
+    const name = 'keyword';
+    const schema = {
+        doc: {
+            name: 'keyword of classifications',
+            description: 'Classification item keyword',
+        },
+        fields: {
+            subcategory: { type: 'string', required: true },
+            length: { type: 'uint', required: true },
+            start: { type: 'uint', required: true },
+        },
+    };
+    categoryEditorSchema.push({ name, schema });
+}
+{
+    const name = 'categoryEditorClassifyItem';
+    const schema = {
+        doc: {
+            name: 'Cateory Editor classify list',
+            description: 'Classification item for assisted tagging',
+        },
+        fields: {
+            title: { type: 'string', required: true },
+            keywords: { type: 'array.keyword', required: true },
+        },
+    };
+    categoryEditorSchema.push({ name, schema });
+}
+{
+    const name = 'categoryEditorClassifyList';
+    const schema = {
+        doc: {
+            name: 'Cateory Editor classify list',
+            description: 'List of classifications for assisted tagging',
+        },
+        fields: {
+            classifications: { type: 'array.categoryEditorClassifyItem', required: true },
+        },
+    };
+    categoryEditorSchema.push({ name, schema });
+}
 
 export default categoryEditorSchema;

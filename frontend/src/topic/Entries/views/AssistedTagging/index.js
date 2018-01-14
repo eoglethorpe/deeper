@@ -22,6 +22,8 @@ import {
     getHexFromString,
 } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import notify from '../../../../common/notify';
+import schema from '../../../../common/schema';
 
 import {
     iconNames,
@@ -30,10 +32,12 @@ import {
 import {
     urlForLeadClassify,
     urlForNer,
+    urlForFeedback,
     createUrlForCeClassify,
     createParamsForLeadClassify,
     createParamsForCeClassify,
     createParamsForNer,
+    createParamsForFeedback,
 } from '../../../../common/rest';
 
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
@@ -108,6 +112,10 @@ export default class AssistedTagging extends React.PureComponent {
         if (this.nerClassifyRequest) {
             this.nerClassifyRequest.stop();
         }
+
+        if (this.feedbackRequest) {
+            this.feedbackRequest.stop();
+        }
     }
 
     highlightSimplifiedExcerpt = (highlight, text) => (
@@ -124,7 +132,7 @@ export default class AssistedTagging extends React.PureComponent {
         </span>
     );
 
-    handleDynamicStyleOverride = (popupContainer) => {
+    handleAssitedBoxInvalidate = (popupContainer) => {
         const popupRect = popupContainer.getBoundingClientRect();
         const primaryContainerRect = this.primaryContainerRect || (
             this.primaryContainer && this.primaryContainer.getBoundingClientRect());
@@ -272,8 +280,44 @@ export default class AssistedTagging extends React.PureComponent {
             }))
             .success((response) => {
                 try {
-                    // FIXME: write schema
+                    schema.validate(response, 'categoryEditorClassifyList');
                     this.extractCeClassifications(response);
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: entryStrings.serverErrorText,
+                });
+            })
+            .fatal((response) => {
+                console.error(response);
+                this.setState({
+                    pending: false,
+                    error: entryStrings.connectionFailureText,
+                });
+            })
+            .build();
+        return request;
+    }
+
+    createFeedbackRequest = (feedback) => {
+        const request = new FgRestBuilder()
+            .url(urlForFeedback)
+            .params(createParamsForFeedback(feedback))
+            .success((response) => {
+                try {
+                    console.warn('feedback sent', response);
+
+                    notify.send({
+                        title: entryStrings.assitedTaggingFeedbackTitle,
+                        type: notify.type.SUCCESS,
+                        message: entryStrings.assitedTaggingFeedbackMessage,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (err) {
                     console.error(err);
                 }
@@ -327,25 +371,26 @@ export default class AssistedTagging extends React.PureComponent {
 
     extractNerClassifications = (data) => {
         const nerSectorOptions = [];
-        const filteredData = data.filter(d => (d[1] !== 'O'));
-        filteredData.forEach((d) => {
-            if (nerSectorOptions.findIndex(o => o.key === d[1]) === -1) {
+
+        if (data.length < 1) {
+            return;
+        }
+
+        data.forEach((d) => {
+            if (nerSectorOptions.findIndex(o => o.key === d.entity) === -1) {
                 nerSectorOptions.push({
-                    key: d[1],
-                    label: d[1],
+                    key: d.entity,
+                    label: d.entity.charAt(0) + d.entity.slice(1).toLowerCase(),
                 });
             }
         });
 
-        this.nerClassifications = filteredData.map(d => ({
-            text: d[0],
-            sector: d[1],
-        }));
+        this.nerClassifications = data;
 
         this.setState({
             nerSectorOptions,
             nerSelectedSectors: [nerSectorOptions[0].key],
-        });
+        }, () => this.refreshSelections());
     }
 
     extractCeClassifications = (data) => {
@@ -375,7 +420,7 @@ export default class AssistedTagging extends React.PureComponent {
         } else if (selectedAssitedTaggingSource === 'ce') {
             this.refreshCeClassifications();
         } else if (selectedAssitedTaggingSource === 'ner') {
-            this.refreshNlpClassifications();
+            this.refreshNerClassifications();
         }
     }
 
@@ -401,6 +446,29 @@ export default class AssistedTagging extends React.PureComponent {
         this.setState({ highlights });
     }
 
+    refreshNerClassifications = () => {
+        const { nerSelectedSectors } = this.state;
+        const { nerClassifications } = this;
+
+        if (!nerClassifications) {
+            this.setState({ highlights: emptyList });
+            return;
+        }
+
+        const keywords = nerClassifications.filter(c => (
+            nerSelectedSectors.find(t => t === c.entity)
+        )).reduce((acc, c) => acc.concat(c), []);
+
+        const highlights = keywords.map(keyword => ({
+            startPos: keyword.start,
+            length: keyword.length,
+            color: getHexFromString(keyword.entity),
+            source: entryStrings.sourceNER,
+            details: keyword.entity,
+        }));
+        this.setState({ highlights });
+    }
+
     refreshCeClassifications = () => {
         const { ceSelectedSectors } = this.state;
         const { ceClassifications } = this;
@@ -419,8 +487,15 @@ export default class AssistedTagging extends React.PureComponent {
             length: keyword.length,
             color: getHexFromString(keyword.subcategory),
             source: entryStrings.sourceCE,
+            details: keyword.subcategory,
         }));
         this.setState({ highlights });
+    }
+
+    handleNerSectorSelect = (nerSelectedSectors) => {
+        this.setState({ nerSelectedSectors }, () => {
+            this.refreshSelections();
+        });
     }
 
     handleCeSectorSelect = (ceSelectedSectors) => {
@@ -433,6 +508,21 @@ export default class AssistedTagging extends React.PureComponent {
         this.setState({ nlpSelectedSectors }, () => {
             this.refreshSelections();
         });
+    }
+
+    handleFeedbackClick = (classificationLabel, useful) => {
+        const { activeHighlightDetails } = this.state;
+        const feedback = {
+            text: activeHighlightDetails.text,
+            classification_label: classificationLabel,
+            useful,
+        };
+
+        if (this.feedbackRequest) {
+            this.feedbackRequest.stop();
+        }
+        this.feedbackRequest = this.createFeedbackRequest(feedback);
+        this.feedbackRequest.start();
     }
 
     calcSectorKey = d => d.label;
@@ -448,11 +538,13 @@ export default class AssistedTagging extends React.PureComponent {
             <div className={styles['feedback-buttons']}>
                 <TransparentSuccessButton
                     title={entryStrings.accurateTextTitle}
+                    onClick={() => this.handleFeedbackClick(sector.label, 'true')}
                 >
                     <span className={iconNames.thumbsUp} />
                 </TransparentSuccessButton>
                 <TransparentWarningButton
                     title={entryStrings.notAccurateTextTitle}
+                    onClick={() => this.handleFeedbackClick(sector.label, 'false')}
                 >
                     <span className={iconNames.thumbsDown} />
                 </TransparentWarningButton>
@@ -532,46 +624,53 @@ export default class AssistedTagging extends React.PureComponent {
                         )
                     }
                 </div>
-                <FloatingContainer
-                    closeOnBlur
-                    parentContainer={this.state.activeHighlightRef}
-                    onDynamicStyleOverride={this.handleDynamicStyleOverride}
-                    containerId="assisted-actions-container"
-                    onClose={this.handleOnCloseAssistedActions}
-                    show={assitedActionsVisible}
-                >
-                    <div styleName="assisted-actions">
-                        <header styleName="header">
-                            <div styleName="title">
-                                <span styleName="label">Source:</span>
-                                <span styleName="source">{activeHighlightDetails.source}</span>
+                {assitedActionsVisible &&
+                    <FloatingContainer
+                        parent={this.state.activeHighlightRef}
+                        onInvalidate={this.handleAssitedBoxInvalidate}
+                    >
+                        <div styleName="assisted-actions">
+                            <header styleName="header">
+                                <div styleName="title">
+                                    <span styleName="label">Source:</span>
+                                    <span styleName="source">{activeHighlightDetails.source}</span>
+                                </div>
+                                <TransparentPrimaryButton
+                                    onClick={this.handleOnCloseAssistedActions}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            </header>
+                            <div styleName="info-bar">
+                                <span>{activeHighlightDetails.text}</span>
+                                <div>
+                                    { activeHighlightDetails.details &&
+                                        <span styleName="details">
+                                            {activeHighlightDetails.details.toLowerCase()}
+                                        </span>
+                                    }
+                                </div>
                             </div>
-                            <TransparentPrimaryButton
-                                onClick={this.handleOnCloseAssistedActions}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        </header>
-                        <div styleName="info-bar">
-                            <span>{activeHighlightDetails.text}</span>
-                        </div>
-                        <ListView
-                            styleName="sectors"
-                            modifier={this.renderSectorList}
-                            data={activeHighlightDetails.sectors}
-                            keyExtractor={this.calcSectorKey}
-                        />
-                        <PrimaryButton
-                            iconName={iconNames.add}
-                            className={styles['add-button']}
-                            onClick={() => this.handleEntryAdd(
-                                activeHighlightDetails.text,
+                            {selectedAssitedTaggingSource === 'nlp' && (
+                                <ListView
+                                    styleName="sectors"
+                                    modifier={this.renderSectorList}
+                                    data={activeHighlightDetails.sectors}
+                                    keyExtractor={this.calcSectorKey}
+                                />
                             )}
-                        >
-                            {entryStrings.addEntryButtonLabel}
-                        </PrimaryButton>
-                    </div>
-                </FloatingContainer>
+                            <PrimaryButton
+                                iconName={iconNames.add}
+                                className={styles['add-button']}
+                                onClick={() => this.handleEntryAdd(
+                                    activeHighlightDetails.text,
+                                )}
+                            >
+                                {entryStrings.addEntryButtonLabel}
+                            </PrimaryButton>
+                        </div>
+                    </FloatingContainer>
+                }
             </div>
         );
     }

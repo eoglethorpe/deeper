@@ -51,11 +51,13 @@ const entryStrings = {
     geoOptionsFatalMessage: string[534],
     locationSelectPlaceholder: string[535],
 
-
     searchFilterLabel: string[536],
     searchFilterPlaceholder: string[537],
     createdByFilterLabel: string[538],
     createdAtFilterLabel: string[539],
+    sourceNER: string[540],
+    assitedTaggingFeedbackTitle: string[541],
+    assitedTaggingFeedbackMessage: string[542],
 };
 
 export default entryStrings;

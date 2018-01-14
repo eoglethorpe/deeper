@@ -7,6 +7,7 @@ import projectsReducers from './projects';
 import regionsReducers from './regions';
 import userGroupsReducers from './userGroups';
 import usersReducers from './users';
+import userExportsReducers from './userExports';
 import commonReducers from './common';
 
 import initialDomainData from '../../initial-state/domainData';
@@ -19,6 +20,7 @@ const reducers = {
     ...regionsReducers,
     ...userGroupsReducers,
     ...usersReducers,
+    ...userExportsReducers,
     ...commonReducers,
 };
 

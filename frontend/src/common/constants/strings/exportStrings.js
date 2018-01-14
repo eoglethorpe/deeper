@@ -5,6 +5,7 @@ const exportStrings = {
     headerExport: string[600],
     showPreviewButtonLabel: string[601],
     startExportButtonLabel: string[602],
+    viewAllExportsButtonLabel: string[620],
 
     docxLabel: string[603],
     pdfLabel: string[604],
@@ -26,6 +27,19 @@ const exportStrings = {
 
     serverErrorText: string[618],
     connectionFailureText: string[619],
+    userExportsTitle: string[621],
+    userExportsFataMessage: string[622],
+
+    documentTypeHeaderLabel: string[623],
+    exportedAtHeaderLabel: string[624],
+    exportTitleHeaderLabel: string[625],
+    statusHeaderLabel: string[626],
+    exportTypeHeaderLabel: string[627],
+    exportDownloadHeaderLabel: string[628],
+    pendingStatusLabel: string[629],
+    errorStatusLabel: string[630],
+    completedStatusLabel: string[631],
+    userExportsHeader: string[632],
 };
 
 export default exportStrings;

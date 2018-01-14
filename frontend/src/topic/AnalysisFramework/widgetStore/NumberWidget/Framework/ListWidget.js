@@ -5,12 +5,24 @@ import styles from './styles.scss';
 
 import {
     NumberInput,
+    TextInput,
 } from '../../../../../public/components/Input';
+import {
+    Button,
+    PrimaryButton,
+} from '../../../../../public/components/Action';
+import {
+    Modal,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+} from '../../../../../public/components/View';
 import { afStrings } from '../../../../../common/constants';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
     widgetKey: PropTypes.string.isRequired,
+    editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
 };
 
@@ -21,6 +33,17 @@ const defaultProps = {
 export default class NumberFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            showEditModal: false,
+            title: props.title,
+        };
+
+        this.props.editAction(this.handleEdit);
+    }
 
     componentDidMount() {
         const { onChange } = this.props;
@@ -59,7 +82,36 @@ export default class NumberFrameworkList extends React.PureComponent {
         };
     }
 
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
+    handleEdit = () => {
+        this.setState({ showEditModal: true });
+    }
+
+    handleModalCancelButtonClick = () => {
+        this.setState({
+            showEditModal: false,
+            title: this.props.title,
+        });
+    }
+
+    handleModalSaveButtonClick = () => {
+        this.setState({ showEditModal: false });
+        const { title } = this.state;
+
+        this.props.onChange(
+            undefined,
+            this.createFilters(),
+            this.createExportable(),
+            title,
+        );
+    }
+
     render() {
+        const { showEditModal, title } = this.state;
+
         return (
             <div styleName="number-list">
                 <NumberInput
@@ -70,6 +122,32 @@ export default class NumberFrameworkList extends React.PureComponent {
                     separator=" "
                     disabled
                 />
+                <Modal show={showEditModal}>
+                    <ModalHeader
+                        title={afStrings.editTitleModalHeader}
+                    />
+                    <ModalBody>
+                        <TextInput
+                            label={afStrings.titleLabel}
+                            placeholder={afStrings.widgetTitlePlaceholder}
+                            onChange={this.handleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                        />
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button
+                            onClick={this.handleModalCancelButtonClick}
+                        >
+                            {afStrings.cancelButtonLabel}
+                        </Button>
+                        <PrimaryButton
+                            onClick={this.handleModalSaveButtonClick}
+                        >
+                            {afStrings.saveButtonLabel}
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Modal>
             </div>
         );
     }

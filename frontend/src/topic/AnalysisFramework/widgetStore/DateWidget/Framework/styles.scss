@@ -11,3 +11,11 @@
         width: 100%;
     }
 }
+
+.modal-body {
+    padding: $spacing-medium-alt;
+
+    .checkbox {
+        margin-top: $spacing-large;
+    }
+}

@@ -1,6 +1,9 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import {
+    Link,
+} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
@@ -19,6 +22,7 @@ import update from '../../../public/utils/immutable-update';
 import { listToMap } from '../../../public/utils/common';
 import {
     exportStrings,
+    pathNames,
 } from '../../../common/constants';
 import {
     createParamsForUser,
@@ -393,6 +397,12 @@ export default class Export extends React.PureComponent {
                         >
                             {exportStrings.showPreviewButtonLabel}
                         </Button>
+                        <Link
+                            to={pathNames.userExports}
+                            styleName="link"
+                        >
+                            {exportStrings.viewAllExportsButtonLabel}
+                        </Link>
                         <PrimaryButton
                             styleName="button"
                             onClick={this.handleExport}

@@ -72,8 +72,18 @@
         display: flex;
         flex-direction: column;
         padding: $spacing-small $spacing-large;
+        max-height: 40vh;
         text-align: justify;
         overflow-y: auto;
+
+        .details {
+            display: inline-block;
+            margin-top: $spacing-extra-small;
+            margin-left: $spacing-extra-small;
+            border: $width-separator-thin solid $color-separator-alt;
+            padding: 0 $spacing-small;
+            text-transform: capitalize;
+        }
     }
 
     .sectors {

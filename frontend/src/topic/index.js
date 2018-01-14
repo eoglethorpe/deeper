@@ -37,6 +37,8 @@ const importers = {
 
     apiDocs: () => import('./ApiDocs/views'),
 
+    userExports: () => import('./UserExports/views'),
+
     fourHundredFour: () => import('./FourHundredFour/views'),
 };
 

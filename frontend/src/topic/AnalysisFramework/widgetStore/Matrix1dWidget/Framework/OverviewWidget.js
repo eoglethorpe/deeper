@@ -69,6 +69,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
         this.state = {
             showEditModal: false,
+            title: props.title,
             activeRow: data.rows[0] || emptyObject,
             data,
         };
@@ -78,9 +79,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         const data = nextProps.data || { rows: [] };
-        this.setState({
-            data,
-        });
+        this.setState({ data });
     }
 
     onSortEnd = ({ oldIndex, newIndex }) => {
@@ -273,14 +272,11 @@ export default class Matrix1dOverview extends React.PureComponent {
         });
     }
 
-    handleEditModalClose = () => {
-        this.setState({ showEditModal: false });
-    }
-
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
             data: this.props.data,
+            title: this.props.title,
         });
     }
 
@@ -292,6 +288,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             this.state.data,
             this.createFilters(this.state.data),
             this.createExportable(this.state.data),
+            this.state.title,
         );
     }
 
@@ -351,6 +348,10 @@ export default class Matrix1dOverview extends React.PureComponent {
         );
     })
 
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
     renderRow = (key, data) => (
         <MatrixRow
             key={key}
@@ -369,6 +370,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             data,
             showEditModal,
             activeRow,
+            title,
         } = this.state;
 
         return (
@@ -382,7 +384,6 @@ export default class Matrix1dOverview extends React.PureComponent {
                 <Modal
                     styleName="edit-row-modal"
                     show={showEditModal}
-                    onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
                         title={afStrings.editRowModalTitle}
@@ -395,19 +396,31 @@ export default class Matrix1dOverview extends React.PureComponent {
                         }
                     />
                     <ModalBody styleName="edit-row-body">
-                        { data.rows.length > 0 &&
-                            <SketchPicker
-                                color={activeRow.color}
-                                onChange={this.handleColorChange}
+                        <div styleName="general-info-container">
+                            <TextInput
+                                className={styles['title-input']}
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.titlePlaceholderScale}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
                             />
-                        }
-                        <this.SortableList
-                            items={data.rows}
-                            onSortEnd={this.onSortEnd}
-                            lockAxis="y"
-                            lockToContainerEdges
-                            useDragHandle
-                        />
+                        </div>
+                        <div styleName="modal-rows-content">
+                            { data.rows.length > 0 &&
+                                <SketchPicker
+                                    color={activeRow.color}
+                                    onChange={this.handleColorChange}
+                                />
+                            }
+                            <this.SortableList
+                                items={data.rows}
+                                onSortEnd={this.onSortEnd}
+                                lockAxis="y"
+                                lockToContainerEdges
+                                useDragHandle
+                            />
+                        </div>
                     </ModalBody>
                     <ModalFooter>
                         <Button

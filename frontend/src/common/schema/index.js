@@ -5,6 +5,7 @@ import leads from './leads';
 import entries from './entries';
 import projects from './projects';
 import regions from './regions';
+import userExports from './userExports';
 import token from './token';
 import userGroups from './userGroups';
 import users from './users';
@@ -76,6 +77,7 @@ const userDefinedSchemas = [];
     ...entries,
     ...projects,
     ...regions,
+    ...userExports,
     ...token,
     ...userGroups,
     ...users,

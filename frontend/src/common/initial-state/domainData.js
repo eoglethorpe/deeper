@@ -86,6 +86,15 @@ const initialDomainDataState = {
         */
     },
 
+    // index is export id
+    userExports: {
+        /*
+        1: {
+        },
+        */
+    },
+
+
     users: {
         /*
         1: {

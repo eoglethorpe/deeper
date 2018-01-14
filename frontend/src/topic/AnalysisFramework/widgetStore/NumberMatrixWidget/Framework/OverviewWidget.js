@@ -70,6 +70,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             showEditModal: false,
             rowHeaders,
             columnHeaders,
+            title: props.title,
         };
 
         this.props.editAction(this.handleEdit);
@@ -238,17 +239,22 @@ export default class NumberMatrixOverview extends React.PureComponent {
         this.setState({ showEditModal: false });
     }
 
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
             rowHeaders: (this.props.data || emptyObject).rowHeaders || emptyList,
             columnHeaders: (this.props.data || emptyObject).columnHeaders || emptyList,
+            title: this.props.title,
         });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { rowHeaders, columnHeaders } = this.state;
+        const { rowHeaders, columnHeaders, title } = this.state;
         const newData = {
             ...this.props.data,
             rowHeaders,
@@ -258,6 +264,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             newData,
             this.createFilters(),
             this.createExportable(newData),
+            title,
         );
     }
 
@@ -440,6 +447,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             showEditModal,
             rowHeaders,
             columnHeaders,
+            title,
         } = this.state;
 
         const { SortableColumnList, SortableRowList } = this;
@@ -454,6 +462,16 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 >
                     <ModalHeader title={afStrings.editNumberMatrixModalTitle} />
                     <ModalBody styleName="modal-body">
+                        <div styleName="general-info-container">
+                            <TextInput
+                                className={styles['title-input']}
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.titlePlaceholderScale}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                        </div>
                         <div styleName="modal-unit-container">
                             <header styleName="header">
                                 <h3 styleName="heading">

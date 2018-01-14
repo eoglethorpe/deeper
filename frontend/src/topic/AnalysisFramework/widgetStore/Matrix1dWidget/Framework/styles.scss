@@ -82,11 +82,29 @@
 
     .edit-row-body {
         display: flex;
+        flex-direction: column;
         padding: 0;
         width: 100%;
 
+        .general-info-container {
+            flex-shrink: 0;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+
+            .title-input {
+                width: auto;
+            }
+        }
+
+        .modal-rows-content {
+            display: flex;
+            flex-grow: 1;
+        }
+
         .row-list {
+            flex-grow: 1;
             border-left: $width-separator-thin solid $color-separator;
+            overflow-y: auto;
 
             .edit-row {
                 border-top: 0;

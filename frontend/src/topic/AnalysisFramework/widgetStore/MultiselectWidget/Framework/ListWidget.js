@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    MultipleSelectInput,
+    MultiSelectInput,
     TextInput,
 } from '../../../../../public/components/Input';
 import {
@@ -55,7 +55,9 @@ export default class Multiselect extends React.PureComponent {
         this.state = {
             showEditModal: false,
             values: props.data || emptyList,
+            title: props.title,
         };
+
         this.props.editAction(this.handleEdit);
     }
 
@@ -121,11 +123,13 @@ export default class Multiselect extends React.PureComponent {
         this.setState({ showEditModal: true });
     }
 
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
     handleRemoveButtonClick = (key) => {
         const newValues = this.state.values.filter(d => d.key !== key);
-        this.setState({
-            values: newValues,
-        });
+        this.setState({ values: newValues });
     }
 
     handleValueInputChange = (key, value) => {
@@ -140,6 +144,7 @@ export default class Multiselect extends React.PureComponent {
             values: newValues,
         });
     }
+
     handleAddOptionButtonClick = () => {
         const newValue = {
             key: randomString(16).toLowerCase(),
@@ -154,26 +159,22 @@ export default class Multiselect extends React.PureComponent {
         });
     }
 
-    handleEditModalClose = () => {
-        this.setState({ showEditModal: false });
-    }
-
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
             values: this.props.data,
+            title: this.props.title,
         });
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({
-            showEditModal: false,
-        });
+        this.setState({ showEditModal: false });
 
         this.props.onChange(
             this.state.values,
             this.createFilters(this.state.values),
             this.createExportable(),
+            this.state.title,
         );
     }
 
@@ -181,19 +182,20 @@ export default class Multiselect extends React.PureComponent {
         const {
             showEditModal,
             values,
+            title,
         } = this.state;
 
         return (
             <div styleName="multiselect-list">
-                <MultipleSelectInput
+                <MultiSelectInput
                     options={values}
                     styleName="multiselect"
                     keyExtractor={Multiselect.valueKeyExtractor}
+                    disabled
                 />
                 <Modal
                     styleName="edit-value-modal"
                     show={showEditModal}
-                    onClose={this.handleEditModalClose}
                 >
                     <ModalHeader
                         title={afStrings.editMultiselectModalTitle}
@@ -205,7 +207,20 @@ export default class Multiselect extends React.PureComponent {
                             </TransparentPrimaryButton>
                         }
                     />
-                    <ModalBody>
+                    <ModalBody styleName="modal-body">
+                        <div styleName="general-info-container">
+                            <TextInput
+                                className={styles['title-input']}
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.titlePlaceholderScale}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                        </div>
+                        <header styleName="header">
+                            <h3>{afStrings.optionsHeader}</h3>
+                        </header>
                         <ListView
                             data={values}
                             className={styles['value-list']}

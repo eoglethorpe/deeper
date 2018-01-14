@@ -11,7 +11,7 @@ import {
 
 import styles from './styles.scss';
 
-const TEXT = 'excerpt';
+const IMAGE = 'image';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -59,19 +59,19 @@ export default class ExcerptList extends React.PureComponent {
         return (
             <div styleName="excerpt-list">
                 {
-                    attribute.type === TEXT ? (
+                    attribute.type === IMAGE ? (
+                        <img
+                            styleName="image"
+                            src={attribute.image}
+                            alt={afStrings.altEntryLabel}
+                        />
+                    ) : (
                         <TextArea
                             onChange={this.handleExcerptChange}
                             styleName="textarea"
                             showLabel={false}
                             showHintAndError={false}
                             value={attribute.excerpt}
-                        />
-                    ) : (
-                        <img
-                            styleName="image"
-                            src={attribute.image}
-                            alt={afStrings.altEntryLabel}
                         />
                     )
                 }
