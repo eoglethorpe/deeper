@@ -12,27 +12,27 @@ export const getTrackingId = () => {
     return 'none';
 };
 
-export const gaConfig = (trackingId, user) => ({
+export const gaConfig = () => ({
     // debug: trackingId === 'none',
     gaOptions: {
         forceSSL: true,
-        userId: user.userId,
+        userId: undefined,
         hostname: window.location.hostname,
     },
 });
 
 
-export const initializeGa = (user = {}) => {
+export const initializeGa = () => {
     const trackingId = getTrackingId();
-    const config = gaConfig(trackingId, user);
+    const config = gaConfig();
 
     ReactGA.initialize(trackingId, config);
 };
 
 export const gaIsInitialize = () => (window.ga && window.ga.create);
 
-export const setGaUserId = (user) => {
+export const setGaUserId = (userId) => {
     if (gaIsInitialize()) {
-        ReactGA.set({ userId: user.userId });
+        ReactGA.set({ userId });
     }
 };

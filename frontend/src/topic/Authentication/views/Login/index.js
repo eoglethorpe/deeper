@@ -26,7 +26,6 @@ import {
     FgRestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
-import { setGaUserId } from '../../../../common/config/google-analytics';
 import { reverseRoute } from '../../../../public/utils/common';
 
 import {
@@ -57,14 +56,12 @@ import {
     authenticateAction,
 
     currentUserProjectsSelector,
-    activeUserSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     login: PropTypes.func.isRequired,
@@ -77,7 +74,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
-    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -221,7 +217,6 @@ export default class Login extends React.PureComponent {
                     this.props.login({ refresh, access });
 
                     // after setAccessToken, current user is verified
-                    setGaUserId(this.props.activeUser);
                     if (this.props.currentUserProjects.length <= 0) {
                         console.warn('No projects in cache');
                         // if there is no projects, block and get from api
@@ -232,7 +227,6 @@ export default class Login extends React.PureComponent {
                         this.props.startRefresh();
                         this.props.authenticate();
                     }
-
                     // Start the locked silo tasks
                     this.props.startSiloTasks(() => {
                         console.log('Silo tasks started');

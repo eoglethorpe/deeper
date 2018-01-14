@@ -7,6 +7,7 @@ import {
 
 import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
+
 import { initializeGa } from './common/config/google-analytics';
 
 import schema from './common/schema';
@@ -24,6 +25,7 @@ import {
     startSiloBackgroundTasksAction,
     stopSiloBackgroundTasksAction,
 } from './common/middlewares/siloBackgroundTasks';
+
 import {
     setAccessTokenAction,
 
@@ -52,7 +54,6 @@ const mapDispatchToProps = dispatch => ({
 
 const propTypes = {
     currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setAccessToken: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     stopRefresh: PropTypes.func.isRequired,
@@ -105,8 +106,8 @@ export default class App extends React.PureComponent {
 
     componentWillMount() {
         console.log('Mounting App');
-
-        initializeGa(this.props.activeUser);
+        // Initialize google analytics
+        initializeGa();
 
         // If there is no refresh token, no need to get a new access token
         const { token: { refresh: refreshToken } } = this.props;
@@ -174,6 +175,10 @@ export default class App extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
+                // NOTE: logout should always stop refresh task, and silo tasks
+                const { stopRefresh, stopSiloTasks } = this.props;
+                stopRefresh();
+                stopSiloTasks();
                 logout();
             })
             .fatal((response) => {
