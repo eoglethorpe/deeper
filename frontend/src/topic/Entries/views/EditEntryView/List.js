@@ -181,8 +181,6 @@ export default class List extends React.PureComponent {
         } = this.props;
 
         const entryStyle = { height: this.getMaxHeight() + 16 };
-        console.log(entries);
-
 
         return (
             <div styleName="list">

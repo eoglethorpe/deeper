@@ -416,7 +416,7 @@ const strings = {
     541: 'Assited tagging feedback',
     542: 'Thank you for your feedback',
 
-    543: 'Oops!! It seems you dont\' have any entries. Please go back to main page to add one.',
+    543: 'Oops!! It seems you don\'t have any entries. Please go back to main page to add one.',
 
     // Export strings
 
