@@ -10,7 +10,7 @@ export const createExportData = (attribute, data) => ({
     excel: {
         type: 'list',
         value: attribute.value.map(key =>
-            (data || emptyObject).options.find(d => d.key === key).label),
+            ((data || emptyObject).options || emptyList).find(d => d.key === key).label),
     },
 });
 

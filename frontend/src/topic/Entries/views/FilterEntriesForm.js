@@ -123,11 +123,11 @@ export default class EntriesFilter extends React.PureComponent {
                 <MultiSelectInput
                     key={key}
                     className="entries-filter"
-                    options={filter.options}
+                    options={filter.options || emptyList}
                     label={title}
                     showHintAndError={false}
                     onChange={values => this.handleFilterChange(key, values)}
-                    value={filters[key]}
+                    value={filters[key] || emptyList}
                     disabled={this.props.pending}
                 />
             );
@@ -201,7 +201,7 @@ export default class EntriesFilter extends React.PureComponent {
                     label={entryStrings.createdByFilterLabel}
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}
-                    value={filters.created_by}
+                    value={filters.created_by || emptyList}
                     disabled={this.props.pending}
                 />
                 <DateFilter
