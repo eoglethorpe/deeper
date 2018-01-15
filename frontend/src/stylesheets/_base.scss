@@ -84,6 +84,8 @@ body {
 }
 
 %main-content {
+    // FIXME: (animation) This is messing up with the visualization initial chart size.
+    // @frozenhelium
     animation: slide-in .3s ease forwards;
     border: $width-separator-thin solid $color-separator;
     height: 100%;

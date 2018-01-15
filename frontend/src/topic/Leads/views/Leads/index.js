@@ -35,8 +35,6 @@ import {
     createUrlForLeadDelete,
     createParamsForLeadDelete,
     transformResponseErrorToFormError,
-    urlForLeadTopicModeling,
-    createParamsForLeadTopicModeling,
 } from '../../../../common/rest';
 import {
     activeProjectSelector,
@@ -58,7 +56,8 @@ import {
     setLeadPageActivePageAction,
 
     addLeadViewAddLeadsAction,
-    setLeadVisualizationAction,
+
+    setLeadVisualizationStaleAction,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -92,7 +91,7 @@ const propTypes = {
     viewMode: PropTypes.string.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
-    setLeadVisualization: PropTypes.func.isRequired,
+    setLeadVisualizationStale: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -120,7 +119,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
-    setLeadVisualization: parms => dispatch(setLeadVisualizationAction(parms)),
+    setLeadVisualizationStale: params => dispatch(setLeadVisualizationStaleAction(params)),
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
@@ -130,6 +129,41 @@ const MAX_LEADS_PER_REQUEST = 24;
 export default class Leads extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    // REST UTILS
+
+    static getFiltersForRequest = (filters) => {
+        const requestFilters = {};
+        Object.keys(filters).forEach((key) => {
+            const filter = filters[key];
+            switch (key) {
+                case 'created_at':
+                    if (filter) {
+                        requestFilters.created_at__gt = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.created_at__lt = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
+                    break;
+                case 'published_on':
+                    if (filter) {
+                        requestFilters.published_on__gt = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.published_on__lt = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
+                    break;
+                default:
+                    requestFilters[key] = filter;
+                    break;
+            }
+        });
+        return requestFilters;
+    }
 
     constructor(props) {
         super(props);
@@ -292,11 +326,6 @@ export default class Leads extends React.PureComponent {
 
             showDeleteModal: false,
             leadToDelete: undefined,
-
-            hierarchicalDataPending: false,
-            chordDataPending: false,
-            correlationDataPending: false,
-            forceDirectedDataPending: false,
         };
     }
 
@@ -316,12 +345,7 @@ export default class Leads extends React.PureComponent {
             activeSort,
             filters,
         });
-        this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
-            activeProject,
-            filters,
-        });
         this.leadRequest.start();
-        this.leadCDIdRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -339,70 +363,28 @@ export default class Leads extends React.PureComponent {
             this.props.activePage !== activePage
         ) {
             this.leadRequest.stop();
-            this.leadCDIdRequest.stop();
             this.leadRequest = this.createRequestForProjectLeads({
                 activeProject,
                 activePage,
                 activeSort,
                 filters,
             });
-            this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
-                activeProject,
-                filters,
-            });
             this.leadRequest.start();
-            this.leadCDIdRequest.start();
         }
     }
 
     componentWillUnmount() {
         this.leadRequest.stop();
-        this.leadCDIdRequest.start();
 
         if (this.leadDeleteRequest) {
             this.leadDeleteRequest.stop();
         }
     }
 
-    // REST UTILS
-
-    getFiltersForRequest = (filters) => {
-        const requestFilters = {};
-        Object.keys(filters).forEach((key) => {
-            const filter = filters[key];
-            switch (key) {
-                case 'created_at':
-                    if (filter) {
-                        requestFilters.created_at__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.created_at__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                case 'published_on':
-                    if (filter) {
-                        requestFilters.published_on__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.published_on__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                default:
-                    requestFilters[key] = filter;
-                    break;
-            }
-        });
-        return requestFilters;
-    }
-
     // REST
 
     createRequestForProjectLeads = ({ activeProject, activePage, activeSort, filters }) => {
-        const sanitizedFilters = this.getFiltersForRequest(filters);
+        const sanitizedFilters = Leads.getFiltersForRequest(filters);
         const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
         const leadRequestLimit = MAX_LEADS_PER_REQUEST;
 
@@ -432,71 +414,7 @@ export default class Leads extends React.PureComponent {
                         leads: response.results,
                         totalLeadsCount: response.count,
                     });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return leadRequest;
-    }
-
-    createRequestForProjectLeadsCDId = ({ activeProject, filters }) => {
-        const sanitizedFilters = this.getFiltersForRequest(filters);
-
-        const urlForProjectLeads = createUrlForLeadsOfProject({
-            project: activeProject,
-            fields: 'classified_doc_id',
-            ...sanitizedFilters,
-        });
-
-        const leadRequest = new FgRestBuilder()
-            .url(urlForProjectLeads)
-            .params(() => createParamsForUser())
-            .preLoad(() => {
-                this.setState({ loadingLeads: true });
-            })
-            .postLoad(() => {
-                this.setState({ loadingLeads: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'leadsCDIdGetResponse');
-                    const docIds = response.results.reduce((acc, lead) => {
-                        if (lead.classifiedDocId) {
-                            acc.push(lead.classifiedDocId);
-                        }
-                        return acc;
-                    }, []);
-                    if (this.requestForLeadTopicmodeling) {
-                        this.requestForLeadTopicmodeling.stop();
-                    }
-                    this.requestForLeadTopicmodeling =
-                        this.createRequestForLeadTopicModeling(docIds);
-                    this.requestForLeadTopicmodeling.start();
-                    /*
-                    this.props.setLeads({
-                        projectId: activeProject,
-                        leads: response.results,
-                        totalLeadsCount: response.count,
-                    });
-                    */
+                    this.props.setLeadVisualizationStale();
                 } catch (er) {
                     console.error(er);
                 }
@@ -541,9 +459,6 @@ export default class Leads extends React.PureComponent {
                 if (this.leadRequest) {
                     this.leadRequest.stop();
                 }
-                if (this.leadCDIdRequest) {
-                    this.leadCDIdRequest.stop();
-                }
                 const { activeProject, activePage, activeSort, filters } = this.props;
                 this.leadRequest = this.createRequestForProjectLeads({
                     activeProject,
@@ -551,12 +466,7 @@ export default class Leads extends React.PureComponent {
                     activeSort,
                     filters,
                 });
-                this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
-                    activeProject,
-                    filters,
-                });
                 this.leadRequest.start();
-                this.leadCDIdRequest.start();
             })
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
@@ -577,41 +487,6 @@ export default class Leads extends React.PureComponent {
             })
             .build();
         return leadRequest;
-    }
-
-    createRequestForLeadTopicModeling = (docIds) => {
-        const request = new FgRestBuilder()
-            .url(urlForLeadTopicModeling)
-            .params(createParamsForLeadTopicModeling({
-                doc_ids: docIds,
-                number_of_topics: 5,
-                depth: 2,
-                keywords_per_topic: 3,
-            }))
-            .preLoad(() => {
-                this.setState({ hierarchicalDataPending: true });
-            })
-            .postLoad(() => {
-                this.setState({ hierarchicalDataPending: false });
-            })
-            .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.props.setLeadVisualization({ data: response });
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.error(response);
-                // TODO: notify user for failure
-            })
-            .fatal((response) => {
-                console.error(response);
-                // TODO: notify user for failure
-            })
-            .build();
-        return request;
     }
 
     // UI
@@ -763,11 +638,6 @@ export default class Leads extends React.PureComponent {
             loadingLeads,
             showDeleteModal,
             redirectTo,
-
-            hierarchicalDataPending,
-            chordDataPending,
-            correlationDataPending,
-            forceDirectedDataPending,
         } = this.state;
 
         if (redirectTo) {
@@ -778,6 +648,8 @@ export default class Leads extends React.PureComponent {
                 />
             );
         }
+
+        const showTable = viewMode === 'table';
 
         return (
             <div styleName="leads">
@@ -792,7 +664,7 @@ export default class Leads extends React.PureComponent {
                     </PrimaryButton>
                 </header>
                 {
-                    viewMode === 'table' ? (
+                    showTable ?
                         <div styleName="table-container">
                             <RawTable
                                 data={this.props.leads}
@@ -805,15 +677,10 @@ export default class Leads extends React.PureComponent {
                             />
                             { loadingLeads && <LoadingAnimation /> }
                         </div>
-                    ) : (
+                        :
                         <Visualizations
                             styleName="viz-container"
-                            hierarchicalDataPending={hierarchicalDataPending}
-                            chordDataPending={chordDataPending}
-                            correlationDataPending={correlationDataPending}
-                            forceDirectedDataPending={forceDirectedDataPending}
                         />
-                    )
                 }
                 <Confirm
                     show={showDeleteModal}

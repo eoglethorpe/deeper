@@ -147,6 +147,7 @@ const initialSiloDomainData = {
     userGalleryFiles: [],
 
     visualization: {
+        pristine: true,
         hierarchialData: {
             name: 'TOPICS',
             children: [{

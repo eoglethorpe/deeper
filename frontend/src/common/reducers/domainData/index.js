@@ -26,7 +26,5 @@ const reducers = {
     ...commonReducers,
 };
 
-console.warn(reducers);
-
 const reducer = createReducerWithMap(reducers, initialDomainData);
 export default reducer;

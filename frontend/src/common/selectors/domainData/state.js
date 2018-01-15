@@ -28,10 +28,6 @@ export const entryFilterOptionsSelector = ({ domainData }) => (
     domainData.entryFilterOptions || emptyObject
 );
 
-export const visualizationSelector = ({ domainData }) => (
-    domainData.visualization || emptyObject
-);
-
 export const regionsSelector = ({ domainData }) => (
     domainData.regions || emptyObject
 );
