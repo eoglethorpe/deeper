@@ -4,33 +4,12 @@
     &.sortable {
         cursor: pointer;
 
-        &::before {
-            display: inline-block;
-            transform: rotate(90deg);
+        .icon {
             margin-right: $spacing-small;
-            font-family: 'Ionicons';
-            content: '\f268';
         }
 
         &.active {
             color: $color-accent;
-
-            &::before {
-                transform: rotate(0);
-            }
-
-            &.asc {
-                &::before {
-                    content: '\f35d';
-                }
-            }
-
-            &.dsc {
-                &::before {
-                    content: '\f366';
-                }
-            }
-
         }
     }
 }
