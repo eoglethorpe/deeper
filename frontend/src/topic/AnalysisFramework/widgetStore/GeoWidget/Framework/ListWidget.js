@@ -115,34 +115,31 @@ export default class GeoFrameworkList extends React.PureComponent {
         return (
             <div styleName="geo-list">
                 <TransparentButton>
-                    {afStrings.geoAreaButtonLabel} <i className={iconNames.globe} />
+                    {afStrings.geoAreaButtonLabel}
+                    <i className={iconNames.globe} />
                 </TransparentButton>
-                <Modal show={showEditModal}>
-                    <ModalHeader
-                        title={afStrings.editTitleModalHeader}
-                    />
-                    <ModalBody>
-                        <TextInput
-                            label={afStrings.titleLabel}
-                            placeholder={afStrings.widgetTitlePlaceholder}
-                            onChange={this.handleWidgetTitleChange}
-                            value={title}
-                            showHintAndError={false}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { showEditModal &&
+                    <Modal>
+                        <ModalHeader title={afStrings.editTitleModalHeader} />
+                        <ModalBody>
+                            <TextInput
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.widgetTitlePlaceholder}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.handleModalCancelButtonClick}>
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

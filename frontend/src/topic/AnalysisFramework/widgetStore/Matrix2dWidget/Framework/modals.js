@@ -34,9 +34,12 @@ export const getEditWidgetModal = (parent) => {
         sectors = emptyList,
     } = data;
 
+    if (!showEditWidgetModal) {
+        return null;
+    }
+
     return (
         <Modal
-            show={showEditWidgetModal}
             styleName="edit-widget-modal"
             onClose={parent.handler.editWidgetModalClose}
         >
@@ -118,9 +121,12 @@ export const getEditSectorsModal = (parent) => {
         sectors = emptyList,
     } = data;
 
+    if (!showEditSectorsModal) {
+        return null;
+    }
+
     return (
         <Modal
-            show={showEditSectorsModal}
             styleName="edit-sectors-modal"
             onClose={parent.handler.editSectorsModalClose}
         >

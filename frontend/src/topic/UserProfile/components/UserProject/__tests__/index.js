@@ -31,7 +31,6 @@ describe('<UserProject />', () => {
                 <Modal
                     closeOnEscape
                     onClose={() => {}}
-                    show
                 >
                     <ModalHeader
                         title="Header"

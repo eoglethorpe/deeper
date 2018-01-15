@@ -258,20 +258,21 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                         >
                             {projectStrings.addCeButtonLabel}
                         </PrimaryButton>
-                        <Modal
-                            closeOnEscape
-                            onClose={this.handleModalClose}
-                            show={this.state.addCeModalShow}
-                            closeOnBlur
-                        >
-                            <ModalHeader title={projectStrings.addCeModalTitle} />
-                            <ModalBody>
-                                <AddCategoryEditor
-                                    projectId={projectId}
-                                    onModalClose={this.handleModalClose}
-                                />
-                            </ModalBody>
-                        </Modal>
+                        { this.state.addCeModalShow &&
+                            <Modal
+                                closeOnEscape
+                                onClose={this.handleModalClose}
+                                closeOnBlur
+                            >
+                                <ModalHeader title={projectStrings.addCeModalTitle} />
+                                <ModalBody>
+                                    <AddCategoryEditor
+                                        projectId={projectId}
+                                        onModalClose={this.handleModalClose}
+                                    />
+                                </ModalBody>
+                            </Modal>
+                        }
                     </div>
                     <ListView
                         styleName="list"

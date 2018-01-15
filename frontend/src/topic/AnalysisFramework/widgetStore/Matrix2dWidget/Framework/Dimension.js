@@ -72,9 +72,7 @@ export default class Dimension extends React.PureComponent {
     }
 
     getModalTitle = () => {
-        const {
-            data,
-        } = this.props;
+        const { data } = this.props;
 
         if (data.title) {
             return `${afStrings.dimensionLabel} ${data.title}`;
@@ -243,43 +241,44 @@ export default class Dimension extends React.PureComponent {
                 >
                     <span className={iconNames.edit} />
                 </TransparentButton>
-                <Modal
-                    show={showEditDimensionModal}
-                    styleName="edit-dimension-modal"
-                    onClose={this.handleEditDimensionModalClose}
-                >
-                    <ModalHeader
-                        title={this.getModalTitle()}
-                        rightComponent={
-                            <PrimaryButton
-                                onClick={this.handleAddSubdimensionButtonClick}
-                                title={afStrings.addSubDimensionButtonLabel}
-                            >
-                                <i className={iconNames.add} />
-                            </PrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="modal-body">
-                        <ListView
-                            styleName="list"
-                            data={data.subdimensions || emptyList}
-                            modifier={this.renderEditSubdimension}
-                            keyExtractor={d => d.id}
+                { showEditDimensionModal &&
+                    <Modal
+                        styleName="edit-dimension-modal"
+                        onClose={this.handleEditDimensionModalClose}
+                    >
+                        <ModalHeader
+                            title={this.getModalTitle()}
+                            rightComponent={
+                                <PrimaryButton
+                                    onClick={this.handleAddSubdimensionButtonClick}
+                                    title={afStrings.addSubDimensionButtonLabel}
+                                >
+                                    <i className={iconNames.add} />
+                                </PrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleEditDimensionModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleEditDimensionModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        <ModalBody styleName="modal-body">
+                            <ListView
+                                styleName="list"
+                                data={data.subdimensions || emptyList}
+                                modifier={this.renderEditSubdimension}
+                                keyExtractor={d => d.id}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleEditDimensionModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleEditDimensionModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

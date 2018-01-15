@@ -259,20 +259,21 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                         >
                             {projectStrings.addAfButtonLabel}
                         </PrimaryButton>
-                        <Modal
-                            closeOnEscape
-                            onClose={this.handleModalClose}
-                            show={this.state.addAfModalShow}
-                            closeOnBlur
-                        >
-                            <ModalHeader title={projectStrings.addAfModalTitle} />
-                            <ModalBody>
-                                <AddAnalysisFramework
-                                    projectId={projectId}
-                                    onModalClose={this.handleModalClose}
-                                />
-                            </ModalBody>
-                        </Modal>
+                        { this.state.addAfModalShow &&
+                            <Modal
+                                closeOnEscape
+                                onClose={this.handleModalClose}
+                                closeOnBlur
+                            >
+                                <ModalHeader title={projectStrings.addAfModalTitle} />
+                                <ModalBody>
+                                    <AddAnalysisFramework
+                                        projectId={projectId}
+                                        onModalClose={this.handleModalClose}
+                                    />
+                                </ModalBody>
+                            </Modal>
+                        }
                     </div>
                     <ListView
                         styleName="list"

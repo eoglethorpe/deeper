@@ -117,32 +117,33 @@ export default class ImagesGrid extends React.PureComponent {
                     data={images}
                     modifier={this.renderImage}
                 />
-                <Modal
-                    styleName="image-preview"
-                    show={imageViewModalShow}
-                    onClose={this.handleImagePreviewClose}
-                    closeOnEscape
-                >
-                    <ModalHeader
-                        title=""
-                        styleName="modal-header"
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                className={styles['transparent-btn']}
-                                onClick={this.handleImagePreviewClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="modal-body">
-                        <img
-                            styleName="preview-image"
-                            src={activeImageSource}
-                            alt={activeImageSource}
+                { imageViewModalShow &&
+                    <Modal
+                        styleName="image-preview"
+                        onClose={this.handleImagePreviewClose}
+                        closeOnEscape
+                    >
+                        <ModalHeader
+                            title=""
+                            styleName="modal-header"
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    className={styles['transparent-btn']}
+                                    onClick={this.handleImagePreviewClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                </Modal>
+                        <ModalBody styleName="modal-body">
+                            <img
+                                styleName="preview-image"
+                                src={activeImageSource}
+                                alt={activeImageSource}
+                            />
+                        </ModalBody>
+                    </Modal>
+                }
             </div>
         );
     }

@@ -246,33 +246,32 @@ export default class Organigram extends React.PureComponent {
 
         return (
             <div styleName="organigram-list">
-                <Modal
-                    styleName="edit-value-modal"
-                    show={showEditModal}
-                >
-                    <ModalHeader title={afStrings.editOrganigramModaltitle} />
-                    <ModalBody styleName="modal-body">
-                        <div styleName="general-info-container">
-                            <TextInput
-                                className={styles['title-input']}
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.titlePlaceholderScale}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                            />
-                        </div>
-                        { this.renderOrgan(organigram) }
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.handleModalCancelButtonClick}>
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { showEditModal &&
+                    <Modal styleName="edit-value-modal">
+                        <ModalHeader title={afStrings.editOrganigramModaltitle} />
+                        <ModalBody styleName="modal-body">
+                            <div styleName="general-info-container">
+                                <TextInput
+                                    className={styles['title-input']}
+                                    label={afStrings.titleLabel}
+                                    placeholder={afStrings.titlePlaceholderScale}
+                                    onChange={this.handleWidgetTitleChange}
+                                    value={title}
+                                    showHintAndError={false}
+                                />
+                            </div>
+                            { this.renderOrgan(organigram) }
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.handleModalCancelButtonClick}>
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

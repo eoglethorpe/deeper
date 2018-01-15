@@ -583,48 +583,52 @@ export default class CategoryEditor extends React.PureComponent {
                         />
                     </div>
                 </div>
-                <Modal
-                    styleName="new-category-modal"
-                    show={showNewCategoryModal}
-                    onClose={this.noop}
-                >
-                    <NewCategoryModal
-                        onSubmit={this.handleNewCategoryModalSubmit}
-                        onClose={this.handleNewCategoryModalClose}
-                    />
-                </Modal>
-                <Modal
-                    styleName="edit-category-modal"
-                    show={showEditCategoryModal}
-                    onClose={this.noop}
-                >
-                    <NewCategoryModal
-                        editMode
-                        initialValue={activeCategory}
-                        onSubmit={this.handleEditCategoryModalSubmit}
-                        onClose={this.handleEditCategoryModalClose}
-                    />
-                </Modal>
-                <Modal
-                    styleName="new-subcategory-modal"
-                    show={showNewSubcategoryModal}
-                    onClose={this.noop}
-                >
-                    <NewSubcategoryModal
-                        onSubmit={this.handleNewSubcategoryModalSubmit}
-                        onClose={this.handleNewSubcategoryModalClose}
-                    />
-                </Modal>
-                <Modal
-                    styleName="new-manual-ngram-modal"
-                    show={showNewManualNGramModal}
-                    onClose={this.noop}
-                >
-                    <NewManualNgramModal
-                        onSubmit={this.handleNewManualNgramModalSubmit}
-                        onClose={this.handleNewManualNgramModalClose}
-                    />
-                </Modal>
+                { showNewCategoryModal &&
+                    <Modal
+                        styleName="new-category-modal"
+                        onClose={this.noop}
+                    >
+                        <NewCategoryModal
+                            onSubmit={this.handleNewCategoryModalSubmit}
+                            onClose={this.handleNewCategoryModalClose}
+                        />
+                    </Modal>
+                }
+                { showEditCategoryModal &&
+                    <Modal
+                        styleName="edit-category-modal"
+                        onClose={this.noop}
+                    >
+                        <NewCategoryModal
+                            editMode
+                            initialValue={activeCategory}
+                            onSubmit={this.handleEditCategoryModalSubmit}
+                            onClose={this.handleEditCategoryModalClose}
+                        />
+                    </Modal>
+                }
+                { showNewSubcategoryModal &&
+                    <Modal
+                        styleName="new-subcategory-modal"
+                        onClose={this.noop}
+                    >
+                        <NewSubcategoryModal
+                            onSubmit={this.handleNewSubcategoryModalSubmit}
+                            onClose={this.handleNewSubcategoryModalClose}
+                        />
+                    </Modal>
+                }
+                { showNewManualNGramModal &&
+                    <Modal
+                        styleName="new-manual-ngram-modal"
+                        onClose={this.noop}
+                    >
+                        <NewManualNgramModal
+                            onSubmit={this.handleNewManualNgramModalSubmit}
+                            onClose={this.handleNewManualNgramModalClose}
+                        />
+                    </Modal>
+                }
                 <Confirm
                     onClose={this.handleRemoveCategoryClose}
                     show={deleteCategory}

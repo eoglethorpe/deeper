@@ -363,27 +363,28 @@ export default class UserGroup extends React.PureComponent {
                         )
                     }
                 </div>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleAddUserGroupClose}
-                    show={addUserGroup}
-                >
-                    <ModalHeader
-                        title={userStrings.addUserGroupButtonLabel}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddUserGroupClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody>
-                        <UserGroupAdd
-                            handleModalClose={this.handleAddUserGroupClose}
+                { addUserGroup &&
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddUserGroupClose}
+                    >
+                        <ModalHeader
+                            title={userStrings.addUserGroupButtonLabel}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddUserGroupClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                </Modal>
+                        <ModalBody>
+                            <UserGroupAdd
+                                handleModalClose={this.handleAddUserGroupClose}
+                            />
+                        </ModalBody>
+                    </Modal>
+                }
                 <Confirm
                     onClose={this.handleDeleteUserGroupClose}
                     show={deleteUserGroup}

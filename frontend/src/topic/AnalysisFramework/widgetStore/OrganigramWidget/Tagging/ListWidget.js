@@ -111,30 +111,29 @@ export default class OrganigramTaggingList extends React.PureComponent {
                     onClick={this.handleShowModal}
                     iconName="fa fa-sitemap"
                 />
-                <Modal
-                    styleName="edit-value-modal"
-                    show={this.state.showEditModal}
-                >
-                    <ModalHeader title={afStrings.organigramWidgetLabel} />
-                    <ModalBody>
-                        <OrgChart
-                            data={this.props.data}
-                            labelAccessor={this.labelAccessor}
-                            idAccessor={this.idAccessor}
-                            childAccessor={this.childAccessor}
-                            onSelection={this.handleSelection}
-                            value={this.state.values}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button onClick={this.handleCancelClick} >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton onClick={this.handleSaveClick} >
-                            {afStrings.applyButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { this.state.showEditModal &&
+                    <Modal styleName="edit-value-modal">
+                        <ModalHeader title={afStrings.organigramWidgetLabel} />
+                        <ModalBody>
+                            <OrgChart
+                                data={this.props.data}
+                                labelAccessor={this.labelAccessor}
+                                idAccessor={this.idAccessor}
+                                childAccessor={this.childAccessor}
+                                onSelection={this.handleSelection}
+                                value={this.state.values}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.handleCancelClick} >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton onClick={this.handleSaveClick} >
+                                {afStrings.applyButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }
