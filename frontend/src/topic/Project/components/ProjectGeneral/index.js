@@ -581,9 +581,7 @@ export default class ProjectGeneral extends React.PureComponent {
                             <ModalHeader
                                 title={projectStrings.addMemberButtonLabel}
                                 rightComponent={
-                                    <TransparentButton
-                                        onClick={this.handleModalClose}
-                                    >
+                                    <TransparentButton onClick={this.handleModalClose}>
                                         <span className={iconNames.close} />
                                     </TransparentButton>
                                 }

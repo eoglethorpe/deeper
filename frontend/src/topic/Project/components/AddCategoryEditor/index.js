@@ -188,6 +188,7 @@ export default class AddCategoryEditor extends React.PureComponent {
                     placeholder={projectStrings.addCeTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
+                    autoFocus
                 />
                 <div styleName="action-buttons">
                     <DangerButton

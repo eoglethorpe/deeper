@@ -38,7 +38,7 @@ export default class LeadColumnHeader extends React.PureComponent {
         if (sortable) {
             classNames.push(styles.sortable);
             if (sortOrder) {
-                classNames.push('active');
+                classNames.push(styles.active);
             }
         }
         return classNames.join(' ');

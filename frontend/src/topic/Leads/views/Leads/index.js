@@ -430,7 +430,7 @@ export default class Leads extends React.PureComponent {
             })
             .success(() => {
                 notify.send({
-                    title: leadsString.leadDelete,
+                    title: 'Leads',
                     type: notify.type.SUCCESS,
                     message: leadsString.leadDeleteSuccess,
                     duration: notify.duration.MEDIUM,

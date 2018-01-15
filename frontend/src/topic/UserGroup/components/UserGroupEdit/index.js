@@ -215,6 +215,7 @@ export default class UserGroupEdit extends React.PureComponent {
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
+                    autoFocus
                 />
                 <TextArea
                     label={userStrings.userGroupModalDescriptionLabel}

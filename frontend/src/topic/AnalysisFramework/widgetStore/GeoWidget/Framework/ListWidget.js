@@ -5,7 +5,6 @@ import React from 'react';
 import {
     Button,
     PrimaryButton,
-    TransparentButton,
 } from '../../../../../public/components/Action';
 import {
     TextInput,
@@ -17,7 +16,6 @@ import {
     ModalFooter,
 } from '../../../../../public/components/View';
 import {
-    iconNames,
     afStrings,
 } from '../../../../../common/constants';
 
@@ -114,10 +112,7 @@ export default class GeoFrameworkList extends React.PureComponent {
 
         return (
             <div styleName="geo-list">
-                <TransparentButton>
-                    {afStrings.geoAreaButtonLabel}
-                    <i className={iconNames.globe} />
-                </TransparentButton>
+                {afStrings.geoAreaButtonLabel}
                 { showEditModal &&
                     <Modal>
                         <ModalHeader title={afStrings.editTitleModalHeader} />
@@ -128,6 +123,7 @@ export default class GeoFrameworkList extends React.PureComponent {
                                 onChange={this.handleWidgetTitleChange}
                                 value={title}
                                 showHintAndError={false}
+                                autoFocus
                             />
                         </ModalBody>
                         <ModalFooter>

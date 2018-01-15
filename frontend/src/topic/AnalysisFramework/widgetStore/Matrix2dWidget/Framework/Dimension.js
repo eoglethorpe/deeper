@@ -195,6 +195,7 @@ export default class Dimension extends React.PureComponent {
                 label={afStrings.titleLabel}
                 onChange={(value) => { this.handleSubdimensionTitleInputChange(i, value); }}
                 value={data.title}
+                autoFocus
             />
             <TextInput
                 label={afStrings.tooltipTitle}
