@@ -83,9 +83,9 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     onSortEnd = ({ oldIndex, newIndex }) => {
-        this.setState({
-            rows: arrayMove(this.state.rows, oldIndex, newIndex),
-        });
+        const data = { ...this.state.data };
+        data.rows = arrayMove(data.rows, oldIndex, newIndex);
+        this.setState({ data });
     };
 
     getActiveSelectionStyle = (key) => {
