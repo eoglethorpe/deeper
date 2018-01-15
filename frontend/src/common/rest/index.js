@@ -1,6 +1,7 @@
 export * from './docs';
 export * from './file';
 export * from './leadFilterOptions';
+export * from './entryFilterOptions';
 export * from './leads';
 export * from './entries';
 export * from './external';

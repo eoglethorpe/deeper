@@ -71,6 +71,14 @@ const initialDomainDataState = {
     },
 
     // index is project id
+    entryFilterOptions: {
+        /*
+        1: {
+        },
+        */
+    },
+
+    // index is project id
     projectsOptions: {
         /*
         1: {
