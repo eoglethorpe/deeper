@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { iconNames } from '../../../../../../public/constants';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -23,54 +24,57 @@ export default class LeadColumnHeader extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    getClassName = (props) => {
+        const classNames = [];
+        const {
+            sortOrder,
+            sortable,
+            className,
+        } = props;
 
-        const styleName = this.getStyleName(props);
-        this.state = {
-            styleName,
-        };
+        classNames.push(className);
+        classNames.push(styles['lead-column-header']);
+
+        if (sortable) {
+            classNames.push(styles.sortable);
+            if (sortOrder) {
+                classNames.push('active');
+            }
+        }
+        return classNames.join(' ');
     }
 
-    componentWillReceiveProps(nextProps) {
-        const styleName = this.getStyleName(nextProps);
-        this.setState({
-            styleName,
-        });
-    }
-
-    getStyleName = (props) => {
-        const styleNames = [];
+    getIconClassName = (props) => {
         const {
             sortOrder,
             sortable,
         } = props;
 
-        styleNames.push('lead-column-header');
+        const classNames = [];
+        classNames.push(styles.icon);
 
         if (sortable) {
-            styleNames.push('sortable');
-
-            if (sortOrder) {
-                styleNames.push('active');
-                styleNames.push(sortOrder);
+            if (sortOrder === 'asc') {
+                classNames.push(iconNames.sortAscending);
+            } else if (sortOrder === 'dsc') {
+                classNames.push(iconNames.sortDescending);
             }
+            classNames.push(iconNames.sort);
         }
-
-        return styleNames.join(' ');
+        return classNames.join(' ');
     }
 
     render() {
         const {
-            className,
             label,
         } = this.props;
 
+        const divClassName = this.getClassName(this.props);
+        const iconClassName = this.getIconClassName(this.props);
+
         return (
-            <div
-                className={className}
-                styleName={this.state.styleName}
-            >
+            <div className={divClassName}>
+                <span className={iconClassName} />
                 {label}
             </div>
         );
