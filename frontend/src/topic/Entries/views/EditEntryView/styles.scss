@@ -45,9 +45,3 @@
     @import './overview';
     @import './list';
 }
-
-:global {
-    #select-options-container {
-        z-index: 11;
-    }
-}

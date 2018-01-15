@@ -27,6 +27,7 @@
 
             .range-filter-container {
                 display: flex;
+                margin: $spacing-small;
             }
 
             .button {
@@ -44,6 +45,8 @@
 
         .lead-entries-list {
             .lead-entries {
+                background-color: $color-background;
+
                 .header {
                     display: flex;
                     position: sticky;
@@ -69,46 +72,47 @@
                 }
 
                 .entry {
+                    @include shadow-small;
                     display: flex;
                     align-items: center;
                     z-index: 10;
-                    border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: $color-background-row-alt;
-                    padding: $spacing-extra-small;
+                    margin-bottom: $spacing-small;
+                    background-color: $color-foreground;
+                    padding: $spacing-medium;
 
-                    .grid-layout {
-                        min-height: 100%;
-                        overflow-y: hidden;
-                        overflow-x: auto;
+                    :global .grid-item {
+                        border: $width-separator-thin solid $color-separator;
+                        border-style: dotted;
 
-                        :global .grid-item {
-                            .header {
-                                display: flex;
-                                flex-shrink: 0;
-                                align-items: flex-end;
-                                justify-content: space-between;
-                                background-color: transparent;
-                                height: 18px;
-                                color: $color-primary;
+                        .header {
+                            display: flex;
+                            flex-shrink: 0;
+                            align-items: flex-end;
+                            justify-content: space-between;
+                            border-bottom: $width-separator-thin solid $color-separator;
+                            background-color: transparent;
+                            height: 18px;
+                            color: $color-primary;
 
-                                .heading {
-                                    background-color: transparent;
-                                    padding: 0;
-                                    font-size: $font-size-small;
-                                }
-                            }
-
-                            .content {
-                                flex-grow: 1;
+                            .heading {
+                                margin-bottom: $spacing-extra-small;
+                                margin-left: $spacing-extra-small;
                                 background-color: transparent;
                                 padding: 0;
-                                height: calc(100% - 32px);
+                                font-size: $font-size-small;
+                                font-weight: $font-weight-bold;
                             }
                         }
-                    }
 
+                        .content {
+                            flex-grow: 1;
+                            background-color: transparent;
+                            padding: $spacing-small;
+                            height: calc(100% - 32px);
+                        }
+                    }
                     &:nth-child(even) {
-                        background-color: $color-background-row;
+                        background-color: $color-background-header;
                     }
                 }
             }

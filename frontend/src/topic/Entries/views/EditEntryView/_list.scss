@@ -37,11 +37,15 @@
 
     .entry-list {
         flex-grow: 1;
+        background-color: $color-background;
         overflow-y: auto;
 
         .entry {
-            border-bottom: $width-separator-medium solid $color-separator;
+            @include shadow-small;
+            margin-bottom: $spacing-small;
             background-color: $color-foreground;
+            padding: $spacing-medium;
+
 
             .apply-buttons {
                 display: flex;
@@ -53,31 +57,39 @@
             }
 
             :global .grid-item {
+                border: $width-separator-thin solid $color-separator;
+                border-style: dotted;
+
                 .header {
                     display: flex;
                     flex-shrink: 0;
                     align-items: flex-end;
                     justify-content: space-between;
+                    border-bottom: $width-separator-thin solid $color-separator;
                     background-color: transparent;
                     height: 18px;
+                    color: $color-primary;
 
                     .heading {
+                        margin-bottom: $spacing-extra-small;
+                        margin-left: $spacing-extra-small;
                         background-color: transparent;
                         padding: 0;
                         font-size: $font-size-small;
+                        font-weight: $font-weight-bold;
                     }
                 }
 
                 .content {
                     flex-grow: 1;
                     background-color: transparent;
-                    padding: 0;
+                    padding: $spacing-small;
                     height: calc(100% - 32px);
                 }
             }
 
             &:nth-child(even) {
-                background-color: $color-foreground;
+                background-color: $color-background-header;
             }
         }
     }

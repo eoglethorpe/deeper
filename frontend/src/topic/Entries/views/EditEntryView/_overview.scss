@@ -141,8 +141,8 @@
                                 }
 
                                 .error {
-                                    color: $color-danger;
                                     animation: spin 1s linear infinite;
+                                    color: $color-danger;
                                 }
 
                                 .complete {
@@ -205,18 +205,24 @@
                 overflow-x: auto;
 
                 :global .grid-item {
+                    border: $width-separator-thin solid $color-separator;
+
                     .header {
                         display: flex;
                         flex-shrink: 0;
                         align-items: flex-end;
                         justify-content: space-between;
+                        border-bottom: $width-separator-thin solid $color-separator;
                         background-color: transparent;
                         height: 24px;
 
                         .heading {
+                            margin-bottom: $spacing-extra-small;
+                            margin-left: $spacing-extra-small;
                             background-color: transparent;
                             padding: 0;
                             font-size: $font-size-small;
+                            font-weight: $font-weight-bold;
                         }
                     }
 
