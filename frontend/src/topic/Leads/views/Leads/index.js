@@ -292,6 +292,11 @@ export default class Leads extends React.PureComponent {
 
             showDeleteModal: false,
             leadToDelete: undefined,
+
+            hierarchicalDataPending: false,
+            chordDataPending: false,
+            correlationDataPending: false,
+            forceDirectedDataPending: false,
         };
     }
 
@@ -583,6 +588,12 @@ export default class Leads extends React.PureComponent {
                 depth: 2,
                 keywords_per_topic: 3,
             }))
+            .preLoad(() => {
+                this.setState({ hierarchicalDataPending: true });
+            })
+            .postLoad(() => {
+                this.setState({ hierarchicalDataPending: false });
+            })
             .success((response) => {
                 try {
                     // FIXME: write schema
@@ -752,6 +763,11 @@ export default class Leads extends React.PureComponent {
             loadingLeads,
             showDeleteModal,
             redirectTo,
+
+            hierarchicalDataPending,
+            chordDataPending,
+            correlationDataPending,
+            forceDirectedDataPending,
         } = this.state;
 
         if (redirectTo) {
@@ -792,6 +808,10 @@ export default class Leads extends React.PureComponent {
                     ) : (
                         <Visualizations
                             styleName="viz-container"
+                            hierarchicalDataPending={hierarchicalDataPending}
+                            chordDataPending={chordDataPending}
+                            correlationDataPending={correlationDataPending}
+                            forceDirectedDataPending={forceDirectedDataPending}
                         />
                     )
                 }

@@ -28,11 +28,21 @@ const propTypes = {
     correlationData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     chordData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     forceDirectedData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    hierarchicalDataPending: PropTypes.bool,
+    chordDataPending: PropTypes.bool,
+    correlationDataPending: PropTypes.bool,
+    forceDirectedDataPending: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     totalLeadsCount: 0,
+
+    hierarchicalDataPending: false,
+    chordDataPending: false,
+    correlationDataPending: false,
+    forceDirectedDataPending: false,
 };
 
 const mapStateToProps = state => ({
@@ -60,6 +70,11 @@ export default class Visualizations extends React.PureComponent {
             hierarchicalData,
             correlationData,
             forceDirectedData,
+
+            hierarchicalDataPending,
+            chordDataPending,
+            correlationDataPending,
+            forceDirectedDataPending,
         } = this.props;
 
         return (
@@ -70,18 +85,21 @@ export default class Visualizations extends React.PureComponent {
                 <TreeMapView
                     styleName="tree-map viz"
                     data={hierarchicalData}
+                    loading={hierarchicalDataPending}
                     valueAccessor={Visualizations.sizeValueAccessor}
                     labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <SunBurstView
                     styleName="sun-burst viz"
                     data={hierarchicalData}
+                    loading={hierarchicalDataPending}
                     valueAccessor={Visualizations.sizeValueAccessor}
                     labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <ChordDiagramView
                     styleName="chord-diagram viz"
                     data={chordData.values}
+                    loading={chordDataPending}
                     labelsData={chordData.labels}
                     valueAccessor={Visualizations.sizeValueAccessor}
                     labelAccessor={Visualizations.labelValueAccessor}
@@ -89,10 +107,12 @@ export default class Visualizations extends React.PureComponent {
                 <CorrelationMatrixView
                     styleName="correlation-matrix viz"
                     data={correlationData}
+                    loading={correlationDataPending}
                 />
                 <ForceDirectedGraphView
                     styleName="force-directed-graph viz"
                     data={forceDirectedData}
+                    loading={forceDirectedDataPending}
                     idAccessor={d => d.id}
                     groupAccessor={Visualizations.groupValueAccessor}
                     valueAccessor={Visualizations.valueAccessor}
@@ -101,11 +121,13 @@ export default class Visualizations extends React.PureComponent {
                 <CollapsibleTreeView
                     styleName="collapsible-tree viz"
                     data={hierarchicalData}
+                    loading={hierarchicalDataPending}
                     labelAccessor={Visualizations.labelValueAccessor}
                 />
                 <RadialDendrogramView
                     styleName="radial-dendrogram viz"
                     data={hierarchicalData}
+                    loading={hierarchicalDataPending}
                     labelAccessor={Visualizations.labelValueAccessor}
                 />
             </div>

@@ -25,7 +25,9 @@ const getHierarchialData = (data) => {
         }, { name: '', size: 0, subtopics: [] });
 
         const subtopics = data.subtopics;
-        if (subtopics) {
+        if (subtopics && subtopics.length > 0) {
+            topic.size = undefined;
+
             topic.children = Object.values(subtopics).map(subtopic => (
                 getHierarchialData(subtopic)
             )).filter(f => f.size > 0);
