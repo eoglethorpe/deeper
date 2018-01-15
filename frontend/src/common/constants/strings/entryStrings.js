@@ -58,6 +58,8 @@ const entryStrings = {
     sourceNER: string[540],
     assitedTaggingFeedbackTitle: string[541],
     assitedTaggingFeedbackMessage: string[542],
+
+    noEntryFound: string[543],
 };
 
 export default entryStrings;

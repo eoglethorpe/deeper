@@ -28,6 +28,13 @@
         }
     }
 
+    .no-entry-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+
     .entry-list {
         flex-grow: 1;
         overflow-y: auto;
@@ -75,4 +82,3 @@
         }
     }
 }
-

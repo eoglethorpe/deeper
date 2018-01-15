@@ -206,24 +206,32 @@ export default class List extends React.PureComponent {
                         </SuccessButton>
                     </div>
                 </header>
-                <div styleName="entry-list">
-                    {
-                        entries.map(entry => (
-                            <div
-                                key={entryAccessor.getKey(entry)}
-                                styleName="entry"
-                                style={entryStyle}
-                            >
-                                <GridLayout
-                                    styleName="grid-layout"
-                                    modifier={this.getItemView}
-                                    items={this.gridItems[entryAccessor.getKey(entry)]}
-                                    viewOnly
-                                />
-                            </div>
-                        ))
-                    }
-                </div>
+                {
+                    (!entries || entries.length <= 0) ? (
+                        <div styleName="no-entry-wrapper">
+                            <h2>{entryStrings.noEntryFound}</h2>
+                        </div>
+                    ) : (
+                        <div styleName="entry-list">
+                            {
+                                entries.map(entry => (
+                                    <div
+                                        key={entryAccessor.getKey(entry)}
+                                        styleName="entry"
+                                        style={entryStyle}
+                                    >
+                                        <GridLayout
+                                            styleName="grid-layout"
+                                            modifier={this.getItemView}
+                                            items={this.gridItems[entryAccessor.getKey(entry)]}
+                                            viewOnly
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    )
+                }
             </div>
         );
     }
