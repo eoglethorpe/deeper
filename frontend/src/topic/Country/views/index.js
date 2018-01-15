@@ -272,19 +272,20 @@ export default class CountryPanel extends React.PureComponent {
                         data={displayCountryList}
                         keyExtractor={this.calcCountryListItemKey}
                     />
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleModalClose}
-                        show={this.state.addCountryModal}
-                        closeOnBlur
-                    >
-                        <ModalHeader title="Add new country" />
-                        <ModalBody>
-                            <AddRegion
-                                onModalClose={this.handleModalClose}
-                            />
-                        </ModalBody>
-                    </Modal>
+                    { this.state.addCountryModal &&
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                            closeOnBlur
+                        >
+                            <ModalHeader title="Add new country" />
+                            <ModalBody>
+                                <AddRegion
+                                    onModalClose={this.handleModalClose}
+                                />
+                            </ModalBody>
+                        </Modal>
+                    }
                 </div>
                 { this.renderCountryDetail() }
             </div>

@@ -31,7 +31,6 @@ describe('<UserGroup />', () => {
                 <Modal
                     closeOnEscape
                     onClose={() => {}}
-                    show
                 >
                     <ModalHeader
                         title="Header"

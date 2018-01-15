@@ -210,40 +210,41 @@ export default class ProjectRegions extends React.PureComponent {
                         >
                             {projectStrings.addRegionButtonLabel}
                         </PrimaryButton>
-                        <Modal
-                            styleName="add-region-modal"
-                            onClose={this.handleModalClose}
-                            show={addRegionModal}
-                            closeOnEscape
-                        >
-                            <ModalHeader title={projectStrings.addRegionModalTitle} />
-                            <ModalBody>
-                                <RadioInput
-                                    styleName="radio-input"
-                                    name="addRegionRadioInput"
-                                    options={this.addRegionOptions}
-                                    onChange={
-                                        selectedOption => this.handleRadioInputChange(
-                                            selectedOption)
+                        { addRegionModal &&
+                            <Modal
+                                styleName="add-region-modal"
+                                onClose={this.handleModalClose}
+                                closeOnEscape
+                            >
+                                <ModalHeader title={projectStrings.addRegionModalTitle} />
+                                <ModalBody>
+                                    <RadioInput
+                                        styleName="radio-input"
+                                        name="addRegionRadioInput"
+                                        options={this.addRegionOptions}
+                                        onChange={
+                                            selectedOption =>
+                                                this.handleRadioInputChange(selectedOption)
+                                        }
+                                        value={selectedAddRegionOption}
+                                    />
+                                    {selectedAddRegionOption === 'old' &&
+                                        <AddExistingRegion
+                                            styleName="add-existing-region"
+                                            projectId={projectDetails.id}
+                                            onModalClose={this.handleModalClose}
+                                        />
                                     }
-                                    value="old"
-                                />
-                                {selectedAddRegionOption === 'old' &&
-                                    <AddExistingRegion
-                                        styleName="add-existing-region"
-                                        projectId={projectDetails.id}
-                                        onModalClose={this.handleModalClose}
-                                    />
-                                }
-                                {selectedAddRegionOption === 'new' &&
-                                    <AddRegion
-                                        styleName="add-region"
-                                        projectId={projectDetails.id}
-                                        onModalClose={this.handleModalClose}
-                                    />
-                                }
-                            </ModalBody>
-                        </Modal>
+                                    {selectedAddRegionOption === 'new' &&
+                                        <AddRegion
+                                            styleName="add-region"
+                                            projectId={projectDetails.id}
+                                            onModalClose={this.handleModalClose}
+                                        />
+                                    }
+                                </ModalBody>
+                            </Modal>
+                        }
                     </div>
                     <ListView
                         styleName="list"

@@ -122,32 +122,28 @@ export default class NumberFrameworkList extends React.PureComponent {
                     separator=" "
                     disabled
                 />
-                <Modal show={showEditModal}>
-                    <ModalHeader
-                        title={afStrings.editTitleModalHeader}
-                    />
-                    <ModalBody>
-                        <TextInput
-                            label={afStrings.titleLabel}
-                            placeholder={afStrings.widgetTitlePlaceholder}
-                            onChange={this.handleWidgetTitleChange}
-                            value={title}
-                            showHintAndError={false}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { showEditModal &&
+                    <Modal>
+                        <ModalHeader title={afStrings.editTitleModalHeader} />
+                        <ModalBody>
+                            <TextInput
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.widgetTitlePlaceholder}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.handleModalCancelButtonClick}>
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

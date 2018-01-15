@@ -390,25 +390,26 @@ export default class UserProject extends React.PureComponent {
                         )
                     }
                 </div>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleAddProjectClose}
-                    show={addProject}
-                >
-                    <ModalHeader
-                        title={userStrings.addProjectButtonLabel}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddProjectClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody>
-                        <UserProjectAdd handleModalClose={this.handleAddProjectClose} />
-                    </ModalBody>
-                </Modal>
+                { addProject &&
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddProjectClose}
+                    >
+                        <ModalHeader
+                            title={userStrings.addProjectButtonLabel}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddProjectClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
+                        />
+                        <ModalBody>
+                            <UserProjectAdd handleModalClose={this.handleAddProjectClose} />
+                        </ModalBody>
+                    </Modal>
+                }
                 <Confirm
                     onClose={this.handleDeleteProjectClose}
                     show={deleteProject}

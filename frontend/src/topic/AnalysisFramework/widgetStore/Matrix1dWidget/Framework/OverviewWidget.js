@@ -381,60 +381,59 @@ export default class Matrix1dOverview extends React.PureComponent {
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
                     modifier={this.renderRow}
                 />
-                <Modal
-                    styleName="edit-row-modal"
-                    show={showEditModal}
-                >
-                    <ModalHeader
-                        title={afStrings.editRowModalTitle}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddRowButtonClick}
-                            >
-                                {afStrings.addRowButtonLabel}
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="edit-row-body">
-                        <div styleName="general-info-container">
-                            <TextInput
-                                className={styles['title-input']}
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.titlePlaceholderScale}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                            />
-                        </div>
-                        <div styleName="modal-rows-content">
-                            { data.rows.length > 0 &&
-                                <SketchPicker
-                                    color={activeRow.color}
-                                    onChange={this.handleColorChange}
-                                />
+                { showEditModal &&
+                    <Modal styleName="edit-row-modal">
+                        <ModalHeader
+                            title={afStrings.editRowModalTitle}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddRowButtonClick}
+                                >
+                                    {afStrings.addRowButtonLabel}
+                                </TransparentPrimaryButton>
                             }
-                            <this.SortableList
-                                items={data.rows}
-                                onSortEnd={this.onSortEnd}
-                                lockAxis="y"
-                                lockToContainerEdges
-                                useDragHandle
-                            />
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        />
+                        <ModalBody styleName="edit-row-body">
+                            <div styleName="general-info-container">
+                                <TextInput
+                                    className={styles['title-input']}
+                                    label={afStrings.titleLabel}
+                                    placeholder={afStrings.titlePlaceholderScale}
+                                    onChange={this.handleWidgetTitleChange}
+                                    value={title}
+                                    showHintAndError={false}
+                                />
+                            </div>
+                            <div styleName="modal-rows-content">
+                                { data.rows.length > 0 &&
+                                    <SketchPicker
+                                        color={activeRow.color}
+                                        onChange={this.handleColorChange}
+                                    />
+                                }
+                                <this.SortableList
+                                    items={data.rows}
+                                    onSortEnd={this.onSortEnd}
+                                    lockAxis="y"
+                                    lockToContainerEdges
+                                    useDragHandle
+                                />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

@@ -183,28 +183,29 @@ export default class ProjectPanel extends React.PureComponent {
                             showLabel={false}
                             showHintAndError={false}
                         />
-                        <Modal
-                            closeOnEscape
-                            onClose={this.handleAddProjectModalClose}
-                            show={showAddProjectModal}
-                        >
-                            <ModalHeader
-                                title={projectStrings.addProjectModalTitle}
-                                rightComponent={
-                                    <TransparentPrimaryButton
-                                        onClick={this.handleAddProjectModalClose}
-                                    >
-                                        <span className={iconNames.close} />
-                                    </TransparentPrimaryButton>
-                                }
-                            />
-                            <ModalBody>
-                                <UserProjectAdd
-                                    onProjectAdded={this.handleProjectAdded}
-                                    handleModalClose={this.handleAddProjectModalClose}
+                        { showAddProjectModal &&
+                            <Modal
+                                closeOnEscape
+                                onClose={this.handleAddProjectModalClose}
+                            >
+                                <ModalHeader
+                                    title={projectStrings.addProjectModalTitle}
+                                    rightComponent={
+                                        <TransparentPrimaryButton
+                                            onClick={this.handleAddProjectModalClose}
+                                        >
+                                            <span className={iconNames.close} />
+                                        </TransparentPrimaryButton>
+                                    }
                                 />
-                            </ModalBody>
-                        </Modal>
+                                <ModalBody>
+                                    <UserProjectAdd
+                                        onProjectAdded={this.handleProjectAdded}
+                                        handleModalClose={this.handleAddProjectModalClose}
+                                    />
+                                </ModalBody>
+                            </Modal>
+                        }
                     </header>
                     <ListView
                         styleName="project-list"

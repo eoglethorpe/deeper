@@ -455,77 +455,78 @@ export default class NumberMatrixOverview extends React.PureComponent {
         return (
             <div styleName="number-matrix-widget">
                 {this.renderMatrix(rowHeaders, columnHeaders)}
-                <Modal
-                    styleName="edit-matrix-modal"
-                    show={showEditModal}
-                    onClose={this.handleEditModalClose}
-                >
-                    <ModalHeader title={afStrings.editNumberMatrixModalTitle} />
-                    <ModalBody styleName="modal-body">
-                        <div styleName="general-info-container">
-                            <TextInput
-                                className={styles['title-input']}
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.titlePlaceholderScale}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                            />
-                        </div>
-                        <div styleName="modal-unit-container">
-                            <header styleName="header">
-                                <h3 styleName="heading">
-                                    {afStrings.rowsLabel}
-                                </h3>
-                                <PrimaryButton
-                                    iconName={iconNames.add}
-                                    onClick={this.handleAddRowButtonClick}
-                                >
-                                    {afStrings.addRowUnitButtonLabel}
-                                </PrimaryButton>
-                            </header>
-                            <SortableRowList
-                                items={rowHeaders}
-                                onSortEnd={this.onRowSortEnd}
-                                lockAxis="y"
-                                lockToContainerEdges
-                                useDragHandle
-                            />
-                        </div>
-                        <div styleName="modal-unit-container">
-                            <header styleName="header">
-                                <h3 styleName="heading">
-                                    {afStrings.columnsLabel}
-                                </h3>
-                                <PrimaryButton
-                                    iconName={iconNames.add}
-                                    onClick={this.handleAddColumnButtonClick}
-                                >
-                                    {afStrings.addColumnUnitButtonLabel}
-                                </PrimaryButton>
-                            </header>
-                            <SortableColumnList
-                                items={columnHeaders}
-                                onSortEnd={this.onColumnSortEnd}
-                                lockAxis="y"
-                                lockToContainerEdges
-                                useDragHandle
-                            />
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { showEditModal &&
+                    <Modal
+                        styleName="edit-matrix-modal"
+                        onClose={this.handleEditModalClose}
+                    >
+                        <ModalHeader title={afStrings.editNumberMatrixModalTitle} />
+                        <ModalBody styleName="modal-body">
+                            <div styleName="general-info-container">
+                                <TextInput
+                                    className={styles['title-input']}
+                                    label={afStrings.titleLabel}
+                                    placeholder={afStrings.titlePlaceholderScale}
+                                    onChange={this.handleWidgetTitleChange}
+                                    value={title}
+                                    showHintAndError={false}
+                                />
+                            </div>
+                            <div styleName="modal-unit-container">
+                                <header styleName="header">
+                                    <h3 styleName="heading">
+                                        {afStrings.rowsLabel}
+                                    </h3>
+                                    <PrimaryButton
+                                        iconName={iconNames.add}
+                                        onClick={this.handleAddRowButtonClick}
+                                    >
+                                        {afStrings.addRowUnitButtonLabel}
+                                    </PrimaryButton>
+                                </header>
+                                <SortableRowList
+                                    items={rowHeaders}
+                                    onSortEnd={this.onRowSortEnd}
+                                    lockAxis="y"
+                                    lockToContainerEdges
+                                    useDragHandle
+                                />
+                            </div>
+                            <div styleName="modal-unit-container">
+                                <header styleName="header">
+                                    <h3 styleName="heading">
+                                        {afStrings.columnsLabel}
+                                    </h3>
+                                    <PrimaryButton
+                                        iconName={iconNames.add}
+                                        onClick={this.handleAddColumnButtonClick}
+                                    >
+                                        {afStrings.addColumnUnitButtonLabel}
+                                    </PrimaryButton>
+                                </header>
+                                <SortableColumnList
+                                    items={columnHeaders}
+                                    onSortEnd={this.onColumnSortEnd}
+                                    lockAxis="y"
+                                    lockToContainerEdges
+                                    useDragHandle
+                                />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

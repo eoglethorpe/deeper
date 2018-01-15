@@ -136,38 +136,34 @@ export default class DateFrameworkList extends React.PureComponent {
                     showHintAndError={false}
                     disabled
                 />
-                <Modal show={showEditModal}>
-                    <ModalHeader
-                        title={afStrings.editTitleModalHeader}
-                    />
-                    <ModalBody styleName="modal-body">
-                        <TextInput
-                            label={afStrings.titleLabel}
-                            placeholder={afStrings.widgetTitlePlaceholder}
-                            onChange={this.handleWidgetTitleChange}
-                            value={title}
-                            showHintAndError={false}
-                        />
-                        <Checkbox
-                            styleName="checkbox"
-                            onChange={this.handleInformationDataCheck}
-                            value={informationDataSelected}
-                            label={afStrings.informationDateCheckboxLabel}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                { showEditModal &&
+                    <Modal>
+                        <ModalHeader title={afStrings.editTitleModalHeader} />
+                        <ModalBody styleName="modal-body">
+                            <TextInput
+                                label={afStrings.titleLabel}
+                                placeholder={afStrings.widgetTitlePlaceholder}
+                                onChange={this.handleWidgetTitleChange}
+                                value={title}
+                                showHintAndError={false}
+                            />
+                            <Checkbox
+                                styleName="checkbox"
+                                onChange={this.handleInformationDataCheck}
+                                value={informationDataSelected}
+                                label={afStrings.informationDateCheckboxLabel}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={this.handleModalCancelButtonClick}>
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

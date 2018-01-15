@@ -319,62 +319,63 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     keyExtractor={ScaleFrameworkList.rowKeyExtractor}
                     modifier={this.getScale}
                 />
-                <Modal
-                    styleName="edit-scales-modal"
-                    show={showEditModal}
-                    onClose={this.handleEditModalClose}
-                >
-                    <ModalHeader
-                        title={afStrings.editScaleModalTitle}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                iconName={iconNames.add}
-                                onClick={this.handleAddScaleUnitButtonClick}
-                            >
-                                {afStrings.addscaleUnitButtonLabel}
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="scale-modal-body">
-                        <div styleName="general-info-container">
-                            <TextInput
-                                className={styles['title-input']}
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.titlePlaceholderScale}
-                                onChange={this.handleScaleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                            />
-                        </div>
-                        <div styleName="scale-units-container">
-                            { scaleUnits.length > 0 &&
-                                <SketchPicker
-                                    color={activeScaleUnit.color}
-                                    onChange={this.handleColorChange}
-                                />
+                { showEditModal &&
+                    <Modal
+                        styleName="edit-scales-modal"
+                        onClose={this.handleEditModalClose}
+                    >
+                        <ModalHeader
+                            title={afStrings.editScaleModalTitle}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    iconName={iconNames.add}
+                                    onClick={this.handleAddScaleUnitButtonClick}
+                                >
+                                    {afStrings.addscaleUnitButtonLabel}
+                                </TransparentPrimaryButton>
                             }
-                            <this.SortableList
-                                items={scaleUnits}
-                                onSortEnd={this.onSortEnd}
-                                lockAxis="y"
-                                lockToContainerEdges
-                                useDragHandle
-                            />
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        />
+                        <ModalBody styleName="scale-modal-body">
+                            <div styleName="general-info-container">
+                                <TextInput
+                                    className={styles['title-input']}
+                                    label={afStrings.titleLabel}
+                                    placeholder={afStrings.titlePlaceholderScale}
+                                    onChange={this.handleScaleWidgetTitleChange}
+                                    value={title}
+                                    showHintAndError={false}
+                                />
+                            </div>
+                            <div styleName="scale-units-container">
+                                { scaleUnits.length > 0 &&
+                                    <SketchPicker
+                                        color={activeScaleUnit.color}
+                                        onChange={this.handleColorChange}
+                                    />
+                                }
+                                <this.SortableList
+                                    items={scaleUnits}
+                                    onSortEnd={this.onSortEnd}
+                                    lockAxis="y"
+                                    lockToContainerEdges
+                                    useDragHandle
+                                />
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

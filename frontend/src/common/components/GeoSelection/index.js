@@ -364,71 +364,72 @@ export default class GeoSelection extends React.PureComponent {
                 >
                     <span className={iconNames.globe} />
                 </TransparentAccentButton>
-                <Modal
-                    styleName="modal"
-                    show={showMapModal}
-                    onClose={this.handleMapModalClose}
-                    closeOnEscape
-                >
-                    <ModalHeader
-                        title="Geo selection"
-                        rightComponent={
-                            <div styleName="location-selects">
-                                <SelectInput
-                                    showHintAndError={false}
-                                    showLabel={false}
-                                    placeholder={entryStrings.regionSelectPlaceholder}
-                                    options={regions}
-                                    keySelector={this.regionKeySelector}
-                                    labelSelector={this.regionLabelSelector}
-                                    onChange={this.handleRegionSelection}
-                                    optionsIdentifier="region-select-options"
-                                    value={selectedRegion}
-                                    hideClearButton
-                                />
-                                <MultiSelectInput
-                                    styleName="map-selection-select"
-                                    onChange={this.handleLocationSelection}
-                                    options={locations[selectedRegion]}
-                                    labelSelector={GeoSelection.shortLabelSelector}
-                                    placeholder={entryStrings.locationSelectPlaceholder}
-                                    optionsIdentifier="location-select-options"
-                                    showHintAndError={false}
-                                    showLabel={false}
-                                    value={values[selectedRegion]}
+                { showMapModal &&
+                    <Modal
+                        styleName="modal"
+                        onClose={this.handleMapModalClose}
+                        closeOnEscape
+                    >
+                        <ModalHeader
+                            title="Geo selection"
+                            rightComponent={
+                                <div styleName="location-selects">
+                                    <SelectInput
+                                        showHintAndError={false}
+                                        showLabel={false}
+                                        placeholder={entryStrings.regionSelectPlaceholder}
+                                        options={regions}
+                                        keySelector={this.regionKeySelector}
+                                        labelSelector={this.regionLabelSelector}
+                                        onChange={this.handleRegionSelection}
+                                        optionsIdentifier="region-select-options"
+                                        value={selectedRegion}
+                                        hideClearButton
+                                    />
+                                    <MultiSelectInput
+                                        styleName="map-selection-select"
+                                        onChange={this.handleLocationSelection}
+                                        options={locations[selectedRegion]}
+                                        labelSelector={GeoSelection.shortLabelSelector}
+                                        placeholder={entryStrings.locationSelectPlaceholder}
+                                        optionsIdentifier="location-select-options"
+                                        showHintAndError={false}
+                                        showLabel={false}
+                                        value={values[selectedRegion]}
+                                    />
+                                </div>
+                            }
+                        />
+                        <ModalBody styleName="map-modal">
+                            <RegionMap
+                                styleName="map"
+                                regionId={selectedRegion}
+                                onChange={this.handleMapSelect}
+                                selections={values[selectedRegion]}
+                            />
+                            <div styleName="map-selections">
+                                <ListView
+                                    styleName="map-selections-list"
+                                    data={values[selectedRegion]}
+                                    keyExtractor={GeoSelection.valueKeyExtractor}
+                                    modifier={this.renderSelectedList}
                                 />
                             </div>
-                        }
-                    />
-                    <ModalBody styleName="map-modal">
-                        <RegionMap
-                            styleName="map"
-                            regionId={selectedRegion}
-                            onChange={this.handleMapSelect}
-                            selections={values[selectedRegion]}
-                        />
-                        <div styleName="map-selections">
-                            <ListView
-                                styleName="map-selections-list"
-                                data={values[selectedRegion]}
-                                keyExtractor={GeoSelection.valueKeyExtractor}
-                                modifier={this.renderSelectedList}
-                            />
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {entryStrings.cancelGeoSelectionButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSetButtonClick}
-                        >
-                            {entryStrings.setGeoSelectionButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {entryStrings.cancelGeoSelectionButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSetButtonClick}
+                            >
+                                {entryStrings.setGeoSelectionButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

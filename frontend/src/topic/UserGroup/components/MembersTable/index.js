@@ -406,31 +406,32 @@ export default class MembersTable extends React.PureComponent {
                         <p>{confirmText}</p>
                     </Confirm>
                 </div>
-                <Modal
-                    styleName="add-member-modal"
-                    closeOnEscape
-                    onClose={this.handleAddMemberModalClose}
-                    show={showAddMemberModal}
-                >
-                    <ModalHeader
-                        title={userStrings.addMemberButtonLabel}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddMemberModalClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody
-                        styleName="add-member"
+                { showAddMemberModal &&
+                    <Modal
+                        styleName="add-member-modal"
+                        closeOnEscape
+                        onClose={this.handleAddMemberModalClose}
                     >
-                        <AddUserGroupMembers
-                            userGroupId={this.props.userGroupId}
-                            onModalClose={this.handleAddMemberModalClose}
+                        <ModalHeader
+                            title={userStrings.addMemberButtonLabel}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddMemberModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                </Modal>
+                        <ModalBody
+                            styleName="add-member"
+                        >
+                            <AddUserGroupMembers
+                                userGroupId={this.props.userGroupId}
+                                onModalClose={this.handleAddMemberModalClose}
+                            />
+                        </ModalBody>
+                    </Modal>
+                }
             </div>
         );
     }

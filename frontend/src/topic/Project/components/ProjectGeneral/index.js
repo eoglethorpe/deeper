@@ -572,30 +572,31 @@ export default class ProjectGeneral extends React.PureComponent {
                             </PrimaryButton>
                         </div>
                     </header>
-                    <Modal
-                        styleName="add-member-modal"
-                        onClose={this.handleModalClose}
-                        show={showAddMemberModal}
-                        closeOnEscape
-                    >
-                        <ModalHeader
-                            title={projectStrings.addMemberButtonLabel}
-                            rightComponent={
-                                <TransparentButton
-                                    onClick={this.handleModalClose}
-                                >
-                                    <span className={iconNames.close} />
-                                </TransparentButton>
-                            }
-                        />
-                        <ModalBody>
-                            <AddProjectMembers
-                                styleName="add-member"
-                                projectId={projectId}
-                                onModalClose={this.handleModalClose}
+                    { showAddMemberModal &&
+                        <Modal
+                            styleName="add-member-modal"
+                            onClose={this.handleModalClose}
+                            closeOnEscape
+                        >
+                            <ModalHeader
+                                title={projectStrings.addMemberButtonLabel}
+                                rightComponent={
+                                    <TransparentButton
+                                        onClick={this.handleModalClose}
+                                    >
+                                        <span className={iconNames.close} />
+                                    </TransparentButton>
+                                }
                             />
-                        </ModalBody>
-                    </Modal>
+                            <ModalBody>
+                                <AddProjectMembers
+                                    styleName="add-member"
+                                    projectId={projectId}
+                                    onModalClose={this.handleModalClose}
+                                />
+                            </ModalBody>
+                        </Modal>
+                    }
                     <div styleName="table-container">
                         <Table
                             data={projectDetails.memberships || emptyList}

@@ -202,30 +202,31 @@ export default class UserProfile extends React.PureComponent {
                                     <span className={iconNames.edit} />
                                 </TransparentPrimaryButton>
                             }
-                            <Modal
-                                closeOnEscape
-                                onClose={this.handleEditProfileClose}
-                                show={this.state.editProfile}
-                                styleName="user-profile-edit-modal"
-                            >
-                                <ModalHeader
-                                    title={userStrings.editProfileModalHeader}
-                                    rightComponent={
-                                        <TransparentPrimaryButton
-                                            onClick={this.handleEditProfileClose}
-                                        >
-                                            <span className={iconNames.close} />
-                                        </TransparentPrimaryButton>
-                                    }
-                                />
-                                <ModalBody>
-                                    <UserEdit
-                                        userId={userId}
-                                        userInformation={userInformation}
-                                        handleModalClose={this.handleEditProfileClose}
+                            { this.state.editProfile &&
+                                <Modal
+                                    closeOnEscape
+                                    onClose={this.handleEditProfileClose}
+                                    styleName="user-profile-edit-modal"
+                                >
+                                    <ModalHeader
+                                        title={userStrings.editProfileModalHeader}
+                                        rightComponent={
+                                            <TransparentPrimaryButton
+                                                onClick={this.handleEditProfileClose}
+                                            >
+                                                <span className={iconNames.close} />
+                                            </TransparentPrimaryButton>
+                                        }
                                     />
-                                </ModalBody>
-                            </Modal>
+                                    <ModalBody>
+                                        <UserEdit
+                                            userId={userId}
+                                            userInformation={userInformation}
+                                            handleModalClose={this.handleEditProfileClose}
+                                        />
+                                    </ModalBody>
+                                </Modal>
+                            }
                         </div>
                         <p styleName="email">
                             { userInformation.email }

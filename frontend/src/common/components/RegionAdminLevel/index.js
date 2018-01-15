@@ -286,29 +286,30 @@ export default class RegionAdminLevel extends React.PureComponent {
                     >
                         {countriesString.addAdminLevelButtonLabel}
                     </PrimaryButton>
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleModalClose}
-                        show={this.state.addAdminLevel}
-                    >
-                        <ModalHeader
-                            title={countriesString.addAdminLevelButtonLabel}
-                            rightComponent={
-                                <TransparentPrimaryButton
-                                    onClick={this.handleModalClose}
-                                >
-                                    <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
-                            }
-                        />
-                        <ModalBody>
-                            <EditAdminLevel
-                                countryId={countryId}
-                                onClose={this.handleModalClose}
-                                adminLevelsOfRegion={adminLevelList}
+                    { this.state.addAdminLevel &&
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                        >
+                            <ModalHeader
+                                title={countriesString.addAdminLevelButtonLabel}
+                                rightComponent={
+                                    <TransparentPrimaryButton
+                                        onClick={this.handleModalClose}
+                                    >
+                                        <span className={iconNames.close} />
+                                    </TransparentPrimaryButton>
+                                }
                             />
-                        </ModalBody>
-                    </Modal>
+                            <ModalBody>
+                                <EditAdminLevel
+                                    countryId={countryId}
+                                    onClose={this.handleModalClose}
+                                    adminLevelsOfRegion={adminLevelList}
+                                />
+                            </ModalBody>
+                        </Modal>
+                    }
                 </div>
                 <div styleName="admin-levels-list">
                     <Table
@@ -316,29 +317,30 @@ export default class RegionAdminLevel extends React.PureComponent {
                         headers={this.adminLevelHeaders}
                         keyExtractor={this.keyExtractor}
                     />
-                    <Modal
-                        closeOnEscape
-                        onClose={this.handleModalClose}
-                        show={this.state.editAdminLevel}
-                    >
-                        <ModalHeader
-                            title={countriesString.editAdminLevelModalTitle}
-                            rightComponent={
-                                <TransparentPrimaryButton
-                                    onClick={this.handleModalClose}
-                                >
-                                    <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
-                            }
-                        />
-                        <ModalBody>
-                            <EditAdminLevel
-                                adminLevelDetail={this.state.clickedAdminLevel}
-                                onClose={this.handleModalClose}
-                                adminLevelsOfRegion={adminLevelList}
+                    { this.state.editAdminLevel &&
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleModalClose}
+                        >
+                            <ModalHeader
+                                title={countriesString.editAdminLevelModalTitle}
+                                rightComponent={
+                                    <TransparentPrimaryButton
+                                        onClick={this.handleModalClose}
+                                    >
+                                        <span className={iconNames.close} />
+                                    </TransparentPrimaryButton>
+                                }
                             />
-                        </ModalBody>
-                    </Modal>
+                            <ModalBody>
+                                <EditAdminLevel
+                                    adminLevelDetail={this.state.clickedAdminLevel}
+                                    onClose={this.handleModalClose}
+                                    adminLevelsOfRegion={adminLevelList}
+                                />
+                            </ModalBody>
+                        </Modal>
+                    }
                 </div>
                 <Confirm
                     show={showDeleteModal}

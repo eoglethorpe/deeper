@@ -174,13 +174,13 @@ class RouteSynchronizer extends React.PureComponent {
             return;
         }
 
-        if (newMatchProjectId && oldActiveProjectId !== newMatchProjectId) {
+        if (newMatchProjectId && oldActiveProjectId !== +newMatchProjectId) {
             console.warn('Syncing state: projectId');
-            newProps.setActiveProject({ activeProject: newMatchProjectId });
+            newProps.setActiveProject({ activeProject: +newMatchProjectId });
         }
-        if (newMatchCountryId && oldActiveCountryId !== newMatchCountryId) {
+        if (newMatchCountryId && oldActiveCountryId !== +newMatchCountryId) {
             console.warn('Syncing state: countryId');
-            newProps.setActiveCountry({ activeCountry: newMatchCountryId });
+            newProps.setActiveCountry({ activeCountry: +newMatchCountryId });
         }
     }
 

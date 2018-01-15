@@ -213,46 +213,47 @@ export default class MatrixRow extends React.PureComponent {
                         <span className={iconNames.edit} />
                     </TransparentButton>
                 </div>
-                <Modal
-                    key="modal"
-                    onMouseDown={this.handleModalMouseDown}
-                    styleName="edit-cell-modal"
-                    show={showEditModal}
-                    onClose={this.handleEditModalClose}
-                >
-                    <ModalHeader
-                        title={afStrings.matrix1DModalTitle}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                iconName={iconNames.add}
-                                onClick={this.handleAddCellButtonClick}
-                            >
-                                {afStrings.addCellButtonLabel}
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="edit-cell-body">
-                        <this.SortableList
-                            items={cells}
-                            onSortEnd={this.onSortEnd}
-                            lockAxis="y"
-                            lockToContainerEdges
-                            useDragHandle
+                { showEditModal &&
+                    <Modal
+                        key="modal"
+                        onMouseDown={this.handleModalMouseDown}
+                        styleName="edit-cell-modal"
+                        onClose={this.handleEditModalClose}
+                    >
+                        <ModalHeader
+                            title={afStrings.matrix1DModalTitle}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    iconName={iconNames.add}
+                                    onClick={this.handleAddCellButtonClick}
+                                >
+                                    {afStrings.addCellButtonLabel}
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        <ModalBody styleName="edit-cell-body">
+                            <this.SortableList
+                                items={cells}
+                                onSortEnd={this.onSortEnd}
+                                lockAxis="y"
+                                lockToContainerEdges
+                                useDragHandle
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

@@ -360,28 +360,30 @@ export default class ProjectsTable extends React.PureComponent {
                         keyExtractor={this.keyExtractor}
                     />
                 </div>
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleAddProjectModalClose}
-                    show={showAddProjectModal}
-                >
-                    <ModalHeader
-                        title={userStrings.addProjectButtonLabel}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddProjectModalClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody>
-                        <UserProjectAdd
-                            userGroups={[userGroup]}
-                            handleModalClose={this.handleAddProjectModalClose}
+                { showAddProjectModal &&
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleAddProjectModalClose}
+                    >
+                        <ModalHeader
+                            title={userStrings.addProjectButtonLabel}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddProjectModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                </Modal>
+                        <ModalBody>
+                            <UserProjectAdd
+                                // TODO: fix this please
+                                userGroups={[userGroup]}
+                                handleModalClose={this.handleAddProjectModalClose}
+                            />
+                        </ModalBody>
+                    </Modal>
+                }
                 <Confirm
                     onClose={this.handleDeleteProjectClose}
                     show={showDeleteProjectModal}

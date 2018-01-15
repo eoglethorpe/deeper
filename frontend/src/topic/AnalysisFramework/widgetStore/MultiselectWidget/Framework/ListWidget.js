@@ -193,54 +193,55 @@ export default class Multiselect extends React.PureComponent {
                     keyExtractor={Multiselect.valueKeyExtractor}
                     disabled
                 />
-                <Modal
-                    styleName="edit-value-modal"
-                    show={showEditModal}
-                >
-                    <ModalHeader
-                        title={afStrings.editMultiselectModalTitle}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleAddOptionButtonClick}
-                            >
-                                {afStrings.addOptionButtonLabel}
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody styleName="modal-body">
-                        <div styleName="general-info-container">
-                            <TextInput
-                                className={styles['title-input']}
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.titlePlaceholderScale}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                            />
-                        </div>
-                        <header styleName="header">
-                            <h3>{afStrings.optionsHeader}</h3>
-                        </header>
-                        <ListView
-                            data={values}
-                            className={styles['value-list']}
-                            keyExtractor={Multiselect.valueKeyExtractor}
-                            modifier={this.getEditValue}
+                { showEditModal &&
+                    <Modal
+                        styleName="edit-value-modal"
+                    >
+                        <ModalHeader
+                            title={afStrings.editMultiselectModalTitle}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleAddOptionButtonClick}
+                                >
+                                    {afStrings.addOptionButtonLabel}
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            onClick={this.handleModalCancelButtonClick}
-                        >
-                            {afStrings.cancelButtonLabel}
-                        </Button>
-                        <PrimaryButton
-                            onClick={this.handleModalSaveButtonClick}
-                        >
-                            {afStrings.saveButtonLabel}
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+                        <ModalBody styleName="modal-body">
+                            <div styleName="general-info-container">
+                                <TextInput
+                                    className={styles['title-input']}
+                                    label={afStrings.titleLabel}
+                                    placeholder={afStrings.titlePlaceholderScale}
+                                    onChange={this.handleWidgetTitleChange}
+                                    value={title}
+                                    showHintAndError={false}
+                                />
+                            </div>
+                            <header styleName="header">
+                                <h3>{afStrings.optionsHeader}</h3>
+                            </header>
+                            <ListView
+                                data={values}
+                                className={styles['value-list']}
+                                keyExtractor={Multiselect.valueKeyExtractor}
+                                modifier={this.getEditValue}
+                            />
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button
+                                onClick={this.handleModalCancelButtonClick}
+                            >
+                                {afStrings.cancelButtonLabel}
+                            </Button>
+                            <PrimaryButton
+                                onClick={this.handleModalSaveButtonClick}
+                            >
+                                {afStrings.saveButtonLabel}
+                            </PrimaryButton>
+                        </ModalFooter>
+                    </Modal>
+                }
             </div>
         );
     }

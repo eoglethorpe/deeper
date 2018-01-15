@@ -226,29 +226,30 @@ export default class UserGroup extends React.PureComponent {
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     activeUser={this.props.activeUser}
                 />
-                <Modal
-                    closeOnEscape
-                    onClose={this.handleUserGroupEditModalClose}
-                    show={showUserGroupEditModal}
-                    styleName="user-group-edit-modal"
-                >
-                    <ModalHeader
-                        title={`${userStrings.userGroupEditModalLabel}: ${userGroup.title}`}
-                        rightComponent={
-                            <TransparentPrimaryButton
-                                onClick={this.handleUserGroupEditModalClose}
-                            >
-                                <span className={iconNames.close} />
-                            </TransparentPrimaryButton>
-                        }
-                    />
-                    <ModalBody>
-                        <UserGroupEdit
-                            userGroup={userGroup}
-                            handleModalClose={this.handleUserGroupEditModalClose}
+                { showUserGroupEditModal &&
+                    <Modal
+                        closeOnEscape
+                        onClose={this.handleUserGroupEditModalClose}
+                        styleName="user-group-edit-modal"
+                    >
+                        <ModalHeader
+                            title={`${userStrings.userGroupEditModalLabel}: ${userGroup.title}`}
+                            rightComponent={
+                                <TransparentPrimaryButton
+                                    onClick={this.handleUserGroupEditModalClose}
+                                >
+                                    <span className={iconNames.close} />
+                                </TransparentPrimaryButton>
+                            }
                         />
-                    </ModalBody>
-                </Modal>
+                        <ModalBody>
+                            <UserGroupEdit
+                                userGroup={userGroup}
+                                handleModalClose={this.handleUserGroupEditModalClose}
+                            />
+                        </ModalBody>
+                    </Modal>
+                }
             </div>
         );
     }
