@@ -148,6 +148,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 onChange={(value) => { this.handleRowUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
+                autoFocus
             />
             <TextInput
                 className={styles['title-input']}
@@ -470,6 +471,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
+                                    autoFocus
                                 />
                             </div>
                             <div styleName="modal-unit-container">

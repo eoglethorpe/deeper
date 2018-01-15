@@ -146,6 +146,7 @@ export default class DateFrameworkList extends React.PureComponent {
                                 onChange={this.handleWidgetTitleChange}
                                 value={title}
                                 showHintAndError={false}
+                                autoFocus
                             />
                             <Checkbox
                                 styleName="checkbox"

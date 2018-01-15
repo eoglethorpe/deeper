@@ -1,11 +1,15 @@
+import CSSModules from 'react-css-modules';
 import React from 'react';
+
 import { afStrings } from '../../../../../common/constants';
 
-// eslint-disable-next-line react/prefer-stateless-function
+import styles from './styles.scss';
+
+@CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
     render() {
         return (
-            <div>
+            <div styleName="matrix-one-container">
                 {afStrings.matrix1DWidgetLabel}
             </div>
         );

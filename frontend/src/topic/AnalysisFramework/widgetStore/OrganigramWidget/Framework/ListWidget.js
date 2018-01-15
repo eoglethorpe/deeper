@@ -203,6 +203,7 @@ export default class Organigram extends React.PureComponent {
                         placeholder={afStrings.organPlaceholder}
                         showLabel={false}
                         onChange={this.handleChange(nextIndices)}
+                        autoFocus
                     />
                     <div styleName="action-buttons">
                         <TransparentPrimaryButton
@@ -246,6 +247,7 @@ export default class Organigram extends React.PureComponent {
 
         return (
             <div styleName="organigram-list">
+                {afStrings.organigramWidgetLabel}
                 { showEditModal &&
                     <Modal styleName="edit-value-modal">
                         <ModalHeader title={afStrings.editOrganigramModaltitle} />
@@ -258,6 +260,7 @@ export default class Organigram extends React.PureComponent {
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
+                                    autoFocus
                                 />
                             </div>
                             { this.renderOrgan(organigram) }

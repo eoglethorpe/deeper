@@ -205,6 +205,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     placeholder={projectStrings.addAfTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.title}
+                    autoFocus
                 />
                 <div styleName="action-buttons">
                     <DangerButton

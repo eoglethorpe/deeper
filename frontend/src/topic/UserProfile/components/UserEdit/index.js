@@ -295,6 +295,7 @@ export default class UserEdit extends React.PureComponent {
                     value={formValues.firstName}
                     error={formFieldErrors.firstName}
                     disabled={pending}
+                    autoFocus
                 />
                 <TextInput
                     label={userStrings.lastNameLabel}
