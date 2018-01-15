@@ -98,6 +98,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             'status',
         ];
     }
+
     componentWillMount() {
         const { activeProject } = this.props;
         this.requestProjectLeadFilterOptions(activeProject);
@@ -142,9 +143,11 @@ export default class FilterLeadsForm extends React.PureComponent {
             .url(urlForProjectFilterOptions)
             .params(() => createParamsForUser())
             .preLoad(() => {
+                // FIXME: use this
                 this.setState({ loadingLeadFilters: true });
             })
             .postLoad(() => {
+                // FIXME: use this
                 this.setState({ loadingLeadFilters: false });
             })
             .success((response) => {

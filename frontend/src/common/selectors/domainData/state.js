@@ -24,6 +24,10 @@ export const leadFilterOptionsSelector = ({ domainData }) => (
     domainData.leadFilterOptions || emptyObject
 );
 
+export const entryFilterOptionsSelector = ({ domainData }) => (
+    domainData.entryFilterOptions || emptyObject
+);
+
 export const visualizationSelector = ({ domainData }) => (
     domainData.visualization || emptyObject
 );
