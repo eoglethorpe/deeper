@@ -9,7 +9,6 @@
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        z-index: 11;
         border-bottom: $width-separator-thin solid $color-separator;
         background-color: $color-background-header;
         padding: $spacing-small $spacing-medium;
@@ -41,11 +40,8 @@
         overflow-y: auto;
 
         .entry {
-            @include shadow-small;
-            margin-bottom: $spacing-small;
-            background-color: $color-foreground;
-            padding: $spacing-medium;
-
+            background-color: $color-background-row;
+            padding: $spacing-small;
 
             .apply-buttons {
                 display: flex;
@@ -56,40 +52,14 @@
                 }
             }
 
-            :global .grid-item {
-                border: $width-separator-thin solid $color-separator;
-                border-style: dotted;
-
-                .header {
-                    display: flex;
-                    flex-shrink: 0;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: transparent;
-                    height: 18px;
-                    color: $color-primary;
-
-                    .heading {
-                        margin-bottom: $spacing-extra-small;
-                        margin-left: $spacing-extra-small;
-                        background-color: transparent;
-                        padding: 0;
-                        font-size: $font-size-small;
-                        font-weight: $font-weight-bold;
-                    }
-                }
-
-                .content {
-                    flex-grow: 1;
-                    background-color: transparent;
-                    padding: $spacing-small;
-                    height: calc(100% - 32px);
+            :global {
+                .grid-item {
+                    @extend %grid-item;
                 }
             }
 
             &:nth-child(even) {
-                background-color: $color-background-header;
+                background-color: $color-background-row-alt;
             }
         }
     }

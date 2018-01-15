@@ -1,19 +1,8 @@
+$width-entry-select-input: 400px;
+
 .overview {
     display: flex;
-    width: 100%;
     height: 100%;
-
-    .header {
-        display: flex;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: space-between;
-        z-index: 11;
-        border-bottom: $width-separator-thin solid $color-separator;
-        background-color: $color-background-header;
-        padding: $spacing-small $spacing-medium;
-        width: 100%;
-    }
 
     .left {
         display: flex;
@@ -21,139 +10,113 @@
         flex-direction: column;
         flex-grow: 0;
         flex-shrink: 0;
+        border-right: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
 
-        .header {
-            .entries-list-btn {
-                &.active {
-                    color: $color-accent;
+        .lead-preview {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow-y: auto;
+
+            .gallery-file {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                iframe {
+                    flex-grow: 1;
+                }
+            }
+
+            .preview-text {
+                display: flex;
+                margin: auto;
+
+                h1 {
+                    color: $color-text-disabled;
+                    font-weight: $font-weight-medium;
                 }
             }
         }
 
-        .container {
+        .entries-list-container {
             display: flex;
-            position: relative;
             flex-direction: column;
             flex-grow: 1;
-            border-right: $width-separator-thin solid $color-separator;
-            background-color: $color-foreground;
-            width: 100%;
+            overflow-y: auto;
 
-            .lead-preview {
-                display: flex;
-                flex-direction: column;
+            .entries-list {
                 flex-grow: 1;
-                border-top: $width-separator-medium solid $color-separator;
-                width: 100%;
-                height: 100%;
-                overflow-y: auto;
 
-                .gallery-file {
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
+                :global .entries-list-item {
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    border-left: $width-separator-thick solid transparent;
+                    padding: 0;
 
-                    iframe {
-                        flex-grow: 1;
+                    &.active {
+                        border-left: $width-separator-thick solid $color-accent;
+                        background-color: $color-hover;
                     }
-                }
 
-                .preview-text {
-                    display: flex;
-                    margin: auto;
-
-                    h1 {
-                        color: $color-text-disabled;
-                        font-weight: $font-weight-medium;
+                    &:hover {
+                        background-color: $color-background-hover;
                     }
-                }
-            }
 
-            .entries-list-container {
-                background-color: $color-foreground;
-                width: 100%;
-                height: 100%;
+                    .button {
+                        display: flex;
+                        justify-content: space-between;
+                        outline: 0;
+                        border: 0;
+                        background-color: transparent;
+                        cursor: pointer;
+                        padding: $spacing-medium $spacing-large;
+                        width: 100%;
+                        text-align: left;
+                        font-family: inherit;
+                        font-size: inherit;
 
-                &.active {
-                    display: flex;
-                    overflow-y: auto;
-                }
-
-                .entries-list {
-                    flex-grow: 1;
-
-                    :global .entries-list-item {
-                        border-bottom: $width-separator-thin solid $color-separator;
-                        border-left: $width-separator-thick solid transparent;
-                        padding: 0;
-
-                        &.active {
-                            border-left: $width-separator-thick solid $color-accent;
-                            background-color: $color-hover;
+                        .entry-excerpt {
+                            flex-grow: 1;
+                            margin-right: $spacing-medium-alt;
+                            text-align: justify;
                         }
 
-                        &:hover {
-                            background-color: $color-hover;
+                        .image {
+                            max-width: 100%;
+                            max-height: 128px;
+                            object-fit: contain;
                         }
 
-                        .button {
+                        .status-icons {
                             display: flex;
-                            justify-content: space-between;
-                            outline: 0;
-                            border: 0;
-                            background-color: transparent;
-                            cursor: pointer;
-                            padding: $spacing-medium $spacing-large;
-                            width: 100%;
-                            text-align: left;
-                            font-family: inherit;
-                            font-size: inherit;
 
-                            .entry-excerpt {
-                                flex-grow: 1;
-                                margin-right: $spacing-medium-alt;
-                                text-align: justify;
+                            .pending,
+                            .error,
+                            .complete,
+                            .pristine,
+                            .stale {
+                                flex-shrink: 0;
+                                margin-left: $spacing-small;
+                                padding: 0;
+                                color: $color-label;
+                                font-size: $font-size-medium-alt;
                             }
 
-                            .image {
-                                max-width: 100%;
-                                max-height: 128px;
-                                object-fit: contain;
+                            .pending {
+                                animation: spin 1s linear infinite;
                             }
 
-                            .status-icons {
-                                display: flex;
-
-                                .pending,
-                                .error,
-                                .complete,
-                                .pristine,
-                                .stale {
-                                    flex-shrink: 0;
-                                    margin-left: $spacing-small;
-                                    padding: 0;
-                                    color: $color-label;
-                                    font-size: $font-size-medium-alt;
-                                }
-
-                                .pending {
-                                    animation: spin 1s linear infinite;
-                                }
-
-                                .error {
-                                    animation: spin 1s linear infinite;
-                                    color: $color-danger;
-                                }
-
-                                .complete {
-                                    color: $color-success;
-                                }
+                            .error {
+                                animation: spin 1s linear infinite;
+                                color: $color-danger;
                             }
 
+                            .complete {
+                                color: $color-success;
+                            }
                         }
-
                     }
-
                 }
             }
         }
@@ -164,13 +127,18 @@
         flex-direction: column;
         flex-grow: 1;
 
-        .header {
+        >.header {
+            display: flex;
+            justify-content: space-between;
+            background-color: $color-foreground;
+            padding: $spacing-small $spacing-medium;
+
             .entry-actions {
                 display: flex;
                 align-items: flex-end;
 
                 .select-input {
-                    width: 400px;
+                    width: $width-entry-select-input;
                 }
 
                 >* {
@@ -196,7 +164,7 @@
             position: relative;
             flex-direction: column;
             flex-grow: 1;
-            background-color: $color-foreground-alt;
+            background-color: $color-background-alt;
             padding: $spacing-small;
 
             .grid-layout {
@@ -204,33 +172,9 @@
                 overflow-y: auto;
                 overflow-x: auto;
 
-                :global .grid-item {
-                    border: $width-separator-thin solid $color-separator;
-
-                    .header {
-                        display: flex;
-                        flex-shrink: 0;
-                        align-items: flex-end;
-                        justify-content: space-between;
-                        border-bottom: $width-separator-thin solid $color-separator;
-                        background-color: transparent;
-                        height: 24px;
-
-                        .heading {
-                            margin-bottom: $spacing-extra-small;
-                            margin-left: $spacing-extra-small;
-                            background-color: transparent;
-                            padding: 0;
-                            font-size: $font-size-small;
-                            font-weight: $font-weight-bold;
-                        }
-                    }
-
-                    .content {
-                        flex-grow: 1;
-                        background-color: transparent;
-                        padding: 0;
-                        height: calc(100% - 32px);
+                :global {
+                    .grid-item {
+                        @extend %grid-item;
                     }
                 }
             }

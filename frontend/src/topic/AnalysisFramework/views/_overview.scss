@@ -23,7 +23,6 @@
 
             .grid-layout {
                 flex-grow: 1;
-                background-color: $color-foreground-alt;
                 overflow: auto;
 
                 :global .grid-item {

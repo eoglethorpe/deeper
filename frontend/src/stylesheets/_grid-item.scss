@@ -1,0 +1,31 @@
+$height-grid-header: 18px;
+
+%grid-item {
+    border: $width-separator-thin solid $color-separator;
+
+    .header {
+        display: flex;
+        align-items: center;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        height: $height-grid-header;
+
+        .heading {
+            padding: 0 $spacing-medium;
+            font-weight: $font-weight-bold;
+        }
+
+        .action-buttons {
+            display: flex;
+
+            button {
+                padding: 0 $spacing-small;
+            }
+        }
+    }
+
+    .content {
+        padding: $spacing-medium;
+        height: calc(100% - #{$height-grid-header});
+    }
+}

@@ -1,4 +1,5 @@
 @import '../../../stylesheets/base';
+@import '../../../stylesheets/grid-item';
 
 .entries {
     @extend %main-content;
@@ -75,44 +76,17 @@
                     @include shadow-small;
                     display: flex;
                     align-items: center;
-                    z-index: 10;
-                    margin-bottom: $spacing-small;
-                    background-color: $color-foreground;
-                    padding: $spacing-medium;
+                    background-color: $color-background-row;
+                    padding: $spacing-small;
 
-                    :global .grid-item {
-                        border: $width-separator-thin solid $color-separator;
-                        border-style: dotted;
-
-                        .header {
-                            display: flex;
-                            flex-shrink: 0;
-                            align-items: flex-end;
-                            justify-content: space-between;
-                            border-bottom: $width-separator-thin solid $color-separator;
-                            background-color: transparent;
-                            height: 18px;
-                            color: $color-primary;
-
-                            .heading {
-                                margin-bottom: $spacing-extra-small;
-                                margin-left: $spacing-extra-small;
-                                background-color: transparent;
-                                padding: 0;
-                                font-size: $font-size-small;
-                                font-weight: $font-weight-bold;
-                            }
-                        }
-
-                        .content {
-                            flex-grow: 1;
-                            background-color: transparent;
-                            padding: $spacing-small;
-                            height: calc(100% - 32px);
+                    :global {
+                        .grid-item {
+                            @extend %grid-item;
                         }
                     }
+
                     &:nth-child(even) {
-                        background-color: $color-background-header;
+                        background-color: $color-background-row-alt;
                     }
                 }
             }

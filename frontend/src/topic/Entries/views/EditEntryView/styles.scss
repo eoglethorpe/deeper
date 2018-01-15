@@ -1,5 +1,6 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
+@import '../../../../stylesheets/grid-item';
 
 .tabs-container {
     flex-grow: 1;
@@ -21,26 +22,6 @@
 .edit-entry {
     @extend %main-content;
     position: relative;
-
-    %grid-item {
-        .header {
-            display: flex;
-            flex-shrink: 0;
-            align-items: center;
-            justify-content: space-between;
-            padding: $spacing-small $spacing-medium;
-
-            .heading {
-                font-size: $font-size-small;
-            }
-        }
-
-        .content {
-            flex-grow: 1;
-            padding: $spacing-medium;
-            height: calc(100% - 32px);
-        }
-    }
 
     @import './overview';
     @import './list';

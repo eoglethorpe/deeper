@@ -374,17 +374,122 @@ export default class Overview extends React.PureComponent {
         );
     }
 
+    renderLeftPanel = () => {
+        const {
+            entries,
+            lead,
+            api,
+        } = this.props;
+
+        return (
+            <div styleName="left">
+                <Tabs
+                    name="leftPaneTabs"
+                    selectedTab={this.state.currentTab}
+                    handleSelect={this.handleTabSelect}
+                    activeLinkStyle={{ none: 'none' }}
+                    styleName="tabs-container"
+                >
+                    <div styleName="tabs-header-container">
+                        <TabLink
+                            styleName="tab-header"
+                            to="simplified-preview"
+                        >
+                            {entryStrings.simplifiedTabLabel}
+                        </TabLink>
+                        <TabLink
+                            styleName="tab-header"
+                            to="assisted-tagging"
+                        >
+                            {entryStrings.assistedTabLabel}
+                        </TabLink>
+                        <TabLink
+                            styleName="tab-header"
+                            to="original-preview"
+                        >
+                            {entryStrings.originalTabLabel}
+                        </TabLink>
+                        {
+                            this.state.images.length > 0 &&
+                                <TabLink
+                                    styleName="tab-header"
+                                    to="images-preview"
+                                >
+                                    {entryStrings.imagesTabLabel}
+                                </TabLink>
+                        }
+                        <TabLink
+                            styleName="tab-header"
+                            to="entries-listing"
+                        >
+                            {entryStrings.entriesTabLabel}
+                        </TabLink>
+                        <div styleName="empty-tab" />
+                    </div>
+                    <div styleName="tabs-content">
+                        <TabContent
+                            styleName="tab"
+                            for="simplified-preview"
+                        >
+                            <SimplifiedLeadPreview
+                                leadId={lead.id}
+                                highlights={api.getEntryHighlights()}
+                                highlightModifier={this.renderHighlightSimplifiedExcerpt}
+                                onLoad={this.handleLoadImages}
+                            />
+                        </TabContent>
+                        <TabContent
+                            styleName="tab"
+                            for="assisted-tagging"
+                        >
+                            <AssistedTagging
+                                lead={lead}
+                                api={api}
+                            />
+                        </TabContent>
+                        <TabContent
+                            styleName="tab"
+                            for="original-preview"
+                        >
+                            <div styleName="lead-preview">
+                                {this.renderLeadPreview(lead)}
+                            </div>
+                        </TabContent>
+                        {
+                            this.state.images.length > 0 &&
+                                <TabContent
+                                    styleName="tab"
+                                    for="images-preview"
+                                >
+                                    {this.renderLeadImages(lead)}
+                                </TabContent>
+                        }
+                        <TabContent
+                            styleName="tab"
+                            for="entries-listing"
+                        >
+                            <div styleName="entries-list-container">
+                                <ListView
+                                    styleName="entries-list"
+                                    modifier={this.renderEntriesList}
+                                    data={entries}
+                                    keyExtractor={this.calcEntryKey}
+                                />
+                            </div>
+                        </TabContent>
+                    </div>
+                </Tabs>
+            </div>
+        );
+    }
+
     render() {
         const {
             selectedEntryId,
             entries,
-
             onSaveAll,
-
             saveAllDisabled,
             widgetDisabled,
-            lead,
-            api,
             onEntryAdd,
             onEntryDelete,
         } = this.props;
@@ -396,106 +501,7 @@ export default class Overview extends React.PureComponent {
 
         return (
             <div styleName="overview">
-                <div styleName="left">
-                    <div styleName="container">
-                        <Tabs
-                            name="leftPaneTabs"
-                            selectedTab={this.state.currentTab}
-                            handleSelect={this.handleTabSelect}
-                            activeLinkStyle={{ none: 'none' }}
-                            styleName="tabs-container"
-                        >
-                            <div styleName="tabs-header-container">
-                                <TabLink
-                                    styleName="tab-header"
-                                    to="simplified-preview"
-                                >
-                                    {entryStrings.simplifiedTabLabel}
-                                </TabLink>
-                                <TabLink
-                                    styleName="tab-header"
-                                    to="assisted-tagging"
-                                >
-                                    {entryStrings.assistedTabLabel}
-                                </TabLink>
-                                <TabLink
-                                    styleName="tab-header"
-                                    to="original-preview"
-                                >
-                                    {entryStrings.originalTabLabel}
-                                </TabLink>
-                                {
-                                    this.state.images.length > 0 &&
-                                    <TabLink
-                                        styleName="tab-header"
-                                        to="images-preview"
-                                    >
-                                        {entryStrings.imagesTabLabel}
-                                    </TabLink>
-                                }
-                                <TabLink
-                                    styleName="tab-header"
-                                    to="entries-listing"
-                                >
-                                    {entryStrings.entriesTabLabel}
-                                </TabLink>
-                                <div styleName="empty-tab" />
-                            </div>
-                            <div styleName="tabs-content">
-                                <TabContent
-                                    styleName="tab"
-                                    for="simplified-preview"
-                                >
-                                    <SimplifiedLeadPreview
-                                        leadId={lead.id}
-                                        highlights={api.getEntryHighlights()}
-                                        highlightModifier={this.renderHighlightSimplifiedExcerpt}
-                                        onLoad={this.handleLoadImages}
-                                    />
-                                </TabContent>
-                                <TabContent
-                                    styleName="tab"
-                                    for="assisted-tagging"
-                                >
-                                    <AssistedTagging
-                                        lead={lead}
-                                        api={api}
-                                    />
-                                </TabContent>
-                                <TabContent
-                                    styleName="tab"
-                                    for="original-preview"
-                                >
-                                    <div styleName="lead-preview">
-                                        {this.renderLeadPreview(lead)}
-                                    </div>
-                                </TabContent>
-                                {
-                                    this.state.images.length > 0 &&
-                                    <TabContent
-                                        styleName="tab"
-                                        for="images-preview"
-                                    >
-                                        {this.renderLeadImages(lead)}
-                                    </TabContent>
-                                }
-                                <TabContent
-                                    styleName="tab"
-                                    for="entries-listing"
-                                >
-                                    <div styleName="entries-list-container">
-                                        <ListView
-                                            styleName="entries-list"
-                                            modifier={this.renderEntriesList}
-                                            data={entries}
-                                            keyExtractor={this.calcEntryKey}
-                                        />
-                                    </div>
-                                </TabContent>
-                            </div>
-                        </Tabs>
-                    </div>
-                </div>
+                { this.renderLeftPanel() }
                 <div styleName="right">
                     <header styleName="header">
                         <div styleName="entry-actions">
