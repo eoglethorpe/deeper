@@ -151,11 +151,13 @@
                 display: flex;
                 flex-shrink: 0;
                 align-items: center;
-                background-color: $color-background-row;
-                padding: $spacing-small;
+                border: $width-separator-thin solid $color-separator;
+                background-color: $color-background-header;
+                padding: $spacing-small $spacing-medium-alt;
 
                 .heading {
                     flex-grow: 1;
+                    text-transform: uppercase;
                 }
 
                 button {
@@ -170,24 +172,14 @@
                 .edit-sector {
                     display: flex;
                     justify-content: space-between;
-                    background-color: $color-background-row;
                     padding: $spacing-small $spacing-medium;
-
-                    &:nth-child(odd) {
-                        background-color: $color-background-row-alt;
-                    }
                 }
 
                 .edit-dimension {
                     display: flex;
                     align-items: flex-end;
                     justify-content: space-between;
-                    background-color: $color-background-row;
                     padding: $spacing-small $spacing-medium;
-
-                    &:nth-child(odd) {
-                        background-color: $color-background-row-alt;
-                    }
                 }
             }
         }
