@@ -84,6 +84,7 @@ export default class ExcerptTextList extends React.PureComponent {
                                 onChange={this.handleWidgetTitleChange}
                                 value={title}
                                 showHintAndError={false}
+                                autoFocus
                             />
                         </ModalBody>
                         <ModalFooter>

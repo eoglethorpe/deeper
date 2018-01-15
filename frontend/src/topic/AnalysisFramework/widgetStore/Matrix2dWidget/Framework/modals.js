@@ -43,9 +43,7 @@ export const getEditWidgetModal = (parent) => {
             styleName="edit-widget-modal"
             onClose={parent.handler.editWidgetModalClose}
         >
-            <ModalHeader
-                title={`Edit ${title || afStrings.titleLabel}`}
-            />
+            <ModalHeader title={`Edit ${title || afStrings.titleLabel}`} />
             <ModalBody styleName="modal-body">
                 <TextInput
                     styleName="title-input"
@@ -53,6 +51,7 @@ export const getEditWidgetModal = (parent) => {
                     value={title}
                     label={afStrings.titleLabel}
                     showHintAndError={false}
+                    autoFocus
                 />
                 <section styleName="edit-sectors">
                     <header styleName="header">

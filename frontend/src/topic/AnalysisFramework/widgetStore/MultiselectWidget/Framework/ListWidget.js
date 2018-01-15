@@ -81,6 +81,7 @@ export default class Multiselect extends React.PureComponent {
                 placeholder={afStrings.optionPlaceholder}
                 onChange={(value) => { this.handleValueInputChange(key, value); }}
                 value={data.label}
+                autoFocus
             />
             <TransparentDangerButton
                 className={styles['delete-button']}
@@ -195,9 +196,7 @@ export default class Multiselect extends React.PureComponent {
                     disabled
                 />
                 { showEditModal &&
-                    <Modal
-                        styleName="edit-value-modal"
-                    >
+                    <Modal styleName="edit-value-modal">
                         <ModalHeader
                             title={afStrings.editMultiselectModalTitle}
                             rightComponent={
@@ -217,6 +216,7 @@ export default class Multiselect extends React.PureComponent {
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
+                                    autoFocus
                                 />
                             </div>
                             <header styleName="header">

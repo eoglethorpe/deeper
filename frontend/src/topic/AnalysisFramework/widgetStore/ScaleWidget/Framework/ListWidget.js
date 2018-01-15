@@ -86,8 +86,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
         return styleNames.join(' ');
     }
 
+    // TODO: fix this, don't make new objet
     getEditScaleUnits = (key, data, index) => (
-        <this.SortableScaleUnit key={key} index={index} value={{ key, data }} />
+        <this.SortableScaleUnit
+            key={key}
+            index={index}
+            value={{ key, data }}
+        />
     )
 
     getScale = (key, data) => (
@@ -155,6 +160,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 onFocus={() => this.handleTextInputOnFocus(key)}
                 value={data.title}
                 showHintAndError={false}
+                autoFocus
             />
             <TransparentDangerButton
                 className={styles['delete-button']}
@@ -344,6 +350,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                                     onChange={this.handleScaleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
+                                    autoFocus
                                 />
                             </div>
                             <div styleName="scale-units-container">

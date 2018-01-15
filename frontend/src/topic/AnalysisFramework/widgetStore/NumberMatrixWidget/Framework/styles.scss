@@ -1,5 +1,13 @@
 @import '../../../../../stylesheets/base';
 
+.number-matrix-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 $spacing-small;
+    height: 100%;
+}
+
 .number-matrix-widget {
     display: flex;
 
