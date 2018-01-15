@@ -1,3 +1,6 @@
+const emptyList = [];
+const emptyObject = {};
+
 export const createFilterData = attribute => ({
     values: attribute.value,
     number: undefined,
@@ -6,7 +9,8 @@ export const createFilterData = attribute => ({
 export const createExportData = (attribute, data) => ({
     excel: {
         type: 'list',
-        value: attribute.value.map(key => data.find(d => d.key === key).label),
+        value: attribute.value.map(key =>
+            (data || emptyObject).options.find(d => d.key === key).label),
     },
 });
 
