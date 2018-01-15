@@ -34,13 +34,14 @@ const propTypes = {
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    data: [],
+    data: {},
 };
 
+const emptyObject = {};
 const emptyList = [];
 
 @CSSModules(styles)
@@ -52,10 +53,11 @@ export default class Multiselect extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const options = props.data.options || emptyList;
         this.state = {
             showEditModal: false,
-            values: props.data || emptyList,
             title: props.title,
+            options,
         };
 
         this.props.editAction(this.handleEdit);
@@ -63,9 +65,8 @@ export default class Multiselect extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.data !== nextProps.data) {
-            this.setState({
-                values: nextProps.data || emptyList,
-            });
+            const options = (nextProps.data || emptyObject).options;
+            this.setState({ options });
         }
     }
 
@@ -90,7 +91,7 @@ export default class Multiselect extends React.PureComponent {
         </div>
     )
 
-    createFilters = (values) => {
+    createFilters = (newOptions) => {
         const { title, widgetKey } = this.props;
         return [{
             title,
@@ -99,7 +100,7 @@ export default class Multiselect extends React.PureComponent {
             filterType: 'list',
             properties: {
                 type: 'multiselect',
-                options: values,
+                options: newOptions,
             },
         }];
     }
@@ -107,15 +108,11 @@ export default class Multiselect extends React.PureComponent {
     createExportable = () => {
         const { title, widgetKey } = this.props;
 
-        const excel = {
-            title,
-        };
+        const excel = { title };
 
         return {
             widgetKey,
-            data: {
-                excel,
-            },
+            data: { excel },
         };
     }
 
@@ -128,33 +125,32 @@ export default class Multiselect extends React.PureComponent {
     }
 
     handleRemoveButtonClick = (key) => {
-        const newValues = this.state.values.filter(d => d.key !== key);
-        this.setState({ values: newValues });
+        const options = this.state.options.filter(d => d.key !== key);
+        this.setState({ options });
     }
 
     handleValueInputChange = (key, value) => {
-        const valueIndex = this.state.values.findIndex(d => d.key === key);
+        const valueIndex = this.state.options.findIndex(d => d.key === key);
         const settings = {
             [valueIndex]: {
                 label: { $set: value },
             },
         };
-        const newValues = update(this.state.values, settings);
-        this.setState({
-            values: newValues,
-        });
+        const options = update(this.state.options, settings);
+
+        this.setState({ options });
     }
 
     handleAddOptionButtonClick = () => {
-        const newValue = {
+        const newOption = {
             key: randomString(16).toLowerCase(),
             label: '',
         };
 
         this.setState({
-            values: [
-                ...this.state.values,
-                newValue,
+            options: [
+                ...this.state.options,
+                newOption,
             ],
         });
     }
@@ -162,17 +158,22 @@ export default class Multiselect extends React.PureComponent {
     handleModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
-            values: this.props.data,
+            options: this.props.data.options,
             title: this.props.title,
         });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
+        const { options } = this.state;
+        const newData = {
+            ...this.props.data,
+            options,
+        };
 
         this.props.onChange(
-            this.state.values,
-            this.createFilters(this.state.values),
+            newData,
+            this.createFilters(this.state.options),
             this.createExportable(),
             this.state.title,
         );
@@ -181,14 +182,14 @@ export default class Multiselect extends React.PureComponent {
     render() {
         const {
             showEditModal,
-            values,
+            options,
             title,
         } = this.state;
 
         return (
             <div styleName="multiselect-list">
                 <MultiSelectInput
-                    options={values}
+                    options={options}
                     styleName="multiselect"
                     keyExtractor={Multiselect.valueKeyExtractor}
                     disabled
@@ -222,7 +223,7 @@ export default class Multiselect extends React.PureComponent {
                                 <h3>{afStrings.optionsHeader}</h3>
                             </header>
                             <ListView
-                                data={values}
+                                data={options}
                                 className={styles['value-list']}
                                 keyExtractor={Multiselect.valueKeyExtractor}
                                 modifier={this.getEditValue}

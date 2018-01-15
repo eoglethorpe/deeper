@@ -9,14 +9,15 @@ import {
 
 
 const emptyList = [];
+const emptyObject = {};
 
 const propTypes = {
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    data: [],
+    data: {},
     attribute: undefined,
 };
 @CSSModules(styles)
@@ -38,10 +39,12 @@ export default class MultiselectList extends React.PureComponent {
         const {
             attribute: {
                 value = emptyList,
-            } = {},
-            data = emptyList,
+            } = emptyObject,
+            data: {
+                options = emptyList,
+            } = emptyObject,
         } = this.props;
-        const selectedData = data.filter(d => value.includes(d.key));
+        const selectedData = options.filter(d => value.includes(d.key));
         return (
             <div
                 styleName="multiselect-list"

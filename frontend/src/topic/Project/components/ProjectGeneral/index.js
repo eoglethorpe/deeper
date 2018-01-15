@@ -588,7 +588,7 @@ export default class ProjectGeneral extends React.PureComponent {
                                     </TransparentButton>
                                 }
                             />
-                            <ModalBody>
+                            <ModalBody styleName="modal-body">
                                 <AddProjectMembers
                                     styleName="add-member"
                                     projectId={projectId}

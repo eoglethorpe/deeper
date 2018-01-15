@@ -20,11 +20,11 @@ const propTypes = {
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    data: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    data: [],
+    data: {},
     attribute: undefined,
 };
 
@@ -47,9 +47,7 @@ export default class Multiselect extends React.PureComponent {
 
     handleChange = (value) => {
         const { api, id, entryId } = this.props;
-        const attribute = {
-            value,
-        };
+        const attribute = { value };
 
         api.getEntryModifier(entryId)
             .setAttribute(id, attribute)
@@ -70,16 +68,16 @@ export default class Multiselect extends React.PureComponent {
     render() {
         const {
             attribute: { value = emptyList } = {},
-            data = emptyList,
+            data,
         } = this.props;
 
-        const selectedData = data.filter(d => value.includes(d.key));
+        const selectedData = data.options.filter(d => value.includes(d.key));
 
         return (
             <div styleName="multiselect-list">
                 <MultiSelectInput
                     onChange={this.handleChange}
-                    options={data}
+                    options={data.options}
                     hideClearButton
                     styleName="multiselect"
                     value={value}
