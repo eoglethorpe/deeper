@@ -1,4 +1,5 @@
 @import '../../../stylesheets/base';
+@import '../../../stylesheets/grid-item';
 
 .entries {
     @extend %main-content;
@@ -27,6 +28,7 @@
 
             .range-filter-container {
                 display: flex;
+                margin: $spacing-small;
             }
 
             .button {
@@ -44,6 +46,8 @@
 
         .lead-entries-list {
             .lead-entries {
+                background-color: $color-background;
+
                 .header {
                     display: flex;
                     position: sticky;
@@ -69,46 +73,20 @@
                 }
 
                 .entry {
+                    @include shadow-small;
                     display: flex;
                     align-items: center;
-                    z-index: 10;
-                    border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: $color-background-row-alt;
-                    padding: $spacing-extra-small;
+                    background-color: $color-background-row;
+                    padding: $spacing-small;
 
-                    .grid-layout {
-                        min-height: 100%;
-                        overflow-y: hidden;
-                        overflow-x: auto;
-
-                        :global .grid-item {
-                            .header {
-                                display: flex;
-                                flex-shrink: 0;
-                                align-items: flex-end;
-                                justify-content: space-between;
-                                background-color: transparent;
-                                height: 18px;
-                                color: $color-primary;
-
-                                .heading {
-                                    background-color: transparent;
-                                    padding: 0;
-                                    font-size: $font-size-small;
-                                }
-                            }
-
-                            .content {
-                                flex-grow: 1;
-                                background-color: transparent;
-                                padding: 0;
-                                height: calc(100% - 32px);
-                            }
+                    :global {
+                        .grid-item {
+                            @extend %grid-item;
                         }
                     }
 
                     &:nth-child(even) {
-                        background-color: $color-background-row;
+                        background-color: $color-background-row-alt;
                     }
                 }
             }

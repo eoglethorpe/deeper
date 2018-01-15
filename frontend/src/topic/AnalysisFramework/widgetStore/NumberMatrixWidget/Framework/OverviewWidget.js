@@ -480,9 +480,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     <PrimaryButton
                                         iconName={iconNames.add}
                                         onClick={this.handleAddRowButtonClick}
-                                    >
-                                        {afStrings.addRowUnitButtonLabel}
-                                    </PrimaryButton>
+                                        title={afStrings.addRowUnitButtonLabel}
+                                    />
                                 </header>
                                 <SortableRowList
                                     items={rowHeaders}
@@ -500,9 +499,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     <PrimaryButton
                                         iconName={iconNames.add}
                                         onClick={this.handleAddColumnButtonClick}
-                                    >
-                                        {afStrings.addColumnUnitButtonLabel}
-                                    </PrimaryButton>
+                                        title={afStrings.addColumnUnitButtonLabel}
+                                    />
                                 </header>
                                 <SortableColumnList
                                     items={columnHeaders}

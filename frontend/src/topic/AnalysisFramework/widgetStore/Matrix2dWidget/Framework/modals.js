@@ -56,15 +56,14 @@ export const getEditWidgetModal = (parent) => {
                 />
                 <section styleName="edit-sectors">
                     <header styleName="header">
-                        <h4 styleName="heading">
+                        <h3 styleName="heading">
                             {afStrings.dimensionXLabel}
-                        </h4>
+                        </h3>
                         <PrimaryButton
                             onClick={parent.handler.addSectorButtonClick}
                             title={afStrings.addDimensionXButtonLabel}
-                        >
-                            <i className={iconNames.add} />
-                        </PrimaryButton>
+                            iconName={iconNames.add}
+                        />
                     </header>
                     <ListView
                         styleName="list"
@@ -75,16 +74,15 @@ export const getEditWidgetModal = (parent) => {
                 </section>
                 <section styleName="edit-dimensions">
                     <header styleName="header">
-                        <h4 styleName="heading">
+                        <h3 styleName="heading">
                             {afStrings.dimensionYLabel}
-                        </h4>
+                        </h3>
                         <PrimaryButton
                             tabIndex="-1"
                             onClick={parent.handler.addDimensionButtonClick}
                             title={afStrings.addDimensionYButtonLabel}
-                        >
-                            <i className={iconNames.add} />
-                        </PrimaryButton>
+                            iconName={iconNames.add}
+                        />
                     </header>
                     <ListView
                         styleName="list"
@@ -146,11 +144,10 @@ export const getEditSectorsModal = (parent) => {
                             {afStrings.subDimensionsLabel}
                         </h4>
                         <PrimaryButton
+                            iconName={iconNames.add}
                             onClick={parent.handler.addSubsectorButtonClick}
                             title={afStrings.addButtonLabel}
-                        >
-                            <i className={iconNames.add} />
-                        </PrimaryButton>
+                        />
                     </header>
                     <ListView
                         styleName="sub-sector-list"

@@ -45,9 +45,8 @@ export default class Renderer {
                 tabIndex="-1"
                 onClick={() => { this.handler.removeSectorButtonClick(i); }}
                 title={afStrings.removeDimensionXButtonTitle}
-            >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
+                iconName={iconNames.delete}
+            />
         </div>
     );
 
@@ -78,9 +77,8 @@ export default class Renderer {
                 tabIndex="-1"
                 onClick={() => { this.handler.removeDimensionButtonClick(i); }}
                 title={afStrings.removeDimensionYButtonTitle}
-            >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
+                iconName={iconNames.delete}
+            />
         </div>
     );
 

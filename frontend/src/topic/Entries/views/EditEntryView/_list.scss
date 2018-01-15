@@ -9,7 +9,6 @@
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        z-index: 11;
         border-bottom: $width-separator-thin solid $color-separator;
         background-color: $color-background-header;
         padding: $spacing-small $spacing-medium;
@@ -37,11 +36,12 @@
 
     .entry-list {
         flex-grow: 1;
+        background-color: $color-background;
         overflow-y: auto;
 
         .entry {
-            border-bottom: $width-separator-medium solid $color-separator;
-            background-color: $color-foreground;
+            background-color: $color-background-row;
+            padding: $spacing-small;
 
             .apply-buttons {
                 display: flex;
@@ -52,32 +52,14 @@
                 }
             }
 
-            :global .grid-item {
-                .header {
-                    display: flex;
-                    flex-shrink: 0;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    background-color: transparent;
-                    height: 18px;
-
-                    .heading {
-                        background-color: transparent;
-                        padding: 0;
-                        font-size: $font-size-small;
-                    }
-                }
-
-                .content {
-                    flex-grow: 1;
-                    background-color: transparent;
-                    padding: 0;
-                    height: calc(100% - 32px);
+            :global {
+                .grid-item {
+                    @extend %grid-item;
                 }
             }
 
             &:nth-child(even) {
-                background-color: $color-foreground;
+                background-color: $color-background-row-alt;
             }
         }
     }
