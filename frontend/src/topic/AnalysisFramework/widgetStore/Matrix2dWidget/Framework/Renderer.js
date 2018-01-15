@@ -34,6 +34,7 @@ export default class Renderer {
                 onChange={(value) => { this.handler.sectorTitleInputChange(i, value); }}
                 showHintAndError={false}
                 value={data.title}
+                autoFocus
             />
             <TextInput
                 label={afStrings.tooltipTitle}
@@ -61,6 +62,7 @@ export default class Renderer {
                 showHintAndError={false}
                 onChange={(value) => { this.handler.dimensionTitleInputChange(i, value); }}
                 value={data.title}
+                autoFocus
             />
             <TextInput
                 label={afStrings.tooltipTitle}
@@ -90,6 +92,7 @@ export default class Renderer {
             key={data.id}
             value={data.title}
             showHintAndError={false}
+            autoFocus
         />
     )
 

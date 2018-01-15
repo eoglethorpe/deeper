@@ -280,9 +280,7 @@ export default class CountryPanel extends React.PureComponent {
                         >
                             <ModalHeader title="Add new country" />
                             <ModalBody>
-                                <AddRegion
-                                    onModalClose={this.handleModalClose}
-                                />
+                                <AddRegion onModalClose={this.handleModalClose} />
                             </ModalBody>
                         </Modal>
                     }

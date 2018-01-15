@@ -219,6 +219,7 @@ export default class UserProjectAdd extends React.PureComponent {
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
+                    autoFocus
                 />
                 <div styleName="action-buttons">
                     <DangerButton

@@ -249,6 +249,7 @@ export default class AddRegion extends React.PureComponent {
                     placeholder={projectStrings.addRegionTitlePlaceholder}
                     value={formValues.title}
                     error={formFieldErrors.name}
+                    autoFocus
                 />
                 <TextInput
                     label={projectStrings.addRegionCodeLabel}

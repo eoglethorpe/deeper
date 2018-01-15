@@ -351,9 +351,7 @@ export default class EditAdminLevel extends React.PureComponent {
                         pending && <LoadingAnimation />
                     }
                     <NonFieldErrors errors={formErrors} />
-                    <div
-                        styleName="admin-level-details"
-                    >
+                    <div styleName="admin-level-details" >
                         <TextInput
                             value={`${formValues.level}`}
                             formname="level"
@@ -364,6 +362,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             error={formFieldErrors.level}
                             disabled={pending}
                             min={0}
+                            autoFocus
                         />
                         <TextInput
                             value={formValues.title}
