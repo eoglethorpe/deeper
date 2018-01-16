@@ -2,12 +2,18 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+    Link,
+} from 'react-router-dom';
 
 import {
     Table,
     FormattedDate,
     LoadingAnimation,
 } from '../../../public/components/View';
+import {
+    reverseRoute,
+} from '../../../public/utils/common';
 import {
     urlForExports,
     createUrlForExport,
@@ -20,6 +26,8 @@ import {
     userExportsListSelector,
     setUserExportsAction,
     setUserExportAction,
+
+    activeProjectSelector,
 } from '../../../common/redux';
 
 import schema from '../../../common/schema';
@@ -27,6 +35,7 @@ import notify from '../../../common/notify';
 import ExportPreview from '../../../common/components/ExportPreview';
 import {
     exportStrings,
+    pathNames,
     iconNames,
 } from '../../../common/constants';
 
@@ -39,14 +48,17 @@ const propTypes = {
     userExports: PropTypes.array.isRequired, //eslint-disable-line
     setUserExports: PropTypes.func.isRequired,
     setUserExport: PropTypes.func.isRequired,
+    projectId: PropTypes.number,
 };
 
 const defaultProps = {
     userExports: [],
+    projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     userExports: userExportsListSelector(state, props),
+    projectId: activeProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -295,8 +307,9 @@ export default class UserExports extends React.PureComponent {
     }
 
     render() {
-        const { userExports } = this.props;
+        const { userExports, projectId } = this.props;
         const { selectedExport } = this.state;
+        console.log(projectId);
 
         return (
             <div styleName="user-exports">
@@ -304,6 +317,12 @@ export default class UserExports extends React.PureComponent {
                     <h2>
                         {exportStrings.userExportsHeader}
                     </h2>
+                    <Link
+                        styleName="export-link"
+                        to={reverseRoute(pathNames.export, { projectId })}
+                    >
+                        {exportStrings.goBackToExportLabel}
+                    </Link>
                 </header>
                 <div styleName="main-container">
                     <div styleName="table-container">

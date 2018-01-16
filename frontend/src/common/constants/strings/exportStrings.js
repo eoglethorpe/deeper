@@ -40,6 +40,8 @@ const exportStrings = {
     errorStatusLabel: string[630],
     completedStatusLabel: string[631],
     userExportsHeader: string[632],
+
+    goBackToExportLabel: string[633],
 };
 
 export default exportStrings;
