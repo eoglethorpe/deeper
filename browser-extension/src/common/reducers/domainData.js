@@ -7,7 +7,8 @@ import initialDomainDataState from '../initial-state/domainData';
 // TYPE
 
 // export const LOGIN_ACTION = 'auth/LOGIN';
-export const UPDATE_INPUT_VALUE_ACTION = 'extension/UPDATE_INPUT_VALUES';
+export const UPDATE_INPUT_VALUE_ACTION = 'extension/UPDATE_INPUT_VALUE';
+export const UPDATE_INPUT_VALUES_ACTION = 'extension/UPDATE_INPUT_VALUES';
 export const CLEAR_INPUT_VALUE_ACTION = 'extension/CLEAR_INPUT_VALUES';
 
 // ACTION-CREATOR
@@ -17,6 +18,12 @@ export const updateInputValueAction = ({ tabId, id, value }) => ({
     tabId,
     id,
     value,
+});
+
+export const updateInputValuesAction = ({ tabId, values }) => ({
+    type: UPDATE_INPUT_VALUES_ACTION,
+    tabId,
+    values,
 });
 
 export const clearInputValueAction = ({ tabId }) => ({
@@ -57,8 +64,27 @@ const updateInputValue = (state, action) => {
     return newState;
 };
 
+const updateInputValues = (state, action) => {
+    const {
+        tabId,
+        values,
+    } = action;
+
+    const settings = {
+        [tabId]: { $auto: {
+            inputValues: {
+                $set: values,
+            },
+        } },
+    };
+
+    const newState = update(state, settings);
+    return newState;
+};
+
 export const domainDataReducers = {
     [UPDATE_INPUT_VALUE_ACTION]: updateInputValue,
+    [UPDATE_INPUT_VALUES_ACTION]: updateInputValues,
     [CLEAR_INPUT_VALUE_ACTION]: clearInputValue,
     // [LOGIN_ACTION]: login,
 };

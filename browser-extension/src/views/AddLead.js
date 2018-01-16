@@ -1,4 +1,5 @@
 import CSSModules from 'react-css-modules';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -6,6 +7,9 @@ import {
     SelectInput,
     MultiSelectInput,
     TextInput,
+    Form,
+    requiredCondition,
+    urlCondition,
 } from '../public-components/Input';
 
 import { FgRestBuilder } from '../public/utils/rest';
@@ -17,10 +21,9 @@ import {
 } from '../public-components/Action';
 
 import {
-    updateInputValueAction,
+    updateInputValuesAction,
     clearInputValueAction,
     setProjectListAction,
-    setCurrentTabInfoAction,
     inputValuesForTabSelector,
     currentTabIdSelector,
     projectListSelector,
@@ -49,21 +52,68 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateInputValue: params => dispatch(updateInputValueAction(params)),
+    updateInputValues: params => dispatch(updateInputValuesAction(params)),
     clearInputValue: params => dispatch(clearInputValueAction(params)),
-    setCurrentTabInfo: params => dispatch(setCurrentTabInfoAction(params)),
     setProjectList: params => dispatch(setProjectListAction(params)),
     setLeadOptions: params => dispatch(setLeadOptionsAction(params)),
 });
 
+const propTypes = {
+    inputValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    currentTabId: PropTypes.string.isRequired,
+    projects: PropTypes.arrayOf(PropTypes.object).isRequired,
+    leadOptions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    updateInputValues: PropTypes.func.isRequired,
+    clearInputValue: PropTypes.func.isRequired,
+    setProjectList: PropTypes.func.isRequired,
+    setLeadOptions: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
-    constructor(prop) {
-        super(prop);
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
 
         this.state = {
             pending: false,
+        };
+
+        this.state = {
+            formErrors: [],
+            formFieldErrors: {},
+            pristine: false,
+        };
+
+        this.formElements = [
+            'project',
+            'title',
+            'source',
+            'confidentiality',
+            'assignee',
+            'publishedOn',
+            'url',
+            'website',
+        ];
+
+        this.validations = {
+            project: [requiredCondition],
+            title: [requiredCondition],
+            source: [requiredCondition],
+            confidentiality: [requiredCondition],
+            assignee: [requiredCondition],
+            publishedOn: [requiredCondition],
+            url: [
+                requiredCondition,
+                urlCondition,
+            ],
+            website: [requiredCondition],
         };
     }
 
@@ -138,7 +188,7 @@ export default class AddLead extends React.PureComponent {
         return request;
     }
 
-    createRequestForLeadCreate = () => {
+    createRequestForLeadCreate = (values) => {
         const maker = val => ({
             ...val,
             sourceType: 'website',
@@ -149,14 +199,14 @@ export default class AddLead extends React.PureComponent {
         const url = urlForLeadCreate;
         const request = new FgRestBuilder()
             .url(url)
-            .params(() => createParamsForLeadCreate(maker(this.props.inputValues)))
+            .params(() => createParamsForLeadCreate(maker(values)))
             .preLoad(() => {
                 this.setState({ pending: true });
             })
             .postLoad(() => {
                 this.setState({ pending: false });
             })
-            .success((response) => {
+            .success(() => {
                 const { currentTabId } = this.props;
                 this.props.clearInputValue({
                     tabId: currentTabId,
@@ -166,26 +216,54 @@ export default class AddLead extends React.PureComponent {
         return request;
     }
 
-    handleInputValueChange = (id, value) => {
-        const {
-            currentTabId,
-            updateInputValue,
-        } = this.props;
-
-        updateInputValue({
-            tabId: currentTabId,
-            id,
-            value,
+    handleFormFailure = ({ formErrors, formFieldErrors }) => {
+        this.setState({
+            formErrors,
+            formFieldErrors,
+            pristine: true,
         });
     }
 
-    handleSubmit = () => {
+    handleSubmitButtonClick = () => {
+        if (this.form) {
+            this.form.submit();
+        }
+    }
+
+    handleFormSuccess = (values) => {
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
         }
 
-        this.leadSaveRequest = this.createRequestForLeadCreate();
+        this.leadSaveRequest = this.createRequestForLeadCreate(values);
         this.leadSaveRequest.start();
+    }
+
+    handleFormChange = (values, { formErrors, formFieldErrors }) => {
+        this.setState({
+            formFieldErrors: {
+                ...this.state.formFieldErrors,
+                ...formFieldErrors,
+            },
+            formErrors,
+            pristine: true,
+        });
+
+        const {
+            inputValues,
+            updateInputValues,
+            currentTabId,
+        } = this.props;
+
+        const newValues = {
+            ...inputValues,
+            ...values,
+        };
+
+        updateInputValues({
+            tabId: currentTabId,
+            values: newValues,
+        });
     }
 
     render() {
@@ -197,7 +275,10 @@ export default class AddLead extends React.PureComponent {
                 confidentiality = [],
             },
         } = this.props;
-        const { pending } = this.state;
+        const {
+            pending,
+            formFieldErrors,
+        } = this.state;
 
         return (
             <div styleName="add-lead">
@@ -213,68 +294,84 @@ export default class AddLead extends React.PureComponent {
                         Settings
                     </TransparentButton>
                 </header>
-                <div styleName="inputs">
+                <Form
+                    styleName="inputs"
+                    ref={(el) => { this.form = el; }}
+                    successCallback={this.handleFormSuccess}
+                    changeCallback={this.handleFormChange}
+                    failureCallback={this.handleFormFailure}
+                    elements={this.formElements}
+                    validations={this.validations}
+                >
                     <MultiSelectInput
+                        formname="project"
                         label="Project"
                         value={inputValues.project}
-                        onChange={value => this.handleInputValueChange('project', value)}
+                        error={formFieldErrors.project}
                         options={projects}
                         keySelector={d => d.id}
                         labelSelector={d => d.title}
                         disabled={pending}
                     />
                     <TextInput
+                        formname="title"
                         label="Title"
                         value={inputValues.title}
-                        onChange={value => this.handleInputValueChange('title', value)}
+                        error={formFieldErrors.title}
                         disabled={pending}
                     />
                     <TextInput
+                        formname="source"
                         label="Source"
                         value={inputValues.source}
-                        onChange={value => this.handleInputValueChange('source', value)}
+                        error={formFieldErrors.source}
                         disabled={pending}
                     />
                     <SelectInput
+                        formname="confidentiality"
                         label="Confidentiality"
                         value={inputValues.confidentiality}
-                        onChange={value => this.handleInputValueChange('confidentiality', value)}
+                        error={formFieldErrors.confidentiality}
                         options={confidentiality}
                         keySelector={d => d.key}
                         labelSelector={d => d.value}
                         disabled={pending}
                     />
                     <MultiSelectInput
+                        formname="assignee"
                         label="Assigned to"
-                        value={inputValues.assignedTo}
-                        onChange={value => this.handleInputValueChange('assignedTo', value)}
+                        value={inputValues.assignee}
+                        error={formFieldErrors.assignee}
                         options={assignee}
                         keySelector={d => d.key}
                         labelSelector={d => d.value}
                         disabled={pending}
                     />
                     <DateInput
+                        formname="publishedOn"
                         label="Published on"
                         value={inputValues.publishedOn}
-                        onChange={value => this.handleInputValueChange('publishedOn', value)}
+                        error={formFieldErrors.publishedOn}
                         disabled={pending}
                     />
                     <TextInput
+                        formname="url"
                         label="Url"
                         value={inputValues.url}
-                        onChange={value => this.handleInputValueChange('url', value)}
+                        error={formFieldErrors.url}
                         disabled={pending}
                     />
                     <TextInput
+                        formname="website"
                         label="website"
                         value={inputValues.website}
-                        onChange={value => this.handleInputValueChange('website', value)}
+                        error={formFieldErrors.website}
                         disabled={pending}
                     />
-                </div>
+                </Form>
                 <div styleName="action-buttons">
                     <PrimaryButton
-                        onClick={this.handleSubmit}
+                        onClick={this.handleSubmitButtonClick}
                         disabled={pending}
                     >
                         Submit

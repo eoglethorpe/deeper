@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -6,39 +7,42 @@ import { FgRestBuilder } from './public/utils/rest';
 import AddLead from './views/AddLead';
 
 import {
-    updateInputValueAction,
     setTokenAction,
-    setProjectListAction,
     setCurrentTabInfoAction,
-    inputValuesForTabSelector,
-    currentTabIdSelector,
     tokenSelector,
-    projectListSelector,
 } from './common/redux';
 
 import {
     urlForTokenRefresh,
     createParamsForTokenRefresh,
-    createUrlForProjectList,
-    createParamsForProjectList,
 } from './common/rest';
 
 const mapStateToProps = state => ({
-    inputValues: inputValuesForTabSelector(state),
-    currentTabId: currentTabIdSelector(state),
     token: tokenSelector(state),
-    projects: projectListSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateInputValue: params => dispatch(updateInputValueAction(params)),
     setCurrentTabInfo: params => dispatch(setCurrentTabInfoAction(params)),
     setToken: params => dispatch(setTokenAction(params)),
-    setProjectList: params => dispatch(setProjectListAction(params)),
 });
+
+const propTypes = {
+    token: PropTypes.shape({
+        access: PropTypes.string,
+        refresh: PropTypes.string,
+    }).isRequired,
+    setCurrentTabInfo: PropTypes.func.isRequired,
+    setToken: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
 
@@ -95,7 +99,7 @@ class App extends React.PureComponent {
 
             const tab = tabs[0];
             const url = tab.url;
-            const tabId = tab.id;
+            const tabId = tab.url;
 
             setCurrentTabInfo({
                 tabId,
