@@ -482,7 +482,7 @@ export default class EditEntryView extends React.PureComponent {
         });
     }
 
-    handleDeleteEntry = (markOrUnmark) => {
+    handleEntryDelete = (markOrUnmark, key) => {
         const {
             leadId,
             selectedEntryId,
@@ -490,7 +490,7 @@ export default class EditEntryView extends React.PureComponent {
 
         this.props.markForDeleteEntry({
             leadId,
-            entryId: selectedEntryId,
+            entryId: key || selectedEntryId,
             mark: markOrUnmark,
         });
     }
@@ -619,7 +619,7 @@ export default class EditEntryView extends React.PureComponent {
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
                                 onEntryAdd={this.handleAddEntry}
-                                onEntryDelete={this.handleDeleteEntry}
+                                onEntryDelete={this.handleEntryDelete}
 
                                 saveAllPending={pendingSaveAll}
                                 widgetDisabled={isWidgetDisabled}

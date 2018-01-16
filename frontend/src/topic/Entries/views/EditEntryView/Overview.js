@@ -269,12 +269,20 @@ export default class Overview extends React.PureComponent {
     );
 
     renderEntriesList = (key, entry) => {
-        const { selectedEntryId } = this.props;
+        const {
+            selectedEntryId,
+            entries,
+            onEntryDelete,
+        } = this.props;
 
         const currentEntryId = this.calcEntryKey(entry);
         const isActive = currentEntryId === selectedEntryId;
         const status = this.props.choices[key].choice;
+        const selectedEntry = entries.find(
+            e => entryAccessor.getKey(e) === selectedEntryId,
+        );
 
+        const isMarkedForDelete = entryAccessor.isMarkedForDelete(selectedEntry);
         return (
             <ListItem
                 className="entries-list-item"
@@ -297,6 +305,23 @@ export default class Overview extends React.PureComponent {
                         }
                     </div>
                 </button>
+                {
+                    isMarkedForDelete ? (
+                        <Button
+                            key="undo-button"
+                            className="remove-button"
+                            onClick={() => onEntryDelete(false, key)}
+                            iconName={iconNames.undo}
+                        />
+                    ) : (
+                        <DangerButton
+                            key="remove-button"
+                            className="remove-button"
+                            onClick={() => onEntryDelete(true, key)}
+                            iconName={iconNames.delete}
+                        />
+                    )
+                }
             </ListItem>
         );
     }

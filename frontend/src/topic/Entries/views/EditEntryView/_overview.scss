@@ -51,9 +51,10 @@ $width-entry-select-input: 400px;
                 flex-grow: 1;
 
                 :global .entries-list-item {
+                    position: relative;
                     border-bottom: $width-separator-thin solid $color-separator;
                     border-left: $width-separator-thick solid transparent;
-                    padding: 0;
+                    padding: $spacing-small;
 
                     &.active {
                         border-left: $width-separator-thick solid $color-accent;
@@ -67,7 +68,7 @@ $width-entry-select-input: 400px;
                         border: 0;
                         background-color: transparent;
                         cursor: pointer;
-                        padding: $spacing-medium $spacing-large;
+                        padding: $spacing-small;
                         width: 100%;
                         text-align: left;
                         font-family: inherit;
@@ -112,6 +113,38 @@ $width-entry-select-input: 400px;
                             .complete {
                                 color: $color-success;
                             }
+                        }
+                    }
+
+                    .remove-button {
+                        display: none;
+                        position: absolute;
+                        top: 50%;
+                        right: $spacing-medium;
+                        transform: translateY(-50%);
+                    }
+
+                    &:hover {
+                        .button {
+                            .status-icons {
+                                visibility: hidden;
+                            }
+                        }
+
+                        .remove-button {
+                            display: initial;
+                            animation: fade .5s linear;
+                            opacity: 1;
+                        }
+                    }
+
+                    @keyframes fade {
+                        0% {
+                            opacity: 0;
+                        }
+
+                        100% {
+                            opacity: 1;
                         }
                     }
                 }
