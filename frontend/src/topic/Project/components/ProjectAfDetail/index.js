@@ -352,7 +352,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                         )}
                     >
                         <p>{`${projectStrings.confirmCloneAf} ${afDetails.title}?`}</p>
-                        <p>{projectStrings.confirmCloneAf}</p>
                     </Confirm>
                 </header>
                 <div styleName="af-details">
