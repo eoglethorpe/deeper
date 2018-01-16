@@ -113,9 +113,6 @@ export const updateAttribute = ({ id, entryId, api, attribute, data, filters, ex
     if (!attribute || !data) {
         api.getEntryModifier(entryId)
             .setHighlightColor(id, undefined)
-            .setFilterData(filters[0].id, undefined)
-            .setFilterData(filters[1].id, undefined)
-            .setExportData(exportable.id, undefined)
             .apply();
         return;
     }

@@ -29,9 +29,6 @@ export const createExportData = (attribute, data) => {
 
 export const updateAttribute = ({ entryId, api, attribute, data, exportable }) => {
     if (!attribute || !data) {
-        api.getEntryModifier(entryId)
-            .setExportData(exportable.id, undefined)
-            .apply();
         return;
     }
 
