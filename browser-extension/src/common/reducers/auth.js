@@ -35,7 +35,7 @@ const setToken = (state, action) => {
 
     const settings = {
         token: {
-            $merge: token,
+            $set: token,
         },
     };
 

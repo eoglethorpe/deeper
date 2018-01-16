@@ -6,3 +6,6 @@ export * from './reducers/mem';
 
 export * from './selectors/auth';
 export * from './reducers/auth';
+
+export * from './selectors/settings';
+export * from './reducers/settings';

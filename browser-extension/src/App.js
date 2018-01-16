@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FgRestBuilder } from './public/utils/rest';
 
 import AddLead from './views/AddLead';
+import Settings from './views/Settings';
 
 import {
     setTokenAction,
@@ -48,8 +49,12 @@ class App extends React.PureComponent {
 
         this.state = {
             pendingTabInfo: true,
-            pendingRefresh: true,
+            pendingRefresh: undefined,
+            authorized: false,
+            currentView: 'add-lead',
         };
+
+        this.fetchingToken = false;
 
         chrome.runtime.onMessage.addListener((request, sender) => {
             if (chrome.runtime.id === sender.id) {
@@ -62,27 +67,39 @@ class App extends React.PureComponent {
 
     componentWillMount() {
         this.getCurrentTabInfo();
-        const { token } = this.props;
 
-        if (token.refresh) {
-            this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
-            this.tokenRefreshRequest.start();
-        } else {
-            const url = 'localhost:3000/browser-extension';
-            chrome.tabs.create({
-                url,
-                active: false,
-            });
-        }
+        chrome.runtime.sendMessage({ message: 'token' }, (response) => {
+            const { token } = response;
+            const { setToken } = this.props;
+
+            setToken({ token });
+
+            if (token.refresh) {
+                this.fetchingToken = true;
+                this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
+                this.tokenRefreshRequest.start();
+            } else {
+                this.setState({ authorized: false });
+                const url = 'localhost:3000/browser-extension';
+                chrome.tabs.create({
+                    url,
+                    active: false,
+                });
+            }
+        });
     }
 
     componentWillReceiveProps(nextProps) {
         const { token: newToken } = nextProps;
         const { token: oldToken } = this.props;
 
-        if (newToken.refresh !== oldToken.refresh) {
-            this.tokenRefreshRequest = this.createRequestForTokenRefresh(newToken);
-            this.tokenRefreshRequest.start();
+        if (!(this.fetchingToken || newToken.refresh === oldToken.refresh)) {
+            if (newToken.refresh) {
+                this.tokenRefreshRequest = this.createRequestForTokenRefresh(newToken);
+                this.tokenRefreshRequest.start();
+            } else {
+                this.setState({ authorized: false });
+            }
         }
     }
 
@@ -116,33 +133,88 @@ class App extends React.PureComponent {
         const tokenRefreshRequest = new FgRestBuilder()
             .url(urlForTokenRefresh)
             .params(() => createParamsForTokenRefresh(token))
+            .preLoad(() => {
+                this.fetchingToken = true;
+                this.setState({
+                    pendingRefresh: true,
+                    authorized: false,
+                });
+            })
+            .postLoad(() => {
+                this.fetchingToken = false;
+                this.setState({ pendingRefresh: false });
+            })
             .success((response) => {
                 const { setToken } = this.props;
 
                 const params = {
-                    token: { access: response.access },
+                    token: {
+                        ...token,
+                        access: response.access,
+                    },
                 };
 
                 setToken(params);
-                this.setState({ pendingRefresh: false });
+                this.setState({ authorized: true });
             })
             .build();
         return tokenRefreshRequest;
+    }
+
+    handleAddLeadSettingsButtonClick = () => {
+        this.setState({
+            currentView: 'settings',
+        });
+    }
+
+    handleSettingsBackButtonClick = () => {
+        this.setState({
+            currentView: 'add-lead',
+        });
     }
 
     render() {
         const {
             pendingTabInfo,
             pendingRefresh,
+            authorized,
+            currentView,
         } = this.state;
+
+        const style = {
+            height: '500px',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        };
 
         if (pendingTabInfo || pendingRefresh) {
             return (
-                <div>Loading...</div>
+                <div style={style}>
+                    Loading...
+                </div>
             );
         }
+
+        if (currentView === 'settings') {
+            return (
+                <Settings
+                    onBackButtonClick={this.handleSettingsBackButtonClick}
+                />
+            );
+        }
+
         return (
-            <AddLead />
+            authorized ? (
+                <AddLead
+                    onSettingsButtonClick={this.handleAddLeadSettingsButtonClick}
+                />
+            ) : (
+                <div style={style}>
+                    You need to login to deep first
+                </div>
+            )
         );
     }
 }

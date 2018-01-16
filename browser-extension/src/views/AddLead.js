@@ -16,7 +16,7 @@ import { FgRestBuilder } from '../public/utils/rest';
 
 import { LoadingAnimation } from '../public-components/View';
 import {
-    TransparentButton,
+    TransparentAccentButton,
     PrimaryButton,
 } from '../public-components/Action';
 
@@ -67,6 +67,7 @@ const propTypes = {
     clearInputValue: PropTypes.func.isRequired,
     setProjectList: PropTypes.func.isRequired,
     setLeadOptions: PropTypes.func.isRequired,
+    onSettingsButtonClick: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -274,6 +275,7 @@ export default class AddLead extends React.PureComponent {
                 assignee = [],
                 confidentiality = [],
             },
+            onSettingsButtonClick,
         } = this.props;
         const {
             pending,
@@ -287,12 +289,13 @@ export default class AddLead extends React.PureComponent {
                     <h1>
                         Add lead
                     </h1>
-                    <TransparentButton
+                    <TransparentAccentButton
                         type="button"
                         disabled={pending}
+                        onClick={onSettingsButtonClick}
                     >
                         Settings
-                    </TransparentButton>
+                    </TransparentAccentButton>
                 </header>
                 <Form
                     styleName="inputs"

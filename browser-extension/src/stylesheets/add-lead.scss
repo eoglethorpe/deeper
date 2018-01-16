@@ -11,12 +11,12 @@
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        padding: $spacing-medium $spacing-large;
+        padding: $spacing-medium-alt $spacing-extra-large;
     }
 
     .inputs {
         flex-grow: 1;
-        padding: $spacing-medium $spacing-large;
+        padding: $spacing-medium-alt $spacing-extra-large;
         overflow-y: auto;
     }
 
@@ -24,6 +24,6 @@
         display: flex;
         flex-shrink: 0;
         justify-content: flex-end;
-        padding: $spacing-medium $spacing-large;
+        padding: $spacing-medium-alt $spacing-extra-large;
     }
 }
