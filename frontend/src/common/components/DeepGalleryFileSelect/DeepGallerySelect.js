@@ -250,6 +250,7 @@ export default class DgSelect extends React.PureComponent {
         <TransparentPrimaryButton
             title={row.selected ? 'Unselect' : 'Select'}
             onClick={() => this.handleFileSelection(row)}
+            smallVerticalPadding
         >
             {
                 row.selected ? <i className={iconNames.checkbox} />

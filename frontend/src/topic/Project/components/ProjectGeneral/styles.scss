@@ -33,6 +33,10 @@
             flex-grow: 1;
             padding: 0 $spacing-medium-alt;
             overflow-y: auto;
+
+            .view-member-link {
+                padding: 0 $spacing-medium;
+            }
         }
     }
 }

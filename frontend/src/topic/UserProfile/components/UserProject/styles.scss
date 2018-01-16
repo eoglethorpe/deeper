@@ -14,10 +14,15 @@
         justify-content: space-between;
         padding: $spacing-small $spacing-medium;
         height: $height-navbar;
+        background-color: $color-background-header;
     }
 
     .projects-table {
         flex-grow: 1;
         overflow-y: auto;
+
+        .link {
+            padding: 0 $spacing-medium;
+        }
     }
 }

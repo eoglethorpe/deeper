@@ -139,12 +139,9 @@ export default class AddProjectMembers extends React.PureComponent {
                                         newRole: isAdmin ? 'normal' : 'admin',
                                     })
                                 }
-                            >
-                                {
-                                    isAdmin ? <i className={iconNames.locked} />
-                                        : <i className={iconNames.person} />
-                                }
-                            </TransparentPrimaryButton>
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                                smallVerticalPadding
+                            />
                         </div>
                     );
                 },

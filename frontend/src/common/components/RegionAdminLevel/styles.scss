@@ -12,31 +12,16 @@
         align-items: center;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-medium $spacing-large;
+        padding: $spacing-small $spacing-medium;
         text-transform: uppercase;
         font-size: $font-size-extra-large;
+        background-color: $color-background-header;
     }
 
     .admin-levels-list {
         flex-grow: 1;
         overflow: auto;
-    }
+        background-color: $color-background-row-alt;
 
-    :global {
-        .raw-table {
-            .headers {
-                .level {
-                    width: 64px;
-                }
-            }
-
-            .body {
-                .row {
-                    .cell {
-                        padding: $spacing-extra-small $spacing-medium;
-                    }
-                }
-            }
-        }
     }
 }

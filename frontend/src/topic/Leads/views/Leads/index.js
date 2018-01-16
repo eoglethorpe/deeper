@@ -118,7 +118,7 @@ const mapDispatchToProps = dispatch => ({
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
-const MAX_LEADS_PER_REQUEST = 21;
+const MAX_LEADS_PER_REQUEST = 24;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -236,28 +236,32 @@ export default class Leads extends React.PureComponent {
                 order: 10,
                 sortable: false,
                 modifier: row => (
-                    <div className="actions">
+                    <div>
                         <TransparentButton
                             title={leadsString.searchSimilarLeadButtonTitle}
                             onClick={() => this.handleSearchSimilarLead(row)}
+                            smallVerticalPadding
                         >
                             <i className={iconNames.search} />
                         </TransparentButton>
                         <TransparentButton
                             title={leadsString.editLeadButtonTitle}
                             onClick={() => this.handleEditLeadClick(row)}
+                            smallVerticalPadding
                         >
                             <i className={iconNames.edit} />
                         </TransparentButton>
                         <TransparentDangerButton
                             title={leadsString.removeLeadLeadButtonTitle}
                             onClick={() => this.handleRemoveLead(row)}
+                            smallVerticalPadding
                         >
                             <i className={iconNames.delete} />
                         </TransparentDangerButton>
                         <TransparentAccentButton
                             title={leadsString.addEntryFromLeadButtonTitle}
                             onClick={() => this.handleAddEntryClick(row)}
+                            smallVerticalPadding
                         >
                             <i className={iconNames.forward} />
                         </TransparentAccentButton>

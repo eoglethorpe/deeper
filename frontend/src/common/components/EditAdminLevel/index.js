@@ -353,7 +353,7 @@ export default class EditAdminLevel extends React.PureComponent {
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="admin-level-details" >
                         <TextInput
-                            value={`${formValues.level}`}
+                            value={formValues.level}
                             formname="level"
                             label={countriesString.adminLevelLabel}
                             placeholder={countriesString.adminLevelPlaceholder}

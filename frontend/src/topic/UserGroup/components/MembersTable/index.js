@@ -133,10 +133,9 @@ export default class MembersTable extends React.PureComponent {
                                     title={userStrings.viewMemberLinkTitle}
                                     key={row.member}
                                     to={reverseRoute(pathNames.userProfile, { userId: row.member })}
+                                    className={styles.link}
                                 >
-                                    <TransparentPrimaryButton>
-                                        <span className={iconNames.openLink} />
-                                    </TransparentPrimaryButton>
+                                    <span className={iconNames.openLink} />
                                 </Link>
                             </div>
                         );
@@ -150,18 +149,15 @@ export default class MembersTable extends React.PureComponent {
                                         userStrings.grantAdminLinkTitle
                                 }
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
-                            >
-                                {
-                                    isAdmin ? <i className={iconNames.locked} />
-                                        : <i className={iconNames.person} />
-                                }
-                            </TransparentPrimaryButton>
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                                smallVerticalPadding
+                            />
                             <TransparentDangerButton
                                 title={userStrings.deleteMemberLinkTitle}
                                 onClick={() => this.handleDeleteMemberClick(row)}
-                            >
-                                <i className={iconNames.delete} />
-                            </TransparentDangerButton>
+                                iconName={iconNames.delete}
+                                smallVerticalPadding
+                            />
                         </div>
                     );
                 },
