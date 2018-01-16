@@ -90,6 +90,10 @@ body {
     transform-origin: top;
 }
 
+%empty-text {
+    color: $color-empty-text;
+}
+
 @keyframes slide-in {
     from {
         transform: rotateX(1deg) translate3d(0, 10px, -100px);

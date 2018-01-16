@@ -103,6 +103,16 @@ export default class ProjectRegions extends React.PureComponent {
         }
     }
 
+    getModalStyleName = () => {
+        const { selectedAddRegionOption } = this.state;
+        const styleNames = ['add-region-modal'];
+        if (selectedAddRegionOption === 'old') {
+            styleNames.push('existing-region');
+        }
+        return styleNames.join(' ');
+    }
+
+
     handleRegionClick = (regionId) => {
         this.setState({ selectedRegion: regionId });
     }
@@ -139,6 +149,10 @@ export default class ProjectRegions extends React.PureComponent {
         });
     };
 
+    handleRegionClone = (selectedRegion) => {
+        this.setState({ selectedRegion });
+    }
+
     calcRegionKey = region => region.id;
 
     renderRegionList = (key, region) => {
@@ -165,14 +179,15 @@ export default class ProjectRegions extends React.PureComponent {
                 <ProjectRegionDetail
                     key={selectedRegion}
                     countryId={selectedRegion}
+                    onRegionClone={this.handleRegionClone}
                 />
             );
         }
 
         return (
-            <h1 styleName="no-regions">
+            <p styleName="no-regions">
                 {projectStrings.noRegionText}
-            </h1>
+            </p>
         );
     }
 
@@ -211,13 +226,9 @@ export default class ProjectRegions extends React.PureComponent {
                             {projectStrings.addRegionButtonLabel}
                         </PrimaryButton>
                         { addRegionModal &&
-                            <Modal
-                                styleName="add-region-modal"
-                                onClose={this.handleModalClose}
-                                closeOnEscape
-                            >
+                            <Modal>
                                 <ModalHeader title={projectStrings.addRegionModalTitle} />
-                                <ModalBody>
+                                <ModalBody styleName={this.getModalStyleName()}>
                                     <RadioInput
                                         styleName="radio-input"
                                         name="addRegionRadioInput"

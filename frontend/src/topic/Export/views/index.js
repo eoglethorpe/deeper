@@ -63,6 +63,8 @@ const propTypes = {
 const defaultProps = {
 };
 
+const emptyList = [];
+
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Export extends React.PureComponent {
@@ -182,7 +184,7 @@ export default class Export extends React.PureComponent {
             ...entriesFilters,
             decoupled: decoupledEntries,
             lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
-            report_structure: this.createReportStructureForExport(reportStructure),
+            report_structure: this.createReportStructureForExport(reportStructure || emptyList),
         };
 
         if (this.exportRequest) {

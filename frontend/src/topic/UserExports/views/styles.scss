@@ -13,6 +13,12 @@
         border-bottom: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
         padding: $spacing-small $spacing-medium-alt;
+
+        .export-link {
+            @extend %button-like-link;
+            background-color: $color-primary;
+            color: $color-text-on-primary;
+        }
     }
 
     .main-container {

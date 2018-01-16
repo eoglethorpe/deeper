@@ -74,28 +74,19 @@
     }
 
     .no-regions {
+        @extend %empty-text;
         display: flex;
         flex-grow: 1;
         align-items: center;
         justify-content: center;
         height: 100%;
+        font-size: $font-size-super-large;
     }
 }
 
 .add-region-modal {
     display: flex;
     flex-direction: column;
-
-    :global {
-        .modal-content {
-            height: 60vh;
-
-            .modal-body {
-                display: flex;
-                flex-direction: column;
-            }
-        }
-    }
 
     .radio-input {
         flex-shrink: 0;
@@ -107,6 +98,10 @@
 
     .add-existing-region {
         flex-grow: 1;
+    }
+
+    &.existing-region {
+        height: 60vh;
     }
 }
 

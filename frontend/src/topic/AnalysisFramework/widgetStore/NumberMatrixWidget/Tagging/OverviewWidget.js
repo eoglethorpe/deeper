@@ -77,6 +77,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         `${styles['table-header-row']} ${styles['not-similar']}`
                     )}
                     scope="row"
+                    title={rowData.tooltip}
                 >
                     {rowData.title}
                 </th>
@@ -94,6 +95,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             className={styles['table-header']}
             scope="col"
             key={key}
+            title={data.tooltip}
         >
             {data.title}
         </th>
