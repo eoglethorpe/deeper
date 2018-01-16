@@ -149,6 +149,10 @@ export default class ProjectRegions extends React.PureComponent {
         });
     };
 
+    handleRegionClone = (selectedRegion) => {
+        this.setState({ selectedRegion });
+    }
+
     calcRegionKey = region => region.id;
 
     renderRegionList = (key, region) => {
@@ -175,14 +179,15 @@ export default class ProjectRegions extends React.PureComponent {
                 <ProjectRegionDetail
                     key={selectedRegion}
                     countryId={selectedRegion}
+                    onRegionClone={this.handleRegionClone}
                 />
             );
         }
 
         return (
-            <h1 styleName="no-regions">
+            <p styleName="no-regions">
                 {projectStrings.noRegionText}
-            </h1>
+            </p>
         );
     }
 

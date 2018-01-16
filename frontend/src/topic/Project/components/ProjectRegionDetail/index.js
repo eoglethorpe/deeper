@@ -50,10 +50,12 @@ const propTypes = {
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
+    onRegionClone: PropTypes.func,
 };
 
 const defaultProps = {
     activeProject: undefined,
+    onRegionClone: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -132,6 +134,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         projectId,
                         regionId,
                     });
+                    if (this.props.onRegionClone) {
+                        this.props.onRegionClone(response.id);
+                    }
                 } catch (er) {
                     console.error(er);
                 }
@@ -139,6 +144,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             .build();
         return regionCloneRequest;
     };
+
     createProjectPatchRequest = (projectDetails, removedRegionId) => {
         const projectId = projectDetails.id;
         const regions = [...projectDetails.regions];

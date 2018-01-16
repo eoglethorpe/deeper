@@ -74,11 +74,13 @@
     }
 
     .no-regions {
+        @extend %empty-text;
         display: flex;
         flex-grow: 1;
         align-items: center;
         justify-content: center;
         height: 100%;
+        font-size: $font-size-super-large;
     }
 }
 
