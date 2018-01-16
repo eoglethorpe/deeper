@@ -3,6 +3,7 @@ import createReducerWithMap from '../../utils/createReducerWithMap';
 import analysisFrameworksReducers from './analysisFrameworks';
 import categoryEditorsReducers from './categoryEditors';
 import leadFilterReducers from './leadFilter';
+import entryFilterReducers from './entryFilter';
 import projectsReducers from './projects';
 import regionsReducers from './regions';
 import userGroupsReducers from './userGroups';
@@ -16,6 +17,7 @@ const reducers = {
     ...analysisFrameworksReducers,
     ...categoryEditorsReducers,
     ...leadFilterReducers,
+    ...entryFilterReducers,
     ...projectsReducers,
     ...regionsReducers,
     ...userGroupsReducers,
@@ -23,6 +25,8 @@ const reducers = {
     ...userExportsReducers,
     ...commonReducers,
 };
+
+console.warn(reducers);
 
 const reducer = createReducerWithMap(reducers, initialDomainData);
 export default reducer;

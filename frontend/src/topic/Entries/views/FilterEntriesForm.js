@@ -13,32 +13,46 @@ import {
     Button,
     DangerButton,
 } from '../../../public/components/Action';
+import { FgRestBuilder } from '../../../public/utils/rest';
+
 import {
     entryStrings,
 } from '../../../common/constants';
 import {
+    activeProjectSelector,
     entriesViewFilterSelector,
     setEntriesViewFilterAction,
     unsetEntriesViewFilterAction,
     filtersForProjectSelector,
 
     projectDetailsSelector,
+    entryFilterOptionsForProjectSelector,
+    setEntryFilterOptionsAction,
 } from '../../../common/redux';
+import {
+    createParamsForUser,
+    createUrlForEntryFilterOptions,
+} from '../../../common/rest';
 
 import GeoSelection from '../../../common/components/GeoSelection';
 
 const mapStateToProps = (state, props) => ({
+    activeProject: activeProjectSelector(state),
     entriesFilters: entriesViewFilterSelector(state, props),
     filters: filtersForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
+    entryFilterOptions: entryFilterOptionsForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
     setEntriesViewFilter: params => dispatch(setEntriesViewFilterAction(params)),
     unsetEntriesViewFilter: params => dispatch(unsetEntriesViewFilterAction(params)),
+
+    setEntryFilterOptions: params => dispatch(setEntryFilterOptionsAction(params)),
 });
 
 const propTypes = {
+    activeProject: PropTypes.number.isRequired,
     entriesFilters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     filters: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     setEntriesViewFilter: PropTypes.func.isRequired,
@@ -46,6 +60,10 @@ const propTypes = {
     pending: PropTypes.bool,
     applyOnChange: PropTypes.bool,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    // eslint-disable-next-line react/forbid-prop-types
+    entryFilterOptions: PropTypes.object.isRequired,
+    setEntryFilterOptions: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -57,9 +75,12 @@ const defaultProps = {
 const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class EntriesFilter extends React.PureComponent {
+export default class FilterEntriesForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static optionLabelSelector = (d = {}) => d.value;
+    static optionKeySelector = (d = {}) => d.key;
 
     constructor(props) {
         super(props);
@@ -70,16 +91,80 @@ export default class EntriesFilter extends React.PureComponent {
         };
     }
 
+    componentWillMount() {
+        const { activeProject } = this.props;
+        this.requestProjectEntryFilterOptions(activeProject);
+    }
+
     componentWillReceiveProps(nextProps) {
-        const { entriesFilters: oldFilter } = this.props;
-        const { entriesFilters: newFilter } = nextProps;
+        const {
+            entriesFilters: oldFilter,
+            activeProject: oldActiveProject,
+        } = this.props;
+        const {
+            entriesFilters: newFilter,
+            activeProject: newActiveProject,
+        } = nextProps;
+
         if (oldFilter !== newFilter) {
             this.setState({
                 pristine: true,
                 filters: newFilter,
             });
         }
+
+        if (oldActiveProject !== newActiveProject) {
+            this.requestProjectEntryFilterOptions(newActiveProject);
+        }
     }
+
+
+    componentWillUnmount() {
+        this.entryFilterOptionsRequest.stop();
+    }
+
+    // REST
+
+    requestProjectEntryFilterOptions = (activeProject) => {
+        if (this.entryFilterOptionsRequest) {
+            this.entryFilterOptionsRequest.stop();
+        }
+
+        // eslint-disable-next-line max-len
+        this.entryFilterOptionsRequest = this.createRequestForProjectEntryFilterOptions(activeProject);
+        this.entryFilterOptionsRequest.start();
+    }
+
+    createRequestForProjectEntryFilterOptions = (activeProject) => {
+        const urlForProjectFilterOptions = createUrlForEntryFilterOptions(activeProject);
+
+        const entryFilterOptionsRequest = new FgRestBuilder()
+            .url(urlForProjectFilterOptions)
+            .params(() => createParamsForUser())
+            .preLoad(() => {
+                // FIXME: use this
+                this.setState({ loadingEntryFilters: true });
+            })
+            .postLoad(() => {
+                // FIXME: use this
+                this.setState({ loadingEntryFilters: false });
+            })
+            .success((response) => {
+                try {
+                    // schema.validate(response, 'projectEntryFilterOptions');
+                    this.props.setEntryFilterOptions({
+                        projectId: activeProject,
+                        entryFilterOptions: response,
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .build();
+
+        return entryFilterOptionsRequest;
+    }
+
 
     handleApplyFilter = () => {
         const { filters } = this.state;
@@ -176,9 +261,11 @@ export default class EntriesFilter extends React.PureComponent {
     }
 
     render() {
-        const { pending } = this.props;
+        const { pending, entryFilterOptions } = this.props;
         const { pristine, filters } = this.state;
         const isFilterEmpty = isObjectEmpty(filters);
+
+        const { createdBy } = entryFilterOptions;
 
         return (
             <div
@@ -198,6 +285,9 @@ export default class EntriesFilter extends React.PureComponent {
                 <MultiSelectInput
                     className="entries-filter"
                     key="created-by"
+                    keySelector={FilterEntriesForm.optionKeySelector}
+                    labelSelector={FilterEntriesForm.optionLabelSelector}
+                    options={createdBy}
                     label={entryStrings.createdByFilterLabel}
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}

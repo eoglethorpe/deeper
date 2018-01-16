@@ -11,6 +11,7 @@ import {
 } from './props';
 import {
     leadFilterOptionsSelector,
+    entryFilterOptionsSelector,
     regionsSelector,
     projectsSelector,
     geoOptionsSelector,
@@ -168,6 +169,13 @@ export const leadFilterOptionsForProjectSelector = createSelector(
     projectIdFromRoute,
     leadFilterOptionsSelector,
     (activeProject, leadFilterOptions) => (leadFilterOptions[activeProject] || emptyObject),
+);
+
+// projectIdFromRoute
+export const entryFilterOptionsForProjectSelector = createSelector(
+    projectIdFromRoute,
+    entryFilterOptionsSelector,
+    (activeProject, entryFilterOptions) => (entryFilterOptions[activeProject] || emptyObject),
 );
 
 // projectIdFromRoute

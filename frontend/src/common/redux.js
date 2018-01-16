@@ -18,6 +18,7 @@ export * from './reducers/siloDomainData/categoryEditor';
 export * from './reducers/siloDomainData/galleryFiles';
 export * from './reducers/domainData/analysisFrameworks';
 export * from './reducers/domainData/leadFilter';
+export * from './reducers/domainData/entryFilter';
 export * from './reducers/domainData/projects';
 export * from './reducers/domainData/regions';
 export * from './reducers/domainData/userExports';
