@@ -114,6 +114,19 @@
 
         .remove-button {
             display: initial;
+            animation: fade .5s linear;
+            opacity: 1;
         }
+    }
+}
+
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    50%, 100% {
+        opacity: 1;
     }
 }

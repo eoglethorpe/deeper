@@ -49,6 +49,7 @@
 
             .lead-list {
                 flex-grow: 1;
+                background-color: $color-foreground-alt;
                 overflow-y: auto;
 
                 .list-item {
@@ -90,6 +91,7 @@
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-around;
+                background-color: $color-foreground;
 
                 .heading {
                     flex-basis: 100%;
