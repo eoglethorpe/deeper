@@ -1,30 +1,31 @@
 import {
-    wsEndpoint,
+    getWSEndpoint,
+    getServerAddress,
     GET,
     POST,
     commonHeader,
     p,
 } from './config/rest';
 
-export const urlForProjects = `${wsEndpoint}/projects/`;
+export const createUrlForProjects = () => (`${getWSEndpoint()}/projects/`);
 
 const projectListFields = ['id', 'title'];
 export const createUrlForProjectList = () => (
-    `${wsEndpoint}/projects/?${p({ fields: projectListFields })}`
+    `${getWSEndpoint()}/projects/?${p({ fields: projectListFields })}`
 );
 export const createParamsForProjectList = () => ({
     method: GET,
     headers: commonHeader,
 });
 
-export const createUrlForLeadOptions = projectId => `${wsEndpoint}/lead-options/?project=${projectId}`;
+export const createUrlForLeadOptions = projectId => `${getWSEndpoint()}/lead-options/?project=${projectId}`;
 export const createParamsForLeadOptions = () => ({
     method: GET,
     headers: commonHeader,
 });
 
 
-export const urlForTokenRefresh = `${wsEndpoint}/token/refresh/`;
+export const createUrlForTokenRefresh = () => (`${getWSEndpoint()}/token/refresh/`);
 export const createParamsForTokenRefresh = ({ refresh }) => ({
     method: POST,
     headers: commonHeader,
@@ -33,9 +34,11 @@ export const createParamsForTokenRefresh = ({ refresh }) => ({
     }),
 });
 
-export const urlForLeadCreate = `${wsEndpoint}/leads/`;
+export const urlForLeadCreate = `${getWSEndpoint()}/leads/`;
 export const createParamsForLeadCreate = data => ({
     method: POST,
     headers: commonHeader,
     body: JSON.stringify(data),
 });
+
+export const createUrlForBrowserExtensionPage = () => (`${getServerAddress()}/browser-extension/`);

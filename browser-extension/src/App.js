@@ -14,8 +14,13 @@ import {
 } from './common/redux';
 
 import {
-    urlForTokenRefresh,
+    Button,
+} from './public-components/Action';
+
+import {
+    createUrlForTokenRefresh,
     createParamsForTokenRefresh,
+    createUrlForBrowserExtensionPage,
 } from './common/rest';
 
 const mapStateToProps = state => ({
@@ -56,37 +61,12 @@ class App extends React.PureComponent {
 
         this.fetchingToken = false;
 
-        chrome.runtime.onMessage.addListener((request, sender) => {
-            if (chrome.runtime.id === sender.id) {
-                if (request.message === 'token') {
-                    props.setToken({ token: request.token });
-                }
-            }
-        });
+        chrome.runtime.onMessage.addListener(this.handleMessageReceive);
     }
 
     componentWillMount() {
         this.getCurrentTabInfo();
-
-        chrome.runtime.sendMessage({ message: 'token' }, (response) => {
-            const { token } = response;
-            const { setToken } = this.props;
-
-            setToken({ token });
-
-            if (token.refresh) {
-                this.fetchingToken = true;
-                this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
-                this.tokenRefreshRequest.start();
-            } else {
-                this.setState({ authorized: false });
-                const url = 'localhost:3000/browser-extension';
-                chrome.tabs.create({
-                    url,
-                    active: false,
-                });
-            }
-        });
+        chrome.runtime.sendMessage({ message: 'token' }, this.handleGetTokenMessageResponse);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -107,6 +87,7 @@ class App extends React.PureComponent {
         if (this.tokenRefreshRequest) {
             this.tokenRefreshRequest.stop();
         }
+        chrome.runtime.onMessage.removeListener(this.handleMessageReceive);
     }
 
     getCurrentTabInfo = () => {
@@ -131,7 +112,7 @@ class App extends React.PureComponent {
 
     createRequestForTokenRefresh = (token) => {
         const tokenRefreshRequest = new FgRestBuilder()
-            .url(urlForTokenRefresh)
+            .url(createUrlForTokenRefresh())
             .params(() => createParamsForTokenRefresh(token))
             .preLoad(() => {
                 this.fetchingToken = true;
@@ -161,7 +142,43 @@ class App extends React.PureComponent {
         return tokenRefreshRequest;
     }
 
+    handleGetTokenMessageResponse = (response) => {
+        const { token } = response;
+        const {
+            setToken,
+        } = this.props;
+
+        setToken({ token });
+
+        if (token.refresh) {
+            this.fetchingToken = true;
+            this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
+            this.tokenRefreshRequest.start();
+        } else {
+            this.setState({ authorized: false });
+            chrome.tabs.create({
+                url: createUrlForBrowserExtensionPage(),
+                active: false,
+            });
+        }
+    }
+
+    handleMessageReceive = (request, sender) => {
+        if (chrome.runtime.id === sender.id) {
+            if (request.message === 'token') {
+                const { setToken } = this.props;
+                setToken({ token: request.token });
+            }
+        }
+    }
+
     handleAddLeadSettingsButtonClick = () => {
+        this.setState({
+            currentView: 'settings',
+        });
+    }
+
+    handleSettingsButtonClick = () => {
         this.setState({
             currentView: 'settings',
         });
@@ -185,23 +202,25 @@ class App extends React.PureComponent {
             height: '500px',
             width: '100%',
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
         };
-
-        if (pendingTabInfo || pendingRefresh) {
-            return (
-                <div style={style}>
-                    Loading...
-                </div>
-            );
-        }
 
         if (currentView === 'settings') {
             return (
                 <Settings
                     onBackButtonClick={this.handleSettingsBackButtonClick}
                 />
+            );
+        }
+
+        if (pendingTabInfo || pendingRefresh) {
+            return (
+                <div style={style}>
+                    <p>Loading...</p>
+                    <Button onClick={this.handleSettingsButtonClick}>Settings</Button>
+                </div>
             );
         }
 
@@ -212,7 +231,8 @@ class App extends React.PureComponent {
                 />
             ) : (
                 <div style={style}>
-                    You need to login to deep first
+                    <p>You need to login to deep first</p>
+                    <Button onClick={this.handleSettingsButtonClick}>Settings</Button>
                 </div>
             )
         );

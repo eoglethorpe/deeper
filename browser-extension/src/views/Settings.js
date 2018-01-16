@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     TextInput,
-    urlCondition,
+    // urlCondition,
 } from '../public-components/Input';
 
 import {
@@ -59,11 +59,38 @@ export default class Settings extends React.PureComponent {
         });
     }
 
+    componentWillUnmount() {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+    }
+
+    setSaveStatus = () => {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
+        }
+
+        this.setState({
+            saveStatus: 'Successfully saved',
+        });
+
+        this.timeout = setTimeout(this.removeSaveStatus, 5000);
+    }
+
+    removeSaveStatus = () => {
+        this.setState({
+            saveStatus: undefined,
+        });
+    }
+
     handleSaveButtonClick = () => {
         const { setServerAddress } = this.props;
         const { serverAddress } = this.state;
 
-        if (serverAddress && urlCondition.truth(serverAddress)) {
+        // temporarily disabled because http://localhost:8000 is not valid url
+        // if (serverAddress && urlCondition.truth(serverAddress)) {
+        if (serverAddress) {
+            this.setSaveStatus();
             setServerAddress({ serverAddress });
         } else {
             this.setState({
@@ -84,6 +111,7 @@ export default class Settings extends React.PureComponent {
         const {
             serverAddress,
             error,
+            saveStatus,
         } = this.state;
 
         return (
@@ -102,12 +130,17 @@ export default class Settings extends React.PureComponent {
                         onChange={this.handleServerAddressInputChange}
                         error={error}
                     />
+                </div>
+                <footer styleName="footer">
+                    <div styleName="save-status">
+                        { saveStatus }
+                    </div>
                     <PrimaryButton
                         onClick={this.handleSaveButtonClick}
                     >
                         Save
                     </PrimaryButton>
-                </div>
+                </footer>
             </div>
         );
     }

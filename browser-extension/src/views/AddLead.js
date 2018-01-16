@@ -38,7 +38,7 @@ import {
     createUrlForLeadOptions,
     createParamsForLeadOptions,
 
-    urlForLeadCreate,
+    createUrlForLeadCreate,
     createParamsForLeadCreate,
 } from '../common/rest';
 
@@ -197,7 +197,7 @@ export default class AddLead extends React.PureComponent {
             project: val.project[0],
         });
 
-        const url = urlForLeadCreate;
+        const url = createUrlForLeadCreate();
         const request = new FgRestBuilder()
             .url(url)
             .params(() => createParamsForLeadCreate(maker(values)))

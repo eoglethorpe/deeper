@@ -18,4 +18,16 @@
         flex-grow: 1;
         padding: $spacing-medium-alt $spacing-large;
     }
+
+    .footer {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-medium-alt $spacing-large;
+
+        .save-status {
+            color: $color-success;
+        }
+    }
 }
