@@ -143,7 +143,7 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'type',
-                label: exportStrings.exportTitleHeaderLabel,
+                label: exportStrings.exportTypeHeaderLabel,
                 order: 5,
                 sortable: true,
                 comparator: (a, b) => a.type.localeCompare(b.type),
@@ -309,7 +309,6 @@ export default class UserExports extends React.PureComponent {
     render() {
         const { userExports, projectId } = this.props;
         const { selectedExport } = this.state;
-        console.log(projectId);
 
         return (
             <div styleName="user-exports">
