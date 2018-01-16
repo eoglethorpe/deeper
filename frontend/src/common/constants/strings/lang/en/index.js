@@ -461,6 +461,8 @@ const strings = {
     631: 'Completed',
     632: 'Recent Exports',
     633: 'Go back to exports',
+    634: 'Decoupled Entries',
+    635: 'Selecting this option significantly increases the export duration',
 
     // Aanalysis Framework Strings
 

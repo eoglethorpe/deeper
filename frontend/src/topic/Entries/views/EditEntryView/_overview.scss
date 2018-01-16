@@ -44,6 +44,7 @@ $width-entry-select-input: 400px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+            background-color: $color-foreground-alt;
             overflow-y: auto;
 
             .entries-list {
@@ -57,10 +58,6 @@ $width-entry-select-input: 400px;
                     &.active {
                         border-left: $width-separator-thick solid $color-accent;
                         background-color: $color-hover;
-                    }
-
-                    &:hover {
-                        background-color: $color-background-hover;
                     }
 
                     .button {

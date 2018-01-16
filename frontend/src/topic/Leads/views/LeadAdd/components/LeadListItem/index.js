@@ -164,7 +164,7 @@ export default class LeadListItem extends React.PureComponent {
                     disabled={isRemoveDisabled}
                     onClick={() => onRemove(leadKey)}
                 >
-                    Remove
+                    <i className={iconNames.delete} />
                 </DangerButton>
             </div>
         );
