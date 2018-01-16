@@ -6,3 +6,4 @@ export * from './editEntries';
 export * from './entries';
 export * from './galleryFiles';
 export * from './leads';
+export * from './visualization';

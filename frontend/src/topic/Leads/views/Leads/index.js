@@ -56,6 +56,8 @@ import {
     setLeadPageActivePageAction,
 
     addLeadViewAddLeadsAction,
+
+    setLeadVisualizationStaleAction,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -89,6 +91,7 @@ const propTypes = {
     viewMode: PropTypes.string.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
+    setLeadVisualizationStale: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -116,6 +119,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
+    setLeadVisualizationStale: params => dispatch(setLeadVisualizationStaleAction(params)),
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
@@ -125,6 +129,41 @@ const MAX_LEADS_PER_REQUEST = 24;
 export default class Leads extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    // REST UTILS
+
+    static getFiltersForRequest = (filters) => {
+        const requestFilters = {};
+        Object.keys(filters).forEach((key) => {
+            const filter = filters[key];
+            switch (key) {
+                case 'created_at':
+                    if (filter) {
+                        requestFilters.created_at__gt = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.created_at__lt = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
+                    break;
+                case 'published_on':
+                    if (filter) {
+                        requestFilters.published_on__gt = FormattedDate.format(
+                            new Date(filter.startDate), 'yyyy-MM-dd',
+                        );
+                        requestFilters.published_on__lt = FormattedDate.format(
+                            new Date(filter.endDate), 'yyyy-MM-dd',
+                        );
+                    }
+                    break;
+                default:
+                    requestFilters[key] = filter;
+                    break;
+            }
+        });
+        return requestFilters;
+    }
 
     constructor(props) {
         super(props);
@@ -342,48 +381,14 @@ export default class Leads extends React.PureComponent {
         }
     }
 
-    // REST UTILS
-
-    getFiltersForRequest = (filters) => {
-        const requestFilters = {};
-        Object.keys(filters).forEach((key) => {
-            const filter = filters[key];
-            switch (key) {
-                case 'created_at':
-                    if (filter) {
-                        requestFilters.created_at__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.created_at__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                case 'published_on':
-                    if (filter) {
-                        requestFilters.published_on__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.published_on__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                default:
-                    requestFilters[key] = filter;
-                    break;
-            }
-        });
-        return requestFilters;
-    }
-
     // REST
 
     createRequestForProjectLeads = ({ activeProject, activePage, activeSort, filters }) => {
-        const sanitizedFilters = this.getFiltersForRequest(filters);
+        const sanitizedFilters = Leads.getFiltersForRequest(filters);
         const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
         const leadRequestLimit = MAX_LEADS_PER_REQUEST;
 
+        // TODO: add required fields only
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             ordering: activeSort,
@@ -409,6 +414,7 @@ export default class Leads extends React.PureComponent {
                         leads: response.results,
                         totalLeadsCount: response.count,
                     });
+                    this.props.setLeadVisualizationStale();
                 } catch (er) {
                     console.error(er);
                 }
@@ -643,6 +649,8 @@ export default class Leads extends React.PureComponent {
             );
         }
 
+        const showTable = viewMode === 'table';
+
         return (
             <div styleName="leads">
                 <header styleName="header">
@@ -656,7 +664,7 @@ export default class Leads extends React.PureComponent {
                     </PrimaryButton>
                 </header>
                 {
-                    viewMode === 'table' ? (
+                    showTable ?
                         <div styleName="table-container">
                             <RawTable
                                 data={this.props.leads}
@@ -669,11 +677,10 @@ export default class Leads extends React.PureComponent {
                             />
                             { loadingLeads && <LoadingAnimation /> }
                         </div>
-                    ) : (
+                        :
                         <Visualizations
                             styleName="viz-container"
                         />
-                    )
                 }
                 <Confirm
                     show={showDeleteModal}

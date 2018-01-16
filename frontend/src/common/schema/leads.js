@@ -22,6 +22,20 @@ const leadSchema = [];
             title: { type: 'string', required: true },
             url: { type: 'string' },
             website: { type: 'string' },
+            classifiedDocId: { type: 'number' },
+        },
+    };
+    leadSchema.push({ name, schema });
+}
+{
+    const name = 'leadClassifiedDocumentId';
+    const schema = {
+        doc: {
+            name: 'Lead Classifed Document ID',
+            description: 'Lead with Classifed Document ID',
+        },
+        fields: {
+            classifiedDocId: { type: 'number' },
         },
     };
     leadSchema.push({ name, schema });
@@ -38,6 +52,22 @@ const leadSchema = [];
             next: { type: 'string' },
             previous: { type: 'string' },
             results: { type: 'array.lead', required: true },
+        },
+    };
+    leadSchema.push({ name, schema });
+}
+{
+    const name = 'leadsCDIdGetResponse';
+    const schema = {
+        doc: {
+            name: 'Lead Classified Doc Id GET Response',
+            description: 'Response for GET /leads/?params',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            next: { type: 'string' },
+            previous: { type: 'string' },
+            results: { type: 'array.leadClassifiedDocumentId', required: true },
         },
     };
     leadSchema.push({ name, schema });

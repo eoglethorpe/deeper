@@ -28,10 +28,6 @@ export const entryFilterOptionsSelector = ({ domainData }) => (
     domainData.entryFilterOptions || emptyObject
 );
 
-export const visualizationSelector = ({ domainData }) => (
-    domainData.visualization || emptyObject
-);
-
 export const regionsSelector = ({ domainData }) => (
     domainData.regions || emptyObject
 );
@@ -69,31 +65,6 @@ export const categoryEditorsSelector = ({ domainData }) => (
 );
 
 // COMPLEX
-
-export const hierarchialDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.hierarchialData || emptyObject,
-);
-
-export const chordDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.chordData || emptyObject,
-);
-
-export const correlationDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.correlationData || emptyObject,
-);
-
-export const barDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.barData || emptyObject,
-);
-
-export const forceDirectedDataSelector = createSelector(
-    visualizationSelector,
-    viz => viz.forceDirectedData || emptyObject,
-);
 
 export const usersInformationListSelector = createSelector(
     usersSelector,

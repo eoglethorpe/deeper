@@ -1,7 +1,6 @@
 @import '../../../../../../stylesheets/base';
 
 .viz-container {
-    display: grid;
     background-color: $color-foreground;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 512px 512px 512px 512px;
