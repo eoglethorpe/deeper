@@ -208,11 +208,14 @@ export default class UserGroup extends React.PureComponent {
                                 </TransparentPrimaryButton>
                         }
                     </div>
-                    <p styleName="label">{userStrings.userGroupDescriptionLabel}</p>
-                    <p styleName="description">{ userGroup.description }</p>
+                    <p styleName="description">
+                        { userGroup.description }
+                    </p>
                 </div>
                 <div styleName="stats">
-                    <h2>{userStrings.userGroupActivtyLogTitle}</h2>
+                    <h2>
+                        {userStrings.userGroupActivtyLogTitle}
+                    </h2>
                 </div>
                 <ProjectsTable
                     styleName="projects"

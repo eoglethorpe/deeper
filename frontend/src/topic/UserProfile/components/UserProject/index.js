@@ -188,10 +188,9 @@ export default class UserProject extends React.PureComponent {
                             <Link
                                 title={userStrings.viewProjectLinkTitle}
                                 to={reverseRoute(pathNames.projects, { projectId: d.id })}
+                                className={styles.link}
                             >
-                                <TransparentPrimaryButton>
-                                    <span className={iconNames.openLink} />
-                                </TransparentPrimaryButton>
+                                <span className={iconNames.openLink} />
                             </Link>
                         );
                     }
@@ -201,18 +200,17 @@ export default class UserProject extends React.PureComponent {
                             title={userStrings.editProjectLinkTitle}
                             key="project-panel"
                             to={reverseRoute(pathNames.projects, { projectId: d.id })}
+                            className={styles.link}
                         >
-                            <TransparentPrimaryButton>
-                                <span className={iconNames.edit} />
-                            </TransparentPrimaryButton>
+                            <span className={iconNames.edit} />
                         </Link>,
                         <TransparentDangerButton
                             title={userStrings.deleteProjectLinkTitle}
                             key="delete"
                             onClick={() => this.handleDeleteProjectClick(d)}
-                        >
-                            <i className={iconNames.delete} />
-                        </TransparentDangerButton>,
+                            iconName={iconNames.delete}
+                            smallVerticalPadding
+                        />,
                     ]);
                 },
             },

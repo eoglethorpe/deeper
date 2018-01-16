@@ -120,10 +120,16 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <TransparentPrimaryButton onClick={() => this.editAdminLevel(row)}>
+                        <TransparentPrimaryButton
+                            onClick={() => this.editAdminLevel(row)}
+                            smallVerticalPadding
+                        >
                             <span className={iconNames.edit} />
                         </TransparentPrimaryButton>
-                        <TransparentDangerButton onClick={() => this.handleDeleteAdminLevel(row)}>
+                        <TransparentDangerButton
+                            onClick={() => this.handleDeleteAdminLevel(row)}
+                            smallVerticalPadding
+                        >
                             <span className={iconNames.delete} />
                         </TransparentDangerButton>
                     </div>

@@ -128,24 +128,24 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
+                    const title = isAdmin ? (
+                        userStrings.revokeAdminLinkTitle
+                    ) : (
+                        userStrings.grantAdminLinkTitle
+                    );
+                    const handleClick = () => this.handleRoleChangeForNewMember({
+                        memberId: row.id,
+                        newRole: isAdmin ? 'normal' : 'admin',
+                    });
                     return (
                         <div className="actions">
                             <TransparentPrimaryButton
-                                title={isAdmin ? userStrings.revokeAdminLinkTitle :
-                                    userStrings.grantAdminLinkTitle}
+                                title={title}
                                 type="button"
-                                onClick={() =>
-                                    this.handleRoleChangeForNewMember({
-                                        memberId: row.id,
-                                        newRole: isAdmin ? 'normal' : 'admin',
-                                    })
-                                }
-                            >
-                                {
-                                    isAdmin ? <i className={iconNames.locked} />
-                                        : <i className={iconNames.person} />
-                                }
-                            </TransparentPrimaryButton>
+                                onClick={handleClick}
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                                smallVerticalPadding
+                            />
                         </div>
                     );
                 },

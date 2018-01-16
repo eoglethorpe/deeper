@@ -163,13 +163,12 @@ export default class ProjectGeneral extends React.PureComponent {
                         return (
                             <div>
                                 <Link
+                                    className={styles['view-member-link']}
                                     title={projectStrings.viewMemberLinkTitle}
                                     key={row.member}
                                     to={reverseRoute(pathNames.userProfile, { userId: row.member })}
                                 >
-                                    <TransparentPrimaryButton>
-                                        <span className={iconNames.openLink} />
-                                    </TransparentPrimaryButton>
+                                    <span className={iconNames.openLink} />
                                 </Link>
                             </div>
                         );
@@ -177,21 +176,18 @@ export default class ProjectGeneral extends React.PureComponent {
                     return (
                         <div>
                             <TransparentPrimaryButton
+                                smallVerticalPadding
                                 title={isAdmin ? projectStrings.revokeAdminRightsTitle :
                                     projectStrings.grantAdminRightsTitle}
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
-                            >
-                                {
-                                    isAdmin ? <span className={iconNames.locked} />
-                                        : <span className={iconNames.person} />
-                                }
-                            </TransparentPrimaryButton>
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                            />
                             <TransparentDangerButton
+                                smallVerticalPadding
                                 title={projectStrings.deleteMemberLinkTitle}
                                 onClick={() => this.handleDeleteMemberClick(row)}
-                            >
-                                <span className={iconNames.delete} />
-                            </TransparentDangerButton>
+                                iconName={iconNames.delete}
+                            />
                         </div>
                     );
                 },

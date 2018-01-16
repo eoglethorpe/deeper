@@ -166,35 +166,39 @@ export default class UserGroup extends React.PureComponent {
                     const activeUserMembership = (d.memberships || [])
                         .find(e => e.member === activeUser.userId);
 
+                    const linkToUserGroup = reverseRoute(
+                        pathNames.userGroup,
+                        { userGroupId: d.id },
+                    );
+
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
                                 title={userStrings.viewUsergroupLinkTitle}
-                                to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
+                                to={linkToUserGroup}
+                                className={styles.link}
                             >
-                                <TransparentPrimaryButton>
-                                    <span className={iconNames.openLink} />
-                                </TransparentPrimaryButton>
+                                <span className={iconNames.openLink} />
                             </Link>
                         );
                     }
+
                     return ([
                         <Link
                             title={userStrings.editUsergroupLinkTitle}
                             key="usergroup-panel"
-                            to={reverseRoute(pathNames.userGroup, { userGroupId: d.id })}
+                            to={linkToUserGroup}
+                            className={styles.link}
                         >
-                            <TransparentPrimaryButton>
-                                <span className={iconNames.edit} />
-                            </TransparentPrimaryButton>
+                            <span className={iconNames.edit} />
                         </Link>,
                         <TransparentDangerButton
                             key="delete"
                             title={userStrings.deleteUsergroupLinkTitle}
                             onClick={() => this.handleDeleteUserGroupClick(d)}
-                        >
-                            <span className={iconNames.delete} />
-                        </TransparentDangerButton>,
+                            iconName={iconNames.delete}
+                            smallVerticalPadding
+                        />,
                     ]);
                 },
             },

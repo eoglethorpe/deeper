@@ -219,7 +219,7 @@ export default class FilterEntriesForm extends React.PureComponent {
         } else if (filter.type === 'multiselect-range') {
             return (
                 <RangeFilter
-                    className="range-filter-container"
+                    className="range-filter entries-filter"
                     key={key}
                     options={filter.options}
                     label={title}

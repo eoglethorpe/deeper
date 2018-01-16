@@ -155,19 +155,17 @@ export default class ProjectsTable extends React.PureComponent {
                             <TransparentDangerButton
                                 title={userStrings.deleteProjectLinkTitle}
                                 onClick={() => this.handleDeleteProjectClick(row)}
-
-                            >
-                                <i className={iconNames.delete} />
-                            </TransparentDangerButton>
+                                iconName={iconNames.delete}
+                                smallVerticalPadding
+                            />
                         }
                         <Link
                             title={userStrings.viewProjectLinkTitle}
                             key={row.id}
                             to={reverseRoute(pathNames.projects, { projectId: row.id })}
+                            className={styles.link}
                         >
-                            <TransparentPrimaryButton>
-                                <span className={iconNames.openLink} />
-                            </TransparentPrimaryButton>
+                            <span className={iconNames.openLink} />
                         </Link>
                     </div>
                 ),
