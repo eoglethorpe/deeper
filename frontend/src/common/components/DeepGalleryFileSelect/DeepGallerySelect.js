@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -69,7 +68,6 @@ const mapDispatchToProps = dispatch => ({
  *
  */
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class DgSelect extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -276,49 +274,50 @@ export default class DgSelect extends React.PureComponent {
             searchInputValue,
         });
 
-        return (
-            <div>
-                <ModalHeader
-                    title="Select Gallery Files"
-                    rightComponent={
-                        <TextInput
-                            onChange={this.handleSearchInputChange}
-                            placeholder={commonStrings.searchGalleryPlaceholder}
-                            styleName="search-input"
-                            type="search"
-                            label={commonStrings.searchGalleryLabel}
-                            value={searchInputValue}
-                            showLabel={false}
-                            showHintAndError={false}
-                            disabled={pending}
-                        />
-                    }
-                />
-                <ModalBody styleName="modal-body">
-                    { pending && <LoadingAnimation /> }
-                    <Table
-                        styleName="gallery-table"
-                        data={tableData}
-                        headers={this.galleryFilesHeader}
-                        keyExtractor={this.keyExtractor}
-                        defaultSort={this.defaultSort}
-                    />
-                </ModalBody>
-                <ModalFooter>
-                    <Button
-                        onClick={this.onClose}
-                    >
-                        {commonStrings.cancelButtonLabel}
-                    </Button>
-                    <PrimaryButton
-                        styleName="add-button"
-                        onClick={this.onAdd}
+        return ([
+            <ModalHeader
+                key="header"
+                className={styles['modal-header']}
+                title="Select Gallery Files"
+                rightComponent={
+                    <TextInput
+                        onChange={this.handleSearchInputChange}
+                        placeholder={commonStrings.searchGalleryPlaceholder}
+                        className={styles['search-input']}
+                        type="search"
+                        label={commonStrings.searchGalleryLabel}
+                        value={searchInputValue}
+                        showLabel={false}
+                        showHintAndError={false}
                         disabled={pending}
-                    >
-                        {commonStrings.addButtonLabel}
-                    </PrimaryButton>
-                </ModalFooter>
-            </div>
-        );
+                    />
+                }
+            />,
+            <ModalBody
+                className={styles['modal-body']}
+                key="body"
+            >
+                { pending && <LoadingAnimation /> }
+                <Table
+                    data={tableData}
+                    headers={this.galleryFilesHeader}
+                    keyExtractor={this.keyExtractor}
+                    defaultSort={this.defaultSort}
+                />
+            </ModalBody>,
+            <ModalFooter key="footer">
+                <Button
+                    onClick={this.onClose}
+                >
+                    {commonStrings.cancelButtonLabel}
+                </Button>
+                <PrimaryButton
+                    onClick={this.onAdd}
+                    disabled={pending}
+                >
+                    {commonStrings.addButtonLabel}
+                </PrimaryButton>
+            </ModalFooter>,
+        ]);
     }
 }

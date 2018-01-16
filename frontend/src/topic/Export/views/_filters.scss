@@ -20,11 +20,11 @@
                     margin: $spacing-small;
                 }
 
-                .range-filter-container {
+                .range-filter {
                     display: flex;
                     margin: 0;
 
-                    .select-input {
+                    .single-select-input {
                         flex-grow: 1;
                         margin: $spacing-small;
                     }

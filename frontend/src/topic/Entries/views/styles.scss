@@ -14,7 +14,7 @@
             flex-wrap: wrap;
             align-items: flex-end;
             border-bottom: $width-separator-thin solid $color-separator;
-            background-color: $color-foreground-alt;
+            background-color: $color-foreground;
             padding: $spacing-small;
 
             .entries-filter,
@@ -26,9 +26,14 @@
                 }
             }
 
-            .range-filter-container {
+            .range-filter {
                 display: flex;
-                margin: $spacing-small;
+                justify-content: space-between;
+                margin: 0;
+
+                .single-select-input {
+                    margin: $spacing-small;
+                }
             }
 
             .button {

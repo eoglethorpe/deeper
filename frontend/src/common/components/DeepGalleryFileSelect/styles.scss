@@ -3,14 +3,10 @@
 
 
 .add-gallery-file-modal {
-    display: flex;
+    width: 960px;
 
-    :global {
-        .modal-content {
-            position: relative;
-            width: 960px;
-            min-width: 50vw;
-        }
+    .modal-header {
+        border-bottom: none;
     }
 
     .search-input {
@@ -20,18 +16,7 @@
     .modal-body {
         position: relative;
         padding: 0;
-        height: 72vh;
-    }
-
-    .gallery-table {
-        :global .header {
-            border-bottom: $width-separator-medium solid $color-separator;
-            user-select: none;
-        }
-    }
-
-    .add-button {
-        min-width: 72px;
+        background-color: $color-background-row;
     }
 }
 

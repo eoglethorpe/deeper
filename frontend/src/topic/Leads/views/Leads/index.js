@@ -14,6 +14,7 @@ import {
     LoadingAnimation,
     Pager,
     RawTable,
+    TableHeader,
 } from '../../../../public/components/View';
 import {
     PrimaryButton,
@@ -69,7 +70,6 @@ import {
 import notify from '../../../../common/notify';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
-import LeadColumnHeader from './components/LeadColumnHeader';
 import Visualizations from './components/Visualizations';
 
 import styles from './styles.scss';
@@ -118,7 +118,7 @@ const mapDispatchToProps = dispatch => ({
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
-const MAX_LEADS_PER_REQUEST = 16;
+const MAX_LEADS_PER_REQUEST = 21;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -134,6 +134,7 @@ export default class Leads extends React.PureComponent {
                 key: 'attachmentMimeType',
                 label: leadsString.filterSourceType,
                 order: 1,
+                sortable: false,
                 modifier: (row) => {
                     let icon = iconNames.documentText;
                     let url;
@@ -164,16 +165,19 @@ export default class Leads extends React.PureComponent {
                 key: 'title',
                 label: leadsString.titleLabel,
                 order: 2,
+                sortable: true,
             },
             {
                 key: 'source',
                 label: leadsString.tableHeaderPublisher,
                 order: 3,
+                sortable: true,
             },
             {
                 key: 'published_on',
                 label: leadsString.tableHeaderDatePublished,
                 order: 4,
+                sortable: true,
                 modifier: row => (
                     <FormattedDate
                         date={row.publishedOn}
@@ -185,6 +189,7 @@ export default class Leads extends React.PureComponent {
                 key: 'created_by',
                 label: leadsString.tableHeaderOwner,
                 order: 5,
+                sortable: true,
                 modifier: row => (
                     <Link
                         key={row.createdBy}
@@ -198,6 +203,7 @@ export default class Leads extends React.PureComponent {
                 key: 'created_at',
                 label: leadsString.tableHeaderDateCreated,
                 order: 6,
+                sortable: true,
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}
@@ -208,23 +214,27 @@ export default class Leads extends React.PureComponent {
             {
                 key: 'confidentiality',
                 label: leadsString.tableHeaderConfidentiality,
+                sortable: true,
                 order: 7,
             },
             {
                 key: 'no_of_entries',
                 label: leadsString.tableHeaderNoOfEntries,
                 order: 8,
+                sortable: true,
                 modifier: row => row.noOfEntries,
             },
             {
                 key: 'status',
                 label: leadsString.tableHeaderStatus,
+                sortable: true,
                 order: 9,
             },
             {
                 key: 'actions',
                 label: leadsString.tableHeaderActions,
                 order: 10,
+                sortable: false,
                 modifier: row => (
                     <div className="actions">
                         <TransparentButton
@@ -430,7 +440,7 @@ export default class Leads extends React.PureComponent {
             })
             .success(() => {
                 notify.send({
-                    title: leadsString.leadDelete,
+                    title: 'Leads', // FIXME: strings
                     type: notify.type.SUCCESS,
                     message: leadsString.leadDeleteSuccess,
                     duration: notify.duration.MEDIUM,
@@ -567,31 +577,28 @@ export default class Leads extends React.PureComponent {
         return lead[columnKey];
     }
 
-    isColumnClickable = key => (
-        ['actions', 'attachmentMimeType'].indexOf(key) === -1
-    )
-
     headerModifier = (headerData) => {
         const { activeSort } = this.props;
 
-        let sortOrder;
+        let sortOrder = '';
         if (activeSort === headerData.key) {
             sortOrder = 'asc';
         } else if (activeSort === `-${headerData.key}`) {
             sortOrder = 'dsc';
         }
         return (
-            <LeadColumnHeader
+            <TableHeader
                 label={headerData.label}
                 sortOrder={sortOrder}
-                sortable={this.isColumnClickable(headerData.key)}
+                sortable={headerData.sortable}
             />
         );
     }
 
     handleTableHeaderClick = (key) => {
+        const headerData = this.headers.find(h => h.key === key);
         // prevent click on 'actions' column
-        if (!this.isColumnClickable(key)) {
+        if (!headerData.sortable) {
             return;
         }
 
