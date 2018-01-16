@@ -42,5 +42,14 @@
         flex-grow: 1;
         padding: $spacing-small $spacing-medium;
         overflow: auto;
+
+        .decoupled-box {
+            display: flex;
+
+            i {
+                color: $color-warning;
+                font-size: $font-size-large;
+            }
+        }
     }
 }

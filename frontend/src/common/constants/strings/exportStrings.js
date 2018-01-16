@@ -42,6 +42,8 @@ const exportStrings = {
     userExportsHeader: string[632],
 
     goBackToExportLabel: string[633],
+    decoupledEntriesLabel: string[634],
+    decoupledEntriesTitle: string[635],
 };
 
 export default exportStrings;

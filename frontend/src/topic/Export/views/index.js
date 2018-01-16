@@ -23,6 +23,7 @@ import { listToMap } from '../../../public/utils/common';
 import {
     exportStrings,
     pathNames,
+    iconNames,
 } from '../../../common/constants';
 import {
     createParamsForUser,
@@ -375,11 +376,17 @@ export default class Export extends React.PureComponent {
     )
 
     renderExcelOptions = () => (
-        <Checkbox
-            label="Decoupled Entries"
-            onChange={this.handleDecoupledEntriesChange}
-            value={this.state.decoupledEntries}
-        />
+        <div styleName="decoupled-box">
+            <Checkbox
+                label={exportStrings.decoupledEntriesLabel}
+                onChange={this.handleDecoupledEntriesChange}
+                value={this.state.decoupledEntries}
+            />
+            <i
+                className={iconNames.help}
+                title={exportStrings.decoupledEntriesTitle}
+            />
+        </div>
     )
 
     render() {

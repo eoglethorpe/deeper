@@ -56,6 +56,7 @@ const iconNames = {
     googleDrive: 'ion-social-googleplus-outline',
     hamburger: 'ion-android-menu',
     help: 'ion-help-circled',
+    info: 'ion-ios-information',
     link: 'ion-link',
     list: 'ion-ios-list-outline',
     loading: 'ion-load-c',
