@@ -350,6 +350,12 @@ export default class EditEntryView extends React.PureComponent {
                         serverId: response.id,
                     };
                     this.props.saveEntry({ leadId, entryId, data });
+                    notify.send({
+                        type: notify.type.SUCCESS,
+                        title: notificationStrings.entrySave,
+                        message: notificationStrings.entrySaveSuccess,
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (er) {
                     console.error(er);
                     const uiState = { error: true };
@@ -363,12 +369,24 @@ export default class EditEntryView extends React.PureComponent {
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
                 this.saveRequestCoordinator.notifyComplete(entryId);
+                notify.send({
+                    type: notify.type.ERROR,
+                    title: notificationStrings.entrySave,
+                    message: notificationStrings.entrySaveFailure,
+                    duration: notify.duration.SLOW,
+                });
             })
             .fatal((response) => {
                 console.warn('FATAL:', response);
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
                 this.saveRequestCoordinator.notifyComplete(entryId);
+                notify.send({
+                    type: notify.type.ERROR,
+                    title: notificationStrings.entrySave,
+                    message: notificationStrings.entrySaveFatal,
+                    duration: notify.duration.SLOW,
+                });
             })
             .build();
 

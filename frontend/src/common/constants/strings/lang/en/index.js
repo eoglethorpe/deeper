@@ -725,7 +725,10 @@ const strings = {
     986: 'Only drop from Extracted Words are valid.',
 
     987: 'Some entries were updated in server.',
-    988: 'Analysis',
+    988: 'Save Entry',
+    989: 'Entries Successfully Saved',
+    990: 'Error. Entry Save Failed.',
+    991: 'Error. Lead Save Failed. Please check your network connection and try again',
 
 
     // Common Components Strings
