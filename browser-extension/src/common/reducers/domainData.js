@@ -20,10 +20,11 @@ export const updateInputValueAction = ({ tabId, id, value }) => ({
     value,
 });
 
-export const updateInputValuesAction = ({ tabId, values }) => ({
+export const updateInputValuesAction = ({ tabId, values, uiState }) => ({
     type: UPDATE_INPUT_VALUES_ACTION,
     tabId,
     values,
+    uiState,
 });
 
 export const clearInputValueAction = ({ tabId }) => ({
@@ -67,14 +68,16 @@ const updateInputValue = (state, action) => {
 const updateInputValues = (state, action) => {
     const {
         tabId,
+        uiState,
         values,
     } = action;
 
     const settings = {
         [tabId]: { $auto: {
-            inputValues: {
-                $set: values,
-            },
+            inputValues: { $auto: {
+                $merge: values,
+            } },
+            uiState: { $set: uiState },
         } },
     };
 

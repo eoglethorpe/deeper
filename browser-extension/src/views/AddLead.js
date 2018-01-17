@@ -25,6 +25,7 @@ import {
     clearInputValueAction,
     setProjectListAction,
     inputValuesForTabSelector,
+    uiStateForTabSelector,
     currentTabIdSelector,
     projectListSelector,
     setLeadOptionsAction,
@@ -40,11 +41,17 @@ import {
 
     createUrlForLeadCreate,
     createParamsForLeadCreate,
+
+    urlForWebInfo,
+    createParamsForWebInfo,
 } from '../common/rest';
 
 import styles from '../stylesheets/add-lead.scss';
 
+const emptyObject = {};
+
 const mapStateToProps = state => ({
+    uiState: uiStateForTabSelector(state),
     inputValues: inputValuesForTabSelector(state),
     currentTabId: currentTabIdSelector(state),
     projects: projectListSelector(state),
@@ -59,6 +66,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const propTypes = {
+    uiState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     inputValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     currentTabId: PropTypes.string.isRequired,
     projects: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -84,12 +92,6 @@ export default class AddLead extends React.PureComponent {
 
         this.state = {
             pending: false,
-        };
-
-        this.state = {
-            formErrors: [],
-            formFieldErrors: {},
-            pristine: false,
         };
 
         this.formElements = [
@@ -124,6 +126,7 @@ export default class AddLead extends React.PureComponent {
 
         // NOTE: load leadoptions just in case
         this.requestForLeadOptions(this.props.inputValues.project);
+        this.requestForWebInfo(this.props.currentTabId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -135,6 +138,10 @@ export default class AddLead extends React.PureComponent {
                 this.requestForLeadOptions(newInputValues.project);
             }
         }
+
+        if (this.props.currentTabId !== nextProps.currentTabId) {
+            this.requestForWebInfo(nextProps.currentTabId);
+        }
     }
 
     componentWillUnmount() {
@@ -144,6 +151,30 @@ export default class AddLead extends React.PureComponent {
         if (this.leadOptionsRequest) {
             this.leadOptionsRequest.stop();
         }
+        if (this.webInfoRequest) {
+            this.webInfoRequest.stop();
+        }
+    }
+
+    requestForWebInfo = (url) => {
+        if (this.webInfoRequest) {
+            this.webInfoRequest.stop();
+        }
+        if (url && url.length > 0) {
+            this.webInfoRequest = this.createRequestForWebInfo(url);
+            this.webInfoRequest.start();
+        }
+    }
+
+    createRequestForWebInfo = (url) => {
+        const webInfoRequest = new FgRestBuilder()
+            .url(urlForWebInfo)
+            .params(() => createParamsForWebInfo({ url }))
+            .success((response) => {
+                this.fillWebInfo(response);
+            })
+            .build();
+        return webInfoRequest;
     }
 
     requestForLeadOptions = (project) => {
@@ -217,11 +248,51 @@ export default class AddLead extends React.PureComponent {
         return request;
     }
 
+    fillWebInfo = (webInfo) => {
+        const {
+            currentTabId,
+            inputValues,
+            updateInputValues,
+        } = this.props;
+
+        const values = {};
+        if (webInfo.project && (!inputValues.project || inputValues.project.length === 0)) {
+            values.project = [webInfo.project];
+        }
+        if (webInfo.date && !inputValues.date) {
+            values.publishedOn = webInfo.date;
+        }
+        if (webInfo.source && !inputValues.source) {
+            values.source = webInfo.source;
+        }
+        if (webInfo.website && !inputValues.website) {
+            values.website = webInfo.website;
+        }
+        if (webInfo.title && !inputValues.title) {
+            values.title = webInfo.title;
+        }
+        if (webInfo.url && !inputValues.url) {
+            values.url = webInfo.url;
+        }
+
+        const newValues = {
+            ...inputValues,
+            ...values,
+        };
+
+        updateInputValues({
+            tabId: currentTabId,
+            values: newValues,
+        });
+    }
+
     handleFormFailure = ({ formErrors, formFieldErrors }) => {
-        this.setState({
-            formErrors,
-            formFieldErrors,
-            pristine: true,
+        this.props.updateInputValues({
+            uiState: {
+                formErrors,
+                formFieldErrors,
+                pristine: true,
+            },
         });
     }
 
@@ -241,35 +312,31 @@ export default class AddLead extends React.PureComponent {
     }
 
     handleFormChange = (values, { formErrors, formFieldErrors }) => {
-        this.setState({
+        const uiState = {
             formFieldErrors: {
-                ...this.state.formFieldErrors,
+                ...(this.props.uiState.formFieldErrors || emptyObject),
                 ...formFieldErrors,
             },
             formErrors,
             pristine: true,
-        });
+        };
 
         const {
-            inputValues,
             updateInputValues,
             currentTabId,
         } = this.props;
 
-        const newValues = {
-            ...inputValues,
-            ...values,
-        };
-
         updateInputValues({
             tabId: currentTabId,
-            values: newValues,
+            uiState,
+            values,
         });
     }
 
     render() {
         const {
             inputValues,
+            uiState,
             projects,
             leadOptions: {
                 assignee = [],
@@ -277,10 +344,8 @@ export default class AddLead extends React.PureComponent {
             },
             onSettingsButtonClick,
         } = this.props;
-        const {
-            pending,
-            formFieldErrors,
-        } = this.state;
+        const { formFieldErrors = emptyObject } = uiState;
+        const { pending } = this.state;
 
         return (
             <div styleName="add-lead">

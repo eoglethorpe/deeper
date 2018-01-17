@@ -33,3 +33,17 @@ export const inputValuesForTabSelector = ({ domainData, mem }) => {
 
     return emptyObject;
 };
+
+export const uiStateForTabSelector = ({ domainData, mem }) => {
+    const { currentTabId } = mem;
+
+    if (currentTabId) {
+        const tabData = domainData[currentTabId];
+
+        if (tabData) {
+            return tabData.uiState || emptyObject;
+        }
+    }
+
+    return emptyObject;
+};

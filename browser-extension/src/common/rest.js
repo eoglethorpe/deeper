@@ -41,4 +41,11 @@ export const createParamsForLeadCreate = data => ({
     body: JSON.stringify(data),
 });
 
+export const urlForWebInfo = `${getWSEndpoint()}/web-info-extract/`;
+export const createParamsForWebInfo = data => ({
+    method: POST,
+    headers: commonHeader,
+    body: JSON.stringify(data),
+});
+
 export const createUrlForBrowserExtensionPage = () => (`${getServerAddress('web')}/browser-extension/`);
