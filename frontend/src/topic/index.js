@@ -40,6 +40,8 @@ const importers = {
     userExports: () => import('./UserExports/views'),
 
     fourHundredFour: () => import('./FourHundredFour/views'),
+
+    browserExtension: () => import('./BrowserExtension/'),
 };
 
 const views = Object.keys(importers).reduce(

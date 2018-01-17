@@ -33,6 +33,8 @@ const pageTitles = {
     userExports: 'User Exports',
 
     fourHundredFour: '404',
+
+    browserExtension: 'Browser Extension',
 };
 
 export default pageTitles;

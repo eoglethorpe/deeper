@@ -1,8 +1,12 @@
 {
+    "parser": "babel-eslint",
     "extends": "airbnb",
     "env": {
         "browser": true,
         "jest": true,
+    },
+    "globals": {
+        "chrome": true
     },
     "plugins": [
         "react",
@@ -20,7 +24,6 @@
         "no-unused-vars": [1, { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
         "no-console": 0
     },
-    "parser": "babel-eslint",
     "parserOptions": {
         "allowImportExportEverywhere": true
     }

@@ -1,8 +1,11 @@
 import { compose, createStore, applyMiddleware } from 'redux';
+import logger from './middlewares/logger';
 import reducer from './reducers';
 
 // Invoke refresh access token every 10m
-const middleware = [];
+const middleware = [
+    logger,
+];
 
 // Get compose from Redux Devtools Extension
 // eslint-disable-next-line no-underscore-dangle

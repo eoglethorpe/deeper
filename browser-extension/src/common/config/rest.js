@@ -1,25 +1,27 @@
 import { RestRequest } from '../../public/utils/rest';
+import store from '../store';
+import { tokenSelector } from '../selectors/auth';
+import { serverAddressSelector } from '../selectors/settings';
+
+// TODO: Remove this on release
+const DEV = true;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
 
-const reactAppApiHttps = location.protocol === 'https:'
-    ? 'https'
-    : process.env.REACT_APP_API_HTTPS;
-
-export const wsEndpoint = (() => {
-    if (!process.env.REACT_APP_API_END) {
-        return 'http://localhost:8000/api/v1';
+export const getServerAddress = (type = 'api') => {
+    if (!DEV) {
+        return serverAddressSelector(store.getState());
     }
-    return `${reactAppApiHttps}://${process.env.REACT_APP_API_END}/api/v1`;
-})();
-
-export const adminEndpoint = (() => {
-    if (!process.env.REACT_APP_ADMIN_END) {
-        return 'http://localhost:8000/admin/';
+    if (type === 'web') {
+        return 'http://localhost:3000';
+    } else if (type === 'api') {
+        return 'http://localhost:8000';
     }
-    return `${reactAppApiHttps}://${process.env.REACT_APP_ADMIN_END}/admin/`;
-})();
+    return undefined;
+};
+
+export const getWSEndpoint = () => (`${getServerAddress()}/api/v1`);
 
 export const POST = 'POST';
 export const GET = 'GET';
@@ -31,32 +33,24 @@ export const commonHeaderForPostExternal = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
 };
-export const authorizationHeaderForPost = {
-};
-export const commonHeaderForPost = {
+
+export const commonHeader = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
+    Authorization: undefined,
 };
 
-if (process.env.NODE_ENV !== 'test') {
-    // eslint-disable-next-line global-require
-    const store = require('../store').default;
-    // eslint-disable-next-line global-require
-    const tokenSelector = require('../selectors/auth').tokenSelector;
 
-    let currentAccess;
-    store.subscribe(() => {
-        const prevAccess = currentAccess;
-        const token = tokenSelector(store.getState());
-        currentAccess = token.access;
-        if (prevAccess !== currentAccess) {
-            if (currentAccess) {
-                commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
-                authorizationHeaderForPost.Authorization = `Bearer ${currentAccess}`;
-            } else {
-                commonHeaderForPost.Authorization = undefined;
-                authorizationHeaderForPost.Authorization = undefined;
-            }
+let currentAccess;
+store.subscribe(() => {
+    const prevAccess = currentAccess;
+    const token = tokenSelector(store.getState());
+    currentAccess = token.access;
+    if (prevAccess !== currentAccess) {
+        if (currentAccess) {
+            commonHeader.Authorization = `Bearer ${currentAccess}`;
+        } else {
+            commonHeader.Authorization = undefined;
         }
-    });
-}
+    }
+});

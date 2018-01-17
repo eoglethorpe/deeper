@@ -37,6 +37,7 @@ const routesOrder = [
     'login',
     'register',
     'passwordReset',
+    'browserExtension',
 
     'projects',
     'dashboard',
@@ -91,6 +92,7 @@ const routes = {
     analysisFramework: { type: ROUTE.private },
     categoryEditor: { type: ROUTE.private },
     apiDocs: { type: ROUTE.public },
+    browserExtension: { type: ROUTE.private },
     fourHundredFour: { type: ROUTE.public },
 };
 

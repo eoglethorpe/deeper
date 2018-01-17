@@ -1,0 +1,57 @@
+@import 'colors';
+@import 'dimens';
+
+$font-family-sans-serif: 'Source Sans Pro', sans-serif;
+$font-family-monospace: 'Inconsolata', monospace;
+$font-family-icons: 'Ionicons';
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: $color-background;
+    width: $width-app;
+    min-height: $height-app;
+    color: $color-text;
+    font-family: $font-family-sans-serif;
+    font-size: $font-size-default;
+    font-weight: $font-weight-default;
+
+    * {
+        box-sizing: border-box;
+
+        ::-webkit-scrollbar-track {
+            background-color: $color-background-scrollbar;
+        }
+
+        ::-webkit-scrollbar {
+            background-color: $color-background-scrollbar;
+            width: $spacing-small;
+            height: $spacing-small;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: $color-foreground-scrollbar;
+        }
+    }
+
+    a {
+        outline: none;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        margin: 0;
+        text-transform: uppercase;
+        font-weight: $font-weight-light;
+    }
+}

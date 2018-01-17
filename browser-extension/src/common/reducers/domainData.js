@@ -1,5 +1,5 @@
 // import jwtDecode from 'jwt-decode';
-// import update from '../../public/utils/immutable-update';
+import update from '../../public/utils/immutable-update';
 import createReducerWithMap from '../utils/createReducerWithMap';
 // import schema from '../../common/schema';
 import initialDomainDataState from '../initial-state/domainData';
@@ -7,36 +7,85 @@ import initialDomainDataState from '../initial-state/domainData';
 // TYPE
 
 // export const LOGIN_ACTION = 'auth/LOGIN';
+export const UPDATE_INPUT_VALUE_ACTION = 'extension/UPDATE_INPUT_VALUE';
+export const UPDATE_INPUT_VALUES_ACTION = 'extension/UPDATE_INPUT_VALUES';
+export const CLEAR_INPUT_VALUE_ACTION = 'extension/CLEAR_INPUT_VALUES';
 
 // ACTION-CREATOR
 
-/*
-export const loginAction = ({ access, refresh }) => ({
-    type: LOGIN_ACTION,
-    access,
-    refresh,
+export const updateInputValueAction = ({ tabId, id, value }) => ({
+    type: UPDATE_INPUT_VALUE_ACTION,
+    tabId,
+    id,
+    value,
 });
-*/
+
+export const updateInputValuesAction = ({ tabId, values }) => ({
+    type: UPDATE_INPUT_VALUES_ACTION,
+    tabId,
+    values,
+});
+
+export const clearInputValueAction = ({ tabId }) => ({
+    type: CLEAR_INPUT_VALUE_ACTION,
+    tabId,
+});
 
 // REDUCER
+const clearInputValue = (state, action) => {
+    const { tabId } = action;
 
-/*
-const login = (state, action) => {
-    const { access, refresh } = action;
-    const decodedToken = decodeAccessToken(access);
     const settings = {
-        token: { $set: {
-            access,
-            refresh,
-        } },
-        activeUser: { $set: decodedToken },
+        [tabId]: { $set: undefined },
     };
-    return update(state, settings);
-};
-*/
 
+    const newState = update(state, settings);
+    return newState;
+};
+
+const updateInputValue = (state, action) => {
+    const {
+        tabId,
+        id,
+        value,
+    } = action;
+
+    const settings = {
+        [tabId]: { $auto: {
+            inputValues: { $auto: {
+                $merge: {
+                    [id]: value,
+                },
+            } },
+        } },
+    };
+
+    const newState = update(state, settings);
+    return newState;
+};
+
+const updateInputValues = (state, action) => {
+    const {
+        tabId,
+        values,
+    } = action;
+
+    const settings = {
+        [tabId]: { $auto: {
+            inputValues: {
+                $set: values,
+            },
+        } },
+    };
+
+    const newState = update(state, settings);
+    return newState;
+};
 
 export const domainDataReducers = {
+    [UPDATE_INPUT_VALUE_ACTION]: updateInputValue,
+    [UPDATE_INPUT_VALUES_ACTION]: updateInputValues,
+    [CLEAR_INPUT_VALUE_ACTION]: clearInputValue,
     // [LOGIN_ACTION]: login,
 };
 

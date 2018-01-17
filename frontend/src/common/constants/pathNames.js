@@ -2,6 +2,7 @@ const pathNames = {
     login: '/login/',
     register: '/register/',
     passwordReset: '/password-reset/',
+    browserExtension: '/browser-extension/',
 
     projects: '/projects/:projectId?/',
     dashboard: '/projects/:projectId/dashboard/',
