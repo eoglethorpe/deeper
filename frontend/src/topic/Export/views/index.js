@@ -1,20 +1,10 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    Link,
-} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
-import {
-    Checkbox,
-    TreeSelection,
-} from '../../../public/components/Input';
-import {
-    Button,
-    PrimaryButton,
-} from '../../../public/components/Action';
+import { Checkbox } from '../../../public/components/Input';
 import {
     List,
     LoadingAnimation,
@@ -22,20 +12,13 @@ import {
 } from '../../../public/components/View';
 import update from '../../../public/utils/immutable-update';
 import { isFalsy, listToMap } from '../../../public/utils/common';
-import {
-    exportStrings,
-    pathNames,
-    iconNames,
-} from '../../../common/constants';
+import { exportStrings } from '../../../common/constants';
 import {
     createUrlForProject,
     createUrlForAnalysisFramework,
 
     createParamsForUser,
     createUrlForLeadsOfProject,
-
-    urlForExportTrigger,
-    createParamsForExportTrigger,
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
@@ -51,10 +34,9 @@ import {
     setProjectAction,
 } from '../../../common/redux';
 
-import wordIcon from '../../../img/word.svg';
-import excelIcon from '../../../img/excel.svg';
-import pdfIcon from '../../../img/pdf.svg';
-import jsonIcon from '../../../img/json.svg';
+
+import ExportHeader from './components/ExportHeader';
+import ExportTypePane from './components/ExportTypePane';
 
 import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
@@ -85,288 +67,9 @@ const propTypes = {
 const defaultProps = {
 };
 
-const emptyList = [];
-
-@CSSModules(styles, { allowMultiple: true })
-class ExportTypePane extends React.PureComponent {
-    static exportTypes = [
-        {
-            key: 'word',
-            img: wordIcon,
-            title: exportStrings.docxLabel,
-        },
-        {
-            key: 'pdf',
-            img: pdfIcon,
-            title: exportStrings.pdfLabel,
-        },
-        {
-            key: 'excel',
-            title: exportStrings.xlxsLabel,
-            img: excelIcon,
-        },
-        {
-            key: 'json',
-            img: jsonIcon,
-            title: exportStrings.jsonLabel,
-        },
-    ]
-
-    static exportTypeKeyExtractor = d => d.key
-
-    componentWillMount() {
-        const newReportStructure = this.createReportStructure(this.props.analysisFramework);
-        this.props.onReportStructureChange(newReportStructure);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.analysisFramework !== this.props.analysisFramework) {
-            const newReportStructure = this.createReportStructure(nextProps.analysisFramework);
-            this.props.onReportStructureChange(newReportStructure);
-        }
-    }
-
-    getExportTypeClassName(key) {
-        const { activeExportTypeKey } = this.props;
-
-        const classNames = [
-            styles['export-type-select'],
-        ];
-        if (activeExportTypeKey === key) {
-            classNames.push(styles.active);
-        }
-        return classNames.join(' ');
-    }
-
-    mapReportLevelsToNodes = levels => levels.map(level => ({
-        key: level.id,
-        title: level.title,
-        selected: true,
-        draggable: true,
-        nodes: level.sublevels && this.mapReportLevelsToNodes(level.sublevels),
-    }));
-
-
-    createReportStructure = (analysisFramework) => {
-        if (!analysisFramework) {
-            return undefined;
-        }
-
-        const { exportables, widgets } = analysisFramework;
-        const nodes = [];
-
-        if (!exportables || !widgets) {
-            return undefined;
-        }
-
-        exportables.forEach((exportable) => {
-            const levels = exportable.data && exportable.data.report &&
-                exportable.data.report.levels;
-            const widget = widgets.find(w => w.key === exportable.widgetKey);
-
-            if (!levels || !widget) {
-                return;
-            }
-
-            nodes.push({
-                title: widget.title,
-                key: `${exportable.id}`,
-                selected: true,
-                draggable: true,
-                nodes: this.mapReportLevelsToNodes(levels),
-            });
-        });
-
-        return nodes;
-    }
-
-    renderExportType = (key, data) => (
-        <button
-            className={this.getExportTypeClassName(key)}
-            key={key}
-            title={data.title}
-            onClick={() => { this.props.onExportTypeChange(key); }}
-        >
-            <img
-                className={styles.image}
-                src={data.img}
-                alt={data.title}
-            />
-        </button>
-    )
-
-    renderReportOptions = () => {
-        if (!this.props.reportStructure) {
-            return (
-                <p>
-                    { 'You don\'t have any matrices in your analysis framework.' }
-                </p>
-            );
-        }
-        return [
-            <h4 key="header">
-                Report Structure
-            </h4>, // FIXME: strings
-            <TreeSelection
-                key="tree-selection"
-                value={this.props.reportStructure}
-                onChange={this.props.onReportStructureChange}
-            />,
-        ];
-    }
-
-    renderExcelOptions = () => (
-        <div styleName="decoupled-box">
-            <Checkbox
-                label={exportStrings.decoupledEntriesLabel}
-                value={this.props.decoupledEntries}
-                onChange={this.props.onReportStructureChange}
-            />
-            <i
-                className={iconNames.help}
-                title={exportStrings.decoupledEntriesTitle}
-            />
-        </div>
-    )
-
-    render() {
-        const { activeExportTypeKey } = this.props;
-        return (
-            <section styleName="export-types">
-                <div styleName="export-type-select-list">
-                    <List
-                        styleName="export-type-select-list"
-                        data={ExportTypePane.exportTypes}
-                        modifier={this.renderExportType}
-                        keyExtractor={ExportTypePane.exportTypeKeyExtractor}
-                    />
-                </div>
-                <div styleName="export-type-options">
-                    {
-                        (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
-                            && this.renderReportOptions()
-                    }
-                    { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
-                </div>
-            </section>
-        );
-    }
-}
-
-@CSSModules(styles, { allowMultiple: true })
-// eslint-disable-next-line
-class ExportHeader extends React.PureComponent {
-    componentWillUnmount() {
-        if (this.exportRequest) {
-            this.exportRequest.stop();
-        }
-    }
-
-    createReportStructureForExport = nodes => nodes
-        .filter(node => node.selected)
-        .map(node => (
-            node.nodes ? {
-                id: node.key,
-                levels: this.createReportStructureForExport(node.nodes),
-            } : {
-                id: node.key,
-            }
-        ));
-
-    export = (onSuccess) => {
-        // Let's start by collecting the filters
-        const {
-            projectId,
-            entriesFilters,
-            activeExportTypeKey,
-            selectedLeads,
-            reportStructure,
-            decoupledEntries,
-        } = this.props;
-
-        let exportType;
-        if (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf') {
-            exportType = 'report';
-        } else {
-            exportType = activeExportTypeKey;
-        }
-
-        const filters = {
-            project: projectId,
-            export_type: exportType,
-            ...entriesFilters,
-            decoupled: decoupledEntries,
-            lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
-            report_structure: this.createReportStructureForExport(reportStructure || emptyList),
-        };
-
-        if (this.exportRequest) {
-            this.exportRequest.stop();
-        }
-        this.exportRequest = this.createRequestForExport({ filters }, onSuccess);
-        this.exportRequest.start();
-    }
-
-    createRequestForExport = ({ filters }, onSuccess) => {
-        const exportRequest = new FgRestBuilder()
-            .url(urlForExportTrigger)
-            .params(() => createParamsForExportTrigger(filters))
-            .success((response) => {
-                // FIXME: write schema
-                onSuccess(response.exportTriggered);
-            })
-            .build();
-        return exportRequest;
-    }
-
-    handleExport = () => {
-        const exportFn = (exportId) => {
-            console.log('Exporting', exportId);
-        };
-        this.export(exportFn);
-    }
-
-    handlePreview = () => {
-        this.export(this.props.onPreview);
-    }
-
-    render() {
-        return (
-            <header styleName="header">
-                <h2>
-                    {exportStrings.headerExport}
-                </h2>
-                <div styleName="action-buttons">
-                    <Link
-                        to={pathNames.userExports}
-                        styleName="link"
-                    >
-                        {exportStrings.viewAllExportsButtonLabel}
-                    </Link>
-                    <Button
-                        styleName="button"
-                        onClick={this.handlePreview}
-                        disabled={this.props.pending}
-                    >
-                        {exportStrings.showPreviewButtonLabel}
-                    </Button>
-                    <PrimaryButton
-                        styleName="button"
-                        onClick={this.handleExport}
-                        disabled={this.props.pending}
-                    >
-                        {exportStrings.startExportButtonLabel}
-                    </PrimaryButton>
-                </div>
-            </header>
-        );
-    }
-}
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-// TODO:
-// eslint-disable-next-line
 export default class Export extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -417,7 +120,7 @@ export default class Export extends React.PureComponent {
             reportStructure: undefined,
             decoupledEntries: true,
 
-            selectedLeads: [],
+            selectedLeads: {},
             pendingLeads: true,
             pendingAf: true,
         };
@@ -688,7 +391,6 @@ export default class Export extends React.PureComponent {
                     selectedLeads={selectedLeads}
                     reportStructure={reportStructure}
                     decoupledEntries={decoupledEntries}
-                    previewId={previewId}
                     onPreview={this.handlePreview}
                     pending={pendingLeads || pendingAf}
                 />
