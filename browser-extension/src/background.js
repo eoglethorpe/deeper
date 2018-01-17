@@ -12,12 +12,18 @@ chrome.runtime.onMessageExternal.addListener((request, sender, reply) => {
     }
 
     if (request.message === 'token') {
-        chrome.storage.local.set({ token: request.token });
-        chrome.runtime.sendMessage({
-            message: 'token',
-            token: request.token,
+        const { token } = request;
+        // console.warn('BG: Saving token', token);
+        chrome.storage.local.set({ token }, () => {
+            const res = {
+                message: 'token',
+                token,
+            };
+            // console.warn('BG: Sending to fg', res);
+            chrome.runtime.sendMessage(res);
+            reply({ message: 'success' });
         });
-        reply({ message: 'success' });
+        return true;
     }
 
     return false;
@@ -29,11 +35,12 @@ chrome.runtime.onMessage.addListener((request, sender, reply) => {
     if (chrome.runtime.id === sender.id) {
         if (request.message === 'token') {
             chrome.storage.local.get('token', (token = emptyObject) => {
+                // console.warn('BG: Replying token', token);
                 reply(token);
             });
+            return true;
         }
-        return true;
+        return false;
     }
-
     return false;
 });

@@ -144,10 +144,9 @@ class App extends React.PureComponent {
 
     handleGetTokenMessageResponse = (response) => {
         const { token } = response;
-        const {
-            setToken,
-        } = this.props;
+        const { setToken } = this.props;
 
+        // console.warn('FG: Received token', response);
         setToken({ token });
 
         if (token.refresh) {
@@ -156,10 +155,12 @@ class App extends React.PureComponent {
             this.tokenRefreshRequest.start();
         } else {
             this.setState({ authorized: false });
+            /*
             chrome.tabs.create({
                 url: createUrlForBrowserExtensionPage(),
                 active: false,
             });
+            */
         }
     }
 

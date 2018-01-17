@@ -1,4 +1,5 @@
-export const extensionId = 'nkipfcpknocfnlelgehlealjgknfkfhm';
+// export const extensionId = 'nkipfcpknocfnlelgehlealjgknfkfhm'; // fhx
+export const extensionId = 'caebgfaeglddaliobdbkcphpfegnedmp'; // tnagorra
 
 const EXTENSION_GET_SCREENSHOT = 'screenshot';
 const EXTENSION_POST_TOKEN = 'token';
@@ -32,7 +33,6 @@ export const sendToken = (token) => {
             if (!response) {
                 reject();
             }
-
             resolve(response);
         });
     });

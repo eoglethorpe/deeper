@@ -3,13 +3,23 @@ import store from '../store';
 import { tokenSelector } from '../selectors/auth';
 import { serverAddressSelector } from '../selectors/settings';
 
+// TODO: Remove this on release
+const DEV = true;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
 
-export const getServerAddress = () => (
-    serverAddressSelector(store.getState())
-);
+export const getServerAddress = (type = 'api') => {
+    if (!DEV) {
+        return serverAddressSelector(store.getState());
+    }
+    if (type === 'web') {
+        return 'http://localhost:3000';
+    } else if (type === 'api') {
+        return 'http://localhost:8000';
+    }
+    return undefined;
+};
 
 export const getWSEndpoint = () => (`${getServerAddress()}/api/v1`);
 

@@ -41,4 +41,4 @@ export const createParamsForLeadCreate = data => ({
     body: JSON.stringify(data),
 });
 
-export const createUrlForBrowserExtensionPage = () => (`${getServerAddress()}/browser-extension/`);
+export const createUrlForBrowserExtensionPage = () => (`${getServerAddress('web')}/browser-extension/`);
