@@ -22,6 +22,7 @@ import {
     usersSelector,
     categoryEditorsSelector,
     regionsListSelector,
+    userExportsSelector,
 } from './state';
 
 
@@ -43,6 +44,15 @@ const userSelector = createSelector(
     (userId, users) => (users[userId] || emptyObject),
 );
 
+export const userExportsListSelector = createSelector(
+    userExportsSelector,
+    projectIdFromRoute,
+    (userExports, projectId) => (
+        (userExports[projectId] && Object.values(userExports[projectId]).filter(
+            userExport => userExport,
+        )) || emptyList
+    ),
+);
 // OTHERS
 
 // countryIdFromRoute
