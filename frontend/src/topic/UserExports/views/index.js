@@ -80,6 +80,7 @@ export default class UserExports extends React.PureComponent {
 
         this.state = {
             selectedExport: 0,
+            pendingExports: true,
         };
 
         this.exportsTableHeader = [
@@ -197,6 +198,8 @@ export default class UserExports extends React.PureComponent {
         const { userExports: oldExports } = this.props;
         const { userExports: newExports } = nextProps;
 
+        // TODO: handle project change?
+
         if (oldExports !== newExports) {
             if (this.exportPollRequests) {
                 this.exportPollRequests.forEach((p) => {
@@ -231,6 +234,12 @@ export default class UserExports extends React.PureComponent {
         const userExportsRequest = new FgRestBuilder()
             .url(urlForExports)
             .params(() => createParamsForUserExportsGET())
+            .preLoad(() => {
+                this.setState({ pendingExports: true });
+            })
+            .postLoad(() => {
+                this.setState({ pendingExports: false });
+            })
             .success((response) => {
                 try {
                     schema.validate(response, 'userExportsGetResponse');
@@ -324,6 +333,7 @@ export default class UserExports extends React.PureComponent {
                     </Link>
                 </header>
                 <div styleName="main-container">
+                    { this.state.pendingExports && <LoadingAnimation /> }
                     <div styleName="table-container">
                         <Table
                             data={userExports || emptyList}

@@ -69,8 +69,10 @@
         }
 
         .leads {
+            position: relative;
             flex-grow: 1;
             overflow-y: auto;
+            background-color: $color-background-row-alt;
 
             .select-lead {
                 background-color: $color-background-row;

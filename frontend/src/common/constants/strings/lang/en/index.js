@@ -416,7 +416,7 @@ const strings = {
     541: 'Assited tagging feedback',
     542: 'Thank you for your feedback',
 
-    543: 'Oops!! It seems you don\'t have any entries. Please go back to main page to add one.',
+    543: 'Oops! It seems you don\'t have any entries. Please go back to the overview page to add one.',
 
     // Export strings
 
@@ -462,7 +462,7 @@ const strings = {
     632: 'Recent Exports',
     633: 'Go back to exports',
     634: 'Decoupled Entries',
-    635: 'Selecting this option significantly increases the export duration',
+    635: 'Note that by selecting this option, it can greatly increase the amount of time to generate the export.',
 
     // Aanalysis Framework Strings
 
