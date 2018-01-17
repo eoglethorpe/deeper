@@ -131,7 +131,7 @@ export default class Leads extends React.PureComponent {
     static defaultProps = defaultProps;
 
     // REST UTILS
-
+    // TODO: move this somewhere
     static getFiltersForRequest = (filters) => {
         const requestFilters = {};
         Object.keys(filters).forEach((key) => {

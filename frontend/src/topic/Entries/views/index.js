@@ -124,7 +124,6 @@ export default class Entries extends React.PureComponent {
 
     componentWillMount() {
         const { projectId } = this.props;
-
         this.projectRequest = this.createRequestForProject(projectId);
         this.projectRequest.start();
     }
@@ -146,14 +145,14 @@ export default class Entries extends React.PureComponent {
 
         if (oldProjectId !== newProjectId) {
             // NOTE: If projects is changed; af, filter and entries will also changed
-            if (this.entriesRequest) {
-                this.entriesRequest.stop();
-            }
             if (this.projectRequest) {
                 this.projectRequest.stop();
             }
             if (this.analysisFrameworkRequest) {
                 this.analysisFrameworkRequest.stop();
+            }
+            if (this.entriesRequest) {
+                this.entriesRequest.stop();
             }
 
             this.setState({
