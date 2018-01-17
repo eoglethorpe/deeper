@@ -61,7 +61,7 @@ $width-entry-select-input: 400px;
                         background-color: $color-hover;
                     }
 
-                    .button {
+                    .add-entry-list-item {
                         display: flex;
                         justify-content: space-between;
                         outline: 0;
@@ -76,7 +76,7 @@ $width-entry-select-input: 400px;
 
                         .entry-excerpt {
                             flex-grow: 1;
-                            margin-right: $spacing-medium-alt;
+                            padding-right: $spacing-large;
                             text-align: justify;
                         }
 
@@ -107,6 +107,7 @@ $width-entry-select-input: 400px;
 
                             .error {
                                 animation: spin 1s linear infinite;
+                                margin-left: 0;
                                 color: $color-danger;
                             }
 
@@ -125,9 +126,9 @@ $width-entry-select-input: 400px;
                     }
 
                     &:hover {
-                        .button {
+                        .add-entry-list-item {
                             .status-icons {
-                                visibility: hidden;
+                                opacity: 0;
                             }
                         }
 
@@ -147,6 +148,7 @@ $width-entry-select-input: 400px;
                             opacity: 1;
                         }
                     }
+
                 }
             }
         }

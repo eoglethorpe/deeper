@@ -279,7 +279,7 @@ export default class Overview extends React.PureComponent {
         const isActive = currentEntryId === selectedEntryId;
         const status = this.props.choices[key].choice;
         const selectedEntry = entries.find(
-            e => entryAccessor.getKey(e) === selectedEntryId,
+            e => entryAccessor.getKey(e) === currentEntryId,
         );
 
         const isMarkedForDelete = entryAccessor.isMarkedForDelete(selectedEntry);
@@ -291,7 +291,7 @@ export default class Overview extends React.PureComponent {
                 scrollIntoView={isActive}
             >
                 <button
-                    className="button"
+                    className="add-entry-list-item"
                     onClick={() => this.handleEntryItemClick(currentEntryId)}
                 >
                     {this.calcEntryLabel(entry)}
@@ -305,6 +305,7 @@ export default class Overview extends React.PureComponent {
                         }
                     </div>
                 </button>
+
                 {
                     isMarkedForDelete ? (
                         <Button
