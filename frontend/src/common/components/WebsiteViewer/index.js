@@ -89,7 +89,7 @@ export default class DeepGallery extends React.PureComponent {
                     const isSecure = !!(response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
                     const mimeType = response.headers['Content-Type'];
                     const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
-                    const httpsUrl = response.url;
+                    const httpsUrl = response.httpsUrl;
 
                     this.setState({
                         canShow: true,
@@ -163,13 +163,13 @@ export default class DeepGallery extends React.PureComponent {
         }
 
         return (
-            (canShow && !isSameOrigin && isSecure) ?
+            (canShow && !isSameOrigin && isSecure && httpsUrl) ?
                 <iframe
                     styleName="doc"
                     sandbox="allow-scripts allow-same-origin"
                     className={className}
-                    title={httpsUrl || url}
-                    src={httpsUrl || url}
+                    title={httpsUrl}
+                    src={httpsUrl}
                 /> :
                 <div className={className}>
                     {
