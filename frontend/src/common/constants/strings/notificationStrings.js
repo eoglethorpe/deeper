@@ -117,8 +117,8 @@ const notificationStrings = {
     // Category Editor
     ceUpdate: string[984],
     ceUpdateOverridden: string[982],
-    invalidDropSource: string[986],
-    validDropAlert: string[987],
+    invalidDropSource: string[985],
+    validDropAlert: string[986],
 
     // Entries
     entryUpdate: string[987],
@@ -129,6 +129,11 @@ const notificationStrings = {
     browserExtensionSuccessMessage: string[2001],
     browserExtensionFailureTitle: string[2000],
     browserExtensionFailureMessage: string[2002],
+
+    entrySave: string[988],
+    entrySaveSuccess: string[989],
+    entrySaveFailure: string[990],
+    entrySaveFatal: string[991],
 };
 
 export default notificationStrings;
