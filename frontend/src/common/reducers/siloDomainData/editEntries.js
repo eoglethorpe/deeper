@@ -15,6 +15,7 @@ export const EE__ENTRY_SAVE = 'domain-data/EE__ENTRY_SAVE';
 export const EE__ENTRY_CHANGE = 'domain-data/EE__ENTRY_CHANGE';
 export const EE__ENTRY_DIFF = 'domain-data/EE__ENTRY_DIFF';
 export const EE__ENTRY_MARK_FOR_DELETE = 'domain-data/EE__ENTRY_MARK_FOR_DELETE';
+export const EE_REMOVE_ALL_ENTRIES = 'domain-data/EE_REMOVE_ALL_ENTRIES';
 
 // CREATOR
 
@@ -33,6 +34,11 @@ export const removeEntryAction = ({ leadId, entryId }) => ({
     type: EE__REMOVE_ENTRY,
     leadId,
     entryId,
+});
+
+export const removeAllEntriesAction = ({ leadId }) => ({
+    type: EE_REMOVE_ALL_ENTRIES,
+    leadId,
 });
 
 export const saveEntryAction = ({ leadId, entryId, data, values }) => ({
@@ -273,6 +279,22 @@ const editEntryViewRemoveEntry = (state, action) => {
     return update(state, settings);
 };
 
+const editEntryViewRemoveAllEntries = (state, action) => {
+    const { leadId } = action;
+
+    const settings = {
+        editEntryView: {
+            [leadId]: {
+                selectedEntryId: { $set: undefined },
+                entries: {
+                    $set: [],
+                },
+            },
+        },
+    };
+    return update(state, settings);
+};
+
 const editEntryViewSetActiveEntry = (state, action) => {
     const { leadId, entryId } = action;
     const settings = {
@@ -296,5 +318,6 @@ const reducers = {
     [EE__ENTRY_CHANGE]: editEntryViewChangeEntry,
     [EE__ENTRY_DIFF]: editEntryViewDiffEntries,
     [EE__ENTRY_MARK_FOR_DELETE]: entryMarkForDelete,
+    [EE_REMOVE_ALL_ENTRIES]: editEntryViewRemoveAllEntries,
 };
 export default reducers;
