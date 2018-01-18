@@ -71,7 +71,7 @@ export default class Multiselect extends React.PureComponent {
             data,
         } = this.props;
 
-        const selectedData = data.options.filter(d => value.includes(d.key));
+        const selectedData = (data.options || emptyList).filter(d => value.includes(d.key));
 
         return (
             <div styleName="multiselect-list">

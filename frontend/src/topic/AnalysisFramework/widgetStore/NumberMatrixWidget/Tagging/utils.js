@@ -1,11 +1,12 @@
 const emptyObject = {};
+const emptyList = [];
 
 export const createExportData = (attribute, data) => {
     const excelValues = [];
 
-    data.rowHeaders.forEach((rowHeader) => {
+    (data.rowHeaders || emptyList).forEach((rowHeader) => {
         const rowValues = [];
-        data.columnHeaders.forEach((columnHeader) => {
+        (data.columnHeaders || emptyList).forEach((columnHeader) => {
             const value = (attribute[rowHeader.key] || emptyObject)[columnHeader.key];
 
             if (value !== undefined) {
@@ -29,9 +30,6 @@ export const createExportData = (attribute, data) => {
 
 export const updateAttribute = ({ entryId, api, attribute, data, exportable }) => {
     if (!attribute || !data) {
-        api.getEntryModifier(entryId)
-            .setExportData(exportable.id, undefined)
-            .apply();
         return;
     }
 

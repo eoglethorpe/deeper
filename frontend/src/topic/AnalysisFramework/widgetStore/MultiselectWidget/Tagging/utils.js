@@ -16,10 +16,6 @@ export const createExportData = (attribute, data) => ({
 
 export const updateAttribute = ({ entryId, api, attribute, data, filters, exportable }) => {
     if (!attribute || !data) {
-        api.getEntryModifier(entryId)
-            .setFilterData(filters[0].id, undefined)
-            .setExportData(exportable.id, undefined)
-            .apply();
         return;
     }
 

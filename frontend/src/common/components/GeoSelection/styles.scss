@@ -20,9 +20,7 @@
 }
 
 .modal {
-    :global .modal-content {
-        width: 720px;
-    }
+    width: 720px;
 
     .location-selects {
         display: flex;
