@@ -32,6 +32,7 @@ import {
     removeEntryAction,
     markForDeleteEntryAction,
     setActiveEntryAction,
+    removeAllEntriesAction,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -72,7 +73,7 @@ import Overview from './Overview';
 import List from './List';
 
 const propTypes = {
-    leadId: PropTypes.string.isRequired,
+    leadId: PropTypes.number.isRequired,
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     selectedEntryId: PropTypes.string,
@@ -88,6 +89,7 @@ const propTypes = {
     diffEntries: PropTypes.func.isRequired,
     markForDeleteEntry: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
+    removeAllEntries: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -115,6 +117,7 @@ const mapDispatchToProps = dispatch => ({
     removeEntry: params => dispatch(removeEntryAction(params)),
     markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
+    removeAllEntries: params => dispatch(removeAllEntriesAction(params)),
 });
 
 
@@ -140,7 +143,7 @@ export default class EditEntryView extends React.PureComponent {
             },
 
             pendingEntries: true,
-            pendingProjectAndAf: true,
+            pendingAf: true,
 
             pendingSaveAll: false,
         };
@@ -170,16 +173,16 @@ export default class EditEntryView extends React.PureComponent {
     componentWillUnmount() {
         this.leadRequest.stop();
 
-        if (this.entriesRequest) {
-            this.entriesRequest.stop();
-        }
-
         if (this.projectRequest) {
             this.projectRequest.stop();
         }
 
         if (this.analysisFrameworkRequest) {
             this.analysisFrameworkRequest.stop();
+        }
+
+        if (this.entriesRequest) {
+            this.entriesRequest.stop();
         }
 
         this.saveRequestCoordinator.close();
@@ -194,28 +197,30 @@ export default class EditEntryView extends React.PureComponent {
                     schema.validate(response, 'lead');
                     this.props.setLead({ lead: response });
 
-                    const {
-                        id,
-                        project,
-                    } = response;
+                    const { project } = response;
 
                     // Load project
-                    this.projectRequest = this.createRequestForProject(project);
+                    this.projectRequest = this.createRequestForProject(project, leadId);
                     this.projectRequest.start();
-
-                    // Load entries
-                    // NOTE: could be loaded along with lead
-                    this.entriesRequest = this.createRequestForEntriesOfLead(id);
-                    this.entriesRequest.start();
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error(response);
+            })
+            .fatal(() => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error('Failed loading leads');
             })
             .build();
         return leadRequest;
     }
 
-    createRequestForProject = (projectId) => {
+    createRequestForProject = (projectId, leadId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForUser())
@@ -231,33 +236,65 @@ export default class EditEntryView extends React.PureComponent {
                     // Load analysisFramework
                     this.analysisFramework = this.createRequestForAnalysisFramework(
                         response.analysisFramework,
+                        leadId,
                     );
                     this.analysisFramework.start();
                 } catch (er) {
                     console.error(er);
                 }
             })
+            .failure((response) => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error(response);
+            })
+            .fatal(() => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error('Failed loading project of lead');
+            })
             .build();
         return projectRequest;
     };
 
-    createRequestForAnalysisFramework = (analysisFrameworkId) => {
+    createRequestForAnalysisFramework = (analysisFrameworkId, leadId) => {
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(createUrlForAnalysisFramework(analysisFrameworkId))
             .params(() => createParamsForUser())
             .delay(0)
-            .postLoad(() => {
-                this.setState({ pendingProjectAndAf: false });
+            .preLoad(() => {
+                this.setState({ pendingAf: true });
             })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
+
+                    // TODO: notify that analysis frameowrk changed and history was removed
+                    if (this.props.analysisFramework.versionId < response.versionId) {
+                        this.props.removeAllEntries({ leadId });
+                    }
                     this.props.setAnalysisFramework({
                         analysisFramework: response,
                     });
+
+                    // Load entries
+                    this.entriesRequest = this.createRequestForEntriesOfLead(leadId);
+                    this.entriesRequest.start();
+
+                    this.setState({ pendingAf: false });
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error(response);
+            })
+            .fatal(() => {
+                this.setState({ pendingAf: false, pendingEntries: false });
+                // TODO: notify
+                console.error('Failed loading af of lead');
             })
             .build();
         return analysisFrameworkRequest;
@@ -267,12 +304,14 @@ export default class EditEntryView extends React.PureComponent {
         const entriesRequest = new FgRestBuilder()
             .url(createUrlForEntriesOfLead(leadId))
             .params(() => createParamsForEntriesOfLead())
-            .postLoad(() => {
-                this.setState({ pendingEntries: false });
+            .preLoad(() => {
+                this.setState({ pendingEntries: true });
             })
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
+                    this.setState({ pendingEntries: false });
+
                     const entries = response.results.entries;
                     const diffs = calcEntriesDiff(this.props.entries, entries);
                     if (getApplicableDiffCount(diffs) <= 0) {
@@ -292,6 +331,16 @@ export default class EditEntryView extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
+            })
+            .failure((response) => {
+                this.setState({ pendingEntries: false });
+                // TODO: notify
+                console.error(response);
+            })
+            .fatal(() => {
+                this.setState({ pendingEntries: false });
+                // TODO: notify
+                console.error('Failed loading entries of lead');
             })
             .build();
         return entriesRequest;
@@ -594,10 +643,10 @@ export default class EditEntryView extends React.PureComponent {
         const {
             pendingSaveAll,
             pendingEntries,
-            pendingProjectAndAf,
+            pendingAf,
         } = this.state;
 
-        if (pendingEntries || pendingProjectAndAf) {
+        if (pendingEntries || pendingAf) {
             return (
                 <div styleName="edit-entry">
                     <LoadingAnimation />

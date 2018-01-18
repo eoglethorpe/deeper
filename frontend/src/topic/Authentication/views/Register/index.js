@@ -208,6 +208,7 @@ export default class Login extends React.PureComponent {
                             value={formValues.firstname}
                             label={loginStrings.firstNameLabel}
                             placeholder={loginStrings.firstNamePlaceholder}
+                            autoFocus
                         />
                         <TextInput
                             error={formFieldErrors.lastname}

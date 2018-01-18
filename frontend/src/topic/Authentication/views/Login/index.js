@@ -314,6 +314,7 @@ export default class Login extends React.PureComponent {
                             value={formValues.email}
                             label={loginStrings.emailLabel}
                             placeholder="john.doe@mail.com"
+                            autoFocus
                         />
                         <TextInput
                             disabled={pending}

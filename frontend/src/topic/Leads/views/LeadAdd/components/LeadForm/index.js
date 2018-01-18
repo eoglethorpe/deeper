@@ -188,6 +188,45 @@ export default class LeadForm extends React.PureComponent {
                     formname="sourceType"
                     value={type}
                 />
+                {
+                    type === LEAD_TYPE.website && [
+                        <TextInput
+                            error={fieldErrors.url}
+                            formname="url"
+                            key="url"
+                            label={leadsString.urlLabel}
+                            placeholder={leadsString.urlPlaceholderLabel}
+                            styleName="url"
+                            value={values.url}
+                            disabled={isFormDisabled}
+                            autoFocus
+                        />,
+                        <TextInput
+                            error={fieldErrors.website}
+                            formname="website"
+                            key="website"
+                            label={leadsString.websiteLabel}
+                            placeholder={leadsString.urlPlaceholderLabel}
+                            styleName="website"
+                            value={values.website}
+                            disabled={isFormDisabled}
+                        />,
+                    ]
+                }
+                {
+                    type === LEAD_TYPE.text &&
+                        <TextArea
+                            error={fieldErrors.text}
+                            formname="text"
+                            label={leadsString.textLabel}
+                            placeholder={leadsString.textareaPlaceholderLabel}
+                            rows="3"
+                            styleName="text"
+                            value={values.text}
+                            disabled={isFormDisabled}
+                            autoFocus
+                        />
+                }
                 <SelectInput
                     disabled
                     error={fieldErrors.project}
@@ -205,7 +244,6 @@ export default class LeadForm extends React.PureComponent {
                 <div
                     styleName="line-break"
                 />
-
                 <TextInput
                     styleName="title"
                     error={fieldErrors.title}
@@ -292,43 +330,6 @@ export default class LeadForm extends React.PureComponent {
                         disabled={isFormDisabled}
                     />
                 </ApplyAll>
-                {
-                    type === LEAD_TYPE.website && [
-                        <TextInput
-                            error={fieldErrors.url}
-                            formname="url"
-                            key="url"
-                            label={leadsString.urlLabel}
-                            placeholder={leadsString.urlPlaceholderLabel}
-                            styleName="url"
-                            value={values.url}
-                            disabled={isFormDisabled}
-                        />,
-                        <TextInput
-                            error={fieldErrors.website}
-                            formname="website"
-                            key="website"
-                            label={leadsString.websiteLabel}
-                            placeholder={leadsString.urlPlaceholderLabel}
-                            styleName="website"
-                            value={values.website}
-                            disabled={isFormDisabled}
-                        />,
-                    ]
-                }
-                {
-                    type === LEAD_TYPE.text &&
-                        <TextArea
-                            error={fieldErrors.text}
-                            formname="text"
-                            label={leadsString.textLabel}
-                            placeholder={leadsString.textareaPlaceholderLabel}
-                            rows="3"
-                            styleName="text"
-                            value={values.text}
-                            disabled={isFormDisabled}
-                        />
-                }
                 {
                     // one of drive, dropbox, or file
                     ATTACHMENT_TYPES.indexOf(type) !== -1 && ([
