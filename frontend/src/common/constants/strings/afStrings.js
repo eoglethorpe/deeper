@@ -94,6 +94,8 @@ const afStrings = {
     optionsHeader: string[775],
     otherDetailsHeader: string[776],
     informationDateCheckboxLabel: string[777],
+
+    exitButtonLabel: string[778],
 };
 
 export default afStrings;

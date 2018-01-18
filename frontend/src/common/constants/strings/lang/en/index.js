@@ -556,6 +556,7 @@ const strings = {
     775: 'Options',
     776: 'Other Details',
     777: 'Information date',
+    778: 'Exit',
 
     // Login/Register strings
 

@@ -1,8 +1,11 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import { Prompt } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {
+    Link,
+    Prompt,
+} from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { SelectInput } from '../../../public/components/Input';
@@ -22,6 +25,7 @@ import {
     randomString,
     trimWhitespace,
     splitInWhitespace,
+    reverseRoute,
 } from '../../../public/utils/common';
 
 import {
@@ -29,6 +33,7 @@ import {
     ceStrings,
     notificationStrings,
     commonStrings,
+    pathNames,
 } from '../../../common/constants';
 
 import DocumentPanel from './components/DocumentPanel';
@@ -54,6 +59,7 @@ import {
     setCategoryEditorAction,
 
     ceIdFromRouteSelector,
+    activeProjectSelector,
 } from '../../../common/redux';
 import {
     createUrlForCategoryEditor,
@@ -79,6 +85,7 @@ const mapStateToProps = (state, props) => ({
     activeCategoryId: activeCategoryIdSelector(state, props),
 
     categoryEditorId: ceIdFromRouteSelector(state, props),
+    projectId: activeProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -113,6 +120,8 @@ const propTypes = {
     setCategoryEditor: PropTypes.func.isRequired,
 
     categoryEditorId: PropTypes.number.isRequired,
+
+    projectId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
@@ -425,6 +434,7 @@ export default class CategoryEditor extends React.PureComponent {
         this.setState({ showNewManualNGramModal: false });
     }
 
+
     // RENDER
 
     renderSubcategoryColumns = () => {
@@ -487,6 +497,7 @@ export default class CategoryEditor extends React.PureComponent {
             activeCategoryId,
             categoryEditorViewPristine,
             categoryEditorViewTitle,
+            projectId,
         } = this.props;
         const {
             pending,
@@ -522,6 +533,14 @@ export default class CategoryEditor extends React.PureComponent {
                             >
                                 {ceStrings.saveCeButtonLabel}
                             </SuccessButton>
+                            <Link
+                                disabled={categoryEditorViewPristine || pending}
+                                styleName="link-to-pp"
+                                to={`${reverseRoute(pathNames.projects, { projectId })}#/category-editor`}
+                                replace
+                            >
+                                {ceStrings.exitButtonLabel}
+                            </Link>
                         </div>
                         <div styleName="action-btn">
                             <SelectInput

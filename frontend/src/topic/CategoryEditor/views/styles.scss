@@ -200,6 +200,13 @@
                 button {
                     flex-shrink: 0;
                 }
+
+                .link-to-pp {
+                    @extend %button-like-link;
+                    margin-left: $spacing-medium;
+                    background-color: $color-primary;
+                    color: $color-foreground-alt;
+                }
             }
 
 
