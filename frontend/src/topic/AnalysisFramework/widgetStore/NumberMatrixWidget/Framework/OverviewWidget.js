@@ -180,6 +180,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 onChange={(value) => { this.handleColUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
+                autoFocus
             />
             <TextInput
                 className={styles['title-input']}

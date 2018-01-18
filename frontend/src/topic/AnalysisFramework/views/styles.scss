@@ -16,33 +16,8 @@
             color: $color-text;
         }
 
-        .action-buttons {
-            flex-shrink: 0;
-            background-color: transparent;
-        }
-
         &:nth-child(odd) {
             background-color: $color-background-row-alt;
-        }
-    }
-}
-
-%grid-item {
-    .header {
-        display: flex;
-        align-items: center;
-        height: 18px;
-
-        .heading {
-            padding: 0 $spacing-small;
-        }
-
-        .action-buttons {
-            display: flex;
-
-            button {
-                padding: 0 $spacing-medium;
-            }
         }
     }
 }

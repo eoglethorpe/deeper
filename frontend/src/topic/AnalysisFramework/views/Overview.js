@@ -242,7 +242,9 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="overview">
                 <header styleName="header">
-                    <h2>{afStrings.headerWidgets}</h2>
+                    <h2>
+                        {afStrings.analysisFramework} / <small>{afStrings.headerOverview}</small>
+                    </h2>
                     <div styleName="actions">
                         <Link
                             styleName="link-to-list"

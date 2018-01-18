@@ -16,10 +16,26 @@ $height-grid-header: 18px;
         }
 
         .action-buttons {
+            @include transition-medium;
             display: flex;
+            opacity: 0;
+            margin: 0 $spacing-extra-small;
 
-            button {
-                padding: 0 $spacing-small;
+            button, span {
+                padding: 0 $spacing-extra-small-alt;
+            }
+
+            .icon {
+                color: $color-info;
+                cursor: pointer;
+            }
+        }
+    }
+
+    &:hover {
+        .header {
+            .action-buttons {
+                opacity: 1;
             }
         }
     }

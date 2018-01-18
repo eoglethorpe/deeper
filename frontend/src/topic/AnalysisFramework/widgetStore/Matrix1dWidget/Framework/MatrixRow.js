@@ -164,6 +164,7 @@ export default class MatrixRow extends React.PureComponent {
                 placeholder={afStrings.titlePlaceholderOverview}
                 onChange={value => this.handleCellValueInputChange(key, value)}
                 value={data.value}
+                autoFocus
             />
             <TransparentDangerButton
                 className={styles['delete-button']}
