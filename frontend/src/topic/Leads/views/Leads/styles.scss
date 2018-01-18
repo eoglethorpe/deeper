@@ -52,8 +52,14 @@
                     top: 0;
                 }
 
+                .capitalize {
+                    text-transform: capitalize;
+                }
+
                 .icon-wrapper {
-                    padding-left: $spacing-medium-alt;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     font-size: $font-size-large;
 
                     a {
@@ -61,8 +67,16 @@
                     }
                 }
 
+                .attachmentMimeType {
+                    width: 64px;
+                }
+
                 .title {
-                    width: 20%;
+                    width: 30%;
+                }
+
+                .actions {
+                    width: 150px;
                 }
             }
         }
