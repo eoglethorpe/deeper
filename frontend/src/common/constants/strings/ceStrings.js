@@ -53,6 +53,9 @@ const ceStrings = {
     confirmTextDeleteCategory: string[428],
     confirmTextDeleteSubCategory: string[429],
 
+    exitButtonLabel: string[778],
+
+
 };
 
 export default ceStrings;
