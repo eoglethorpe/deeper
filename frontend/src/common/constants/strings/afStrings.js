@@ -2,6 +2,10 @@ import string from './lang/en/';
 
 const afStrings = {
 
+    analysisFramework: string[379],
+    headerList: string[780],
+    headerOverview: string[781],
+
     headerWidgets: string[700],
     gotoListButtonLabel: string[701],
     saveButtonLabel: string[702],

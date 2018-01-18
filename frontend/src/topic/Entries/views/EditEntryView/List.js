@@ -142,7 +142,7 @@ export default class List extends React.PureComponent {
                 attribute: this.props.api.getEntryAttribute(item.id, entryId),
                 entryId,
                 headerRightComponent: (
-                    <div className={styles['apply-buttons']}>
+                    <div className="action-buttons">
                         <TransparentAccentButton
                             className={styles['apply-button']}
                             type="button"

@@ -376,9 +376,9 @@ const strings = {
     507: 'Add',
     508: 'Entities',
 
-    509: 'Goto Overview',
+    509: 'Go to Overview',
     510: 'Save',
-    511: 'Goto List',
+    511: 'Go to List',
     512: 'Entry',
 
     513: 'Image',
@@ -464,12 +464,12 @@ const strings = {
     634: 'Decoupled Entries',
     635: 'Note that by selecting this option, it can greatly increase the amount of time to generate the export.',
 
-    // Aanalysis Framework Strings
+    // Analysis Framework Strings
 
     700: 'Widgets',
-    701: 'Goto List',
+    701: 'Go to List',
     702: 'Save',
-    703: 'Goto Overview',
+    703: 'Go to Overview',
 
     704: 'Date',
     705: 'Excerpt',
@@ -557,6 +557,9 @@ const strings = {
     776: 'Other Details',
     777: 'Information date',
     778: 'Exit',
+
+    780: 'List',
+    781: 'Overview',
 
     // Login/Register strings
 

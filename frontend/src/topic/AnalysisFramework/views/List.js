@@ -11,6 +11,7 @@ import { GridLayout } from '../../../public/components/View';
 import {
     SuccessButton,
     TransparentButton,
+    TransparentDangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 
@@ -86,42 +87,76 @@ export default class List extends React.PureComponent {
         return key;
     }
 
-    getGridItems = () => this.items.map(item => ({
-        key: item.key,
-        widgetId: item.widgetId,
-        title: item.title,
-        layout: item.properties.listGridLayout,
-        minSize: this.widgets.find(w => w.id === item.widgetId).listMinSize,
-        data: item.properties.data,
-        headerRightComponent: (
-            <div
-                className={`${styles['action-buttons']} action-buttons`}
-            >
+    getGridItems = items => items.map((item) => {
+        const {
+            key,
+            widgetId,
+            title,
+            properties: {
+                listGridLayout: layout,
+                data,
+            },
+        } = item;
+
+        const widget = this.widgets.find(w => w.id === item.widgetId);
+        const minSize = this.widgets.find(w => w.id === widgetId).listMinSize;
+
+        const headerRightComponent = widget.overviewComponent ? (
+            <div className={`${styles['action-buttons']} action-buttons`} >
+                <span
+                    className={`${iconNames.info} icon`}
+                    title="Widget added from overview page" // FIXME: use strings
+                />
+            </div>
+        ) : (
+            <div className={`${styles['action-buttons']} action-buttons`} >
                 <TransparentButton
-                    onClick={() => this.handleWidgetEditButtonClick(item.key)}
+                    onClick={() => this.handleWidgetEditButtonClick(key)}
                 >
                     <span className={iconNames.edit} />
                 </TransparentButton>
-                <TransparentButton
-                    onClick={() => this.handleWidgetRemoveButtonClick(item.key)}
+
+                <TransparentDangerButton
+                    onClick={() => this.handleWidgetRemoveButtonClick(key)}
                 >
                     <span className={iconNames.close} />
-                </TransparentButton>
+                </TransparentDangerButton>
             </div>
-        ),
-    }))
+        );
+
+        return {
+            key,
+            widgetId,
+            title,
+            minSize,
+            layout,
+            data,
+            widget,
+            headerRightComponent,
+        };
+    })
 
     getItemView = (item) => {
-        const Component = this.widgets.find(w => w.id === item.widgetId).listComponent;
+        const {
+            widget: { listComponent },
+            key: itemKey,
+            title: itemTitle,
+            data: itemData,
+        } = item;
+        const Component = listComponent;
+        const onChange = (data, filters, exportable, title) => {
+            this.handleItemChange(itemKey, data, filters, exportable, title);
+        };
+        const editAction = (handler) => {
+            this.widgetEditActions[itemKey] = handler;
+        };
         return (
             <Component
-                title={item.title}
-                widgetKey={item.key}
-                data={item.data}
-                editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={(data, filters, exportable, title) => {
-                    this.handleItemChange(item.key, data, filters, exportable, title);
-                }}
+                title={itemTitle}
+                widgetKey={itemKey}
+                data={itemData}
+                editAction={editAction}
+                onChange={onChange}
                 className={styles.component}
             />
         );
@@ -225,7 +260,7 @@ export default class List extends React.PureComponent {
             w => this.widgets.find(w1 => w1.id === w.widgetId),
         );
 
-        this.gridItems = this.getGridItems();
+        this.gridItems = this.getGridItems(this.items);
     }
 
     handleExitButtonClick = () => {
@@ -242,7 +277,7 @@ export default class List extends React.PureComponent {
             <div styleName="list">
                 <header styleName="header">
                     <h2>
-                        {afStrings.headerWidgets}
+                        {afStrings.analysisFramework} / <small>{afStrings.headerList}</small>
                     </h2>
                     <div styleName="actions">
                         <Link

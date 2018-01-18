@@ -313,6 +313,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 placeholder={afStrings.optionPlaceholder}
                 onChange={value => this.handleRowValueInputChange(key, value, 'title')}
                 value={data.title}
+                autoFocus
             />
             <TextInput
                 className={styles['title-input']}
@@ -402,6 +403,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
+                                    autoFocus
                                 />
                             </div>
                             <div styleName="modal-rows-content">
