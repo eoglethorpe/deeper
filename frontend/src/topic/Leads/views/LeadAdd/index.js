@@ -7,6 +7,7 @@ import CSSBuilders from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Prompt } from 'react-router-dom';
 
 import update from '../../../../public/utils/immutable-update';
 import {
@@ -52,6 +53,7 @@ import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 import {
     leadsString,
     notificationStrings,
+    commonStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import LeadFilter from './components/LeadFilter';
@@ -397,6 +399,10 @@ export default class LeadAdd extends React.PureComponent {
 
         return (
             <div styleName="add-lead">
+                <Prompt
+                    when={someSaveEnabled}
+                    message={commonStrings.youHaveUnsavedChanges}
+                />
                 <header
                     styleName="header"
                 >
