@@ -23,6 +23,7 @@ describe('<AddLeadListItem />', () => {
                 choice="error"
                 leadKey="key"
                 upload={{ progress: 1 }}
+                onRemove={() => console.warn('lead list is removed')}
             />
         </Provider>,
     );
