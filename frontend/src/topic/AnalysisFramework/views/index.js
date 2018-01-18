@@ -38,6 +38,7 @@ const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     analysisFrameworkId: PropTypes.number.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -151,7 +152,10 @@ export default class AnalysisFramework extends React.PureComponent {
     }
 
     render() {
-        const { analysisFramework } = this.props;
+        const {
+            analysisFramework,
+            history,
+        } = this.props;
 
         if (!analysisFramework) {
             return (
@@ -180,6 +184,7 @@ export default class AnalysisFramework extends React.PureComponent {
                                 {...props}
                                 analysisFramework={analysisFramework}
                                 onSave={this.handleSave}
+                                mainHistory={history}
                             />
                         )}
                     />
@@ -190,6 +195,7 @@ export default class AnalysisFramework extends React.PureComponent {
                                 {...props}
                                 analysisFramework={analysisFramework}
                                 onSave={this.handleSave}
+                                mainHistory={history}
                             />
                         )}
                     />

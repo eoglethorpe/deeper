@@ -12,20 +12,25 @@ import {
     TransparentButton,
     TransparentDangerButton,
     SuccessButton,
+    PrimaryButton,
 } from '../../../public/components/Action';
 
 import {
     iconNames,
     afStrings,
+    pathNames,
 } from '../../../common/constants';
 import {
     randomString,
+    reverseRoute,
 } from '../../../public/utils/common';
 
 import {
     addAfViewWidgetAction,
     removeAfViewWidgetAction,
     updateAfViewWidgetAction,
+
+    activeProjectSelector,
 } from '../../../common/redux';
 
 import widgetStore from '../widgetStore';
@@ -37,6 +42,8 @@ const propTypes = {
     onSave: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
     removeWidget: PropTypes.func.isRequired,
+    projectId: PropTypes.number.isRequired,
+    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -45,7 +52,11 @@ const mapDispatchToProps = dispatch => ({
     updateWidget: params => dispatch(updateAfViewWidgetAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+const mapStateToProps = (state, props) => ({
+    projectId: activeProjectSelector(state, props),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
@@ -218,7 +229,14 @@ export default class Overview extends React.PureComponent {
         this.gridItems = this.getGridItems();
     }
 
-    renderWidgets
+    handleExitButtonClick = () => {
+        const {
+            projectId,
+            mainHistory,
+        } = this.props;
+        const url = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
+        mainHistory.push(url);
+    }
 
     render() {
         return (
@@ -236,6 +254,11 @@ export default class Overview extends React.PureComponent {
                         <SuccessButton onClick={this.props.onSave} >
                             {afStrings.saveButtonLabel}
                         </SuccessButton>
+                        <PrimaryButton
+                            onClick={() => this.handleExitButtonClick()}
+                        >
+                            {afStrings.exitButtonLabel}
+                        </PrimaryButton>
                     </div>
                 </header>
                 <div styleName="content">
