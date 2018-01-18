@@ -563,7 +563,7 @@ const strings = {
     800: 'Form has combined validation error.',
     801: 'Email must be longer than password',
     802: 'Password must be shorter than email',
-    803: 'Welcome to',
+    803: 'Welcome to DEEP (BETA)',
     804: 'Data entry and exploration platform',
     805: 'Login with HID',
     806: 'Or',
@@ -778,7 +778,7 @@ const strings = {
     1234: 'I am Mr. Meeseeks!! Look at me ...',
     1235: 'Oh, yeaahhhh! You gotta get schwifty. ...',
     1236: 'Shhhh!!! The Kraken is sleeping ...',
-
+    1237: 'BETA',
     1300: 'Are you sure you want to leave? You may lose your unsaved changes.',
 
     2000: 'Browser Extension',

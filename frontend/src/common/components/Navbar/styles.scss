@@ -34,8 +34,24 @@
         }
 
         .title {
+            display: flex;
+            align-items: center;
+            padding-bottom: $spacing-extra-small;
             text-transform: uppercase;
-            font-size: $font-size-extra-large;
+
+            .deep {
+                font-size: $font-size-extra-large;
+            }
+
+            .beta {
+                align-self: flex-end;
+                opacity: .8;
+                border-radius: 48px;
+                background-color: $color-foreground;
+                padding: 0 $spacing-small;
+                color: $color-primary;
+                font-size: $font-size-super-small-alt;
+            }
         }
     }
 

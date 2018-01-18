@@ -313,9 +313,14 @@ export default class Navbar extends React.PureComponent {
                         className={styles.icon}
                         path={logo}
                     />
-                    <span styleName="title">
-                        {commonStrings.deepLabel}
-                    </span>
+                    <div styleName="title">
+                        <span styleName="deep">
+                            {commonStrings.deepLabel}
+                        </span>
+                        <span styleName="beta">
+                            {commonStrings.betaLabel}
+                        </span>
+                    </div>
                 </Link>
                 <Cloak
                     requireLogin={projectSelectInputLink.requireLogin}
