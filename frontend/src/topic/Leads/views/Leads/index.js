@@ -173,7 +173,7 @@ export default class Leads extends React.PureComponent {
                 key: 'attachmentMimeType',
                 label: leadsString.filterSourceType,
                 order: 1,
-                sortable: false,
+                sortable: true,
                 modifier: (row) => {
                     let icon = iconNames.documentText;
                     let url;
@@ -255,19 +255,29 @@ export default class Leads extends React.PureComponent {
                 label: leadsString.tableHeaderConfidentiality,
                 sortable: true,
                 order: 7,
-            },
-            {
-                key: 'no_of_entries',
-                label: leadsString.tableHeaderNoOfEntries,
-                order: 8,
-                sortable: true,
-                modifier: row => row.noOfEntries,
+                modifier: row => (
+                    <div className="capitalize">
+                        {row.confidentiality}
+                    </div>
+                ),
             },
             {
                 key: 'status',
                 label: leadsString.tableHeaderStatus,
                 sortable: true,
+                order: 8,
+                modifier: row => (
+                    <div className="capitalize">
+                        {row.status}
+                    </div>
+                ),
+            },
+            {
+                key: 'no_of_entries',
+                label: leadsString.tableHeaderNoOfEntries,
                 order: 9,
+                sortable: true,
+                modifier: row => row.noOfEntries,
             },
             {
                 key: 'actions',
