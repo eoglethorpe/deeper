@@ -7,9 +7,10 @@ export const SET_USER_EXPORT = 'domain-data/SET_USER_EXPORT';
 
 // ACTION-CREATOR
 
-export const setUserExportsAction = ({ exports }) => ({
+export const setUserExportsAction = ({ exports, projectId }) => ({
     type: SET_USER_EXPORTS,
     exports,
+    projectId,
 });
 
 export const setUserExportAction = ({ userExport }) => ({
@@ -20,19 +21,19 @@ export const setUserExportAction = ({ userExport }) => ({
 // REDUCER
 
 const setUserExports = (state, action) => {
-    const { exports } = action;
+    const { exports, projectId } = action;
 
     const exportsSettings = exports.reduce(
         (acc, e) => {
-            acc[e.id] = { $auto: {
-                $set: e,
-            } };
+            acc[e.id] = { $set: e };
             return acc;
         },
         {},
     );
     const settings = {
-        userExports: exportsSettings,
+        userExports: { $auto: {
+            [projectId]: { $auto: exportsSettings },
+        } },
     };
     return update(state, settings);
 };
@@ -42,8 +43,10 @@ const setUserExport = (state, action) => {
 
     const settings = {
         userExports: {
-            [userExport.id]: { $auto: {
-                $merge: userExport,
+            [userExport.project]: { $auto: {
+                [userExport.id]: { $auto: {
+                    $merge: userExport,
+                } },
             } },
         },
     };

@@ -17,7 +17,7 @@ const allLinks = {
 
     userProfile: l,
     apiDocs: l,
-    userExports: l,
+    userExports: lp,
 
     adminPanel: la,
     projectSelect: l,

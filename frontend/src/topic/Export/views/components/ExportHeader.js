@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { reverseRoute } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
     Button,
@@ -17,6 +18,7 @@ import {
     urlForExportTrigger,
     createParamsForExportTrigger,
 } from '../../../../common/rest';
+
 
 import styles from '../styles.scss';
 
@@ -61,7 +63,7 @@ export default class ExportHeader extends React.PureComponent {
             }
         ));
 
-    export = (onSuccess) => {
+    export = (onSuccess, isPreview = false) => {
         // Let's start by collecting the filters
         const {
             projectId,
@@ -86,6 +88,7 @@ export default class ExportHeader extends React.PureComponent {
             decoupled: decoupledEntries,
             lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
             report_structure: this.createReportStructureForExport(reportStructure || emptyList),
+            is_preview: isPreview,
         };
 
         if (this.exportRequest) {
@@ -111,14 +114,17 @@ export default class ExportHeader extends React.PureComponent {
         const exportFn = (exportId) => {
             console.log('Exporting', exportId);
         };
-        this.export(exportFn);
+        this.export(exportFn, false);
     }
 
     handlePreview = () => {
-        this.export(this.props.onPreview);
+        this.export(this.props.onPreview, true);
     }
 
     render() {
+        const { projectId } = this.props;
+
+
         return (
             <header styleName="header">
                 <h2>
@@ -126,7 +132,7 @@ export default class ExportHeader extends React.PureComponent {
                 </h2>
                 <div styleName="action-buttons">
                     <Link
-                        to={pathNames.userExports}
+                        to={reverseRoute(pathNames.userExports, { projectId })}
                         styleName="link"
                     >
                         {exportStrings.viewAllExportsButtonLabel}

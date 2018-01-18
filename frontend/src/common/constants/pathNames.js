@@ -31,7 +31,7 @@ const pathNames = {
 
     apiDocs: '/api-docs/',
 
-    userExports: '/exports/',
+    userExports: '/projects/:projectId/exports/',
 
     homeScreen: '/',
 

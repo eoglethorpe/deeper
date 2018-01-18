@@ -15,9 +15,9 @@ import {
     reverseRoute,
 } from '../../../public/utils/common';
 import {
-    urlForExports,
     createUrlForExport,
     createParamsForUserExportsGET,
+    createUrlForExportsOfProject,
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
@@ -27,7 +27,7 @@ import {
     setUserExportsAction,
     setUserExportAction,
 
-    activeProjectSelector,
+    projectIdFromRouteSelector,
 } from '../../../common/redux';
 
 import schema from '../../../common/schema';
@@ -58,7 +58,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     userExports: userExportsListSelector(state, props),
-    projectId: activeProjectSelector(state, props),
+    projectId: projectIdFromRouteSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -180,7 +180,8 @@ export default class UserExports extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.userExportsRequest = this.createUserExportsRequest();
+        const { projectId } = this.props;
+        this.userExportsRequest = this.createUserExportsRequest(projectId);
         this.userExportsRequest.start();
 
         const { userExports } = this.props;
@@ -195,8 +196,8 @@ export default class UserExports extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { userExports: oldExports } = this.props;
-        const { userExports: newExports } = nextProps;
+        const { userExports: oldExports, projectId: oldProjectId } = this.props;
+        const { userExports: newExports, projectId: newProjectId } = nextProps;
 
         // TODO: handle project change?
 
@@ -216,6 +217,14 @@ export default class UserExports extends React.PureComponent {
                 }
             });
         }
+
+        if (oldProjectId !== newProjectId) {
+            if (this.userExportsRequest) {
+                this.userExportsRequest.stop();
+            }
+            this.userExportsRequest = this.createUserExportsRequest(newProjectId);
+            this.userExportsRequest.start();
+        }
     }
 
     componentWillUnmount() {
@@ -230,9 +239,9 @@ export default class UserExports extends React.PureComponent {
         }
     }
 
-    createUserExportsRequest = () => {
+    createUserExportsRequest = (projectId) => {
         const userExportsRequest = new FgRestBuilder()
-            .url(urlForExports)
+            .url(createUrlForExportsOfProject(projectId))
             .params(() => createParamsForUserExportsGET())
             .preLoad(() => {
                 this.setState({ pendingExports: true });
@@ -245,6 +254,7 @@ export default class UserExports extends React.PureComponent {
                     schema.validate(response, 'userExportsGetResponse');
                     this.props.setUserExports({
                         exports: response.results,
+                        projectId,
                     });
                 } catch (er) {
                     console.error(er);

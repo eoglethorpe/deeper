@@ -9,6 +9,7 @@ from rest_framework import (
 
 from export.serializers import ExportSerializer
 from export.models import Export
+from project.models import Project
 
 from export.tasks_entries import export_entries
 
@@ -18,7 +19,17 @@ class ExportViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Export.get_for(self.request.user)
+        exports = Export.get_for(self.request.user)
+
+        project = self.request.GET.get('project')
+        if project:
+            exports = exports.filter(project__id=project)
+
+        is_preview = self.request.GET.get('is_preview')
+        if is_preview:
+            exports = exports.filter(is_preview=(int(is_preview) == 1))
+
+        return exports
 
 
 class ExportTriggerView(views.APIView):
@@ -31,10 +42,15 @@ class ExportTriggerView(views.APIView):
         project_id = filters.get('project')
         export_type = filters.get('export_type', 'excel')
 
+        is_preview = filters.get('is_preview', False)
+
+        project = Project.objects.get(id=project_id)
         export = Export.objects.create(
             title='tmp',
             exported_by=request.user,
             pending=True,
+            project=project,
+            is_preview=is_preview,
         )
 
         if not settings.TESTING:
