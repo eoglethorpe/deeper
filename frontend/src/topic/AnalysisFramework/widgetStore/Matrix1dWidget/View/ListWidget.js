@@ -18,6 +18,8 @@ const defaultProps = {
     data: {},
 };
 
+const emptyList = [];
+
 @CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
     static rowKeyExtractor = d => d.title;
@@ -35,12 +37,12 @@ export default class Matrix1dList extends React.PureComponent {
 
     getSelectedRowsTitles = (data, attribute) => {
         const selectedRows = [];
-        data.rows.forEach((row) => {
+        (data.rows || emptyList).forEach((row) => {
             const selectedCells = [];
             const attributeRow = attribute[row.key];
 
             if (attributeRow) {
-                row.cells.forEach((cell) => {
+                (row.cells || emptyList).forEach((cell) => {
                     if (attributeRow[cell.key]) {
                         selectedCells.push({
                             title: cell.value,

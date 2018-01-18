@@ -40,7 +40,11 @@ const propTypes = {
     widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+};
+
+const defaultProps = {
+    data: {},
 };
 
 const DragHandle = SortableHandle(() => (
@@ -52,8 +56,9 @@ const emptyObject = {};
 
 @CSSModules(styles)
 export default class ScaleFrameworkList extends React.PureComponent {
-    static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
+    static rowKeyExtractor = d => d.key;
 
     constructor(props) {
         super(props);
