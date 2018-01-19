@@ -1,5 +1,5 @@
 const initialSettingsState = {
-    serverAddress: 'http://deeper.togglecorp.com',
+    serverAddress: 'https://deeper.togglecorp.com',
 };
 
 export default initialSettingsState;

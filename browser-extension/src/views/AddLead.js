@@ -39,10 +39,10 @@ import {
     createUrlForLeadOptions,
     createParamsForLeadOptions,
 
-    urlForLeadCreate,
+    createUrlForLeadCreate,
     createParamsForLeadCreate,
 
-    urlForWebInfo,
+    createUrlForWebInfo,
     createParamsForWebInfo,
 } from '../common/rest';
 
@@ -169,7 +169,7 @@ export default class AddLead extends React.PureComponent {
 
     createRequestForWebInfo = (url) => {
         const webInfoRequest = new FgRestBuilder()
-            .url(urlForWebInfo)
+            .url(createUrlForWebInfo())
             .params(() => createParamsForWebInfo({ url }))
             .success((response) => {
                 this.fillWebInfo(response);
@@ -228,7 +228,7 @@ export default class AddLead extends React.PureComponent {
             project: val.project,
         });
 
-        const url = urlForLeadCreate;
+        const url = createUrlForLeadCreate();
         const request = new FgRestBuilder()
             .url(url)
             .params(() => createParamsForLeadCreate(maker(values)))

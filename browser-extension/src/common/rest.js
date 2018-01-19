@@ -34,14 +34,14 @@ export const createParamsForTokenRefresh = ({ refresh }) => ({
     }),
 });
 
-export const urlForLeadCreate = `${getWSEndpoint()}/leads/`;
+export const createUrlForLeadCreate = () => `${getWSEndpoint()}/leads/`;
 export const createParamsForLeadCreate = data => ({
     method: POST,
     headers: commonHeader,
     body: JSON.stringify(data),
 });
 
-export const urlForWebInfo = `${getWSEndpoint()}/web-info-extract/`;
+export const createUrlForWebInfo = () => `${getWSEndpoint()}/web-info-extract/`;
 export const createParamsForWebInfo = data => ({
     method: POST,
     headers: commonHeader,
