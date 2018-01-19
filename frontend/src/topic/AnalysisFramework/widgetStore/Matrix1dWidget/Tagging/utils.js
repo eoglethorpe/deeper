@@ -1,3 +1,5 @@
+const emptyObject = {};
+
 export const createFilterData = (attribute) => {
     const filterValues = [];
 
@@ -25,7 +27,7 @@ export const createFilterData = (attribute) => {
 
 export const createHighlightColor = (attribute, { rows }) => {
     let color;
-    Object.keys(attribute || {}).forEach((key) => {
+    Object.keys(attribute || emptyObject).forEach((key) => {
         const row = attribute[key];
 
         const rowExists = Object.keys(row).reduce((acc, k) => acc || row[k], false);

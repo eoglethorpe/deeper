@@ -69,6 +69,17 @@ export default class Matrix2dOverview extends React.PureComponent {
         editAction(this.handler.widgetEdit);
     }
 
+    componentWillMount() {
+        const { onChange } = this.props;
+
+        onChange(
+            this.state.data,
+            this.handler.createFilters(this.state.data),
+            this.handler.createExportable(this.state.data),
+            this.state.title,
+        );
+    }
+
     componentWillReceiveProps(nextProps) {
         this.setState({
             title: nextProps.title,
