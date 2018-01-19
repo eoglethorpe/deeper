@@ -473,6 +473,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                     value={title}
                                     showHintAndError={false}
                                     autoFocus
+                                    selectOnFocus
                                 />
                             </div>
                             <div styleName="modal-unit-container">

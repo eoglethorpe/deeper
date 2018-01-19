@@ -217,6 +217,7 @@ export default class Multiselect extends React.PureComponent {
                                     value={title}
                                     showHintAndError={false}
                                     autoFocus
+                                    selectOnFocus
                                 />
                             </div>
                             <header styleName="header">

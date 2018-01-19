@@ -356,6 +356,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                                     value={title}
                                     showHintAndError={false}
                                     autoFocus
+                                    selectOnFocus
                                 />
                             </div>
                             <div styleName="scale-units-container">

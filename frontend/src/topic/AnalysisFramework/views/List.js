@@ -6,7 +6,10 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-import { GridLayout } from '../../../public/components/View';
+import {
+    GridLayout,
+    Confirm,
+} from '../../../public/components/View';
 
 import {
     SuccessButton,
@@ -70,6 +73,10 @@ export default class List extends React.PureComponent {
         this.updateAnalysisFramework(props.analysisFramework);
 
         this.widgetEditActions = {};
+
+        this.state = {
+            showDeleteModal: false,
+        };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -162,26 +169,42 @@ export default class List extends React.PureComponent {
         );
     }
 
+    handleWidgetClose = (y) => {
+        if (y) {
+            const {
+                analysisFramework,
+                removeWidget,
+            } = this.props;
+            const {
+                deleteKey: id,
+            } = this.state;
+
+            const widgetData = {
+                analysisFrameworkId: analysisFramework.id,
+                widgetId: id,
+            };
+
+            removeWidget(widgetData);
+        }
+
+        this.setState({
+            showDeleteModal: false,
+            deleteKey: undefined,
+        });
+    }
+
+    handleWidgetRemoveButtonClick = (key) => {
+        this.setState({
+            showDeleteModal: true,
+            deleteKey: key,
+        });
+    }
+
     handleWidgetEditButtonClick = (id) => {
         if (this.widgetEditActions[id]) {
             (this.widgetEditActions[id])();
         }
     }
-
-    handleWidgetRemoveButtonClick = (id) => {
-        const {
-            analysisFramework,
-            removeWidget,
-        } = this.props;
-
-        const widgetData = {
-            analysisFrameworkId: analysisFramework.id,
-            widgetId: id,
-        };
-
-        removeWidget(widgetData);
-    }
-
 
     handleAddWidgetButtonClick = (id) => {
         const analysisFrameworkId = this.props.analysisFramework.id;
@@ -305,6 +328,16 @@ export default class List extends React.PureComponent {
                             items={this.gridItems}
                             onLayoutChange={this.handleLayoutChange}
                         />
+                        <Confirm
+                            title="Remove widget" // FIXME: strings
+                            onClose={this.handleWidgetClose}
+                            show={this.state.showDeleteModal}
+                        >
+                            <p>
+                                Do you want to remove this widget?
+                            </p>
+                        </Confirm>
+                        {/* FIXME: strings */}
                     </div>
                     <div styleName="widget-list">
                         {

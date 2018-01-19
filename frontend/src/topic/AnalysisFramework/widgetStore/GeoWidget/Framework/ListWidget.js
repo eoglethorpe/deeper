@@ -124,6 +124,7 @@ export default class GeoFrameworkList extends React.PureComponent {
                                 value={title}
                                 showHintAndError={false}
                                 autoFocus
+                                selectOnFocus
                             />
                         </ModalBody>
                         <ModalFooter>

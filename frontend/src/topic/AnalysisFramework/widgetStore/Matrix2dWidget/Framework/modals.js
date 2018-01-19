@@ -52,6 +52,7 @@ export const getEditWidgetModal = (parent) => {
                     label={afStrings.titleLabel}
                     showHintAndError={false}
                     autoFocus
+                    selectOnFocus
                 />
                 <section styleName="edit-sectors">
                     <header styleName="header">

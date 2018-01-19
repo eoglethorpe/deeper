@@ -261,6 +261,7 @@ export default class Organigram extends React.PureComponent {
                                     value={title}
                                     showHintAndError={false}
                                     autoFocus
+                                    selectOnFocus
                                 />
                             </div>
                             { this.renderOrgan(organigram) }
