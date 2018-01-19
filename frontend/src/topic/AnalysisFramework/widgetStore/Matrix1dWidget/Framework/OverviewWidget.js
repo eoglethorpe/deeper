@@ -404,6 +404,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                                     value={title}
                                     showHintAndError={false}
                                     autoFocus
+                                    selectOnFocus
                                 />
                             </div>
                             <div styleName="modal-rows-content">

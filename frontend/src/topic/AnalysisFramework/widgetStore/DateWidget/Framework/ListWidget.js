@@ -147,6 +147,7 @@ export default class DateFrameworkList extends React.PureComponent {
                                 value={title}
                                 showHintAndError={false}
                                 autoFocus
+                                selectOnFocus
                             />
                             <Checkbox
                                 styleName="checkbox"
