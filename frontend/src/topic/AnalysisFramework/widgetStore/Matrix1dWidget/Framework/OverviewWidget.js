@@ -77,6 +77,17 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
+    componentDidMount() {
+        const { onChange } = this.props;
+
+        onChange(
+            this.state.data,
+            this.createFilters(this.state.data),
+            this.createExportable(this.state.data),
+            this.state.title,
+        );
+    }
+
     componentWillReceiveProps(nextProps) {
         const data = nextProps.data || { rows: [] };
         this.setState({ data });
