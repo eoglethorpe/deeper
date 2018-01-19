@@ -313,8 +313,11 @@ export default class Navbar extends React.PureComponent {
                         className={styles.icon}
                         path={logo}
                     />
-                    <span styleName="title">
+                    <div styleName="title">
                         {commonStrings.deepLabel}
+                    </div>
+                    <span styleName="beta-label">
+                        {commonStrings.betaLabel}
                     </span>
                 </Link>
                 <Cloak

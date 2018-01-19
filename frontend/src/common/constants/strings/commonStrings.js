@@ -49,6 +49,7 @@ const commonStrings = {
     loadingMessages14: string[1235],
     loadingMessages15: string[1236],
 
+    betaLabel: string[1237],
 
     youHaveUnsavedChanges: string[1300],
 };

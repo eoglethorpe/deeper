@@ -274,7 +274,6 @@ export default class Login extends React.PureComponent {
                     />
                     <h2 styleName="heading">
                         <small>{loginStrings.welcomeToText}</small><br />
-                        {loginStrings.deepLabel}
                     </h2>
                 </div>
                 <div styleName="login-form-container">
