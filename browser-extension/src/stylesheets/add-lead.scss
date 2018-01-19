@@ -16,8 +16,12 @@
 
     .inputs {
         flex-grow: 1;
-        padding: $spacing-medium-alt $spacing-extra-large;
+        padding: 0 $spacing-extra-large;
         overflow-y: auto;
+
+        >* {
+            margin: $spacing-small-alt 0;
+        }
     }
 
     .action-buttons {
@@ -26,4 +30,20 @@
         justify-content: flex-end;
         padding: $spacing-medium-alt $spacing-extra-large;
     }
+}
+
+.submit-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $height-app;
+    color: $color-success;
+}
+
+.submit-failure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $height-app;
+    color: $color-danger;
 }

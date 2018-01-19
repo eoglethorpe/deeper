@@ -1,5 +1,6 @@
 // export const extensionId = 'nkipfcpknocfnlelgehlealjgknfkfhm'; // fhx
-export const extensionId = 'caebgfaeglddaliobdbkcphpfegnedmp'; // tnagorra
+// export const extensionId = 'caebgfaeglddaliobdbkcphpfegnedmp'; // tnagorra
+export const extensionId = 'kafonkgglonkbldmcigbdojiadfcmcdc'; // extension on store
 
 const EXTENSION_GET_SCREENSHOT = 'screenshot';
 const EXTENSION_POST_TOKEN = 'token';

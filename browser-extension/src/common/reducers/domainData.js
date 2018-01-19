@@ -77,7 +77,9 @@ const updateInputValues = (state, action) => {
             inputValues: { $auto: {
                 $merge: values,
             } },
-            uiState: { $set: uiState },
+            uiState: { $auto: {
+                $set: uiState,
+            } },
         } },
     };
 
