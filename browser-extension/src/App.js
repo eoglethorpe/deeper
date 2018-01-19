@@ -147,7 +147,7 @@ class App extends React.PureComponent {
         // console.warn('FG: Received token', response);
         setToken({ token });
 
-        console.warn(response);
+        // console.warn(response);
         if (token && token.refresh) {
             this.fetchingToken = true;
             this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
