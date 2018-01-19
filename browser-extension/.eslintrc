@@ -6,7 +6,7 @@
         "jest": true,
     },
     "globals": {
-        "chrome": true
+        "chrome": true,
     },
     "plugins": [
         "react",

@@ -92,6 +92,7 @@ export default class AddLead extends React.PureComponent {
 
         this.state = {
             pending: false,
+            leadSubmittedSuccessfully: undefined,
         };
 
         this.formElements = [
@@ -239,9 +240,16 @@ export default class AddLead extends React.PureComponent {
             })
             .success(() => {
                 const { currentTabId } = this.props;
+                this.setState({ leadSubmittedSuccessfully: true });
                 this.props.clearInputValue({
                     tabId: currentTabId,
                 });
+            })
+            .failure(() => {
+                this.setState({ leadSubmittedSuccessfully: false });
+            })
+            .fatal(() => {
+                this.setState({ leadSubmittedSuccessfully: false });
             })
             .build();
         return request;
@@ -286,7 +294,14 @@ export default class AddLead extends React.PureComponent {
     }
 
     handleFormFailure = ({ formErrors, formFieldErrors }) => {
-        this.props.updateInputValues({
+        const {
+            currentTabId,
+            updateInputValues,
+        } = this.props;
+
+        updateInputValues({
+            tabId: currentTabId,
+            values: {},
             uiState: {
                 formErrors,
                 formFieldErrors,
@@ -344,7 +359,25 @@ export default class AddLead extends React.PureComponent {
             onSettingsButtonClick,
         } = this.props;
         const { formFieldErrors = emptyObject } = uiState;
-        const { pending } = this.state;
+        const {
+            pending,
+            leadSubmittedSuccessfully,
+
+        } = this.state;
+
+        if (leadSubmittedSuccessfully === true) {
+            return (
+                <div styleName="submit-success">
+                    Lead submitted successfully
+                </div>
+            );
+        } else if (leadSubmittedSuccessfully === false) {
+            return (
+                <div styleName="submit-failure">
+                    An error occured while submitting the lead
+                </div>
+            );
+        }
 
         return (
             <div styleName="add-lead">

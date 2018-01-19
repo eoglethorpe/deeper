@@ -4,7 +4,8 @@ import { tokenSelector } from '../selectors/auth';
 import { serverAddressSelector } from '../selectors/settings';
 
 // TODO: Remove this on release
-const DEV = true;
+// const DEV = true;
+const DEV = false;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;

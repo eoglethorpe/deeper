@@ -1,17 +1,17 @@
 {
     "manifest_version": 2,
-    "name": "Browser Extension for Data Entry and Exploration Platform",
+    "name": "DEEP-2: Add Lead",
     "short_name": "DEEP Extension",
     "version": "1.0",
 
-    "description": "Browser Extension for Data Entry and Exploration Platform",
+    "description": "Browser Extension for DEEP",
     "icons": {
-        "192": "favicon.ico"
+        "192": "deep-logo.png"
     },
 
     "browser_action": {
         "default_icon": {
-            "192": "favicon.ico"
+            "192": "deep-logo.png"
         },
         "default_popup": "index.html",
         "default_title": "DEEP Extension"

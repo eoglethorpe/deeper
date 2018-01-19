@@ -13,9 +13,7 @@ import {
     tokenSelector,
 } from './common/redux';
 
-import {
-    Button,
-} from './public-components/Action';
+import { TransparentAccentButton } from './public-components/Action';
 
 import {
     createUrlForTokenRefresh,
@@ -149,7 +147,8 @@ class App extends React.PureComponent {
         // console.warn('FG: Received token', response);
         setToken({ token });
 
-        if (token.refresh) {
+        console.warn(response);
+        if (token && token.refresh) {
             this.fetchingToken = true;
             this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
             this.tokenRefreshRequest.start();
@@ -198,7 +197,7 @@ class App extends React.PureComponent {
         } = this.state;
 
         const style = {
-            height: '500px',
+            height: '560px',
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -218,7 +217,11 @@ class App extends React.PureComponent {
             return (
                 <div style={style}>
                     <p>Loading...</p>
-                    <Button onClick={this.handleSettingsButtonClick}>Settings</Button>
+                    <TransparentAccentButton
+                        onClick={this.handleSettingsButtonClick}
+                    >
+                        Settings
+                    </TransparentAccentButton>
                 </div>
             );
         }
@@ -231,7 +234,11 @@ class App extends React.PureComponent {
             ) : (
                 <div style={style}>
                     <p>You need to login to deep first</p>
-                    <Button onClick={this.handleSettingsButtonClick}>Settings</Button>
+                    <TransparentAccentButton
+                        onClick={this.handleSettingsButtonClick}
+                    >
+                        Settings
+                    </TransparentAccentButton>
                 </div>
             )
         );
