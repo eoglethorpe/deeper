@@ -15,6 +15,7 @@
 
     .brand {
         display: flex;
+        position: relative;
         align-items: center;
         align-self: stretch;
         color: $color-text-on-navbar;
@@ -36,22 +37,21 @@
         .title {
             display: flex;
             align-items: center;
-            padding-bottom: $spacing-extra-small;
             text-transform: uppercase;
+            font-size: $font-size-extra-large;
+        }
 
-            .deep {
-                font-size: $font-size-extra-large;
-            }
-
-            .beta {
-                align-self: flex-end;
-                opacity: .8;
-                border-radius: 48px;
-                background-color: $color-foreground;
-                padding: 0 $spacing-small;
-                color: $color-primary;
-                font-size: $font-size-super-small-alt;
-            }
+        .beta-label {
+            position: absolute;
+            top: 50%;
+            right: -$spacing-extra-small;
+            transform: translate(100%, -100%);
+            opacity: .7;
+            border-radius: $font-size-extra-small;
+            background-color: $color-foreground;
+            padding: 0 $spacing-extra-small-alt;
+            color: $color-primary;
+            font-size: $font-size-extra-small;
         }
     }
 
@@ -86,6 +86,7 @@
     .user-menu {
         flex-shrink: 0;
         align-self: stretch;
+        min-width: 156px;
     }
 
 }
