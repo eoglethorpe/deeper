@@ -36,10 +36,6 @@ import {
     pathNames,
 } from '../../../common/constants';
 
-import DocumentPanel from './components/DocumentPanel';
-import SubcategoryColumn from './components/SubcategoryColumn';
-import SubcategoryPropertyPanel from './components/SubcategoryPropertyPanel';
-
 import {
     categoryEditorViewTitleSelector,
     categoryEditorViewVersionIdSelector,
@@ -70,6 +66,10 @@ import {
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
+
+import DocumentPanel from './components/DocumentPanel';
+import SubcategoryColumn from './components/SubcategoryColumn';
+import SubcategoryPropertyPanel from './components/SubcategoryPropertyPanel';
 import NewCategoryModal from './components/NewCategoryModal';
 import NewSubcategoryModal from './components/NewSubcategoryModal';
 import NewManualNgramModal from './components/NewManualNgramModal';
@@ -130,7 +130,7 @@ const defaultProps = {
     categoryEditorViewPristine: undefined,
 };
 
-const LIMIT = 5;
+const DEPTH_LIMIT = 5;
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
@@ -472,7 +472,7 @@ export default class CategoryEditor extends React.PureComponent {
             );
         });
 
-        if (selectedSubcategories.length < LIMIT) {
+        if (selectedSubcategories.length < DEPTH_LIMIT) {
             const currentSubcategories = nextSubcategory.subcategories;
             const currentSubcategoryTitle = nextSubcategory.title;
             subcategoryColumns.push(

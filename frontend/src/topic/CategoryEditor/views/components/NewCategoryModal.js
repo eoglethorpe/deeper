@@ -68,6 +68,7 @@ export default class NewCategoryModal extends React.PureComponent {
             />,
             <ModalBody key="body">
                 <TextInput
+                    autoFocus
                     label={ceStrings.addCategoryTitleLabel}
                     placeholder={ceStrings.addCategoryTitlePlaceholder}
                     onChange={this.handleTitleValueChange}
