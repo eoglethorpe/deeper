@@ -7,6 +7,7 @@ const pageTitles = {
     dashboard: 'Dashboard',
 
     leads: 'Leads',
+    leadsViz: 'Leads Visualization',
     addLeads: 'Add Leads',
     entries: 'Entries',
     ary: 'Assessment Registry',

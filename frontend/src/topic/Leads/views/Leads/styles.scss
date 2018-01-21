@@ -100,10 +100,15 @@
             justify-content: center;
         }
 
-        .view-mode-button {
+        .link-container {
             display: flex;
             height: 32px;
-            text-transform: uppercase;
+
+            .link {
+                @extend %button-like-link;
+                background-color: $color-primary;
+                color: $color-foreground-alt;
+            }
         }
     }
 }

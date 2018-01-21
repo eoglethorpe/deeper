@@ -1,0 +1,140 @@
+@import '../../../../stylesheets/base';
+
+.leads {
+    @extend %main-content;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $color-foreground;
+        padding: $spacing-small;
+
+        .add-lead-button {
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin: $spacing-small;
+            padding: $spacing-small $spacing-medium-alt;
+            font-size: $font-size-large;
+        }
+
+        .filters {
+            display: flex;
+            flex-grow: 1;
+
+            :global {
+                .leads-filter {
+                    margin: $spacing-small;
+                }
+
+                .button {
+                    flex-shrink: 0;
+                    align-self: flex-end;
+                    margin: $spacing-small;
+                }
+            }
+        }
+    }
+
+    .viz-container {
+        display: grid;
+
+        background-color: $color-foreground;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 512px 512px 512px 512px;
+        grid-template-areas: 'tree-map tree-map'
+            'sun-burst chord-diagram'
+            'correlation-matrix force-directed-graph'
+            'collapsible-tree radial-dendrogram';
+        overflow-y: auto;
+
+        .viz {
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            border: $width-separator-thin solid $color-separator;
+            padding-bottom: $spacing-extra-small;
+
+            :global {
+                .action {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: flex-end;
+                    justify-content: space-between;
+                    padding: $spacing-extra-small $spacing-medium-alt;
+
+                    .action-selects {
+                        display: flex;
+
+                        .select-input {
+                            margin-right: $spacing-extra-small;
+                        }
+                    }
+
+                    .action-buttons {
+                        button {
+                            margin-left: $spacing-extra-small;
+                        }
+                    }
+                }
+
+                .responsive-wrapper {
+                    display: flex;
+                    flex-grow: 1;
+                }
+            }
+        }
+
+        .tree-map {
+            grid-area: tree-map;
+        }
+
+        .sun-burst {
+            grid-area: sun-burst;
+        }
+
+        .chord-diagram {
+            grid-area: chord-diagram;
+        }
+
+        .correlation-matrix {
+            grid-area: correlation-matrix;
+        }
+
+        .force-directed-graph {
+            grid-area: force-directed-graph;
+        }
+
+        .collapsible-tree {
+            grid-area: collapsible-tree;
+        }
+
+        .radial-dendrogram {
+            grid-area: radial-dendrogram;
+        }
+    }
+
+    .footer {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-between;
+        border-top: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground-alt;
+        padding: $spacing-small $spacing-medium-alt;
+
+
+        .link-container {
+            display: flex;
+            height: 32px;
+
+            .link {
+                @extend %button-like-link;
+                background-color: $color-primary;
+                color: $color-foreground-alt;
+            }
+        }
+    }
+}

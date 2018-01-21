@@ -7,10 +7,12 @@ export const visualizationSelector = ({ siloDomainData }) => (
     siloDomainData.visualization || emptyObject
 );
 
+/*
 export const visualizationStaleSelector = createSelector(
     visualizationSelector,
     viz => viz.stale,
 );
+*/
 
 export const hierarchialDataSelector = createSelector(
     visualizationSelector,
