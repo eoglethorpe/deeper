@@ -1,10 +1,10 @@
 import update from '../../../public/utils/immutable-update';
-import { randomString } from '../../../public/utils/common';
+// import { randomString } from '../../../public/utils/common';
 
 // TYPE
 
 export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
-export const SET_LEAD_VISUALIZATION_STALE = 'domain-data/VISUALIZATION/LEAD/STALE';
+// export const SET_LEAD_VISUALIZATION_STALE = 'domain-data/VISUALIZATION/LEAD/STALE';
 
 // ACTION-CREATOR
 
@@ -13,9 +13,11 @@ export const setLeadVisualizationAction = ({ data }) => ({
     data,
 });
 
+/*
 export const setLeadVisualizationStaleAction = () => ({
     type: SET_LEAD_VISUALIZATION_STALE,
 });
+*/
 
 // UTILS
 const getHierarchialTopic = (keywords) => {
@@ -73,6 +75,7 @@ const setLeadVisualization = (state, action) => {
     return update(state, settings);
 };
 
+/*
 const setLeadVisualizationStale = (state) => {
     const settings = {
         visualization: { $auto: {
@@ -83,12 +86,13 @@ const setLeadVisualizationStale = (state) => {
     };
     return update(state, settings);
 };
+*/
 
 
 // REDUCER MAP
 
 const reducers = {
     [SET_LEAD_VISUALIZATION]: setLeadVisualization,
-    [SET_LEAD_VISUALIZATION_STALE]: setLeadVisualizationStale,
+    // [SET_LEAD_VISUALIZATION_STALE]: setLeadVisualizationStale,
 };
 export default reducers;

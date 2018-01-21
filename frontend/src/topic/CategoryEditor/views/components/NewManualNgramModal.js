@@ -64,6 +64,7 @@ export default class NewManualNgramModal extends React.PureComponent {
                     placeholder={ceStrings.addNewWordPlaceholder}
                     onChange={this.handleWordValueChange}
                     value={this.state.wordValue}
+                    autoFocus
                 />
             </ModalBody>,
             <ModalFooter key="footer">

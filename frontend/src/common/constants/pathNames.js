@@ -8,6 +8,7 @@ const pathNames = {
     dashboard: '/projects/:projectId/dashboard/',
 
     leads: '/projects/:projectId/leads/',
+    leadsViz: '/projects/:projectId/leads/viz',
     addLeads: '/projects/:projectId/leads/add/',
 
     entries: '/projects/:projectId/entries/',

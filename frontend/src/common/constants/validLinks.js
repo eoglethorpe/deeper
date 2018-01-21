@@ -49,6 +49,7 @@ const validLinks = {
     dashboard: allLinks,
 
     leads: allLinks,
+    leadsViz: allLinks,
     addLeads: allLinksWithProjectDisabled,
 
     entries: allLinks,

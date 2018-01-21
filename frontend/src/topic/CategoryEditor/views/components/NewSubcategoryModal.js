@@ -75,6 +75,7 @@ export default class NewSubcategoryModal extends React.PureComponent {
                     placeholder={ceStrings.addSubCategoryTitlePlaceholder}
                     onChange={this.handleTitleValueChange}
                     value={this.state.titleValue}
+                    autoFocus
                 />
                 <TextInput
                     label={ceStrings.addSubCategoryDescriptionLabel}

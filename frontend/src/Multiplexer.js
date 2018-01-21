@@ -42,6 +42,7 @@ const routesOrder = [
     'projects',
     'dashboard',
     'leads',
+    'leadsViz',
     'addLeads',
     'entries',
     'editEntries',
@@ -77,6 +78,7 @@ const routes = {
     homeScreen: { type: ROUTE.private },
     dashboard: { type: ROUTE.private },
     leads: { type: ROUTE.private },
+    leadsViz: { type: ROUTE.private },
     addLeads: { type: ROUTE.private },
     entries: { type: ROUTE.private },
     editEntries: { type: ROUTE.private },
@@ -95,8 +97,6 @@ const routes = {
     browserExtension: { type: ROUTE.private },
     fourHundredFour: { type: ROUTE.public },
 };
-
-// const NavbarWithProps = withRouter(props => <Navbar {...props} />);
 
 const propTypes = {
     authenticated: PropTypes.bool.isRequired,
@@ -119,14 +119,6 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Multiplexer extends React.PureComponent {
     static propTypes = propTypes;
-
-    componentWillMount() {
-        console.log('Mounting Multiplexer');
-    }
-
-    componentWillUnmount() {
-        console.log('Unmounting Multiplexer');
-    }
 
     getRoutes = () => (
         routesOrder.map((routeId) => {
@@ -182,18 +174,12 @@ export default class Multiplexer extends React.PureComponent {
     )
 
     handleToastClose = () => {
-        const {
-            notifyHide,
-        } = this.props;
-
+        const { notifyHide } = this.props;
         notifyHide();
     }
 
     render() {
-        console.log('Rendering Multiplexer');
-        const {
-            lastNotify,
-        } = this.props;
+        const { lastNotify } = this.props;
 
         return ([
             <Navbar

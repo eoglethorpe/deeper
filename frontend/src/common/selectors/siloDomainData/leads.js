@@ -24,11 +24,6 @@ export const leadPageActivePageSelector = createSelector(
     leadPage => leadPage.activePage || 1,
 );
 
-export const leadPageViewModeSelector = createSelector(
-    leadPageForProjectSelector,
-    leadPage => leadPage.viewMode || 'table',
-);
-
 export const leadPageActiveSortSelector = createSelector(
     leadPageForProjectSelector,
     leadPage => leadPage.activeSort || '-created_at',

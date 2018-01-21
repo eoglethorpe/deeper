@@ -6,7 +6,6 @@ export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
 export const L__SET_FILTER = 'silo-domain-data/L__SET_FILTER';
 export const L__UNSET_FILTER = 'silo-domain-data/L__UNSET_FILTER';
 
-export const L__SET_VIEW_MODE = 'silo-domain-data/L__SET_VIEW_MODE';
 export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
 export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
 
@@ -24,11 +23,6 @@ export const unsetLeadPageFilterAction = () => ({
 export const setLeadPageActivePageAction = ({ activePage }) => ({
     type: L__SET_ACTIVE_PAGE,
     activePage,
-});
-
-export const setLeadPageViewModeAction = ({ viewMode }) => ({
-    type: L__SET_VIEW_MODE,
-    viewMode,
 });
 
 export const setLeadPageActiveSortAction = ({ activeSort }) => ({
@@ -85,19 +79,6 @@ const leadViewSetActivePage = (state, action) => {
     return update(state, settings);
 };
 
-const leadViewSetViewMode = (state, action) => {
-    const { viewMode } = action;
-    const { activeProject } = state;
-    const settings = {
-        leadPage: {
-            [activeProject]: { $auto: {
-                viewMode: { $set: viewMode },
-            } },
-        },
-    };
-    return update(state, settings);
-};
-
 const leadViewSetActiveSort = (state, action) => {
     const { activeSort } = action;
     const { activeProject } = state;
@@ -131,7 +112,6 @@ const reducers = {
     [L__SET_FILTER]: leadViewSetFilter,
     [L__UNSET_FILTER]: leadViewUnsetFilter,
     [L__SET_ACTIVE_PAGE]: leadViewSetActivePage,
-    [L__SET_VIEW_MODE]: leadViewSetViewMode,
     [L__SET_ACTIVE_SORT]: leadViewSetActiveSort,
     [L__SET_LEADS]: setLeads,
 };

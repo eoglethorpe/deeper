@@ -11,6 +11,7 @@ const importers = {
     dashboard: () => import('./Dashboard/views'),
 
     leads: () => import('./Leads/views/Leads'),
+    leadsViz: () => import('./Leads/views/LeadsViz'),
     addLeads: () => import('./Leads/views/LeadAdd'),
 
     entries: () => import('./Entries/views/'),

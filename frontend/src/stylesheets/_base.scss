@@ -84,12 +84,11 @@ body {
 }
 
 %main-content {
-    // FIXME: (animation) This is messing up with the visualization initial chart size.
     // @frozenhelium
-    animation: slide-in .3s ease forwards;
+    animation: slide-in $duration-slow ease forwards;
     border: $width-separator-thin solid $color-separator;
     height: 100%;
-    transform-origin: top;
+    transform-origin: bottom;
 }
 
 %empty-text {
@@ -98,8 +97,8 @@ body {
 
 @keyframes slide-in {
     from {
-        transform: rotateX(1deg) translate3d(0, 10px, -100px);
-        opacity: 0;
+        transform: rotateX(1deg);
+        opacity: .5;
     }
 
     to {

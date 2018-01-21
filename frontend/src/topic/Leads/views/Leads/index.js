@@ -18,7 +18,6 @@ import {
 } from '../../../../public/components/View';
 import {
     PrimaryButton,
-    SegmentButton,
     TransparentAccentButton,
     TransparentButton,
     TransparentDangerButton,
@@ -49,15 +48,10 @@ import {
     leadPageActiveSortSelector,
     setLeadPageActiveSortAction,
 
-    leadPageViewModeSelector,
-    setLeadPageViewModeAction,
-
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
 
     addLeadViewAddLeadsAction,
-
-    setLeadVisualizationStaleAction,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -72,7 +66,6 @@ import {
 import notify from '../../../../common/notify';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
-import Visualizations from './components/Visualizations';
 
 import styles from './styles.scss';
 
@@ -87,11 +80,8 @@ const propTypes = {
     totalLeadsCount: PropTypes.number,
     setLeadPageFilter: PropTypes.func.isRequired,
     setLeadPageActiveSort: PropTypes.func.isRequired,
-    setLeadPageViewMode: PropTypes.func.isRequired,
-    viewMode: PropTypes.string.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
-    setLeadVisualizationStale: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -106,7 +96,6 @@ const mapStateToProps = (state, props) => ({
     totalLeadsCount: totalLeadsCountForProjectSelector(state, props),
     activePage: leadPageActivePageSelector(state, props),
     activeSort: leadPageActiveSortSelector(state, props),
-    viewMode: leadPageViewModeSelector(state, props),
     filters: leadPageFilterSelector(state, props),
 });
 
@@ -114,12 +103,10 @@ const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
 
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
-    setLeadPageViewMode: params => dispatch(setLeadPageViewModeAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
 
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
-    setLeadVisualizationStale: params => dispatch(setLeadVisualizationStaleAction(params)),
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
@@ -173,7 +160,7 @@ export default class Leads extends React.PureComponent {
                 key: 'attachmentMimeType',
                 label: leadsString.filterSourceType,
                 order: 1,
-                sortable: true,
+                sortable: false,
                 modifier: (row) => {
                     let icon = iconNames.documentText;
                     let url;
@@ -319,17 +306,6 @@ export default class Leads extends React.PureComponent {
             },
         ];
 
-        this.viewModes = [
-            {
-                label: leadsString.tableLabel,
-                value: 'table',
-            },
-            {
-                label: leadsString.visualizationsLabel,
-                value: 'Viz',
-            },
-        ];
-
         this.state = {
             loadingLeads: false,
             redirectTo: undefined,
@@ -340,8 +316,7 @@ export default class Leads extends React.PureComponent {
     }
 
     componentWillMount() {
-        console.log('Mounting Leads');
-
+        // console.log('Mounting Leads');
         const {
             activeProject,
             activeSort,
@@ -424,7 +399,6 @@ export default class Leads extends React.PureComponent {
                         leads: response.results,
                         totalLeadsCount: response.count,
                     });
-                    this.props.setLeadVisualizationStale();
                 } catch (er) {
                     console.error(er);
                 }
@@ -631,17 +605,12 @@ export default class Leads extends React.PureComponent {
         this.props.setLeadPageActiveSort({ activeSort });
     }
 
-    handleLeadViewChange = (newViewMode) => {
-        this.props.setLeadPageViewMode({ viewMode: newViewMode });
-    }
-
     render() {
-        console.log('Rendering Leads');
-
+        // console.log('Rendering Leads');
         const {
             totalLeadsCount,
             activePage,
-            viewMode,
+            activeProject,
         } = this.props;
 
         const {
@@ -659,8 +628,6 @@ export default class Leads extends React.PureComponent {
             );
         }
 
-        const showTable = viewMode === 'table';
-
         return (
             <div styleName="leads">
                 <header styleName="header">
@@ -673,25 +640,18 @@ export default class Leads extends React.PureComponent {
                         {leadsString.addSourcesButtonLabel}
                     </PrimaryButton>
                 </header>
-                {
-                    showTable ?
-                        <div styleName="table-container">
-                            <RawTable
-                                data={this.props.leads}
-                                dataModifier={this.leadModifier}
-                                headerModifier={this.headerModifier}
-                                headers={this.headers}
-                                onHeaderClick={this.handleTableHeaderClick}
-                                keyExtractor={this.leadKeyExtractor}
-                                styleName="leads-table"
-                            />
-                            { loadingLeads && <LoadingAnimation /> }
-                        </div>
-                        :
-                        <Visualizations
-                            styleName="viz-container"
-                        />
-                }
+                <div styleName="table-container">
+                    <RawTable
+                        data={this.props.leads}
+                        dataModifier={this.leadModifier}
+                        headerModifier={this.headerModifier}
+                        headers={this.headers}
+                        onHeaderClick={this.handleTableHeaderClick}
+                        keyExtractor={this.leadKeyExtractor}
+                        styleName="leads-table"
+                    />
+                    { loadingLeads && <LoadingAnimation /> }
+                </div>
                 <Confirm
                     show={showDeleteModal}
                     closeOnEscape
@@ -702,24 +662,22 @@ export default class Leads extends React.PureComponent {
                     </p>
                 </Confirm>
                 <footer styleName="footer">
-                    <SegmentButton
-                        styleName="view-mode-button"
-                        data={this.viewModes}
-                        selected={viewMode}
-                        onChange={this.handleLeadViewChange}
-                        backgroundHighlight
-                    />
-                    <div>
-                        {viewMode === 'table' &&
-                            <Pager
-                                activePage={activePage}
-                                styleName="pager"
-                                itemsCount={totalLeadsCount}
-                                maxItemsPerPage={MAX_LEADS_PER_REQUEST}
-                                onPageClick={this.handlePageClick}
-                            />
-                        }
+                    <div styleName="link-container">
+                        <Link
+                            styleName="link"
+                            to={reverseRoute(pathNames.leadsViz, { projectId: activeProject })}
+                            replace
+                        >
+                            Show Visualization
+                        </Link>
                     </div>
+                    <Pager
+                        activePage={activePage}
+                        styleName="pager"
+                        itemsCount={totalLeadsCount}
+                        maxItemsPerPage={MAX_LEADS_PER_REQUEST}
+                        onPageClick={this.handlePageClick}
+                    />
                 </footer>
             </div>
         );
