@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 
 import {
     TextInput,
-    // urlCondition,
+    Form,
+    requiredCondition,
+    urlCondition,
 } from '../public-components/Input';
 
 import {
@@ -14,24 +16,29 @@ import {
 } from '../public-components/Action';
 
 import {
-    setServerAddressAction,
+    setSettingsAction,
     serverAddressSelector,
+    apiAddressSelector,
 } from '../common/redux';
+
+import { DEV } from '../common/config/rest';
 
 import styles from '../stylesheets/settings.scss';
 
 const mapStateToProps = state => ({
     serverAddress: serverAddressSelector(state),
+    apiAddress: apiAddressSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setServerAddress: params => dispatch(setServerAddressAction(params)),
+    setSettings: params => dispatch(setSettingsAction(params)),
 });
 
 const propTypes = {
     serverAddress: PropTypes.string.isRequired,
+    apiAddress: PropTypes.string.isRequired,
     onBackButtonClick: PropTypes.func.isRequired,
-    setServerAddress: PropTypes.func.isRequired,
+    setSettings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -47,15 +54,31 @@ export default class Settings extends React.PureComponent {
         super(props);
 
         this.state = {
-            serverAddress: props.serverAddress,
-            error: undefined,
+            inputValues: {
+                serverAddress: props.serverAddress,
+                apiAddress: props.apiAddress,
+            },
+            formFieldErrors: {},
+        };
+
+        this.formElements = [
+            'serverAddress',
+            'apiAddress',
+        ];
+
+        this.validations = {
+            serverAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
+            apiAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
         };
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            serverAddress: nextProps.serverAddress,
-            error: undefined,
+            inputValues: {
+                serverAddress: nextProps.serverAddress,
+                apiAddress: nextProps.apiAddress,
+            },
+            formFieldErrors: {},
         });
     }
 
@@ -65,82 +88,104 @@ export default class Settings extends React.PureComponent {
         }
     }
 
-    setSaveStatus = () => {
+    // STATUS
+
+    removeSaveStatus = () => {
+        this.setState({ saveStatus: undefined });
+    }
+
+    showSaveStatus = () => {
+        this.setState({ saveStatus: 'Successfully saved' });
+
         if (this.timeout) {
             clearTimeout(this.timeout);
         }
-
-        this.setState({
-            saveStatus: 'Successfully saved',
-        });
-
         this.timeout = setTimeout(this.removeSaveStatus, 5000);
     }
 
-    removeSaveStatus = () => {
+    // FORM
+
+    handleFormChange = (value, { formFieldErrors }) => {
+        console.warn('change');
         this.setState({
-            saveStatus: undefined,
+            formFieldErrors: {
+                ...this.state.formFieldErrors,
+                ...formFieldErrors,
+            },
+            inputValues: {
+                ...this.state.inputValues,
+                ...value,
+            },
         });
     }
 
-    handleSaveButtonClick = () => {
-        const { setServerAddress } = this.props;
-        const { serverAddress } = this.state;
-
-        // temporarily disabled because http://localhost:8000 is not valid url
-        // if (serverAddress && urlCondition.truth(serverAddress)) {
-        if (serverAddress) {
-            this.setSaveStatus();
-            setServerAddress({ serverAddress });
-        } else {
-            this.setState({
-                error: 'Server address must be filled and a valid url',
-            });
-        }
+    handleFormFailure = ({ formFieldErrors }) => {
+        console.warn('fail');
+        this.setState({
+            formFieldErrors: {
+                ...this.state.formFieldErrors,
+                ...formFieldErrors,
+            },
+        });
     }
 
-    handleServerAddressInputChange = (serverAddress) => {
-        this.setState({
-            serverAddress,
-            error: undefined,
-        });
+    handleFormSuccess = (values) => {
+        console.warn('success');
+        const { setSettings } = this.props;
+        setSettings(values);
+        this.showSaveStatus();
     }
 
     render() {
         const { onBackButtonClick } = this.props;
         const {
-            serverAddress,
-            error,
+            inputValues,
+            formFieldErrors,
             saveStatus,
         } = this.state;
 
         return (
             <div styleName="settings">
-                <header styleName="header">
-                    <h1>Settings</h1>
-                    <TransparentAccentButton onClick={onBackButtonClick}>
-                        Back
-                    </TransparentAccentButton>
-                </header>
-                <div styleName="content">
-                    <TextInput
-                        label="Server address"
-                        placeholder="eg: https://thedeep.io"
-                        value={serverAddress}
-                        onChange={this.handleServerAddressInputChange}
-                        error={error}
-                    />
-                </div>
-                <footer styleName="footer">
-                    <div styleName="save-status">
-                        { saveStatus }
+                <Form
+                    successCallback={this.handleFormSuccess}
+                    failureCallback={this.handleFormFailure}
+                    changeCallback={this.handleFormChange}
+                    elements={this.formElements}
+                    validations={this.validations}
+                >
+                    <header styleName="header">
+                        <h1>
+                            Settings
+                        </h1>
+                        <TransparentAccentButton onClick={onBackButtonClick}>
+                            Back
+                        </TransparentAccentButton>
+                    </header>
+                    <div styleName="content">
+                        <TextInput
+                            formname="serverAddress"
+                            label="Server address"
+                            placeholder="eg: https://thedeep.io"
+                            value={inputValues.serverAddress}
+                            error={formFieldErrors.serverAddress}
+                        />
+                        <TextInput
+                            formname="apiAddress"
+                            label="Api address"
+                            placeholder="eg: https://api.thedeep.io"
+                            value={inputValues.apiAddress}
+                            error={formFieldErrors.apiAddress}
+                        />
                     </div>
-                    <PrimaryButton
-                        onClick={this.handleSaveButtonClick}
-                    >
-                        Save
-                    </PrimaryButton>
-                </footer>
+                    <footer styleName="footer">
+                        <div styleName="save-status">
+                            { saveStatus }
+                        </div>
+                        <PrimaryButton>
+                            Save
+                        </PrimaryButton>
+                    </footer>
+                </Form>
             </div>
         );
     }

@@ -304,7 +304,10 @@ export default class AddLead extends React.PureComponent {
             values: {},
             uiState: {
                 formErrors,
-                formFieldErrors,
+                formFieldErrors: {
+                    ...this.props.uiState.formFieldErrors,
+                    ...formFieldErrors,
+                },
                 pristine: true,
             },
         });
@@ -328,7 +331,7 @@ export default class AddLead extends React.PureComponent {
     handleFormChange = (values, { formErrors, formFieldErrors }) => {
         const uiState = {
             formFieldErrors: {
-                ...(this.props.uiState.formFieldErrors || emptyObject),
+                ...this.props.uiState.formFieldErrors,
                 ...formFieldErrors,
             },
             formErrors,

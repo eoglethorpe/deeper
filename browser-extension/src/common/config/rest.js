@@ -1,18 +1,25 @@
 import { RestRequest } from '../../public/utils/rest';
 import store from '../store';
 import { tokenSelector } from '../selectors/auth';
-import { serverAddressSelector } from '../selectors/settings';
+import {
+    serverAddressSelector,
+    apiAddressSelector,
+} from '../selectors/settings';
 
 // TODO: Remove this on release
-// const DEV = true;
-const DEV = false;
+export const DEV = false;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;
 
 export const getServerAddress = (type = 'api') => {
     if (!DEV) {
-        return serverAddressSelector(store.getState());
+        if (type === 'web') {
+            return serverAddressSelector(store.getState());
+        } else if (type === 'api') {
+            return apiAddressSelector(store.getState());
+        }
+        return undefined;
     }
     if (type === 'web') {
         return 'http://localhost:3000';
