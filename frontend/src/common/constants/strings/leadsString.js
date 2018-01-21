@@ -35,9 +35,16 @@ const leadsString = {
 
     previousButtonLabel: string[22],
     nextButtonLabel: string[23],
-    removeButtonLabel: string[24],
-    saveButtonLabel: string[25],
-    saveAllButtonLabel: string[26],
+
+    removeButtonTitle: string[5558],
+    saveButtonTitle: string[25],
+    saveCurrentButtonTitle: string[5551],
+    saveAllButtonTitle: string[5552],
+    saveAllFilteredButtonTitle: string[5553],
+    removeCurrentButtonTitle: string[5554],
+    removeAllButtonTitle: string[5555],
+    removeAllFilteredButtonTitle: string[5556],
+    removeAllSavedButtonTitle: string[5557],
 
     noSourcePreviewLabel: string[27],
     cannotPreviewUrl: string[28],

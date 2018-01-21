@@ -17,9 +17,8 @@ import {
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 
 import {
-    PrimaryButton,
-    DangerButton,
-    SuccessButton,
+    Button,
+    DropdownMenu,
 } from '../../../../public/components/Action/';
 
 import {
@@ -36,7 +35,6 @@ import {
 
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
-
 } from '../../../../common/redux';
 
 import {
@@ -51,6 +49,7 @@ import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
 import {
+    iconNames,
     leadsString,
     notificationStrings,
     commonStrings,
@@ -409,36 +408,78 @@ export default class LeadAdd extends React.PureComponent {
                     <LeadFilter />
                     { activeLead &&
                         <div styleName="action-buttons">
-                            <PrimaryButton
-                                disabled={!addLeadViewCanPrev}
-                                onClick={this.handleLeadPrev}
+                            <div styleName="movement-buttons">
+                                <Button
+                                    disabled={!addLeadViewCanPrev}
+                                    onClick={this.handleLeadPrev}
+                                >
+                                    {leadsString.previousButtonLabel}
+                                </Button>
+                                <Button
+                                    disabled={!addLeadViewCanNext}
+                                    onClick={this.handleLeadNext}
+                                >
+                                    {leadsString.nextButtonLabel}
+                                </Button>
+                            </div>
+                            <DropdownMenu
+                                iconName={iconNames.delete}
+                                styleName="remove-buttons"
+                                title={leadsString.removeButtonTitle}
                             >
-                                {leadsString.previousButtonLabel}
-                            </PrimaryButton>
-                            <PrimaryButton
-                                disabled={!addLeadViewCanNext}
-                                onClick={this.handleLeadNext}
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleRemove}
+                                    disabled={isRemoveDisabled}
+                                >
+                                    {leadsString.removeCurrentButtonTitle}
+                                </button>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleRemoveAllFiltered}
+                                >
+                                    {leadsString.removeAllFilteredButtonTitle}
+
+                                </button>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleRemoveAllSaved}
+                                >
+                                    {leadsString.removeAllSavedButtonTitle}
+                                </button>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleRemoveAll}
+                                >
+                                    {leadsString.removeAllButtonTitle}
+                                </button>
+                            </DropdownMenu>
+                            <DropdownMenu
+                                iconName={iconNames.save}
+                                styleName="save-buttons"
+                                title="Save"
                             >
-                                {leadsString.nextButtonLabel}
-                            </PrimaryButton>
-                            <DangerButton
-                                onClick={this.handleRemove}
-                                disabled={isRemoveDisabled}
-                            >
-                                {leadsString.removeButtonLabel}
-                            </DangerButton>
-                            <SuccessButton
-                                onClick={this.handleSave}
-                                disabled={isSaveDisabled}
-                            >
-                                {leadsString.saveButtonLabel}
-                            </SuccessButton>
-                            <SuccessButton
-                                onClick={this.handleBulkSave}
-                                disabled={pendingSubmitAll || !someSaveEnabled}
-                            >
-                                {leadsString.saveAllButtonLabel}
-                            </SuccessButton>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleSave}
+                                    disabled={isSaveDisabled}
+                                >
+                                    {leadsString.saveCurrentButtonTitle}
+                                </button>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleBulkSaveFiltered}
+                                >
+                                    {leadsString.saveAllFilteredButtonTitle}
+                                </button>
+                                <button
+                                    styleName="dropdown-button"
+                                    onClick={this.handleBulkSave}
+                                    disabled={pendingSubmitAll || !someSaveEnabled}
+                                >
+                                    {leadsString.saveAllButtonTitle}
+                                </button>
+                            </DropdownMenu>
                         </div>
                     }
                 </header>

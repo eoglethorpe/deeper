@@ -13,7 +13,7 @@ import {
 } from '../../../../../../common/constants';
 
 import {
-    DangerButton,
+    WarningButton,
 } from '../../../../../../public/components/Action';
 
 import styles from './styles.scss';
@@ -158,14 +158,14 @@ export default class LeadListItem extends React.PureComponent {
                     { this.renderIcon(choice) }
                     { this.renderUploadProgress(choice, upload) }
                 </button>
-                <DangerButton
+                <WarningButton
                     key="remove-button"
                     styleName="remove-button"
                     disabled={isRemoveDisabled}
                     onClick={() => onRemove(leadKey)}
                 >
                     <i className={iconNames.delete} />
-                </DangerButton>
+                </WarningButton>
             </div>
         );
     }
