@@ -92,26 +92,6 @@ export default class ScaleTaggingList extends React.PureComponent {
         }));
     }
 
-    createFilterData = (attribute) => {
-        const { data } = this.props;
-        return {
-            values: undefined,
-            number: attribute.selectedScale && (
-                data.scaleUnits.findIndex(s => s.key === attribute.selectedScale) + 1
-            ),
-        };
-    }
-
-    createExportData = (attribute) => {
-        const { data } = this.props;
-        const scale = data.scaleUnits.find(s => s.key === attribute.selectedScale);
-        return {
-            excel: {
-                value: scale ? scale.title : '',
-            },
-        };
-    }
-
     handleScaleClick = (selectedScale) => {
         const { api, id, entryId } = this.props;
         const attribute = { selectedScale };
