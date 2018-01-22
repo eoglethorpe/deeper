@@ -129,7 +129,6 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 styleName="excerpt-overview"
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragExit}
-                onDrop={this.handleExcerptDrop}
             >
                 {dragOver &&
                     <div
