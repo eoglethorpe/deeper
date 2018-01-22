@@ -46,6 +46,19 @@ class EntryModifier {
         return this;
     }
 
+    setDate(date) {
+        if (!this.entry) {
+            return this;
+        }
+
+        const settings = {
+            informationDate: { $set: date },
+        };
+        this.pristine = false;
+        this.values = update(this.values, settings);
+        return this;
+    }
+
     setType(type) {
         if (!this.entry) {
             return this;
@@ -280,6 +293,14 @@ export default class API {
         this.addEntry = addEntry;
         this.selectEntry = selectEntry;
         this.changeEntryValues = changeEntryValues;
+    }
+
+    setLeadDate(date) {
+        this.leadDate = date;
+    }
+
+    getLeadDate() {
+        return this.leadDate;
     }
 
     setEntries(entries) {

@@ -201,6 +201,7 @@ export default class EditEntryView extends React.PureComponent {
                 try {
                     schema.validate(response, 'lead');
                     this.props.setLead({ lead: response });
+                    this.api.setLeadDate(response.publishedOn);
 
                     const { project } = response;
 

@@ -14,10 +14,12 @@ const propTypes = {
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     attribute: undefined,
+    data: undefined,
 };
 
 @CSSModules(styles)
@@ -30,6 +32,22 @@ export default class DateTaggingList extends React.PureComponent {
         updateAttribute(props);
     }
 
+    componentDidMount() {
+        const {
+            data: { informationDateSelected } = {},
+            attribute = {},
+            api, id, entryId,
+        } = this.props;
+
+
+        if (informationDateSelected && !attribute.value) {
+            api.getEntryModifier(entryId)
+                .setAttribute(id, { value: api.getLeadDate() })
+                .setDate(api.getLeadDate())
+                .apply();
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.attribute !== nextProps.attribute) {
             updateAttribute(nextProps);
@@ -37,14 +55,19 @@ export default class DateTaggingList extends React.PureComponent {
     }
 
     handleChange = (value) => {
-        const { api, id, entryId } = this.props;
+        const { api, id, entryId, data } = this.props;
         const attribute = {
             value,
         };
 
-        api.getEntryModifier(entryId)
-            .setAttribute(id, attribute)
-            .apply();
+        const modifier = api.getEntryModifier(entryId)
+            .setAttribute(id, attribute);
+
+        if (data && data.informationDateSelected) {
+            modifier.setDate(value);
+        }
+
+        modifier.apply();
     }
 
     render() {
