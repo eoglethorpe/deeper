@@ -15,10 +15,10 @@ import {
     TextInput,
 } from '../../../../../public/components/Input';
 import {
-    TransparentPrimaryButton,
-    TransparentDangerButton,
-    Button,
     PrimaryButton,
+    AccentButton,
+    DangerButton,
+    Button,
 } from '../../../../../public/components/Action';
 import {
     Modal,
@@ -63,11 +63,14 @@ export default class ScaleFrameworkList extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const scaleUnits = (this.props.data || emptyObject).scaleUnits || emptyList;
+        const data = this.props.data || emptyObject;
+        const scaleUnits = data.scaleUnits || emptyList;
+        const defaultScaleUnit = data.value;
         const title = this.props.title;
 
         this.state = {
             showEditModal: false,
+            defaultScaleUnit,
             activeScaleUnit: scaleUnits[0] || emptyObject,
             scaleUnits,
             title,
@@ -91,6 +94,16 @@ export default class ScaleFrameworkList extends React.PureComponent {
         return styleNames.join(' ');
     }
 
+    getSelectedScaleStyle = (key) => {
+        const { defaultScaleUnit } = this.state;
+        const scaleUnitStyle = ['scale-unit'];
+        if (defaultScaleUnit === key) {
+            scaleUnitStyle.push('selected');
+        }
+        const styleNames = scaleUnitStyle.map(d => styles[d]);
+        return styleNames.join(' ');
+    }
+
     // TODO: fix this, don't make new objet
     getEditScaleUnits = (key, data, index) => (
         <this.SortableScaleUnit
@@ -104,7 +117,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         <button
             key={key}
             title={data.title}
-            className={styles['scale-unit']}
+            className={this.getSelectedScaleStyle(key)}
             style={{ backgroundColor: data.color }}
         />
     )
@@ -143,38 +156,54 @@ export default class ScaleFrameworkList extends React.PureComponent {
         };
     }
 
-    SortableScaleUnit = SortableElement(({ value: { data, key } }) => (
-        <div
-            className={this.getActiveSelectionStyle(key)}
-            key={key}
-        >
-            <DragHandle />
-            <div className={styles['color-box-container']}>
-                <span className={styles['color-label']}>{afStrings.colorLabel}</span>
-                <button
-                    className={styles['color-box']}
-                    onClick={() => this.handleColorBoxClick(key)}
-                    style={{ backgroundColor: data.color }}
-                />
-            </div>
-            <TextInput
-                className={styles['title-input']}
-                label={afStrings.titleLabel}
-                placeholder={afStrings.titlePlaceholderScale}
-                onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
-                onFocus={() => this.handleTextInputOnFocus(key)}
-                value={data.title}
-                showHintAndError={false}
-                autoFocus
-            />
-            <TransparentDangerButton
-                className={styles['delete-button']}
-                onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
+    SortableScaleUnit = SortableElement(({ value: { data, key } }) => {
+        const { defaultScaleUnit } = this.state;
+        let defaultIconName = iconNames.checkboxOutlineBlank;
+        if (defaultScaleUnit === key) {
+            defaultIconName = iconNames.checkbox;
+        }
+
+        return (
+            <div
+                className={this.getActiveSelectionStyle(key)}
+                key={key}
             >
-                <span className={iconNames.delete} />
-            </TransparentDangerButton>
-        </div>
-    ))
+                <DragHandle />
+                <div className={styles['color-box-container']}>
+                    <span className={styles['color-label']}>{afStrings.colorLabel}</span>
+                    <button
+                        className={styles['color-box']}
+                        onClick={() => this.handleColorBoxClick(key)}
+                        style={{ backgroundColor: data.color }}
+                    />
+                </div>
+                <TextInput
+                    className={styles['title-input']}
+                    label={afStrings.titleLabel}
+                    placeholder={afStrings.titlePlaceholderScale}
+                    onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
+                    onFocus={() => this.handleTextInputOnFocus(key)}
+                    value={data.title}
+                    showHintAndError={false}
+                    autoFocus
+                />
+                <DangerButton
+                    className={styles['delete-button']}
+                    onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
+                    transparent
+                >
+                    <span className={iconNames.delete} />
+                </DangerButton>
+                <AccentButton
+                    className={styles['check-button']}
+                    onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
+                    transparent
+                >
+                    <span className={defaultIconName} />
+                </AccentButton>
+            </div>
+        );
+    })
 
     SortableList = SortableContainer(({ items: scaleUnits }) => {
         let additionalStyle = '';
@@ -192,6 +221,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
             />
         );
     })
+
+    handleScaleSetDefaultButtonClick = (key) => {
+        this.setState({ defaultScaleUnit: key });
+    }
 
     handleTextInputOnFocus = (key) => {
         const { scaleUnits } = this.state;
@@ -236,9 +269,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { scaleUnits, title } = this.state;
+        const { scaleUnits, title, defaultScaleUnit } = this.state;
         const newScaleUnits = {
             ...this.props.data,
+            value: defaultScaleUnit,
             scaleUnits,
         };
         this.props.onChange(
@@ -270,10 +304,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleScaleUnitRemoveButtonClick = (key) => {
+        const { defaultScaleUnit } = this.state;
         const settings = {
             $filter: d => d.key !== key,
         };
         const newScaleUnits = update(this.state.scaleUnits, settings);
+        if (defaultScaleUnit === key) {
+            const newDefaultScaleUnit = newScaleUnits[0].key;
+            this.setState({ defaultScaleUnit: newDefaultScaleUnit });
+        }
         this.setState({
             scaleUnits: newScaleUnits,
             activeScaleUnit: newScaleUnits[0] || emptyObject,
@@ -299,13 +338,19 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     addScaleUnit = () => {
+        const { defaultScaleUnit } = this.state;
+        let newDefaultScaleUnit = defaultScaleUnit;
         const newScaleUnit = {
             key: randomString(16).toLowerCase(),
             title: '',
             color: '#ffffff',
         };
+        if (defaultScaleUnit === undefined) {
+            newDefaultScaleUnit = newScaleUnit.key;
+        }
 
         this.setState({
+            defaultScaleUnit: newDefaultScaleUnit,
             scaleUnits: [
                 ...this.state.scaleUnits,
                 newScaleUnit,
@@ -338,12 +383,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         <ModalHeader
                             title={afStrings.editScaleModalTitle}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddScaleUnitButtonClick}
+                                    transparent
                                 >
                                     {afStrings.addscaleUnitButtonLabel}
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody styleName="scale-modal-body">

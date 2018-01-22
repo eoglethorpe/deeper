@@ -18,8 +18,8 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     Button,
     PrimaryButton,
-    TransparentAccentButton,
-    TransparentDangerButton,
+    AccentButton,
+    DangerButton,
 } from '../../../public/components/Action';
 import {
     createUrlForGeoOptions,
@@ -317,11 +317,12 @@ export default class GeoSelection extends React.PureComponent {
                 key={key}
             >
                 {regionData.shortLabel}
-                <TransparentDangerButton
+                <DangerButton
                     onClick={() => this.handleRegionRemove(key)}
+                    transparent
                 >
                     <span className={iconNames.delete} />
-                </TransparentDangerButton>
+                </DangerButton>
             </div>
         );
     }
@@ -358,12 +359,13 @@ export default class GeoSelection extends React.PureComponent {
                     value={flatValues}
                     disabled={disabled}
                 />
-                <TransparentAccentButton
+                <AccentButton
                     styleName="map-modal-button"
                     onClick={this.handleGeoSelectButtonClick}
+                    transparent
                 >
                     <span className={iconNames.globe} />
-                </TransparentAccentButton>
+                </AccentButton>
                 { showMapModal &&
                     <Modal
                         styleName="modal"

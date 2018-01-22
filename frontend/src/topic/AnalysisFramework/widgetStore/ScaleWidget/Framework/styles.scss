@@ -17,6 +17,11 @@
             padding: 0;
             width: $width-scale-widget-unit;
             height: $height-scale-widget-unit;
+
+            &.selected {
+                width: $width-scale-widget-unit-selected;
+                height: $height-scale-widget-unit-selected;
+            }
         }
     }
 }
