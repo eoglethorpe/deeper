@@ -3,12 +3,10 @@ import reducers, {
     L__SET_FILTER,
     L__UNSET_FILTER,
     L__SET_ACTIVE_PAGE,
-    L__SET_VIEW_MODE,
     L__SET_ACTIVE_SORT,
     setLeadPageFilterAction,
     unsetLeadPageFilterAction,
     setLeadPageActivePageAction,
-    setLeadPageViewModeAction,
     setLeadPageActiveSortAction,
     setLeadsAction,
 } from './leads';
@@ -131,83 +129,6 @@ test('should set active page for first time', () => {
     };
 
     expect(reducers[L__SET_ACTIVE_PAGE](state, action)).toEqual(after);
-});
-
-test('should set view mode', () => {
-    const state = {
-        activeProject: 2,
-        leadPage: {
-            2: {
-                filter: { search: 'hari' },
-                activePage: 2,
-                viewMode: 'visualization',
-            },
-        },
-    };
-    const action = setLeadPageViewModeAction({
-        viewMode: 'table',
-    });
-    const after = {
-        activeProject: 2,
-        leadPage: {
-            2: {
-                filter: { search: 'hari' },
-                activePage: 2,
-                viewMode: 'table',
-            },
-        },
-    };
-
-    expect(reducers[L__SET_VIEW_MODE](state, action)).toEqual(after);
-});
-
-test('should set view mode for first time', () => {
-    const state = {
-        activeProject: 2,
-        leadPage: {
-        },
-    };
-    const action = setLeadPageViewModeAction({
-        viewMode: 'visualization',
-    });
-    const after = {
-        activeProject: 2,
-        leadPage: {
-            2: {
-                viewMode: 'visualization',
-            },
-        },
-    };
-
-    expect(reducers[L__SET_VIEW_MODE](state, action)).toEqual(after);
-});
-
-test('should set active sort', () => {
-    const state = {
-        activeProject: 2,
-        leadPage: {
-            2: {
-                filter: { search: 'hari' },
-                activePage: 2,
-                activeSort: '-created-at',
-            },
-        },
-    };
-    const action = setLeadPageActiveSortAction({
-        activeSort: '+created-at',
-    });
-    const after = {
-        activeProject: 2,
-        leadPage: {
-            2: {
-                filter: { search: 'hari' },
-                activePage: 1,
-                activeSort: '+created-at',
-            },
-        },
-    };
-
-    expect(reducers[L__SET_ACTIVE_SORT](state, action)).toEqual(after);
 });
 
 test('should set active sort for first time', () => {
