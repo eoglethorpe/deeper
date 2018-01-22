@@ -43,12 +43,13 @@ const propTypes = {
     onSuccess: PropTypes.func.isRequired,
     onFailure: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    onApplyAllClick: PropTypes.func.isRequired,
+    onApplyAllBelowClick: PropTypes.func.isRequired,
 
+    isSaveDisabled: PropTypes.bool.isRequired,
     isFormDisabled: PropTypes.bool.isRequired,
     isFormLoading: PropTypes.bool.isRequired,
     isBulkActionDisabled: PropTypes.bool.isRequired,
-    onApplyAllClick: PropTypes.func.isRequired,
-    onApplyAllBelowClick: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -131,9 +132,11 @@ export default class LeadForm extends React.PureComponent {
     }
 
     submit = () => {
-        if (this.formRef) {
+        if (this.formRef && !this.props.isSaveDisabled) {
             this.formRef.submit();
+            return true;
         }
+        return false;
     }
 
     handleApplyAllClick = name => this.props.onApplyAllClick(name);

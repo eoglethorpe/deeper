@@ -108,6 +108,12 @@ const notificationStrings = {
     leadDeleteFailure: string[978],
     leadDeleteFatal: string[979],
 
+    leadDiscard: string[992],
+    leadDiscardSuccess: string[993],
+
+    leadsDiscard: string[994],
+    leadsDiscardSuccess: string[995],
+
     // Analysis Framework
     afTitle: string[964],
     afUpdate: string[981],

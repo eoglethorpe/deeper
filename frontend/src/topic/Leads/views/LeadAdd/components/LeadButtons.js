@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { TransparentButton } from '../../../../../public/components/Action';
+import { Button } from '../../../../../public/components/Action';
 import { FileInput } from '../../../../../public/components/Input';
 import { randomString } from '../../../../../public/utils/common';
 
@@ -75,10 +75,14 @@ export default class LeadButtons extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        // NOTE: dropbox button must be manullay disabled and enabled unlike
+        // google-drive which creates an overlay and disables everything in bg
         this.state = { dropboxDisabled: false };
+        // NOTE: google drive access token is received at start
+        this.googleDriveAccessToken = undefined;
     }
 
-    handleAddLeadFromGoogleDrive = (response) => {
+    handleLeadAddFromGoogleDrive = (response) => {
         const { docs, action } = response;
         if (action !== 'picked') {
             return;
@@ -117,7 +121,7 @@ export default class LeadButtons extends React.PureComponent {
         this.props.onGoogleDriveSelect(uploads);
     }
 
-    handleAddLeadFromDropbox = (response) => {
+    handleLeadAddFromDropbox = (response) => {
         if (response.length <= 0) {
             console.warn('Empty response from dropbox');
             return;
@@ -155,7 +159,7 @@ export default class LeadButtons extends React.PureComponent {
         this.setState({ dropboxDisabled: false });
     }
 
-    handleAddLeadFromDisk = (e) => {
+    handleLeadAddFromDisk = (e) => {
         const files = Object.values(e);
         if (files.length <= 0) {
             return;
@@ -191,7 +195,7 @@ export default class LeadButtons extends React.PureComponent {
         this.props.onFileSelect(uploads);
     }
 
-    handleAddLeadFromWebsite = () => {
+    handleLeadAddFromWebsite = () => {
         const { activeProject } = this.props;
         const newLeads = [];
 
@@ -213,7 +217,7 @@ export default class LeadButtons extends React.PureComponent {
         this.props.addLeads(newLeads);
     }
 
-    handleAddLeadFromText = () => {
+    handleLeadAddFromText = () => {
         const { activeProject } = this.props;
         const newLeads = [];
 
@@ -247,9 +251,7 @@ export default class LeadButtons extends React.PureComponent {
     handleDropboxChooserCancel = () => this.setState({ dropboxDisabled: false });
 
     render() {
-        const {
-            dropboxDisabled,
-        } = this.state;
+        const { dropboxDisabled } = this.state;
 
         return (
             <div styleName="add-lead-buttons">
@@ -261,50 +263,62 @@ export default class LeadButtons extends React.PureComponent {
                     clientId={googleDriveClientId}
                     developerKey={googleDriveDeveloperKey}
                     onAuthenticate={this.handleGoogleDriveOnAuthenticated}
-                    onChange={this.handleAddLeadFromGoogleDrive}
+                    onChange={this.handleLeadAddFromGoogleDrive}
                     mimeTypes={supportedGoogleDriveMimeTypes}
                     multiselect
                     navHidden
                 >
                     <span className={iconNames.googleDrive} />
-                    <p>{leadsString.googleDriveLabel}</p>
+                    <p>
+                        {leadsString.googleDriveLabel}
+                    </p>
                 </GooglePicker>
                 <DropboxChooser
                     styleName="add-lead-btn"
                     appKey={dropboxAppKey}
                     multiselect
                     extensions={supportedDropboxExtension}
-                    success={this.handleAddLeadFromDropbox}
+                    success={this.handleLeadAddFromDropbox}
                     onClick={this.handleDropboxChooserClick}
                     cancel={this.handleDropboxChooserCancel}
                     disabled={dropboxDisabled}
                 >
                     <span className={iconNames.dropbox} />
-                    <p>{leadsString.dropboxLabel}</p>
+                    <p>
+                        {leadsString.dropboxLabel}
+                    </p>
                 </DropboxChooser>
                 <FileInput
                     styleName="add-lead-btn"
-                    onChange={this.handleAddLeadFromDisk}
+                    onChange={this.handleLeadAddFromDisk}
                     showStatus={false}
                     multiple
                 >
                     <span className={iconNames.upload} />
-                    <p>{leadsString.localDiskLabel}</p>
+                    <p>
+                        {leadsString.localDiskLabel}
+                    </p>
                 </FileInput>
-                <TransparentButton
+                <Button
                     styleName="add-lead-btn"
-                    onClick={this.handleAddLeadFromWebsite}
+                    transparent
+                    onClick={this.handleLeadAddFromWebsite}
                 >
                     <span className={iconNames.globe} />
-                    <p>{leadsString.websiteLabel}</p>
-                </TransparentButton>
-                <TransparentButton
+                    <p>
+                        {leadsString.websiteLabel}
+                    </p>
+                </Button>
+                <Button
                     styleName="add-lead-btn"
-                    onClick={this.handleAddLeadFromText}
+                    transparent
+                    onClick={this.handleLeadAddFromText}
                 >
                     <span className={iconNames.clipboard} />
-                    <p>{leadsString.textLabel}</p>
-                </TransparentButton>
+                    <p>
+                        {leadsString.textLabel}
+                    </p>
+                </Button>
             </div>
         );
     }

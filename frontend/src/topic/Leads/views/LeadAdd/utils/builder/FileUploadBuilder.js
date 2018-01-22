@@ -42,6 +42,7 @@ export default class FileUploadBuilder {
             return { leadUploads };
         });
     }
+
     handleLeadUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
@@ -67,6 +68,7 @@ export default class FileUploadBuilder {
 
         this.parent.uploadCoordinator.notifyComplete(leadId);
     }
+
     handleLeadUploadFailure = leadId => (response) => {
         // FOR DATA CHANGE
         const { addLeadViewLeadChange } = this.parent.props;
@@ -89,6 +91,7 @@ export default class FileUploadBuilder {
 
         this.parent.uploadCoordinator.notifyComplete(leadId);
     }
+
     handleLeadUploadProgress = leadId => (progress) => {
         const theLeadUpload = this.parent.state.leadUploads[leadId];
         if (!theLeadUpload || theLeadUpload.progress === progress) {

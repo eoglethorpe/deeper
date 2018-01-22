@@ -222,4 +222,9 @@
     &:hover {
         background-color: $color-background-hover;
     }
+
+    &:disabled {
+        cursor: default;
+        color: $color-text-disabled;
+    }
 }

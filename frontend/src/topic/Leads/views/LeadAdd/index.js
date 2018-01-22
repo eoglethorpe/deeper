@@ -9,6 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 import update from '../../../../public/utils/immutable-update';
 import {
     Confirm,
@@ -22,12 +23,14 @@ import {
 } from '../../../../public/components/Action/';
 
 import {
-    addLeadViewLeadChangeAction,
+    leadFilterOptionsSelector,
+
     addLeadViewActiveLeadIdSelector,
     addLeadViewActiveLeadSelector,
     addLeadViewLeadsSelector,
-    leadFilterOptionsSelector,
+    addLeadViewFiltersSelector,
 
+    addLeadViewLeadChangeAction,
     addLeadViewLeadSaveAction,
     addLeadViewLeadNextAction,
     addLeadViewLeadPrevAction,
@@ -38,6 +41,7 @@ import {
 } from '../../../../common/redux';
 
 import {
+    LEAD_FILTER_STATUS,
     LEAD_STATUS,
     calcLeadState,
     leadAccessor,
@@ -66,6 +70,7 @@ const mapStateToProps = state => ({
     activeLead: addLeadViewActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
     leadFilterOptions: leadFilterOptionsSelector(state),
+    filters: addLeadViewFiltersSelector(state),
     addLeadViewCanNext: addLeadViewCanNextSelector(state),
     addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
 });
@@ -83,6 +88,7 @@ const propTypes = {
     activeLead: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     leadFilterOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     addLeadViewLeadNext: PropTypes.func.isRequired,
     addLeadViewLeadPrev: PropTypes.func.isRequired,
@@ -101,12 +107,99 @@ const defaultProps = {
     activeLead: undefined,
 };
 
+const DELETE_MODE = {
+    all: 'all',
+    filtered: 'filtered',
+    single: 'single',
+};
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSBuilders(styles, { allowMultiple: true })
 export default class LeadAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static statusMatches = (leadStatus, status) => {
+        switch (status) {
+            case LEAD_FILTER_STATUS.invalid:
+                return (
+                    leadStatus === LEAD_STATUS.invalid ||
+                    leadStatus === LEAD_STATUS.warning
+                );
+            case LEAD_FILTER_STATUS.saved:
+                return leadStatus === LEAD_STATUS.complete;
+            case LEAD_FILTER_STATUS.unsaved:
+                return (
+                    leadStatus === LEAD_STATUS.nonPristine ||
+                    leadStatus === LEAD_STATUS.uploading ||
+                    leadStatus === LEAD_STATUS.requesting
+                );
+            default:
+                return false;
+        }
+    };
+
+    static calcGlobalUiState = (
+        { leadUploads, leadRests, leadDriveRests, leadDropboxRests },
+        { addLeadViewLeads },
+    ) => (addLeadViewLeads.reduce(
+        (acc, lead) => {
+            const leadId = leadAccessor.getKey(lead);
+            const leadState = calcLeadState({
+                lead,
+                rest: leadRests[leadId],
+                upload: leadUploads[leadId],
+                drive: leadDriveRests[leadId],
+                dropbox: leadDropboxRests[leadId],
+            });
+            const isSaveDisabled = (leadState !== LEAD_STATUS.nonPristine);
+            const isRemoveDisabled = (leadState === LEAD_STATUS.requesting);
+            const isFormLoading = (leadState === LEAD_STATUS.requesting);
+            const isFormDisabled = (
+                leadState === LEAD_STATUS.requesting ||
+                leadState === LEAD_STATUS.warning
+            );
+            acc[leadId] = {
+                leadState,
+                isSaveDisabled,
+                isFormDisabled,
+                isFormLoading,
+                isRemoveDisabled,
+            };
+            return acc;
+        },
+        {},
+    ))
+
+    static createFilterFn = (globalUiState, { search, type, source, status }) => (lead) => {
+        const id = leadAccessor.getKey(lead);
+        const leadType = leadAccessor.getType(lead);
+        const {
+            title: leadTitle = '',
+            source: leadSource = '',
+        } = leadAccessor.getValues(lead);
+
+        const leadStatus = globalUiState[id].leadState;
+
+        if (!caseInsensitiveSubmatch(leadTitle, search)) {
+            return false;
+        } else if (!caseInsensitiveSubmatch(leadSource, source)) {
+            return false;
+        } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
+            return false;
+        } else if (status && status.length > 0 && !LeadAdd.statusMatches(leadStatus, status)) {
+            return false;
+        }
+        return true;
+    }
+
+    static isSomeSaveEnabled = (list, uiState) => (
+        list.some(key => !(uiState[key].isSaveDisabled))
+    )
+
+    static isSomeRemoveEnabled = (list, uiState) => (
+        list.some(key => !(uiState[key].isRemoveDisabled))
+    )
 
     constructor(props) {
         super(props);
@@ -121,7 +214,7 @@ export default class LeadAdd extends React.PureComponent {
             showRemoveLeadModal: false,
         };
         // Store references to lead forms
-        this.leadRefs = { };
+        this.leadFormRefs = { };
 
         this.uploadCoordinator = new CoordinatorBuilder()
             .maxActiveActors(3)
@@ -152,6 +245,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     // HANDLE SELECTION
+
     handleGoogleDriveSelect = (uploads) => {
         const googleDriveBuilder = new GoogleDriveBuilder(this);
         uploads.forEach((upload) => {
@@ -239,107 +333,133 @@ export default class LeadAdd extends React.PureComponent {
 
     // UI BUTTONS
 
-    handleLeadNext = () => {
+    handleNextButtonClick = () => {
         this.props.addLeadViewLeadNext();
     }
 
-    handleLeadPrev = () => {
+    handlePrevButtonClick = () => {
         this.props.addLeadViewLeadPrev();
     }
 
-    handleRemove = (leadId) => {
-        const removeLeadModalText = leadsString.deleteLeadConfirmText;
+    handleRemoveButtonClick = (leadId) => {
         this.setState({
-            removeLeadModalText,
             showRemoveLeadModal: true,
+            deleteMode: DELETE_MODE.single,
             leadIdForRemoval: leadId || this.props.activeLeadId,
         });
     }
 
-    handleRemoveLeadClose = (confirm) => {
-        const leadId = this.state.leadIdForRemoval;
+    handleFilteredRemoveButtonClick = () => {
         this.setState({
-            showRemoveLeadModal: false,
-            removeLeadModalText: undefined,
-            leadIdForRemoval: undefined,
+            showRemoveLeadModal: true,
+            deleteMode: DELETE_MODE.filtered,
         });
-
-        if (confirm) {
-            this.uploadCoordinator.remove(leadId);
-            this.props.addLeadViewLeadRemove(leadId);
-
-            notify.send({
-                title: notificationStrings.leadDelete,
-                type: notify.type.SUCCESS,
-                message: notificationStrings.leadDeleteSuccess,
-                duration: notify.duration.SLOW,
-            });
-        }
     }
 
-    handleSave = () => {
-        const leadId = this.props.activeLeadId;
+    handleBulkRemoveButtonClick = () => {
+        this.setState({
+            showRemoveLeadModal: true,
+            deleteMode: DELETE_MODE.all,
+        });
+    }
 
-        const activeLeadForm = this.leadRefs[leadId];
+    handleRemoveLeadModalClose = (confirm) => {
+        const {
+            leadIdForRemoval: leadId,
+            deleteMode,
+        } = this.state;
+
+        if (confirm) {
+            switch (deleteMode) {
+                case DELETE_MODE.single:
+                    this.removeSelected(leadId);
+                    break;
+                case DELETE_MODE.filtered:
+                    this.removeFiltered();
+                    break;
+                case DELETE_MODE.all:
+                    this.removeBulk();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        this.setState({
+            showRemoveLeadModal: false,
+            leadIdForRemoval: undefined,
+            deleteMode: undefined,
+        });
+    }
+
+    removeSelected = (leadId) => {
+        this.uploadCoordinator.remove(leadId);
+        this.props.addLeadViewLeadRemove(leadId);
+
+        notify.send({
+            title: notificationStrings.leadDiscard,
+            type: notify.type.SUCCESS,
+            message: notificationStrings.leadDiscardSuccess,
+            duration: notify.duration.MEDIUM,
+        });
+    }
+
+    removeFiltered = () => {
+        this.filteredLeadsKeys.forEach((leadId) => {
+            this.uploadCoordinator.remove(leadId);
+            this.props.addLeadViewLeadRemove(leadId);
+        });
+
+        notify.send({
+            title: notificationStrings.leadsDiscard,
+            type: notify.type.SUCCESS,
+            message: notificationStrings.leadsDiscardSuccess,
+            duration: notify.duration.MEDIUM,
+        });
+    }
+
+    removeBulk = () => {
+        this.allLeadsKeys.forEach((leadId) => {
+            this.uploadCoordinator.remove(leadId);
+            this.props.addLeadViewLeadRemove(leadId);
+        });
+
+        notify.send({
+            title: notificationStrings.leadsDiscard,
+            type: notify.type.SUCCESS,
+            message: notificationStrings.leadsDiscardSuccess,
+            duration: notify.duration.MEDIUM,
+        });
+    }
+
+    handleSaveButtonClick = () => {
+        const leadId = this.props.activeLeadId;
+        const activeLeadForm = this.leadFormRefs[leadId];
         if (activeLeadForm) {
             activeLeadForm.start();
         }
     }
 
-
-    handleBulkSave = () => {
-        const leadKeys = this.props.addLeadViewLeads
-            .map(leadAccessor.getKey);
-        leadKeys.forEach((id) => {
-            this.formCoordinator.add(id, this.leadRefs[id]);
+    handleFilteredSaveButtonClick = () => {
+        this.filteredLeadsKeys.forEach((id) => {
+            this.formCoordinator.add(id, this.leadFormRefs[id]);
         });
         this.formCoordinator.start();
     }
 
-    // UI
+    handleBulkSaveButtonClick = () => {
+        this.allLeadsKeys.forEach((id) => {
+            this.formCoordinator.add(id, this.leadFormRefs[id]);
+        });
+        this.formCoordinator.start();
+    }
+
+    // RENDER
 
     referenceForLeadDetail = key => (elem) => {
         if (elem) {
-            this.leadRefs[key] = elem.getWrappedInstance();
+            this.leadFormRefs[key] = elem.getWrappedInstance();
         }
-    }
-
-    calcChoices = () => {
-        const {
-            leadUploads,
-            leadRests,
-            leadDriveRests,
-            leadDropboxRests,
-        } = this.state;
-        const { addLeadViewLeads } = this.props;
-        return addLeadViewLeads.reduce(
-            (acc, lead) => {
-                const leadId = leadAccessor.getKey(lead);
-                const choice = calcLeadState({
-                    lead,
-                    rest: leadRests[leadId],
-                    upload: leadUploads[leadId],
-                    drive: leadDriveRests[leadId],
-                    dropbox: leadDropboxRests[leadId],
-                });
-                const isSaveDisabled = (choice !== LEAD_STATUS.nonPristine);
-                const isRemoveDisabled = (choice === LEAD_STATUS.requesting);
-                const isFormLoading = (choice === LEAD_STATUS.requesting);
-                const isFormDisabled = (
-                    choice === LEAD_STATUS.requesting ||
-                    choice === LEAD_STATUS.warning
-                );
-                acc[leadId] = {
-                    choice,
-                    isSaveDisabled,
-                    isFormDisabled,
-                    isFormLoading,
-                    isRemoveDisabled,
-                };
-                return acc;
-            },
-            {},
-        );
     }
 
     renderLeadDetail = (key, lead) => {
@@ -347,12 +467,13 @@ export default class LeadAdd extends React.PureComponent {
             isSaveDisabled,
             isFormDisabled,
             isFormLoading,
-        } = this.choices[key] || {};
+        } = this.globalUiState[key] || {};
         const {
             activeLeadId,
             leadFilterOptions,
         } = this.props;
         const { pendingSubmitAll } = this.state;
+
         const { project } = leadAccessor.getValues(lead);
         const leadOptions = leadFilterOptions[project];
         return (
@@ -378,49 +499,89 @@ export default class LeadAdd extends React.PureComponent {
             leadUploads,
             pendingSubmitAll,
             showRemoveLeadModal,
-            removeLeadModalText,
         } = this.state;
         const {
             activeLead,
             activeLeadId,
             addLeadViewCanPrev,
             addLeadViewCanNext,
+            addLeadViewLeads,
+            filters,
         } = this.props;
 
-        // calculate all choices
-        this.choices = this.calcChoices();
-        // get choice for activeLead
-        const { isSaveDisabled, isRemoveDisabled } = this.choices[activeLeadId] || {};
-        // identify if save is enabled for some leads
-        const someSaveEnabled = Object.keys(this.choices).some(
-            key => !(this.choices[key].isSaveDisabled),
+        // calculate all globalUiState
+        const globalUiState = LeadAdd.calcGlobalUiState(this.state, this.props);
+
+        // filter leads
+        const filterFn = LeadAdd.createFilterFn(globalUiState, filters);
+        const leadsFiltered = addLeadViewLeads.filter(filterFn);
+
+        const allLeadsKeys = addLeadViewLeads.map(leadAccessor.getKey);
+        const filteredLeadsKeys = leadsFiltered.map(leadAccessor.getKey);
+
+        const allEnabled = (
+            allLeadsKeys.length > 1
         );
+        const filteredEnabled = (
+            allLeadsKeys.length > 1 &&
+            allLeadsKeys.length !== filteredLeadsKeys.length &&
+            filteredLeadsKeys.length > 0
+        );
+
+        // identify if save is enabled for all-leads
+        const isSaveEnabledForAll = (
+            allEnabled &&
+            LeadAdd.isSomeSaveEnabled(allLeadsKeys, globalUiState)
+        );
+        const isRemoveEnabledForAll = (
+            allEnabled &&
+            LeadAdd.isSomeRemoveEnabled(allLeadsKeys, globalUiState)
+        );
+
+        // identify is save is enabled for filtered-leads
+        const isSaveEnabledForFiltered = (
+            filteredEnabled &&
+            LeadAdd.isSomeSaveEnabled(filteredLeadsKeys, globalUiState)
+        );
+
+        const isRemoveEnabledForFiltered = (
+            filteredEnabled &&
+            LeadAdd.isSomeRemoveEnabled(filteredLeadsKeys, globalUiState)
+        );
+
+        // identify is save is enabled for active-lead
+        const {
+            isSaveDisabled: isSaveDisabledForActive,
+            isRemoveDisabled: isRemoveDisabledForActive,
+        } = globalUiState[activeLeadId] || {};
+
+        this.globalUiState = globalUiState;
+        this.allLeadsKeys = allLeadsKeys;
+        this.filteredLeadsKeys = filteredLeadsKeys;
 
         return (
             <div styleName="add-lead">
                 <Prompt
-                    when={someSaveEnabled}
+                    when={isSaveEnabledForAll}
                     message={commonStrings.youHaveUnsavedChanges}
                 />
-                <header
-                    styleName="header"
-                >
+                <header styleName="header">
                     <LeadFilter />
                     { activeLead &&
                         <div styleName="action-buttons">
                             <div styleName="movement-buttons">
                                 <Button
                                     disabled={!addLeadViewCanPrev}
-                                    onClick={this.handleLeadPrev}
-                                >
-                                    {leadsString.previousButtonLabel}
-                                </Button>
+                                    onClick={this.handlePrevButtonClick}
+                                    iconName={iconNames.prev}
+                                    title={leadsString.previousButtonLabel}
+                                />
                                 <Button
                                     disabled={!addLeadViewCanNext}
-                                    onClick={this.handleLeadNext}
-                                >
-                                    {leadsString.nextButtonLabel}
-                                </Button>
+                                    onClick={this.handleNextButtonClick}
+                                    iconName={iconNames.next}
+                                    title={leadsString.nextButtonLabel}
+                                />
                             </div>
                             <DropdownMenu
                                 iconName={iconNames.delete}
@@ -429,27 +590,23 @@ export default class LeadAdd extends React.PureComponent {
                             >
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleRemove}
-                                    disabled={isRemoveDisabled}
+                                    onClick={this.handleRemoveButtonClick}
+                                    disabled={isRemoveDisabledForActive}
                                 >
                                     {leadsString.removeCurrentButtonTitle}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleRemoveAllFiltered}
+                                    onClick={this.handleFilteredRemoveButtonClick}
+                                    disabled={!isRemoveEnabledForFiltered}
                                 >
                                     {leadsString.removeAllFilteredButtonTitle}
 
                                 </button>
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleRemoveAllSaved}
-                                >
-                                    {leadsString.removeAllSavedButtonTitle}
-                                </button>
-                                <button
-                                    styleName="dropdown-button"
-                                    onClick={this.handleRemoveAll}
+                                    onClick={this.handleBulkRemoveButtonClick}
+                                    disabled={!isRemoveEnabledForAll}
                                 >
                                     {leadsString.removeAllButtonTitle}
                                 </button>
@@ -457,25 +614,26 @@ export default class LeadAdd extends React.PureComponent {
                             <DropdownMenu
                                 iconName={iconNames.save}
                                 styleName="save-buttons"
-                                title="Save"
+                                title="Save" // FIXME: use strings
                             >
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleSave}
-                                    disabled={isSaveDisabled}
+                                    onClick={this.handleSaveButtonClick}
+                                    disabled={isSaveDisabledForActive}
                                 >
                                     {leadsString.saveCurrentButtonTitle}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleBulkSaveFiltered}
+                                    onClick={this.handleFilteredSaveButtonClick}
+                                    disabled={pendingSubmitAll || !isSaveEnabledForFiltered}
                                 >
                                     {leadsString.saveAllFilteredButtonTitle}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
-                                    onClick={this.handleBulkSave}
-                                    disabled={pendingSubmitAll || !someSaveEnabled}
+                                    onClick={this.handleBulkSaveButtonClick}
+                                    disabled={pendingSubmitAll || !isSaveEnabledForAll}
                                 >
                                     {leadsString.saveAllButtonTitle}
                                 </button>
@@ -483,14 +641,13 @@ export default class LeadAdd extends React.PureComponent {
                         </div>
                     }
                 </header>
-                <div
-                    styleName="content"
-                >
+                <div styleName="content">
                     <div styleName="left">
                         <LeadList
+                            leads={leadsFiltered}
                             leadUploads={leadUploads}
-                            choices={this.choices}
-                            onLeadRemove={this.handleRemove}
+                            globalUiState={this.globalUiState}
+                            onLeadRemove={this.handleRemoveButtonClick}
                         />
                         <LeadButtons
                             onDropboxSelect={this.handleDropboxSelect}
@@ -499,16 +656,21 @@ export default class LeadAdd extends React.PureComponent {
                         />
                     </div>
                     <List
-                        data={this.props.addLeadViewLeads}
+                        data={addLeadViewLeads}
                         modifier={this.renderLeadDetail}
                         keyExtractor={leadAccessor.getKey}
                     />
                 </div>
                 <Confirm
-                    onClose={this.handleRemoveLeadClose}
+                    onClose={this.handleRemoveLeadModalClose}
                     show={showRemoveLeadModal}
                 >
-                    <p>{removeLeadModalText}</p>
+                    <p>
+                        {
+                            /* TODO: different message for delete modes */
+                            leadsString.deleteLeadConfirmText
+                        }
+                    </p>
                 </Confirm>
             </div>
         );

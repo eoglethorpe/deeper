@@ -21,17 +21,18 @@
         font-size: inherit;
         user-select: none;
 
+        &.active {
+            border-left: $width-separator-thick solid $color-accent;
+            background-color: $color-hover;
+        }
+
+
         .icon {
             flex-shrink: 0;
             margin: 0 $spacing-small;
             padding: 0;
             width: $width-icon-large;
             font-size: $font-size-large;
-        }
-
-        &.active {
-            border-left: $width-separator-thick solid $color-accent;
-            background-color: $color-hover;
         }
 
         .title {
@@ -42,11 +43,7 @@
             word-break: break-all;
         }
 
-        .warning,
-        .pending,
-        .error,
-        .complete,
-        .pristine {
+        .status-icon{
             flex-shrink: 0;
             margin: 0 $spacing-small;
             padding: 0;

@@ -27,25 +27,19 @@ import {
 import styles from '../styles.scss';
 
 const propTypes = {
-    leadKey: PropTypes.string.isRequired,
     active: PropTypes.bool.isRequired,
+    leadKey: PropTypes.string.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    leadOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     onFormSubmitFailure: PropTypes.func.isRequired,
     onFormSubmitSuccess: PropTypes.func.isRequired,
 
     addLeadViewLeadChange: PropTypes.func.isRequired,
+
     addLeadViewCopyAllBelow: PropTypes.func.isRequired,
     addLeadViewCopyAll: PropTypes.func.isRequired,
-
-    isFormDisabled: PropTypes.bool.isRequired,
-    isFormLoading: PropTypes.bool.isRequired,
-    isSaveDisabled: PropTypes.bool.isRequired,
-    isBulkActionDisabled: PropTypes.bool.isRequired,
 };
 const defaultProps = {
-    leadOptions: {},
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -66,10 +60,25 @@ export default class LeadFormItem extends React.PureComponent {
         }
     }
 
-    handleFormChange = (values, { formErrors, formFieldErrors }) => {
-        const leadId = this.props.leadKey;
+    handleFormSuccess = (newValues) => {
+        const {
+            lead,
+            onFormSubmitSuccess,
+        } = this.props;
+        if (this.leadSaveRequest) {
+            this.leadSaveRequest.stop();
+        }
+        this.leadSaveRequest = onFormSubmitSuccess(lead, newValues);
+        this.leadSaveRequest.start();
+    }
 
-        this.props.addLeadViewLeadChange({
+    handleFormChange = (values, { formErrors, formFieldErrors }) => {
+        const {
+            leadKey: leadId,
+            addLeadViewLeadChange,
+        } = this.props;
+
+        addLeadViewLeadChange({
             leadId,
             values,
             formErrors,
@@ -79,120 +88,135 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     handleFormFailure = ({ formErrors, formFieldErrors }) => {
-        const leadId = this.props.leadKey;
-        this.props.addLeadViewLeadChange({
+        const {
+            leadKey: leadId,
+            addLeadViewLeadChange,
+            onFormSubmitFailure,
+        } = this.props;
+
+        addLeadViewLeadChange({
             leadId,
             formErrors,
             formFieldErrors,
             uiState: { pristine: true },
         });
-
-        this.props.onFormSubmitFailure(this.props.leadKey);
+        onFormSubmitFailure(leadId);
     }
 
-    handleFormSuccess = (newValues) => {
-        if (this.leadSaveRequest) {
-            this.leadSaveRequest.stop();
-        }
-        this.leadSaveRequest = this.props.onFormSubmitSuccess(this.props.lead, newValues);
-        this.leadSaveRequest.start();
+    handleApplyAllClick = (attrName) => {
+        const {
+            leadKey,
+            addLeadViewCopyAll,
+        } = this.props;
+        addLeadViewCopyAll({ leadId: leadKey, attrName });
     }
 
-    // Called by co-ordinator
+    handleApplyAllBelowClick = (attrName) => {
+        const {
+            leadKey,
+            addLeadViewCopyAllBelow,
+        } = this.props;
+        addLeadViewCopyAllBelow({ leadId: leadKey, attrName });
+    }
+
+    // CO-ORDINATOR
 
     start = () => {
+        const {
+            onFormSubmitFailure,
+            leadKey,
+        } = this.props;
+
         if (this.containerRef) {
-            if (!this.props.isSaveDisabled) {
-                this.containerRef.submit();
-            } else {
-                this.props.onFormSubmitFailure(this.props.leadKey);
+            const submittable = this.containerRef.submit();
+            if (!submittable) {
+                onFormSubmitFailure(leadKey);
             }
         }
     }
 
     close = () => {
-        // do nothing, cleanup not required
+        // no op, cleanup not required
     }
 
-    handleApplyAllClick = (attrName) => {
-        const { leadKey } = this.props;
-        this.props.addLeadViewCopyAll({ leadId: leadKey, attrName });
-    }
+    // RENDER
 
-    handleApplyAllBelowClick = (attrName) => {
-        const { leadKey } = this.props;
-        this.props.addLeadViewCopyAllBelow({ leadId: leadKey, attrName });
-    }
-
-    renderLeadPreview = (lead) => {
+    renderLeadPreview = ({ lead }) => {
         const type = leadAccessor.getType(lead);
-
         const values = leadAccessor.getValues(lead);
-        if (type === LEAD_TYPE.website) {
-            if (values.url) {
+
+        switch (type) {
+            case LEAD_TYPE.text:
+                return null;
+            case LEAD_TYPE.website:
                 return (
                     <div className={styles['lead-preview']} >
-                        <WebsiteViewer
-                            styleName="gallery-file"
-                            url={values.url}
-                        />
+                        {
+                            values.url ? (
+                                <WebsiteViewer
+                                    styleName="gallery-file"
+                                    url={values.url}
+                                />
+                            ) : (
+                                <div styleName="preview-text">
+                                    <h1>
+                                        {leadsString.sourcePreview}
+                                    </h1>
+                                </div>
+                            )
+                        }
                     </div>
                 );
-            }
-            return (
-                <div className={styles['lead-preview']} >
-                    <div styleName="preview-text">
-                        <h1>{leadsString.sourcePreview}</h1>
+            default:
+                return (
+                    <div className={styles['lead-preview']} >
+                        {
+                            values.attachment ? (
+                                <DeepGallery
+                                    styleName="gallery-file"
+                                    galleryId={values.attachment && values.attachment.id}
+                                />
+                            ) :
+                                <div styleName="preview-text">
+                                    <h1>
+                                        {leadsString.previewNotAvailable}
+                                    </h1>
+                                </div>
+                        }
                     </div>
-                </div>
-            );
-        } else if (type === LEAD_TYPE.text) {
-            return undefined;
+                );
         }
-        return (
-            <div className={styles['lead-preview']} >
-                {
-                    values.attachment ? (
-                        <DeepGallery
-                            styleName="gallery-file"
-                            galleryId={values.attachment && values.attachment.id}
-                        />
-                    ) :
-                        <div styleName="preview-text">
-                            <h1>{leadsString.previewNotAvailable}</h1>
-                        </div>
-                }
-            </div>
-        );
     }
 
     render() {
         const {
-            lead,
-            leadOptions,
             active,
-            isFormDisabled,
-            isFormLoading,
-            isBulkActionDisabled,
+            lead,
+            leadKey, // eslint-disable-line no-unused-vars
+            onFormSubmitFailure, // eslint-disable-line no-unused-vars
+            onFormSubmitSuccess, // eslint-disable-line no-unused-vars
+            addLeadViewLeadChange, // eslint-disable-line no-unused-vars
+            addLeadViewCopyAllBelow, // eslint-disable-line no-unused-vars
+            addLeadViewCopyAll, // eslint-disable-line no-unused-vars
+            ...otherProps
         } = this.props;
 
+        const LeadPreview = this.renderLeadPreview;
+
         return (
-            <div className={`${styles.right} ${!active ? styles.hidden : ''}`} >
+            <div className={`${styles.right} ${!active ? styles.hidden : ''}`}>
                 <LeadForm
                     ref={(ref) => { this.containerRef = ref; }}
                     className={styles['add-lead-form']}
                     lead={lead}
-                    leadOptions={leadOptions}
                     onChange={this.handleFormChange}
                     onFailure={this.handleFormFailure}
                     onSuccess={this.handleFormSuccess}
-                    isFormDisabled={isFormDisabled}
-                    isFormLoading={isFormLoading}
-                    isBulkActionDisabled={isBulkActionDisabled}
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                    {...otherProps}
                 />
-                { active ? this.renderLeadPreview(lead) : null }
+                { active && <LeadPreview lead={lead} /> }
             </div>
         );
     }
