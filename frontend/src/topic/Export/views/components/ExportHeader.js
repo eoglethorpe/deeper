@@ -64,7 +64,7 @@ export default class ExportHeader extends React.PureComponent {
             }
         ));
 
-    export = (onSuccess, isPreview = false) => {
+    export = (onSuccess, isPreview = false, pdf = false) => {
         // Let's start by collecting the filters
         const {
             projectId,
@@ -90,6 +90,7 @@ export default class ExportHeader extends React.PureComponent {
             lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
             report_structure: this.createReportStructureForExport(reportStructure || emptyList),
             is_preview: isPreview,
+            pdf,
         };
 
         if (this.exportRequest) {
@@ -121,11 +122,11 @@ export default class ExportHeader extends React.PureComponent {
                 duration: notify.duration.MEDIUM,
             });
         };
-        this.export(exportFn, false);
+        this.export(exportFn, false, this.props.activeExportTypeKey === 'pdf');
     }
 
     handlePreview = () => {
-        this.export(this.props.onPreview, true);
+        this.export(this.props.onPreview, true, this.props.activeExportTypeKey === 'pdf');
     }
 
     render() {
