@@ -48,12 +48,14 @@ const propTypes = {
     }),
     setRegionDetails: PropTypes.func.isRequired,
     dataLoading: PropTypes.bool,
+    projectId: PropTypes.number,
 };
 
 const defaultProps = {
     className: '',
     regionDetail: {},
     dataLoading: false,
+    projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -131,6 +133,7 @@ export default class RegionDetail extends React.PureComponent {
     }
 
     createRequestForRegionDetailPatch = (regionId, data) => {
+        const { projectId } = this.props;
         const urlForRegion = createUrlForRegion(regionId);
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(urlForRegion)
@@ -147,6 +150,7 @@ export default class RegionDetail extends React.PureComponent {
                     this.props.setRegionDetails({
                         regionDetails: response,
                         regionId,
+                        projectId,
                     });
                     notify.send({
                         title: notificationStrings.regionDetail,

@@ -286,7 +286,7 @@ const strings = {
     350: 'ID',
 
     351: 'Remove Region',
-    352: 'Clone and Edit',
+    352: 'Clone & Edit',
 
     353: 'Are you sure you want to remove',
     354: 'Are you sure you want to clone',

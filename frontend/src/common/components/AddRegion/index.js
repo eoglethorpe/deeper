@@ -20,7 +20,6 @@ import {
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 
-
 import {
     pathNames,
     countriesString,

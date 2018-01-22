@@ -96,9 +96,13 @@ export default class ProjectRegions extends React.PureComponent {
                 region => caseInsensitiveSubmatch(region.title, searchInputValue),
             );
 
+            let newSelectedRegion = selectedRegion;
+            if (regions.findIndex(r => r.id === selectedRegion) === -1) {
+                newSelectedRegion = regions.length > 0 ? regions[0].id : selectedRegion;
+            }
             this.setState({
                 displayRegionList,
-                selectedRegion: regions.length > 0 ? regions[0].id : selectedRegion,
+                selectedRegion: newSelectedRegion,
             });
         }
     }
