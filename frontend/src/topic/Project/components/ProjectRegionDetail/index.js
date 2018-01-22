@@ -295,6 +295,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                 <RegionDetail
                                     dataLoading={dataLoading}
                                     countryId={countryId}
+                                    projectId={activeProject}
                                     styleName="region-detail-form"
                                 />
                                 <div styleName="map-container">

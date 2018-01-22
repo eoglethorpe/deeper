@@ -9,6 +9,7 @@ import {
     Button,
     PrimaryButton,
 } from '../../../../public/components/Action';
+import notify from '../../../../common/notify';
 
 import {
     pathNames,
@@ -112,7 +113,13 @@ export default class ExportHeader extends React.PureComponent {
 
     handleExport = () => {
         const exportFn = (exportId) => {
-            console.log('Exporting', exportId);
+            console.log('Exporting to ', exportId);
+            notify.send({
+                title: exportStrings.headerExport,
+                type: notify.type.SUCCESS,
+                message: exportStrings.exportStartedNotifyMessage,
+                duration: notify.duration.MEDIUM,
+            });
         };
         this.export(exportFn, false);
     }

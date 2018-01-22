@@ -286,7 +286,7 @@ const strings = {
     350: 'ID',
 
     351: 'Remove Region',
-    352: 'Clone and Edit',
+    352: 'Clone & Edit',
 
     353: 'Are you sure you want to remove',
     354: 'Are you sure you want to clone',
@@ -468,6 +468,7 @@ const strings = {
     633: 'Go back to exports',
     634: 'Decoupled Entries',
     635: 'Note that by selecting this option, it can greatly increase the amount of time to generate the export.',
+    636: 'Your export has been started.\nPlease go to view all exports page for further information on export.',
 
     // Analysis Framework Strings
 

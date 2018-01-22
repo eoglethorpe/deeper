@@ -96,9 +96,13 @@ export default class ProjectRegions extends React.PureComponent {
                 region => caseInsensitiveSubmatch(region.title, searchInputValue),
             );
 
+            let newSelectedRegion = selectedRegion;
+            if (regions.findIndex(r => r.id === selectedRegion) === -1) {
+                newSelectedRegion = regions.length > 0 ? regions[0].id : selectedRegion;
+            }
             this.setState({
                 displayRegionList,
-                selectedRegion: regions.length > 0 ? regions[0].id : selectedRegion,
+                selectedRegion: newSelectedRegion,
             });
         }
     }
@@ -153,6 +157,16 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion });
     }
 
+    handleAddedRegions = (regions) => {
+        if (regions) {
+            this.setState({ selectedRegion: regions[0] });
+        }
+    }
+
+    handleAddedRegion = (region) => {
+        this.setState({ selectedRegion: region });
+    }
+
     calcRegionKey = region => region.id;
 
     renderRegionList = (key, region) => {
@@ -190,6 +204,7 @@ export default class ProjectRegions extends React.PureComponent {
             </p>
         );
     }
+
 
     render() {
         const {
@@ -244,6 +259,7 @@ export default class ProjectRegions extends React.PureComponent {
                                             styleName="add-existing-region"
                                             projectId={projectDetails.id}
                                             onModalClose={this.handleModalClose}
+                                            onRegionsAdd={this.handleAddedRegions}
                                         />
                                     }
                                     {selectedAddRegionOption === 'new' &&
@@ -251,6 +267,7 @@ export default class ProjectRegions extends React.PureComponent {
                                             styleName="add-region"
                                             projectId={projectDetails.id}
                                             onModalClose={this.handleModalClose}
+                                            onRegionAdd={this.handleAddedRegion}
                                         />
                                     }
                                 </ModalBody>

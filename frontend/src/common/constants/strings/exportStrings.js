@@ -44,6 +44,8 @@ const exportStrings = {
     goBackToExportLabel: string[633],
     decoupledEntriesLabel: string[634],
     decoupledEntriesTitle: string[635],
+
+    exportStartedNotifyMessage: string[636],
 };
 
 export default exportStrings;

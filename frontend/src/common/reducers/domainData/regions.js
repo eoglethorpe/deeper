@@ -43,10 +43,11 @@ export const unsetAdminLevelForRegionAction = ({ adminLevelId, regionId }) => ({
     regionId,
 });
 
-export const setRegionDetailsAction = ({ regionDetails, regionId }) => ({
+export const setRegionDetailsAction = ({ regionDetails, regionId, projectId }) => ({
     type: SET_REGION_DETAILS,
     regionId,
     regionDetails,
+    projectId,
 });
 
 export const setRegionsAction = ({ regions }) => ({
@@ -89,7 +90,7 @@ const setRegions = (state, action) => {
 };
 
 const setRegionDetails = (state, action) => {
-    const { regionId, regionDetails } = action;
+    const { regionId, regionDetails, projectId } = action;
     const settings = {
         regions: {
             [regionId]: { $auto: {
@@ -97,6 +98,22 @@ const setRegionDetails = (state, action) => {
             } },
         },
     };
+    if (projectId) {
+        const index = ((state.projects[projectId] || {}).regions
+            || []).findIndex(d => (d.id === regionId));
+        if (index !== -1) {
+            settings.projects = {
+                [projectId]: { $auto: {
+                    regions: { $autoArray: {
+                        [index]: { $set: {
+                            id: regionDetails.id,
+                            title: regionDetails.title,
+                        } },
+                    } },
+                } },
+            };
+        }
+    }
     return update(state, settings);
 };
 
