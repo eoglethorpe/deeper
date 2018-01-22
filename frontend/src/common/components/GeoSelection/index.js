@@ -100,9 +100,15 @@ export default class GeoSelection extends React.PureComponent {
         const flatValues = props.value || emptyList;
         const values = GeoSelection.createNonFlatValues(locations, flatValues);
 
+        let selectedRegion;
+
+        if (props.regions) {
+            selectedRegion = (props.regions[0] || emptyObject).id;
+        }
+
         this.state = {
             showMapModal: false,
-            selectedRegion: undefined,
+            selectedRegion,
             locations,
             flatLocations,
             values,
@@ -319,32 +325,32 @@ export default class GeoSelection extends React.PureComponent {
                             rightComponent={
                                 <div styleName="location-selects">
                                     <SelectInput
-                                        showHintAndError={false}
-                                        showLabel={false}
-                                        placeholder={entryStrings.regionSelectPlaceholder}
-                                        options={regions}
+                                        hideClearButton
                                         keySelector={this.regionKeySelector}
+                                        label={entryStrings.regionSelectTitle}
                                         labelSelector={this.regionLabelSelector}
                                         onChange={this.handleRegionSelection}
+                                        options={regions}
                                         optionsIdentifier="region-select-options"
+                                        placeholder={entryStrings.regionSelectPlaceholder}
+                                        showHintAndError={false}
                                         value={selectedRegion}
-                                        hideClearButton
                                     />
                                     <MultiSelectInput
-                                        styleName="map-selection-select"
+                                        label={entryStrings.locationSelectTitle}
+                                        labelSelector={GeoSelection.shortLabelSelector}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
-                                        labelSelector={GeoSelection.shortLabelSelector}
-                                        placeholder={entryStrings.locationSelectPlaceholder}
                                         optionsIdentifier="location-select-options"
+                                        placeholder={entryStrings.locationSelectPlaceholder}
                                         showHintAndError={false}
-                                        showLabel={false}
+                                        styleName="map-selection-select"
                                         value={values[selectedRegion]}
                                     />
                                 </div>
                             }
                         />
-                        <ModalBody styleName="map-modal">
+                        <ModalBody styleName="body">
                             <RegionMap
                                 styleName="map"
                                 regionId={selectedRegion}

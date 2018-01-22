@@ -422,6 +422,8 @@ const strings = {
     542: 'Thank you for your feedback',
 
     543: 'Oops! It seems you don\'t have any entries. Please go back to the overview page to add one.',
+    544: 'Regions',
+    545: 'Locations',
 
     // Export strings
 

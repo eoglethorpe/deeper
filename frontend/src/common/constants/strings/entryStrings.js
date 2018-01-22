@@ -60,6 +60,8 @@ const entryStrings = {
     assitedTaggingFeedbackMessage: string[542],
 
     noEntryFound: string[543],
+    regionSelectTitle: string[544],
+    locationSelectTitle: string[545],
 };
 
 export default entryStrings;
