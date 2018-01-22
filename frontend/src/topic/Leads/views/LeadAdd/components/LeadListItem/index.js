@@ -104,20 +104,24 @@ export default class LeadListItem extends React.PureComponent {
 
     renderUploadProgress = ({ leadState, upload = {} }) => {
         const hide = leadState !== LEAD_STATUS.uploading || !upload;
+
+        const classNames = [styles['progress-bar']];
+        if (upload.progress >= 100) {
+            classNames.push(styles.completed);
+        }
+        if (hide) {
+            classNames.push(styles.hide);
+        }
+        const className = classNames.join(' ');
+
         const style = {
             width: `${upload.progress}%`,
         };
 
         return (
-            <span
-                styleName={`
-                    progress-bar
-                    ${upload.progress >= 100 ? 'completed' : ''}
-                    ${hide ? 'hide' : ''}
-                `}
-            >
+            <span className={className}>
                 <span
-                    styleName="progress"
+                    className={styles.progress}
                     style={style}
                 />
             </span>

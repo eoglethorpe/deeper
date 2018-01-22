@@ -154,11 +154,11 @@ export default class LeadFormItem extends React.PureComponent {
                         {
                             values.url ? (
                                 <WebsiteViewer
-                                    styleName="gallery-file"
+                                    className={styles['gallery-file']}
                                     url={values.url}
                                 />
                             ) : (
-                                <div styleName="preview-text">
+                                <div className={styles['preview-text']}>
                                     <h1>
                                         {leadsString.sourcePreview}
                                     </h1>
@@ -173,11 +173,11 @@ export default class LeadFormItem extends React.PureComponent {
                         {
                             values.attachment ? (
                                 <DeepGallery
-                                    styleName="gallery-file"
+                                    className={styles['gallery-file']}
                                     galleryId={values.attachment && values.attachment.id}
                                 />
                             ) :
-                                <div styleName="preview-text">
+                                <div className={styles['preview-text']}>
                                     <h1>
                                         {leadsString.previewNotAvailable}
                                     </h1>
