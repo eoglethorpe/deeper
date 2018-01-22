@@ -46,7 +46,7 @@ export default class DateFrameworkList extends React.PureComponent {
         this.state = {
             showEditModal: false,
             title: props.title,
-            informationDataSelected: (props.data || emptyObject).informationDataSelected,
+            informationDateSelected: (props.data || emptyObject).informationDateSelected,
         };
 
         this.props.editAction(this.handleEdit);
@@ -94,7 +94,7 @@ export default class DateFrameworkList extends React.PureComponent {
     }
 
     handleInformationDataCheck = (value) => {
-        this.setState({ informationDataSelected: value });
+        this.setState({ informationDateSelected: value });
     }
 
     handleEdit = () => {
@@ -105,14 +105,14 @@ export default class DateFrameworkList extends React.PureComponent {
         this.setState({
             showEditModal: false,
             title: this.props.title,
-            informationDataSelected: this.props.data.informationDataSelected,
+            informationDateSelected: this.props.data.informationDateSelected,
         });
     }
 
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { title, informationDataSelected } = this.state;
-        const data = { informationDataSelected };
+        const { title, informationDateSelected } = this.state;
+        const data = { informationDateSelected };
 
         this.props.onChange(
             data,
@@ -126,7 +126,7 @@ export default class DateFrameworkList extends React.PureComponent {
         const {
             showEditModal,
             title,
-            informationDataSelected,
+            informationDateSelected,
         } = this.state;
 
         return (
@@ -152,7 +152,7 @@ export default class DateFrameworkList extends React.PureComponent {
                             <Checkbox
                                 styleName="checkbox"
                                 onChange={this.handleInformationDataCheck}
-                                value={informationDataSelected}
+                                value={informationDateSelected}
                                 label={afStrings.informationDateCheckboxLabel}
                             />
                         </ModalBody>
