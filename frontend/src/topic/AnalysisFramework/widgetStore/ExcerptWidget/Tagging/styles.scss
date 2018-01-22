@@ -19,6 +19,15 @@
     height: 100%;
     overflow: auto;
 
+    .drop-here-container {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        color: $color-label;
+    }
+
     .textarea {
         @extend %textarea;
     }
