@@ -190,7 +190,7 @@ export default class EditEntryView extends React.PureComponent {
             this.entriesRequest.stop();
         }
 
-        this.saveRequestCoordinator.close();
+        this.saveRequestCoordinator.stop();
     }
 
     createRequestForLead = (leadId) => {

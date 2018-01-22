@@ -207,7 +207,7 @@ export default class LeadFormItem extends React.PureComponent {
         }
     }
 
-    close = () => {
+    stop = () => {
         // no op, cleanup not required
     }
 

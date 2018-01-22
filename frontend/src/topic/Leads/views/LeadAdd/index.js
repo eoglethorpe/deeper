@@ -238,10 +238,10 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.uploadCoordinator.close();
-        this.driveUploadCoordinator.close();
-        this.dropboxUploadCoordinator.close();
-        this.formCoordinator.close();
+        this.uploadCoordinator.stop();
+        this.driveUploadCoordinator.stop();
+        this.dropboxUploadCoordinator.stop();
+        this.formCoordinator.stop();
     }
 
     // HANDLE SELECTION

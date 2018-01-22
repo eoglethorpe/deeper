@@ -82,14 +82,20 @@ export default class Export extends React.PureComponent {
         if (pending) {
             return (
                 <div>
-                    <h2>Just a moment, setting up you extension</h2>
+                    <h2>
+                        {/* FIXME: strings */}
+                        Just a moment, setting up you extension
+                    </h2>
                 </div>
             );
         }
 
         return (
             <div>
-                <h2>You may close this page now</h2>
+                <h2>
+                    {/* FIXME: strings */}
+                    You may close this page now
+                </h2>
             </div>
         );
     }
