@@ -4,19 +4,19 @@ import initialSettingsState from '../initial-state/settings';
 
 // TYPE
 
-export const SET_SERVER_ADDRESS_ACTION = 'auth/SET_SERVER_ADDRESS';
+export const SET_SETTINGS_ACTION = 'auth/SET_SETTINGS';
 
 // ACTION-CREATOR
 
-export const setServerAddressAction = ({ serverAddress, apiAddress }) => ({
-    type: SET_SERVER_ADDRESS_ACTION,
+export const setSettingsAction = ({ serverAddress, apiAddress }) => ({
+    type: SET_SETTINGS_ACTION,
     serverAddress,
     apiAddress,
 });
 
 // REDUCER
 
-const setServerAddress = (state, action) => {
+const setSettings = (state, action) => {
     const {
         serverAddress,
         apiAddress,
@@ -32,7 +32,7 @@ const setServerAddress = (state, action) => {
 };
 
 export const settingsReducers = {
-    [SET_SERVER_ADDRESS_ACTION]: setServerAddress,
+    [SET_SETTINGS_ACTION]: setSettings,
 };
 
 const settingsReducer = createReducerWithMap(settingsReducers, initialSettingsState);

@@ -16,7 +16,7 @@ import { FgRestBuilder } from '../public/utils/rest';
 
 import { LoadingAnimation } from '../public-components/View';
 import {
-    TransparentAccentButton,
+    AccentButton,
     PrimaryButton,
 } from '../public-components/Action';
 
@@ -389,13 +389,14 @@ export default class AddLead extends React.PureComponent {
                     <h1>
                         Add lead
                     </h1>
-                    <TransparentAccentButton
+                    <AccentButton
+                        transparent
                         type="button"
                         disabled={pending}
                         onClick={onSettingsButtonClick}
                     >
                         Settings
-                    </TransparentAccentButton>
+                    </AccentButton>
                 </header>
                 <Form
                     styleName="inputs"

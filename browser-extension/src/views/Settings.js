@@ -11,7 +11,7 @@ import {
 } from '../public-components/Input';
 
 import {
-    TransparentAccentButton,
+    AccentButton,
     PrimaryButton,
 } from '../public-components/Action';
 
@@ -106,7 +106,6 @@ export default class Settings extends React.PureComponent {
     // FORM
 
     handleFormChange = (value, { formFieldErrors }) => {
-        console.warn('change');
         this.setState({
             formFieldErrors: {
                 ...this.state.formFieldErrors,
@@ -120,7 +119,6 @@ export default class Settings extends React.PureComponent {
     }
 
     handleFormFailure = ({ formFieldErrors }) => {
-        console.warn('fail');
         this.setState({
             formFieldErrors: {
                 ...this.state.formFieldErrors,
@@ -130,7 +128,6 @@ export default class Settings extends React.PureComponent {
     }
 
     handleFormSuccess = (values) => {
-        console.warn('success');
         const { setSettings } = this.props;
         setSettings(values);
         this.showSaveStatus();
@@ -157,9 +154,12 @@ export default class Settings extends React.PureComponent {
                         <h1>
                             Settings
                         </h1>
-                        <TransparentAccentButton onClick={onBackButtonClick}>
+                        <AccentButton
+                            transparent
+                            onClick={onBackButtonClick}
+                        >
                             Back
-                        </TransparentAccentButton>
+                        </AccentButton>
                     </header>
                     <div styleName="content">
                         <TextInput
