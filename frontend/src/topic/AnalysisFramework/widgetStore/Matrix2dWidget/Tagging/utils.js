@@ -90,7 +90,7 @@ export const createExportData = (attribute, data) => {
                         dimensionData.title,
                         subdimensionData.title,
                         sectorData.title,
-                        subsectors.map(ss => sectorData.subsectors.find(sd => sd.id === ss)).join(','),
+                        subsectors.map(ss => sectorData.subsectors.find(sd => sd.id === ss).title).join(','),
                     ]);
                     reportValues.push(`${sectorKey}-${key}-${subKey}`);
                 }

@@ -57,6 +57,8 @@ def get_filtered_entries(user, queries):
         entries = entries.filter(lead__project__id=project)
 
     filters = Filter.get_for(user)
+    if project:
+        filters = filters.filter(analysis_framework__project__id=project)
 
     ONE_DAY = 24 * 60 * 60
 
