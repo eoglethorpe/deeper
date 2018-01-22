@@ -4,6 +4,16 @@
     border: none;
 }
 
+.iframe {
+
+    .url {
+        display: inline-block;
+        text-align: center;
+        color: $color-accent;
+        text-transform: lowercase;
+    }
+}
+
 .error-website-msg {
     display: flex;
     flex-direction: column;

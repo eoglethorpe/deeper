@@ -20,15 +20,17 @@ import {
 const propTypes = {
     className: PropTypes.string,
     url: PropTypes.string,
+    showUrl: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     url: undefined,
+    showUrl: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class DeepGallery extends React.PureComponent {
+export default class WebsiteViewer extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -126,6 +128,74 @@ export default class DeepGallery extends React.PureComponent {
         return urlRequest;
     }
 
+    renderIFrame = () => {
+        const {
+            className,
+            showUrl,
+            url,
+        } = this.props;
+        const { httpsUrl } = this.state;
+
+        return (
+            <div
+                styleName="iframe"
+                className={className}
+            >
+                {
+                    showUrl &&
+                        <a
+                            styleName="url"
+                            href={httpsUrl || url}
+                            target="_blank"
+                        >
+                            {httpsUrl || url}
+                        </a>
+                }
+                <iframe
+                    styleName="doc"
+                    sandbox="allow-scripts allow-same-origin"
+                    title={httpsUrl}
+                    src={httpsUrl}
+                />
+            </div>
+        );
+    }
+
+    renderError = () => {
+        const {
+            className,
+            url,
+        } = this.props;
+        const {
+            httpsUrl,
+            invalidUrl,
+        } = this.state;
+
+        return (
+            <div className={className}>
+                {
+                    !invalidUrl ?
+                        <div styleName="error-website-msg">
+                            <span>
+                                {leadsString.cannotPreviewUrl}
+                            </span>
+                            <a
+                                styleName="url"
+                                href={httpsUrl || url}
+                                target="_blank"
+                            >
+                                {httpsUrl || url}
+                            </a>
+                        </div>
+                        :
+                        <span styleName="error-website-msg">
+                            {leadsString.invalidUrl}
+                        </span>
+                }
+            </div>
+        );
+    }
+
     render() {
         const {
             pending,
@@ -135,7 +205,6 @@ export default class DeepGallery extends React.PureComponent {
             mimeType,
             isDoc,
             httpsUrl,
-            invalidUrl,
         } = this.state;
 
         const {
@@ -171,34 +240,7 @@ export default class DeepGallery extends React.PureComponent {
 
         return (
             (canShow && !isSameOrigin && isSecure && httpsUrl) ?
-                <iframe
-                    styleName="doc"
-                    sandbox="allow-scripts allow-same-origin"
-                    className={className}
-                    title={httpsUrl}
-                    src={httpsUrl}
-                /> :
-                <div className={className}>
-                    {
-                        !invalidUrl ?
-                            <div styleName="error-website-msg">
-                                <span>
-                                    {leadsString.cannotPreviewUrl}
-                                </span>
-                                <a
-                                    styleName="url"
-                                    href={httpsUrl || url}
-                                    target="_blank"
-                                >
-                                    {httpsUrl || url}
-                                </a>
-                            </div>
-                            :
-                            <span styleName="error-website-msg">
-                                {leadsString.invalidUrl}
-                            </span>
-                    }
-                </div>
+                this.renderIFrame() : this.renderError()
         );
     }
 }

@@ -359,6 +359,7 @@ export default class Overview extends React.PureComponent {
                 <WebsiteViewer
                     styleName="gallery-file"
                     url={lead.url}
+                    showUrl
                 />
             );
         } else if (this.isTypeWithAttachment(type) && lead.attachment) {
