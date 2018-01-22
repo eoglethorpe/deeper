@@ -6,12 +6,10 @@ $width-entry-select-input: 400px;
 
     .left {
         display: flex;
-        flex-basis: 30%;
         flex-direction: column;
-        flex-grow: 0;
-        flex-shrink: 0;
         border-right: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
+        width: 30%;
 
         .lead-preview {
             display: flex;
@@ -157,7 +155,7 @@ $width-entry-select-input: 400px;
     .right {
         display: flex;
         flex-direction: column;
-        flex-grow: 1;
+        width: 70%;
 
         >.header {
             display: flex;
