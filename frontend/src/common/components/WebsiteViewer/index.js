@@ -90,9 +90,16 @@ export default class DeepGallery extends React.PureComponent {
                     const mimeType = response.headers['Content-Type'];
                     const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
                     const httpsUrl = response.httpsUrl;
+                    const contentSecurityPolicy = response.headers['Content-Security-Policy'] || '';
+                    let canShow = true;
+
+                    if (contentSecurityPolicy.match('frame-ancestors')) {
+                        // NOTE: Assuming there is no *.thedeep.io in allow
+                        canShow = false;
+                    }
 
                     this.setState({
-                        canShow: true,
+                        canShow,
                         isSameOrigin,
                         isSecure,
                         mimeType,

@@ -1,8 +1,8 @@
 #! /bin/bash
 
-/code/deploy/scripts/
+# /code/deploy/scripts/
 BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-/code/
+# /code/
 ROOT_DIR=$(dirname "$(dirname "$BASE_DIR")")
 instid=`curl -s -o - http://169.254.169.254/latest/meta-data/instance-id`
 export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
