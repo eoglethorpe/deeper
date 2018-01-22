@@ -57,3 +57,10 @@ export const createUrlForSimplifiedLeadPreview = leadId => (
 export const createUrlForLeadExtractionTrigger = leadId => (
     `${wsEndpoint}/lead-extraction-trigger/${leadId}/`
 );
+
+export const urlForWebInfo = `${wsEndpoint}/web-info-extract/`;
+export const createParamsForWebInfo = ({ url }) => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({ url }),
+});
