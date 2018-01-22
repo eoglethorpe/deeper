@@ -45,11 +45,13 @@ const propTypes = {
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
+    onRegionsAdd: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
     projectId: undefined,
+    onRegionsAdd: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
@@ -125,7 +127,7 @@ export default class AddExistingRegion extends React.PureComponent {
         }
     }
 
-    createProjectPatchRequest = (newProjectDetails, projectId) => {
+    createProjectPatchRequest = (newProjectDetails, projectId, addedRegions) => {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForProjectPatch(newProjectDetails))
@@ -141,6 +143,9 @@ export default class AddExistingRegion extends React.PureComponent {
                         message: notificationStrings.countryCreateSuccess,
                         duration: notify.duration.MEDIUM,
                     });
+                    if (this.props.onRegionsAdd) {
+                        this.props.onRegionsAdd(addedRegions);
+                    }
                     this.props.onModalClose();
                 } catch (er) {
                     console.error(er);
@@ -214,7 +219,11 @@ export default class AddExistingRegion extends React.PureComponent {
             this.projectPatchRequest.stop();
         }
 
-        this.projectPatchRequest = this.createProjectPatchRequest(newProjectDetails, projectId);
+        this.projectPatchRequest = this.createProjectPatchRequest(
+            newProjectDetails,
+            projectId,
+            values.regions,
+        );
         this.projectPatchRequest.start();
 
         this.setState({ pristine: false });

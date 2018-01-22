@@ -46,11 +46,13 @@ const propTypes = {
     addNewRegion: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
+    onRegionAdd: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
     projectId: undefined,
+    onRegionAdd: undefined,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -127,6 +129,9 @@ export default class AddRegion extends React.PureComponent {
                             projectId,
                         });
                         this.props.onModalClose();
+                        if (this.props.onRegionAdd) {
+                            this.props.onRegionAdd(response.id);
+                        }
                     } else {
                         this.props.addNewRegion({
                             regionDetail: response,
