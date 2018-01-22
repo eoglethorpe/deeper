@@ -145,12 +145,6 @@ export default class GeoSelection extends React.PureComponent {
         }
     }
 
-    componentWillUnmount() {
-        if (this.geoOptionsRequest) {
-            this.geoOptionsRequest.stop();
-        }
-    }
-
     handleRegionSelection = (selectedRegion) => {
         this.setState({ selectedRegion });
     }
