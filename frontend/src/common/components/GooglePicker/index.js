@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 
-import { TransparentButton } from '../../../public/components/Action';
+import { PrimaryButton } from '../../../public/components/Action';
 import { commonStrings } from '../../../common/constants';
 
 import styles from './styles.scss';
@@ -193,18 +193,19 @@ export default class GooglePicker extends React.Component {
 
     render() {
         return (
-            <TransparentButton
+            <PrimaryButton
                 className={this.props.className}
                 styleName="google-picker-btn"
                 onClick={this.onChoose}
                 disabled={this.props.disabled}
+                transparent
             >
                 {
                     this.props.children ?
                         this.props.children :
                         <button>{commonStrings.openGoogleChooserText}</button>
                 }
-            </TransparentButton>
+            </PrimaryButton>
         );
     }
 }

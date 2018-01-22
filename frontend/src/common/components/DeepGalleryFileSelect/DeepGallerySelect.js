@@ -14,7 +14,6 @@ import {
 } from '../../../public/components/View';
 import { TextInput } from '../../../public/components/Input';
 import {
-    TransparentPrimaryButton,
     PrimaryButton,
     Button,
 } from '../../../public/components/Action';
@@ -247,16 +246,17 @@ export default class DgSelect extends React.PureComponent {
     }
 
     renderCheckbox = row => (
-        <TransparentPrimaryButton
+        <PrimaryButton
             title={row.selected ? 'Unselect' : 'Select'}
             onClick={() => this.handleFileSelection(row)}
             smallVerticalPadding
+            transparent
         >
             {
                 row.selected ? <i className={iconNames.checkbox} />
                     : <i className={iconNames.checkboxOutlineBlank} />
             }
-        </TransparentPrimaryButton>
+        </PrimaryButton>
     )
 
     render() {

@@ -9,7 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    TransparentPrimaryButton,
+    PrimaryButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -198,9 +198,12 @@ export default class UserProfile extends React.PureComponent {
                             </div>
                             {
                                 isCurrentUser &&
-                                <TransparentPrimaryButton onClick={this.handleEditProfileClick}>
-                                    <span className={iconNames.edit} />
-                                </TransparentPrimaryButton>
+                                    <PrimaryButton
+                                        onClick={this.handleEditProfileClick}
+                                        transparent
+                                    >
+                                        <span className={iconNames.edit} />
+                                    </PrimaryButton>
                             }
                             { this.state.editProfile &&
                                 <Modal
@@ -211,11 +214,12 @@ export default class UserProfile extends React.PureComponent {
                                     <ModalHeader
                                         title={userStrings.editProfileModalHeader}
                                         rightComponent={
-                                            <TransparentPrimaryButton
+                                            <PrimaryButton
                                                 onClick={this.handleEditProfileClose}
+                                                transparent
                                             >
                                                 <span className={iconNames.close} />
-                                            </TransparentPrimaryButton>
+                                            </PrimaryButton>
                                         }
                                     />
                                     <ModalBody>
