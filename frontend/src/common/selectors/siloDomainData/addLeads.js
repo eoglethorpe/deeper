@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { isObjectEmpty } from '../../../public/utils/common';
 import { leadAccessor } from '../../entities/lead';
 
 const emptyList = [];
@@ -9,6 +10,11 @@ const addLeadViewSelector = ({ siloDomainData }) => siloDomainData.addLeadView;
 export const addLeadViewFiltersSelector = createSelector(
     addLeadViewSelector,
     addLeadView => addLeadView.filters || emptyObject,
+);
+
+export const addLeadViewIsFilterEmptySelector = createSelector(
+    addLeadViewFiltersSelector,
+    filters => isObjectEmpty(filters),
 );
 
 export const addLeadViewActiveLeadIdSelector = createSelector(

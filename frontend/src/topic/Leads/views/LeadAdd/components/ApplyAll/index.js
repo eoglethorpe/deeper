@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    TransparentAccentButton,
-    TransparentWarningButton,
+    AccentButton,
+    WarningButton,
 } from '../../../../../../public/components/Action';
 
 import {
@@ -45,8 +45,9 @@ export default class ApplyAll extends React.PureComponent {
             <div styleName="apply-input" className={className}>
                 { children }
                 <div styleName="apply-buttons">
-                    <TransparentAccentButton
+                    <AccentButton
                         styleName="apply-button"
+                        transparent
                         type="button"
                         title={leadsString.applyAllButtonTitle}
                         disabled={disabled}
@@ -54,9 +55,10 @@ export default class ApplyAll extends React.PureComponent {
                         tabIndex="-1"
                     >
                         <span className={iconNames.applyAll} />
-                    </TransparentAccentButton>
-                    <TransparentWarningButton
+                    </AccentButton>
+                    <WarningButton
                         styleName="apply-button"
+                        transparent
                         type="button"
                         title={leadsString.applyAllBelowButtonTitle}
                         disabled={disabled}
@@ -64,7 +66,7 @@ export default class ApplyAll extends React.PureComponent {
                         tabIndex="-1"
                     >
                         <span className={iconNames.applyAllBelow} />
-                    </TransparentWarningButton>
+                    </WarningButton>
                 </div>
             </div>
         );

@@ -15,8 +15,34 @@
         padding: $spacing-small;
 
         .action-buttons {
-            button {
-                margin: $spacing-extra-small-alt;
+            display: flex;
+            flex-shrink: 0;
+
+            .movement-buttons {
+                margin-right: $spacing-medium;
+
+                >button:first-child {
+                    margin-right: $spacing-extra-small-alt;
+                }
+            }
+
+            .save-buttons {
+                @include shadow-medium;
+                flex-shrink: 0;
+                margin-left: $spacing-extra-small-alt;
+                border-radius: 3px;
+                background-color: $color-success;
+                color: $color-text-on-success;
+                font-size: $font-size-medium;
+            }
+
+            .remove-buttons {
+                @include shadow-medium;
+                flex-shrink: 0;
+                border-radius: 3px;
+                background-color: $color-warning;
+                color: $color-text-on-warning;
+                font-size: $font-size-medium;
             }
         }
 
@@ -180,11 +206,25 @@
     }
 }
 
-:global #lead-list-filter-options {
-    min-width: 108px;
+.dropdown-button {
+    display: block;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-small $spacing-medium;
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+    color: $color-text;
+    font-family: inherit;
+    font-size: $font-size-medium;
 
-    .select-option {
-        display: flex;
-        padding: $spacing-medium;
+    &:hover {
+        background-color: $color-background-hover;
+    }
+
+    &:disabled {
+        cursor: default;
+        color: $color-text-disabled;
     }
 }

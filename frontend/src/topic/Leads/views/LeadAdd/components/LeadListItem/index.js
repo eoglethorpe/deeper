@@ -13,34 +13,33 @@ import {
 } from '../../../../../../common/constants';
 
 import {
-    DangerButton,
+    WarningButton,
 } from '../../../../../../public/components/Action';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    active: PropTypes.bool,
-
     className: PropTypes.string,
 
-    onClick: PropTypes.func.isRequired,
+    leadKey: PropTypes.string.isRequired,
 
     lead: PropTypes.shape({
         dummy: PropTypes.string,
     }).isRequired,
 
-    leadKey: PropTypes.string.isRequired,
-
-    choice: PropTypes.string.isRequired,
+    leadState: PropTypes.string.isRequired,
     upload: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 
+    onClick: PropTypes.func.isRequired,
     onRemove: PropTypes.func.isRequired,
+
+    active: PropTypes.bool,
     isRemoveDisabled: PropTypes.bool,
 };
 
 const defaultProps = {
-    isRemoveDisabled: true,
     active: false,
+    isRemoveDisabled: true,
     className: '',
     upload: undefined,
 };
@@ -50,95 +49,100 @@ export default class LeadListItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
+    static leadTypeToIconClassMap = {
+        [LEAD_TYPE.drive]: iconNames.googleDrive,
+        [LEAD_TYPE.dropbox]: iconNames.dropbox,
+        [LEAD_TYPE.file]: iconNames.upload,
+        [LEAD_TYPE.website]: iconNames.globe,
+        [LEAD_TYPE.text]: iconNames.clipboard,
+    };
 
-        this.leadTypeToIconClassMap = {
-            [LEAD_TYPE.drive]: iconNames.googleDrive,
-            [LEAD_TYPE.dropbox]: iconNames.dropbox,
-            [LEAD_TYPE.file]: iconNames.upload,
-            [LEAD_TYPE.website]: iconNames.globe,
-            [LEAD_TYPE.text]: iconNames.clipboard,
-        };
+    static styleMap = {
+        [LEAD_STATUS.warning]: 'warning',
+        [LEAD_STATUS.requesting]: 'pending',
+        [LEAD_STATUS.uploading]: 'pending',
+        [LEAD_STATUS.invalid]: 'error',
+        [LEAD_STATUS.nonPristine]: 'pristine',
+        [LEAD_STATUS.complete]: 'complete',
+    };
+
+    static iconMap = {
+        [LEAD_STATUS.warning]: 'warning',
+        [LEAD_STATUS.requesting]: 'loading',
+        [LEAD_STATUS.uploading]: 'loading',
+        [LEAD_STATUS.invalid]: 'error',
+        [LEAD_STATUS.nonPristine]: 'codeWorking',
+        [LEAD_STATUS.complete]: 'checkCircle',
+    };
+
+    static getIconClassName(type) {
+        return LeadListItem.leadTypeToIconClassMap[type];
     }
 
-    getIconClassName(type) {
-        return this.leadTypeToIconClassMap[type];
-    }
+    // HANDLE
 
     handleClick = () => {
         this.props.onClick(this.props.leadKey);
     }
 
-    renderIcon = (choice) => {
-        switch (choice) {
-            case LEAD_STATUS.warning:
-                return (
-                    <span
-                        styleName="status-icon warning"
-                        className={iconNames.warning}
-                    />
-                );
-            case LEAD_STATUS.requesting:
-            case LEAD_STATUS.uploading:
-                return (
-                    <span
-                        styleName="status-icon pending"
-                        className={iconNames.loading}
-                    />
-                );
-            case LEAD_STATUS.invalid:
-                return (
-                    <span
-                        styleName="status-icon error"
-                        className={iconNames.error}
-                    />
-                );
-            case LEAD_STATUS.nonPristine:
-                return (
-                    <span
-                        styleName="status-icon pristine"
-                        className={iconNames.codeWorking}
-                    />
-                );
-            case LEAD_STATUS.complete:
-                return (
-                    <span
-                        styleName="status-icon complete"
-                        className={iconNames.checkCircle}
-                    />
-                );
-            default:
-                return null;
-        }
+    handleRemoveClick = () => {
+        this.props.onRemove(this.props.leadKey);
     }
 
-    renderUploadProgress = (choice, upload = {}) => {
-        const hide = choice !== LEAD_STATUS.uploading || !upload;
+    // RENDER
+
+    renderIcon = ({ leadState }) => {
+        const classNames = [
+            styles['status-icon'],
+            styles[LeadListItem.styleMap[leadState]],
+            iconNames[LeadListItem.iconMap[leadState]],
+        ];
+        const className = classNames.join(' ');
+
+        return <span className={className} />;
+    }
+
+    renderUploadProgress = ({ leadState, upload = {} }) => {
+        const hide = leadState !== LEAD_STATUS.uploading || !upload;
+
+        const classNames = [styles['progress-bar']];
+        if (upload.progress >= 100) {
+            classNames.push(styles.completed);
+        }
+        if (hide) {
+            classNames.push(styles.hide);
+        }
+        const className = classNames.join(' ');
+
+        const style = {
+            width: `${upload.progress}%`,
+        };
+
         return (
-            <span
-                styleName={`
-                    progress-bar
-                    ${upload.progress >= 100 ? 'completed' : ''}
-                    ${hide ? 'hide' : ''}
-                `}
-            >
+            <span className={className}>
                 <span
-                    styleName="progress"
-                    style={{
-                        width: `${upload.progress}%`,
-                    }}
+                    className={styles.progress}
+                    style={style}
                 />
             </span>
         );
     }
 
     render() {
-        const { active, className, isRemoveDisabled, onRemove, leadKey } = this.props;
+        const {
+            active,
+            leadState,
+            className,
+            isRemoveDisabled,
+            lead,
+            upload,
+        } = this.props;
 
-        const { choice, upload, lead } = this.props;
         const type = leadAccessor.getType(lead);
         const { title } = leadAccessor.getValues(lead);
+
+        const LeadListIcon = this.renderIcon;
+        const UploadProgress = this.renderUploadProgress;
 
         return (
             <div styleName="lead-list-item">
@@ -150,22 +154,25 @@ export default class LeadListItem extends React.PureComponent {
                 >
                     <span
                         styleName="icon"
-                        className={this.getIconClassName(type)}
+                        className={LeadListItem.getIconClassName(type)}
                     />
                     <span styleName="title" >
                         { title }
                     </span>
-                    { this.renderIcon(choice) }
-                    { this.renderUploadProgress(choice, upload) }
+                    <LeadListIcon leadState={leadState} />
+                    <UploadProgress
+                        leadState={leadState}
+                        upload={upload}
+                    />
                 </button>
-                <DangerButton
+                <WarningButton
                     key="remove-button"
                     styleName="remove-button"
                     disabled={isRemoveDisabled}
-                    onClick={() => onRemove(leadKey)}
+                    onClick={this.handleRemoveClick}
                 >
                     <i className={iconNames.delete} />
-                </DangerButton>
+                </WarningButton>
             </div>
         );
     }

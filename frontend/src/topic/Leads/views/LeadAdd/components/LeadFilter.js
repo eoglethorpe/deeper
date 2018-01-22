@@ -15,7 +15,6 @@ import {
     TextInput,
 } from '../../../../../public/components/Input';
 import { DangerButton } from '../../../../../public/components/Action';
-import { isObjectEmpty } from '../../../../../public/utils/common';
 import { BgRestBuilder } from '../../../../../public/utils/rest';
 
 import {
@@ -23,6 +22,7 @@ import {
     addLeadViewSetFiltersAction,
     addLeadViewUnsetFiltersAction,
     addLeadViewFiltersSelector,
+    addLeadViewIsFilterEmptySelector,
     setLeadFilterOptionsAction,
 } from '../../../../../common/redux';
 import {
@@ -34,9 +34,7 @@ import {
     LEAD_FILTER_STATUS,
 } from '../../../../../common/entities/lead';
 
-import {
-    leadsString,
-} from '../../../../../common/constants';
+import { leadsString } from '../../../../../common/constants';
 import styles from '../styles.scss';
 
 
@@ -55,7 +53,8 @@ const leadStatusFilterOptions = [
 ];
 
 const defaultProps = { }; const propTypes = {
-    filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    isFilterEmpty: PropTypes.bool.isRequired,
+    filters: PropTypes.object.isRequired, // eslint-disable-line
     activeProject: PropTypes.number.isRequired,
     setLeadViewFilters: PropTypes.func.isRequired,
     unsetLeadViewFilters: PropTypes.func.isRequired,
@@ -65,6 +64,7 @@ const defaultProps = { }; const propTypes = {
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     filters: addLeadViewFiltersSelector(state),
+    isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -89,6 +89,7 @@ export default class LeadFilter extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         const { activeProject } = nextProps;
+
         if (this.props.activeProject !== activeProject) {
             if (this.leadFilterOptionsRequest) {
                 this.leadFilterOptionsRequest.stop();
@@ -149,11 +150,7 @@ export default class LeadFilter extends React.PureComponent {
     }
 
     render() {
-        const {
-            filters,
-        } = this.props;
-
-        const isFilterEmpty = isObjectEmpty(filters);
+        const { filters, isFilterEmpty } = this.props;
 
         return (
             <div

@@ -76,6 +76,10 @@ const iconNames = {
     warning: 'ion-alert-circled',
     wrench: 'ion-wrench',
     checkAll: 'ion-android-done-all',
+    save: 'fa fa-save',
+
+    next: 'ion-chevron-right',
+    prev: 'ion-chevron-left',
 };
 
 export default iconNames;

@@ -52,11 +52,16 @@ const strings = {
     48: 'Source Preview',
     49: 'Gathering Website Information to Preview',
     50: '',
+    5551: 'Selected',
+    5552: 'All',
+    5553: 'Filtered',
+    5554: 'Saved',
+    5555: 'Discard',
 
     130: 'Apply this value to all',
     131: 'Apply this value to all below',
     132: 'Preview Not Available',
-    133: 'Are you sure you want to delete this lead?',
+    133: 'Are you sure you want to discard this lead?',
     134: 'Failed to upload file :',
 
     135: 'Search Similar Lead',
@@ -715,6 +720,7 @@ const strings = {
 
     976: 'Delete Lead',
     977: 'Lead Successfully Deleted',
+
     978: 'Cannot delete lead.',
     979: 'Cannot delete lead. Please check your network connection and try again',
 
@@ -734,6 +740,11 @@ const strings = {
     990: 'Error. Entry Save Failed.',
     991: 'Error. Lead Save Failed. Please check your network connection and try again',
 
+    992: 'Discard Lead',
+    993: 'Lead Successfully Discarded',
+
+    994: 'Discard Leads',
+    995: 'Leads Successfully Discarded',
 
     // Common Components Strings
 
@@ -773,20 +784,21 @@ const strings = {
     1226: 'Checking the gravitational constant in your locale ...',
     1227: 'The server is powered by a lemon and two electrodes ...',
     1228: 'Don\'t think of purple hippos ...',
-    1229: 'Dividing eternity by zero, please be patient... ...',
+    1229: 'Dividing eternity by zero, please be patient...',
     1230: 'Photographing cats... Attaching signs... MEME complete ...',
     1231: 'Nobody exists on purpose, nobody belongs anywhere ...',
     1232: 'Swapping time and space...',
-    1233: 'Greetings Earthling!! ...',
-    1234: 'I am Mr. Meeseeks!! Look at me ...',
-    1235: 'Oh, yeaahhhh! You gotta get schwifty. ...',
-    1236: 'Shhhh!!! The Kraken is sleeping ...',
+    1233: 'Greetings Earthling! ...',
+    1234: 'I am Mr. Meeseeks! Look at me ...',
+    1235: 'Oh, yeaah! You gotta get schwifty. ...',
+    1236: 'Shhhh! The Kraken is sleeping ...',
     1237: 'BETA',
+
     1300: 'Are you sure you want to leave? You may lose your unsaved changes.',
 
     2000: 'Browser Extension',
-    2001: 'Your extension has been successfully set up',
-    2002: 'An error occured while setting up the extension, please make sure you have installed and enabled the extension and',
+    2001: 'Your extension has been successfully set up.',
+    2002: 'An error occured while setting up the extension, please make sure you have installed and enabled the extension.',
 };
 
 export default strings;
