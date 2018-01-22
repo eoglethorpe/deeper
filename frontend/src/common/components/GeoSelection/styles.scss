@@ -20,7 +20,7 @@
 }
 
 .modal {
-    width: 720px;
+    width: 72vw;
 
     .location-selects {
         display: flex;
@@ -30,26 +30,25 @@
         }
     }
 
-    .map-modal {
+    .body {
         display: flex;
         padding: 0;
+        height: 60vh;
 
         .map {
-            flex-grow: 0;
+            flex-basis: 80%;
             border-right: $width-separator-thin solid $color-separator;
-            width: 512px;
-            height: 512px;
         }
 
         .map-selections {
-            flex-grow: 1;
+            flex-basis: 20%;
             padding: 0;
 
             .map-selections-list {
                 display: flex;
                 flex-direction: column;
                 flex-shrink: 0;
-                height: 512px;
+                height: 100%;
                 overflow-y: auto;
 
                 .region-item {
@@ -67,9 +66,4 @@
             }
         }
     }
-}
-
-:global #region-select-options,
-:global #location-select-options {
-    z-index: 1111;
 }

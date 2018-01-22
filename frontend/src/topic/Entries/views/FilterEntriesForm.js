@@ -14,6 +14,8 @@ import {
     DangerButton,
 } from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
+import schema from '../../../common/schema';
+import notify from '../../../common/notify';
 
 import {
     entryStrings,
@@ -28,10 +30,16 @@ import {
     projectDetailsSelector,
     entryFilterOptionsForProjectSelector,
     setEntryFilterOptionsAction,
+    setGeoOptionsAction,
 } from '../../../common/redux';
 import {
+    createUrlForGeoOptions,
+    createParamsForGeoOptionsGET,
+
     createParamsForUser,
     createUrlForEntryFilterOptions,
+
+    transformResponseErrorToFormError,
 } from '../../../common/rest';
 
 import GeoSelection from '../../../common/components/GeoSelection';
@@ -49,6 +57,7 @@ const mapDispatchToProps = dispatch => ({
     unsetEntriesViewFilter: params => dispatch(unsetEntriesViewFilterAction(params)),
 
     setEntryFilterOptions: params => dispatch(setEntryFilterOptionsAction(params)),
+    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 });
 
 const propTypes = {
@@ -57,6 +66,7 @@ const propTypes = {
     filters: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     setEntriesViewFilter: PropTypes.func.isRequired,
     unsetEntriesViewFilter: PropTypes.func.isRequired,
+    setGeoOptions: PropTypes.func.isRequired,
     pending: PropTypes.bool,
     applyOnChange: PropTypes.bool,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -94,6 +104,9 @@ export default class FilterEntriesForm extends React.PureComponent {
     componentWillMount() {
         const { activeProject } = this.props;
         this.requestProjectEntryFilterOptions(activeProject);
+
+        this.geoOptionsRequest = this.createGeoOptionsRequest(activeProject);
+        this.geoOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -121,9 +134,49 @@ export default class FilterEntriesForm extends React.PureComponent {
 
     componentWillUnmount() {
         this.entryFilterOptionsRequest.stop();
+
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
+        }
     }
 
     // REST
+
+    createGeoOptionsRequest = (projectId) => {
+        const geoOptionsRequest = new FgRestBuilder()
+            .url(createUrlForGeoOptions(projectId))
+            .params(() => createParamsForGeoOptionsGET())
+            .success((response) => {
+                try {
+                    schema.validate(response, 'geoOptions');
+                    this.props.setGeoOptions({
+                        projectId,
+                        locations: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: entryStrings.entriesTabLabel,
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: entryStrings.entriesTabLabel,
+                    type: notify.type.ERROR,
+                    message: entryStrings.geoOptionsFatalMessage,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return geoOptionsRequest;
+    };
 
     requestProjectEntryFilterOptions = (activeProject) => {
         if (this.entryFilterOptionsRequest) {
@@ -249,7 +302,6 @@ export default class FilterEntriesForm extends React.PureComponent {
                     className="entries-filter"
                     label={title}
                     onChange={values => this.handleFilterChange(key, values)}
-                    projectId={this.props.projectDetails.id}
                     regions={this.props.projectDetails.regions}
                     value={filters[key] || emptyList}
                     disabled={this.props.pending}

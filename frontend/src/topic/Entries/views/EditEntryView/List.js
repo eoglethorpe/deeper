@@ -13,9 +13,21 @@ import {
     WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
+import { FgRestBuilder } from '../../../../public/utils/rest';
+import schema from '../../../../common/schema';
+import notify from '../../../../common/notify';
 
 import {
+    createUrlForGeoOptions,
+    createParamsForGeoOptionsGET,
+
+    transformResponseErrorToFormError,
+} from '../../../../common/rest';
+import {
     editEntryViewCurrentLeadSelector,
+    projectIdFromRouteSelector,
+
+    setGeoOptionsAction,
 } from '../../../../common/redux';
 import {
     entryStrings,
@@ -37,17 +49,25 @@ const propTypes = {
     widgetDisabled: PropTypes.bool,
     saveAllDisabled: PropTypes.bool.isRequired,
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.number,
+    setGeoOptions: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     widgetDisabled: false,
+    projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     leadDetails: editEntryViewCurrentLeadSelector(state, props),
+    projectId: projectIdFromRouteSelector(state, props),
 });
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => ({
+    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
@@ -63,12 +83,24 @@ export default class List extends React.PureComponent {
         this.updateGridItems(props.entries);
     }
 
+    componentWillMount() {
+        const { projectId } = this.props;
+        this.geoOptionsRequest = this.createGeoOptionsRequest(projectId);
+        this.geoOptionsRequest.start();
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.updateAnalysisFramework(nextProps.analysisFramework);
-            this.updateGridItems(nextProps.entries);
         } else if (this.props.entries !== nextProps.entries) {
             this.updateGridItems(nextProps.entries);
+            this.updateGridItems(nextProps.entries);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
         }
     }
 
@@ -95,6 +127,43 @@ export default class List extends React.PureComponent {
             />
         );
     }
+
+    // REST
+    createGeoOptionsRequest = (projectId) => {
+        const geoOptionsRequest = new FgRestBuilder()
+            .url(createUrlForGeoOptions(projectId))
+            .params(() => createParamsForGeoOptionsGET())
+            .success((response) => {
+                try {
+                    schema.validate(response, 'geoOptions');
+                    this.props.setGeoOptions({
+                        projectId,
+                        locations: response,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .failure((response) => {
+                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                notify.send({
+                    title: entryStrings.entriesTabLabel,
+                    type: notify.type.ERROR,
+                    message,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: entryStrings.entriesTabLabel,
+                    type: notify.type.ERROR,
+                    message: entryStrings.geoOptionsFatalMessage,
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return geoOptionsRequest;
+    };
 
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore

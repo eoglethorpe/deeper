@@ -14,7 +14,6 @@ import {
     SelectInput,
     MultiSelectInput,
 } from '../../../public/components/Input';
-import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     Button,
     PrimaryButton,
@@ -22,21 +21,12 @@ import {
     DangerButton,
 } from '../../../public/components/Action';
 import {
-    createUrlForGeoOptions,
-    createParamsForGeoOptionsGET,
-
-    transformResponseErrorToFormError,
-} from '../../../common/rest';
-import {
     geoOptionsForProjectSelector,
-    setGeoOptionsAction,
 } from '../../../common/redux';
 import {
     iconNames,
     entryStrings,
 } from '../../constants';
-import schema from '../../../common/schema';
-import notify from '../../../common/notify';
 import update from '../../../public/utils/immutable-update';
 
 import RegionMap from '../RegionMap';
@@ -44,13 +34,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    projectId: PropTypes.number.isRequired,
     label: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
-    setGeoOptions: PropTypes.func.isRequired,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
@@ -67,11 +55,7 @@ const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
 });
 
-const mapDispatchToProps = dispatch => ({
-    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d;
@@ -116,20 +100,20 @@ export default class GeoSelection extends React.PureComponent {
         const flatValues = props.value || emptyList;
         const values = GeoSelection.createNonFlatValues(locations, flatValues);
 
+        let selectedRegion;
+
+        if (props.regions) {
+            selectedRegion = (props.regions[0] || emptyObject).id;
+        }
+
         this.state = {
             showMapModal: false,
-            selectedRegion: undefined,
+            selectedRegion,
             locations,
             flatLocations,
             values,
             flatValues,
         };
-    }
-
-    componentWillMount() {
-        const { projectId } = this.props;
-        this.geoOptionsRequest = this.createGeoOptionsRequest(projectId);
-        this.geoOptionsRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -160,48 +144,6 @@ export default class GeoSelection extends React.PureComponent {
             });
         }
     }
-
-    componentWillUnmount() {
-        if (this.geoOptionsRequest) {
-            this.geoOptionsRequest.stop();
-        }
-    }
-
-    createGeoOptionsRequest = (projectId) => {
-        const geoOptionsRequest = new FgRestBuilder()
-            .url(createUrlForGeoOptions(projectId))
-            .params(() => createParamsForGeoOptionsGET())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'geoOptions');
-                    this.props.setGeoOptions({
-                        projectId,
-                        locations: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
-                notify.send({
-                    title: entryStrings.entriesTabLabel,
-                    type: notify.type.ERROR,
-                    message,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: entryStrings.entriesTabLabel,
-                    type: notify.type.ERROR,
-                    message: entryStrings.geoOptionsFatalMessage,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return geoOptionsRequest;
-    };
 
     handleRegionSelection = (selectedRegion) => {
         this.setState({ selectedRegion });
@@ -377,32 +319,32 @@ export default class GeoSelection extends React.PureComponent {
                             rightComponent={
                                 <div styleName="location-selects">
                                     <SelectInput
-                                        showHintAndError={false}
-                                        showLabel={false}
-                                        placeholder={entryStrings.regionSelectPlaceholder}
-                                        options={regions}
+                                        hideClearButton
                                         keySelector={this.regionKeySelector}
+                                        label={entryStrings.regionSelectTitle}
                                         labelSelector={this.regionLabelSelector}
                                         onChange={this.handleRegionSelection}
+                                        options={regions}
                                         optionsIdentifier="region-select-options"
+                                        placeholder={entryStrings.regionSelectPlaceholder}
+                                        showHintAndError={false}
                                         value={selectedRegion}
-                                        hideClearButton
                                     />
                                     <MultiSelectInput
-                                        styleName="map-selection-select"
+                                        label={entryStrings.locationSelectTitle}
+                                        labelSelector={GeoSelection.shortLabelSelector}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
-                                        labelSelector={GeoSelection.shortLabelSelector}
-                                        placeholder={entryStrings.locationSelectPlaceholder}
                                         optionsIdentifier="location-select-options"
+                                        placeholder={entryStrings.locationSelectPlaceholder}
                                         showHintAndError={false}
-                                        showLabel={false}
+                                        styleName="map-selection-select"
                                         value={values[selectedRegion]}
                                     />
                                 </div>
                             }
                         />
-                        <ModalBody styleName="map-modal">
+                        <ModalBody styleName="body">
                             <RegionMap
                                 styleName="map"
                                 regionId={selectedRegion}
