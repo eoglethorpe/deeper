@@ -35,6 +35,9 @@ import {
     activeUserSelector,
 } from './common/redux';
 
+import getUserConfirmation from './common/utils/getUserConfirmation';
+
+
 import Multiplexer from './Multiplexer';
 
 const mapStateToProps = state => ({
@@ -205,7 +208,9 @@ export default class App extends React.PureComponent {
         }
 
         return (
-            <BrowserRouter>
+            <BrowserRouter
+                getUserConfirmation={getUserConfirmation}
+            >
                 <Multiplexer />
             </BrowserRouter>
         );
