@@ -93,7 +93,6 @@ export default class GeoTaggingList extends React.PureComponent {
                 <GeoSelection
                     styleName="geo-select"
                     onChange={this.handleGeoSelectionChange}
-                    projectId={this.props.api.getProject().id}
                     regions={this.props.api.getProject().regions}
                     value={flatValues}
                     disabled={false}

@@ -14,7 +14,6 @@ import {
     SelectInput,
     MultiSelectInput,
 } from '../../../public/components/Input';
-import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     Button,
     PrimaryButton,
@@ -22,21 +21,12 @@ import {
     DangerButton,
 } from '../../../public/components/Action';
 import {
-    createUrlForGeoOptions,
-    createParamsForGeoOptionsGET,
-
-    transformResponseErrorToFormError,
-} from '../../../common/rest';
-import {
     geoOptionsForProjectSelector,
-    setGeoOptionsAction,
 } from '../../../common/redux';
 import {
     iconNames,
     entryStrings,
 } from '../../constants';
-import schema from '../../../common/schema';
-import notify from '../../../common/notify';
 import update from '../../../public/utils/immutable-update';
 
 import RegionMap from '../RegionMap';
@@ -44,13 +34,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    projectId: PropTypes.number.isRequired,
     label: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     value: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
-    setGeoOptions: PropTypes.func.isRequired,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
@@ -67,11 +55,7 @@ const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
 });
 
-const mapDispatchToProps = dispatch => ({
-    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d;
@@ -126,12 +110,6 @@ export default class GeoSelection extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        const { projectId } = this.props;
-        this.geoOptionsRequest = this.createGeoOptionsRequest(projectId);
-        this.geoOptionsRequest.start();
-    }
-
     componentWillReceiveProps(nextProps) {
         const { geoOptions, value } = nextProps;
 
@@ -166,42 +144,6 @@ export default class GeoSelection extends React.PureComponent {
             this.geoOptionsRequest.stop();
         }
     }
-
-    createGeoOptionsRequest = (projectId) => {
-        const geoOptionsRequest = new FgRestBuilder()
-            .url(createUrlForGeoOptions(projectId))
-            .params(() => createParamsForGeoOptionsGET())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'geoOptions');
-                    this.props.setGeoOptions({
-                        projectId,
-                        locations: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
-                notify.send({
-                    title: entryStrings.entriesTabLabel,
-                    type: notify.type.ERROR,
-                    message,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: entryStrings.entriesTabLabel,
-                    type: notify.type.ERROR,
-                    message: entryStrings.geoOptionsFatalMessage,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return geoOptionsRequest;
-    };
 
     handleRegionSelection = (selectedRegion) => {
         this.setState({ selectedRegion });
