@@ -56,6 +56,7 @@ import {
 } from '../../../../common/rest';
 import {
     notificationStrings,
+    commonStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import schema from '../../../../common/schema';
@@ -675,17 +676,13 @@ export default class EditEntryView extends React.PureComponent {
                 key="prompt"
                 when={!isSaveAllDisabled}
                 message={
-                    (location) => {
-                        console.error(location);
-                        console.error(location.pathname, this.props.routeUrl);
-                        return (
-                            location.pathname === this.props.routeUrl ? (
-                                true
-                            ) : (
-                                'You have unsaved changes. Are you sure you want to leave without saving?'
-                            )
-                        );
-                    }
+                    location => (
+                        location.pathname === this.props.routeUrl ? (
+                            true
+                        ) : (
+                            commonStrings.youHaveUnsavedChanges
+                        )
+                    )
                 }
             />,
             <HashRouter key="router">
