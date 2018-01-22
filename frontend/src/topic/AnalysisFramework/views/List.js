@@ -13,8 +13,8 @@ import {
 
 import {
     SuccessButton,
-    TransparentButton,
-    TransparentDangerButton,
+    Button,
+    DangerButton,
     PrimaryButton,
 } from '../../../public/components/Action';
 
@@ -117,17 +117,19 @@ export default class List extends React.PureComponent {
             </div>
         ) : (
             <div className={`${styles['action-buttons']} action-buttons`} >
-                <TransparentButton
+                <Button
+                    transparent
                     onClick={() => this.handleWidgetEditButtonClick(key)}
                 >
                     <span className={iconNames.edit} />
-                </TransparentButton>
+                </Button>
 
-                <TransparentDangerButton
+                <DangerButton
+                    transparent
                     onClick={() => this.handleWidgetRemoveButtonClick(key)}
                 >
                     <span className={iconNames.close} />
-                </TransparentDangerButton>
+                </DangerButton>
             </div>
         );
 
@@ -350,7 +352,8 @@ export default class List extends React.PureComponent {
                                         {widget.title}
                                     </div>
                                     <div styleName="actions">
-                                        <TransparentButton
+                                        <Button
+                                            transparent
                                             onClick={
                                                 () => {
                                                     this.handleAddWidgetButtonClick(widget.id);
@@ -358,7 +361,7 @@ export default class List extends React.PureComponent {
                                             }
                                         >
                                             <span className={iconNames.add} />
-                                        </TransparentButton>
+                                        </Button>
                                     </div>
                                 </div>
                             ))

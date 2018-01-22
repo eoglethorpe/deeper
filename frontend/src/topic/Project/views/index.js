@@ -14,7 +14,6 @@ import {
 import { TextInput } from '../../../public/components/Input';
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
 } from '../../../public/components/Action';
 import {
     reverseRoute,
@@ -191,11 +190,12 @@ export default class ProjectPanel extends React.PureComponent {
                                 <ModalHeader
                                     title={projectStrings.addProjectModalTitle}
                                     rightComponent={
-                                        <TransparentPrimaryButton
+                                        <PrimaryButton
                                             onClick={this.handleAddProjectModalClose}
+                                            transparent
                                         >
                                             <span className={iconNames.close} />
-                                        </TransparentPrimaryButton>
+                                        </PrimaryButton>
                                     }
                                 />
                                 <ModalBody>

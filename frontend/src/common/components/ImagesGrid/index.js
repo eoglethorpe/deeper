@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    TransparentPrimaryButton,
+    PrimaryButton,
 } from '../../../public/components/Action';
 import {
     ListView,
@@ -127,12 +127,13 @@ export default class ImagesGrid extends React.PureComponent {
                             title=""
                             styleName="modal-header"
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     className={styles['transparent-btn']}
                                     onClick={this.handleImagePreviewClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody styleName="modal-body">

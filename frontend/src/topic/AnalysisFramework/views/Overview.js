@@ -12,8 +12,8 @@ import {
 } from '../../../public/components/View';
 
 import {
-    TransparentButton,
-    TransparentDangerButton,
+    Button,
+    DangerButton,
     SuccessButton,
     PrimaryButton,
 } from '../../../public/components/Action';
@@ -105,16 +105,18 @@ export default class Overview extends React.PureComponent {
         data: item.properties.data,
         headerRightComponent: (
             <div className="action-buttons">
-                <TransparentButton
+                <Button
                     onClick={() => this.handleWidgetEditButtonClick(item.key)}
+                    transparent
                 >
                     <span className={iconNames.edit} />
-                </TransparentButton>
-                <TransparentDangerButton
+                </Button>
+                <DangerButton
                     onClick={() => this.handleWidgetRemoveButtonClick(item.key)}
+                    transparent
                 >
                     <span className={iconNames.close} />
-                </TransparentDangerButton>
+                </DangerButton>
             </div>
         ),
     }))
@@ -299,13 +301,14 @@ export default class Overview extends React.PureComponent {
                                         {widget.title}
                                     </div>
                                     <div styleName="actions">
-                                        <TransparentButton
+                                        <Button
+                                            transparent
                                             onClick={
                                                 () => this.handleAddWidgetButtonClick(widget.id)
                                             }
                                         >
                                             <span className={iconNames.add} />
-                                        </TransparentButton>
+                                        </Button>
                                     </div>
                                 </div>
                             ))

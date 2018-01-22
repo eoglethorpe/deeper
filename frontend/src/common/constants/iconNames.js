@@ -80,6 +80,8 @@ const iconNames = {
 
     next: 'ion-chevron-right',
     prev: 'ion-chevron-left',
+
+    chart: 'fa fa-sitemap',
 };
 
 export default iconNames;

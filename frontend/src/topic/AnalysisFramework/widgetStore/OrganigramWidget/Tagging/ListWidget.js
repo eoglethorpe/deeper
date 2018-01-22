@@ -5,7 +5,7 @@ import React from 'react';
 import {
     Button,
     PrimaryButton,
-    TransparentAccentButton,
+    AccentButton,
 } from '../../../../../public/components/Action';
 import {
     Modal,
@@ -16,7 +16,10 @@ import {
 import {
     OrgChart,
 } from '../../../../../public/components/Visualization';
-import { afStrings } from '../../../../../common/constants';
+import {
+    iconNames,
+    afStrings,
+} from '../../../../../common/constants';
 
 
 import styles from './styles.scss';
@@ -106,10 +109,11 @@ export default class OrganigramTaggingList extends React.PureComponent {
                         ))
                     }
                 </ul>
-                <TransparentAccentButton
+                <AccentButton
                     styleName="show-organigram-button"
                     onClick={this.handleShowModal}
-                    iconName="fa fa-sitemap"
+                    iconName={iconNames.chart}
+                    transparent
                 />
                 { this.state.showEditModal &&
                     <Modal styleName="edit-value-modal">

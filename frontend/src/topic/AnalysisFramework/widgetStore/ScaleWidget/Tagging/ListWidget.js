@@ -33,34 +33,64 @@ export default class ScaleTaggingList extends React.PureComponent {
 
     constructor(props) {
         super(props);
+        this.createScaleUnits(props);
         updateAttribute(props);
+    }
+
+    componentDidMount() {
+        const { attribute, data, api, entryId, id } = this.props;
+        if (data) {
+            if ((attribute || emptyObject).selectedScale === undefined) {
+                const newSelectedScale = data.value;
+                const newAttribute = {
+                    ...attribute,
+                    selectedScale: newSelectedScale,
+                };
+                api.getEntryModifier(entryId)
+                    .setAttribute(id, newAttribute)
+                    .apply();
+            }
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.attribute !== nextProps.attribute) {
             updateAttribute(nextProps);
         }
+
+        if (this.props.attribute !== nextProps.attribute ||
+            this.props.data !== nextProps.data) {
+            this.createScaleUnits(nextProps);
+        }
     }
 
-    getActiveSelectionStyle = (key) => {
-        const { selectedScale } = this.props.attribute || emptyObject;
+    getActiveSelectionStyle = (scaleUnit) => {
         const scaleUnitStyle = ['scale-unit'];
-        if (selectedScale === key) {
+        if (scaleUnit.selected) {
             scaleUnitStyle.push('selected');
         }
         const styleNames = scaleUnitStyle.map(d => styles[d]);
         return styleNames.join(' ');
     }
 
-    getScale = (key, data) => (
+    getScale = (key, scaleUnit) => (
         <button
             key={key}
             onClick={() => this.handleScaleClick(key)}
-            title={data.title}
-            className={this.getActiveSelectionStyle(key)}
-            style={{ backgroundColor: data.color }}
+            title={scaleUnit.title}
+            className={this.getActiveSelectionStyle(scaleUnit)}
+            style={{ backgroundColor: scaleUnit.color }}
         />
     )
+
+    createScaleUnits = ({ data = emptyObject, attribute = emptyObject }) => {
+        const scaleUnits = data.scaleUnits || emptyList;
+        const { selectedScale } = attribute;
+        this.scaleUnits = scaleUnits.map(s => ({
+            ...s,
+            selected: selectedScale === s.key,
+        }));
+    }
 
     createFilterData = (attribute) => {
         const { data } = this.props;
@@ -91,13 +121,11 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     render() {
-        const { data } = this.props;
-
         return (
             <div styleName="scales">
                 <ListView
                     styleName="scale"
-                    data={(data || emptyObject).scaleUnits || emptyList}
+                    data={this.scaleUnits}
                     keyExtractor={ScaleTaggingList.rowKeyExtractor}
                     modifier={this.getScale}
                 />

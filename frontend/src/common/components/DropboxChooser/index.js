@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 
-import { TransparentButton } from '../../../public/components/Action';
+import { Button } from '../../../public/components/Action';
 import {
     commonStrings,
 } from '../../../common/constants';
@@ -149,11 +149,12 @@ export default class DropboxChooser extends React.Component {
     render() {
         const { className, disabled, children } = this.props;
         return (
-            <TransparentButton
+            <Button
                 className={className}
                 styleName="dropbox-btn"
                 onClick={this.onChoose}
                 disabled={disabled}
+                transparent
             >
                 {
                     children ||
@@ -161,7 +162,7 @@ export default class DropboxChooser extends React.Component {
                         {commonStrings.openDropboxChooserText}
                     </button>
                 }
-            </TransparentButton>
+            </Button>
         );
     }
 }

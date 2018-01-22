@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {
-    TransparentButton,
+    Button,
 } from '../../../public/components/Action';
 import {
     iconNames,
@@ -97,18 +97,20 @@ export default class ImagesSlider extends React.PureComponent {
                 {galleryIds.length > 0 &&
                     <div styleName="action-bar">
                         {!isFirstItem &&
-                            <TransparentButton
+                            <Button
                                 onClick={this.handlePreviousClick}
+                                transparent
                             >
                                 <span className={iconNames.chevronLeft} />
-                            </TransparentButton>
+                            </Button>
                         }
                         {!isLastItem &&
-                            <TransparentButton
+                            <Button
                                 onClick={this.handleNextClick}
+                                transparent
                             >
                                 <span className={iconNames.chevronRight} />
-                            </TransparentButton>
+                            </Button>
                         }
                     </div>
                 }

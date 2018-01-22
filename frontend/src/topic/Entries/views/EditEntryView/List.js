@@ -9,8 +9,8 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import {
-    TransparentAccentButton,
-    TransparentWarningButton,
+    AccentButton,
+    WarningButton,
     SuccessButton,
 } from '../../../../public/components/Action';
 
@@ -143,7 +143,7 @@ export default class List extends React.PureComponent {
                 entryId,
                 headerRightComponent: (
                     <div className="action-buttons">
-                        <TransparentAccentButton
+                        <AccentButton
                             className={styles['apply-button']}
                             type="button"
                             title={leadsString.applyAllButtonTitle}
@@ -151,10 +151,11 @@ export default class List extends React.PureComponent {
                                 this.props.api.setAttributeToAll(item.id, entryId);
                             }}
                             tabIndex="-1"
+                            transparent
                         >
                             <span className={iconNames.applyAll} />
-                        </TransparentAccentButton>
-                        <TransparentWarningButton
+                        </AccentButton>
+                        <WarningButton
                             className={styles['apply-button']}
                             type="button"
                             title={leadsString.applyAllBelowButtonTitle}
@@ -162,9 +163,10 @@ export default class List extends React.PureComponent {
                                 this.props.api.setAttributeToBelow(item.id, entryId);
                             }}
                             tabIndex="-1"
+                            transparent
                         >
                             <span className={iconNames.applyAllBelow} />
-                        </TransparentWarningButton>
+                        </WarningButton>
                     </div>
                 ),
             }));
