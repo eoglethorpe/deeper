@@ -2,7 +2,10 @@ import { createSelector } from 'reselect';
 
 const emptyObject = {};
 
-// eslint-disable-next-line import/prefer-default-export
+export const routeUrlSelector = ({ route }) => (
+    route.url
+);
+
 export const routeParamsSelector = ({ route }) => (
     route.params || emptyObject
 );

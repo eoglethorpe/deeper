@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -6,6 +5,7 @@ import {
     Redirect,
     Route,
     HashRouter,
+    Prompt,
 } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
@@ -33,6 +33,8 @@ import {
     markForDeleteEntryAction,
     setActiveEntryAction,
     removeAllEntriesAction,
+
+    routeUrlSelector,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -90,6 +92,8 @@ const propTypes = {
     markForDeleteEntry: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
     removeAllEntries: PropTypes.func.isRequired,
+
+    routeUrl: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -102,6 +106,7 @@ const mapStateToProps = (state, props) => ({
     analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
     entries: editEntryViewEntriesSelector(state, props),
     selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
+    routeUrl: routeUrlSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -122,7 +127,6 @@ const mapDispatchToProps = dispatch => ({
 
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class EditEntryView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -648,7 +652,7 @@ export default class EditEntryView extends React.PureComponent {
 
         if (pendingEntries || pendingAf) {
             return (
-                <div styleName="edit-entry">
+                <div className={styles['edit-entry']} >
                     <LoadingAnimation />
                 </div>
             );
@@ -666,9 +670,26 @@ export default class EditEntryView extends React.PureComponent {
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
 
-        return (
-            <HashRouter>
-                <div styleName="edit-entry">
+        return ([
+            <Prompt
+                key="prompt"
+                when={!isSaveAllDisabled}
+                message={
+                    (location) => {
+                        console.error(location);
+                        console.error(location.pathname, this.props.routeUrl);
+                        return (
+                            location.pathname === this.props.routeUrl ? (
+                                true
+                            ) : (
+                                'You have unsaved changes. Are you sure you want to leave without saving?'
+                            )
+                        );
+                    }
+                }
+            />,
+            <HashRouter key="router">
+                <div className={styles['edit-entry']}>
                     <Route
                         exact
                         path="/"
@@ -712,7 +733,7 @@ export default class EditEntryView extends React.PureComponent {
                         )}
                     />
                 </div>
-            </HashRouter>
-        );
+            </HashRouter>,
+        ]);
     }
 }
