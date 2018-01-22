@@ -8,6 +8,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
+    requiredCondition,
+    urlCondition,
+} from '../../../../../public/components/Input';
+
+import { FgRestBuilder } from '../../../../../public/utils/rest';
+
+import {
     addLeadViewLeadChangeAction,
     addLeadViewCopyAllBelowAction,
     addLeadViewCopyAllAction,
@@ -21,6 +28,10 @@ import {
     LEAD_TYPE,
     leadAccessor,
 } from '../../../../../common/entities/lead';
+import {
+    urlForWebInfo,
+    createParamsForWebInfo,
+} from '../../../../../common/rest';
 import {
     leadsString,
 } from '../../../../../common/constants';
@@ -54,10 +65,71 @@ export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    componentWillReceiveProps(nextProps) {
+        const oldLead = leadAccessor.getValues(this.props.lead);
+        const newLead = leadAccessor.getValues(nextProps.lead);
+
+        if (
+            newLead.url !== oldLead.url &&
+            requiredCondition.truth(newLead.url) &&
+            urlCondition.truth(newLead.url)
+        ) {
+            if (this.webInfoExtractRequest) {
+                this.webInfoExtractRequest.stop();
+            }
+            this.webInfoExtractRequest = this.createWebInfoExtractRequest(newLead.url);
+            this.webInfoExtractRequest.start();
+        }
+    }
+
     componentWillUnmount() {
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
         }
+        if (this.webInfoExtractRequest) {
+            this.webInfoExtractRequest.stop();
+        }
+    }
+
+    createWebInfoExtractRequest = (url) => {
+        const request = new FgRestBuilder()
+            .url(urlForWebInfo)
+            .params(createParamsForWebInfo({ url }))
+            .delay(0)
+            .success((response) => {
+                const webInfo = response;
+                const inputValues = leadAccessor.getValues(this.props.lead);
+
+                const values = {};
+                if (webInfo.project && (!inputValues.project || inputValues.project.length === 0)) {
+                    values.project = [webInfo.project];
+                }
+                if (webInfo.date && !inputValues.date) {
+                    values.publishedOn = webInfo.date;
+                }
+                if (webInfo.source && !inputValues.source) {
+                    values.source = webInfo.source;
+                }
+                if (webInfo.website && !inputValues.website) {
+                    values.website = webInfo.website;
+                }
+                if (webInfo.title && !inputValues.title) {
+                    values.title = webInfo.title;
+                }
+                if (webInfo.url && !inputValues.url) {
+                    values.url = webInfo.url;
+                }
+
+                this.props.addLeadViewLeadChange({
+                    leadId: this.props.leadKey,
+                    values,
+                    formErrors: [],
+                    formFieldErrors: {},
+                    uiState: { pristine: false },
+                });
+            })
+            .build();
+        return request;
     }
 
     handleFormSuccess = (newValues) => {
