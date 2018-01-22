@@ -87,7 +87,7 @@ export default class ExportHeader extends React.PureComponent {
             export_type: exportType,
             ...entriesFilters,
             decoupled: decoupledEntries,
-            lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]).join(','),
+            lead: Object.keys(selectedLeads).filter(l => selectedLeads[l]),
             report_structure: this.createReportStructureForExport(reportStructure || emptyList),
             is_preview: isPreview,
             pdf,
