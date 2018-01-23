@@ -96,7 +96,7 @@ export default class Matrix2dOverview extends React.PureComponent {
             formattedData = JSON.parse(data);
         } catch (ex) {
             formattedData = {
-                type: 'text',
+                type: 'excerpt',
                 data,
             };
         }

@@ -57,7 +57,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 .apply();
         } else {
             const newAttribute = {
-                type: 'text',
+                type: 'excerpt',
                 excerpt: value,
             };
 
@@ -76,7 +76,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
             formattedData = JSON.parse(data);
         } catch (ex) {
             formattedData = {
-                type: 'text',
+                type: 'excerpt',
                 data,
             };
         }
