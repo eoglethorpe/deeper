@@ -86,7 +86,7 @@
 
 .edit-row-modal {
     @extend %modal;
-    width: 768px;
+    width: 512px;
 
     .edit-row-body {
         display: flex;
@@ -121,10 +121,6 @@
             &.no-items {
                 flex-basis: 100%;
             }
-        }
-
-        :global .sketch-picker {
-            margin: $spacing-medium-alt;
         }
     }
 

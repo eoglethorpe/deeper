@@ -15,8 +15,8 @@ import {
     NumberInput,
 } from '../../../../../public/components/Input';
 import {
-    TransparentDangerButton,
     Button,
+    DangerButton,
     PrimaryButton,
 } from '../../../../../public/components/Action';
 import {
@@ -158,12 +158,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 value={data.tooltip}
                 showHintAndError={false}
             />
-            <TransparentDangerButton
+            <DangerButton
                 className={styles['delete-button']}
                 onClick={() => { this.handleRowUnitRemoveButtonClick(key); }}
+                transparent
             >
                 <span className={iconNames.delete} />
-            </TransparentDangerButton>
+            </DangerButton>
         </div>
     ))
 
@@ -190,12 +191,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 value={data.tooltip}
                 showHintAndError={false}
             />
-            <TransparentDangerButton
+            <DangerButton
                 className={styles['delete-button']}
                 onClick={() => { this.handleColUnitRemoveButtonClick(key); }}
+                transparent
             >
                 <span className={iconNames.delete} />
-            </TransparentDangerButton>
+            </DangerButton>
         </div>
     ))
 
@@ -485,6 +487,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                         iconName={iconNames.add}
                                         onClick={this.handleAddRowButtonClick}
                                         title={afStrings.addRowUnitButtonLabel}
+                                        transparent
                                     />
                                 </header>
                                 <SortableRowList
@@ -504,6 +507,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                                         iconName={iconNames.add}
                                         onClick={this.handleAddColumnButtonClick}
                                         title={afStrings.addColumnUnitButtonLabel}
+                                        transparent
                                     />
                                 </header>
                                 <SortableColumnList

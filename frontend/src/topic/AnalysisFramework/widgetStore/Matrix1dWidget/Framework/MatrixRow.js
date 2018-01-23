@@ -11,9 +11,7 @@ import {
 import { randomString } from '../../../../../public/utils/common';
 import MatrixCell from './MatrixCell';
 import {
-    TransparentButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
     PrimaryButton,
     Button,
 } from '../../../../../public/components/Action';
@@ -166,12 +164,13 @@ export default class MatrixRow extends React.PureComponent {
                 value={data.value}
                 autoFocus
             />
-            <TransparentDangerButton
+            <DangerButton
                 className={styles['delete-button']}
                 onClick={() => this.handleCellRemoveButtonClick(key)}
+                transparent
             >
                 <span className={iconNames.delete} />
-            </TransparentDangerButton>
+            </DangerButton>
         </div>
     ))
 
@@ -208,11 +207,12 @@ export default class MatrixRow extends React.PureComponent {
                     key="action-buttons"
                     styleName="action-buttons"
                 >
-                    <TransparentButton
+                    <PrimaryButton
                         onClick={this.handleEditButtonClick}
+                        transparent
                     >
                         <span className={iconNames.edit} />
-                    </TransparentButton>
+                    </PrimaryButton>
                 </div>
                 { showEditModal &&
                     <Modal
@@ -224,12 +224,12 @@ export default class MatrixRow extends React.PureComponent {
                         <ModalHeader
                             title={afStrings.matrix1DModalTitle}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddCellButtonClick}
                                 >
                                     {afStrings.addCellButtonLabel}
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody styleName="edit-cell-body">
