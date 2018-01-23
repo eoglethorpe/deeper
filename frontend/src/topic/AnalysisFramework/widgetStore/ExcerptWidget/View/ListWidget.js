@@ -7,7 +7,7 @@ import {
     afStrings,
 } from '../../../../../common/constants';
 
-const TEXT = 'excerpt';
+const IMAGE = 'image';
 
 const propTypes = {
     entry: PropTypes.shape({
@@ -50,16 +50,16 @@ export default class ExcerptTextList extends React.PureComponent {
         return (
             <div styleName="excerpt-list-view">
                 {
-                    attribute.type === TEXT ? (
-                        <span styleName="textarea">
-                            {attribute.excerpt}
-                        </span>
-                    ) : (
+                    attribute.type === IMAGE ? (
                         <img
                             styleName="image"
                             src={attribute.image}
                             alt={afStrings.altEntryLabel}
                         />
+                    ) : (
+                        <span styleName="textarea">
+                            {attribute.excerpt}
+                        </span>
                     )
                 }
             </div>

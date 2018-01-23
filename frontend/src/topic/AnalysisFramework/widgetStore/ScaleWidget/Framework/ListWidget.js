@@ -197,8 +197,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 <AccentButton
                     className={styles['check-button']}
                     onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
+                    id={`${key}-check-button`}
                     transparent
                 >
+                    <label
+                        className={styles.label}
+                        htmlFor={`${key}-check-button`}
+                    >
+                        {afStrings.defaultButtonLabel}
+                    </label>
                     <span className={defaultIconName} />
                 </AccentButton>
             </div>

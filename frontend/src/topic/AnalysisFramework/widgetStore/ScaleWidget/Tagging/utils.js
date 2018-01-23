@@ -1,5 +1,5 @@
 export const createFilterData = attribute => ({
-    values: [attribute.selectedScale],
+    values: attribute.selectedScale && [attribute.selectedScale],
     number: undefined,
 });
 
