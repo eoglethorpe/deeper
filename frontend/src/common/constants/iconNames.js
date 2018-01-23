@@ -82,6 +82,7 @@ const iconNames = {
     prev: 'ion-chevron-left',
 
     chart: 'fa fa-sitemap',
+    eye: 'ion-eye',
 };
 
 export default iconNames;

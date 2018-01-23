@@ -100,7 +100,7 @@ const leadsString = {
     leadDeleteConfirmText: string[141],
     leadDeleteSuccess: string[977],
 
-
+    extractLead: string[129],
 };
 
 export default leadsString;
