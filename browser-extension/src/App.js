@@ -13,7 +13,7 @@ import {
     tokenSelector,
 } from './common/redux';
 
-import { TransparentAccentButton } from './public-components/Action';
+import { AccentButton } from './public-components/Action';
 
 import {
     createUrlForTokenRefresh,
@@ -42,6 +42,20 @@ const propTypes = {
 const defaultProps = {
 };
 
+// TODO: Move this to utils
+export const transformResponseErrorToFormError = (errors) => {
+    const { nonFieldErrors: formErrors = [], ...formFieldErrorList } = errors;
+
+    const formFieldErrors = Object.keys(formFieldErrorList).reduce(
+        (acc, key) => {
+            acc[key] = formFieldErrorList[key].join(' ');
+            return acc;
+        },
+        {},
+    );
+    return { formFieldErrors, formErrors };
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends React.PureComponent {
     static propTypes = propTypes;
@@ -53,6 +67,7 @@ class App extends React.PureComponent {
         this.state = {
             pendingTabInfo: true,
             pendingRefresh: undefined,
+            error: undefined,
             authorized: false,
             currentView: 'add-lead',
         };
@@ -119,10 +134,6 @@ class App extends React.PureComponent {
                     authorized: false,
                 });
             })
-            .postLoad(() => {
-                this.fetchingToken = false;
-                this.setState({ pendingRefresh: false });
-            })
             .success((response) => {
                 const { setToken } = this.props;
 
@@ -134,7 +145,32 @@ class App extends React.PureComponent {
                 };
 
                 setToken(params);
-                this.setState({ authorized: true });
+                this.fetchingToken = false;
+                this.setState({
+                    error: undefined,
+                    pendingRefresh: false,
+                    authorized: true,
+                });
+            })
+            .failure((response) => {
+                console.log(response);
+                const { formErrors } = transformResponseErrorToFormError(response);
+                this.fetchingToken = false;
+                this.setState({
+                    authorized: false,
+                    pendingRefresh: false,
+                    error: formErrors.join(', '),
+                });
+                this.fetchingToken = false;
+            })
+            .fatal((response) => {
+                console.log(response);
+                this.setState({
+                    authorized: false,
+                    error: 'Oops, something went wrong',
+                    pendingRefresh: false,
+                });
+                this.fetchingToken = false;
             })
             .build();
         return tokenRefreshRequest;
@@ -188,14 +224,7 @@ class App extends React.PureComponent {
         });
     }
 
-    render() {
-        const {
-            pendingTabInfo,
-            pendingRefresh,
-            authorized,
-            currentView,
-        } = this.state;
-
+    renderMessage = (p) => {
         const style = {
             height: '560px',
             width: '100%',
@@ -205,6 +234,30 @@ class App extends React.PureComponent {
             justifyContent: 'center',
         };
 
+        return (
+            <div style={style}>
+                <p>{p.message}</p>
+                <AccentButton
+                    transparent
+                    onClick={this.handleSettingsButtonClick}
+                >
+                    Settings
+                </AccentButton>
+            </div>
+        );
+    }
+
+    render() {
+        const {
+            pendingTabInfo,
+            pendingRefresh,
+            authorized,
+            currentView,
+            error,
+        } = this.state;
+
+        const Message = this.renderMessage;
+
         if (currentView === 'settings') {
             return (
                 <Settings
@@ -213,17 +266,12 @@ class App extends React.PureComponent {
             );
         }
 
+        if (error) {
+            return <Message message={error} />;
+        }
+
         if (pendingTabInfo || pendingRefresh) {
-            return (
-                <div style={style}>
-                    <p>Loading...</p>
-                    <TransparentAccentButton
-                        onClick={this.handleSettingsButtonClick}
-                    >
-                        Settings
-                    </TransparentAccentButton>
-                </div>
-            );
+            return <Message message="Loading..." />;
         }
 
         return (
@@ -232,14 +280,7 @@ class App extends React.PureComponent {
                     onSettingsButtonClick={this.handleAddLeadSettingsButtonClick}
                 />
             ) : (
-                <div style={style}>
-                    <p>You need to login to deep first</p>
-                    <TransparentAccentButton
-                        onClick={this.handleSettingsButtonClick}
-                    >
-                        Settings
-                    </TransparentAccentButton>
-                </div>
+                <Message message="You need to login to deep first" />
             )
         );
     }
