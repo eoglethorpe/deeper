@@ -2,7 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { TransparentAccentButton } from '../../../../public/components/Action';
+import { AccentButton } from '../../../../public/components/Action';
 import { ListView } from '../../../../public/components/View';
 import {
     iconNames,
@@ -164,10 +164,11 @@ export default class SubcategoryColumn extends React.PureComponent {
                     <h4 styleName="heading" >
                         {this.props.title}
                     </h4>
-                    <TransparentAccentButton
+                    <AccentButton
                         onClick={this.handleNewSubcategoryButtonClick}
                         title={`Add subcategory in ${this.props.title}`}
                         iconName={iconNames.add}
+                        transparent
                     />
                 </header>
                 <ListView

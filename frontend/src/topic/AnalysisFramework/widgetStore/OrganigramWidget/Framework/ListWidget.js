@@ -5,8 +5,7 @@ import React from 'react';
 import {
     Button,
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../../public/components/Action';
 import {
     TextInput,
@@ -206,23 +205,25 @@ export default class Organigram extends React.PureComponent {
                         autoFocus
                     />
                     <div styleName="action-buttons">
-                        <TransparentPrimaryButton
+                        <PrimaryButton
                             styleName="action-button"
                             onClick={this.handleAdd(nextIndices)}
                             title={afStrings.addChildButtonTitle}
                             tabIndex="-1"
+                            transparent
                         >
                             <span className="ion-fork-repo" />
-                        </TransparentPrimaryButton>
+                        </PrimaryButton>
                         { !isFatherOrgan &&
-                            <TransparentDangerButton
+                            <DangerButton
                                 styleName="action-button"
                                 onClick={this.handleRemove(indices, j)}
                                 title={afStrings.removeElementButtonTitle}
                                 tabIndex="-1"
+                                transparent
                             >
                                 <span className="ion-trash-b" />
-                            </TransparentDangerButton>
+                            </DangerButton>
                         }
                     </div>
                 </div>

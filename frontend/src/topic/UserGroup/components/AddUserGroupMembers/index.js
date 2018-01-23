@@ -15,7 +15,6 @@ import {
 import {
     DangerButton,
     PrimaryButton,
-    TransparentPrimaryButton,
 } from '../../../../public/components/Action';
 import {
     iconNames,
@@ -139,12 +138,13 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     });
                     return (
                         <div className="actions">
-                            <TransparentPrimaryButton
+                            <PrimaryButton
                                 title={title}
                                 type="button"
                                 onClick={handleClick}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 smallVerticalPadding
+                                transparent
                             />
                         </div>
                     );

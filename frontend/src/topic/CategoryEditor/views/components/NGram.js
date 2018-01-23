@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { ListView } from '../../../../public/components/View';
-import { TransparentDangerButton } from '../../../../public/components/Action';
+import { DangerButton } from '../../../../public/components/Action';
 
 import { iconNames } from '../../../../common/constants';
 
@@ -34,11 +34,12 @@ export default class NGram extends React.PureComponent {
                 { data }
             </div>
             <div className={styles['action-buttons']}>
-                <TransparentDangerButton
+                <DangerButton
                     onClick={() => this.props.onDelete(data)}
+                    transparent
                 >
                     <span className={iconNames.delete} />
-                </TransparentDangerButton>
+                </DangerButton>
             </div>
         </div>
     )

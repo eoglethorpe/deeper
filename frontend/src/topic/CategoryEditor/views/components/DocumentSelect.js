@@ -10,7 +10,7 @@ import {
 import {
     Button,
     PrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../public/components/Action';
 
 import {
@@ -133,12 +133,13 @@ export default class DocumentSelect extends React.PureComponent {
             <span className={styles.title} >
                 {file.title}
             </span>
-            <TransparentDangerButton
+            <DangerButton
                 className={styles.icon}
                 onClick={() => this.handleRemoveFiles(fileId)}
+                transparent
             >
                 <span className={iconNames.delete} />
-            </TransparentDangerButton>
+            </DangerButton>
         </ListItem>
     );
 

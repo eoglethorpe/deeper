@@ -15,7 +15,6 @@ import {
 import {
     DangerButton,
     PrimaryButton,
-    TransparentPrimaryButton,
 } from '../../../../public/components/Action';
 import {
     iconNames,
@@ -130,9 +129,10 @@ export default class AddProjectMembers extends React.PureComponent {
                     const isAdmin = row.role === 'admin';
                     return (
                         <div className="actions">
-                            <TransparentPrimaryButton
+                            <PrimaryButton
                                 title={isAdmin ? 'Revoke admin rights' : 'Grant admin rights'}
                                 type="button"
+                                transparent
                                 onClick={() =>
                                     this.handleRoleChangeForNewMember({
                                         memberId: row.id,

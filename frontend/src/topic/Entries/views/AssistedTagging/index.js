@@ -4,9 +4,8 @@ import React from 'react';
 
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentSuccessButton,
-    TransparentWarningButton,
+    SuccessButton,
+    WarningButton,
     SegmentButton,
 } from '../../../../public/components/Action';
 import {
@@ -536,18 +535,20 @@ export default class AssistedTagging extends React.PureComponent {
                 {sector.label} {sector.confidence}
             </div>
             <div className={styles['feedback-buttons']}>
-                <TransparentSuccessButton
+                <SuccessButton
                     title={entryStrings.accurateTextTitle}
                     onClick={() => this.handleFeedbackClick(sector.label, 'true')}
+                    transparent
                 >
                     <span className={iconNames.thumbsUp} />
-                </TransparentSuccessButton>
-                <TransparentWarningButton
+                </SuccessButton>
+                <WarningButton
                     title={entryStrings.notAccurateTextTitle}
                     onClick={() => this.handleFeedbackClick(sector.label, 'false')}
+                    transparent
                 >
                     <span className={iconNames.thumbsDown} />
-                </TransparentWarningButton>
+                </WarningButton>
             </div>
         </div>
     );
@@ -635,11 +636,12 @@ export default class AssistedTagging extends React.PureComponent {
                                     <span styleName="label">Source:</span>
                                     <span styleName="source">{activeHighlightDetails.source}</span>
                                 </div>
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleOnCloseAssistedActions}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             </header>
                             <div styleName="info-bar">
                                 <span>{activeHighlightDetails.text}</span>

@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../public/components/Action';
 import {
     Modal,
@@ -120,18 +119,20 @@ export default class RegionAdminLevel extends React.PureComponent {
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
-                        <TransparentPrimaryButton
+                        <PrimaryButton
                             onClick={() => this.editAdminLevel(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <span className={iconNames.edit} />
-                        </TransparentPrimaryButton>
-                        <TransparentDangerButton
+                        </PrimaryButton>
+                        <DangerButton
                             onClick={() => this.handleDeleteAdminLevel(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <span className={iconNames.delete} />
-                        </TransparentDangerButton>
+                        </DangerButton>
                     </div>
                 ),
             },
@@ -300,11 +301,12 @@ export default class RegionAdminLevel extends React.PureComponent {
                             <ModalHeader
                                 title={countriesString.addAdminLevelButtonLabel}
                                 rightComponent={
-                                    <TransparentPrimaryButton
+                                    <PrimaryButton
                                         onClick={this.handleModalClose}
+                                        transparent
                                     >
                                         <span className={iconNames.close} />
-                                    </TransparentPrimaryButton>
+                                    </PrimaryButton>
                                 }
                             />
                             <ModalBody>
@@ -331,11 +333,12 @@ export default class RegionAdminLevel extends React.PureComponent {
                             <ModalHeader
                                 title={countriesString.editAdminLevelModalTitle}
                                 rightComponent={
-                                    <TransparentPrimaryButton
+                                    <PrimaryButton
                                         onClick={this.handleModalClose}
+                                        transparent
                                     >
                                         <span className={iconNames.close} />
-                                    </TransparentPrimaryButton>
+                                    </PrimaryButton>
                                 }
                             />
                             <ModalBody>

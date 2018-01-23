@@ -18,9 +18,9 @@ import {
 } from '../../../../public/components/View';
 import {
     PrimaryButton,
-    TransparentAccentButton,
-    TransparentButton,
-    TransparentDangerButton,
+    AccentButton,
+    Button,
+    DangerButton,
 } from '../../../../public/components/Action';
 
 import {
@@ -273,34 +273,38 @@ export default class Leads extends React.PureComponent {
                 sortable: false,
                 modifier: row => (
                     <div>
-                        <TransparentButton
+                        <Button
                             title={leadsString.searchSimilarLeadButtonTitle}
                             onClick={() => this.handleSearchSimilarLead(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <i className={iconNames.search} />
-                        </TransparentButton>
-                        <TransparentButton
+                        </Button>
+                        <Button
                             title={leadsString.editLeadButtonTitle}
                             onClick={() => this.handleEditLeadClick(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <i className={iconNames.edit} />
-                        </TransparentButton>
-                        <TransparentDangerButton
+                        </Button>
+                        <DangerButton
                             title={leadsString.removeLeadLeadButtonTitle}
                             onClick={() => this.handleRemoveLead(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <i className={iconNames.delete} />
-                        </TransparentDangerButton>
-                        <TransparentAccentButton
+                        </DangerButton>
+                        <AccentButton
                             title={leadsString.addEntryFromLeadButtonTitle}
                             onClick={() => this.handleAddEntryClick(row)}
                             smallVerticalPadding
+                            transparent
                         >
                             <i className={iconNames.forward} />
-                        </TransparentAccentButton>
+                        </AccentButton>
                     </div>
                 ),
             },
