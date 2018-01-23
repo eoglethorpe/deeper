@@ -3,6 +3,7 @@ import React from 'react';
 
 
 const propTypes = {
+    className: PropTypes.string,
     text: PropTypes.string.isRequired,
     highlights: PropTypes.arrayOf(PropTypes.shape({
         start: PropTypes.number,
@@ -13,6 +14,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     modifier: text => text,
 };
 
@@ -23,6 +25,7 @@ export default class HighlightedText extends React.PureComponent {
 
     render() {
         const {
+            className,
             highlights,
             text,
             modifier,
@@ -61,13 +64,13 @@ export default class HighlightedText extends React.PureComponent {
         });
 
         return (
-            <pre>
+            <p className={className}>
                 {splits.map(split => (
                     <span key={split.key}>
                         {split.item ? modifier(split.item, split.text) : split.text}
                     </span>
                 ))}
-            </pre>
+            </p>
         );
     }
 }
