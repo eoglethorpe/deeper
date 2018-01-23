@@ -360,6 +360,7 @@ export default class Overview extends React.PureComponent {
                     styleName="gallery-file"
                     url={lead.url}
                     showUrl
+                    showScreenshot
                 />
             );
         } else if (this.isTypeWithAttachment(type) && lead.attachment) {

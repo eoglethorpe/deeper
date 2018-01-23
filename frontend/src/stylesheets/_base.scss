@@ -124,3 +124,13 @@ body {
     }
 }
 
+%transparent-button-like-link {
+    border-radius: 3px;
+    background-color: transparent;
+    padding: $spacing-small $spacing-medium;
+    text-transform: uppercase;
+    color: $color-label;
+    font-family: inherit;
+    font-size: $font-size-medium-alt;
+    font-weight: $font-weight-normal;
+}

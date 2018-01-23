@@ -246,6 +246,7 @@ export default class LeadFormItem extends React.PureComponent {
                                 <WebsiteViewer
                                     className={styles['gallery-file']}
                                     url={values.url}
+                                    showUrl
                                 />
                             ) : (
                                 <div className={styles['preview-text']}>

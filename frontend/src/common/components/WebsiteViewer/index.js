@@ -11,6 +11,8 @@ import {
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
 
+import { AccentButton } from '../../../public/components/Action';
+import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     urlForWebsiteFetch,
@@ -21,12 +23,14 @@ const propTypes = {
     className: PropTypes.string,
     url: PropTypes.string,
     showUrl: PropTypes.bool,
+    showScreenshot: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     url: undefined,
     showUrl: false,
+    showScreenshot: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -93,12 +97,7 @@ export default class WebsiteViewer extends React.PureComponent {
                     const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
                     const httpsUrl = response.httpsUrl;
                     const contentSecurityPolicy = response.headers['Content-Security-Policy'] || '';
-                    let canShow = true;
-
-                    if (contentSecurityPolicy.match('frame-ancestors')) {
-                        // NOTE: Assuming there is no *.thedeep.io in allow
-                        canShow = false;
-                    }
+                    const canShow = !contentSecurityPolicy.match('frame-ancestors');
 
                     this.setState({
                         canShow,
@@ -132,6 +131,7 @@ export default class WebsiteViewer extends React.PureComponent {
         const {
             className,
             showUrl,
+            showScreenshot,
             url,
         } = this.props;
         const { httpsUrl } = this.state;
@@ -143,13 +143,31 @@ export default class WebsiteViewer extends React.PureComponent {
             >
                 {
                     showUrl &&
-                        <a
-                            styleName="url"
-                            href={httpsUrl || url}
-                            target="_blank"
-                        >
-                            {httpsUrl || url}
-                        </a>
+                        <div styleName="urlbar">
+                            <TextInput
+                                styleName="url"
+                                value={httpsUrl || url}
+                                readOnly
+                                showLabel={false}
+                                showHintAndError={false}
+                                selectOnFocus
+                            />
+                            <div styleName="action-buttons">
+                                <a
+                                    styleName="open-link"
+                                    href={httpsUrl || url}
+                                    target="_blank"
+                                >
+                                    <span className={iconNames.openLink} />
+                                </a>
+                                { showScreenshot &&
+                                    <AccentButton
+                                        iconName={iconNames.camera}
+                                        transparent
+                                    />
+                                }
+                            </div>
+                        </div>
                 }
                 <iframe
                     styleName="doc"
@@ -222,7 +240,9 @@ export default class WebsiteViewer extends React.PureComponent {
                         className={iconNames.loading}
                         styleName="loading-animation"
                     />
-                    <span styleName="waiting-text">{leadsString.gatheringWebsiteInfoLabel}</span>
+                    <span styleName="waiting-text">
+                        {leadsString.gatheringWebsiteInfoLabel}
+                    </span>
                 </div>
             );
         }
