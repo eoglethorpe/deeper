@@ -19,8 +19,7 @@ import {
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../public/components/Action';
 import {
     reverseRoute,
@@ -142,7 +141,7 @@ export default class MembersTable extends React.PureComponent {
                     }
                     return (
                         <div>
-                            <TransparentPrimaryButton
+                            <PrimaryButton
                                 title={
                                     isAdmin ?
                                         userStrings.revokeAdminLinkTitle :
@@ -151,12 +150,14 @@ export default class MembersTable extends React.PureComponent {
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 smallVerticalPadding
+                                transparent
                             />
-                            <TransparentDangerButton
+                            <DangerButton
                                 title={userStrings.deleteMemberLinkTitle}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                                 iconName={iconNames.delete}
                                 smallVerticalPadding
+                                transparent
                             />
                         </div>
                     );
@@ -411,11 +412,12 @@ export default class MembersTable extends React.PureComponent {
                         <ModalHeader
                             title={userStrings.addMemberButtonLabel}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleAddMemberModalClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody

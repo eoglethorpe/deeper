@@ -17,8 +17,7 @@ import {
 } from '../../../../public/components/Input';
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../public/components/Action';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import {
@@ -152,11 +151,12 @@ export default class ProjectsTable extends React.PureComponent {
                     <div>
                         {
                             this.props.isCurrentUserAdmin &&
-                            <TransparentDangerButton
+                            <DangerButton
                                 title={userStrings.deleteProjectLinkTitle}
                                 onClick={() => this.handleDeleteProjectClick(row)}
                                 iconName={iconNames.delete}
                                 smallVerticalPadding
+                                transparent
                             />
                         }
                         <Link
@@ -366,11 +366,12 @@ export default class ProjectsTable extends React.PureComponent {
                         <ModalHeader
                             title={userStrings.addProjectButtonLabel}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleAddProjectModalClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody>

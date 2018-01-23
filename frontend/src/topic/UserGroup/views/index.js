@@ -10,7 +10,7 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 import {
-    TransparentPrimaryButton,
+    PrimaryButton,
 } from '../../../public/components/Action';
 import styles from './styles.scss';
 
@@ -203,9 +203,12 @@ export default class UserGroup extends React.PureComponent {
                         <span styleName="name">{ userGroup.title }</span>
                         {
                             isCurrentUserAdmin &&
-                                <TransparentPrimaryButton onClick={this.handleUserGroupEditClick}>
+                                <PrimaryButton
+                                    onClick={this.handleUserGroupEditClick}
+                                    transparent
+                                >
                                     <span className={iconNames.edit} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                         }
                     </div>
                     <p styleName="description">
@@ -238,11 +241,12 @@ export default class UserGroup extends React.PureComponent {
                         <ModalHeader
                             title={`${userStrings.userGroupEditModalLabel}: ${userGroup.title}`}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleUserGroupEditModalClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody>

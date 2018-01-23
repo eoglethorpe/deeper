@@ -12,8 +12,7 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../public/components/Action';
 import {
     Confirm,
@@ -204,12 +203,13 @@ export default class UserProject extends React.PureComponent {
                         >
                             <span className={iconNames.edit} />
                         </Link>,
-                        <TransparentDangerButton
+                        <DangerButton
                             title={userStrings.deleteProjectLinkTitle}
                             key="delete"
                             onClick={() => this.handleDeleteProjectClick(d)}
                             iconName={iconNames.delete}
                             smallVerticalPadding
+                            transparent
                         />,
                     ]);
                 },
@@ -396,11 +396,12 @@ export default class UserProject extends React.PureComponent {
                         <ModalHeader
                             title={userStrings.addProjectButtonLabel}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleAddProjectClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody>

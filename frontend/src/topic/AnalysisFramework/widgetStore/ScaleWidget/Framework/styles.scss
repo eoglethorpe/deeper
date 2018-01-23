@@ -27,7 +27,7 @@
 }
 
 %modal {
-    width: 640px;
+    width: 480px;
 
     :global .modal-body {
         padding: 0;
@@ -54,38 +54,8 @@
         font-size: $font-size-large;
     }
 
-    .color-box-container {
-        display: flex;
-        flex-basis: 48px;
-        flex-direction: column;
-        flex-shrink: 0;
-        padding: $spacing-extra-small;
-        padding-bottom: 0;
-        width: 48px;
-        height: 40px;
-
-        .color-label {
-            flex-shrink: 0;
-            text-transform: uppercase;
-            color: $color-label;
-            font-size: $font-size-extra-small;
-        }
-
-        .color-box {
-            flex-grow: 1;
-            margin-right: $spacing-small;
-            outline: 0;
-            border: 0;
-        }
-    }
-
-    &.active {
-        border-left: $width-separator-thick solid $color-accent;
-    }
-
     .title-input {
         flex-grow: 1;
-        height: 40px;
     }
 
     .delete-button {
@@ -130,12 +100,8 @@
         flex-grow: 1;
         padding: 0;
 
-        :global .sketch-picker {
-            margin: $spacing-medium-alt;
-        }
-
         .list {
-            flex-basis: calc(100% - 220px);
+            flex-basis: 100%;
             flex-shrink: 0;
             border-left: $width-separator-thin solid $color-separator;
             overflow-y: auto;

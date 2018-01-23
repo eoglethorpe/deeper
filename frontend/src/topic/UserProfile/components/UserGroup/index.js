@@ -12,8 +12,7 @@ import { connect } from 'react-redux';
 
 import {
     PrimaryButton,
-    TransparentPrimaryButton,
-    TransparentDangerButton,
+    DangerButton,
 } from '../../../../public/components/Action';
 import {
     Confirm,
@@ -192,12 +191,13 @@ export default class UserGroup extends React.PureComponent {
                         >
                             <span className={iconNames.edit} />
                         </Link>,
-                        <TransparentDangerButton
+                        <DangerButton
                             key="delete"
                             title={userStrings.deleteUsergroupLinkTitle}
                             onClick={() => this.handleDeleteUserGroupClick(d)}
                             iconName={iconNames.delete}
                             smallVerticalPadding
+                            transparent
                         />,
                     ]);
                 },
@@ -375,11 +375,12 @@ export default class UserGroup extends React.PureComponent {
                         <ModalHeader
                             title={userStrings.addUserGroupButtonLabel}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleAddUserGroupClose}
+                                    transparent
                                 >
                                     <span className={iconNames.close} />
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody>

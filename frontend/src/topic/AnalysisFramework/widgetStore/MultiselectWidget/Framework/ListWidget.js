@@ -7,9 +7,8 @@ import {
     TextInput,
 } from '../../../../../public/components/Input';
 import {
-    TransparentPrimaryButton,
-    TransparentDangerButton,
     Button,
+    DangerButton,
     PrimaryButton,
 } from '../../../../../public/components/Action';
 import {
@@ -83,12 +82,13 @@ export default class Multiselect extends React.PureComponent {
                 value={data.label}
                 autoFocus
             />
-            <TransparentDangerButton
+            <DangerButton
                 className={styles['delete-button']}
                 onClick={() => { this.handleRemoveButtonClick(key); }}
+                transparent
             >
                 <span className={iconNames.delete} />
-            </TransparentDangerButton>
+            </DangerButton>
         </div>
     )
 
@@ -200,11 +200,12 @@ export default class Multiselect extends React.PureComponent {
                         <ModalHeader
                             title={afStrings.editMultiselectModalTitle}
                             rightComponent={
-                                <TransparentPrimaryButton
+                                <PrimaryButton
                                     onClick={this.handleAddOptionButtonClick}
+                                    transparent
                                 >
                                     {afStrings.addOptionButtonLabel}
-                                </TransparentPrimaryButton>
+                                </PrimaryButton>
                             }
                         />
                         <ModalBody styleName="modal-body">

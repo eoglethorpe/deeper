@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { SketchPicker } from 'react-color';
 import {
     SortableContainer,
     SortableElement,
@@ -13,6 +12,7 @@ import update from '../../../../../public/utils/immutable-update';
 
 import {
     TextInput,
+    ColorInput,
 } from '../../../../../public/components/Input';
 import {
     PrimaryButton,
@@ -71,7 +71,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.state = {
             showEditModal: false,
             defaultScaleUnit,
-            activeScaleUnit: scaleUnits[0] || emptyObject,
             scaleUnits,
             title,
         };
@@ -83,16 +82,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
             scaleUnits: arrayMove(this.state.scaleUnits, oldIndex, newIndex),
         });
     };
-
-    getActiveSelectionStyle = (key) => {
-        const { activeScaleUnit } = this.state;
-        const scaleUnitStyle = ['edit-scale-unit', 'draggable-item'];
-        if (activeScaleUnit.key === key) {
-            scaleUnitStyle.push('active');
-        }
-        const styleNames = scaleUnitStyle.map(d => styles[d]);
-        return styleNames.join(' ');
-    }
 
     getSelectedScaleStyle = (key) => {
         const { defaultScaleUnit } = this.state;
@@ -165,24 +154,21 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
         return (
             <div
-                className={this.getActiveSelectionStyle(key)}
+                className={`${styles['edit-scale-unit']} ${styles['draggable-item']}`}
                 key={key}
             >
                 <DragHandle />
-                <div className={styles['color-box-container']}>
-                    <span className={styles['color-label']}>{afStrings.colorLabel}</span>
-                    <button
-                        className={styles['color-box']}
-                        onClick={() => this.handleColorBoxClick(key)}
-                        style={{ backgroundColor: data.color }}
-                    />
-                </div>
+                <ColorInput
+                    label={afStrings.colorLabel}
+                    onChange={newColor => this.handleColorChange(newColor, key)}
+                    value={data.color}
+                    showHintAndError={false}
+                />
                 <TextInput
                     className={styles['title-input']}
                     label={afStrings.titleLabel}
                     placeholder={afStrings.titlePlaceholderScale}
                     onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
-                    onFocus={() => this.handleTextInputOnFocus(key)}
                     value={data.title}
                     showHintAndError={false}
                     autoFocus
@@ -233,29 +219,8 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.setState({ defaultScaleUnit: key });
     }
 
-    handleTextInputOnFocus = (key) => {
-        const { scaleUnits } = this.state;
-        const index = scaleUnits.findIndex(d => d.key === key);
-
-        this.setState({
-            activeScaleUnit: scaleUnits[index],
-        });
-    }
-
-    handleColorBoxClick = (key) => {
-        const { scaleUnits } = this.state;
-        const index = scaleUnits.findIndex(d => d.key === key);
-
-        this.setState({
-            activeScaleUnit: scaleUnits[index],
-        });
-    }
-
     handleEdit = () => {
-        this.setState({
-            showEditModal: true,
-            activeScaleUnit: this.state.scaleUnits[0] || emptyObject,
-        });
+        this.setState({ showEditModal: true });
     }
 
     handleAddScaleUnitButtonClick = () => {
@@ -304,10 +269,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         };
         const newScaleUnits = update(this.state.scaleUnits, settings);
 
-        this.setState({
-            scaleUnits: newScaleUnits,
-            activeScaleUnit: newScaleUnits[rowIndex],
-        });
+        this.setState({ scaleUnits: newScaleUnits });
     }
 
     handleScaleUnitRemoveButtonClick = (key) => {
@@ -320,28 +282,21 @@ export default class ScaleFrameworkList extends React.PureComponent {
             const newDefaultScaleUnit = newScaleUnits[0].key;
             this.setState({ defaultScaleUnit: newDefaultScaleUnit });
         }
-        this.setState({
-            scaleUnits: newScaleUnits,
-            activeScaleUnit: newScaleUnits[0] || emptyObject,
-        });
+        this.setState({ scaleUnits: newScaleUnits });
     };
 
-    handleColorChange = (newColor) => {
-        const { activeScaleUnit } = this.state;
-        const rowIndex = this.state.scaleUnits.findIndex(d => d.key === activeScaleUnit.key);
+    handleColorChange = (newColor, key) => {
+        const rowIndex = this.state.scaleUnits.findIndex(d => d.key === key);
 
         const settings = {
             [rowIndex]: {
-                color: { $set: newColor.hex },
+                color: { $set: newColor },
             },
         };
 
         const newScaleUnits = update(this.state.scaleUnits, settings);
 
-        this.setState({
-            scaleUnits: newScaleUnits,
-            activeScaleUnit: newScaleUnits[rowIndex],
-        });
+        this.setState({ scaleUnits: newScaleUnits });
     }
 
     addScaleUnit = () => {
@@ -362,7 +317,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
                 ...this.state.scaleUnits,
                 newScaleUnit,
             ],
-            activeScaleUnit: newScaleUnit,
         });
     }
 
@@ -370,7 +324,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
         const {
             scaleUnits,
             showEditModal,
-            activeScaleUnit,
             title,
         } = this.state;
 
@@ -413,12 +366,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
                                 />
                             </div>
                             <div styleName="scale-units-container">
-                                { scaleUnits.length > 0 &&
-                                    <SketchPicker
-                                        color={activeScaleUnit.color}
-                                        onChange={this.handleColorChange}
-                                    />
-                                }
                                 <this.SortableList
                                     items={scaleUnits}
                                     onSortEnd={this.onSortEnd}
