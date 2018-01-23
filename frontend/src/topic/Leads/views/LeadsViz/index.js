@@ -19,6 +19,7 @@ import { FormattedDate } from '../../../../public/components/View';
 
 import {
     urlForLeadTopicModeling,
+    urlForLeadTopicCorrelation,
     createParamsForLeadTopicModeling,
     createUrlForLeadsOfProject,
     createParamsForUser,
@@ -150,10 +151,12 @@ export default class LeadsViz extends React.PureComponent {
             if (this.leadCDIdRequest) {
                 this.leadCDIdRequest.stop();
             }
-            if (this.requestForLeadTopicmodeling) {
-                this.requestForLeadTopicmodeling.stop();
+            if (this.requestForLeadTopicModeling) {
+                this.requestForLeadTopicModeling.stop();
             }
-
+            if (this.requestForLeadTopicCorrelaction) {
+                this.requestForLeadTopicCorrelaction.stop();
+            }
             this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
                 activeProject: nextProps.activeProject,
                 filters: nextProps.filters,
@@ -166,8 +169,11 @@ export default class LeadsViz extends React.PureComponent {
         if (this.leadCDIdRequest) {
             this.leadCDIdRequest.stop();
         }
-        if (this.requestForLeadTopicmodeling) {
-            this.requestForLeadTopicmodeling.stop();
+        if (this.requestForLeadTopicModeling) {
+            this.requestForLeadTopicModeling.stop();
+        }
+        if (this.requestForLeadTopicCorrelaction) {
+            this.requestForLeadTopicCorrelaction.stop();
         }
     }
 
@@ -204,10 +210,20 @@ export default class LeadsViz extends React.PureComponent {
                         return acc;
                     }, []);
 
-                    this.requestForLeadTopicmodeling =
-                        this.createRequestForLeadTopicModeling(docIds);
-                    this.requestForLeadTopicmodeling.start();
+                    if (this.requestForLeadTopicModeling) {
+                        this.requestForLeadTopicModeling.stop();
+                    }
+                    if (this.requestForLeadTopicCorrelaction) {
+                        this.requestForLeadTopicCorrelaction.stop();
+                    }
 
+                    this.requestForLeadTopicModeling =
+                        this.createRequestForLeadTopicModeling(docIds);
+                    this.requestForLeadTopicCorrelaction =
+                        this.createRequestForLeadTopicCorrelation(docIds);
+
+                    this.requestForLeadTopicModeling.start();
+                    this.requestForLeadTopicCorrelaction.start();
                     this.setState({ loadingLeads: false });
                 } catch (er) {
                     console.error(er);
@@ -266,7 +282,45 @@ export default class LeadsViz extends React.PureComponent {
             .success((response) => {
                 try {
                     // FIXME: write schema
-                    this.props.setLeadVisualization({ data: response });
+                    this.props.setLeadVisualization({ hierarchial: response });
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .build();
+        return request;
+    }
+
+    createRequestForLeadTopicCorrelation = (docIds) => {
+        console.warn('TODO: use this docIds for correlation', docIds);
+        const request = new FgRestBuilder()
+            .url(urlForLeadTopicCorrelation)
+            .params(createParamsForUser())
+            /*
+            .params(createParamsForLeadTopicModeling({
+                doc_ids: docIds,
+                number_of_topics: 5,
+                depth: 2,
+                keywords_per_topic: 3,
+            }))
+            */
+            .preLoad(() => {
+                this.setState({ correlationDataPending: true,
+                    chordDataPending: true,
+                    forceDirectedDataPending: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    correlationDataPending: false,
+                    chordDataPending: false,
+                    forceDirectedDataPending: false,
+                });
+            })
+            .success((response) => {
+                try {
+                    // FIXME: write schema
+                    this.props.setLeadVisualization({ correlation: response });
                 } catch (err) {
                     console.error(err);
                 }
