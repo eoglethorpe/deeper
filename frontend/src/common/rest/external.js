@@ -31,6 +31,9 @@ export const urlForLeadClassify =
 export const urlForLeadTopicModeling =
     'https://deepl.togglecorp.com/api/topic-modeling/';
 
+export const urlForLeadTopicCorrelation =
+    'https://deepl.togglecorp.com/api/subtopics/correlation/';
+
 export const createParamsForLeadClassify = body => ({
     method: POST,
     body: JSON.stringify(body),

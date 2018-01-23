@@ -14,11 +14,13 @@ import {
     ForceDirectedGraphView,
     CollapsibleTreeView,
     RadialDendrogramView,
+    GeoReferencedMap,
 } from '../../../../public/components/Visualization';
 import { FormattedDate } from '../../../../public/components/View';
 
 import {
     urlForLeadTopicModeling,
+    urlForLeadTopicCorrelation,
     createParamsForLeadTopicModeling,
     createUrlForLeadsOfProject,
     createParamsForUser,
@@ -33,6 +35,7 @@ import {
     chordDataSelector,
     correlationDataSelector,
     forceDirectedDataSelector,
+    geoPointsDataSelector,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -55,6 +58,7 @@ const propTypes = {
     correlationData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     chordData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     forceDirectedData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    geoPointsData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setLeadVisualization: PropTypes.func.isRequired,
 };
 
@@ -70,6 +74,7 @@ const mapStateToProps = state => ({
     chordData: chordDataSelector(state),
     correlationData: correlationDataSelector(state),
     forceDirectedData: forceDirectedDataSelector(state),
+    geoPointsData: geoPointsDataSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -131,6 +136,8 @@ export default class LeadsViz extends React.PureComponent {
             chordDataPending: true,
             correlationDataPending: true,
             forceDirectedDataPending: true,
+            // TODO: change to true
+            geoPointsDataPending: false,
         };
     }
 
@@ -150,10 +157,12 @@ export default class LeadsViz extends React.PureComponent {
             if (this.leadCDIdRequest) {
                 this.leadCDIdRequest.stop();
             }
-            if (this.requestForLeadTopicmodeling) {
-                this.requestForLeadTopicmodeling.stop();
+            if (this.requestForLeadTopicModeling) {
+                this.requestForLeadTopicModeling.stop();
             }
-
+            if (this.requestForLeadTopicCorrelaction) {
+                this.requestForLeadTopicCorrelaction.stop();
+            }
             this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
                 activeProject: nextProps.activeProject,
                 filters: nextProps.filters,
@@ -166,8 +175,11 @@ export default class LeadsViz extends React.PureComponent {
         if (this.leadCDIdRequest) {
             this.leadCDIdRequest.stop();
         }
-        if (this.requestForLeadTopicmodeling) {
-            this.requestForLeadTopicmodeling.stop();
+        if (this.requestForLeadTopicModeling) {
+            this.requestForLeadTopicModeling.stop();
+        }
+        if (this.requestForLeadTopicCorrelaction) {
+            this.requestForLeadTopicCorrelaction.stop();
         }
     }
 
@@ -190,6 +202,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: true,
                     correlationDataPending: true,
                     forceDirectedDataPending: true,
+                    // geoPointsDataPending: true,
                 });
             })
             .postLoad(() => {
@@ -204,10 +217,20 @@ export default class LeadsViz extends React.PureComponent {
                         return acc;
                     }, []);
 
-                    this.requestForLeadTopicmodeling =
-                        this.createRequestForLeadTopicModeling(docIds);
-                    this.requestForLeadTopicmodeling.start();
+                    if (this.requestForLeadTopicModeling) {
+                        this.requestForLeadTopicModeling.stop();
+                    }
+                    if (this.requestForLeadTopicCorrelaction) {
+                        this.requestForLeadTopicCorrelaction.stop();
+                    }
 
+                    this.requestForLeadTopicModeling =
+                        this.createRequestForLeadTopicModeling(docIds);
+                    this.requestForLeadTopicCorrelaction =
+                        this.createRequestForLeadTopicCorrelation(docIds);
+
+                    this.requestForLeadTopicModeling.start();
+                    this.requestForLeadTopicCorrelaction.start();
                     this.setState({ loadingLeads: false });
                 } catch (er) {
                     console.error(er);
@@ -227,6 +250,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: false,
                     correlationDataPending: false,
                     forceDirectedDataPending: false,
+                    geoPointsDataPending: false,
                 });
             })
             .fatal(() => {
@@ -242,6 +266,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: false,
                     correlationDataPending: false,
                     forceDirectedDataPending: false,
+                    geoPointsDataPending: false,
                 });
             })
             .build();
@@ -266,7 +291,51 @@ export default class LeadsViz extends React.PureComponent {
             .success((response) => {
                 try {
                     // FIXME: write schema
-                    this.props.setLeadVisualization({ data: response });
+                    this.props.setLeadVisualization({
+                        hierarchial: response,
+                        projectId: this.props.activeProject,
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .build();
+        return request;
+    }
+
+    createRequestForLeadTopicCorrelation = (docIds) => {
+        console.warn('TODO: use this docIds for correlation', docIds);
+        const request = new FgRestBuilder()
+            .url(urlForLeadTopicCorrelation)
+            .params(createParamsForUser())
+            /*
+            .params(createParamsForLeadTopicModeling({
+                doc_ids: docIds,
+                number_of_topics: 5,
+                depth: 2,
+                keywords_per_topic: 3,
+            }))
+            */
+            .preLoad(() => {
+                this.setState({ correlationDataPending: true,
+                    chordDataPending: true,
+                    forceDirectedDataPending: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    correlationDataPending: false,
+                    chordDataPending: false,
+                    forceDirectedDataPending: false,
+                });
+            })
+            .success((response) => {
+                try {
+                    // FIXME: write schema
+                    this.props.setLeadVisualization({
+                        correlation: response,
+                        projectId: this.props.activeProject,
+                    });
                 } catch (err) {
                     console.error(err);
                 }
@@ -282,6 +351,7 @@ export default class LeadsViz extends React.PureComponent {
             hierarchicalData,
             correlationData,
             forceDirectedData,
+            geoPointsData,
         } = this.props;
 
         const {
@@ -290,6 +360,7 @@ export default class LeadsViz extends React.PureComponent {
             chordDataPending,
             correlationDataPending,
             forceDirectedDataPending,
+            geoPointsDataPending,
         } = this.state;
 
         return (
@@ -298,6 +369,11 @@ export default class LeadsViz extends React.PureComponent {
                     <FilterLeadsForm styleName="filters" />
                 </header>
                 <div styleName="viz-container">
+                    <GeoReferencedMap
+                        styleName="geo-referenced-map viz"
+                        loading={loadingLeads || geoPointsDataPending}
+                        geoPoints={geoPointsData.points}
+                    />
                     <TreeMapView
                         styleName="tree-map viz"
                         data={hierarchicalData}

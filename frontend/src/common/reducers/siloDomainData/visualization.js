@@ -8,9 +8,11 @@ export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
 
 // ACTION-CREATOR
 
-export const setLeadVisualizationAction = ({ data }) => ({
+export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation }) => ({
     type: SET_LEAD_VISUALIZATION,
-    data,
+    projectId,
+    hierarchial,
+    correlation,
 });
 
 /*
@@ -31,47 +33,109 @@ const getHierarchialTopic = (keywords) => {
     return topic;
 };
 
-const getHierarchialData = (data) => {
-    const keywords = data.keywords;
+const getHierarchialData = (hierarchial = {}) => {
+    const keywords = hierarchial.keywords;
 
-    if (keywords) {
-        const subtopics = data.subtopics;
-        const topic = getHierarchialTopic(keywords, subtopics);
-
-        if (subtopics && subtopics.length > 0) {
-            topic.size = undefined;
-
-            topic.children = Object.values(subtopics).map(subtopic => (
-                getHierarchialData(subtopic)
-            )).filter(f => f.size > 0);
-        }
-        return topic;
+    if (!keywords) {
+        return Object.values(hierarchial).map(d => (
+            getHierarchialData(d)
+        )).filter(f => f.size === undefined || f.size > 0);
     }
 
-    return Object.values(data).map(d => (
-        getHierarchialData(d)
-    )).filter(f => f.size > 0);
+    const subtopics = hierarchial.subtopics;
+    const topic = getHierarchialTopic(keywords, subtopics);
+    const children = getHierarchialData(subtopics);
+
+    if (children && children.length > 0) {
+        topic.size = undefined;
+        topic.children = children;
+    }
+
+    return topic;
+};
+
+const getCorrelationData = (correlation, scale = 1) => {
+    const labels = Object.keys(correlation);
+    const values = [];
+
+    labels.forEach(label => (
+        values.push(labels.map(l => scale * correlation[label][l]))
+    ));
+
+    return {
+        labels,
+        values,
+    };
+};
+
+const getForceDirectedData = (correlation) => {
+    const labels = Object.keys(correlation);
+    const links = [];
+
+    const nodes = labels.map(c => ({
+        id: c, group: 0,
+    }));
+
+    labels.forEach(label => (
+        links.push(...labels.map(l => ({
+            source: label,
+            target: l,
+            value: correlation[label][l],
+        })).filter(l => l.value > 0.8)) // TODO: threshold
+    ));
+
+    return { nodes, links };
 };
 
 // REDUCER
 
 const setLeadVisualization = (state, action) => {
     const {
-        data,
+        hierarchial,
+        correlation,
+        projectId,
     } = action;
 
     const settings = {
-        visualization: { $auto: {
-            stale: {
-                $set: false,
-            },
-            hierarchialData: { $auto: {
-                children: { $autoArray: {
-                    $set: getHierarchialData(data),
-                } },
+        visualization: {
+            [projectId]: { $auto: {
+                stale: {
+                    $set: false,
+                },
             } },
-        } },
+        },
     };
+
+    if (hierarchial) {
+        settings.visualization[projectId].$auto.hierarchialData = {
+            $auto: {
+                children: { $autoArray: {
+                    $set: getHierarchialData(hierarchial),
+                } },
+            },
+        };
+    }
+
+    if (correlation) {
+        settings.visualization[projectId].$auto = {
+            ...settings.visualization[projectId].$auto,
+            correlationData: {
+                $auto: { $set: getCorrelationData(correlation) },
+            },
+            chordData: {
+                $auto: { $set: getCorrelationData(correlation, 100) },
+            },
+            forceDirectedData: {
+                $auto: { $set: getForceDirectedData(correlation) },
+            },
+            /*
+            barData: {
+                $auto: getCorrelationData(correlation),
+            },
+            */
+        };
+    }
+
     return update(state, settings);
 };
 

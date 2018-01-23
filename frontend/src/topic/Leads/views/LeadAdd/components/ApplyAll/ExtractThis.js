@@ -4,7 +4,7 @@ import React from 'react';
 
 import {
     AccentButton,
-    WarningButton,
+    // WarningButton,
 } from '../../../../../../public/components/Action';
 
 import {
