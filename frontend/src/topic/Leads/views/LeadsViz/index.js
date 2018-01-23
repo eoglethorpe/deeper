@@ -291,7 +291,10 @@ export default class LeadsViz extends React.PureComponent {
             .success((response) => {
                 try {
                     // FIXME: write schema
-                    this.props.setLeadVisualization({ hierarchial: response });
+                    this.props.setLeadVisualization({
+                        hierarchial: response,
+                        projectId: this.props.activeProject,
+                    });
                 } catch (err) {
                     console.error(err);
                 }
@@ -329,7 +332,10 @@ export default class LeadsViz extends React.PureComponent {
             .success((response) => {
                 try {
                     // FIXME: write schema
-                    this.props.setLeadVisualization({ correlation: response });
+                    this.props.setLeadVisualization({
+                        correlation: response,
+                        projectId: this.props.activeProject,
+                    });
                 } catch (err) {
                     console.error(err);
                 }

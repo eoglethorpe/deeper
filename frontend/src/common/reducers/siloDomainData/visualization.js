@@ -8,8 +8,9 @@ export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
 
 // ACTION-CREATOR
 
-export const setLeadVisualizationAction = ({ hierarchial, correlation }) => ({
+export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation }) => ({
     type: SET_LEAD_VISUALIZATION,
+    projectId,
     hierarchial,
     correlation,
 });
@@ -92,18 +93,21 @@ const setLeadVisualization = (state, action) => {
     const {
         hierarchial,
         correlation,
+        projectId,
     } = action;
 
     const settings = {
-        visualization: { $auto: {
-            stale: {
-                $set: false,
-            },
-        } },
+        visualization: {
+            [projectId]: { $auto: {
+                stale: {
+                    $set: false,
+                },
+            } },
+        },
     };
 
     if (hierarchial) {
-        settings.visualization.$auto.hierarchialData = {
+        settings.visualization[projectId].$auto.hierarchialData = {
             $auto: {
                 children: { $autoArray: {
                     $set: getHierarchialData(hierarchial),
@@ -113,8 +117,8 @@ const setLeadVisualization = (state, action) => {
     }
 
     if (correlation) {
-        settings.visualization.$auto = {
-            ...settings.visualization.$auto,
+        settings.visualization[projectId].$auto = {
+            ...settings.visualization[projectId].$auto,
             correlationData: {
                 $auto: { $set: getCorrelationData(correlation) },
             },
