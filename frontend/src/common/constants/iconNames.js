@@ -83,6 +83,7 @@ const iconNames = {
 
     chart: 'fa fa-sitemap',
     eye: 'ion-eye',
+    camera: 'ion-camera',
 };
 
 export default iconNames;

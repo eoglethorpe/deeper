@@ -4,6 +4,40 @@
     border: none;
 }
 
+.iframe {
+    .urlbar {
+        display: flex;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-small;
+
+        .url {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+
+            :global .input {
+                border: $width-separator-thin solid $color-separator;
+                border-radius: 3px;
+                background-color: $color-foreground;
+                padding: $spacing-small $spacing-extra-small;
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            margin-left: $spacing-small;
+
+            .open-link {
+                @extend %transparent-button-like-link;
+                color: $color-accent;
+            }
+        }
+    }
+}
+
 .error-website-msg {
     display: flex;
     flex-direction: column;

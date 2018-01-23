@@ -11,6 +11,8 @@ import {
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
 
+import { AccentButton } from '../../../public/components/Action';
+import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     urlForWebsiteFetch,
@@ -20,15 +22,19 @@ import {
 const propTypes = {
     className: PropTypes.string,
     url: PropTypes.string,
+    showUrl: PropTypes.bool,
+    showScreenshot: PropTypes.bool,
 };
 
 const defaultProps = {
     className: '',
     url: undefined,
+    showUrl: false,
+    showScreenshot: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class DeepGallery extends React.PureComponent {
+export default class WebsiteViewer extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -90,9 +96,11 @@ export default class DeepGallery extends React.PureComponent {
                     const mimeType = response.headers['Content-Type'];
                     const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
                     const httpsUrl = response.httpsUrl;
+                    const contentSecurityPolicy = response.headers['Content-Security-Policy'] || '';
+                    const canShow = !contentSecurityPolicy.match('frame-ancestors');
 
                     this.setState({
-                        canShow: true,
+                        canShow,
                         isSameOrigin,
                         isSecure,
                         mimeType,
@@ -119,6 +127,93 @@ export default class DeepGallery extends React.PureComponent {
         return urlRequest;
     }
 
+    renderIFrame = () => {
+        const {
+            className,
+            showUrl,
+            showScreenshot,
+            url,
+        } = this.props;
+        const { httpsUrl } = this.state;
+
+        return (
+            <div
+                styleName="iframe"
+                className={className}
+            >
+                {
+                    showUrl &&
+                        <div styleName="urlbar">
+                            <TextInput
+                                styleName="url"
+                                value={httpsUrl || url}
+                                readOnly
+                                showLabel={false}
+                                showHintAndError={false}
+                                selectOnFocus
+                            />
+                            <div styleName="action-buttons">
+                                <a
+                                    styleName="open-link"
+                                    href={httpsUrl || url}
+                                    target="_blank"
+                                >
+                                    <span className={iconNames.openLink} />
+                                </a>
+                                { showScreenshot &&
+                                    <AccentButton
+                                        iconName={iconNames.camera}
+                                        transparent
+                                    />
+                                }
+                            </div>
+                        </div>
+                }
+                <iframe
+                    styleName="doc"
+                    sandbox="allow-scripts allow-same-origin"
+                    title={httpsUrl}
+                    src={httpsUrl}
+                />
+            </div>
+        );
+    }
+
+    renderError = () => {
+        const {
+            className,
+            url,
+        } = this.props;
+        const {
+            httpsUrl,
+            invalidUrl,
+        } = this.state;
+
+        return (
+            <div className={className}>
+                {
+                    !invalidUrl ?
+                        <div styleName="error-website-msg">
+                            <span>
+                                {leadsString.cannotPreviewUrl}
+                            </span>
+                            <a
+                                styleName="url"
+                                href={httpsUrl || url}
+                                target="_blank"
+                            >
+                                {httpsUrl || url}
+                            </a>
+                        </div>
+                        :
+                        <span styleName="error-website-msg">
+                            {leadsString.invalidUrl}
+                        </span>
+                }
+            </div>
+        );
+    }
+
     render() {
         const {
             pending,
@@ -128,7 +223,6 @@ export default class DeepGallery extends React.PureComponent {
             mimeType,
             isDoc,
             httpsUrl,
-            invalidUrl,
         } = this.state;
 
         const {
@@ -146,7 +240,9 @@ export default class DeepGallery extends React.PureComponent {
                         className={iconNames.loading}
                         styleName="loading-animation"
                     />
-                    <span styleName="waiting-text">{leadsString.gatheringWebsiteInfoLabel}</span>
+                    <span styleName="waiting-text">
+                        {leadsString.gatheringWebsiteInfoLabel}
+                    </span>
                 </div>
             );
         }
@@ -164,34 +260,7 @@ export default class DeepGallery extends React.PureComponent {
 
         return (
             (canShow && !isSameOrigin && isSecure && httpsUrl) ?
-                <iframe
-                    styleName="doc"
-                    sandbox="allow-scripts allow-same-origin"
-                    className={className}
-                    title={httpsUrl}
-                    src={httpsUrl}
-                /> :
-                <div className={className}>
-                    {
-                        !invalidUrl ?
-                            <div styleName="error-website-msg">
-                                <span>
-                                    {leadsString.cannotPreviewUrl}
-                                </span>
-                                <a
-                                    styleName="url"
-                                    href={httpsUrl || url}
-                                    target="_blank"
-                                >
-                                    {httpsUrl || url}
-                                </a>
-                            </div>
-                            :
-                            <span styleName="error-website-msg">
-                                {leadsString.invalidUrl}
-                            </span>
-                    }
-                </div>
+                this.renderIFrame() : this.renderError()
         );
     }
 }
