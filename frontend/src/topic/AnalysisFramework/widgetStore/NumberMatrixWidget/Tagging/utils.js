@@ -33,7 +33,9 @@ export const updateAttribute = ({ entryId, api, attribute, data, exportable }) =
         return;
     }
 
-    api.getEntryModifier(entryId)
-        .setExportData(exportable.id, createExportData(attribute, data))
-        .apply();
+    if (exportable) {
+        api.getEntryModifier(entryId)
+            .setExportData(exportable.id, createExportData(attribute, data))
+            .apply();
+    }
 };

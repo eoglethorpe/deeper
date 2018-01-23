@@ -19,8 +19,10 @@ export const updateAttribute = ({ entryId, api, attribute, data, filters, export
         return;
     }
 
-    api.getEntryModifier(entryId)
-        .setFilterData(filters[0].id, createFilterData(attribute, data))
-        .setExportData(exportable.id, createExportData(attribute, data))
-        .apply();
+    if (filters && filters.length === 1 && exportable) {
+        api.getEntryModifier(entryId)
+            .setFilterData(filters[0].id, createFilterData(attribute, data))
+            .setExportData(exportable.id, createExportData(attribute, data))
+            .apply();
+    }
 };

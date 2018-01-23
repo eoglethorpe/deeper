@@ -77,9 +77,16 @@ export const updateAttribute = ({ id, entryId, api, attribute, data, filters, ex
         return;
     }
 
-    api.getEntryModifier(entryId)
-        .setHighlightColor(id, createHighlightColor(attribute, data))
-        .setFilterData(filters[0].id, createFilterData(attribute, data))
-        .setExportData(exportable.id, createExportData(attribute, data))
-        .apply();
+    const modifier = api.getEntryModifier(entryId)
+        .setHighlightColor(id, createHighlightColor(attribute, data));
+
+    if (filters && filters.length === 1) {
+        modifier.setFilterData(filters[0].id, createFilterData(attribute, data));
+    }
+
+    if (exportable) {
+        modifier.setExportData(exportable.id, createExportData(attribute, data));
+    }
+
+    modifier.apply();
 };
