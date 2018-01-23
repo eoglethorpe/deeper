@@ -71,7 +71,13 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.destroy();
+        if (this.triggerRequest) {
+            this.triggerRequest.stop();
+        }
+        if (this.previewRequest) {
+            this.previewRequest.stop();
+        }
+        this.previewId = undefined;
     }
 
     startProcess = () => {
@@ -91,19 +97,6 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
     }
 
-    destroy() {
-        if (this.previewRequestTimeout) {
-            clearTimeout(this.previewRequestTimeout);
-        }
-        if (this.triggerRequest) {
-            this.triggerRequest.stop();
-        }
-        if (this.previewRequest) {
-            this.previewRequest.stop();
-        }
-        this.previewId = undefined;
-    }
-
     reset = (previewId) => {
         // reset if preview id is also not set
         if (!previewId) {
@@ -118,13 +111,8 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
     }
 
-    create(props) {
-        this.destroy();
-
-        const {
-            fileIds,
-            previewId,
-        } = props;
+    create({ fileIds, previewId, onLoad }) {
+        this.previewId = undefined;
 
         if (!fileIds || fileIds.length === 0) {
             this.reset(previewId);
@@ -134,94 +122,70 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         this.startProcess();
 
         if (previewId) {
-            this.createPreviewRequest(previewId);
+            if (this.previewRequest) {
+                this.previewRequest.stop();
+            }
+            this.previewRequest = this.createPreviewRequest(previewId, onLoad);
+            this.previewRequest.stop();
             return;
         }
 
-        const triggerParams = createParamsForFileExtractionTrigger(fileIds);
-        const triggerUrl = urlForFileExtractionTrigger;
-
-        this.previewRequestCount = 0;
-        this.triggerRequest = this.createRequest(
-            triggerUrl,
-            triggerParams,
-            (response) => {
-                // FIXME: write schema
-                console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
-                this.createPreviewRequest(response.extractionTriggered);
-            },
-        );
-
+        this.triggerRequest = this.createTriggerRequest(fileIds, onLoad);
         this.triggerRequest.start();
     }
 
-    createPreviewRequest = (previewId) => {
-        const { onLoad } = this.props;
-        const params = createParamsForGenericGet();
-        const previewUrl = createUrlForSimplifiedFilePreview(previewId);
-
-        this.previewRequest = this.createRequest(
-            previewUrl,
-            params,
-            (response) => {
-                // FIXME: write schema
-                if (!response.extracted) {
-                    // Keep trying
-                    this.previewRequestTimeout = setTimeout(() => {
-                        this.tryPreviewRequest();
-                    }, 1000);
-                } else {
-                    this.previewId = response.id;
-                    if (onLoad) {
-                        onLoad(response);
-                    }
-                    this.endProcess({
-                        error: undefined,
-                        extractedText: response.text,
-                    });
-                }
-            },
-        );
-
-        this.previewRequest.start();
-    }
-
-    tryPreviewRequest = (maxCount = 30) => {
-        if (this.triggerRequest) {
-            this.triggerRequest.stop();
-        }
-
-        if (this.previewRequestCount === maxCount) {
-            this.endProcess({
-                error: undefined,
-                extractedText: null,
-            });
-            return;
-        }
-
-        this.previewRequestCount += 1;
-        this.previewRequest.start();
-    }
-
-    createRequest = (url, params, onSuccess) => (
+    createPreviewRequest = (previewId, onLoad) => (
         new FgRestBuilder()
-            .url(url)
-            .params(params)
+            .url(createUrlForSimplifiedFilePreview(previewId))
+            .params(createParamsForGenericGet())
+            .maxPollAttempts(200)
+            .pollTime(2000)
+            .shouldPoll(response => !response.extracted)
             .success((response) => {
-                try {
-                    onSuccess(response);
-                } catch (err) {
-                    console.error(err);
+                // FIXME: write schema
+                this.previewId = response.id;
+                if (onLoad) {
+                    onLoad(response);
                 }
+                this.endProcess({
+                    error: undefined,
+                    extractedText: response.text,
+                });
             })
-            .failure((response) => {
-                console.error(response);
+            .failure(() => {
                 this.endProcess({
                     error: commonStrings.serverErrorText,
                 });
             })
-            .fatal((response) => {
-                console.error(response);
+            .fatal(() => {
+                this.endProcess({
+                    error: commonStrings.connectionFailureText,
+                });
+            })
+            .build()
+    )
+
+    createTriggerRequest = (fileIds, onLoad) => (
+        new FgRestBuilder()
+            .url(urlForFileExtractionTrigger)
+            .params(createParamsForFileExtractionTrigger(fileIds))
+            .success((response) => {
+                console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
+                if (this.previewRequest) {
+                    this.previewRequest.stop();
+                }
+                this.previewRequest = this.createPreviewRequest(
+                    response.extractionTriggered,
+                    onLoad,
+                );
+                this.previewRequest.start();
+            })
+            .failure(() => {
+                this.endProcess({
+                    error: commonStrings.serverErrorText,
+                });
+            })
+            .fatal(() => {
                 this.endProcess({
                     error: commonStrings.connectionFailureText,
                 });
