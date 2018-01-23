@@ -74,13 +74,6 @@ export default class RegionMap extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.destroy();
-    }
-
-    destroy() {
-        if (this.staleRequestTimeout) {
-            clearTimeout(this.staleRequestTimeout);
-        }
         this.geoJsonRequests.forEach(request => request.stop());
         if (this.triggerRequest) {
             this.triggerRequest.stop();
@@ -91,7 +84,7 @@ export default class RegionMap extends React.PureComponent {
     }
 
     create(regionId) {
-        this.destroy();
+        this.geoJsonRequests.forEach(request => request.stop());
 
         if (!regionId) {
             this.setState({ pending: false });
@@ -99,39 +92,66 @@ export default class RegionMap extends React.PureComponent {
         }
 
         this.setState({ pending: true });
+        this.hasTriggeredOnce = false;
 
-        const params = createParamsForAdminLevelsForRegionGET();
-        const triggerUrl = createUrlForGeoAreasLoadTrigger(regionId);
-        const adminLevelsUrl = createUrlForAdminLevelsForRegion(regionId);
+        if (this.adminLevelsRequest) {
+            this.adminLevelsRequest.stop();
+        }
+        this.adminLevelsRequest = this.createAdminLevelsRequest(regionId);
+        this.adminLevelsRequest.start();
+    }
 
-        this.staleCheckCount = 0;
-        this.triggerRequest = this.createRequest(
-            triggerUrl,
-            params,
-            () => {
-                // FIXME: write schema
+    createTriggerRequest = regionId => (
+        new FgRestBuilder()
+            .url(createUrlForGeoAreasLoadTrigger(regionId))
+            .params(createParamsForAdminLevelsForRegionGET())
+            .success(() => {
                 console.log(`Triggered geo areas loading task for ${regionId}`);
-                this.tryRequestToCheckStale();
-            },
-        );
+                if (this.adminLevelsRequest) {
+                    this.adminLevelsRequest.stop();
+                }
+                this.adminLevelsRequest = this.createAdminLevelsRequest(regionId);
+                this.adminLevelsRequest.start();
+            })
+            .failure(() => {
+                this.setState({
+                    pending: false,
+                    error: commonStrings.erverErrorText,
+                });
+            })
+            .fatal(() => {
+                this.setState({
+                    pending: false,
+                    error: commonStrings.connectionFailureText,
+                });
+            })
+            .build()
+    )
 
-        this.adminLevelsRequest = this.createRequest(
-            adminLevelsUrl,
-            params,
-            (response) => {
-                // FIXME: write schema
+    createAdminLevelsRequest = regionId => (
+        new FgRestBuilder()
+            .url(createUrlForAdminLevelsForRegion(regionId))
+            .params(createParamsForAdminLevelsForRegionGET())
+            .maxPollAttempts(200)
+            .pollTime(2000)
+            .shouldPoll(response => (
+                this.hasTriggeredOnce &&
+                response.results.reduce((acc, adminLevel) => (
+                    adminLevel.staleGeoAreas || acc
+                ), false)
+            ))
+            .success((response) => {
                 const stale = response.results.reduce((acc, adminLevel) => (
                     adminLevel.staleGeoAreas || acc
                 ), false);
 
                 if (stale) {
-                    if (this.staleCheckCount === 0) {
-                        this.triggerRequest.start();
-                    } else {
-                        this.staleRequestTimeout = setTimeout(() => {
-                            this.tryRequestToCheckStale();
-                        }, 1000);
+                    this.hasTriggeredOnce = true;
+                    if (this.triggerRequest) {
+                        this.triggerRequest.stop();
                     }
+                    this.triggerRequest = this.createTriggerRequest(regionId);
+                    this.triggerRequest.start();
                 } else {
                     this.setState({
                         pending: false,
@@ -142,50 +162,14 @@ export default class RegionMap extends React.PureComponent {
                         this.loadGeoJsons();
                     });
                 }
-            },
-        );
-
-        this.adminLevelsRequest.start();
-    }
-
-    tryRequestToCheckStale(maxCount = 30) {
-        if (this.triggerRequest) {
-            this.triggerRequest.stop();
-        }
-
-        if (this.staleCheckCount === maxCount) {
-            this.setState({
-                pending: false,
-                error: undefined,
-                adminLevels: [],
-            });
-            return;
-        }
-
-        this.staleCheckCount += 1;
-        this.adminLevelsRequest.start();
-    }
-
-    createRequest = (url, params, onSuccess) => (
-        new FgRestBuilder()
-            .url(url)
-            .params(params)
-            .success((response) => {
-                try {
-                    onSuccess(response);
-                } catch (err) {
-                    console.error(err);
-                }
             })
-            .failure((response) => {
-                console.log(response);
+            .failure(() => {
                 this.setState({
                     pending: false,
                     error: commonStrings.erverErrorText,
                 });
             })
-            .fatal((response) => {
-                console.log(response);
+            .fatal(() => {
                 this.setState({
                     pending: false,
                     error: commonStrings.connectionFailureText,
