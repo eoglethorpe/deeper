@@ -14,6 +14,7 @@ import {
     ForceDirectedGraphView,
     CollapsibleTreeView,
     RadialDendrogramView,
+    GeoReferencedMap,
 } from '../../../../public/components/Visualization';
 import { FormattedDate } from '../../../../public/components/View';
 
@@ -34,6 +35,7 @@ import {
     chordDataSelector,
     correlationDataSelector,
     forceDirectedDataSelector,
+    geoPointsDataSelector,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -56,6 +58,7 @@ const propTypes = {
     correlationData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     chordData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     forceDirectedData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    geoPointsData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setLeadVisualization: PropTypes.func.isRequired,
 };
 
@@ -71,6 +74,7 @@ const mapStateToProps = state => ({
     chordData: chordDataSelector(state),
     correlationData: correlationDataSelector(state),
     forceDirectedData: forceDirectedDataSelector(state),
+    geoPointsData: geoPointsDataSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -132,6 +136,8 @@ export default class LeadsViz extends React.PureComponent {
             chordDataPending: true,
             correlationDataPending: true,
             forceDirectedDataPending: true,
+            // TODO: change to true
+            geoPointsDataPending: false,
         };
     }
 
@@ -196,6 +202,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: true,
                     correlationDataPending: true,
                     forceDirectedDataPending: true,
+                    // geoPointsDataPending: true,
                 });
             })
             .postLoad(() => {
@@ -243,6 +250,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: false,
                     correlationDataPending: false,
                     forceDirectedDataPending: false,
+                    geoPointsDataPending: false,
                 });
             })
             .fatal(() => {
@@ -258,6 +266,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: false,
                     correlationDataPending: false,
                     forceDirectedDataPending: false,
+                    geoPointsDataPending: false,
                 });
             })
             .build();
@@ -336,6 +345,7 @@ export default class LeadsViz extends React.PureComponent {
             hierarchicalData,
             correlationData,
             forceDirectedData,
+            geoPointsData,
         } = this.props;
 
         const {
@@ -344,6 +354,7 @@ export default class LeadsViz extends React.PureComponent {
             chordDataPending,
             correlationDataPending,
             forceDirectedDataPending,
+            geoPointsDataPending,
         } = this.state;
 
         return (
@@ -352,6 +363,11 @@ export default class LeadsViz extends React.PureComponent {
                     <FilterLeadsForm styleName="filters" />
                 </header>
                 <div styleName="viz-container">
+                    <GeoReferencedMap
+                        styleName="geo-referenced-map viz"
+                        loading={loadingLeads || geoPointsDataPending}
+                        geoPoints={geoPointsData.points}
+                    />
                     <TreeMapView
                         styleName="tree-map viz"
                         data={hierarchicalData}

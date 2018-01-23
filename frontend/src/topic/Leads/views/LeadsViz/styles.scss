@@ -41,11 +41,11 @@
 
     .viz-container {
         display: grid;
-
         background-color: $color-foreground;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 512px 512px 512px 512px;
-        grid-template-areas: 'tree-map tree-map'
+        grid-template-rows: repeat(5, 512px);
+        grid-template-areas: 'geo-referenced-map geo-referenced-map'
+            'tree-map tree-map'
             'sun-burst chord-diagram'
             'correlation-matrix force-directed-graph'
             'collapsible-tree radial-dendrogram';
@@ -114,6 +114,10 @@
 
         .radial-dendrogram {
             grid-area: radial-dendrogram;
+        }
+
+        .geo-referenced-map {
+            grid-area: geo-referenced-map;
         }
     }
 

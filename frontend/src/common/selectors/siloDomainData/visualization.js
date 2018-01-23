@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 
 const emptyObject = {};
+const emptyGeoPointsData = { points: [] };
+
 // Gallery Files
 
 export const visualizationSelector = ({ siloDomainData }) => (
@@ -37,4 +39,9 @@ export const barDataSelector = createSelector(
 export const forceDirectedDataSelector = createSelector(
     visualizationSelector,
     viz => viz.forceDirectedData || emptyObject,
+);
+
+export const geoPointsDataSelector = createSelector(
+    visualizationSelector,
+    viz => viz.geoPointsData || emptyGeoPointsData,
 );

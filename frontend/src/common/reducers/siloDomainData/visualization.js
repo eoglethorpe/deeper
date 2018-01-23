@@ -32,27 +32,25 @@ const getHierarchialTopic = (keywords) => {
     return topic;
 };
 
-const getHierarchialData = (hierarchial) => {
+const getHierarchialData = (hierarchial = {}) => {
     const keywords = hierarchial.keywords;
 
-    if (keywords) {
-        const subtopics = hierarchial.subtopics;
-        const topic = getHierarchialTopic(keywords, subtopics);
-
-        if (subtopics && Object.keys(subtopics).length > 0) {
-            const children = getHierarchialData(subtopics);
-
-            if (children && children.length > 0) {
-                topic.size = undefined;
-                topic.children = children;
-            }
-        }
-        return topic;
+    if (!keywords) {
+        return Object.values(hierarchial).map(d => (
+            getHierarchialData(d)
+        )).filter(f => f.size === undefined || f.size > 0);
     }
 
-    return Object.values(hierarchial).map(d => (
-        getHierarchialData(d)
-    )).filter(f => f.size === undefined || f.size > 0);
+    const subtopics = hierarchial.subtopics;
+    const topic = getHierarchialTopic(keywords, subtopics);
+    const children = getHierarchialData(subtopics);
+
+    if (children && children.length > 0) {
+        topic.size = undefined;
+        topic.children = children;
+    }
+
+    return topic;
 };
 
 const getCorrelationData = (correlation, scale = 1) => {
