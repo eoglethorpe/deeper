@@ -58,6 +58,7 @@ const strings = {
     5554: 'Saved',
     5555: 'Discard',
 
+    129: 'Extract lead information from url',
     130: 'Apply this value to all',
     131: 'Apply this value to all below',
     132: 'Preview Not Available',

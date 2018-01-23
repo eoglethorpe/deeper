@@ -65,20 +65,25 @@ export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static isUrlValid = url => (requiredCondition.truth(url) && urlCondition.truth(url))
+
+    constructor(props) {
+        super(props);
+
+        const lead = leadAccessor.getValues(this.props.lead);
+        const isUrlValid = LeadFormItem.isUrlValid(lead.url);
+        this.state = {
+            pendingExtraction: false,
+            isUrlValid,
+        };
+    }
+
     componentWillReceiveProps(nextProps) {
         const oldLead = leadAccessor.getValues(this.props.lead);
         const newLead = leadAccessor.getValues(nextProps.lead);
-
-        if (
-            newLead.url !== oldLead.url &&
-            requiredCondition.truth(newLead.url) &&
-            urlCondition.truth(newLead.url)
-        ) {
-            if (this.webInfoExtractRequest) {
-                this.webInfoExtractRequest.stop();
-            }
-            this.webInfoExtractRequest = this.createWebInfoExtractRequest(newLead.url);
-            this.webInfoExtractRequest.start();
+        if (newLead.url !== oldLead.url) {
+            const isUrlValid = LeadFormItem.isUrlValid(newLead.url);
+            this.setState({ isUrlValid });
         }
     }
 
@@ -95,28 +100,32 @@ export default class LeadFormItem extends React.PureComponent {
         const request = new FgRestBuilder()
             .url(urlForWebInfo)
             .params(createParamsForWebInfo({ url }))
-            .delay(0)
+            .preLoad(() => {
+                this.setState({ pendingExtraction: true });
+            })
+            .postLoad(() => {
+                this.setState({ pendingExtraction: false });
+            })
             .success((response) => {
                 const webInfo = response;
-                const inputValues = leadAccessor.getValues(this.props.lead);
-
                 const values = {};
-                if (webInfo.project && (!inputValues.project || inputValues.project.length === 0)) {
+
+                if (webInfo.project) {
                     values.project = [webInfo.project];
                 }
-                if (webInfo.date && !inputValues.date) {
+                if (webInfo.date) {
                     values.publishedOn = webInfo.date;
                 }
-                if (webInfo.source && !inputValues.source) {
+                if (webInfo.source) {
                     values.source = webInfo.source;
                 }
-                if (webInfo.website && !inputValues.website) {
+                if (webInfo.website) {
                     values.website = webInfo.website;
                 }
-                if (webInfo.title && !inputValues.title) {
+                if (webInfo.title) {
                     values.title = webInfo.title;
                 }
-                if (webInfo.url && !inputValues.url) {
+                if (webInfo.url) {
                     values.url = webInfo.url;
                 }
 
@@ -130,6 +139,15 @@ export default class LeadFormItem extends React.PureComponent {
             })
             .build();
         return request;
+    }
+
+    handleExtractClick = () => {
+        if (this.webInfoExtractRequest) {
+            this.webInfoExtractRequest.stop();
+        }
+        const lead = leadAccessor.getValues(this.props.lead);
+        this.webInfoExtractRequest = this.createWebInfoExtractRequest(lead.url);
+        this.webInfoExtractRequest.start();
     }
 
     handleFormSuccess = (newValues) => {
@@ -286,6 +304,9 @@ export default class LeadFormItem extends React.PureComponent {
                     onSuccess={this.handleFormSuccess}
                     onApplyAllClick={this.handleApplyAllClick}
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                    isExtractionLoading={this.state.pendingExtraction}
+                    isExtractionDisabled={!this.state.isUrlValid}
+                    onExtractClick={this.handleExtractClick}
                     {...otherProps}
                 />
                 { active && <LeadPreview lead={lead} /> }

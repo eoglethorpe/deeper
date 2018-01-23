@@ -18,16 +18,14 @@ const propTypes = {
     className: PropTypes.string,
     disabled: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
-    identiferName: PropTypes.string.isRequired,
-    onApplyAllClick: PropTypes.func.isRequired,
-    onApplyAllBelowClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
-export default class ApplyAll extends React.PureComponent {
+export default class ExtractThis extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -36,9 +34,7 @@ export default class ApplyAll extends React.PureComponent {
             className,
             disabled,
             children,
-            identiferName,
-            onApplyAllClick,
-            onApplyAllBelowClick,
+            onClick,
         } = this.props;
 
         return (
@@ -49,28 +45,15 @@ export default class ApplyAll extends React.PureComponent {
                         styleName="apply-button"
                         transparent
                         type="button"
-                        title={leadsString.applyAllButtonTitle}
+                        title={leadsString.extractLead} // TODO: use strings
                         disabled={disabled}
-                        onClick={() => onApplyAllClick(identiferName)}
+                        onClick={onClick}
                         tabIndex="-1"
                     >
-                        <span className={iconNames.applyAll} />
+                        <span className={iconNames.eye} />
                     </AccentButton>
-                    <WarningButton
-                        styleName="apply-button"
-                        transparent
-                        type="button"
-                        title={leadsString.applyAllBelowButtonTitle}
-                        disabled={disabled}
-                        onClick={() => onApplyAllBelowClick(identiferName)}
-                        tabIndex="-1"
-                    >
-                        <span className={iconNames.applyAllBelow} />
-                    </WarningButton>
                 </div>
             </div>
         );
     }
 }
-
-export { default as ExtractThis } from './ExtractThis';

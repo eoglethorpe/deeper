@@ -24,7 +24,7 @@ import {
 import DeepGallery from '../../../../../../common/components/DeepGallery';
 import { leadsString } from '../../../../../../common/constants';
 
-import ApplyAll from '../ApplyAll';
+import ApplyAll, { ExtractThis } from '../ApplyAll';
 
 import styles from './styles.scss';
 
@@ -50,6 +50,10 @@ const propTypes = {
     isFormDisabled: PropTypes.bool.isRequired,
     isFormLoading: PropTypes.bool.isRequired,
     isBulkActionDisabled: PropTypes.bool.isRequired,
+
+    isExtractionDisabled: PropTypes.bool.isRequired,
+    isExtractionLoading: PropTypes.bool.isRequired,
+    onExtractClick: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -159,6 +163,10 @@ export default class LeadForm extends React.PureComponent {
             isFormDisabled,
             isFormLoading,
             isBulkActionDisabled,
+
+            isExtractionDisabled,
+            isExtractionLoading,
+            onExtractClick,
         } = this.props;
 
         const values = leadAccessor.getValues(lead);
@@ -180,7 +188,7 @@ export default class LeadForm extends React.PureComponent {
                 validations={this.validations}
             >
                 {
-                    isFormLoading && <LoadingAnimation />
+                    (isFormLoading || isExtractionLoading) && <LoadingAnimation />
                 }
                 <header
                     styleName="header"
@@ -193,17 +201,22 @@ export default class LeadForm extends React.PureComponent {
                 />
                 {
                     type === LEAD_TYPE.website && [
-                        <TextInput
-                            error={fieldErrors.url}
-                            formname="url"
+                        <ExtractThis
                             key="url"
-                            label={leadsString.urlLabel}
-                            placeholder={leadsString.urlPlaceholderLabel}
                             styleName="url"
-                            value={values.url}
-                            disabled={isFormDisabled}
-                            autoFocus
-                        />,
+                            disabled={isFormDisabled || isExtractionDisabled}
+                            onClick={onExtractClick}
+                        >
+                            <TextInput
+                                error={fieldErrors.url}
+                                formname="url"
+                                label={leadsString.urlLabel}
+                                placeholder={leadsString.urlPlaceholderLabel}
+                                value={values.url}
+                                disabled={isFormDisabled}
+                                autoFocus
+                            />
+                        </ExtractThis>,
                         <TextInput
                             error={fieldErrors.website}
                             formname="website"
