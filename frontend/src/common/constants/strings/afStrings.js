@@ -100,6 +100,7 @@ const afStrings = {
     informationDateCheckboxLabel: string[777],
 
     exitButtonLabel: string[778],
+    defaultButtonLabel: string[779],
 };
 
 export default afStrings;
