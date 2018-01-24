@@ -570,6 +570,18 @@ const strings = {
 
     780: 'List',
     781: 'Overview',
+    782: 'Untitled dimension',
+    783: 'Title',
+    784: 'Tooltip',
+    785: 'Color',
+    786: 'Subdimensions',
+    787: 'Dimensions',
+    788: 'Add subdimension',
+    789: 'Add dimension',
+    790: 'Cancel',
+    791: 'Save',
+    792: 'Edit Matrix-2d',
+    793: 'Nothing here',
 
     // Login/Register strings
 

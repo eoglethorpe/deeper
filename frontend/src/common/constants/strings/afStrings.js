@@ -35,9 +35,9 @@ const afStrings = {
     titlePlaceholderOverview: string[763],
 
     matrix2DWidgetLabel: string[723],
+    dimensionXLabel: string[726],
     dimensionYLabel: string[724],
     addDimensionYButtonLabel: string[725],
-    dimensionXLabel: string[726],
     addDimensionXButtonLabel: string[727],
     subDimensionsLabel: string[728],
     addDimensionModalTitle: string[729],
@@ -47,7 +47,7 @@ const afStrings = {
     removeDimensionXButtonTitle: string[770],
     removeDimensionYButtonTitle: string[771],
     removeSubdimensionButtonTitle: string[772],
-
+    untiledDimensionTitle: string[782],
 
     dimensionXTitleLabel: string[731],
     dimensionXTitlePlaceholder: string[732],
@@ -101,6 +101,22 @@ const afStrings = {
 
     exitButtonLabel: string[778],
     defaultButtonLabel: string[779],
+
+    title: string[783],
+    tooltip: string[784],
+    color: string[785],
+
+    dimensions: string[787],
+    subdimensions: string[786],
+
+    addSubdimensionButtonTitle: string[788],
+    addDimensionButtonTitle: string[789],
+
+    saveButtonTitle: string[790],
+    cancelButtonTitle: string[791],
+
+    editModalTitle: string[792],
+    empty: string[793],
 };
 
 export default afStrings;

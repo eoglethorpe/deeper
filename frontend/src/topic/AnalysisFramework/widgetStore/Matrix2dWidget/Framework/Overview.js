@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+
 import {
     Modal,
     ModalHeader,
@@ -27,6 +28,7 @@ import {
 } from '../../../../../public/utils/common';
 
 import update from '../../../../../public/utils/immutable-update';
+import afStrings from '../../../../../common/constants/strings/afStrings';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -471,7 +473,6 @@ export default class Matrix2dOverview extends React.PureComponent {
                                                 className={styles['dimension-td']}
                                                 rowSpan={dimension.subdimensions.length}
                                                 title={dimension.tooltip}
-                                                role="gridcell"
                                             >
                                                 {dimension.title}
                                             </td>
@@ -519,8 +520,8 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderDimensionTypes = () => {
         const dimensionTypes = [
-            'Dimension-X',
-            'Dimension-Y',
+            afStrings.dimensionXLabel,
+            afStrings.dimensionYLabel,
         ];
 
         return (
@@ -546,7 +547,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                 onClick={() => { this.setState({ activeDimensionIndex: i }); }}
                 className={classNames.join(' ')}
             >
-                { data.title || 'Untitled dimension' }
+                { data.title || afStrings.untiledDimensionTitle }
             </button>
         );
     }
@@ -575,14 +576,14 @@ export default class Matrix2dOverview extends React.PureComponent {
         >
             <div className={styles.inputs}>
                 <TextInput
-                    label="Title"
+                    label={afStrings.title}
                     value={data.title}
                     showHintAndError={false}
                     onChange={(value) => { this.handleSubdimensionInputValueChange(i, 'title', value); }}
                     autoFocus
                 />
                 <TextInput
-                    label="Tooltip"
+                    label={afStrings.tooltip}
                     value={data.tooltip}
                     showHintAndError={false}
                     onChange={(value) => { this.handleSubdimensionInputValueChange(i, 'tooltip', value); }}
@@ -612,7 +613,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         if (!dimension) {
             return (
                 <div className={styles.empty}>
-                    Nothing here
+                    { afStrings.empty }
                 </div>
             );
         }
@@ -629,7 +630,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                     <div className={styles.inputs}>
                         <TextInput
                             className={styles['text-input']}
-                            label="Title"
+                            label={afStrings.title}
                             value={dimension.title}
                             showHintAndError={false}
                             onChange={(value) => { this.handleDimensionInputValueChange('title', value); }}
@@ -637,7 +638,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         />
                         <TextInput
                             className={styles['text-input']}
-                            label="Tooltip"
+                            label={afStrings.tooltip}
                             value={dimension.tooltip}
                             showHintAndError={false}
                             onChange={(value) => { this.handleDimensionInputValueChange('tooltip', value); }}
@@ -646,7 +647,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                             showColorInput && (
                                 <ColorInput
                                     className={styles['color-input']}
-                                    label="Color"
+                                    label={afStrings.color}
                                     value={dimension.color}
                                     showHintAndError={false}
                                     onChange={(value) => { this.handleDimensionInputValueChange('color', value); }}
@@ -663,13 +664,9 @@ export default class Matrix2dOverview extends React.PureComponent {
                 </div>
                 <div className={styles['subdimension-detail']}>
                     <header className={styles.header}>
-                        <h4>
-                            Subdimensions
-                        </h4>
-                        <Button
-                            onClick={this.handleAddSubdimensionButtonClick}
-                        >
-                            Add subdimension
+                        <h4>{ afStrings.subdimension }</h4>
+                        <Button onClick={this.handleAddSubdimensionButtonClick}>
+                            { afStrings.addSubdimensionButtonTitle }
                         </Button>
                     </header>
                     <ListView
@@ -698,13 +695,12 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         return (
             <Modal className={styles['framework-overview-edit-modal']}>
-                <ModalHeader title="Edit Matrix-2d" />
+                <ModalHeader title={afStrings.editModalTitle} />
                 <ModalBody className={styles.body}>
                     <header className={styles.header}>
                         <div className={styles.left}>
                             <TextInput
-                                label="Title"
-                                placeholder="Title for Matrix 2d"
+                                label={afStrings.title}
                                 showHintAndError={false}
                                 value={title}
                                 onChange={this.handleTitleInputValueChange}
@@ -714,10 +710,8 @@ export default class Matrix2dOverview extends React.PureComponent {
                         </div>
                         <DimensionTypes />
                         <div className={styles.right}>
-                            <Button
-                                onClick={this.handleAddDimensionButtonClick}
-                            >
-                                Add dimension
+                            <Button onClick={this.handleAddDimensionButtonClick}>
+                                { afStrings.addDimensionButtonTitle }
                             </Button>
                         </div>
                     </header>
@@ -728,10 +722,10 @@ export default class Matrix2dOverview extends React.PureComponent {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.handleModalCancelButtonClick}>
-                        Cancel
+                        { afStrings.cancelButtonTitle }
                     </Button>
                     <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                       Save
+                        { afStrings.saveButtonTitle }
                     </PrimaryButton>
                 </ModalFooter>
             </Modal>
