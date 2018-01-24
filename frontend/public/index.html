@@ -13,28 +13,70 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.41.0/mapbox-gl.css' rel='stylesheet' />
 
     <title>DEEP</title>
+    <style>
+        #root-preload {
+            height: 100vh;
+            background-color: #f0f0f0;
+            color: #414141;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 20px;
+        }
+
+        .issue-collector {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            z-index: 999999999;
+        }
+
+        .issue-collector button {
+            outline: 0;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            padding: 0px 5px;
+            font-size: 14px;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        /*
+        .issue-collector button#finance-a-feature {
+            background-color: #d0d0d0;
+        }
+        */
+    </style>
   </head>
   <body style="background-color: #f0f0f0;">
     <noscript>
         You need to enable JavaScript to run this app.
     </noscript>
     <div id="root">
-        Just a moment, going deeper...
+        <div id="root-preload">
+            Just a moment, going deeper...
+        </div>
     </div>
 
     <div class="issue-collector">
-        <button id="report-a-bug">Feedback? Found a Bug?</span></button>
+        <button id="report-a-bug">
+            Feedback? Found a Bug?
+        </button>
     </div>
 
-    <script type="text/javascript" src="https://togglecorp.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-adfe5m/b/8/a44af77267a987a660377e5c46e0fb64/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=82f773fc"></script>
-
-        <script type="text/javascript">window.ATL_JQ_PAGE_PROPS =  {
-        "triggerFunction": function(showCollectorDialog) {
-            document.getElementById("report-a-bug").onclick = function(e) {
-                e.preventDefault();
-                showCollectorDialog();
-            };
-        }};
+    <!-- Jira Collector -->
+    <script type="text/javascript" src="https://togglecorp.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-adfe5m/b/8/a44af77267a987a660377e5c46e0fb64/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=82f773fc">
     </script>
+    <script type="text/javascript">
+        window.ATL_JQ_PAGE_PROPS = {
+            "triggerFunction": function(showCollectorDialog) {
+                document.getElementById("report-a-bug").onclick = function(e) {
+                    e.preventDefault();
+                    showCollectorDialog();
+                };
+            }
+        };
+    </script>
+    <!-- END Jira Collector -->
   </body>
 </html>
