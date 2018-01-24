@@ -156,10 +156,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         const headRowView = (
             renderSectors.map(sector => (
-                <th
-                    key={sector.id}
-                    className={styles.sector}
-                >
+                <th key={sector.id}>
                     {sector.title}
                 </th>
             ))
@@ -199,16 +196,13 @@ export default class Matrix2dOverview extends React.PureComponent {
                     {i === 0 && (
                         <td
                             rowSpan={dimension.subdimensions.length}
-                            className={styles.dimension}
+                            className={styles['dimension-td']}
                             title={dimension.tooltip}
                         >
                             {dimension.title}
                         </td>
                     )}
-                    <td
-                        className={styles.subdimension}
-                        title={subdimension.tooltip}
-                    >
+                    <td title={subdimension.tooltip}>
                         {subdimension.title}
                     </td>
                     {

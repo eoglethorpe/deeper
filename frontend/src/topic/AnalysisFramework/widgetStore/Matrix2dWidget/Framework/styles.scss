@@ -1,4 +1,5 @@
 @import '../../../../../stylesheets/base';
+@import '../../../../../stylesheets/matrix-2d-overview-table';
 
 .matrix-two-container {
     display: flex;
@@ -8,129 +9,195 @@
     height: 100%;
 }
 
-.framework-matrix-2d-overview {
-    overflow-y: auto;
+.framework-overview {
+    .table {
+        @extend %matrix-2d-overview-table;
+    }
+}
 
-    .content {
-        display: table;
-        width: 100%;
-        border-spacing: $width-separator-medium;
+.framework-overview-edit-modal {
+    width: 80vw;
+    height: 80vh;
 
-        .row {
-            display: table-row;
-            position: relative;
+    %button-basic {
+        outline: 0;
+        border: 0;
+        background-color: transparent;
+        cursor: pointer;
+        color: inherit;
+        font-family: inherit;
+        font-size: inherit;
+    }
 
-            .blank {
-                display: table-cell;
+    .body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+
+        >.header {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+
+            .left {
+                display: flex;
+                flex-grow: 1;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium;
             }
 
-            &.top-row {
-                position: relative;
+            .dimension-type-list {
+                flex-shrink: 0;
+                align-self: flex-end;
 
-                .blank {
-                    position: sticky;
-                    top: 0;
-                    z-index: 11;
-                    background-color: $color-foreground;
-                }
+                .tab {
+                    @extend %button-basic;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    padding: $spacing-medium;
+                    text-transform: uppercase;
 
-                .edit-sectors-button {
-                    @include transition-medium;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    opacity: 0;
-                }
-
-                &:hover {
-                    .edit-sectors-button {
-                        opacity: 1;
+                    &.active {
+                        border-bottom-color: $color-accent;
+                        color: $color-accent;
                     }
                 }
             }
 
-            .dimensions {
-                display: table-cell;
+            .right {
+                display: flex;
+                flex-grow: 1;
+                align-self: flex-end;
+                justify-content: flex-end;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium;
+            }
+        }
 
-                .dimension {
+        >.content {
+            display: flex;
+            flex-grow: 1;
+            background-color: $color-background-alt;
+
+            .dimension-list {
+                flex-basis: 20%;
+                border-right: $width-separator-thin solid $color-separator;
+                background-color: $color-background-row-alt;
+                overflow-y: auto;
+
+                .tab {
+                    @extend %button-basic;
+                    display: block;
+                    background-color: $color-background-row;
+                    padding: $spacing-small $spacing-medium;
+                    width: 100%;
+                    text-align: left;
+
+                    &:nth-child(odd) {
+                        background-color: $color-background-row-alt;
+                    }
+
+                    &.active {
+                        background-color: $color-accent;
+                        color: $color-text-on-primary;
+                    }
+                }
+
+            }
+
+            .dimension-detail {
+                display: flex;
+                flex-basis: 80%;
+                flex-direction: column;
+
+                .dimension-inputs {
                     display: flex;
-                    position: relative;
+                    flex-shrink: 0;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium 0;
 
-                    .title {
+                    .inputs {
                         display: flex;
-                        flex-basis: 50%;
+                        flex-grow: 1;
+                        padding: 0 $spacing-medium;
+
+                        .text-input {
+                            flex-grow: 1;
+                        }
+
+                        .color-input {
+                            flex-shrink: 0;
+                        }
+
+                        >* {
+                            &:not(:first-child) {
+                                margin-left: $spacing-medium;
+                            }
+                        }
+                    }
+
+                    .actions {
+                        flex-shrink: 0;
+                        padding: 0 $spacing-medium;
+                    }
+                }
+
+                .subdimension-detail {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+
+                    .header {
+                        display: flex;
+                        flex-shrink: 0;
                         align-items: center;
-                        justify-content: center;
+                        justify-content: space-between;
+                        border-bottom: $width-separator-thin solid $color-separator;
+                        background-color: $color-background-header;
                         padding: $spacing-small $spacing-medium;
                     }
 
-                    .subdimensions {
-                        flex-basis: 50%;
+                    .content {
+                        flex-grow: 1;
+                        overflow-y: auto;
 
-                        .subdimension {
-                            margin: $width-separator-medium;
-                            padding: $spacing-small $spacing-medium;
-                            text-align: center;
-                            user-select: none;
+                        .sub-dimension-inputs {
+                            display: flex;
+                            justify-content: space-between;
+                            background-color: $color-background-row;
+                            padding: $spacing-medium 0;
 
-                            &:first-child {
-                                margin-top: 0;
+                            &:nth-child(odd) {
+                                background-color: $color-background-row-alt;
                             }
 
-                            &:last-child {
-                                margin-bottom: 0;
+                            .inputs {
+                                display: flex;
+                                flex-grow: 1;
+                                justify-content: space-between;
+                                padding: 0 $spacing-medium;
+
+                                >* {
+                                    flex-basis: calc(calc(100% - #{$spacing-medium}) / 2);
+                                }
+                            }
+
+                            .actions {
+                                flex-shrink: 0;
+                                align-self: flex-end;
+                                padding: 0 $spacing-medium;
                             }
                         }
-                    }
-
-                    .edit-dimension-button {
-                        @include transition-medium;
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        opacity: 0;
-                    }
-
-                    &:hover {
-                        .edit-dimension-button {
-                            opacity: 1;
-                        }
-                    }
-
-                    + .dimension {
-                        margin-top: $width-separator-medium;
                     }
                 }
             }
 
-            .sectors {
+            .empty {
                 display: flex;
-                position: sticky;
-                top: 0;
-                padding: 0;
-
-                .sector {
-                    flex-grow: 1;
-                    margin: 0 $width-separator-thin;
-                    background-color: $color-background;
-                    padding: $spacing-small $spacing-medium;
-                    text-align: center;
-                }
-
-                .edit-sectors-button {
-                    @include transition-medium;
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    opacity: 0;
-                }
-
-                &:hover {
-                    .edit-sectors-button {
-                        opacity: 1;
-                    }
-                }
-
+                flex-basis: 80%;
+                align-items: center;
+                justify-content: center;
+                color: $color-label;
             }
         }
     }
