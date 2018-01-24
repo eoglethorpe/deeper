@@ -55,6 +55,7 @@ export default class RegionMap extends React.PureComponent {
 
         this.state = {
             pending: true,
+            adminLevelPending: {},
             error: false,
             adminLevels: [],
             geoJsons: {},
@@ -87,12 +88,12 @@ export default class RegionMap extends React.PureComponent {
         this.geoJsonRequests.forEach(request => request.stop());
 
         if (!regionId) {
-            this.setState({ pending: false });
+            this.setState({ pending: false, adminLevelPending: {} });
             return;
         }
 
-        this.setState({ pending: true });
         this.hasTriggeredOnce = false;
+        this.setState({ pending: true, adminLevelPending: {} });
 
         if (this.adminLevelsRequest) {
             this.adminLevelsRequest.stop();
@@ -155,6 +156,7 @@ export default class RegionMap extends React.PureComponent {
                 } else {
                     this.setState({
                         pending: false,
+                        adminLevelPending: {},
                         error: undefined,
                         selectedAdminLevelId: response.results.length > 0 ? `${response.results[0].id}` : '',
                         adminLevels: response.results,
@@ -229,6 +231,22 @@ export default class RegionMap extends React.PureComponent {
                 const request = new FgRestBuilder()
                     .url(url)
                     .params(params)
+                    .preLoad(() => {
+                        this.setState({
+                            adminLevelPending: {
+                                ...this.state.adminLevelPending,
+                                [adminLevel.id]: true,
+                            },
+                        });
+                    })
+                    .postLoad(() => {
+                        this.setState({
+                            adminLevelPending: {
+                                ...this.state.adminLevelPending,
+                                [adminLevel.id]: false,
+                            },
+                        });
+                    })
                     .success((response) => {
                         // FIXME: write schema
                         const geoJsons = {
@@ -295,6 +313,7 @@ export default class RegionMap extends React.PureComponent {
             selectedAdminLevelId,
             geoJsons,
             geoJsonBounds,
+            adminLevelPending,
         } = this.state;
 
         if (error) {
@@ -306,6 +325,8 @@ export default class RegionMap extends React.PureComponent {
         }
 
         if (adminLevels && adminLevels.length > 0 && selectedAdminLevelId) {
+            const adminLevel = adminLevels.find(al => al.id === +selectedAdminLevelId);
+
             return (
                 <div styleName="map-container">
                     <Button
@@ -320,6 +341,8 @@ export default class RegionMap extends React.PureComponent {
                         geoJson={geoJsons[selectedAdminLevelId]}
                         geoJsonBounds={geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
+                        thickness={adminLevels.length - adminLevel.level}
+                        pending={adminLevelPending[selectedAdminLevelId]}
                     />
                     <div styleName="bottom-bar">
                         <SegmentButton

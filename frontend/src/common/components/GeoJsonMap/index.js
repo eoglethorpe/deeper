@@ -13,6 +13,8 @@ const propTypes = {
     selections: PropTypes.arrayOf(PropTypes.string),
     geoJson: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     geoJsonBounds: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+    thickness: PropTypes.number,
+    pending: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -21,6 +23,8 @@ const defaultProps = {
     selections: [],
     geoJson: undefined,
     geoJsonBounds: undefined,
+    thickness: 1,
+    pending: false,
 };
 
 
@@ -50,7 +54,11 @@ export default class GeoJsonMap extends React.PureComponent {
         map.on('load', () => {
             if (this.mounted) {
                 this.setState({ map }, () => {
-                    this.loadGeoJson(this.props.geoJson, this.props.geoJsonBounds);
+                    this.loadGeoJson(
+                        this.props.geoJson,
+                        this.props.geoJsonBounds,
+                        this.props.thickness,
+                    );
                     this.setSelections(this.props.selections);
                 });
             }
@@ -97,7 +105,11 @@ export default class GeoJsonMap extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.geoJson !== nextProps.geoJson) {
-            this.loadGeoJson(nextProps.geoJson, nextProps.geoJsonBounds);
+            this.loadGeoJson(
+                nextProps.geoJson,
+                nextProps.geoJsonBounds,
+                nextProps.thickness,
+            );
         }
 
         if (this.props.selections !== nextProps.selections) {
@@ -110,6 +122,7 @@ export default class GeoJsonMap extends React.PureComponent {
         if (map) {
             if (this.layerAdded) {
                 map.removeLayer('geojson');
+                map.removeLayer('outline');
                 map.removeLayer('geojson-selected');
                 map.removeLayer('geojson-hover');
                 map.removeSource('geojson');
@@ -141,7 +154,7 @@ export default class GeoJsonMap extends React.PureComponent {
         }
     }
 
-    loadGeoJson(geoJson, bounds) {
+    loadGeoJson(geoJson, bounds, thickness) {
         const { map } = this.state;
         if (!geoJson || !map) {
             return;
@@ -157,8 +170,14 @@ export default class GeoJsonMap extends React.PureComponent {
                 features: [],
             });
             map.getSource('geojson').setData(geoJson);
+            map.setPaintProperty('outline', 'line-width', thickness);
             return;
         }
+
+        const basePaint = {
+            'fill-color': '#088',
+            'fill-opacity': 0.5,
+        };
 
         map.addSource('geojson', {
             type: 'geojson',
@@ -168,9 +187,15 @@ export default class GeoJsonMap extends React.PureComponent {
             id: 'geojson',
             type: 'fill',
             source: 'geojson',
+            paint: basePaint,
+        });
+        map.addLayer({
+            id: 'outline',
+            type: 'line',
+            source: 'geojson',
             paint: {
-                'fill-color': '#088',
-                'fill-opacity': 0.5,
+                'line-color': '#fff',
+                'line-width': thickness,
             },
         });
         map.addLayer({
@@ -178,8 +203,8 @@ export default class GeoJsonMap extends React.PureComponent {
             type: 'fill',
             source: 'geojson',
             paint: {
+                ...basePaint,
                 'fill-color': '#6e599f',
-                'fill-opacity': 0.5,
             },
             filter: ['in', 'pk', ''],
         });
@@ -188,6 +213,7 @@ export default class GeoJsonMap extends React.PureComponent {
             type: 'fill',
             source: 'geojson',
             paint: {
+                ...basePaint,
                 'fill-color': '#fff',
                 'fill-opacity': 0.2,
             },
@@ -199,6 +225,7 @@ export default class GeoJsonMap extends React.PureComponent {
     render() {
         const {
             className,
+            pending,
         } = this.props;
 
         return (
@@ -207,7 +234,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 ref={(el) => { this.mapContainer = el; }}
                 style={{ position: 'relative' }}
             >
-                {!this.state.map && (
+                {(pending || !this.state.map) && (
                     <LoadingAnimation />
                 )}
             </div>

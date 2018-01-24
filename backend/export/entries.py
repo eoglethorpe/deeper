@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.files.base import ContentFile
+from django.core.files.base import ContentFile, File
 from django.db.models import Case, When
 
 from export.formats.xlsx import WorkBook, RowsBuilder
@@ -9,11 +9,16 @@ from entry.models import ExportData
 from lead.models import Lead
 from geo.models import GeoArea
 from utils.common import format_date, generate_filename
+from export.models import Export
 
+from subprocess import call
 import os
+import tempfile
 
 DOCX_MIME_TYPE = \
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+PDF_MIME_TYPE = \
+    'application/pdf'
 EXCEL_MIME_TYPE = \
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
@@ -363,7 +368,7 @@ class ReportExporter:
 
         return self
 
-    def export(self, export_entity):
+    def export(self, export_entity, pdf=False):
         """
         Export and save in export_entity
         """
@@ -406,14 +411,35 @@ class ReportExporter:
             self.doc.add_paragraph()
         self.doc.add_page_break()
 
-        buffer = self.doc.save()
-        filename = generate_filename('Entries General Export', 'docx')
+        if pdf:
+            temp_doc = tempfile.NamedTemporaryFile(dir=settings.BASE_DIR)
+            self.doc.save_to_file(temp_doc)
+
+            filename = temp_doc.name.split('/')[-1]
+            temp_pdf = os.path.join(settings.BASE_DIR,
+                                    '{}.pdf'.format(filename))
+
+            call(['libreoffice', '--headless', '--convert-to',
+                  'pdf', temp_doc.name, '--outdir', settings.BASE_DIR])
+
+            filename = generate_filename('Entries General Export', 'pdf')
+            export_entity.file.save(filename, File(open(temp_pdf, 'rb')))
+
+            os.unlink(temp_pdf)
+            temp_doc.close()
+
+            export_entity.format = Export.PDF
+            export_entity.mime_type = PDF_MIME_TYPE
+        else:
+            buffer = self.doc.save()
+            filename = generate_filename('Entries General Export', 'docx')
+            export_entity.file.save(filename, ContentFile(buffer))
+
+            export_entity.format = Export.DOCX
+            export_entity.mime_type = DOCX_MIME_TYPE
 
         export_entity.title = filename
-        export_entity.type = 'entries'
-        export_entity.format = 'docx'
+        export_entity.type = Export.ENTRIES
         export_entity.pending = False
-        export_entity.mime_type = DOCX_MIME_TYPE
 
-        export_entity.file.save(filename, ContentFile(buffer))
         export_entity.save()
