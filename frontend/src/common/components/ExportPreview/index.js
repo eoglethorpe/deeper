@@ -57,13 +57,6 @@ export default class ExportPreview extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.destroy();
-    }
-
-    destroy() {
-        if (this.previewRequestTimeout) {
-            clearTimeout(this.previewRequestTimeout);
-        }
         if (this.previewRequest) {
             this.previewRequest.stop();
         }
@@ -71,8 +64,6 @@ export default class ExportPreview extends React.PureComponent {
 
     create(props) {
         const { exportId } = props;
-
-        this.destroy();
 
         if (!exportId) {
             this.setState({
@@ -83,23 +74,10 @@ export default class ExportPreview extends React.PureComponent {
             return;
         }
 
-        this.previewRequestCount = 0;
-        this.previewRequest = this.createPreviewRequest(exportId);
-
-        this.tryPreviewRequest();
-    }
-
-    tryPreviewRequest = (maxCount = 30) => {
-        if (this.previewRequestCount === maxCount) {
-            this.setState({
-                pending: false,
-                error: undefined,
-                exportObj: undefined,
-            });
-            return;
+        if (this.previewRequest) {
+            this.previewRequest.stop();
         }
-
-        this.previewRequestCount += 1;
+        this.previewRequest = this.createPreviewRequest(exportId);
         this.previewRequest.start();
     }
 
@@ -107,37 +85,27 @@ export default class ExportPreview extends React.PureComponent {
         new FgRestBuilder()
             .url(createUrlForExport(exportId))
             .params(createParamsForGenericGet)
+            .maxPollAttempts(200)
+            .pollTime(2000)
+            .shouldPoll(response => response.pending)
             .success((response) => {
-                try {
-                    // FIXME: write schema
-                    if (response.pending) {
-                        this.previewRequestTimeout = setTimeout(() => {
-                            this.tryPreviewRequest();
-                        }, 1000);
-                    } else {
-                        this.setState({
-                            pending: false,
-                            error: undefined,
-                            exportObj: response,
-                        });
+                this.setState({
+                    pending: false,
+                    error: undefined,
+                    exportObj: response,
+                });
 
-                        if (this.props.onLoad) {
-                            this.props.onLoad(response);
-                        }
-                    }
-                } catch (err) {
-                    console.error(err);
+                if (this.props.onLoad) {
+                    this.props.onLoad(response);
                 }
             })
-            .failure((response) => {
-                console.log(response);
+            .failure(() => {
                 this.setState({
                     pending: false,
                     error: exportStrings.erverErrorText,
                 });
             })
-            .fatal((response) => {
-                console.log(response);
+            .fatal(() => {
                 this.setState({
                     pending: false,
                     error: exportStrings.connectionFailureText,

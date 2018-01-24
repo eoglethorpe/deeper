@@ -26,7 +26,6 @@ const propTypes = {
     leadId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     highlights: PropTypes.arrayOf(PropTypes.object),
     highlightModifier: PropTypes.func,
-    onLoad: PropTypes.func,
 };
 const defaultProps = {
     className: '',
@@ -51,23 +50,25 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             extractedText: null,
             extractedImages: [],
         };
-
-        this.triggerRequest = undefined;
-        this.previewRequest = undefined;
     }
 
     componentDidMount() {
-        this.create();
+        this.create(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.leadId !== nextProps.leadId) {
-            this.create();
+            this.create(nextProps);
         }
     }
 
     componentWillUnmount() {
-        this.destroy();
+        if (this.triggerRequest) {
+            this.triggerRequest.stop();
+        }
+        if (this.previewRequest) {
+            this.previewRequest.stop();
+        }
     }
 
     getHighlights() {
@@ -81,72 +82,67 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         }));
     }
 
-    destroy() {
-        if (this.previewRequestTimeout) {
-            clearTimeout(this.previewRequestTimeout);
-        }
-        if (this.triggerRequest) {
-            this.triggerRequest.stop();
-        }
-        if (this.previewRequest) {
-            this.previewRequest.stop();
-        }
-    }
-
     // TODO Since this is also called by componentWillReceiveProps,
     // take in the `props` param
-    create() {
-        this.destroy();
-
-        /**
-         * Get lead preview
-         * If null, trigger one
-         * Either use websocket or polling to check if lead preview can be obtained
-         * If failed or timeout, show error
-         */
-
-        const {
-            leadId,
-            onLoad,
-        } = this.props;
-
+    create({ leadId, onLoad }) {
         if (!leadId) {
             return;
         }
 
-        const params = createParamsForGenericGet();
-        const triggerUrl = createUrlForLeadExtractionTrigger(leadId);
-        const previewUrl = createUrlForSimplifiedLeadPreview(leadId);
-
         this.setState({ pending: true });
+        this.hasTriggeredOnce = false;
 
-        this.previewRequestCount = 0;
-        this.triggerRequest = this.createRequest(
-            triggerUrl,
-            params,
-            () => {
-                // FIXME: write schema
+        if (this.previewRequest) {
+            this.previewRequest.stop();
+        }
+        this.previewRequest = this.createPreviewRequest(leadId, onLoad);
+        this.previewRequest.start();
+    }
+
+    createTriggerRequest = (leadId, onLoad) => (
+        new FgRestBuilder()
+            .url(createUrlForLeadExtractionTrigger(leadId))
+            .params(createParamsForGenericGet())
+            .success(() => {
                 console.log(`Triggered lead extraction for ${leadId}`);
-                this.tryPreviewRequest();
-            },
-        );
+                this.previewRequest.stop();
+                this.previewRequest = this.createPreviewRequest(leadId, onLoad);
+                this.previewRequest.start();
+            })
+            .failure(() => {
+                this.setState({
+                    pending: false,
+                    error: commonStrings.serverErrorText,
+                });
+            })
+            .fatal(() => {
+                this.setState({
+                    pending: false,
+                    error: commonStrings.connectionFailureText,
+                });
+            })
+            .build()
+    )
 
-        this.previewRequest = this.createRequest(
-            previewUrl,
-            params,
-            (response) => {
-                // FIXME: write schema
+    createPreviewRequest = (leadId, onLoad) => (
+        new FgRestBuilder()
+            .url(createUrlForSimplifiedLeadPreview(leadId))
+            .params(createParamsForGenericGet())
+            .maxPollAttempts(200)
+            .pollTime(2000)
+            .shouldPoll(response => (
+                this.hasTriggeredOnce &&
+                isFalsy(response.text) &&
+                response.images.length === 0
+            ))
+            .success((response) => {
                 if (isFalsy(response.text) && response.images.length === 0) {
-                    // There is no preview
-                    if (this.previewRequestCount === 0) {
-                        // Trigger an extraction if this is the first time
-                        this.triggerRequest.start();
-                    } else {
-                        // Otherwise try a few more times
-                        this.previewRequestTimeout = setTimeout(() => {
-                            this.tryPreviewRequest();
-                        }, 1000);
+                    this.hasTriggeredOnce = true;
+                    if (this.triggerRequest) {
+                        this.triggerRequest.stop();
                     }
+                    this.triggerRequest = this.createTriggerRequest(leadId);
+                    this.triggerRequest.start();
                 } else {
                     this.setState({
                         pending: false,
@@ -158,51 +154,14 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         onLoad(response);
                     }
                 }
-            },
-        );
-
-        this.previewRequest.start();
-    }
-
-    tryPreviewRequest = (maxCount = 30) => {
-        if (this.triggerRequest) {
-            this.triggerRequest.stop();
-        }
-
-        if (this.previewRequestCount === maxCount) {
-            this.setState({
-                pending: false,
-                error: undefined,
-                extractedText: null,
-                extractedImages: [],
-            });
-            return;
-        }
-
-        this.previewRequestCount += 1;
-        this.previewRequest.start();
-    }
-
-    createRequest = (url, params, onSuccess) => (
-        new FgRestBuilder()
-            .url(url)
-            .params(params)
-            .success((response) => {
-                try {
-                    onSuccess(response);
-                } catch (err) {
-                    console.error(err);
-                }
             })
-            .failure((response) => {
-                console.log(response);
+            .failure(() => {
                 this.setState({
                     pending: false,
                     error: commonStrings.serverErrorText,
                 });
             })
-            .fatal((response) => {
-                console.log(response);
+            .fatal(() => {
                 this.setState({
                     pending: false,
                     error: commonStrings.connectionFailureText,
