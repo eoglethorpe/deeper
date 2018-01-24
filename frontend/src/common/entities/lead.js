@@ -51,6 +51,47 @@ export const mimeType = {
     msword: 'application/msword',
 };
 
+export const LEAD_PANE_TYPE = {
+    txt: 'txt',
+    csv: 'csv',
+    json: 'json',
+    xml: 'xml',
+
+    word: 'word',
+    pdf: 'pdf',
+    presentation: 'presentation',
+    spreadsheet: 'spreadsheet',
+    image: 'image',
+
+    text: 'text',
+    website: 'website',
+};
+
+export const leadPaneTypeMap = {
+    [mimeType.text]: LEAD_PANE_TYPE.txt,
+    [mimeType.csv]: LEAD_PANE_TYPE.csv,
+    [mimeType.json]: LEAD_PANE_TYPE.json,
+    [mimeType.xml]: LEAD_PANE_TYPE.xml,
+
+    [mimeType.docx]: LEAD_PANE_TYPE.word,
+    [mimeType.rtf]: LEAD_PANE_TYPE.word,
+    [mimeType.otf]: LEAD_PANE_TYPE.word,
+    [mimeType.msword]: LEAD_PANE_TYPE.word,
+
+    [mimeType.pdf]: LEAD_PANE_TYPE.pdf,
+
+    [mimeType.pptx]: LEAD_PANE_TYPE.presentation,
+    [mimeType.ppt]: LEAD_PANE_TYPE.presentation,
+
+    [mimeType.xls]: LEAD_PANE_TYPE.spreadsheet,
+    [mimeType.xlxs]: LEAD_PANE_TYPE.spreadsheet,
+
+    [mimeType.png]: LEAD_PANE_TYPE.image,
+    [mimeType.jpg]: LEAD_PANE_TYPE.image,
+    [mimeType.jpeg]: LEAD_PANE_TYPE.image,
+    [mimeType.fig]: LEAD_PANE_TYPE.image,
+};
+
 export const leadTypeIconMap = {
     [mimeType.text]: iconNames.documentText,
 

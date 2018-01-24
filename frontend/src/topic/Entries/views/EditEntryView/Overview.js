@@ -39,7 +39,11 @@ import DeepGallery from '../../../../common/components/DeepGallery';
 import ImagesGrid from '../../../../common/components/ImagesGrid';
 import AssistedTagging from '../AssistedTagging';
 
-import { LEAD_TYPE } from '../../../../common/entities/lead';
+import {
+    LEAD_TYPE,
+    LEAD_PANE_TYPE,
+    leadPaneTypeMap,
+} from '../../../../common/entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
 import styles from './styles.scss';
@@ -90,6 +94,17 @@ export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static getPaneType = (lead) => {
+        const type = lead.sourceType;
+        if (type === LEAD_TYPE.text) {
+            return LEAD_PANE_TYPE.text;
+        } else if (type === LEAD_TYPE.website) {
+            return LEAD_PANE_TYPE.website;
+        }
+        const mimeType = lead.attachment.mimeType;
+        return leadPaneTypeMap[mimeType];
+    }
+
     constructor(props) {
         super(props);
 
@@ -102,7 +117,6 @@ export default class Overview extends React.PureComponent {
         this.state = {
             currentEntryId: undefined,
             images: emptyList,
-            currentTab: 'simplified-preview',
         };
     }
 
@@ -111,6 +125,7 @@ export default class Overview extends React.PureComponent {
             this.updateAnalysisFramework(nextProps.analysisFramework);
             this.updateGridItems(nextProps.entries);
         }
+
         if (
             this.props.entries !== nextProps.entries ||
             this.props.selectedEntryId !== nextProps.selectedEntryId
@@ -413,42 +428,59 @@ export default class Overview extends React.PureComponent {
         );
     }
 
-    renderLeftPanel = () => {
+    renderLeft = ({
+        showOriginal = true,
+        showSimplified = true,
+        showAssisted = true,
+        labelSimplified = entryStrings.simplifiedTabLabel,
+        labelAssisted = entryStrings.assistedTabLabel,
+        labelOriginal = entryStrings.originalTabLabel,
+    }) => {
         const {
-            entries,
             lead,
+            entries,
             api,
         } = this.props;
+        const {
+            images,
+            currentTab,
+        } = this.state;
 
         return (
             <Tabs
                 name="leftPaneTabs"
-                selectedTab={this.state.currentTab}
+                selectedTab={currentTab}
                 handleSelect={this.handleTabSelect}
                 activeLinkStyle={{ none: 'none' }}
                 styleName="tabs-container"
             >
                 <div styleName="tabs-header-container">
-                    <TabLink
-                        styleName="tab-header"
-                        to="simplified-preview"
-                    >
-                        {entryStrings.simplifiedTabLabel}
-                    </TabLink>
-                    <TabLink
-                        styleName="tab-header"
-                        to="assisted-tagging"
-                    >
-                        {entryStrings.assistedTabLabel}
-                    </TabLink>
-                    <TabLink
-                        styleName="tab-header"
-                        to="original-preview"
-                    >
-                        {entryStrings.originalTabLabel}
-                    </TabLink>
+                    { showSimplified &&
+                        <TabLink
+                            styleName="tab-header"
+                            to="simplified-preview"
+                        >
+                            {labelSimplified}
+                        </TabLink>
+                    }
+                    { showAssisted &&
+                        <TabLink
+                            styleName="tab-header"
+                            to="assisted-tagging"
+                        >
+                            {labelAssisted}
+                        </TabLink>
+                    }
+                    { showOriginal &&
+                        <TabLink
+                            styleName="tab-header"
+                            to="original-preview"
+                        >
+                            {labelOriginal}
+                        </TabLink>
+                    }
                     {
-                        this.state.images.length > 0 &&
+                        images.length > 0 &&
                             <TabLink
                                 styleName="tab-header"
                                 to="images-preview"
@@ -465,36 +497,42 @@ export default class Overview extends React.PureComponent {
                     <div styleName="empty-tab" />
                 </div>
                 <div styleName="tabs-content">
-                    <TabContent
-                        styleName="tab"
-                        for="simplified-preview"
-                    >
-                        <SimplifiedLeadPreview
-                            leadId={lead.id}
-                            highlights={api.getEntryHighlights()}
-                            highlightModifier={this.renderHighlightSimplifiedExcerpt}
-                            onLoad={this.handleLoadImages}
-                        />
-                    </TabContent>
-                    <TabContent
-                        styleName="tab"
-                        for="assisted-tagging"
-                    >
-                        <AssistedTagging
-                            lead={lead}
-                            api={api}
-                        />
-                    </TabContent>
-                    <TabContent
-                        styleName="tab"
-                        for="original-preview"
-                    >
-                        <div styleName="lead-preview">
-                            {this.renderLeadPreview(lead)}
-                        </div>
-                    </TabContent>
+                    { showSimplified &&
+                        <TabContent
+                            styleName="tab"
+                            for="simplified-preview"
+                        >
+                            <SimplifiedLeadPreview
+                                leadId={lead.id}
+                                highlights={api.getEntryHighlights()}
+                                highlightModifier={this.renderHighlightSimplifiedExcerpt}
+                                onLoad={this.handleLoadImages}
+                            />
+                        </TabContent>
+                    }
+                    { showAssisted &&
+                        <TabContent
+                            styleName="tab"
+                            for="assisted-tagging"
+                        >
+                            <AssistedTagging
+                                lead={lead}
+                                api={api}
+                            />
+                        </TabContent>
+                    }
+                    { showOriginal &&
+                        <TabContent
+                            styleName="tab"
+                            for="original-preview"
+                        >
+                            <div styleName="lead-preview">
+                                {this.renderLeadPreview(lead)}
+                            </div>
+                        </TabContent>
+                    }
                     {
-                        this.state.images.length > 0 &&
+                        images.length > 0 &&
                             <TabContent
                                 styleName="tab"
                                 for="images-preview"
@@ -518,6 +556,39 @@ export default class Overview extends React.PureComponent {
                 </div>
             </Tabs>
         );
+    }
+
+    renderLeftPanel = () => {
+        const { lead } = this.props;
+
+        const leadPaneType = Overview.getPaneType(lead);
+        switch (leadPaneType) {
+            case LEAD_PANE_TYPE.spreadsheet:
+                // tabular(original) entries
+                return this.renderLeft({
+                    labelOriginal: 'Tabular', // FIXME: use strings
+                    showSimplified: false,
+                    showAssisted: false,
+                });
+            case LEAD_PANE_TYPE.image:
+                return this.renderLeft({
+                    labelOriginal: entryStrings.imagesTabLabel,
+                    showSimplified: false,
+                    showAssisted: false,
+                });
+            case LEAD_PANE_TYPE.text:
+                return this.renderLeft({
+                    labelSimplified: 'Text', // FIXME: use strings
+                    showOriginal: false,
+                });
+            case LEAD_PANE_TYPE.word:
+            case LEAD_PANE_TYPE.pdf:
+            case LEAD_PANE_TYPE.presentation:
+            case LEAD_PANE_TYPE.website:
+                return this.renderLeft({});
+            default:
+                return null;
+        }
     }
 
     render() {
