@@ -11,6 +11,9 @@ import {
     requiredCondition,
     urlCondition,
 } from '../../../../../public/components/Input';
+import {
+    Confirm,
+} from '../../../../../public/components/View';
 
 import { FgRestBuilder } from '../../../../../public/utils/rest';
 
@@ -59,6 +62,11 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewCopyAll: params => dispatch(addLeadViewCopyAllAction(params)),
 });
 
+const APPLY_MODE = {
+    all: 'all',
+    allBelow: 'allBelow',
+};
+
 @connect(undefined, mapDispatchToProps, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
@@ -73,8 +81,12 @@ export default class LeadFormItem extends React.PureComponent {
         const lead = leadAccessor.getValues(this.props.lead);
         const isUrlValid = LeadFormItem.isUrlValid(lead.url);
         this.state = {
-            pendingExtraction: false,
             isUrlValid,
+            pendingExtraction: false,
+
+            showApplyModal: false,
+            applyMode: undefined, // all or below
+            applyAttribute: undefined, // attribute to apply
         };
     }
 
@@ -194,19 +206,40 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     handleApplyAllClick = (attrName) => {
-        const {
-            leadKey,
-            addLeadViewCopyAll,
-        } = this.props;
-        addLeadViewCopyAll({ leadId: leadKey, attrName });
+        this.setState({
+            showApplyModal: true,
+            applyMode: APPLY_MODE.all,
+            applyAttribute: attrName,
+        });
     }
 
     handleApplyAllBelowClick = (attrName) => {
-        const {
-            leadKey,
-            addLeadViewCopyAllBelow,
-        } = this.props;
-        addLeadViewCopyAllBelow({ leadId: leadKey, attrName });
+        this.setState({
+            showApplyModal: true,
+            applyMode: APPLY_MODE.allBelow,
+            applyAttribute: attrName,
+        });
+    }
+
+    handleApplyModal = (confirm) => {
+        if (confirm) {
+            const {
+                leadKey,
+                addLeadViewCopyAll,
+                addLeadViewCopyAllBelow,
+            } = this.props;
+            const { applyMode, applyAttribute } = this.state;
+            if (applyMode === APPLY_MODE.all) {
+                addLeadViewCopyAll({ leadId: leadKey, attrName: applyAttribute });
+            } else if (applyMode === APPLY_MODE.allBelow) {
+                addLeadViewCopyAllBelow({ leadId: leadKey, attrName: applyAttribute });
+            }
+        }
+        this.setState({
+            showApplyModal: false,
+            applyMode: undefined,
+            applyAttribute: undefined,
+        });
     }
 
     // CO-ORDINATOR
@@ -292,6 +325,11 @@ export default class LeadFormItem extends React.PureComponent {
             ...otherProps
         } = this.props;
 
+        const {
+            showApplyModal,
+            applyMode,
+        } = this.state;
+
         const LeadPreview = this.renderLeadPreview;
 
         return (
@@ -311,6 +349,21 @@ export default class LeadFormItem extends React.PureComponent {
                     {...otherProps}
                 />
                 { active && <LeadPreview lead={lead} /> }
+                <Confirm
+                    show={showApplyModal}
+                    closeOnEscape
+                    onClose={this.handleApplyModal}
+                >
+                    <p>
+                        {
+                            applyMode === APPLY_MODE.all ? (
+                                leadsString.applyToAll
+                            ) : (
+                                leadsString.applyToAllBelow
+                            )
+                        }
+                    </p>
+                </Confirm>
             </div>
         );
     }

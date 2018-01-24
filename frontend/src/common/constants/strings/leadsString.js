@@ -1,7 +1,6 @@
 import string from './lang/en/';
 
 const leadsString = {
-
     filterOwner: string[1],
     filterDateCreated: string[2],
     filterDatePublished: string[3],
@@ -101,6 +100,9 @@ const leadsString = {
     leadDeleteSuccess: string[977],
 
     extractLead: string[129],
+
+    applyToAll: string[2003],
+    applyToAllBelow: string[2004],
 };
 
 export default leadsString;
