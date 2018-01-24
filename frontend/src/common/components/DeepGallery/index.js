@@ -14,6 +14,10 @@ import {
     commonStrings,
 } from '../../../common/constants';
 
+import Screenshot from '../../../common/components/Screenshot';
+
+import { AccentButton } from '../../../public/components/Action';
+import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
 import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './components/GalleryImage';
@@ -33,6 +37,9 @@ const propTypes = {
     galleryId: PropTypes.number,
     onlyFileName: PropTypes.bool,
     label: PropTypes.string,
+    showUrl: PropTypes.bool,
+    showScreenshot: PropTypes.bool,
+    onScreenshotCapture: PropTypes.func,
 };
 
 const defaultProps = {
@@ -40,6 +47,9 @@ const defaultProps = {
     galleryId: undefined,
     onlyFileName: false,
     label: commonStrings.loadingFileLabel,
+    showUrl: false,
+    showScreenshot: false,
+    onScreenshotCapture: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -54,6 +64,8 @@ export default class DeepGallery extends React.PureComponent {
             fileUrl: undefined,
             pending: !!props.galleryId,
             fileName: undefined,
+            screenshotMode: false,
+            currentScreenshot: undefined,
         };
 
         if (props.galleryId) {
@@ -131,6 +143,51 @@ export default class DeepGallery extends React.PureComponent {
         return galleryFileRequest;
     }
 
+    handleScreenshot = (image) => {
+        this.setState({ currentScreenshot: image });
+    }
+
+    handleScreenshotDone = () => {
+        this.setState({ screenshotMode: false });
+        if (this.props.onScreenshotCapture) {
+            this.props.onScreenshotCapture(this.state.currentScreenshot);
+        }
+    }
+
+    handleScreenshotClose = () => {
+        this.setState({ screenshotMode: false });
+    }
+
+    renderScreenshotButton = () => {
+        const { screenshotMode, currentScreenshot } = this.state;
+        if (screenshotMode) {
+            return ([
+                currentScreenshot && (
+                    <AccentButton
+                        key="screenshot-done"
+                        iconName={iconNames.check}
+                        onClick={this.handleScreenshotDone}
+                        transparent
+                    />
+                ),
+                <AccentButton
+                    key="screenshot-close"
+                    iconName={iconNames.close}
+                    onClick={this.handleScreenshotClose}
+                    transparent
+                />,
+            ]);
+        }
+
+        return (
+            <AccentButton
+                iconName={iconNames.camera}
+                onClick={() => { this.setState({ screenshotMode: true }); }}
+                transparent
+            />
+        );
+    }
+
     renderPreview = ({ className, pending, fileUrl, fileName, mimeType }) => {
         if (GalleryMapping[mimeType] === ComponentType.IMAGE) {
             return (
@@ -171,11 +228,14 @@ export default class DeepGallery extends React.PureComponent {
             fileUrl,
             fileName,
             mimeType,
+            screenshotMode,
         } = this.state;
 
         const {
             className,
             onlyFileName,
+            showUrl,
+            showScreenshot,
         } = this.props;
 
         if (onlyFileName) {
@@ -209,6 +269,49 @@ export default class DeepGallery extends React.PureComponent {
             );
         }
 
-        return this.renderPreview({ className, pending, fileUrl, fileName, mimeType });
+        return (
+            <div
+                styleName="preview"
+                className={className}
+            >
+                {
+                    showUrl &&
+                        <div styleName="urlbar">
+                            <TextInput
+                                styleName="url"
+                                value={fileUrl}
+                                readOnly
+                                showLabel={false}
+                                showHintAndError={false}
+                                selectOnFocus
+                            />
+                            <div styleName="action-buttons">
+                                <a
+                                    styleName="open-link"
+                                    href={fileUrl}
+                                    target="_blank"
+                                >
+                                    <span className={iconNames.openLink} />
+                                </a>
+                                { showScreenshot && this.renderScreenshotButton() }
+                            </div>
+                        </div>
+                }
+                <div styleName="doc-container">
+                    { screenshotMode && (
+                        <Screenshot
+                            onCapture={this.handleScreenshot}
+                        />
+                    ) }
+                    { this.renderPreview({
+                        className: 'doc',
+                        pending,
+                        fileUrl,
+                        fileName,
+                        mimeType,
+                    }) }
+                </div>
+            </div>
+        );
     }
 }

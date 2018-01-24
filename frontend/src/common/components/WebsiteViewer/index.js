@@ -8,8 +8,11 @@ import {
     iconNames,
     leadsString,
 } from '../../../common/constants';
+
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
+
+import Screenshot from '../../../common/components/Screenshot';
 
 import { AccentButton } from '../../../public/components/Action';
 import { TextInput } from '../../../public/components/Input';
@@ -24,6 +27,7 @@ const propTypes = {
     url: PropTypes.string,
     showUrl: PropTypes.bool,
     showScreenshot: PropTypes.bool,
+    onScreenshotCapture: PropTypes.func,
 };
 
 const defaultProps = {
@@ -31,6 +35,7 @@ const defaultProps = {
     url: undefined,
     showUrl: false,
     showScreenshot: false,
+    onScreenshotCapture: undefined,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -50,6 +55,8 @@ export default class WebsiteViewer extends React.PureComponent {
             isDoc: undefined,
             httpsUrl: undefined,
             invalidUrl: undefined,
+            screenshotMode: false,
+            currentScreenshot: undefined,
         };
 
         this.state = { ...this.initialState };
@@ -127,6 +134,51 @@ export default class WebsiteViewer extends React.PureComponent {
         return urlRequest;
     }
 
+    handleScreenshot = (image) => {
+        this.setState({ currentScreenshot: image });
+    }
+
+    handleScreenshotDone = () => {
+        this.setState({ screenshotMode: false });
+        if (this.props.onScreenshotCapture) {
+            this.props.onScreenshotCapture(this.state.currentScreenshot);
+        }
+    }
+
+    handleScreenshotClose = () => {
+        this.setState({ screenshotMode: false });
+    }
+
+    renderScreenshotButton = () => {
+        const { screenshotMode, currentScreenshot } = this.state;
+        if (screenshotMode) {
+            return ([
+                currentScreenshot && (
+                    <AccentButton
+                        key="screenshot-done"
+                        iconName={iconNames.check}
+                        onClick={this.handleScreenshotDone}
+                        transparent
+                    />
+                ),
+                <AccentButton
+                    key="screenshot-close"
+                    iconName={iconNames.close}
+                    onClick={this.handleScreenshotClose}
+                    transparent
+                />,
+            ]);
+        }
+
+        return (
+            <AccentButton
+                iconName={iconNames.camera}
+                onClick={() => { this.setState({ screenshotMode: true }); }}
+                transparent
+            />
+        );
+    }
+
     renderIFrame = () => {
         const {
             className,
@@ -134,7 +186,7 @@ export default class WebsiteViewer extends React.PureComponent {
             showScreenshot,
             url,
         } = this.props;
-        const { httpsUrl } = this.state;
+        const { httpsUrl, screenshotMode } = this.state;
 
         return (
             <div
@@ -160,21 +212,23 @@ export default class WebsiteViewer extends React.PureComponent {
                                 >
                                     <span className={iconNames.openLink} />
                                 </a>
-                                { showScreenshot &&
-                                    <AccentButton
-                                        iconName={iconNames.camera}
-                                        transparent
-                                    />
-                                }
+                                { showScreenshot && this.renderScreenshotButton() }
                             </div>
                         </div>
                 }
-                <iframe
-                    styleName="doc"
-                    sandbox="allow-scripts allow-same-origin"
-                    title={httpsUrl}
-                    src={httpsUrl}
-                />
+                <div styleName="doc-container">
+                    { screenshotMode && (
+                        <Screenshot
+                            onCapture={this.handleScreenshot}
+                        />
+                    ) }
+                    <iframe
+                        styleName="doc"
+                        sandbox="allow-scripts allow-same-origin"
+                        title={httpsUrl}
+                        src={httpsUrl}
+                    />
+                </div>
             </div>
         );
     }

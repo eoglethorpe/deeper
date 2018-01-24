@@ -258,6 +258,12 @@ export default class Overview extends React.PureComponent {
         [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive].indexOf(t) !== 1
     );
 
+    handleScreenshot = (image) => {
+        this.props.api.getEntryBuilder()
+            .setImage(image)
+            .apply();
+    }
+
     renderHighlightSimplifiedExcerpt = (highlight, text) => (
         <span
             style={{
@@ -359,8 +365,9 @@ export default class Overview extends React.PureComponent {
                 <WebsiteViewer
                     styleName="gallery-file"
                     url={lead.url}
-                    showUrl
+                    onScreenshotCapture={this.handleScreenshot}
                     showScreenshot
+                    showUrl
                 />
             );
         } else if (this.isTypeWithAttachment(type) && lead.attachment) {
@@ -368,6 +375,9 @@ export default class Overview extends React.PureComponent {
                 <DeepGallery
                     styleName="gallery-file"
                     galleryId={lead.attachment.id}
+                    onScreenshotCapture={this.handleScreenshot}
+                    showScreenshot
+                    showUrl
                 />
             );
         }
