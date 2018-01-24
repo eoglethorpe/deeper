@@ -181,8 +181,27 @@ export default class ExportTypePane extends React.PureComponent {
             />,
         ];
     }
-
-    renderExcelOptions = () => (
+    renderExcelOptions = () => ([
+        <Checkbox
+            key="checkbox"
+            label={exportStrings.decoupledEntriesLabel}
+            value={this.props.decoupledEntries}
+            onChange={this.props.onDecoupledEntriesChange}
+        />,
+        <div
+            styleName="info"
+            key="info"
+        >
+            <span
+                styleName="icon"
+                className={iconNames.info}
+            />
+            <div>
+                <p>{exportStrings.decoupledEntriesTitle2}</p>
+                <p>{exportStrings.decoupledEntriesTitle}</p>
+            </div>
+        </div>,
+        /*
         <div styleName="decoupled-box">
             <Checkbox
                 label={exportStrings.decoupledEntriesLabel}
@@ -196,6 +215,11 @@ export default class ExportTypePane extends React.PureComponent {
             >
                 <i className={iconNames.help} />
             </div>
+            <div styleName="info">
+                <span className={iconNames.info} />
+                <p>{exportStrings.decoupledEntriesTitle2}</p>
+                <p>{exportStrings.decoupledEntriesTitle}</p>
+            </div>
             {
                 this.state.isHovered &&
                 <div styleName="box">
@@ -207,7 +231,8 @@ export default class ExportTypePane extends React.PureComponent {
                 </div>
             }
         </div>
-    )
+        */
+    ])
 
     render() {
         const { activeExportTypeKey } = this.props;

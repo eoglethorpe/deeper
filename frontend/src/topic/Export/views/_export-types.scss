@@ -43,6 +43,22 @@
         padding: $spacing-small $spacing-medium;
         overflow: auto;
 
+        .info {
+            display: flex;
+            margin-top: $spacing-extra-large;
+
+            .icon {
+                flex-shrink: 0;
+                color: $color-info;
+                font-size: $font-size-large;
+            }
+
+            p {
+                margin: 0 0 $spacing-small $spacing-small;
+                color: $color-label;
+            }
+        }
+
         .decoupled-box {
             display: flex;
             cursor: pointer;
