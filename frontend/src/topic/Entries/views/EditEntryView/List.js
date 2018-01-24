@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import {
     GridLayout,
     LoadingAnimation,
+    Confirm,
 } from '../../../../public/components/View';
 import {
     AccentButton,
@@ -32,7 +33,6 @@ import {
 import {
     entryStrings,
     iconNames,
-    leadsString, // FIXME: don't use this here
 } from '../../../../common/constants';
 import { entryAccessor } from '../../../../common/entities/entry';
 
@@ -67,6 +67,11 @@ const mapDispatchToProps = dispatch => ({
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 });
 
+const APPLY_MODE = {
+    all: 'all',
+    allBelow: 'allBelow',
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
@@ -81,6 +86,13 @@ export default class List extends React.PureComponent {
 
         this.updateAnalysisFramework(props.analysisFramework);
         this.updateGridItems(props.entries);
+
+        this.state = {
+            showApplyModal: false,
+            applyMode: undefined, // all or below
+            applyItemId: undefined,
+            applyEntryId: undefined,
+        };
     }
 
     componentWillMount() {
@@ -126,6 +138,45 @@ export default class List extends React.PureComponent {
                 data={item.data}
             />
         );
+    }
+
+    handleApplyAllClick = (itemId, entryId) => {
+        this.setState({
+            showApplyModal: true,
+            applyMode: APPLY_MODE.all,
+            applyItemId: itemId,
+            applyEntryId: entryId,
+        });
+    }
+
+    handleApplyAllBelowClick = (itemId, entryId) => {
+        this.setState({
+            showApplyModal: true,
+            applyMode: APPLY_MODE.allBelow,
+            applyItemId: itemId,
+            applyEntryId: entryId,
+        });
+    }
+
+    handleApplyModal = (confirm) => {
+        if (confirm) {
+            const {
+                applyItemId,
+                applyEntryId,
+                applyMode,
+            } = this.state;
+            if (applyMode === APPLY_MODE.all) {
+                this.props.api.setAttributeToAll(applyItemId, applyEntryId);
+            } else if (applyMode === APPLY_MODE.allBelow) {
+                this.props.api.setAttributeToBelow(applyItemId, applyEntryId);
+            }
+        }
+        this.setState({
+            showApplyModal: false,
+            applyMode: undefined,
+            applyItemId: undefined,
+            applyEntryId: undefined,
+        });
     }
 
     // REST
@@ -210,37 +261,48 @@ export default class List extends React.PureComponent {
                 data: item.properties.data,
                 attribute: this.props.api.getEntryAttribute(item.id, entryId),
                 entryId,
-                headerRightComponent: (
-                    <div className="action-buttons">
-                        <AccentButton
-                            className={styles['apply-button']}
-                            type="button"
-                            title={leadsString.applyAllButtonTitle}
-                            onClick={() => {
-                                this.props.api.setAttributeToAll(item.id, entryId);
-                            }}
-                            tabIndex="-1"
-                            transparent
-                        >
-                            <span className={iconNames.applyAll} />
-                        </AccentButton>
-                        <WarningButton
-                            className={styles['apply-button']}
-                            type="button"
-                            title={leadsString.applyAllBelowButtonTitle}
-                            onClick={() => {
-                                this.props.api.setAttributeToBelow(item.id, entryId);
-                            }}
-                            tabIndex="-1"
-                            transparent
-                        >
-                            <span className={iconNames.applyAllBelow} />
-                        </WarningButton>
-                    </div>
-                ),
+                headerRightComponent: this.renderActionButtons(item, entryId),
             }));
         });
     }
+
+    renderActionButtons = (item, entryId) => (
+        <div className="action-buttons">
+            <AccentButton
+                className={styles['apply-button']}
+                type="button"
+                title={entryStrings.applyAllButtonTitle}
+                onClick={() =>
+                    this.setState({
+                        showApplyModal: true,
+                        applyMode: APPLY_MODE.all,
+                        applyItemId: item.id,
+                        applyEntryId: entryId,
+                    })
+                }
+                tabIndex="-1"
+                transparent
+            >
+                <span className={iconNames.applyAll} />
+            </AccentButton>
+            <WarningButton
+                className={styles['apply-button']}
+                type="button"
+                title={entryStrings.applyAllBelowButtonTitle}
+                onClick={() =>
+                    this.setState({
+                        showApplyModal: true,
+                        applyMode: APPLY_MODE.allBelow,
+                        applyItemId: item.id,
+                        applyEntryId: entryId,
+                    })}
+                tabIndex="-1"
+                transparent
+            >
+                <span className={iconNames.applyAllBelow} />
+            </WarningButton>
+        </div>
+    )
 
     render() {
         const {
@@ -250,6 +312,10 @@ export default class List extends React.PureComponent {
             widgetDisabled,
             leadDetails,
         } = this.props;
+        const {
+            showApplyModal,
+            applyMode,
+        } = this.state;
 
         const entryStyle = { height: this.getMaxHeight() + 16 };
 
@@ -303,6 +369,21 @@ export default class List extends React.PureComponent {
                         </div>
                     )
                 }
+                <Confirm
+                    show={showApplyModal}
+                    closeOnEscape
+                    onClose={this.handleApplyModal}
+                >
+                    <p>
+                        {
+                            applyMode === APPLY_MODE.all ? (
+                                entryStrings.applyToAll
+                            ) : (
+                                entryStrings.applyToAllBelow
+                            )
+                        }
+                    </p>
+                </Confirm>
             </div>
         );
     }
