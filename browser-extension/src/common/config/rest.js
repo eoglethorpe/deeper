@@ -7,7 +7,7 @@ import {
 } from '../selectors/settings';
 
 // TODO: Remove this on release
-export const DEV = false;
+export const DEV = true;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;

@@ -1,6 +1,5 @@
-from django.core.management.base import BaseCommand
-
 from deep_migration.utils import (
+    MigrationCommand,
     get_source_url,
     request_with_auth,
 )
@@ -22,9 +21,6 @@ import reversion
 import re
 
 
-ENTRY_TEMPLATES_URL = get_source_url('entry-templates', 'v1')
-
-
 def get_user(old_user_id):
     migration = UserMigration.objects.filter(old_id=old_user_id).first()
     return migration and migration.user
@@ -41,12 +37,12 @@ def snap(x, default=16):
     return round(x / default) * default
 
 
-class Command(BaseCommand):
-    def handle(self, *args, **kwargs):
-        frameworks = request_with_auth(ENTRY_TEMPLATES_URL)
+class Command(MigrationCommand):
+    def run(self):
+        frameworks = request_with_auth(get_source_url('entry-templates', 'v1'))
 
         if not frameworks:
-            print('Couldn\'t find AF data at {}'.format(ENTRY_TEMPLATES_URL))
+            print('Couldn\'t find AF data at')
 
         with reversion.create_revision():
             for framework in frameworks:
@@ -113,6 +109,8 @@ class Command(BaseCommand):
             'organigram': self.migrate_organigram,
             'multiselect': self.migrate_multiselect,
             'geolocations': self.migrate_geo,
+
+            'number2d': self.migrate_number_matrix,
         }
 
         method = type_method_map.get(element['type'])
@@ -163,6 +161,7 @@ class Command(BaseCommand):
             widget_key=element['id'],
             defaults={
                 'title': title,
+                'filter_type': 'number',
                 'properties': {
                     'type': 'number',
                 },
@@ -199,6 +198,7 @@ class Command(BaseCommand):
             widget_key=element['id'],
             defaults={
                 'title': title,
+                'filter_type': 'number',
                 'properties': {
                     'type': 'date',
                 },
@@ -442,6 +442,71 @@ class Command(BaseCommand):
                 },
             },
         )
+
+    def migrate_number_matrix(self, framework, element):
+        widget, _ = Widget.objects.get_or_create(
+            widget_id='numberMatrixWidget',
+            analysis_framework=framework,
+            key=element['id'],
+            defaults={
+                'title': element['title'],
+                'properties': {
+                    'overview_grid_layout': self.get_layout(element),
+                    'list_grid_layout': self.get_layout(element.get('list')),
+                    'data': self.convert_number_matrix(element['rows'],
+                                                       element['columns']),
+                },
+            },
+        )
+
+        filter, _ = Filter.objects.get_or_create(
+            key=element['id'],
+            analysis_framework=framework,
+            widget_key=element['id'],
+            defaults={
+                'title': element['title'],
+                'properties': {
+                    'type': 'number-2d',
+                },
+            },
+        )
+
+        exportable, _ = Exportable.objects.get_or_create(
+            widget_key=element['id'],
+            analysis_framework=framework,
+            defaults={
+                'data': self.convert_number_matrix_export(element['rows'],
+                                                          element['columns']),
+            },
+        )
+
+    def convert_number_matrix(self, rows, columns):
+        row_headers = []
+        column_headers = []
+        for row in rows:
+            row_headers.append({'key': row['id'],
+                                'title': row['title']})
+        for column in columns:
+            column_headers.append({'key': column['id'],
+                                   'title': column['title']})
+
+        return {
+            'row_headers': row_headers,
+            'column_headers': column_headers,
+        }
+
+    def convert_number_matrix_export(self, rows, columns):
+        titles = []
+        for row in rows:
+            for column in columns:
+                titles.append('{}-{}'.format(row['title'], column['title']))
+
+        return {
+            'excel': {
+                'type': 'multiple',
+                'titles': titles,
+            },
+        }
 
     def migrate_matrix1d(self, framework, element):
         widget, _ = Widget.objects.get_or_create(

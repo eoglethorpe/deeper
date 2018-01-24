@@ -1,6 +1,5 @@
-from django.core.management.base import BaseCommand
-
 from deep_migration.utils import (
+    MigrationCommand,
     get_source_url,
     request_with_auth,
 )
@@ -29,7 +28,6 @@ from datetime import datetime
 import reversion
 
 
-ENTRIES_URL = get_source_url('entries/?template=1', 'v1')
 ONE_DAY = 24 * 60 * 60 * 1000
 
 
@@ -62,12 +60,14 @@ def get_region(code):
     return migration and migration.region
 
 
-class Command(BaseCommand):
-    def handle(self, *args, **kwargs):
-        entries = request_with_auth(ENTRIES_URL)
+class Command(MigrationCommand):
+    def run(self):
+        entries = request_with_auth(
+            get_source_url('entries/?template=1', 'v1')
+        )
 
         if not entries:
-            print('Couldn\'t find entries data at {}'.format(ENTRIES_URL))
+            print('Couldn\'t find entries data')
 
         with reversion.create_revision():
             for entry in entries:
@@ -163,6 +163,7 @@ class Command(BaseCommand):
             'geoWidget': self.migrate_geo,
             'matrix1dWidget': self.migrate_matrix1d,
             'matrix2dWidget': self.migrate_matrix2d,
+            'numberMatrixWidget': self.migrate_number_matrix,
         }
 
         method = widget_method_map.get(widget.widget_id)
@@ -326,22 +327,24 @@ class Command(BaseCommand):
         values = [
             {
                 'key': area.id,
+                'short_label': area.get_label(prepend_region=False),
                 'label': area.get_label(),
             } for area in areas
         ]
-        keys = [v['key'] for v in values]
+        keys = [str(v['key']) for v in values]
 
         self.migrate_attribute_data(entry, widget, {
             'values': values,
         })
         self.migrate_filter_data(
-            entry, widget,
+            entry,
+            widget,
             values=keys,
         )
 
         self.migrate_export_data(entry, widget, {
             'excel': {
-                'value': keys,
+                'values': keys,
             }
         })
 
@@ -360,6 +363,7 @@ class Command(BaseCommand):
             return None
 
         areas = GeoArea.objects.filter(
+            admin_level__region=region,
             admin_level__level=admin_level,
             title=area_title,
         )
@@ -367,6 +371,51 @@ class Command(BaseCommand):
             areas = areas.filter(code=area_code)
 
         return areas.first()
+
+    def migrate_number_matrix(self, entry, widget, element):
+        numbers = element.get('numbers', [])
+        attribute = self.get_number_matrix(numbers)
+        self.migrate_attribute_data(entry, widget, attribute)
+
+        widget_data = widget.properties['data']
+        rows = widget_data['row_headers']
+        columns = widget_data['column_headers']
+
+        self.migrate_export_data(
+            entry, widget,
+            self.get_number_matrix_export_data(attribute, rows, columns),
+        )
+
+    def get_number_matrix(self, numbers):
+        attribute = {}
+        for number in numbers:
+            row = number['row']
+            column = number['column']
+            if row not in attribute:
+                attribute[row] = {}
+            attribute[row][column] = int(number['value'])
+
+        return attribute
+
+    def get_number_matrix_export_data(self, attribute, rows, columns):
+        excel_values = []
+        for row in rows:
+            row_values = []
+            for column in columns:
+                value = attribute.get(row['key'], {}).get(column['key'], None)
+                if value is not None:
+                    excel_values.append(str(value))
+                    row_values.append(int(value))
+                else:
+                    excel_values.append('')
+            is_same = len(row_values) == 0 or len(set(row_values)) == 1
+            excel_values.append('True' if is_same else 'False')
+
+        return {
+            'excel': {
+                'values': excel_values
+            }
+        }
 
     def migrate_matrix1d(self, entry, widget, element):
         selections = element.get('selections', [])

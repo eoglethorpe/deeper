@@ -1,11 +1,11 @@
 export const createFilterData = attribute => ({
-    values: attribute.values.map(v => v.key),
+    values: attribute.values.map(v => `${v.key}`),
     number: undefined,
 });
 
 export const createExportData = attribute => ({
     excel: {
-        values: attribute.values.map(v => v.key),
+        values: attribute.values.map(v => `${v.key}`),
     },
 });
 
