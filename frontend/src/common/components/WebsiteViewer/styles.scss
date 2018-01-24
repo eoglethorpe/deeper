@@ -1,7 +1,14 @@
 @import '../../../stylesheets/base';
 
-.doc {
-    border: none;
+.doc-container {
+    display: flex;
+    position: relative;
+    flex-grow: 1;
+
+    .doc {
+        flex-grow: 1;
+        border: 0;
+    }
 }
 
 .iframe {
@@ -26,8 +33,8 @@
 
         .action-buttons {
             display: flex;
-            align-items: center;
             flex-shrink: 0;
+            align-items: center;
             margin-left: $spacing-small;
 
             .open-link {
@@ -41,17 +48,17 @@
 .error-website-msg {
     display: flex;
     flex-direction: column;
-    text-align: center;
     align-items: center;
     justify-content: center;
     margin: auto;
-    color: $color-danger;
     padding: $spacing-medium;
+    text-align: center;
+    color: $color-danger;
 
     .url {
         display: inline-block;
-        color: $color-accent;
         text-transform: lowercase;
+        color: $color-accent;
     }
 }
 
