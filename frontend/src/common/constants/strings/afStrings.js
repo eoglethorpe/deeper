@@ -112,8 +112,8 @@ const afStrings = {
     addSubdimensionButtonTitle: string[788],
     addDimensionButtonTitle: string[789],
 
-    saveButtonTitle: string[790],
-    cancelButtonTitle: string[791],
+    saveButtonTitle: string[791],
+    cancelButtonTitle: string[790],
 
     editModalTitle: string[792],
     empty: string[793],

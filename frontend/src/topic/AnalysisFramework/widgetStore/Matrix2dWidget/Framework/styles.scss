@@ -15,9 +15,12 @@
     }
 }
 
+$width-overview-edit-modal: 900px;
+$height-overview-edit-modal: 80vh;
+
 .framework-overview-edit-modal {
-    width: 80vw;
-    height: 80vh;
+    width: $width-overview-edit-modal;
+    height: $height-overview-edit-modal;
 
     %button-basic {
         outline: 0;
@@ -80,7 +83,7 @@
             background-color: $color-background-alt;
 
             .dimension-list {
-                flex-basis: 20%;
+                flex-basis: 30%;
                 border-right: $width-separator-thin solid $color-separator;
                 background-color: $color-background-row-alt;
                 overflow-y: auto;
@@ -89,7 +92,7 @@
                     @extend %button-basic;
                     display: block;
                     background-color: $color-background-row;
-                    padding: $spacing-small $spacing-medium;
+                    padding: $spacing-small-alt $spacing-medium;
                     width: 100%;
                     text-align: left;
 
@@ -107,7 +110,7 @@
 
             .dimension-detail {
                 display: flex;
-                flex-basis: 80%;
+                flex-basis: 70%;
                 flex-direction: column;
 
                 .dimension-inputs {

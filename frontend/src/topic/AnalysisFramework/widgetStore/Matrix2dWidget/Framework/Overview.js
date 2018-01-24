@@ -664,7 +664,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                 </div>
                 <div className={styles['subdimension-detail']}>
                     <header className={styles.header}>
-                        <h4>{ afStrings.subdimension }</h4>
+                        <h4>{ afStrings.subdimensions }</h4>
                         <Button onClick={this.handleAddSubdimensionButtonClick}>
                             { afStrings.addSubdimensionButtonTitle }
                         </Button>
