@@ -804,6 +804,11 @@ const strings = {
     2000: 'Browser Extension',
     2001: 'Your extension has been successfully set up.',
     2002: 'An error occured while setting up the extension, please make sure you have installed and enabled the extension.',
+
+    2003: 'Do you want to apply this value to all leads?',
+    2004: 'Do you want to apply this value to all leads below?',
+    2005: 'Do you want to apply this value to all entries?',
+    2006: 'Do you want to apply this value to all entries below?',
 };
 
 export default strings;

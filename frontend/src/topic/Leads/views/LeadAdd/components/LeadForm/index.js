@@ -361,7 +361,7 @@ export default class LeadForm extends React.PureComponent {
                         <HiddenInput
                             formname="attachment"
                             key="input"
-                            value={values.attachment}
+                            value={values.attachment || ''}
                         />,
                     ])
                 }

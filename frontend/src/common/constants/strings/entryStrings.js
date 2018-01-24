@@ -62,6 +62,11 @@ const entryStrings = {
     noEntryFound: string[543],
     regionSelectTitle: string[544],
     locationSelectTitle: string[545],
+
+    applyAllButtonTitle: string[130],
+    applyAllBelowButtonTitle: string[131],
+    applyToAll: string[2005],
+    applyToAllBelow: string[2006],
 };
 
 export default entryStrings;
