@@ -61,6 +61,14 @@ export default class ExportTypePane extends React.PureComponent {
 
     static exportTypeKeyExtractor = d => d.key
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isHovered: null,
+        };
+    }
+
     componentWillMount() {
         const newReportStructure = this.createReportStructure(this.props.analysisFramework);
         this.props.onReportStructureChange(newReportStructure);
@@ -127,6 +135,18 @@ export default class ExportTypePane extends React.PureComponent {
         return nodes;
     }
 
+    handleHoverEnter() {
+        this.setState({
+            isHovered: true,
+        });
+    }
+
+    handleHoverLeave() {
+        this.setState({
+            isHovered: false,
+        });
+    }
+
     renderExportType = (key, data) => (
         <button
             className={this.getExportTypeClassName(key)}
@@ -169,10 +189,23 @@ export default class ExportTypePane extends React.PureComponent {
                 value={this.props.decoupledEntries}
                 onChange={this.props.onDecoupledEntriesChange}
             />
-            <i
-                className={iconNames.help}
-                title={exportStrings.decoupledEntriesTitle}
-            />
+            <div
+                styleName="help-box"
+                onMouseEnter={() => this.handleHoverEnter()}
+                onMouseLeave={() => this.handleHoverLeave()}
+            >
+                <i className={iconNames.help} />
+            </div>
+            {
+                this.state.isHovered &&
+                <div styleName="box">
+                    {exportStrings.decoupledEntriesTitle2}
+                    <br />
+                    <span>
+                        {exportStrings.decoupledEntriesTitle}
+                    </span>
+                </div>
+            }
         </div>
     )
 
@@ -199,4 +232,3 @@ export default class ExportTypePane extends React.PureComponent {
         );
     }
 }
-
