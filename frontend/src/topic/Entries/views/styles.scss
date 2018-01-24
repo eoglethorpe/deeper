@@ -83,6 +83,7 @@
                     align-items: center;
                     background-color: $color-background-row;
                     padding: $spacing-small;
+                    overflow-x: auto;
 
                     :global {
                         .grid-item {

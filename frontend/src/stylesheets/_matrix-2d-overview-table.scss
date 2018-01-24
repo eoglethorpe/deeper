@@ -1,0 +1,27 @@
+%matrix-2d-overview-table {
+    width: 100%;
+    border-collapse: separate;
+    text-align: center;
+
+    thead {
+        border: 0;
+
+        th {
+            position: sticky;
+            top: 0;
+            background-color: $color-foreground;
+            padding: $spacing-small $spacing-medium;
+        }
+    }
+
+    tbody {
+        td {
+            margin: $spacing-extra-small;
+            padding: $spacing-small;
+        }
+
+        .dimension-td {
+            width: 96px;
+        }
+    }
+}
