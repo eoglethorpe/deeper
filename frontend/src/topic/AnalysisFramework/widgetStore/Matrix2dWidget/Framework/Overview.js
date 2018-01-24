@@ -190,7 +190,16 @@ export default class Matrix2dOverview extends React.PureComponent {
     }
 
     handleModalCancelButtonClick = () => {
-        this.setState({ showEditModal: false });
+        const {
+            data,
+            title,
+        } = this.props;
+
+        this.setState({
+            data,
+            title,
+            showEditModal: false,
+        });
     }
 
     handleModalSaveButtonClick = () => {
