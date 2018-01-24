@@ -47,6 +47,8 @@ const exportStrings = {
     decoupledEntriesTitle2: string[636],
 
     exportStartedNotifyMessage: string[637],
+    noMatrixAfText: string[638],
+    reportStructureLabel: string[639],
 };
 
 export default exportStrings;

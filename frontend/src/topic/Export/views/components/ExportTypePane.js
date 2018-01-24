@@ -166,14 +166,14 @@ export default class ExportTypePane extends React.PureComponent {
         if (!this.props.reportStructure) {
             return (
                 <p>
-                    { 'You don\'t have any matrices in your analysis framework.' }
+                    { exportStrings.noMatrixAfText}
                 </p>
             );
         }
         return [
             <h4 key="header">
-                Report Structure
-            </h4>, // FIXME: strings
+                {exportStrings.reportStructureLabel}
+            </h4>,
             <TreeSelection
                 key="tree-selection"
                 value={this.props.reportStructure}
