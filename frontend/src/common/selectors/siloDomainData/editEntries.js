@@ -33,6 +33,11 @@ export const editEntryViewEntriesSelector = createSelector(
     editEntryView => editEntryView.entries || emptyList,
 );
 
+export const editEntryViewFilteredEntriesSelector = createSelector(
+    editEntryViewEntriesSelector,
+    entries => entries.filter(e => !e.markedForDelete),
+);
+
 export const editEntryViewCurrentProjectSelector = createSelector(
     editEntryViewCurrentLeadSelector,
     projectsSelector,

@@ -91,6 +91,10 @@ const getEntryIndexByEntryId = (editEntryView, leadId, entryId) => {
     const entries = getEntriesByLeadId(editEntryView, leadId);
     return entries.findIndex(e => getIdFromEntry(e) === entryId);
 };
+const getEntryByEntryId = (editEntryView, leadId, entryId) => {
+    const entries = getEntriesByLeadId(editEntryView, leadId);
+    return entries.find(e => getIdFromEntry(e) === entryId);
+};
 
 // REDUCER
 
@@ -237,9 +241,22 @@ const entryMarkForDelete = (state, action) => {
     } = action;
     const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
 
+    // HERE:
+    let newSelectedEntryId;
+    if (mark) {
+        const entries = getEntriesByLeadId(editEntryView, leadId);
+        const filteredEntries = entries.filter(e => !e.markedForDelete);
+        const filteredEntryIndex = filteredEntries.findIndex(e => getIdFromEntry(e) === entryId);
+        const newSelectedEntry = getElementAround(filteredEntries, filteredEntryIndex);
+        newSelectedEntryId = newSelectedEntry ? getIdFromEntry(newSelectedEntry) : undefined;
+    } else {
+        newSelectedEntryId = entryId;
+    }
+
     const settings = {
         editEntryView: {
             [leadId]: {
+                selectedEntryId: { $set: newSelectedEntryId },
                 entries: {
                     [entryIndex]: {
                         markedForDelete: { $set: mark },
@@ -296,11 +313,20 @@ const editEntryViewRemoveAllEntries = (state, action) => {
 };
 
 const editEntryViewSetActiveEntry = (state, action) => {
+    const { editEntryView } = state;
     const { leadId, entryId } = action;
+
+    const entry = getEntryByEntryId(editEntryView, leadId, entryId);
+    if (entry.markedForDelete) {
+        return state;
+    }
+
     const settings = {
         editEntryView: {
             [leadId]: {
-                selectedEntryId: { $set: entryId },
+                selectedEntryId: {
+                    $set: entryId,
+                },
             },
         },
     };

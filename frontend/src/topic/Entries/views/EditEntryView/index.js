@@ -18,6 +18,7 @@ import {
     leadIdFromRoute,
     editEntryViewCurrentAnalysisFrameworkSelector,
     editEntryViewEntriesSelector,
+    editEntryViewFilteredEntriesSelector,
     editEntryViewSelectedEntryIdSelector,
 
     setAnalysisFrameworkAction,
@@ -79,6 +80,7 @@ const propTypes = {
     leadId: PropTypes.number.isRequired,
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    filteredEntries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     selectedEntryId: PropTypes.string,
 
     setAnalysisFramework: PropTypes.func.isRequired,
@@ -106,6 +108,7 @@ const mapStateToProps = (state, props) => ({
     leadId: leadIdFromRoute(state, props),
     analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
     entries: editEntryViewEntriesSelector(state, props),
+    filteredEntries: editEntryViewFilteredEntriesSelector(state, props),
     selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
     routeUrl: routeUrlSelector(state),
 });
@@ -644,6 +647,7 @@ export default class EditEntryView extends React.PureComponent {
             analysisFramework,
             leadId,
             entries,
+            filteredEntries,
             selectedEntryId,
         } = this.props;
         const {
@@ -702,6 +706,7 @@ export default class EditEntryView extends React.PureComponent {
                                 leadId={leadId}
                                 selectedEntryId={selectedEntryId}
                                 entries={entries}
+                                filteredEntries={filteredEntries}
                                 analysisFramework={analysisFramework}
                                 onSaveAll={this.handleSaveAll}
                                 onEntryAdd={this.handleAddEntry}
@@ -725,7 +730,7 @@ export default class EditEntryView extends React.PureComponent {
                                 onSaveAll={this.handleSaveAll}
                                 saveAllDisabled={isSaveAllDisabled}
                                 widgetDisabled={isWidgetDisabled}
-                                entries={entries}
+                                entries={filteredEntries}
                                 analysisFramework={analysisFramework}
                             />
                         )}
