@@ -96,11 +96,17 @@ export default class Overview extends React.PureComponent {
     static defaultProps = defaultProps;
 
     static getPaneType = (lead) => {
+        if (!lead) {
+            return undefined;
+        }
         const type = lead.sourceType;
         if (type === LEAD_TYPE.text) {
             return LEAD_PANE_TYPE.text;
         } else if (type === LEAD_TYPE.website) {
             return LEAD_PANE_TYPE.website;
+        }
+        if (!lead.attachment) {
+            return undefined;
         }
         const mimeType = lead.attachment.mimeType;
         return leadPaneTypeMap[mimeType];
@@ -589,7 +595,12 @@ export default class Overview extends React.PureComponent {
             case LEAD_PANE_TYPE.website:
                 return this.renderLeft({});
             default:
-                return null;
+                // FIXME: use strings
+                return (
+                    <p>
+                        There seems to be some error with lead.
+                    </p>
+                );
         }
     }
 
