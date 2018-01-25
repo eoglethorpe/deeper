@@ -34,6 +34,9 @@ export const urlForLeadTopicModeling =
 export const urlForLeadTopicCorrelation =
     'https://deepl.togglecorp.com/api/subtopics/correlation/';
 
+export const urlForLeadNerDocsId =
+    'https://deepl.togglecorp.com/api/ner-docs/';
+
 export const createParamsForLeadClassify = body => ({
     method: POST,
     body: JSON.stringify(body),
@@ -53,6 +56,15 @@ export const createParamsForFeedback = body => ({
 });
 
 export const createParamsForLeadTopicModeling = body => ({
+    method: POST,
+    body: JSON.stringify(body),
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+
+export const createParamsForLeadNer = body => ({
     method: POST,
     body: JSON.stringify(body),
     headers: {

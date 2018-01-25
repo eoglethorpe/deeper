@@ -21,9 +21,11 @@ import { FormattedDate } from '../../../../public/components/View';
 import {
     urlForLeadTopicModeling,
     urlForLeadTopicCorrelation,
+    urlForLeadNerDocsId,
+    createParamsForUser,
     createParamsForLeadTopicModeling,
     createUrlForLeadsOfProject,
-    createParamsForUser,
+    createParamsForLeadNer,
     transformResponseErrorToFormError,
 } from '../../../../common/rest';
 import {
@@ -136,8 +138,7 @@ export default class LeadsViz extends React.PureComponent {
             chordDataPending: true,
             correlationDataPending: true,
             forceDirectedDataPending: true,
-            // TODO: change to true
-            geoPointsDataPending: false,
+            geoPointsDataPending: true,
         };
     }
 
@@ -163,6 +164,9 @@ export default class LeadsViz extends React.PureComponent {
             if (this.requestForLeadTopicCorrelaction) {
                 this.requestForLeadTopicCorrelaction.stop();
             }
+            if (this.requestForLeadNer) {
+                this.requestForLeadNer.stop();
+            }
             this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
                 activeProject: nextProps.activeProject,
                 filters: nextProps.filters,
@@ -180,6 +184,9 @@ export default class LeadsViz extends React.PureComponent {
         }
         if (this.requestForLeadTopicCorrelaction) {
             this.requestForLeadTopicCorrelaction.stop();
+        }
+        if (this.requestForLeadNer) {
+            this.requestForLeadNer.stop();
         }
     }
 
@@ -202,7 +209,7 @@ export default class LeadsViz extends React.PureComponent {
                     chordDataPending: true,
                     correlationDataPending: true,
                     forceDirectedDataPending: true,
-                    // geoPointsDataPending: true,
+                    geoPointsDataPending: true,
                 });
             })
             .postLoad(() => {
@@ -223,14 +230,21 @@ export default class LeadsViz extends React.PureComponent {
                     if (this.requestForLeadTopicCorrelaction) {
                         this.requestForLeadTopicCorrelaction.stop();
                     }
+                    if (this.requestForLeadNer) {
+                        this.requestForLeadNer.stop();
+                    }
 
                     this.requestForLeadTopicModeling =
                         this.createRequestForLeadTopicModeling(docIds);
                     this.requestForLeadTopicCorrelaction =
                         this.createRequestForLeadTopicCorrelation(docIds);
+                    this.requestForLeadNer =
+                        this.createRequestForLeadNer(docIds);
 
                     this.requestForLeadTopicModeling.start();
                     this.requestForLeadTopicCorrelaction.start();
+                    this.requestForLeadNer.start();
+
                     this.setState({ loadingLeads: false });
                 } catch (er) {
                     console.error(er);
@@ -299,6 +313,71 @@ export default class LeadsViz extends React.PureComponent {
                     console.error(err);
                 }
             })
+            .failure((response) => {
+                console.warn('Failure', response);
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Hierarchical Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Hierarchical Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .build();
+        return request;
+    }
+
+    createRequestForLeadNer = (docIds) => {
+        const request = new FgRestBuilder()
+            .url(urlForLeadNerDocsId)
+            .params(createParamsForLeadNer({
+                doc_ids: docIds,
+            }))
+            .preLoad(() => {
+                this.setState({
+                    geoPointsDataPending: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    geoPointsDataPending: false,
+                });
+            })
+            .success((response) => {
+                try {
+                    // FIXME: write schema
+                    this.props.setLeadVisualization({
+                        geoPoints: response.locations,
+                        projectId: this.props.activeProject,
+                    });
+                } catch (err) {
+                    console.error(err);
+                }
+            })
+            .failure((response) => {
+                console.warn('Failure', response);
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Geo Points Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Geo Points Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
             .build();
         return request;
     }
@@ -339,6 +418,23 @@ export default class LeadsViz extends React.PureComponent {
                 } catch (err) {
                     console.error(err);
                 }
+            })
+            .failure((response) => {
+                console.warn('Failure', response);
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Topic Correlation Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads Visualization', // FIXME: strings
+                    type: notify.type.ERROR,
+                    message: 'Failed to load Topic Correlation Data from NLP Server',
+                    duration: notify.duration.MEDIUM,
+                });
             })
             .build();
         return request;

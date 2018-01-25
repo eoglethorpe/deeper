@@ -8,11 +8,12 @@ export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
 
 // ACTION-CREATOR
 
-export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation }) => ({
+export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation, geoPoints }) => ({
     type: SET_LEAD_VISUALIZATION,
     projectId,
     hierarchial,
     correlation,
+    geoPoints,
 });
 
 /*
@@ -87,12 +88,29 @@ const getForceDirectedData = (correlation) => {
     return { nodes, links };
 };
 
+const getGeoPointsData = (geoPoints) => {
+    const points = [];
+    geoPoints.forEach((p) => {
+        const { info } = p;
+        const geometry = info.geometry;
+        if (geometry) {
+            const { lat, lng } = geometry.location;
+            points.push({
+                title: info.formatted_address || p.name,
+                coordinates: [lng, lat],
+            });
+        }
+    });
+    return points;
+};
+
 // REDUCER
 
 const setLeadVisualization = (state, action) => {
     const {
         hierarchial,
         correlation,
+        geoPoints,
         projectId,
     } = action;
 
@@ -134,6 +152,14 @@ const setLeadVisualization = (state, action) => {
             },
             */
         };
+    }
+
+    if (geoPoints) {
+        settings.visualization[projectId].$auto.geoPointsData = { $auto: {
+            points: { $autoArray: {
+                $set: getGeoPointsData(geoPoints),
+            } },
+        } };
     }
 
     return update(state, settings);

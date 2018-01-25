@@ -148,7 +148,6 @@ const initialSiloDomainData = {
 
     visualization: {
         // index is project id
-        /*
         4: {
             pristine: true,
             hierarchialData: {
@@ -427,7 +426,6 @@ const initialSiloDomainData = {
                 ],
             },
         },
-    */
     },
 };
 
