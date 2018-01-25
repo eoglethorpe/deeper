@@ -40,12 +40,17 @@
 
     .export-type-options {
         flex-grow: 1;
-        padding: $spacing-small $spacing-medium;
+        padding: $spacing-medium;
         overflow: auto;
+
+        p {
+            margin: 0 0 $spacing-small $spacing-small;
+            color: $color-label;
+        }
 
         .info {
             display: flex;
-            margin-top: $spacing-extra-large;
+            margin-top: $spacing-medium;
 
             .icon {
                 flex-shrink: 0;
@@ -53,10 +58,6 @@
                 font-size: $font-size-large;
             }
 
-            p {
-                margin: 0 0 $spacing-small $spacing-small;
-                color: $color-label;
-            }
         }
 
         .decoupled-box {

@@ -47,9 +47,11 @@ import styles from './styles.scss';
 const propTypes = {
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    className: PropTypes.string,
 };
 
 const defaultProps = {
+    className: '',
 };
 
 const emptyList = [];
@@ -64,7 +66,7 @@ export default class AssistedTagging extends React.PureComponent {
         super(props);
 
         this.state = {
-            assitedActionsVisible: false,
+            showAssistant: false,
             activeHighlightRef: undefined,
             activeHighlightDetails: emptyObject,
             nlpSectorOptions: emptyList,
@@ -161,14 +163,14 @@ export default class AssistedTagging extends React.PureComponent {
         }
 
         this.setState({
-            assitedActionsVisible: true,
+            showAssistant: true,
             activeHighlightRef: e.target,
             activeHighlightDetails,
         });
     }
 
     handleOnCloseAssistedActions = () => {
-        this.setState({ assitedActionsVisible: false });
+        this.setState({ showAssistant: false });
     }
 
     handleEntryAdd = (text) => {
@@ -554,10 +556,14 @@ export default class AssistedTagging extends React.PureComponent {
     );
 
     render() {
-        const { lead } = this.props;
+        const {
+            lead,
+            className,
+        } = this.props;
+
         const {
             activeHighlightDetails,
-            assitedActionsVisible,
+            showAssistant,
             nlpSectorOptions,
             nlpSelectedSectors,
             ceSectorOptions,
@@ -568,19 +574,32 @@ export default class AssistedTagging extends React.PureComponent {
             highlights,
         } = this.state;
 
+        const classNames = [
+            className,
+            styles['assisted-tagging'],
+        ];
+
+        if (showAssistant) {
+            classNames.push(styles['assistant-shown']);
+        }
+
         return (
             <div
                 ref={(el) => { this.primaryContainer = el; }}
-                styleName={assitedActionsVisible ? 'assisted-tagging faded' : 'assisted-tagging'}
+                className={classNames.join(' ')}
             >
                 <SimplifiedLeadPreview
-                    styleName="text"
+                    className="preview"
+                    styleName="preview"
                     leadId={lead.id}
                     highlights={highlights}
                     highlightModifier={this.highlightSimplifiedExcerpt}
                     onLoad={this.handleLeadPreviewLoad}
                 />
-                <div styleName="bottom-box">
+                <div
+                    className="assistant-options"
+                    styleName="assistant-options"
+                >
                     <SegmentButton
                         styleName="assisted-source-change-btn"
                         data={this.assitedTaggingSources}
@@ -625,12 +644,12 @@ export default class AssistedTagging extends React.PureComponent {
                         )
                     }
                 </div>
-                {assitedActionsVisible &&
+                {showAssistant &&
                     <FloatingContainer
                         parent={this.state.activeHighlightRef}
                         onInvalidate={this.handleAssitedBoxInvalidate}
                     >
-                        <div styleName="assisted-actions">
+                        <div styleName="assistant">
                             <header styleName="header">
                                 <div styleName="title">
                                     <span styleName="label">Source:</span>

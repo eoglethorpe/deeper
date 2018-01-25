@@ -2,19 +2,22 @@
 
 .assisted-tagging {
     @include transition-medium;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
 
-    &.faded {
-        filter: brightness(70%) grayscale(80%);
+    &.assistant-shown {
+        filter: brightness(70%);
         pointer-events: none;
     }
 
-    .bottom-box {
+    .preview {
+        .highlighted-excerpt {
+            cursor: pointer;
+        }
+    }
+
+    .assistant-options {
         display: flex;
-        flex-shrink: 0;
         align-items: flex-end;
+        animation: pop-in $duration-medium ease forwards;
         border-top: $width-separator-thin solid $color-separator;
         padding: $spacing-medium-alt;
 
@@ -27,18 +30,19 @@
             margin-left: $spacing-small;
         }
     }
+}
 
-    .text {
-        flex-grow: 1;
-        background-color: $color-foreground-alt;
+@keyframes pop-in {
+    from {
+        transform: translateY(100%);
+    }
 
-        .highlighted-excerpt {
-            cursor: pointer;
-        }
+    to {
+        transform: translateY(0%);
     }
 }
 
-.assisted-actions {
+.assistant {
     @include shadow-large-dark;
     display: flex;
     flex-direction: column;

@@ -188,11 +188,24 @@ export default class WebsiteViewer extends React.PureComponent {
         } = this.props;
         const { httpsUrl, screenshotMode } = this.state;
 
+        const docContainerClassNames = [
+            styles['doc-container'],
+            'doc-container',
+        ];
+
+        const classNames = [
+            className,
+            'website-viewer',
+            styles['website-viewer'],
+        ];
+
+        if (showUrl) {
+            classNames.push(styles['urlbar-shown']);
+        }
+
+
         return (
-            <div
-                styleName="iframe"
-                className={className}
-            >
+            <div className={classNames.join(' ')}>
                 {
                     showUrl &&
                         <div styleName="urlbar">
@@ -216,7 +229,7 @@ export default class WebsiteViewer extends React.PureComponent {
                             </div>
                         </div>
                 }
-                <div styleName="doc-container">
+                <div className={docContainerClassNames.join(' ')}>
                     { screenshotMode && (
                         <Screenshot
                             onCapture={this.handleScreenshot}

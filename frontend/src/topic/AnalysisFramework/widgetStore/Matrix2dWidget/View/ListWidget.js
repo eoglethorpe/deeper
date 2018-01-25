@@ -29,42 +29,50 @@ export default class Matrix2dList extends React.PureComponent {
     getSelectedSectors = (data, attribute) => {
         const selectedSectors = [];
 
+        if (!attribute) {
+            return selectedSectors;
+        }
+
         data.dimensions.forEach((dimension) => {
             const dimensionAttribute = attribute[dimension.id];
 
-            if (dimensionAttribute) {
-                dimension.subdimensions.forEach((subdimension) => {
-                    const subdimensionAttribute = dimensionAttribute[subdimension.id];
-
-                    if (subdimensionAttribute) {
-                        data.sectors.forEach((sector) => {
-                            const sectorAttribute = subdimensionAttribute[sector.id];
-
-                            if (sectorAttribute) {
-                                const sectorAttributeWithTitle = sectorAttribute.map(
-                                    (d) => {
-                                        const index = sector.subsectors.findIndex(s => s.id === d);
-
-                                        return ({
-                                            key: d,
-                                            title: (sector.subsectors[index] || {}).title,
-                                        });
-                                    },
-                                );
-
-                                selectedSectors.push({
-                                    sector,
-                                    dimension,
-                                    subdimension,
-                                    subsectors: sectorAttribute,
-                                    subsectorsWithTitle: sectorAttributeWithTitle,
-                                    key: `${sector.id}-${dimension.id}-${subdimension.id}`,
-                                });
-                            }
-                        });
-                    }
-                });
+            if (!dimensionAttribute) {
+                return;
             }
+
+            dimension.subdimensions.forEach((subdimension) => {
+                const subdimensionAttribute = dimensionAttribute[subdimension.id];
+
+                if (!subdimensionAttribute) {
+                    return;
+                }
+
+                data.sectors.forEach((sector) => {
+                    const sectorAttribute = subdimensionAttribute[sector.id];
+
+                    if (!sectorAttribute) {
+                        return;
+                    }
+
+                    const sectorAttributeWithTitle = sectorAttribute.map((d) => {
+                        const index = sector.subsectors.findIndex(s => s.id === d);
+
+                        return ({
+                            key: d,
+                            title: (sector.subsectors[index] || {}).title,
+                        });
+                    });
+
+                    selectedSectors.push({
+                        sector,
+                        dimension,
+                        subdimension,
+                        subsectors: sectorAttribute,
+                        subsectorsWithTitle: sectorAttributeWithTitle,
+                        key: `${sector.id}-${dimension.id}-${subdimension.id}`,
+                    });
+                });
+            });
         });
         return selectedSectors;
     }

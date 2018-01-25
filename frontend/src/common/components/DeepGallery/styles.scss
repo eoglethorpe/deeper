@@ -1,18 +1,7 @@
 @import '../../../stylesheets/base';
 
-.doc-container {
-    display: flex;
-    position: relative;
-    flex-grow: 1;
 
-    .doc {
-        display: flex;
-        flex-grow: 1;
-        border: 0;
-    }
-}
-
-.preview {
+.deep-gallery {
     .urlbar {
         display: flex;
         border-bottom: $width-separator-thin solid $color-separator;
@@ -42,6 +31,22 @@
                 @extend %transparent-button-like-link;
                 color: $color-accent;
             }
+        }
+    }
+
+    .doc-container {
+        position: relative;
+        height: 100%;
+
+        .doc {
+            border: 0;
+            height: 100%;
+        }
+    }
+
+    &.urlbar-shown {
+        .doc-container {
+            height: calc(100% - 48px);
         }
     }
 }

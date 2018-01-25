@@ -82,7 +82,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
     startProcess = () => {
         this.setState({ pending: true });
-        if (this.props.preLoad()) {
+        if (this.props.preLoad) {
             this.props.preLoad();
         }
     }
@@ -126,7 +126,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
                 this.previewRequest.stop();
             }
             this.previewRequest = this.createPreviewRequest(previewId, onLoad);
-            this.previewRequest.stop();
+            this.previewRequest.start();
             return;
         }
 
@@ -142,6 +142,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             .pollTime(2000)
             .shouldPoll(response => !response.extracted)
             .success((response) => {
+                console.warn('success');
                 // FIXME: write schema
                 this.previewId = response.id;
                 if (onLoad) {
@@ -209,9 +210,9 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (extractedText) {
             return (
-                <pre>
+                <p className={styles['simplified-text']}>
                     {extractedText}
-                </pre>
+                </p>
             );
         }
 
