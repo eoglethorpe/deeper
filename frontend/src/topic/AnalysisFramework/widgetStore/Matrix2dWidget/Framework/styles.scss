@@ -15,6 +15,16 @@
     }
 }
 
+%button-basic {
+    outline: 0;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 $width-overview-edit-modal: 900px;
 $height-overview-edit-modal: 80vh;
 
@@ -22,15 +32,6 @@ $height-overview-edit-modal: 80vh;
     width: $width-overview-edit-modal;
     height: $height-overview-edit-modal;
 
-    %button-basic {
-        outline: 0;
-        border: 0;
-        background-color: transparent;
-        cursor: pointer;
-        color: inherit;
-        font-family: inherit;
-        font-size: inherit;
-    }
 
     .body {
         display: flex;
@@ -85,26 +86,8 @@ $height-overview-edit-modal: 80vh;
             .dimension-list {
                 flex-basis: 30%;
                 border-right: $width-separator-thin solid $color-separator;
-                background-color: $color-background-row-alt;
                 overflow-y: auto;
 
-                .tab {
-                    @extend %button-basic;
-                    display: block;
-                    background-color: $color-background-row;
-                    padding: $spacing-small-alt $spacing-medium;
-                    width: 100%;
-                    text-align: left;
-
-                    &:nth-child(odd) {
-                        background-color: $color-background-row-alt;
-                    }
-
-                    &.active {
-                        background-color: $color-accent;
-                        color: $color-text-on-primary;
-                    }
-                }
 
             }
 
@@ -164,33 +147,6 @@ $height-overview-edit-modal: 80vh;
                         flex-grow: 1;
                         overflow-y: auto;
 
-                        .sub-dimension-inputs {
-                            display: flex;
-                            justify-content: space-between;
-                            background-color: $color-background-row;
-                            padding: $spacing-medium 0;
-
-                            &:nth-child(odd) {
-                                background-color: $color-background-row-alt;
-                            }
-
-                            .inputs {
-                                display: flex;
-                                flex-grow: 1;
-                                justify-content: space-between;
-                                padding: 0 $spacing-medium;
-
-                                >* {
-                                    flex-basis: calc(calc(100% - #{$spacing-medium}) / 2);
-                                }
-                            }
-
-                            .actions {
-                                flex-shrink: 0;
-                                align-self: flex-end;
-                                padding: 0 $spacing-medium;
-                            }
-                        }
                     }
                 }
             }
@@ -345,3 +301,59 @@ $height-overview-edit-modal: 80vh;
         }
     }
 }
+
+.sub-dimensions {
+    background-color: $color-background-row;
+
+    &:nth-child(odd) {
+        background-color: $color-background-row-alt;
+    }
+}
+
+.dimension-list-item {
+    align-items: stretch;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-background-row;
+
+    &:nth-child(odd) {
+        background-color: $color-background-row-alt;
+    }
+
+    .dimension-tab {
+        @extend %button-basic;
+        display: block;
+        padding: $spacing-small-alt $spacing-medium;
+        width: 100%;
+        text-align: left;
+
+        &.active {
+            background-color: $color-accent;
+            color: $color-text-on-primary;
+        }
+    }
+}
+
+.sub-dimension-inputs {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    padding: $spacing-medium 0;
+
+    .inputs {
+        display: flex;
+        flex-grow: 1;
+        justify-content: space-between;
+        padding: 0 $spacing-medium;
+
+        >* {
+            flex-basis: calc(calc(100% - #{$spacing-medium}) / 2);
+        }
+    }
+
+    .actions {
+        flex-shrink: 0;
+        align-self: flex-end;
+        padding: 0 $spacing-medium;
+    }
+}
+

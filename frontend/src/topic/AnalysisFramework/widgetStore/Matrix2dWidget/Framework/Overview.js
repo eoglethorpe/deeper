@@ -9,6 +9,7 @@ import {
     ModalBody,
     ModalFooter,
     ListView,
+    SortableList,
 } from '../../../../../public/components/View';
 import {
     DangerButton,
@@ -341,6 +342,72 @@ export default class Matrix2dOverview extends React.PureComponent {
         this.setState({ data });
     }
 
+    handleDimensionListSortChange = (newData) => {
+        const dimensionTypes = [
+            'sectors',
+            'dimensions',
+        ];
+
+        const {
+            activeDimensionTypeIndex,
+            activeDimensionIndex,
+            data: oldData,
+        } = this.state;
+
+        const currentDimensionType = dimensionTypes[activeDimensionTypeIndex];
+
+        const dimensions = oldData[currentDimensionType];
+        const activeDimensionId = dimensions[activeDimensionIndex].id;
+
+        const newActiveDimensionIndex = newData.findIndex(d => d.id === activeDimensionId);
+
+        const settings = {
+            [currentDimensionType]: {
+                $set: newData,
+            },
+        };
+
+        const data = update(oldData, settings);
+        this.setState({
+            data,
+            activeDimensionIndex: newActiveDimensionIndex,
+        });
+    }
+
+    handleSubdimensionsSortChange = (newData) => {
+        const dimensionTypes = [
+            'sectors',
+            'dimensions',
+        ];
+
+        const subdimensionTypes = [
+            'subsectors',
+            'subdimensions',
+        ];
+
+        const {
+            activeDimensionTypeIndex,
+            activeDimensionIndex,
+            data: oldData,
+        } = this.state;
+
+        const currentDimensionType = dimensionTypes[activeDimensionTypeIndex];
+        const currentSubdimensionType = subdimensionTypes[activeDimensionTypeIndex];
+
+        const settings = {
+            [currentDimensionType]: {
+                [activeDimensionIndex]: {
+                    [currentSubdimensionType]: {
+                        $set: newData,
+                    },
+                },
+            },
+        };
+
+        const data = update(oldData, settings);
+        this.setState({ data });
+    }
+
     handleAddDimensionButtonClick = () => {
         const dimensionTypes = [
             'sectors',
@@ -544,7 +611,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderDimensionListItem = (key, data, i) => {
         const { activeDimensionIndex } = this.state;
-        const classNames = [styles.tab];
+        const classNames = [styles['dimension-tab']];
 
         if (activeDimensionIndex === i) {
             classNames.push(styles.active);
@@ -570,10 +637,12 @@ export default class Matrix2dOverview extends React.PureComponent {
         const dimensionData = [data.sectors, data.dimensions];
 
         return (
-            <ListView
+            <SortableList
                 className={styles['dimension-list']}
                 data={dimensionData[activeDimensionTypeIndex]}
                 modifier={this.renderDimensionListItem}
+                onChange={this.handleDimensionListSortChange}
+                sortableItemClass={styles['dimension-list-item']}
             />
         );
     }
@@ -678,10 +747,12 @@ export default class Matrix2dOverview extends React.PureComponent {
                             { afStrings.addSubdimensionButtonTitle }
                         </Button>
                     </header>
-                    <ListView
+                    <SortableList
                         className={styles.content}
                         data={subdimension}
                         modifier={this.renderSubdimension}
+                        onChange={this.handleSubdimensionsSortChange}
+                        sortableItemClass={styles['sub-dimensions']}
                     />
                 </div>
             </div>
