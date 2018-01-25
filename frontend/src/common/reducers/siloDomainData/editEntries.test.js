@@ -285,7 +285,7 @@ test('should mark for delete', () => {
         editEntryView: {
             1: {
                 leadId: 1,
-                selectedEntryId: 'flksjal',
+                selectedEntryId: undefined,
                 entries: [
                     {
                         markedForDelete: true,

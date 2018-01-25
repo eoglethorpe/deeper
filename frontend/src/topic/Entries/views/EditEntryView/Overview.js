@@ -60,6 +60,7 @@ const propTypes = {
 
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    filteredEntries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -315,6 +316,7 @@ export default class Overview extends React.PureComponent {
                 <button
                     className="add-entry-list-item"
                     onClick={() => this.handleEntryItemClick(currentEntryId)}
+                    disabled={isMarkedForDelete}
                 >
                     {this.calcEntryLabel(entry)}
                     <div className="status-icons">
@@ -595,6 +597,7 @@ export default class Overview extends React.PureComponent {
         const {
             selectedEntryId,
             entries,
+            filteredEntries,
             onSaveAll,
             saveAllDisabled,
             widgetDisabled,
@@ -627,7 +630,7 @@ export default class Overview extends React.PureComponent {
                                 hideClearButton
                                 keySelector={this.calcEntryKey}
                                 labelSelector={this.calcEntryLabelLimited}
-                                options={entries}
+                                options={filteredEntries}
                                 value={selectedEntryId}
                                 onChange={this.handleEntrySelectChange}
                             />
