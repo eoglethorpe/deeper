@@ -496,6 +496,7 @@ export default class LeadsViz extends React.PureComponent {
                         styleName="correlation-matrix viz"
                         data={correlationData}
                         loading={loadingLeads || correlationDataPending}
+                        margins={{ top: 100, right: 0, bottom: 50, left: 100 }}
                     />
                     <ForceDirectedGraphView
                         styleName="force-directed-graph viz"
