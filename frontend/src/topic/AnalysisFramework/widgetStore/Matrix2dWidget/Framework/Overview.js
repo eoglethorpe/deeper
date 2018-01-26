@@ -52,7 +52,7 @@ const emptyList = [];
 
 @CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dOverview extends React.PureComponent {
-    static rowKeyExtractor = d => d.key;
+    static rowKeyExtractor = d => d.id;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -643,9 +643,22 @@ export default class Matrix2dOverview extends React.PureComponent {
                 modifier={this.renderDimensionListItem}
                 onChange={this.handleDimensionListSortChange}
                 sortableItemClass={styles['dimension-list-item']}
+                keyExtractor={Matrix2dOverview.rowKeyExtractor}
+                dragHandleModifier={this.renderDragHandle}
             />
         );
     }
+
+    renderDragHandle = (key, data, index) => {
+        const { activeDimensionIndex } = this.state;
+        const dragStyle = [styles['drag-handle']];
+        if (activeDimensionIndex === index) {
+            dragStyle.push(styles.active);
+        }
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
 
     renderSubdimension = (key, data, i) => (
         <div
@@ -753,6 +766,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         modifier={this.renderSubdimension}
                         onChange={this.handleSubdimensionsSortChange}
                         sortableItemClass={styles['sub-dimensions']}
+                        keyExtractor={Matrix2dOverview.rowKeyExtractor}
                     />
                 </div>
             </div>

@@ -331,6 +331,18 @@ $height-overview-edit-modal: 80vh;
             color: $color-text-on-primary;
         }
     }
+
+    .drag-handle {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 $spacing-medium-alt;
+
+        &.active {
+            background-color: $color-accent;
+            color: $color-text-on-primary;
+        }
+    }
 }
 
 .sub-dimension-inputs {
