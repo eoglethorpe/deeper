@@ -386,7 +386,7 @@ export default class Overview extends React.PureComponent {
         if (this.isTypeWithUrl(type) && lead.url) {
             return (
                 <WebsiteViewer
-                    styleName="gallery-file"
+                    styleName="preview"
                     url={lead.url}
                     onScreenshotCapture={this.handleScreenshot}
                     showScreenshot
@@ -396,7 +396,7 @@ export default class Overview extends React.PureComponent {
         } else if (this.isTypeWithAttachment(type) && lead.attachment) {
             return (
                 <DeepGallery
-                    styleName="gallery-file"
+                    styleName="preview"
                     galleryId={lead.attachment.id}
                     onScreenshotCapture={this.handleScreenshot}
                     showScreenshot
@@ -405,17 +405,13 @@ export default class Overview extends React.PureComponent {
             );
         }
         return (
-            <div styleName="preview-text">
+            <div styleName="empty-text">
                 <h1>
                     {entryStrings.previewNotAvailableText}
                 </h1>
             </div>
         );
     }
-
-    renderLeadImages = () => (
-        <ImagesGrid images={this.state.images} />
-    )
 
     renderItemView = (item) => {
         const widget = this.widgets.find(
@@ -511,6 +507,7 @@ export default class Overview extends React.PureComponent {
                             for="simplified-preview"
                         >
                             <SimplifiedLeadPreview
+                                styleName="simplified-preview"
                                 leadId={lead.id}
                                 highlights={api.getEntryHighlights()}
                                 highlightModifier={this.renderHighlightSimplifiedExcerpt}
@@ -524,6 +521,7 @@ export default class Overview extends React.PureComponent {
                             for="assisted-tagging"
                         >
                             <AssistedTagging
+                                styleName="assisted-tagging"
                                 lead={lead}
                                 api={api}
                             />
@@ -534,7 +532,7 @@ export default class Overview extends React.PureComponent {
                             styleName="tab"
                             for="original-preview"
                         >
-                            <div styleName="lead-preview">
+                            <div styleName="original-preview">
                                 {this.renderLeadPreview(lead)}
                             </div>
                         </TabContent>
@@ -545,7 +543,10 @@ export default class Overview extends React.PureComponent {
                                 styleName="tab"
                                 for="images-preview"
                             >
-                                {this.renderLeadImages(lead)}
+                                <ImagesGrid
+                                    styleName="images-preview"
+                                    images={this.state.images}
+                                />
                             </TabContent>
                     }
                     <TabContent

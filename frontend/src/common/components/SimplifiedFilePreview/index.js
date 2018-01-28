@@ -82,7 +82,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
     startProcess = () => {
         this.setState({ pending: true });
-        if (this.props.preLoad()) {
+        if (this.props.preLoad) {
             this.props.preLoad();
         }
     }
@@ -126,7 +126,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
                 this.previewRequest.stop();
             }
             this.previewRequest = this.createPreviewRequest(previewId, onLoad);
-            this.previewRequest.stop();
+            this.previewRequest.start();
             return;
         }
 
@@ -170,6 +170,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             .url(urlForFileExtractionTrigger)
             .params(createParamsForFileExtractionTrigger(fileIds))
             .success((response) => {
+                // FIXME: write schema
                 console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
                 if (this.previewRequest) {
                     this.previewRequest.stop();
@@ -209,9 +210,9 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (extractedText) {
             return (
-                <pre>
+                <p className={styles['simplified-text']}>
                     {extractedText}
-                </pre>
+                </p>
             );
         }
 

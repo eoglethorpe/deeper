@@ -3,18 +3,18 @@
 @import '../../../../stylesheets/grid-item';
 
 .tabs-container {
-    flex-grow: 1;
     width: 100%;
     height: 100%;
 
+    .tabs-header-container {
+        background-color: $color-foreground;
+    }
+
     .tabs-content {
-        display: flex;
-        flex-direction: column;
+        height: calc(100% - 39px);
 
         .tab {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
+            height: 100%;
         }
     }
 }

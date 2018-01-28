@@ -43,19 +43,24 @@ export default class GalleryDocs extends React.PureComponent {
         const googleDriveViewerUrl = createUrlForGoogleViewer(docUrl);
         const isHttps = !!docUrl.match(/^https:\/\//) || window.location.hostname === 'localhost';
 
+        const classNames = [
+            className,
+            'gallery-docs',
+            styles['gallery-docs'],
+        ];
+
         return (
-            <div
-                styleName="gallery-docs"
-                className={`gallery-docs ${className}`}
-            >
+            <div className={classNames.join(' ')}>
                 {
                     mimeType === 'application/pdf' && !isSameOrigin && isHttps ?
                         <iframe
+                            className="doc"
                             styleName="doc"
                             title={docUrl}
                             src={docUrl}
                         />
                         : <iframe
+                            className="doc"
                             styleName="doc"
                             title={docUrl}
                             src={googleDriveViewerUrl}

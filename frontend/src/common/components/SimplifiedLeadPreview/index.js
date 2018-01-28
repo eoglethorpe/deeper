@@ -170,7 +170,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .build()
     )
 
-    renderContent() {
+    renderContent = () => {
         const { highlightModifier } = this.props;
 
         const {
@@ -180,7 +180,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         if (error) {
             return (
-                <div styleName="message">
+                <div className={styles.message}>
                     { error }
                 </div>
             );
@@ -189,6 +189,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         if (extractedText) {
             return (
                 <HighlightedText
+                    className={styles['highlighted-text']}
                     text={extractedText}
                     highlights={this.getHighlights()}
                     modifier={highlightModifier}
@@ -197,7 +198,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         }
 
         return (
-            <div styleName="message">
+            <div className={styles.message}>
                 {commonStrings.previewNotAvailable}
             </div>
         );
@@ -207,13 +208,20 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const { className } = this.props;
         const { pending } = this.state;
 
+        const Content = this.renderContent;
+
         return (
             <div
                 className={className}
                 styleName="lead-preview"
             >
-                { pending && <LoadingAnimation /> }
-                { !pending && this.renderContent() }
+                {
+                    pending ? (
+                        <LoadingAnimation />
+                    ) : (
+                        <Content />
+                    )
+                }
             </div>
         );
     }

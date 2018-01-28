@@ -60,6 +60,7 @@
         flex-basis: 24%;
         flex-direction: column;
         background-color: $color-foreground;
+        width: 24%;
 
         .document-panel {
             display: flex;
@@ -139,6 +140,7 @@
                 .simplified-tab {
                     flex-grow: 1;
                     padding: $spacing-medium;
+                    width: 100%;
                     text-align: justify;
                     overflow-y: auto;
                 }
@@ -181,6 +183,7 @@
         flex-basis: 76%;
         flex-direction: column;
         background-color: $color-foreground-alt;
+        width: 76%;
 
         >.header {
             display: flex;

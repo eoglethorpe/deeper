@@ -269,11 +269,18 @@ export default class DeepGallery extends React.PureComponent {
             );
         }
 
+        const classNames = [
+            className,
+            'deep-gallery',
+            styles['deep-gallery'],
+        ];
+
+        if (showUrl) {
+            classNames.push(styles['urlbar-shown']);
+        }
+
         return (
-            <div
-                styleName="preview"
-                className={className}
-            >
+            <div className={classNames.join(' ')}>
                 {
                     showUrl &&
                         <div styleName="urlbar">
@@ -297,14 +304,17 @@ export default class DeepGallery extends React.PureComponent {
                             </div>
                         </div>
                 }
-                <div styleName="doc-container">
+                <div
+                    styleName="doc-container"
+                    className="doc-container"
+                >
                     { screenshotMode && (
                         <Screenshot
                             onCapture={this.handleScreenshot}
                         />
                     ) }
                     { this.renderPreview({
-                        className: 'doc',
+                        className: styles.doc,
                         pending,
                         fileUrl,
                         fileName,

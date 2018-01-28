@@ -1,13 +1,11 @@
 @import '../../../../../stylesheets/base';
 
 .gallery-docs {
-    display: flex;
-    position: relative;
-    flex-grow: 1;
 
     .doc {
-        flex-grow: 1;
         border: 0;
+        width: 100%;
+        height: 100%;
         object-fit: contain;
         object-position: center center;
     }

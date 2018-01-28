@@ -183,8 +183,23 @@
                     flex-direction: column;
                     flex-grow: 1;
 
-                    iframe {
-                        flex-grow: 1;
+                    :global {
+                        .doc-container {
+                            display: flex;
+                            flex-direction: column;
+                            flex-grow: 1;
+
+                            >div {
+                                display: flex;
+                                flex-direction: column;
+                                flex-grow: 1;
+                            }
+                        }
+
+                        iframe {
+                            flex-grow: 1;
+                            border: 0;
+                        }
                     }
                 }
 
