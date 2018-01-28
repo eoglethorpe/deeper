@@ -4,15 +4,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { Checkbox } from '../../../public/components/Input';
+import { AccentButton } from '../../../public/components/Action';
 import {
-    List,
+    Table,
     LoadingAnimation,
     FormattedDate,
 } from '../../../public/components/View';
 import update from '../../../public/utils/immutable-update';
 import { isFalsy, listToMap } from '../../../public/utils/common';
-import { exportStrings } from '../../../common/constants';
+import {
+    iconNames,
+    exportStrings,
+} from '../../../common/constants';
 import {
     createUrlForProject,
     createUrlForAnalysisFramework,
@@ -113,6 +116,56 @@ export default class Export extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
+        // TABLE component
+        this.headers = [
+            {
+                key: 'select',
+                // FIXME: use strings
+                label: 'Select',
+                order: 1,
+                sortable: false,
+                modifier: (d) => {
+                    const key = Export.leadKeyExtractor(d);
+                    const selected = this.state.selectedLeads[key];
+                    const iconName = selected ? iconNames.checkbox : iconNames.checkboxOutlineBlank;
+                    return (
+                        <AccentButton
+                            title={selected ? 'Unselect' : 'Select'}
+                            onClick={() => this.handleSelectLeadChange(key, !selected)}
+                            smallVerticalPadding
+                            transparent
+                            iconName={iconName}
+                        />
+                    );
+                },
+            },
+            {
+                key: 'title',
+                label: 'Title',
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
+            },
+            {
+                key: 'createdAt',
+                label: 'Created', // FIXME: use strings
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => a.title.localeCompare(b.title),
+                modifier: row => (
+                    <FormattedDate
+                        date={row.createdAt}
+                        mode="dd-MM-yyyy hh:mm"
+                    />
+                ),
+            },
+        ];
+
+        this.defaultSort = {
+            key: 'createdAt',
+            order: 'dsc',
+        };
 
         this.state = {
             activeExportTypeKey: 'word',
@@ -283,7 +336,7 @@ export default class Export extends React.PureComponent {
         const sanitizedFilters = Export.getFiltersForRequest(filters);
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
-            fields: ['id', 'title'],
+            fields: ['id', 'title', 'created_at'],
             ...sanitizedFilters,
         });
 
@@ -353,16 +406,6 @@ export default class Export extends React.PureComponent {
         this.setState({ previewId: exportId });
     }
 
-    renderLeadCheck = (key, data) => (
-        <Checkbox
-            className={styles['select-lead']}
-            key={key}
-            label={data.title}
-            onChange={(value) => { this.handleSelectLeadChange(key, value); }}
-            value={this.state.selectedLeads[key]}
-        />
-    )
-
     render() {
         const {
             previewId,
@@ -370,7 +413,7 @@ export default class Export extends React.PureComponent {
             reportStructure,
             decoupledEntries,
             selectedLeads,
-            leads,
+            leads = [],
 
             pendingLeads,
             pendingAf,
@@ -405,7 +448,7 @@ export default class Export extends React.PureComponent {
                         analysisFramework={analysisFramework}
                     />
                     <section styleName="filters" >
-                        <div styleName="entry-filters">
+                        <div>
                             <h4 styleName="heading">
                                 {exportStrings.entryAttributesLabel}
                             </h4>
@@ -423,9 +466,11 @@ export default class Export extends React.PureComponent {
                             </div>
                             <div styleName="leads">
                                 { pendingLeads && <LoadingAnimation /> }
-                                <List
+                                <Table
+                                    styleName="leads-table"
                                     data={leads}
-                                    modifier={this.renderLeadCheck}
+                                    headers={this.headers}
+                                    defaultSort={this.defaultSort}
                                     keyExtractor={Export.leadKeyExtractor}
                                 />
                             </div>

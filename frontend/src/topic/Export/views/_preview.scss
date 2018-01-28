@@ -1,6 +1,7 @@
 .preview {
     display: flex;
     flex-basis: 30%;
+    text-align: center;
     align-items: center;
     justify-content: center;
     border-left: $width-separator-thin solid $color-separator;

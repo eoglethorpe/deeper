@@ -1,67 +1,74 @@
 .filters {
     display: flex;
+    flex-direction: column;
     flex-basis: 50%;
+    background-color: $color-background-row-alt;
 
     .heading {
         padding: $spacing-small;
+        background-color: $color-background-header;
+        border-bottom: $width-separator-thin solid $color-separator;
     }
 
-    .entry-filters {
-        display: flex;
-        flex-basis: 40%;
-        flex-direction: column;
-        border-right: $width-separator-thin solid $color-separator;
+    :global {
+        .entries-filters {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border-bottom: $width-separator-thin solid $color-separator;
+            background-color: $color-foreground;
+            padding: $spacing-small;
 
-        :global {
-            .entries-filters {
-                padding: $spacing-extra-small-alt;
+            .entries-filter,
+            .select-input {
+                margin: $spacing-small;
 
-                .entries-filter {
-                    margin: $spacing-small;
-                }
-
-                .range-filter {
-                    display: flex;
+                &.flat-select-input {
                     margin: 0;
-
-                    .single-select-input {
-                        flex-grow: 1;
-                        margin: $spacing-small;
-                    }
                 }
+            }
 
-                .button {
+            .range-filter {
+                display: flex;
+                justify-content: space-between;
+                margin: 0;
+
+                .single-select-input {
                     margin: $spacing-small;
                 }
+            }
+
+            .button {
+                flex-shrink: 0;
+                margin: $spacing-small;
             }
         }
     }
 
     .lead-filters {
         display: flex;
-        flex-basis: 60%;
         flex-direction: column;
 
         .lead-attributes {
-            flex-shrink: 0;
-            border-bottom: $width-separator-thin solid $color-separator;
-
-            .heading {
-                padding: $spacing-small;
-            }
-
             :global {
                 .leads-filters {
                     display: flex;
+                    flex-shrink: 0;
                     flex-wrap: wrap;
-                    padding: $spacing-extra-small-alt;
+                    align-items: flex-end;
+                    // border-bottom: $width-separator-thin solid $color-separator;
+                    background-color: $color-foreground;
+                    padding: $spacing-small;
+
 
                     .leads-filter {
-                        flex-basis: calc(50% - #{$spacing-small * 2});
                         margin: $spacing-small;
                     }
 
                     .button {
+                        flex-shrink: 0;
+                        align-self: flex-end;
                         margin: $spacing-small;
                     }
                 }
@@ -74,14 +81,14 @@
             overflow-y: auto;
             background-color: $color-background-row-alt;
 
-            .select-lead {
-                background-color: $color-background-row;
-                padding: $spacing-small $spacing-medium;
-
-                &:nth-child(odd) {
-                    background-color: $color-background-row-alt;
+            .leads-table {
+                :global {
+                    .select {
+                        width: 64px;
+                    }
                 }
             }
+
         }
     }
 }
