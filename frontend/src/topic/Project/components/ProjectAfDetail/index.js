@@ -366,6 +366,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                         styleName="project-af-form"
                         pristine={pristine}
                         pending={pending}
+                        readOnly={!afDetails.isAdmin}
                     />
                     <ImagesSlider
                         styleName="images-container"
