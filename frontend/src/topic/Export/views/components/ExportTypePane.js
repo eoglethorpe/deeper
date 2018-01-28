@@ -61,48 +61,15 @@ export default class ExportTypePane extends React.PureComponent {
 
     static exportTypeKeyExtractor = d => d.key
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isHovered: null,
-        };
-    }
-
-    componentWillMount() {
-        const newReportStructure = this.createReportStructure(this.props.analysisFramework);
-        this.props.onReportStructureChange(newReportStructure);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.analysisFramework !== this.props.analysisFramework) {
-            const newReportStructure = this.createReportStructure(nextProps.analysisFramework);
-            this.props.onReportStructureChange(newReportStructure);
-        }
-    }
-
-    getExportTypeClassName(key) {
-        const { activeExportTypeKey } = this.props;
-
-        const classNames = [
-            styles['export-type-select'],
-        ];
-        if (activeExportTypeKey === key) {
-            classNames.push(styles.active);
-        }
-        return classNames.join(' ');
-    }
-
-    mapReportLevelsToNodes = levels => levels.map(level => ({
+    static mapReportLevelsToNodes = levels => levels.map(level => ({
         key: level.id,
         title: level.title,
         selected: true,
         draggable: true,
-        nodes: level.sublevels && this.mapReportLevelsToNodes(level.sublevels),
+        nodes: level.sublevels && ExportTypePane.mapReportLevelsToNodes(level.sublevels),
     }));
 
-
-    createReportStructure = (analysisFramework) => {
+    static createReportStructure = (analysisFramework) => {
         if (!analysisFramework) {
             return undefined;
         }
@@ -128,23 +95,39 @@ export default class ExportTypePane extends React.PureComponent {
                 key: `${exportable.id}`,
                 selected: true,
                 draggable: true,
-                nodes: this.mapReportLevelsToNodes(levels),
+                nodes: ExportTypePane.mapReportLevelsToNodes(levels),
             });
         });
 
         return nodes;
     }
 
-    handleHoverEnter() {
-        this.setState({
-            isHovered: true,
-        });
+    componentWillMount() {
+        const newReportStructure = ExportTypePane.createReportStructure(
+            this.props.analysisFramework,
+        );
+        this.props.onReportStructureChange(newReportStructure);
     }
 
-    handleHoverLeave() {
-        this.setState({
-            isHovered: false,
-        });
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.analysisFramework !== this.props.analysisFramework) {
+            const newReportStructure = ExportTypePane.createReportStructure(
+                nextProps.analysisFramework,
+            );
+            this.props.onReportStructureChange(newReportStructure);
+        }
+    }
+
+    getExportTypeClassName(key) {
+        const { activeExportTypeKey } = this.props;
+
+        const classNames = [
+            styles['export-type-select'],
+        ];
+        if (activeExportTypeKey === key) {
+            classNames.push(styles.active);
+        }
+        return classNames.join(' ');
     }
 
     renderExportType = (key, data) => (
@@ -152,7 +135,7 @@ export default class ExportTypePane extends React.PureComponent {
             className={this.getExportTypeClassName(key)}
             key={key}
             title={data.title}
-            onClick={() => { this.props.onExportTypeChange(key); }}
+            onClick={() => this.props.onExportTypeChange(key)}
         >
             <img
                 className={styles.image}
@@ -162,7 +145,7 @@ export default class ExportTypePane extends React.PureComponent {
         </button>
     )
 
-    renderReportOptions = () => {
+    renderWordPdfOptions = () => {
         if (!this.props.reportStructure) {
             return (
                 <p>
@@ -170,6 +153,7 @@ export default class ExportTypePane extends React.PureComponent {
                 </p>
             );
         }
+
         return [
             <h4 key="header">
                 {exportStrings.reportStructureLabel}
@@ -181,6 +165,7 @@ export default class ExportTypePane extends React.PureComponent {
             />,
         ];
     }
+
     renderExcelOptions = () => ([
         <Checkbox
             key="checkbox"
@@ -201,38 +186,23 @@ export default class ExportTypePane extends React.PureComponent {
                 <p>{exportStrings.decoupledEntriesTitle}</p>
             </div>
         </div>,
-        /*
-        <div styleName="decoupled-box">
-            <Checkbox
-                label={exportStrings.decoupledEntriesLabel}
-                value={this.props.decoupledEntries}
-                onChange={this.props.onDecoupledEntriesChange}
-            />
-            <div
-                styleName="help-box"
-                onMouseEnter={() => this.handleHoverEnter()}
-                onMouseLeave={() => this.handleHoverLeave()}
-            >
-                <i className={iconNames.help} />
-            </div>
-            <div styleName="info">
-                <span className={iconNames.info} />
-                <p>{exportStrings.decoupledEntriesTitle2}</p>
-                <p>{exportStrings.decoupledEntriesTitle}</p>
-            </div>
-            {
-                this.state.isHovered &&
-                <div styleName="box">
-                    {exportStrings.decoupledEntriesTitle2}
-                    <br />
-                    <span>
-                        {exportStrings.decoupledEntriesTitle}
-                    </span>
-                </div>
-            }
-        </div>
-        */
     ])
+
+    renderOptions = (activeExportTypeKey) => {
+        switch (activeExportTypeKey) {
+            case 'word':
+            case 'pdf':
+                return this.renderWordPdfOptions();
+            case 'excel':
+                return this.renderExcelOptions();
+            default:
+                return (
+                    <p>
+                        { exportStrings.noOptionsAvailable }
+                    </p>
+                );
+        }
+    }
 
     render() {
         const { activeExportTypeKey } = this.props;
@@ -247,11 +217,7 @@ export default class ExportTypePane extends React.PureComponent {
                     />
                 </div>
                 <div styleName="export-type-options">
-                    {
-                        (activeExportTypeKey === 'word' || activeExportTypeKey === 'pdf')
-                            && this.renderReportOptions()
-                    }
-                    { activeExportTypeKey === 'excel' && this.renderExcelOptions() }
+                    { this.renderOptions(activeExportTypeKey) }
                 </div>
             </section>
         );

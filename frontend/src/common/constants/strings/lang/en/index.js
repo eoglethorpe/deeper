@@ -476,6 +476,7 @@ const strings = {
     637: 'Your export has been started.\nPlease go to view all exports page for further information on export.',
     638: 'You don\'t have any matrices in your analysis framework.',
     639: 'Report Structure',
+    640: 'No export options available',
 
     // Analysis Framework Strings
 

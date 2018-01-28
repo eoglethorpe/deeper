@@ -142,7 +142,6 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             .pollTime(2000)
             .shouldPoll(response => !response.extracted)
             .success((response) => {
-                console.warn('success');
                 // FIXME: write schema
                 this.previewId = response.id;
                 if (onLoad) {
@@ -171,6 +170,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             .url(urlForFileExtractionTrigger)
             .params(createParamsForFileExtractionTrigger(fileIds))
             .success((response) => {
+                // FIXME: write schema
                 console.warn(`Triggering file extraction for ${fileIds.join(', ')}`);
                 if (this.previewRequest) {
                     this.previewRequest.stop();

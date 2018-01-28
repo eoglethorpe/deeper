@@ -48,6 +48,7 @@ const exportStrings = {
 
     exportStartedNotifyMessage: string[637],
     noMatrixAfText: string[638],
+    noOptionsAvailable: string[640],
     reportStructureLabel: string[639],
 };
 
