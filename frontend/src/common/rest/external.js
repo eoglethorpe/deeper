@@ -64,6 +64,15 @@ export const createParamsForLeadTopicModeling = body => ({
     },
 });
 
+export const createParamsForLeadTopicCorrelation = body => ({
+    method: POST,
+    body: JSON.stringify(body),
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+
 export const createParamsForLeadNer = body => ({
     method: POST,
     body: JSON.stringify(body),

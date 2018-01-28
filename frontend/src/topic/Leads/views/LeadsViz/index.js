@@ -24,6 +24,7 @@ import {
     urlForLeadNerDocsId,
     createParamsForUser,
     createParamsForLeadTopicModeling,
+    createParamsForLeadTopicCorrelation,
     createUrlForLeadsOfProject,
     createParamsForLeadNer,
     transformResponseErrorToFormError,
@@ -383,18 +384,11 @@ export default class LeadsViz extends React.PureComponent {
     }
 
     createRequestForLeadTopicCorrelation = (docIds) => {
-        console.warn('TODO: use this docIds for correlation', docIds);
         const request = new FgRestBuilder()
             .url(urlForLeadTopicCorrelation)
-            .params(createParamsForUser())
-            /*
-            .params(createParamsForLeadTopicModeling({
+            .params(createParamsForLeadTopicCorrelation({
                 doc_ids: docIds,
-                number_of_topics: 5,
-                depth: 2,
-                keywords_per_topic: 3,
             }))
-            */
             .preLoad(() => {
                 this.setState({ correlationDataPending: true,
                     chordDataPending: true,
