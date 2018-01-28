@@ -69,15 +69,24 @@ export default class GeoJsonMap extends React.PureComponent {
             closeOnClick: false,
         });
 
+        map.on('zoom', (e) => {
+            if (e.originalEvent) {
+                popup.setLngLat(map.unproject([
+                    e.originalEvent.offsetX,
+                    e.originalEvent.offsetY - 8,
+                ]));
+            }
+        });
+
         map.on('mousemove', 'geojson', (e) => {
             const feature = e.features[0];
             map.setFilter('geojson-hover', ['==', 'pk', feature.properties.pk]);
             map.getCanvas().style.cursor = 'pointer';
 
-            popup.setLngLat([
-                e.lngLat.lng,
-                e.lngLat.lat + 0.1,
-            ]).setHTML(feature.properties.title);
+            popup.setLngLat(map.unproject([
+                e.point.x,
+                e.point.y - 8,
+            ])).setHTML(feature.properties.title);
         });
 
         map.on('mouseenter', 'geojson', (e) => {
