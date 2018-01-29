@@ -40,12 +40,12 @@ const strings = {
     36: 'Dropbox',
     37: 'Local Disk',
     38: 'Select One',
-    39: 'Nepal Monitoring',
-    40: 'Lead 12:21:00 PM',
-    41: 'https://deeper.togglecorp.com',
-    42: 'togglecorp.com',
-    43: 'Newspaper',
-    44: '12/12/2012',
+    39: 'eg: Nepal Monitoring',
+    40: 'eg: Lead 12:21:00 PM',
+    41: 'eg: https://deeper.togglecorp.com',
+    42: 'eg: togglecorp.com',
+    43: 'eg: Newspaper',
+    44: 'eg: 12/12/2012',
     45: 'Enter text description here',
     46: 'Attachment:',
     47: 'Clear Similar Filter',
@@ -154,11 +154,11 @@ const strings = {
     // User Profile and User Group
 
     150: 'First Name',
-    151: 'John',
+    151: 'eg: John',
     152: 'Last Name',
-    153: 'Doe',
+    153: 'eg: Doe',
     154: 'Organization',
-    155: 'ToggleCorp',
+    155: 'eg: ToggleCorp',
     156: 'Save',
     157: 'Cancel',
 
@@ -186,7 +186,7 @@ const strings = {
     176: 'Add User Group',
 
     177: 'Title',
-    178: 'ACAPS',
+    178: 'eg: ACAPS',
     179: 'Create',
 
     180: 'Project Title',
@@ -213,7 +213,7 @@ const strings = {
     196: 'Grant admin rights to',
     197: 'Are you sure you want to remove',
 
-    198: 'User Group Not Found....',
+    198: 'User Group Not Found',
     199: 'User Not Found',
     200: 'Description',
     201: 'User Group',
@@ -259,7 +259,7 @@ const strings = {
     327: 'Create',
 
     328: 'Name',
-    329: 'Nepal Monitoring',
+    329: 'eg: Nepal Monitoring',
     330: 'Description',
     331: 'Enter Project Description',
     332: 'Start Date',
@@ -280,9 +280,9 @@ const strings = {
     345: 'Use existing regions',
 
     346: 'Region Title',
-    347: 'Nepal',
+    347: 'eg: Nepal',
     348: 'Code',
-    349: 'NPL',
+    349: 'eg: NPL',
 
     350: 'ID',
 
@@ -300,7 +300,7 @@ const strings = {
     359: 'There are no analysis frameworks.',
 
     360: 'Title',
-    361: 'ACAPS framework',
+    361: 'eg: ACAPS framework',
 
     362: 'Use',
     363: 'Edit',
@@ -311,7 +311,7 @@ const strings = {
     367: 'Are you sure you want to clone',
     368: 'After cloning and editing this analysis framework,you will not recieve any updates made by owner.',
 
-    369: 'ACAPS Category Editor',
+    369: 'eg: ACAPS Category Editor',
     370: 'Search Category Editor',
     371: 'Add New Category Editor',
     372: 'There are no category editors.',
@@ -344,7 +344,7 @@ const strings = {
 
     411: 'eg: Wash',
     412: 'Description',
-    413: 'eg: Wash sector is for Water, Sanitation and Hygiene...',
+    413: 'eg: Wash stands for Water, Sanitation and Hygiene',
 
     414: 'Add new Sub-Category',
 
@@ -571,7 +571,7 @@ const strings = {
     765: 'Add Subdimension',
     766: 'Add Child',
     767: 'Remove Element',
-    768: '999 999',
+    768: 'eg: 999 999',
     769: 'Dimension',
     770: 'Remove Dimension-X',
     771: 'Remove Dimension-Y',
@@ -618,8 +618,6 @@ const strings = {
     812: 'Check your inbox:',
     813: 'john.doe@mail.com',
     814: 'Login',
-    815: 'Login*',
-    816: 'Register*',
 
     817: 'Go back to login',
 
@@ -633,7 +631,6 @@ const strings = {
     824: 'Password should be more than four characters long.',
     825: 'Already have an account?',
     826: 'Submit',
-    827: 'Submit*',
 
     // API docs
 
@@ -657,100 +654,100 @@ const strings = {
 
     900: 'User Profile Edit',
     901: 'User Edit Successful',
-    902: 'Error. User Edit Failure.',
-    903: 'Error. User Edit Failure. Please check your network connection and try again',
+    902: 'User Edit Failure.',
+    903: 'User Edit Failure. Please check your network connection and try again',
 
     904: 'User Group Delete',
     905: 'User Group Successfully Deleted',
-    906: 'Error. User Group Deletion Failure',
-    907: 'Error. User Group Deletion Failure. Please check your network connection and try again',
+    906: 'User Group Deletion Failure',
+    907: 'User Group Deletion Failure. Please check your network connection and try again',
 
     908: 'User Group Add',
     909: 'User Group Successfully Created',
-    910: 'Error. User Group Creation Failure',
-    911: 'Error. User Group Creation Failure. Please check your network connection and try again',
+    910: 'User Group Creation Failure',
+    911: 'User Group Creation Failure. Please check your network connection and try again',
 
     912: 'User Project Delete',
     913: 'Project Successfully Deleted',
-    914: 'Error. Project Deletion Failure',
-    915: 'Error. Project Deletion Failure. Please check your network connection and try again',
+    914: 'Project Deletion Failure',
+    915: 'Project Deletion Failure. Please check your network connection and try again',
 
     916: 'User Project Add',
     917: 'Project Successfully Created',
-    918: 'Error. Project Creation Failure',
-    919: 'Error. Project Creation Failure. Please check your network connection and try again',
+    918: 'Project Creation Failure',
+    919: 'Project Creation Failure. Please check your network connection and try again',
 
     920: 'Add User Membership ',
     921: 'User Added Successfully ',
-    922: 'Error. Cannot add user',
-    923: 'Error. Cannot add user. Please check your network connection and try again',
+    922: 'Cannot add user',
+    923: 'Cannot add user. Please check your network connection and try again',
 
     924: 'Remove User Membership',
     925: 'User Removed Successfully ',
-    926: 'Error. Cannot remove user',
-    927: 'Error. Cannot remove user. Please check your network connection and try again',
+    926: 'Cannot remove user',
+    927: 'Cannot remove user. Please check your network connection and try again',
 
     928: 'Membership Role',
     929: 'User role successfully updated',
-    930: 'Error. User role update failure.',
-    931: 'Error. Cannot update user role. Please check your network connection and try again',
+    930: 'User role update failure.',
+    931: 'Cannot update user role. Please check your network connection and try again',
 
     932: 'User Group Edit',
     933: 'Name Updated Successfully',
-    934: 'Error. Edit Failure.',
-    935: 'Error. Edit Failure. Please check your network connection and try again',
+    934: 'Edit Failure.',
+    935: 'Edit Failure. Please check your network connection and try again',
 
 
     // Country Panel
     936: 'Delete Country',
     937: 'Country Delete Successful',
-    938: 'Error. Cannot delete country.',
-    939: 'Error. Cannot delete country. Please check your network connection and try again',
+    938: 'Cannot delete country.',
+    939: 'Cannot delete country. Please check your network connection and try again',
 
     940: 'Add Country',
     941: 'Country Added Successfully',
-    942: 'Error. Cannot add country.',
-    943: 'Error. Cannot add country. Please check your network connection and try again',
+    942: 'Cannot add country.',
+    943: 'Cannot add country. Please check your network connection and try again',
 
     944: 'Region Detail',
     945: 'Region Detail Successfully Updated',
-    946: 'Error. Cannot update region detail.',
-    947: 'Error. Cannot update region detail. Please check your network connection and try again',
+    946: 'Cannot update region detail.',
+    947: 'Cannot update region detail. Please check your network connection and try again',
 
     948: 'Delete Admin Level',
     949: 'Admin Level Successfully Deleted',
-    950: 'Error. Cannot delete admin level.',
-    951: 'Error. Cannot delete admin level. Please check your network connection and try again',
+    950: 'Cannot delete admin level.',
+    951: 'Cannot delete admin level. Please check your network connection and try again',
 
     952: 'Add Admin Level',
     953: 'Admin Level Successfully Added',
-    954: 'Error. Cannot add admin level.',
-    955: 'Error. Cannot add admin level. Please check your network connection and try again',
+    954: 'Cannot add admin level.',
+    955: 'Cannot add admin level. Please check your network connection and try again',
 
     956: 'Edit Admin Level',
     957: 'Admin Level Successfully Updated',
-    958: 'Error. Cannot update admin level.',
-    959: 'Error. Cannot update admin level. Please check your network connection and try again',
+    958: 'Cannot update admin level.',
+    959: 'Cannot update admin level. Please check your network connection and try again',
 
     960: 'Project Details',
     961: 'Project Details Successfully Updated',
-    962: 'Error. Cannot update project details.',
-    963: 'Error. Cannot update project details. Please check your network connection and try again',
+    962: 'Cannot update project details.',
+    963: 'Cannot update project details. Please check your network connection and try again',
 
     964: 'Analysis Framework',
     965: 'Analysis Framework Successfully Added ',
-    966: 'Error. Cannot add Analysis Framework.',
-    967: 'Error. Cannot add Analysis Framework. Please check your network connection and try again',
+    966: 'Cannot add Analysis Framework.',
+    967: 'Cannot add Analysis Framework. Please check your network connection and try again',
 
     968: 'Analysis Framework Form',
     969: 'Analysis Framework Form Updated',
-    970: 'Error. Cannot update Analysis Framework Form.',
-    971: 'Error. Cannot update Analysis Framework Form. Please check your network connection and try again',
+    970: 'Cannot update Analysis Framework Form.',
+    971: 'Cannot update Analysis Framework Form. Please check your network connection and try again',
 
     972: 'Save Lead',
     973: 'Lead Save Successful',
-    974: 'Error. Lead Save Failed.',
-    975: 'Error. Lead Save Failed. Please check your network connection and try again',
+    974: 'Lead Save Failed.',
+    975: 'Lead Save Failed. Please check your network connection and try again',
 
     976: 'Delete Lead',
     977: 'Lead Successfully Deleted',
@@ -766,13 +763,13 @@ const strings = {
 
     984: 'Category editor was updated in server.',
     985: 'Invalid drop source',
-    986: 'Only drop from Extracted Words are valid.',
+    986: 'Drag and Drop are only valid from Extracted Words.',
 
     987: 'Some entries were updated in server.',
     988: 'Save Entry',
     989: 'Entries Successfully Saved',
-    990: 'Error. Entry Save Failed.',
-    991: 'Error. Lead Save Failed. Please check your network connection and try again',
+    990: 'Entry Save Failed.',
+    991: 'Lead Save Failed. Please check your network connection and try again',
 
     992: 'Discard Lead',
     993: 'Lead Successfully Discarded',
@@ -832,7 +829,7 @@ const strings = {
 
     2000: 'Browser Extension',
     2001: 'Your extension has been successfully set up.',
-    2002: 'An error occured while setting up the extension, please make sure you have installed and enabled the extension.',
+    2002: 'An error occured while setting up the extension. Please make sure you have installed and enabled the extension.',
 
     2003: 'Do you want to apply this value to all leads?',
     2004: 'Do you want to apply this value to all leads below?',

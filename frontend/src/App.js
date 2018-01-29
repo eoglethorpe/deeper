@@ -12,6 +12,7 @@ import { initializeGa } from './common/config/google-analytics';
 
 import schema from './common/schema';
 
+import en from './common/constants/strings/lang/en';
 import { commonStrings } from './common/constants';
 import {
     createParamsForTokenRefresh,
@@ -37,8 +38,31 @@ import {
 
 import getUserConfirmation from './common/utils/getUserConfirmation';
 
-
 import Multiplexer from './Multiplexer';
+
+// Get array of strings
+const array = [];
+Object.keys(en).forEach((key) => {
+    array.push({ key, value: en[key] });
+});
+array.sort((a, b) => (
+    a.value.split(' ').length - b.value.split(' ').length) ||
+    a.value.localeCompare(b.value),
+);
+
+// Get array of unique strings
+const uniqueArray = [];
+array.forEach((a) => {
+    if (uniqueArray.length <= 0) {
+        uniqueArray.push(a);
+        return;
+    }
+    const memory = uniqueArray[uniqueArray.length - 1];
+    if (a.value.toLowerCase() !== memory.value.toLowerCase()) {
+        uniqueArray.push(a);
+    }
+});
+console.warn(array.length - uniqueArray.length);
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
