@@ -58,7 +58,8 @@ const mapStateToProps = (state, props) => ({
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GeoSelection extends React.PureComponent {
-    static valueKeyExtractor = d => d;
+    static valueKeyExtractor = d => d.key;
+    static adminLevelKeySelector = d => d.title;
     static shortLabelSelector = d => d.shortLabel;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -248,26 +249,38 @@ export default class GeoSelection extends React.PureComponent {
 
     regionLabelSelector = d => d.title;
 
-    renderSelectedList = (key, data) => {
-        const { locations, selectedRegion } = this.state;
-        const regionData = (locations[selectedRegion] || emptyList)
-            .find(d => d.key === data) || emptyObject;
-
-        return (
-            <div
-                className={styles['region-item']}
-                key={key}
+    renderSelectedList = (key, data) => (
+        <div
+            className={styles['region-item']}
+            key={key}
+        >
+            {data.shortLabel}
+            <DangerButton
+                onClick={() => this.handleRegionRemove(key)}
+                transparent
             >
-                {regionData.shortLabel}
-                <DangerButton
-                    onClick={() => this.handleRegionRemove(key)}
-                    transparent
-                >
-                    <span className={iconNames.delete} />
-                </DangerButton>
-            </div>
-        );
-    }
+                <span className={iconNames.delete} />
+            </DangerButton>
+        </div>
+    )
+
+    renderAdminLevelList = (key, data) => (
+        <div
+            className={styles['admin-level-section']}
+            key={key}
+        >
+            <span
+                className={styles.title}
+            >
+                {data.title}
+            </span>
+            <ListView
+                data={data.values}
+                keyExtractor={GeoSelection.valueKeyExtractor}
+                modifier={this.renderSelectedList}
+            />
+        </div>
+    )
 
     render() {
         const {
@@ -285,6 +298,21 @@ export default class GeoSelection extends React.PureComponent {
             locations,
             flatLocations,
         } = this.state;
+
+        const selectedRegionSelections = {};
+        (values[selectedRegion] || emptyList).forEach((key) => {
+            const regionData = flatLocations.find(l => l.key === key);
+
+            if (!selectedRegionSelections[regionData.adminLevelTitle]) {
+                selectedRegionSelections[regionData.adminLevelTitle] = {
+                    title: regionData.adminLevelTitle,
+                    values: [regionData],
+                };
+            } else {
+                selectedRegionSelections[regionData.adminLevelTitle].values.push(regionData);
+            }
+        });
+        const selectedRegionSelectionsList = Object.values(selectedRegionSelections);
 
         return (
             <div
@@ -356,9 +384,9 @@ export default class GeoSelection extends React.PureComponent {
                             <div styleName="map-selections">
                                 <ListView
                                     styleName="map-selections-list"
-                                    data={values[selectedRegion]}
-                                    keyExtractor={GeoSelection.valueKeyExtractor}
-                                    modifier={this.renderSelectedList}
+                                    data={selectedRegionSelectionsList}
+                                    keyExtractor={GeoSelection.adminLevelKeySelector}
+                                    modifier={this.renderAdminLevelList}
                                 />
                             </div>
                         </ModalBody>

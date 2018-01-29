@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import ImagesSlider from '../../../../common/components/ImagesSlider';
 
 import {
     PrimaryButton,
@@ -367,10 +366,6 @@ export default class ProjectAfDetail extends React.PureComponent {
                         pristine={pristine}
                         pending={pending}
                         readOnly={!afDetails.isAdmin}
-                    />
-                    <ImagesSlider
-                        styleName="images-container"
-                        galleryIds={snapshots}
                     />
                 </div>
             </div>
