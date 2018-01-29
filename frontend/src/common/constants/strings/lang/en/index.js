@@ -478,6 +478,18 @@ const strings = {
     639: 'Report Structure',
     640: 'No export options available',
 
+    641: 'Leads',
+    642: 'Couldn\'t load leads',
+
+    643: 'Select',
+    644: 'Title',
+
+    645: 'Project',
+    646: 'Couldn\'t load project',
+    647: 'Analysis Framework',
+    648: 'Couldn\'t load analysis framework',
+
+
     // Analysis Framework Strings
 
     700: 'Widgets',

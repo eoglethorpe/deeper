@@ -15,6 +15,7 @@ import {
 import { TextInput } from '../../../public/components/Input';
 import {
     PrimaryButton,
+    AccentButton,
     Button,
 } from '../../../public/components/Action';
 
@@ -246,17 +247,14 @@ export default class DgSelect extends React.PureComponent {
     }
 
     renderCheckbox = row => (
-        <PrimaryButton
+        <AccentButton
+            // FIXME: use strings
             title={row.selected ? 'Unselect' : 'Select'}
             onClick={() => this.handleFileSelection(row)}
             smallVerticalPadding
             transparent
-        >
-            {
-                row.selected ? <i className={iconNames.checkbox} />
-                    : <i className={iconNames.checkboxOutlineBlank} />
-            }
-        </PrimaryButton>
+            iconName={row.selected ? iconNames.checkbox : iconNames.checkboxOutlineBlank}
+        />
     )
 
     render() {

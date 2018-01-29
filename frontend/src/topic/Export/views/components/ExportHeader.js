@@ -119,7 +119,7 @@ export default class ExportHeader extends React.PureComponent {
                 title: exportStrings.headerExport,
                 type: notify.type.SUCCESS,
                 message: exportStrings.exportStartedNotifyMessage,
-                duration: notify.duration.MEDIUM,
+                duration: 15000,
             });
         };
         this.export(exportFn, false, this.props.activeExportTypeKey === 'pdf');
