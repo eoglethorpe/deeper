@@ -50,6 +50,19 @@ const exportStrings = {
     noMatrixAfText: string[638],
     noOptionsAvailable: string[640],
     reportStructureLabel: string[639],
+
+    leadsLabel: string[641],
+    cantLoadLeads: string[642],
+
+    selectLabel: string[643],
+    titleLabel: string[644],
+
+    projectLabel: string[645],
+    cantLoadProject: string[646],
+
+    afLabel: string[647],
+    cantLoadAf: string[648],
+
 };
 
 export default exportStrings;

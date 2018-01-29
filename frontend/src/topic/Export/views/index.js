@@ -121,8 +121,7 @@ export default class Export extends React.PureComponent {
         this.headers = [
             {
                 key: 'select',
-                // FIXME: use strings
-                label: 'Select',
+                label: exportStrings.selectLabel,
                 order: 1,
                 sortable: false,
                 modifier: (d) => {
@@ -142,14 +141,14 @@ export default class Export extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: 'Title',
+                label: exportStrings.titleLabel,
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: 'Created', // FIXME: use strings
+                label: exportStrings.createdAtLabel,
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
@@ -268,7 +267,7 @@ export default class Export extends React.PureComponent {
                 this.setState({ pendingAf: false });
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: 'Project', // FIXME: strings
+                    title: exportStrings.projectLabel,
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -277,9 +276,9 @@ export default class Export extends React.PureComponent {
             .fatal(() => {
                 this.setState({ pendingAf: false });
                 notify.send({
-                    title: 'Project', // FIXME: strings
+                    title: exportStrings.projectLabel,
                     type: notify.type.ERROR,
-                    message: 'Couldn\'t load project', // FIXME: strings
+                    message: exportStrings.cantLoadProject,
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -314,7 +313,7 @@ export default class Export extends React.PureComponent {
                 console.warn(response);
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: 'Analysis Framework', // FIXME: strings
+                    title: exportStrings.afLabel,
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -322,9 +321,9 @@ export default class Export extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Analysis Framework', // FIXME: strings
+                    title: exportStrings.afLabel,
                     type: notify.type.ERROR,
-                    message: 'Couldn\'t load analysis framework', // FIXME: strings
+                    message: exportStrings.cantLoadAf,
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -360,7 +359,7 @@ export default class Export extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: exportStrings.leadsLabel,
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -368,9 +367,9 @@ export default class Export extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: exportStrings.leadsLabel,
                     type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
+                    message: exportStrings.cantLoadLeads,
                     duration: notify.duration.MEDIUM,
                 });
             })
