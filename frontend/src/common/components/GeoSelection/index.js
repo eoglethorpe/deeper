@@ -304,6 +304,8 @@ export default class GeoSelection extends React.PureComponent {
                 <AccentButton
                     styleName="map-modal-button"
                     onClick={this.handleGeoSelectButtonClick}
+                    smallVerticalPadding
+                    smallHorizontalPadding
                     transparent
                 >
                     <span className={iconNames.globe} />
