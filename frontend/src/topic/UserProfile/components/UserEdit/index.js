@@ -27,7 +27,7 @@ import {
 } from '../../../../public/components/View';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import { Uploader } from '../../../../public/utils/upload';
+import { UploadBuilder } from '../../../../public/utils/upload';
 
 import schema from '../../../../common/schema';
 import {
@@ -103,7 +103,7 @@ export default class UserEdit extends React.PureComponent {
             this.userPatchRequest.stop();
         }
         if (this.uploader) {
-            this.uploader.abort();
+            this.uploader.stop();
         }
     }
 
@@ -208,37 +208,37 @@ export default class UserEdit extends React.PureComponent {
 
     // Image Input Change
     handleImageInputChange = (files) => {
-        this.setState({
-            pending: true,
-        });
+        if (files.length <= 0) {
+            console.warn('No files selected');
+            return;
+        }
 
-        const uploader = new Uploader(
-            files[0],
-            urlForUpload,
-            () => createParamsForFileUpload({ is_public: true }),
-        );
+        if (this.uploader) {
+            this.uploader.stop();
+        }
 
-        uploader.success = (response) => {
-            this.setState({
-                formValues: { ...this.state.formValues, displayPicture: response.id },
-                pristine: true,
-                pending: false,
-            });
-        };
-
-        uploader.failure = () => {
-            this.setState({
-                pending: false,
-            });
-        };
-
-        uploader.onProgress = (progress) => {
-            console.log(progress);
-            // TODO: Add progress component
-            // console.warn(`Upload Progress: ${progress}`);
-        };
-        this.uploader = uploader;
-
+        this.uploader = new UploadBuilder()
+            .file(files[0])
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload({ is_public: true }))
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
+            .success((response) => {
+                this.setState({
+                    formValues: { ...this.state.formValues, displayPicture: response.id },
+                    pristine: true,
+                    pending: false,
+                });
+            })
+            .progress((progress) => {
+                console.warn(progress);
+            })
+            .build();
+        // TODO: notify on fatal and failure
         this.uploader.start();
     }
 
