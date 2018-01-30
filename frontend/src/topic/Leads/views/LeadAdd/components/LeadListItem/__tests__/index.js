@@ -18,12 +18,12 @@ describe('<AddLeadListItem />', () => {
         >
             <AddLeadListItem
                 active={false}
-                onClick={() => {}}
-                lead={{ data: { type: 'dropbox' }, form: { values: {} } }}
-                leadState="pending"
                 choice="error"
                 leadKey="key"
-                upload={{ progress: 1 }}
+                lead={{ data: { type: 'dropbox' }, form: { values: {} } }}
+                leadState="uploading"
+                upload={{ progress: 10 }}
+                onClick={() => console.warn('lead list is clicked')}
                 onRemove={() => console.warn('lead list is removed')}
             />
         </Provider>,

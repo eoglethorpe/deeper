@@ -21,7 +21,11 @@ describe('<AddLeadForm />', () => {
                 onSuccess={() => {}}
                 onChange={() => {}}
                 onFailure={() => {}}
+                onExtractClick={() => {}}
+                isSaveDisabled
+                isExtractionDisabled
                 isFormDisabled
+                isExtractionLoading={false}
                 isFormLoading={false}
                 isBulkActionDisabled
                 onApplyAllClick={() => {}}
