@@ -30,12 +30,14 @@ const propTypes = {
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
+    readOnly: PropTypes.bool,
 };
 
 const defaultProps = {
     pending: false,
     pristine: false,
     className: '',
+    readOnly: false,
 };
 
 @CSSModules(styles, { allowMultiple: true })
@@ -67,6 +69,7 @@ export default class ProjectAfForm extends React.PureComponent {
             pending,
             pristine,
             successCallback,
+            readOnly,
         } = this.props;
 
         return (
@@ -79,20 +82,22 @@ export default class ProjectAfForm extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
             >
-                <div styleName="action-buttons">
-                    <DangerButton
-                        onClick={handleFormCancel}
-                        type="button"
-                        disabled={pending || !pristine}
-                    >
-                        {projectStrings.modalRevert}
-                    </DangerButton>
-                    <SuccessButton
-                        disabled={pending || !pristine}
-                    >
-                        {projectStrings.modalSave}
-                    </SuccessButton>
-                </div>
+                { !readOnly &&
+                    <div styleName="action-buttons">
+                        <DangerButton
+                            onClick={handleFormCancel}
+                            type="button"
+                            disabled={pending || !pristine}
+                        >
+                            {projectStrings.modalRevert}
+                        </DangerButton>
+                        <SuccessButton
+                            disabled={pending || !pristine}
+                        >
+                            {projectStrings.modalSave}
+                        </SuccessButton>
+                    </div>
+                }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label={projectStrings.addAfTitleLabel}
@@ -102,6 +107,7 @@ export default class ProjectAfForm extends React.PureComponent {
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
+                    readOnly={readOnly}
                 />
                 <TextArea
                     label={projectStrings.projectDescriptionLabel}
@@ -112,6 +118,7 @@ export default class ProjectAfForm extends React.PureComponent {
                     value={formValues.description}
                     error={formFieldErrors.description}
                     disabled={pending}
+                    readOnly={readOnly}
                 />
             </Form>
         );

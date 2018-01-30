@@ -293,6 +293,7 @@ export default class LeadButtons extends React.PureComponent {
                     onChange={this.handleLeadAddFromDisk}
                     showStatus={false}
                     multiple
+                    accept=".pdf, .ppt, .pptx, .csv, .xls, .xlsx, .doc, .docx, .odt, .rtf, image/*"
                 >
                     <span className={iconNames.upload} />
                     <p>

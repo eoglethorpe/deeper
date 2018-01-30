@@ -336,6 +336,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                         styleName="project-ce-form"
                         pristine={pristine}
                         pending={pending}
+                        readOnly={!ceDetails.isAdmin}
                     />
                 </div>
             </div>
