@@ -62,7 +62,7 @@ const propTypes = {
     userGroups: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     unSetUserGroup: PropTypes.func.isRequired,
-    userId: PropTypes.string.isRequired,
+    userId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {

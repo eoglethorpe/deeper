@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import schema from '../../../common/schema';
 import { BgRestBuilder } from '../../../public/utils/rest';
-import { Uploader } from '../../../public/utils/upload';
+import { UploadBuilder } from '../../../public/utils/upload';
 
 import {
     DangerButton,
@@ -92,7 +92,7 @@ export default class EditAdminLevel extends React.PureComponent {
             formValues: this.props.adminLevelDetail,
             pending: false,
             pristine: false,
-            adminLevelsOfRegion: this.otherAdminLevels(props.adminLevelsOfRegion),
+            adminLevelsOfRegion: this.calculateOtherAdminLevels(props.adminLevelsOfRegion),
         };
 
         this.elements = [
@@ -121,12 +121,24 @@ export default class EditAdminLevel extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         if (this.props !== nextProps) {
             this.setState({
-                adminLevelsOfRegion: this.otherAdminLevels(nextProps.adminLevelsOfRegion),
+                adminLevelsOfRegion: this.calculateOtherAdminLevels(nextProps.adminLevelsOfRegion),
             });
         }
     }
 
-    otherAdminLevels = adminLevels => adminLevels.filter(adminLevel => (
+    componentWillUnmount() {
+        if (this.requestForAlForRegion) {
+            this.requestForAlForRegion.stop();
+        }
+        if (this.uploader) {
+            this.uploader.stop();
+        }
+    }
+
+    keySelector = row => row.id
+    labelSelector = row => row.title
+
+    calculateOtherAdminLevels = adminLevels => adminLevels.filter(adminLevel => (
         adminLevel.id !== this.props.adminLevelDetail.id &&
         adminLevel.parent !== this.props.adminLevelDetail.id
     ))
@@ -250,7 +262,6 @@ export default class EditAdminLevel extends React.PureComponent {
         return requestForAdminLevelsCreateForRegion;
     }
 
-
     // FORM RELATED
     changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
@@ -289,42 +300,38 @@ export default class EditAdminLevel extends React.PureComponent {
     };
 
     handleGeoFileInputChange = (files) => {
-        this.setState({
-            pending: true,
-        });
+        if (files.length <= 0) {
+            console.warn('No files selected');
+            return;
+        }
 
-        const uploader = new Uploader(
-            files[0],
-            urlForUpload,
-            () => createParamsForFileUpload(),
-        );
+        if (this.uploader) {
+            this.uploader.stop();
+        }
 
-        uploader.success = (response) => {
-            this.setState({
-                formValues: { ...this.state.formValues, geoShapeFile: response.id },
-                pristine: true,
-                pending: false,
-            });
-        };
-
-        uploader.failure = () => {
-            this.setState({
-                pending: false,
-            });
-        };
-
-        uploader.onProgress = (progress) => {
-            console.log(progress);
-            // TODO: Add progress component
-            // console.warn(`Upload Progress: ${progress}`);
-        };
-        this.uploader = uploader;
-
+        this.uploader = new UploadBuilder()
+            .file(files[0])
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload())
+            .preLoad(() => {
+                this.setState({ pending: true });
+            })
+            .postLoad(() => {
+                this.setState({ pending: false });
+            })
+            .success((response) => {
+                this.setState({
+                    formValues: { ...this.state.formValues, geoShapeFile: response.id },
+                    pristine: true,
+                });
+            })
+            .progress((progress) => {
+                console.warn(progress);
+            })
+            .build();
+        // TODO: notify on fatal and failure
         this.uploader.start();
     }
-
-    keySelector = row => row.id
-    labelSelector = row => row.title
 
     render() {
         const { onClose } = this.props;
@@ -445,7 +452,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
                         </FileInput>
                         <HiddenInput
-                            value={formValues.geoShapeFile || undefined}
+                            value={formValues.geoShapeFile}
                             formname="geoShapeFile"
                         />
                     </div>
