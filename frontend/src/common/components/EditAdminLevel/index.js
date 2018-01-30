@@ -431,11 +431,11 @@ export default class EditAdminLevel extends React.PureComponent {
                             disabled={pending}
                         />
                         <FileInput
-                            // TODO: only shape files
                             styleName="geo-file"
                             onChange={this.handleGeoFileInputChange}
                             error={formFieldErrors.geoShapeFile}
                             disabled={pending}
+                            accept=".zip, .json, .geojson"
                         >
                             {
                                 formValues.geoShapeFile ?
