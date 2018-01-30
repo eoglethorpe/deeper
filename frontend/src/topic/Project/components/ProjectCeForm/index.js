@@ -80,20 +80,22 @@ export default class ProjectCeForm extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
             >
-                <div styleName="action-buttons">
-                    <DangerButton
-                        onClick={handleFormCancel}
-                        type="button"
-                        disabled={pending || !pristine}
-                    >
-                        {projectStrings.modalRevert}
-                    </DangerButton>
-                    <SuccessButton
-                        disabled={pending || !pristine}
-                    >
-                        {projectStrings.modalSave}
-                    </SuccessButton>
-                </div>
+                { !readOnly &&
+                    <div styleName="action-buttons">
+                        <DangerButton
+                            onClick={handleFormCancel}
+                            type="button"
+                            disabled={pending || !pristine}
+                        >
+                            {projectStrings.modalRevert}
+                        </DangerButton>
+                        <SuccessButton
+                            disabled={pending || !pristine}
+                        >
+                            {projectStrings.modalSave}
+                        </SuccessButton>
+                    </div>
+                }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
                     label={projectStrings.addCeTitleLabel}
