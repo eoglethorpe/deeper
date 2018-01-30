@@ -54,6 +54,9 @@ export const unSetProjectAction = ({ userId, projectId }) => ({
     projectId,
 });
 
+const emptyList = [];
+const emptyObject = {};
+
 // REDUCER
 
 const setUserProject = (state, action) => {
@@ -67,8 +70,8 @@ const setUserProject = (state, action) => {
     };
 
     if (userId) {
-        const userProjectArrayIndex = ((state.users[userId] || {}).projects
-            || []).indexOf(project.id);
+        const userProjectArrayIndex = ((state.users[userId] || emptyObject).projects
+            || emptyList).indexOf(project.id);
 
         if (userProjectArrayIndex === -1) {
             settings.users = {
@@ -85,10 +88,22 @@ const setUserProject = (state, action) => {
 
 const setUserProjectOptions = (state, action) => {
     const { projectId, options } = action;
+
+    const regions = [...options.regions || emptyList];
+    const userGroups = [...options.userGroups || emptyList];
+
+    regions.sort((a, b) => a.value.localeCompare(b.value));
+    userGroups.sort((a, b) => a.value.localeCompare(b.value));
+
+    const newOptions = {
+        userGroups,
+        regions,
+    };
+
     const settings = {
         projectsOptions: {
             [projectId]: { $auto: {
-                $set: options,
+                $set: newOptions,
             } },
         },
     };
@@ -98,7 +113,7 @@ const setUserProjectOptions = (state, action) => {
 const setUsersProjectMembership = (state, action) => {
     const { projectId, projectMembership } = action;
 
-    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const memberships = ((state.projects[projectId] || emptyObject).memberships || emptyList);
     const newMembers = projectMembership.filter(
         projectMember => (
             memberships.findIndex(member => (member.id === projectMember.id)) === -1
@@ -120,7 +135,7 @@ const setUsersProjectMembership = (state, action) => {
 const setUserProjectMembership = (state, action) => {
     const { projectId, memberDetails } = action;
 
-    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const memberships = ((state.projects[projectId] || emptyObject).memberships || emptyList);
     const updatedMemberShipIndex = memberships.findIndex(
         membership => (memberDetails.id === membership.id),
     );
@@ -142,7 +157,7 @@ const setUserProjectMembership = (state, action) => {
 const unsetUserProjectMembership = (state, action) => {
     const { memberId, projectId } = action;
 
-    const memberships = ((state.projects[projectId] || {}).memberships || []);
+    const memberships = ((state.projects[projectId] || emptyObject).memberships || emptyList);
     const membershipArrayIndex = memberships.findIndex(
         membership => (membership.id === memberId));
 
@@ -172,8 +187,8 @@ const unsetUserProject = (state, action) => {
     };
 
     if (userId) {
-        const userProjectArrayIndex = ((state.users[userId] || {}).projects
-            || []).indexOf(projectId);
+        const userProjectArrayIndex = ((state.users[userId] || emptyObject).projects
+            || emptyList).indexOf(projectId);
 
         if (userProjectArrayIndex !== -1) {
             settings.users = {

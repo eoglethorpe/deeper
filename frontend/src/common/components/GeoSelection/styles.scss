@@ -43,22 +43,36 @@
             padding: 0;
 
             .map-selections-list {
-                display: flex;
-                flex-direction: column;
                 flex-shrink: 0;
                 height: 100%;
                 overflow-y: auto;
 
-                .region-item {
+                .admin-level-section {
                     display: flex;
-                    flex-shrink: 0;
-                    align-items: center;
-                    justify-content: space-between;
-                    background-color: $color-background-row;
-                    padding: $spacing-small $spacing-medium;
+                    flex-direction: column;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
 
-                    &:nth-child(even) {
-                        background-color: $color-background-row-alt;
+                    .title {
+                        display: block;
+                        flex-shrink: 0;
+                        padding: $spacing-medium $spacing-small;
+                        width: 100%;
+                        text-transform: uppercase;
+                        color: $color-accent;
+                        font-size: $font-size-extra-small;
+                    }
+
+                    .region-item {
+                        display: flex;
+                        flex-shrink: 0;
+                        align-items: center;
+                        justify-content: space-between;
+                        background-color: $color-background-row;
+                        padding: $spacing-extra-small $spacing-medium;
+
+                        &:nth-child(even) {
+                            background-color: $color-background-row-alt;
+                        }
                     }
                 }
             }

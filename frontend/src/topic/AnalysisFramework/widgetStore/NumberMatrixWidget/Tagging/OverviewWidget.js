@@ -62,20 +62,32 @@ export default class NumberMatrixOverview extends React.PureComponent {
             .apply();
     }
 
-    renderRow = (key, rowData) => {
+    getSimilarityIndicatorStyle = (key) => {
         const { data, attribute } = this.props;
-        const values = Object.values(attribute[key] || emptyObject)
-            .filter(v => v);
-        const isSame = values.length === 0 || (new Set(values).size === 1);
+        const indicatorStyle = [styles['table-header-row']];
 
+        const values = Object.values(attribute[key] || emptyObject).filter(v => v);
+
+        const isSame = new Set(values).size === 1;
+        const colHeaderLength = (data.columnHeaders || emptyList).length;
+
+        if (values.length === 0 || (isSame && values.length === colHeaderLength)) {
+            indicatorStyle.push(styles.similar);
+        } else if (!isSame) {
+            indicatorStyle.push(styles['not-similar']);
+        } else {
+            indicatorStyle.push(styles['partial-similar']);
+        }
+
+        return indicatorStyle.join(' ');
+    }
+
+    renderRow = (key, rowData) => {
+        const { data } = this.props;
         return (
             <tr key={key} >
                 <th
-                    className={isSame ? (
-                        styles['table-header-row']
-                    ) : (
-                        `${styles['table-header-row']} ${styles['not-similar']}`
-                    )}
+                    className={this.getSimilarityIndicatorStyle(key)}
                     scope="row"
                     title={rowData.tooltip}
                 >

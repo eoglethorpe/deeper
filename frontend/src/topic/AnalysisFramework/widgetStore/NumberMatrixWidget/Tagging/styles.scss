@@ -9,12 +9,19 @@
     }
 
     .table-header-row {
-        background-color: $color-success;
         padding: $spacing-small $spacing-medium;
         color: $color-text-on-primary;
 
         &.not-similar {
             background-color: $color-danger;
+        }
+
+        &.similar {
+            background-color: $color-success;
+        }
+
+        &.partial-similar {
+            background-color: $color-label;
         }
     }
 
