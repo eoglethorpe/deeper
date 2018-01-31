@@ -162,6 +162,7 @@ export default class App extends React.PureComponent {
                         startRefresh(() => {
                             this.setState({ pending: false });
                         });
+                        // TODO: handle failure of startRefresh
                     } else {
                         // set pending to false irrespective of api call
                         startRefresh();
