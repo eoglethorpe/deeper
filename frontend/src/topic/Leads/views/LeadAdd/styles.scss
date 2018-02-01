@@ -159,8 +159,63 @@
             background-color: $color-background-alt;
             overflow-y: auto;
 
-            .add-lead-form {
-                flex-shrink: 0;
+            .top {
+                min-height: 100px;
+                overflow-y: auto;
+
+                .add-lead-form {
+                    flex-shrink: 0;
+                }
+            }
+
+            .bottom {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+                min-height: 100px;
+
+                .lead-preview {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    border-top: $width-separator-thin solid $color-separator;
+                    overflow-y: auto;
+
+                    .gallery-file {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+
+                        :global {
+                            .doc-container {
+                                display: flex;
+                                flex-direction: column;
+                                flex-grow: 1;
+
+                                >div {
+                                    display: flex;
+                                    flex-direction: column;
+                                    flex-grow: 1;
+                                }
+                            }
+
+                            iframe {
+                                flex-grow: 1;
+                                border: 0;
+                            }
+                        }
+                    }
+
+                    .preview-text {
+                        display: flex;
+                        margin: auto;
+
+                        h1 {
+                            color: $color-text-disabled;
+                            font-weight: $font-weight-medium;
+                        }
+                    }
+                }
             }
 
             .empty-form {
@@ -169,49 +224,6 @@
                 flex-shrink: 0;
                 align-items: center;
                 justify-content: center;
-            }
-
-            .lead-preview {
-                display: flex;
-                flex-direction: column;
-                flex-grow: 1;
-                border-top: $width-separator-thin solid $color-separator;
-                overflow-y: auto;
-
-                .gallery-file {
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
-
-                    :global {
-                        .doc-container {
-                            display: flex;
-                            flex-direction: column;
-                            flex-grow: 1;
-
-                            >div {
-                                display: flex;
-                                flex-direction: column;
-                                flex-grow: 1;
-                            }
-                        }
-
-                        iframe {
-                            flex-grow: 1;
-                            border: 0;
-                        }
-                    }
-                }
-
-                .preview-text {
-                    display: flex;
-                    margin: auto;
-
-                    h1 {
-                        color: $color-text-disabled;
-                        font-weight: $font-weight-medium;
-                    }
-                }
             }
 
             &.hidden {

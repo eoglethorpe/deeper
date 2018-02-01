@@ -208,9 +208,6 @@ export default class Login extends React.PureComponent {
             .preLoad(() => {
                 this.setState({ pending: true, pristine: false });
             })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenGetResponse');
@@ -223,10 +220,12 @@ export default class Login extends React.PureComponent {
                         // if there is no projects, block and get from api
                         this.props.startRefresh(() => {
                             this.props.authenticate();
+                            this.setState({ pending: false });
                         });
                     } else {
                         this.props.startRefresh();
                         this.props.authenticate();
+                        this.setState({ pending: false });
                     }
                     // Start the locked silo tasks
                     this.props.startSiloTasks(() => {
@@ -245,12 +244,14 @@ export default class Login extends React.PureComponent {
                 this.setState({
                     formFieldErrors,
                     formErrors,
+                    pending: false,
                 });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
                     formErrors: ['Error while trying to log in.'],
+                    pending: false,
                 });
             })
             .build();

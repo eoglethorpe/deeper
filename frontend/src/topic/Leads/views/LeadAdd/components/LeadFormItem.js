@@ -13,6 +13,7 @@ import {
 } from '../../../../../public/components/Input';
 import {
     Confirm,
+    ResizableV,
 } from '../../../../../public/components/View';
 
 import { FgRestBuilder } from '../../../../../public/utils/rest';
@@ -333,38 +334,47 @@ export default class LeadFormItem extends React.PureComponent {
         const LeadPreview = this.renderLeadPreview;
 
         return (
-            <div className={`${styles.right} ${!active ? styles.hidden : ''}`}>
-                <LeadForm
-                    ref={(ref) => { this.containerRef = ref; }}
-                    className={styles['add-lead-form']}
-                    lead={lead}
-                    onChange={this.handleFormChange}
-                    onFailure={this.handleFormFailure}
-                    onSuccess={this.handleFormSuccess}
-                    onApplyAllClick={this.handleApplyAllClick}
-                    onApplyAllBelowClick={this.handleApplyAllBelowClick}
-                    isExtractionLoading={this.state.pendingExtraction}
-                    isExtractionDisabled={!this.state.isUrlValid}
-                    onExtractClick={this.handleExtractClick}
-                    {...otherProps}
-                />
-                { active && <LeadPreview lead={lead} /> }
-                <Confirm
-                    show={showApplyModal}
-                    closeOnEscape
-                    onClose={this.handleApplyModal}
-                >
-                    <p>
-                        {
-                            applyMode === APPLY_MODE.all ? (
-                                leadsString.applyToAll
-                            ) : (
-                                leadsString.applyToAllBelow
-                            )
-                        }
-                    </p>
-                </Confirm>
-            </div>
+            <ResizableV
+                className={`${styles.right} ${!active ? styles.hidden : ''}`}
+                topContainerClassName={styles.top}
+                bottomContainerClassName={styles.bottom}
+                topChild={[
+                    <LeadForm
+                        key="form"
+                        ref={(ref) => { this.containerRef = ref; }}
+                        className={styles['add-lead-form']}
+                        lead={lead}
+                        onChange={this.handleFormChange}
+                        onFailure={this.handleFormFailure}
+                        onSuccess={this.handleFormSuccess}
+                        onApplyAllClick={this.handleApplyAllClick}
+                        onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                        isExtractionLoading={this.state.pendingExtraction}
+                        isExtractionDisabled={!this.state.isUrlValid}
+                        onExtractClick={this.handleExtractClick}
+                        {...otherProps}
+                    />,
+                    <Confirm
+                        key="confirm"
+                        show={showApplyModal}
+                        closeOnEscape
+                        onClose={this.handleApplyModal}
+                    >
+                        <p>
+                            {
+                                applyMode === APPLY_MODE.all ? (
+                                    leadsString.applyToAll
+                                ) : (
+                                    leadsString.applyToAllBelow
+                                )
+                            }
+                        </p>
+                    </Confirm>,
+                ]}
+                bottomChild={
+                    active ? <LeadPreview lead={lead} /> : <div />
+                }
+            />
         );
     }
 }
