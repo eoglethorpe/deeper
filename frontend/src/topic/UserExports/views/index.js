@@ -351,6 +351,7 @@ export default class UserExports extends React.PureComponent {
                             keyExtractor={UserExports.tableKeyExtractor}
                             highlightRowKey={selectedExport}
                             onBodyClick={this.handleRowClick}
+                            // TODO: move this default sort in constructor
                             defaultSort={{ key: 'exportedAt', order: 'dsc' }}
                         />
                     </div>
