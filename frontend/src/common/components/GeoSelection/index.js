@@ -303,7 +303,7 @@ export default class GeoSelection extends React.PureComponent {
 
         const selectedRegionSelections = {};
         (values[selectedRegion] || emptyList).forEach((key) => {
-            const regionData = flatLocations.find(l => l.key === key);
+            const regionData = (flatLocations || emptyList).find(l => l.key === key) || emptyObject;
 
             if (!selectedRegionSelections[regionData.adminLevelTitle]) {
                 selectedRegionSelections[regionData.adminLevelTitle] = {
