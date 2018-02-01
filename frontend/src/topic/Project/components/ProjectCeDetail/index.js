@@ -28,6 +28,7 @@ import {
     setProjectCeAction,
     setCeDetailAction,
     addNewCeAction,
+    projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -38,7 +39,6 @@ import {
 import {
     iconNames,
     pathNames,
-    projectStrings,
 } from '../../../../common/constants';
 
 import ProjectCeForm from '../ProjectCeForm';
@@ -52,6 +52,7 @@ const propTypes = {
     setProjectCe: PropTypes.func.isRequired,
     setCeDetail: PropTypes.func.isRequired,
     mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,13 +61,13 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     ceDetails: categoryEditorDetailSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     addNewCe: params => dispatch(addNewCeAction(params)),
     setProjectCe: params => dispatch(setProjectCeAction(params)),
     setCeDetail: params => dispatch(setCeDetailAction(params)),
-    dispatch,
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -286,7 +287,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeUseClick}
                                 disabled={pending}
                             >
-                                {projectStrings.useCeButtonLabel}
+                                {this.props.projectStrings('useCeButtonLabel')}
                             </PrimaryButton>
                         }
                         {ceDetails.isAdmin &&
@@ -295,14 +296,14 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeEditClick}
                                 disabled={pending}
                             >
-                                {projectStrings.editCeButtonLabel}
+                                {this.props.projectStrings('editCeButtonLabel')}
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleCeCloneClick}
                             disabled={pending}
                         >
-                            {projectStrings.cloneEditCeButtonLabel}
+                            {this.props.projectStrings('cloneEditCeButtonLabel')}
                         </PrimaryButton>
                     </div>
                     <Confirm
@@ -311,8 +312,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                             useConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`${projectStrings.confirmUseCe} ${ceDetails.title}?`}</p>
-                        <p>{projectStrings.confirmUseCeText}</p>
+                        <p>{`${this.props.projectStrings('confirmUseCe')} ${ceDetails.title}?`}</p>
+                        <p>{this.props.projectStrings('confirmUseCeText')}</p>
                     </Confirm>
                     <Confirm
                         show={cloneConfirmModalShow}
@@ -320,8 +321,8 @@ export default class ProjectCeDetail extends React.PureComponent {
                             cloneConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`${projectStrings.confirmCloneCe} ${ceDetails.title}?`}</p>
-                        <p>{projectStrings.confirmCloneCeText}.</p>
+                        <p>{`${this.props.projectStrings('confirmCloneCe')} ${ceDetails.title}?`}</p>
+                        <p>{this.props.projectStrings('confirmCloneCeText')}.</p>
                     </Confirm>
                 </header>
                 <div styleName="ce-details">

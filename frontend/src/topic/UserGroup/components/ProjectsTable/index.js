@@ -27,15 +27,15 @@ import {
 
 import {
     iconNames,
-    notificationStrings,
     pathNames,
-    userStrings,
 } from '../../../../common/constants';
 import {
     userGroupProjectSelector,
     setUserProjectsAction,
     unSetProjectAction,
     activeUserSelector,
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
 import {
     createUrlForUserGroupProjects,
@@ -58,6 +58,8 @@ const propTypes = {
     unSetProject: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     isCurrentUserAdmin: PropTypes.bool.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -67,6 +69,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projects: userGroupProjectSelector(state, props),
     activeUser: activeUserSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -96,26 +100,26 @@ export default class ProjectsTable extends React.PureComponent {
         this.projectHeaders = [
             {
                 key: 'title',
-                label: userStrings.tableHeaderTitle,
+                label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: userStrings.tableHeaderCreatedAt,
+                label: this.props.userStrings('tableHeaderCreatedAt'),
                 order: 2,
                 modifier: row => <FormattedDate date={row.createdAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'startDate',
-                label: userStrings.tableHeaderStartDate,
+                label: this.props.userStrings('tableHeaderStartDate'),
                 order: 3,
                 modifier: row => <FormattedDate date={row.startDate} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'countries',
-                label: userStrings.tableHeaderStartDate,
+                label: this.props.userStrings('tableHeaderStartDate'),
                 order: 4,
                 sortable: true,
                 modifier: d => ((d.regions || []).length),
@@ -123,7 +127,7 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: userStrings.tableHeaderStatus,
+                label: this.props.userStrings('tableHeaderStatus'),
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
                 // sortable: true,
@@ -131,13 +135,13 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'modifiedAt',
-                label: userStrings.tableHeaderLastModifiedAt,
+                label: this.props.userStrings('tableHeaderLastModifiedAt'),
                 order: 6,
                 modifier: row => <FormattedDate date={row.modifiedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {
                 key: 'members',
-                label: userStrings.tableHeaderMembers,
+                label: this.props.userStrings('tableHeaderMembers'),
                 order: 7,
                 sortable: true,
                 modifier: d => ((d.memberships || []).length),
@@ -145,14 +149,14 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: userStrings.tableHeaderActions,
+                label: this.props.userStrings('tableHeaderActions'),
                 order: 8,
                 modifier: row => (
                     <div>
                         {
                             this.props.isCurrentUserAdmin &&
                             <DangerButton
-                                title={userStrings.deleteProjectLinkTitle}
+                                title={this.props.userStrings('deleteProjectLinkTitle')}
                                 onClick={() => this.handleDeleteProjectClick(row)}
                                 iconName={iconNames.delete}
                                 smallVerticalPadding
@@ -160,7 +164,7 @@ export default class ProjectsTable extends React.PureComponent {
                             />
                         }
                         <Link
-                            title={userStrings.viewProjectLinkTitle}
+                            title={this.props.userStrings('viewProjectLinkTitle')}
                             key={row.id}
                             to={reverseRoute(pathNames.projects, { projectId: row.id })}
                             className={styles.link}
@@ -237,9 +241,9 @@ export default class ProjectsTable extends React.PureComponent {
                         userId: this.props.activeUser.userId,
                     });
                     notify.send({
-                        title: notificationStrings.userProjectDelete,
+                        title: this.props.notificationStrings('userProjectDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userProjectDeleteSuccess,
+                        message: this.props.notificationStrings('userProjectDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.setState({ showDeleteProjectModal: false });
@@ -249,9 +253,9 @@ export default class ProjectsTable extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.userProjectDelete,
+                    title: this.props.notificationStrings('userProjectDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userProjectDeleteFailure,
+                    message: this.props.notificationStrings('userProjectDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -263,7 +267,7 @@ export default class ProjectsTable extends React.PureComponent {
     }
 
     handleDeleteProjectClick = (project) => {
-        const confirmText = `${userStrings.confirmTextDeleteProject}
+        const confirmText = `${this.props.userStrings('confirmTextDeleteProject')}
         ${project.title}?`;
 
         this.setState({
@@ -329,11 +333,11 @@ export default class ProjectsTable extends React.PureComponent {
                 {deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
-                        {userStrings.headerProjects}
+                        {this.props.userStrings('headerProjects')}
                     </h2>
                     <div styleName="pusher" />
                     <TextInput
-                        placeholder={userStrings.placeholderSearch}
+                        placeholder={this.props.userStrings('placeholderSearch')}
                         onChange={this.handleSearchProjectChange}
                         value={searchProjectInputValue}
                         type="search"
@@ -345,9 +349,9 @@ export default class ProjectsTable extends React.PureComponent {
                         this.props.isCurrentUserAdmin &&
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
-                            title={userStrings.addProjectButtonLabel}
+                            title={this.props.userStrings('addProjectButtonLabel')}
                         >
-                            {userStrings.addProjectButtonLabel}
+                            {this.props.userStrings('addProjectButtonLabel')}
                         </PrimaryButton>
                     }
                 </div>
@@ -364,7 +368,7 @@ export default class ProjectsTable extends React.PureComponent {
                         onClose={this.handleAddProjectModalClose}
                     >
                         <ModalHeader
-                            title={userStrings.addProjectButtonLabel}
+                            title={this.props.userStrings('addProjectButtonLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddProjectModalClose}

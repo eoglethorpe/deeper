@@ -28,6 +28,8 @@ import {
     setProjectAfAction,
     setAfDetailAction,
     addNewAfAction,
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 
@@ -38,8 +40,6 @@ import {
 import {
     iconNames,
     pathNames,
-    notificationStrings,
-    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import ProjectAfForm from '../ProjectAfForm';
@@ -53,6 +53,8 @@ const propTypes = {
     setProjectAf: PropTypes.func.isRequired,
     setAfDetail: PropTypes.func.isRequired,
     mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -61,6 +63,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     afDetails: analysisFrameworkDetailSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -162,9 +166,9 @@ export default class ProjectAfDetail extends React.PureComponent {
                         afDetail: response,
                     });
                     notify.send({
-                        title: notificationStrings.afFormEdit,
+                        title: this.props.notificationStrings('afFormEdit'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.afFormEditSuccess,
+                        message: this.props.notificationStrings('afFormEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -173,17 +177,17 @@ export default class ProjectAfDetail extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.afFormEdit,
+                    title: this.props.notificationStrings('afFormEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.afFormEditFailure,
+                    message: this.props.notificationStrings('afFormEditFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.afFormEdit,
+                    title: this.props.notificationStrings('afFormEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.afFormEditFatal,
+                    message: this.props.notificationStrings('afFormEditFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -316,7 +320,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                                 onClick={this.handleAfUseClick}
                                 disabled={pending}
                             >
-                                {projectStrings.useAfButtonLabel}
+                                {this.props.projectStrings('useAfButtonLabel')}
                             </PrimaryButton>
                         }
                         {afDetails.isAdmin &&
@@ -325,14 +329,14 @@ export default class ProjectAfDetail extends React.PureComponent {
                                 onClick={this.handleAfEditClick}
                                 disabled={pending}
                             >
-                                {projectStrings.editAfButtonLabel}
+                                {this.props.projectStrings('editAfButtonLabel')}
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleAfCloneClick}
                             disabled={pending}
                         >
-                            {projectStrings.cloneEditAfButtonLabel}
+                            {this.props.projectStrings('cloneEditAfButtonLabel')}
                         </PrimaryButton>
                     </div>
                     <Confirm
@@ -341,8 +345,8 @@ export default class ProjectAfDetail extends React.PureComponent {
                             useConfirm, analysisFrameworkId, projectDetails.id,
                         )}
                     >
-                        <p>{`${projectStrings.confirmUseAf}${afDetails.title}?`}</p>
-                        <p>{projectStrings.confirmUseAfText}</p>
+                        <p>{`${this.props.projectStrings('confirmUseAf')}${afDetails.title}?`}</p>
+                        <p>{this.props.projectStrings('confirmUseAfText')}</p>
                     </Confirm>
                     <Confirm
                         show={cloneConfirmModalShow}
@@ -350,7 +354,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                             cloneConfirm, analysisFrameworkId, projectDetails.id,
                         )}
                     >
-                        <p>{`${projectStrings.confirmCloneAf} ${afDetails.title}?`}</p>
+                        <p>{`${this.props.projectStrings('confirmCloneAf')} ${afDetails.title}?`}</p>
                     </Confirm>
                 </header>
                 <div styleName="af-details">

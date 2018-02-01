@@ -19,12 +19,12 @@ import {
 } from '../../../../public/components/View';
 import {
     iconNames,
-    projectStrings,
 } from '../../../../common/constants';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
 import {
     projectDetailsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
 
 import AddRegion from '../../../../common/components/AddRegion';
@@ -34,6 +34,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -41,6 +42,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,11 +68,11 @@ export default class ProjectRegions extends React.PureComponent {
         this.addRegionOptions = [
             {
                 key: 'old',
-                label: projectStrings.useExistingRegionText,
+                label: this.props.projectStrings('useExistingRegionText'),
             },
             {
                 key: 'new',
-                label: projectStrings.createNewRegionText,
+                label: this.props.projectStrings('createNewRegionText'),
             },
         ];
 
@@ -200,7 +202,7 @@ export default class ProjectRegions extends React.PureComponent {
 
         return (
             <p styleName="no-regions">
-                {projectStrings.noRegionText}
+                {this.props.projectStrings('noRegionText')}
             </p>
         );
     }
@@ -229,7 +231,7 @@ export default class ProjectRegions extends React.PureComponent {
                         <TextInput
                             styleName="search-input"
                             onChange={this.handleSearchInputChange}
-                            placeholder={projectStrings.searchRegionPlaceholder}
+                            placeholder={this.props.projectStrings('searchRegionPlaceholder')}
                             type="search"
                             value={searchInputValue}
                         />
@@ -238,11 +240,11 @@ export default class ProjectRegions extends React.PureComponent {
                             styleName="add-btn"
                             onClick={this.handleAddRegionButtonClick}
                         >
-                            {projectStrings.addRegionButtonLabel}
+                            {this.props.projectStrings('addRegionButtonLabel')}
                         </PrimaryButton>
                         { addRegionModal &&
                             <Modal>
-                                <ModalHeader title={projectStrings.addRegionModalTitle} />
+                                <ModalHeader title={this.props.projectStrings('addRegionModalTitle')} />
                                 <ModalBody styleName={this.getModalStyleName()}>
                                     <RadioInput
                                         styleName="radio-input"

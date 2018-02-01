@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     MultiSelectInput,
@@ -20,10 +21,8 @@ import {
 } from '../../../../../public/components/View';
 import { randomString } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -34,6 +33,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -43,6 +43,11 @@ const defaultProps = {
 const emptyObject = {};
 const emptyList = [];
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
@@ -76,8 +81,8 @@ export default class Multiselect extends React.PureComponent {
         >
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.optionLabel}
-                placeholder={afStrings.optionPlaceholder}
+                label={this.props.afStrings('optionLabel')}
+                placeholder={this.props.afStrings('optionPlaceholder')}
                 onChange={(value) => { this.handleValueInputChange(key, value); }}
                 value={data.label}
                 autoFocus
@@ -198,13 +203,13 @@ export default class Multiselect extends React.PureComponent {
                 { showEditModal &&
                     <Modal styleName="edit-value-modal">
                         <ModalHeader
-                            title={afStrings.editMultiselectModalTitle}
+                            title={this.props.afStrings('editMultiselectModalTitle')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddOptionButtonClick}
                                     transparent
                                 >
-                                    {afStrings.addOptionButtonLabel}
+                                    {this.props.afStrings('addOptionButtonLabel')}
                                 </PrimaryButton>
                             }
                         />
@@ -212,8 +217,8 @@ export default class Multiselect extends React.PureComponent {
                             <div styleName="general-info-container">
                                 <TextInput
                                     className={styles['title-input']}
-                                    label={afStrings.titleLabel}
-                                    placeholder={afStrings.titlePlaceholderScale}
+                                    label={this.props.afStrings('titleLabel')}
+                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
@@ -222,7 +227,9 @@ export default class Multiselect extends React.PureComponent {
                                 />
                             </div>
                             <header styleName="header">
-                                <h3>{afStrings.optionsHeader}</h3>
+                                <h3>
+                                    {this.props.afStrings('optionsHeader')}
+                                </h3>
                             </header>
                             <ListView
                                 data={options}
@@ -232,15 +239,11 @@ export default class Multiselect extends React.PureComponent {
                             />
                         </ModalBody>
                         <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
-                                {afStrings.cancelButtonLabel}
+                            <Button onClick={this.handleModalCancelButtonClick}>
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
-                            <PrimaryButton
-                                onClick={this.handleModalSaveButtonClick}
-                            >
-                                {afStrings.saveButtonLabel}
+                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

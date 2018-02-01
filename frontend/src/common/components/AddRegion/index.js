@@ -20,12 +20,7 @@ import {
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 
-import {
-    pathNames,
-    countriesString,
-    notificationStrings,
-    projectStrings,
-} from '../../../common/constants';
+import { pathNames } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
 
 import {
@@ -35,6 +30,9 @@ import {
 } from '../../rest';
 import {
     addNewRegionAction,
+    countriesStringsSelector,
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../redux';
 import notify from '../../notify';
 import schema from '../../schema';
@@ -46,6 +44,9 @@ const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
     onRegionAdd: PropTypes.func,
+    countriesStrings: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -54,11 +55,17 @@ const defaultProps = {
     onRegionAdd: undefined,
 };
 
+const mapStateToProps = state => ({
+    countriesStrings: countriesStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
+});
+
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddRegion extends React.PureComponent {
     static propTypes = propTypes;
@@ -143,9 +150,9 @@ export default class AddRegion extends React.PureComponent {
                         });
                     }
                     notify.send({
-                        title: notificationStrings.countryCreate,
+                        title: this.props.notificationStrings('countryCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.countryCreateSuccess,
+                        message: this.props.notificationStrings('countryCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -154,9 +161,9 @@ export default class AddRegion extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.countryCreate,
+                    title: this.props.notificationStrings('countryCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryCreateFailure,
+                    message: this.props.notificationStrings('countryCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -170,9 +177,9 @@ export default class AddRegion extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.countryCreate,
+                    title: this.props.notificationStrings('countryCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryCreateFatal,
+                    message: this.props.notificationStrings('countryCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -248,17 +255,17 @@ export default class AddRegion extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={projectStrings.addRegionTitleLabel}
+                    label={this.props.projectStrings('addRegionTitleLabel')}
                     formname="title"
-                    placeholder={projectStrings.addRegionTitlePlaceholder}
+                    placeholder={this.props.projectStrings('addRegionTitlePlaceholder')}
                     value={formValues.title}
                     error={formFieldErrors.name}
                     autoFocus
                 />
                 <TextInput
-                    label={projectStrings.addRegionCodeLabel}
+                    label={this.props.projectStrings('addRegionCodeLabel')}
                     formname="code"
-                    placeholder={projectStrings.addRegionCodePlaceholder}
+                    placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
                     value={formValues.code}
                     error={formFieldErrors.code}
                 />
@@ -268,10 +275,10 @@ export default class AddRegion extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {countriesString.cancelButtonLabel}
+                        {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {countriesString.addRegionButtonLabel}
+                        {this.props.countriesStrings('addRegionButtonLabel')}
                     </PrimaryButton>
                 </div>
             </Form>

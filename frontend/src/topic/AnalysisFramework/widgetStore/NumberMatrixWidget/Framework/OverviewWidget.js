@@ -7,9 +7,10 @@ import {
     SortableHandle,
     arrayMove,
 } from 'react-sortable-hoc';
+import { connect } from 'react-redux';
 
 import update from '../../../../../public/utils/immutable-update';
-
+import { randomString } from '../../../../../public/utils/common';
 import {
     TextInput,
     NumberInput,
@@ -27,11 +28,9 @@ import {
     ListView,
     List,
 } from '../../../../../public/components/View';
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
-import { randomString } from '../../../../../public/utils/common';
+
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -41,6 +40,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -54,6 +54,11 @@ const DragHandle = SortableHandle(() => (
 const emptyObject = {};
 const emptyList = [];
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -143,8 +148,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.titleLabel}
-                placeholder={afStrings.titlePlaceholderRow}
+                label={this.props.afStrings('titleLabel')}
+                placeholder={this.props.afStrings('titlePlaceholderRow')}
                 onChange={(value) => { this.handleRowUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
@@ -152,8 +157,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
             />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.tooltipTitle}
-                placeholder={afStrings.tooltipPlaceholder}
+                label={this.props.afStrings('tooltipTitle')}
+                placeholder={this.props.afStrings('tooltipPlaceholder')}
                 onChange={(value) => { this.handleRowUnitTooltipInputChange(key, value); }}
                 value={data.tooltip}
                 showHintAndError={false}
@@ -176,8 +181,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.titleLabel}
-                placeholder={afStrings.titlePlaceholderColumn}
+                label={this.props.afStrings('titleLabel')}
+                placeholder={this.props.afStrings('titlePlaceholderColumn')}
                 onChange={(value) => { this.handleColUnitTitleInputChange(key, value); }}
                 value={data.title}
                 showHintAndError={false}
@@ -185,8 +190,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
             />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.tooltipTitle}
-                placeholder={afStrings.tooltipPlaceholder}
+                label={this.props.afStrings('tooltipTitle')}
+                placeholder={this.props.afStrings('tooltipPlaceholder')}
                 onChange={(value) => { this.handleColUnitTooltipInputChange(key, value); }}
                 value={data.tooltip}
                 showHintAndError={false}
@@ -393,7 +398,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
         >
             <NumberInput
                 className={styles['number-input']}
-                placeholder={afStrings.numberPlaceholder}
+                placeholder={this.props.afStrings('numberPlaceholder')}
                 showLabel={false}
                 showHintAndError={false}
                 separator=" "
@@ -464,13 +469,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         styleName="edit-matrix-modal"
                         onClose={this.handleEditModalClose}
                     >
-                        <ModalHeader title={afStrings.editNumberMatrixModalTitle} />
+                        <ModalHeader title={this.props.afStrings('editNumberMatrixModalTitle')} />
                         <ModalBody styleName="modal-body">
                             <div styleName="general-info-container">
                                 <TextInput
                                     className={styles['title-input']}
-                                    label={afStrings.titleLabel}
-                                    placeholder={afStrings.titlePlaceholderScale}
+                                    label={this.props.afStrings('titleLabel')}
+                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
@@ -481,12 +486,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             <div styleName="modal-unit-container">
                                 <header styleName="header">
                                     <h3 styleName="heading">
-                                        {afStrings.rowsLabel}
+                                        {this.props.afStrings('rowsLabel')}
                                     </h3>
                                     <PrimaryButton
                                         iconName={iconNames.add}
                                         onClick={this.handleAddRowButtonClick}
-                                        title={afStrings.addRowUnitButtonLabel}
+                                        title={this.props.afStrings('addRowUnitButtonLabel')}
                                         transparent
                                     />
                                 </header>
@@ -501,12 +506,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             <div styleName="modal-unit-container">
                                 <header styleName="header">
                                     <h3 styleName="heading">
-                                        {afStrings.columnsLabel}
+                                        {this.props.afStrings('columnsLabel')}
                                     </h3>
                                     <PrimaryButton
                                         iconName={iconNames.add}
                                         onClick={this.handleAddColumnButtonClick}
-                                        title={afStrings.addColumnUnitButtonLabel}
+                                        title={this.props.afStrings('addColumnUnitButtonLabel')}
                                         transparent
                                     />
                                 </header>
@@ -523,12 +528,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             <Button
                                 onClick={this.handleModalCancelButtonClick}
                             >
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton
                                 onClick={this.handleModalSaveButtonClick}
                             >
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

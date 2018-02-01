@@ -18,15 +18,12 @@ import {
 } from '../../../../public/components/View';
 
 import {
-    ceStrings,
-} from '../../../../common/constants';
-
-import {
     selectedSubcategorySelector,
     updateSelectedSubcategoryAction,
     removeSelectedSubcategoryAction,
     removeSubcategoryNGramAction,
     ceIdFromRouteSelector,
+    ceStringsSelector,
 } from '../../../../common/redux';
 
 import NGram from './NGram';
@@ -39,6 +36,7 @@ const propTypes = {
     removeSubcategoryNGram: PropTypes.func.isRequired,
     onNewManualNGram: PropTypes.func.isRequired,
     categoryEditorId: PropTypes.number.isRequired,
+    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -48,6 +46,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     subcategory: selectedSubcategorySelector(state, props),
     categoryEditorId: ceIdFromRouteSelector(state, props),
+    ceStrings: ceStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -152,7 +151,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
     handleSubcategoryRemove = () => {
         const { subcategory } = this.props;
         // const activeSubCategory = subcategory.find(cat => cat.id === activeSubCategoryId);
-        const confirmText = `${ceStrings.confirmTextDeleteSubCategory} ${subcategory.title} ?`;
+        const confirmText = `${this.props.ceStrings('confirmTextDeleteSubCategory')} ${subcategory.title} ?`;
 
         this.setState({
             deleteSubCategory: true,
@@ -202,7 +201,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         if (!subcategory) {
             return (
                 <div styleName="property-panel">
-                    <p styleName="empty">{ceStrings.nothingHereText}</p>
+                    <p styleName="empty">
+                        {this.props.ceStrings('nothingHereText')}
+                    </p>
                 </div>
             );
         }
@@ -219,26 +220,26 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
             >
                 <header styleName="header" >
                     <h3 styleName="heading" >
-                        {ceStrings.subCategoryDetailsText}
+                        {this.props.ceStrings('subCategoryDetailsText')}
                     </h3>
                     <div styleName="action-buttons">
                         <DangerButton
                             onClick={this.handleSubcategoryRemove}
                         >
-                            {ceStrings.removeCategoryButtonLabel}
+                            {this.props.ceStrings('removeCategoryButtonLabel')}
                         </DangerButton>
                     </div>
                 </header>
                 <section styleName="properties" >
                     <TextInput
-                        label={ceStrings.subCategoryTitleLabel}
-                        placeholder={ceStrings.subCategoryTitlePlaceholder}
+                        label={this.props.ceStrings('subCategoryTitleLabel')}
+                        placeholder={this.props.ceStrings('subCategoryTitlePlaceholder')}
                         value={title}
                         onChange={this.handleSubcategoryTitleInputChange}
                     />
                     <TextArea
-                        label={ceStrings.subCategoryDescriptionLabel}
-                        placeholder={ceStrings.subCategoryDescriptionPlaceholder}
+                        label={this.props.ceStrings('subCategoryDescriptionLabel')}
+                        placeholder={this.props.ceStrings('subCategoryDescriptionPlaceholder')}
                         value={description}
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
@@ -248,7 +249,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         {
                             (ngramKeys.length > 0) && (
                                 <h4 styleName="heading">
-                                    {ceStrings.numberOfWordsLabel}
+                                    {this.props.ceStrings('numberOfWordsLabel')}
                                 </h4>
                             )
                         }
@@ -272,7 +273,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                             />
                         ) : (
                             <div styleName="empty">
-                                {ceStrings.noWordsText}
+                                {this.props.ceStrings('noWordsText')}
                             </div>
                         )
                     }
@@ -280,7 +281,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         <PrimaryButton
                             onClick={onNewManualNGram}
                         >
-                            {ceStrings.addWordManuallyButtonLabel}
+                            {this.props.ceStrings('addWordManuallyButtonLabel')}
                         </PrimaryButton>
                     </div>
                 </section>

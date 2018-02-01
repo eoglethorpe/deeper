@@ -2,11 +2,10 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import loadScript from 'load-script';
+import { connect } from 'react-redux';
 
 import { Button } from '../../../public/components/Action';
-import {
-    commonStrings,
-} from '../../../common/constants';
+import { commonStringsSelector } from '../../../common/redux';
 import styles from './styles.scss';
 
 import { DROPBOX_SDK_URL, SCRIPT_ID } from '../../../common/config/dropbox';
@@ -29,6 +28,7 @@ const propTypes = {
     // Api load delay and limit
     retryDelay: PropTypes.number, // in miliseconds
     retryLimit: PropTypes.number,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,8 +45,13 @@ const defaultProps = {
     retryLimit: 10,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
+
 // read more
 // https://www.dropbox.com/developers/chooser
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class DropboxChooser extends React.Component {
     static propTypes = propTypes ;
@@ -159,7 +164,7 @@ export default class DropboxChooser extends React.Component {
                 {
                     children ||
                     <button>
-                        {commonStrings.openDropboxChooserText}
+                        {this.props.commonStrings('openDropboxChooserText')}
                     </button>
                 }
             </Button>

@@ -14,7 +14,6 @@ import {
     LoadingAnimation,
 } from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import { projectStrings } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
 import {
@@ -27,6 +26,7 @@ import {
     projectDetailsSelector,
     setProjectAction,
     setProjectOptionsAction,
+    projectStringsSelector,
 } from '../../../../common/redux';
 
 import ProjectGeneral from '../ProjectGeneral';
@@ -42,6 +42,7 @@ const propTypes = {
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,40 +51,10 @@ const defaultProps = {
     projectId: undefined,
 };
 
-const routes = [
-    'generalDetails',
-    'regions',
-    'analysisFramework',
-    'categoryEditor',
-];
-
-const defaultRoute = 'generalDetails';
-
-const pathNames = {
-    generalDetails: '/general-details',
-    regions: '/regions',
-    analysisFramework: '/analysis-framework',
-    categoryEditor: '/category-editor',
-};
-
-const views = {
-    generalDetails: ProjectGeneral,
-    regions: ProjectRegions,
-    analysisFramework: ProjectAnalysisFramework,
-    categoryEditor: ProjectCategoryEditor,
-};
-
-const titles = {
-    generalDetails: projectStrings.generalDetailsLabel,
-    regions: projectStrings.regionsLabel,
-    analysisFramework: projectStrings.analysisFrameworkLabel,
-    categoryEditor: projectStrings.categoryEditorLabel,
-};
-
-const keyExtractor = d => d;
 
 const mapStateToProps = (state, props) => ({
     project: projectDetailsSelector(state, props),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,11 +68,43 @@ export default class ProjectDetails extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static keyExtractor = d => d;
+
     constructor(props) {
         super(props);
 
         this.state = {
             pending: false,
+        };
+
+        this.routes = [
+            'generalDetails',
+            'regions',
+            'analysisFramework',
+            'categoryEditor',
+        ];
+
+        this.defaultRoute = 'generalDetails';
+
+        this.pathNames = {
+            generalDetails: '/general-details',
+            regions: '/regions',
+            analysisFramework: '/analysis-framework',
+            categoryEditor: '/category-editor',
+        };
+
+        this.views = {
+            generalDetails: ProjectGeneral,
+            regions: ProjectRegions,
+            analysisFramework: ProjectAnalysisFramework,
+            categoryEditor: ProjectCategoryEditor,
+        };
+
+        this.titles = {
+            generalDetails: this.props.projectStrings('generalDetailsLabel'),
+            regions: this.props.projectStrings('regionsLabel'),
+            analysisFramework: this.props.projectStrings('analysisFrameworkLabel'),
+            categoryEditor: this.props.projectStrings('categoryEditorLabel'),
         };
 
         const { projectId } = props;
@@ -201,24 +204,24 @@ export default class ProjectDetails extends React.PureComponent {
     renderLink = (key, routeId) => (
         <NavLink
             key={key}
-            to={pathNames[routeId]}
+            to={this.pathNames[routeId]}
             activeClassName={styles.active}
             className={styles.tab}
             replace
             exact
         >
-            { titles[routeId] }
+            { this.titles[routeId] }
         </NavLink>
     )
 
     renderRoute = (key, routeId) => {
-        const Component = views[routeId];
+        const Component = this.views[routeId];
         const { projectId } = this.props;
 
         return (
             <Route
                 key={key}
-                path={pathNames[routeId]}
+                path={this.pathNames[routeId]}
                 exact
                 render={() => (
                     <Component
@@ -248,7 +251,7 @@ export default class ProjectDetails extends React.PureComponent {
                     <Route
                         exact
                         path="/"
-                        component={() => <Redirect to={pathNames[defaultRoute]} />}
+                        component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
                     />
                     { pending && <LoadingAnimation /> }
                     {
@@ -262,22 +265,22 @@ export default class ProjectDetails extends React.PureComponent {
                                 </h2>
                                 <div styleName="tabs">
                                     <List
-                                        data={routes}
+                                        data={this.routes}
                                         modifier={this.renderLink}
-                                        keyExtractor={keyExtractor}
+                                        keyExtractor={ProjectDetails.keyExtractor}
                                     />
                                     <div styleName="empty-space" />
                                 </div>
                             </header>,
                             <List
                                 key="list"
-                                data={routes}
+                                data={this.routes}
                                 modifier={this.renderRoute}
-                                keyExtractor={keyExtractor}
+                                keyExtractor={ProjectDetails.keyExtractor}
                             />,
                         ]) : (
                             <p styleName="forbidden-text">
-                                {projectStrings.forbiddenText}
+                                {this.props.projectStrings('forbiddenText')}
                             </p>
                         )
                     }

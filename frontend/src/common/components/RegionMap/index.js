@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 
@@ -16,10 +17,8 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
-import {
-    iconNames,
-    commonStrings,
-} from '../../constants';
+import { iconNames } from '../../constants';
+import { commonStringsSelector } from '../../redux';
 import {
     createParamsForAdminLevelsForRegionGET,
     createUrlForAdminLevelsForRegion,
@@ -34,6 +33,7 @@ const propTypes = {
     selections: PropTypes.arrayOf(PropTypes.string),
     onChange: PropTypes.func,
     onLocationsChange: PropTypes.func,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,7 +44,11 @@ const defaultProps = {
     onLocationsChange: undefined,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
 
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class RegionMap extends React.PureComponent {
     static propTypes = propTypes;
@@ -117,13 +121,13 @@ export default class RegionMap extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.erverErrorText,
+                    error: this.props.commonStrings('erverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -168,13 +172,13 @@ export default class RegionMap extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.erverErrorText,
+                    error: this.props.commonStrings('erverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -326,6 +330,10 @@ export default class RegionMap extends React.PureComponent {
 
         if (adminLevels && adminLevels.length > 0 && selectedAdminLevelId) {
             const adminLevel = adminLevels.find(al => al.id === +selectedAdminLevelId);
+            const segmentButtonData = adminLevels.map(al => ({
+                label: al.title,
+                value: `${al.id}`,
+            }));
 
             return (
                 <div styleName="map-container">
@@ -346,12 +354,7 @@ export default class RegionMap extends React.PureComponent {
                     />
                     <div styleName="bottom-bar">
                         <SegmentButton
-                            data={
-                                adminLevels.map(al => ({
-                                    label: al.title,
-                                    value: `${al.id}`,
-                                }))
-                            }
+                            data={segmentButtonData}
                             selected={selectedAdminLevelId}
                             backgroundHighlight
                             onChange={this.handleAdminLevelSelection}
@@ -363,31 +366,21 @@ export default class RegionMap extends React.PureComponent {
 
         return (
             <div styleName="message">
-                {commonStrings.mapNotAvailable}
+                {this.props.commonStrings('mapNotAvailable')}
             </div>
         );
     }
 
     render() {
-        const {
-            className,
-        } = this.props;
-        const {
-            pending,
-        } = this.state;
+        const { className } = this.props;
+        const { pending } = this.state;
 
         return (
             <div
                 className={className}
                 styleName="region-map"
             >
-                {
-                    (pending && (
-                        <LoadingAnimation />
-                    )) || (
-                        this.renderContent()
-                    )
-                }
+                { pending ? <LoadingAnimation /> : this.renderContent() }
             </div>
         );
     }

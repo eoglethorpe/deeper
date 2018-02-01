@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import {
     ModalHeader,
@@ -12,9 +13,7 @@ import {
 } from '../../../../public/components/Action';
 import { TextInput } from '../../../../public/components/Input';
 
-import {
-    ceStrings,
-} from '../../../../common/constants';
+import { ceStringsSelector } from '../../../../common/redux';
 
 import styles from '../styles.scss';
 
@@ -23,6 +22,7 @@ const propTypes = {
     onSubmit: PropTypes.func.isRequired,
     editMode: PropTypes.bool,
     initialValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -30,6 +30,11 @@ const defaultProps = {
     initialValue: {},
 };
 
+const mapStateToProps = state => ({
+    ceStrings: ceStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 export default class NewCategoryModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
@@ -60,7 +65,9 @@ export default class NewCategoryModal extends React.PureComponent {
 
     render() {
         const { editMode } = this.props;
-        const title = editMode ? ceStrings.editCategoryTooltip : ceStrings.addCategoryTooltip;
+        const title = editMode
+            ? this.props.ceStrings('editCategoryTooltip')
+            : this.props.ceStrings('addCategoryTooltip');
         return ([
             <ModalHeader
                 key="header"
@@ -69,21 +76,21 @@ export default class NewCategoryModal extends React.PureComponent {
             <ModalBody key="body">
                 <TextInput
                     autoFocus
-                    label={ceStrings.addCategoryTitleLabel}
-                    placeholder={ceStrings.addCategoryTitlePlaceholder}
+                    label={this.props.ceStrings('addCategoryTitleLabel')}
+                    placeholder={this.props.ceStrings('addCategoryTitlePlaceholder')}
                     onChange={this.handleTitleValueChange}
                     value={this.state.titleValue}
                 />
             </ModalBody>,
             <ModalFooter key="footer">
                 <Button onClick={this.handleModalClose} >
-                    {ceStrings.modalCancel}
+                    {this.props.ceStrings('modalCancel')}
                 </Button>
                 <PrimaryButton
                     onClick={this.handleModalOk}
                     className={styles['ok-button']}
                 >
-                    {ceStrings.modalOk}
+                    {this.props.ceStrings('modalOk')}
                 </PrimaryButton>
             </ModalFooter>,
         ]);

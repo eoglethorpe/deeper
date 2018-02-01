@@ -38,6 +38,10 @@ import {
 
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
+
+    leadsStringsSelector,
+    notificationStringsSelector,
+    commonStringsSelector,
 } from '../../../../common/redux';
 
 import {
@@ -52,12 +56,7 @@ import FileUploadBuilder from './utils/builder/FileUploadBuilder';
 import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
 
-import {
-    iconNames,
-    leadsString,
-    notificationStrings,
-    commonStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
@@ -73,6 +72,10 @@ const mapStateToProps = state => ({
     filters: addLeadViewFiltersSelector(state),
     addLeadViewCanNext: addLeadViewCanNextSelector(state),
     addLeadViewCanPrev: addLeadViewCanPrevSelector(state),
+
+    leadsStrings: leadsStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -100,6 +103,10 @@ const propTypes = {
     addLeadViewLeadSave: PropTypes.func.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
     addLeadViewLeadChange: PropTypes.func.isRequired,
+
+    leadsStrings: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -397,9 +404,9 @@ export default class LeadAdd extends React.PureComponent {
         this.props.addLeadViewLeadRemove(leadId);
 
         notify.send({
-            title: notificationStrings.leadDiscard,
+            title: this.props.notificationStrings('leadDiscard'),
             type: notify.type.SUCCESS,
-            message: notificationStrings.leadDiscardSuccess,
+            message: this.props.notificationStrings('leadDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -411,9 +418,9 @@ export default class LeadAdd extends React.PureComponent {
         });
 
         notify.send({
-            title: notificationStrings.leadsDiscard,
+            title: this.props.notificationStrings('leadsDiscard'),
             type: notify.type.SUCCESS,
-            message: notificationStrings.leadsDiscardSuccess,
+            message: this.props.notificationStrings('leadsDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -425,9 +432,9 @@ export default class LeadAdd extends React.PureComponent {
         });
 
         notify.send({
-            title: notificationStrings.leadsDiscard,
+            title: this.props.notificationStrings('leadsDiscard'),
             type: notify.type.SUCCESS,
-            message: notificationStrings.leadsDiscardSuccess,
+            message: this.props.notificationStrings('leadsDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -563,7 +570,7 @@ export default class LeadAdd extends React.PureComponent {
             <div styleName="add-lead">
                 <Prompt
                     when={isSaveEnabledForAll}
-                    message={commonStrings.youHaveUnsavedChanges}
+                    message={this.props.commonStrings('youHaveUnsavedChanges')}
                 />
                 <header styleName="header">
                     <LeadFilter />
@@ -574,33 +581,33 @@ export default class LeadAdd extends React.PureComponent {
                                     disabled={!addLeadViewCanPrev}
                                     onClick={this.handlePrevButtonClick}
                                     iconName={iconNames.prev}
-                                    title={leadsString.previousButtonLabel}
+                                    title={this.props.leadsStrings('previousButtonLabel')}
                                 />
                                 <Button
                                     disabled={!addLeadViewCanNext}
                                     onClick={this.handleNextButtonClick}
                                     iconName={iconNames.next}
-                                    title={leadsString.nextButtonLabel}
+                                    title={this.props.leadsStrings('nextButtonLabel')}
                                 />
                             </div>
                             <DropdownMenu
                                 iconName={iconNames.delete}
                                 styleName="remove-buttons"
-                                title={leadsString.removeButtonTitle}
+                                title={this.props.leadsStrings('removeButtonTitle')}
                             >
                                 <button
                                     styleName="dropdown-button"
                                     onClick={this.handleRemoveButtonClick}
                                     disabled={isRemoveDisabledForActive}
                                 >
-                                    {leadsString.removeCurrentButtonTitle}
+                                    {this.props.leadsStrings('removeCurrentButtonTitle')}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
                                     onClick={this.handleFilteredRemoveButtonClick}
                                     disabled={!isRemoveEnabledForFiltered}
                                 >
-                                    {leadsString.removeAllFilteredButtonTitle}
+                                    {this.props.leadsStrings('removeAllFilteredButtonTitle')}
 
                                 </button>
                                 <button
@@ -608,7 +615,7 @@ export default class LeadAdd extends React.PureComponent {
                                     onClick={this.handleBulkRemoveButtonClick}
                                     disabled={!isRemoveEnabledForAll}
                                 >
-                                    {leadsString.removeAllButtonTitle}
+                                    {this.props.leadsStrings('removeAllButtonTitle')}
                                 </button>
                             </DropdownMenu>
                             <DropdownMenu
@@ -621,21 +628,21 @@ export default class LeadAdd extends React.PureComponent {
                                     onClick={this.handleSaveButtonClick}
                                     disabled={isSaveDisabledForActive}
                                 >
-                                    {leadsString.saveCurrentButtonTitle}
+                                    {this.props.leadsStrings('saveCurrentButtonTitle')}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
                                     onClick={this.handleFilteredSaveButtonClick}
                                     disabled={pendingSubmitAll || !isSaveEnabledForFiltered}
                                 >
-                                    {leadsString.saveAllFilteredButtonTitle}
+                                    {this.props.leadsStrings('saveAllFilteredButtonTitle')}
                                 </button>
                                 <button
                                     styleName="dropdown-button"
                                     onClick={this.handleBulkSaveButtonClick}
                                     disabled={pendingSubmitAll || !isSaveEnabledForAll}
                                 >
-                                    {leadsString.saveAllButtonTitle}
+                                    {this.props.leadsStrings('saveAllButtonTitle')}
                                 </button>
                             </DropdownMenu>
                         </div>
@@ -668,7 +675,7 @@ export default class LeadAdd extends React.PureComponent {
                     <p>
                         {
                             /* TODO: different message for delete modes */
-                            leadsString.deleteLeadConfirmText
+                            this.props.leadsStrings('deleteLeadConfirmText')
                         }
                     </p>
                 </Confirm>

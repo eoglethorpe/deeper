@@ -28,9 +28,7 @@ import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 import {
     iconNames,
-    notificationStrings,
     pathNames,
-    userStrings,
 } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
@@ -48,6 +46,9 @@ import {
     activeUserSelector,
     unSetProjectAction,
     userIdFromRouteSelector,
+
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
 
 import UserProjectAdd from '../../../../common/components/UserProjectAdd';
@@ -62,6 +63,9 @@ const propTypes = {
     userProjects: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.number.isRequired,
+
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -73,6 +77,9 @@ const mapStateToProps = (state, props) => ({
     userProjects: userProjectsSelector(state, props),
     activeUser: activeUserSelector(state),
     userId: userIdFromRouteSelector(state, props),
+
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -120,14 +127,14 @@ export default class UserProject extends React.PureComponent {
         this.projectTableHeaders = [
             {
                 key: 'title',
-                label: userStrings.tableHeaderTitle,
+                label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
-                label: userStrings.tableHeaderRights,
+                label: this.props.userStrings('tableHeaderRights'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.role.localeCompare(b.role),
@@ -135,7 +142,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'createdAt',
-                label: userStrings.tableHeaderCreatedAt,
+                label: this.props.userStrings('tableHeaderCreatedAt'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.createdAt, b.createdAt),
@@ -148,7 +155,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'modifiedAt',
-                label: userStrings.tableHeaderLastModifiedAt,
+                label: this.props.userStrings('tableHeaderLastModifiedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.modifiedAt, b.modifiedAt),
@@ -161,13 +168,13 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: userStrings.tableHeaderStatus,
+                label: this.props.userStrings('tableHeaderStatus'),
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
                 key: 'members',
-                label: userStrings.tableHeaderMembers,
+                label: this.props.userStrings('tableHeaderMembers'),
                 order: 6,
                 sortable: true,
                 comparator: (a, b) => a.memberships.length || [] - b.memberships.length || [],
@@ -175,7 +182,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: userStrings.tableHeaderActions,
+                label: this.props.userStrings('tableHeaderActions'),
                 order: 7,
                 modifier: (d) => {
                     const { activeUser } = this.props;
@@ -185,7 +192,7 @@ export default class UserProject extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
-                                title={userStrings.viewProjectLinkTitle}
+                                title={this.props.userStrings('viewProjectLinkTitle')}
                                 to={reverseRoute(pathNames.projects, { projectId: d.id })}
                                 className={styles.link}
                             >
@@ -196,7 +203,7 @@ export default class UserProject extends React.PureComponent {
 
                     return ([
                         <Link
-                            title={userStrings.editProjectLinkTitle}
+                            title={this.props.userStrings('editProjectLinkTitle')}
                             key="project-panel"
                             to={reverseRoute(pathNames.projects, { projectId: d.id })}
                             className={styles.link}
@@ -204,7 +211,7 @@ export default class UserProject extends React.PureComponent {
                             <span className={iconNames.edit} />
                         </Link>,
                         <DangerButton
-                            title={userStrings.deleteProjectLinkTitle}
+                            title={this.props.userStrings('deleteProjectLinkTitle')}
                             key="delete"
                             onClick={() => this.handleDeleteProjectClick(d)}
                             iconName={iconNames.delete}
@@ -252,9 +259,9 @@ export default class UserProject extends React.PureComponent {
                         projectId,
                     });
                     notify.send({
-                        title: notificationStrings.userProjectDelete,
+                        title: this.props.notificationStrings('userProjectDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userProjectDeleteSuccess,
+                        message: this.props.notificationStrings('userProjectDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -269,17 +276,17 @@ export default class UserProject extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.userProjectDelete,
+                    title: this.props.notificationStrings('userProjectDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userProjectDeleteFailure,
+                    message: this.props.notificationStrings('userProjectDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userProjectDelete,
+                    title: this.props.notificationStrings('userProjectDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userProjectDeleteFatal,
+                    message: this.props.notificationStrings('userProjectDeleteFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -377,13 +384,13 @@ export default class UserProject extends React.PureComponent {
                 { deletePending && <LoadingAnimation /> }
                 <div styleName="header">
                     <h2>
-                        {userStrings.headerProjects}
+                        {this.props.userStrings('headerProjects')}
                     </h2>
                     {
 
                         isCurrentUser && (
                             <PrimaryButton onClick={this.handleAddProjectClick} >
-                                {userStrings.addProjectButtonLabel}
+                                {this.props.userStrings('addProjectButtonLabel')}
                             </PrimaryButton>
                         )
                     }
@@ -394,7 +401,7 @@ export default class UserProject extends React.PureComponent {
                         onClose={this.handleAddProjectClose}
                     >
                         <ModalHeader
-                            title={userStrings.addProjectButtonLabel}
+                            title={this.props.userStrings('addProjectButtonLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddProjectClose}

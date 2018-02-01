@@ -10,9 +10,6 @@ import {
     createParamsForLeadEdit,
     createParamsForLeadCreate,
 } from '../../../../../../common/rest';
-import {
-    notificationStrings,
-} from '../../../../../../common/constants';
 import notify from '../../../../../../common/notify';
 
 import {
@@ -80,9 +77,9 @@ export default class FormSaveBuilder {
             schema.validate(response, 'lead');
 
             notify.send({
-                title: notificationStrings.leadSave,
+                title: this.parent.props.notificationStrings('leadSave'),
                 type: notify.type.SUCCESS,
-                message: notificationStrings.leadSaveSuccess,
+                message: this.parent.props.notificationStrings('leadSaveSuccess'),
                 duration: notify.duration.MEDIUM,
             });
             this.parent.props.addLeadViewLeadSave({
@@ -97,9 +94,9 @@ export default class FormSaveBuilder {
     handleLeadSaveFailure = leadId => (response) => {
         // console.error('Failed lead request:', response);
         notify.send({
-            title: notificationStrings.leadSave,
+            title: this.parent.props.notificationStrings('leadSave'),
             type: notify.type.ERROR,
-            message: notificationStrings.leadSaveFailure,
+            message: this.parent.props.notificationStrings('leadSaveFailure'),
             duration: notify.duration.SLOW,
         });
         const {
@@ -117,14 +114,15 @@ export default class FormSaveBuilder {
     }
     handleLeadSaveFatal = leadId => () => {
         notify.send({
-            title: notificationStrings.leadSave,
+            title: this.parent.props.notificationStrings('leadSave'),
             type: notify.type.ERROR,
-            message: notificationStrings.leadSaveFatal,
+            message: this.parent.props.notificationStrings('leadSaveFatal'),
             duration: notify.duration.SLOW,
         });
 
         this.parent.props.addLeadViewLeadChange({
             leadId,
+            // FIXME: use strings
             formErrors: ['Error while trying to save lead.'],
             uiState: { pristine: true },
         });

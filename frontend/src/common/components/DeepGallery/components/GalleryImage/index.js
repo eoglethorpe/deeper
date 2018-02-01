@@ -1,19 +1,19 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { iconNames } from '../../../../../common/constants';
+import { commonStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
-
-import {
-    iconNames,
-    commonStrings,
-} from '../../../../../common/constants';
 
 export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig'];
 
 const propTypes = {
     className: PropTypes.string,
     imageUrl: PropTypes.string,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -21,6 +21,11 @@ const defaultProps = {
     imageUrl: undefined,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GalleryImage extends React.PureComponent {
     static propTypes = propTypes;
@@ -40,7 +45,7 @@ export default class GalleryImage extends React.PureComponent {
                 {
                     imageUrl ? (
                         <img
-                            alt={commonStrings.altUser}
+                            alt={this.props.commonStrings('altUser')}
                             className="image"
                             styleName="image"
                             src={imageUrl}

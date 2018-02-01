@@ -1,16 +1,15 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     AccentButton,
     WarningButton,
 } from '../../../../../../public/components/Action';
+import { leadsStringsSelector } from '../../../../../../common/redux';
 
-import {
-    iconNames,
-    leadsString,
-} from '../../../../../../common/constants';
+import { iconNames } from '../../../../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -21,11 +20,18 @@ const propTypes = {
     identiferName: PropTypes.string.isRequired,
     onApplyAllClick: PropTypes.func.isRequired,
     onApplyAllBelowClick: PropTypes.func.isRequired,
+    leadsStrings: PropTypes.func.isRequired,
 };
+
 const defaultProps = {
     className: undefined,
 };
 
+const mapStateToProps = state => ({
+    leadsStrings: leadsStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ApplyAll extends React.PureComponent {
     static propTypes = propTypes;
@@ -42,14 +48,17 @@ export default class ApplyAll extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="apply-input" className={className}>
+            <div
+                styleName="apply-input"
+                className={className}
+            >
                 { children }
                 <div styleName="apply-buttons">
                     <AccentButton
                         styleName="apply-button"
                         transparent
                         type="button"
-                        title={leadsString.applyAllButtonTitle}
+                        title={this.props.leadsStrings('applyAllButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllClick(identiferName)}
                         tabIndex="-1"
@@ -60,7 +69,7 @@ export default class ApplyAll extends React.PureComponent {
                         styleName="apply-button"
                         transparent
                         type="button"
-                        title={leadsString.applyAllBelowButtonTitle}
+                        title={this.props.leadsStrings('applyAllBelowButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllBelowClick(identiferName)}
                         tabIndex="-1"

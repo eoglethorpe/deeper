@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -17,7 +18,7 @@ import {
     ModalBody,
     ModalFooter,
 } from '../../../../../public/components/View';
-import { afStrings } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -27,6 +28,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -35,6 +37,11 @@ const defaultProps = {
 
 const emptyObject = {};
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class DateFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
@@ -138,11 +145,11 @@ export default class DateFrameworkList extends React.PureComponent {
                 />
                 { showEditModal &&
                     <Modal>
-                        <ModalHeader title={afStrings.editTitleModalHeader} />
+                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
                         <ModalBody styleName="modal-body">
                             <TextInput
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.widgetTitlePlaceholder}
+                                label={this.props.afStrings('titleLabel')}
+                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
                                 onChange={this.handleWidgetTitleChange}
                                 value={title}
                                 showHintAndError={false}
@@ -153,15 +160,15 @@ export default class DateFrameworkList extends React.PureComponent {
                                 styleName="checkbox"
                                 onChange={this.handleInformationDataCheck}
                                 value={informationDateSelected}
-                                label={afStrings.informationDateCheckboxLabel}
+                                label={this.props.afStrings('informationDateCheckboxLabel')}
                             />
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.handleModalCancelButtonClick}>
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

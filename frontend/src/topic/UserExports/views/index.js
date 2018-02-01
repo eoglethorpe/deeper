@@ -28,13 +28,13 @@ import {
     setUserExportAction,
 
     projectIdFromRouteSelector,
+    exportStringsSelector,
 } from '../../../common/redux';
 
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 import ExportPreview from '../../../common/components/ExportPreview';
 import {
-    exportStrings,
     pathNames,
     iconNames,
 } from '../../../common/constants';
@@ -49,6 +49,7 @@ const propTypes = {
     setUserExports: PropTypes.func.isRequired,
     setUserExport: PropTypes.func.isRequired,
     projectId: PropTypes.number,
+    exportStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -59,6 +60,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userExports: userExportsListSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
+    exportStrings: exportStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -86,7 +88,7 @@ export default class UserExports extends React.PureComponent {
         this.exportsTableHeader = [
             {
                 key: 'mime-type',
-                label: exportStrings.documentTypeHeaderLabel,
+                label: this.props.exportStrings('documentTypeHeaderLabel'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
@@ -104,7 +106,7 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'exportedAt',
-                label: exportStrings.exportedAtHeaderLabel,
+                label: this.props.exportStrings('exportedAtHeaderLabel'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.exportedAt.localeCompare(b.exportedAt),
@@ -117,14 +119,14 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: exportStrings.exportTitleHeaderLabel,
+                label: this.props.exportStrings('exportTitleHeaderLabel'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'pending',
-                label: exportStrings.statusHeaderLabel,
+                label: this.props.exportStrings('statusHeaderLabel'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => {
@@ -135,23 +137,23 @@ export default class UserExports extends React.PureComponent {
                 },
                 modifier: (row) => {
                     if (row.pending) {
-                        return exportStrings.pendingStatusLabel;
+                        return this.props.exportStrings('pendingStatusLabel');
                     } else if (!row.file) {
-                        return exportStrings.errorStatusLabel;
+                        return this.props.exportStrings('errorStatusLabel');
                     }
-                    return exportStrings.completedStatusLabel;
+                    return this.props.exportStrings('completedStatusLabel');
                 },
             },
             {
                 key: 'type',
-                label: exportStrings.exportTypeHeaderLabel,
+                label: this.props.exportStrings('exportTypeHeaderLabel'),
                 order: 5,
                 sortable: true,
                 comparator: (a, b) => a.type.localeCompare(b.type),
             },
             {
                 key: 'file',
-                label: exportStrings.exportDownloadHeaderLabel,
+                label: this.props.exportStrings('exportDownloadHeaderLabel'),
                 order: 6,
                 modifier: (row) => {
                     if (row.pending) {
@@ -263,7 +265,7 @@ export default class UserExports extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: exportStrings.userExportsTitle,
+                    title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -271,9 +273,9 @@ export default class UserExports extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: exportStrings.userExportsTitle,
+                    title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,
-                    message: exportStrings.userExportsFataMessage,
+                    message: this.props.exportStrings('userExportsFataMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -303,7 +305,7 @@ export default class UserExports extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: exportStrings.userExportsTitle,
+                    title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -311,9 +313,9 @@ export default class UserExports extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: exportStrings.userExportsTitle,
+                    title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,
-                    message: exportStrings.userExportsFataMessage,
+                    message: this.props.exportStrings('userExportsFataMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -333,13 +335,13 @@ export default class UserExports extends React.PureComponent {
             <div styleName="user-exports">
                 <header styleName="header">
                     <h2>
-                        {exportStrings.userExportsHeader}
+                        {this.props.exportStrings('userExportsHeader')}
                     </h2>
                     <Link
                         styleName="export-link"
                         to={reverseRoute(pathNames.export, { projectId })}
                     >
-                        {exportStrings.goBackToExportLabel}
+                        {this.props.exportStrings('goBackToExportLabel')}
                     </Link>
                 </header>
                 <div styleName="main-container">

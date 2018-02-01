@@ -10,12 +10,12 @@ import { reverseRoute } from '../../../public/utils/common';
 import logo from '../../../img/deep-logo.svg';
 import {
     pathNames,
-    homescreenStrings,
 } from '../../../common/constants';
 import {
     activeProjectSelector,
     activeUserSelector,
     currentUserProjectsSelector,
+    homescreenStringsSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -25,6 +25,7 @@ const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
+    homescreenStrings: homescreenStringsSelector(state),
 });
 
 const propTypes = {
@@ -34,6 +35,7 @@ const propTypes = {
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
+    homescreenStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -81,17 +83,17 @@ export default class HomeScreen extends React.PureComponent {
                 />
                 <p>
                     <span styleName="welcome-message">
-                        {homescreenStrings.welcomeText}
-                        <strong>{homescreenStrings.deepLabel}</strong>
+                        {this.props.homescreenStrings('welcomeText')}
+                        <strong>{this.props.homescreenStrings('deepLabel')}</strong>
                         <br />
                     </span>
-                    {homescreenStrings.message1}
+                    {this.props.homescreenStrings('message1')}
                     <br />
-                    {homescreenStrings.message2}
+                    {this.props.homescreenStrings('message2')}
                     <br />
                 </p>
                 <Link to={linkToProfile}>
-                    {homescreenStrings.goToProfile}
+                    {this.props.homescreenStrings('goToProfile')}
                 </Link>
             </div>
         );

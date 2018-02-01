@@ -18,7 +18,6 @@ import { FgRestBuilder } from '../../../public/utils/rest';
 import {
     iconNames,
     pathNames,
-    entryStrings,
 } from '../../../common/constants';
 
 import schema from '../../../common/schema';
@@ -41,6 +40,8 @@ import {
     entriesViewActivePageSelector,
     totalEntriesCountForProjectSelector,
     setEntriesViewActivePageAction,
+
+    entryStringsSelector,
 } from '../../../common/redux';
 
 import {
@@ -69,6 +70,8 @@ const mapStateToProps = (state, props) => ({
     projectId: projectIdFromRouteSelector(state, props),
     activePage: entriesViewActivePageSelector(state, props),
     totalEntriesCount: totalEntriesCountForProjectSelector(state, props),
+
+    entryStrings: entryStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -96,6 +99,8 @@ const propTypes = {
     maxHeight: PropTypes.number,
     totalEntriesCount: PropTypes.number,
     setEntriesViewActivePage: PropTypes.func.isRequired,
+
+    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -261,7 +266,7 @@ export default class Entries extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -269,7 +274,7 @@ export default class Entries extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
                     message: 'Couldn\'t load entries', // FIXME: strings
                     duration: notify.duration.MEDIUM,
@@ -457,11 +462,11 @@ export default class Entries extends React.PureComponent {
                     </div>
                     <div className={styles['action-buttons']}>
                         <Link
-                            title={entryStrings.editEntryLinkTitle}
+                            title={this.props.entryStrings('editEntryLinkTitle')}
                             to={route}
                         >
                             <PrimaryButton iconName={iconNames.edit} >
-                                {entryStrings.editEntryButtonLabel}
+                                {this.props.entryStrings('editEntryButtonLabel')}
                             </PrimaryButton>
                         </Link>
                     </div>

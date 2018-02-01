@@ -12,11 +12,9 @@ import {
     ViewListWidget,
 } from './View';
 
-import { afStrings } from '../../../../common/constants';
-
 const excerptTextWidget = {
     id: 'excerptWidget',
-    title: afStrings.excerptWidgetLabel,
+    title: 'excerptWidgetLabel',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,

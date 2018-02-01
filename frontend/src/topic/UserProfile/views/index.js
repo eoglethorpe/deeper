@@ -26,10 +26,7 @@ import {
     UserEdit,
 } from '../components/';
 
-import {
-    iconNames,
-    userStrings,
-} from '../../../common/constants';
+import { iconNames } from '../../../common/constants';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
 
@@ -44,6 +41,8 @@ import {
     unsetUserAction,
     activeUserSelector,
     userIdFromRouteSelector,
+
+    userStringsSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
@@ -54,6 +53,8 @@ const propTypes = {
     userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.number.isRequired,
+
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -64,6 +65,7 @@ const mapStateToProps = (state, props) => ({
     userInformation: userInformationSelector(state, props),
     activeUser: activeUserSelector(state),
     userId: userIdFromRouteSelector(state, props),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -169,7 +171,7 @@ export default class UserProfile extends React.PureComponent {
             return (
                 <div styleName="user-profile">
                     <div styleName="user-detail-alt">
-                        {userStrings.userNotFound}
+                        {this.props.userStrings('userNotFound')}
                     </div>
                 </div>
             );
@@ -212,7 +214,7 @@ export default class UserProfile extends React.PureComponent {
                                     styleName="user-profile-edit-modal"
                                 >
                                     <ModalHeader
-                                        title={userStrings.editProfileModalHeader}
+                                        title={this.props.userStrings('editProfileModalHeader')}
                                         rightComponent={
                                             <PrimaryButton
                                                 onClick={this.handleEditProfileClose}

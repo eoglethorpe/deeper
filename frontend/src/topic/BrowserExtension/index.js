@@ -6,20 +6,24 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { tokenSelector } from '../../common/redux';
+import {
+    tokenSelector,
+    notificationStringsSelector,
+} from '../../common/redux';
 import { sendToken } from '../../common/utils/browserExtension';
-import notificationStrings from '../../common/constants/strings/notificationStrings';
 
 import notify from '../../common/notify';
 
 const mapStateToProps = state => ({
     token: tokenSelector(state),
+    notificationStrings: notificationStringsSelector(state),
 });
 
 const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -56,8 +60,8 @@ export default class Export extends React.PureComponent {
             () => {
                 notify.send({
                     type: notify.type.SUCCESS,
-                    title: notificationStrings.browserExtensionSuccessTitle,
-                    message: notificationStrings.browserExtensionSuccessMessage,
+                    title: this.props.notificationStrings('browserExtensionSuccessTitle'),
+                    message: this.props.notificationStrings('browserExtensionSuccessMessage'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({ pending: false });
@@ -65,8 +69,8 @@ export default class Export extends React.PureComponent {
             () => {
                 notify.send({
                     type: notify.type.ERROR,
-                    title: notificationStrings.browserExtensionFailureTitle,
-                    message: notificationStrings.browserExtensionFailureMessage,
+                    title: this.props.notificationStrings('browserExtensionFailureTitle'),
+                    message: this.props.notificationStrings('browserExtensionFailureMessage'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({ pending: false });

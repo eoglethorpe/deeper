@@ -7,11 +7,10 @@ import {
 import {
     ViewListWidget,
 } from './View';
-import { afStrings } from '../../../../common/constants';
 
 const multiselectWidget = {
     id: 'multiselectWidget',
-    title: afStrings.multiselectWidgetLabel,
+    title: 'multiselectWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,
         listMinSize: { width: 192, height: 240 },

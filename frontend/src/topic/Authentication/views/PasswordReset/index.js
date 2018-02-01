@@ -5,6 +5,8 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
     LoadingAnimation,
@@ -22,10 +24,9 @@ import {
 } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
-import {
-    pathNames,
-    loginStrings,
-} from '../../../../common/constants';
+import { pathNames } from '../../../../common/constants';
+import { loginStringsSelector } from '../../../../common/redux';
+
 import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
@@ -35,10 +36,17 @@ import {
 
 import styles from './styles.scss';
 
-const propTypes = { };
+const propTypes = {
+    loginStrings: PropTypes.func.isRequired,
+};
 
 const defaultProps = { };
 
+const mapStateToProps = state => ({
+    loginStrings: loginStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class PasswordReset extends React.PureComponent {
     static propTypes = propTypes;
@@ -148,7 +156,6 @@ export default class PasswordReset extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
-            pristine,
             resetSuccess,
         } = this.state;
 
@@ -158,8 +165,10 @@ export default class PasswordReset extends React.PureComponent {
                     {
                         resetSuccess ?
                             <div styleName="info">
-                                <p> {loginStrings.checkInboxText}
-                                    {formValues.email || loginStrings.emailPlaceholder} </p>
+                                <p>
+                                    {this.props.loginStrings('checkInboxText')}
+                                    {formValues.email || this.props.loginStrings('emailPlaceholder')}
+                                </p>
                             </div>
                             :
                             <Form
@@ -178,16 +187,14 @@ export default class PasswordReset extends React.PureComponent {
                                     error={formFieldErrors.email}
                                     formname="email"
                                     value={formValues.email}
-                                    label={loginStrings.emailLabel}
-                                    placeholder={loginStrings.emailPlaceholder}
+                                    label={this.props.loginStrings('emailLabel')}
+                                    placeholder={this.props.loginStrings('emailPlaceholder')}
                                 />
                                 <div styleName="action-buttons">
                                     <PrimaryButton
                                         disabled={pending}
                                     >
-                                        { pristine ?
-                                            loginStrings.submitForgetPasswordPristine :
-                                            loginStrings.submitForgetPassword }
+                                        { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
                             </Form>
@@ -197,7 +204,7 @@ export default class PasswordReset extends React.PureComponent {
                             styleName="go-back-link"
                             to={reverseRoute(pathNames.login, {})}
                         >
-                            {loginStrings.goBackToLoginText}
+                            {this.props.loginStrings('goBackToLoginText')}
                         </Link>
                     </div>
                 </div>

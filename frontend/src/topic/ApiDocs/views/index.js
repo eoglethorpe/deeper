@@ -1,5 +1,7 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
 
 import {
     List,
@@ -7,18 +9,24 @@ import {
 } from '../../../public/components/View';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
-import { apiStrings } from '../../../common/constants';
+import { apiStringsSelector } from '../../../common/redux';
 
 import { urlForApiDocs } from '../../../common/rest';
 
 import styles from './styles.scss';
 
 const propTypes = {
+    apiStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    apiStrings: apiStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ApiDocs extends React.PureComponent {
     static propTypes = propTypes;
@@ -171,20 +179,18 @@ export default class ApiDocs extends React.PureComponent {
             <p className={styles.path}>
                 {method.path}
             </p>
-
             {!isObjectEmpty(method.requestSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        {apiStrings.requestSchemaLabel}
+                        {this.props.apiStrings('requestSchemaLabel')}
                     </h5>
                     {this.renderSchema(method.requestSchema)}
                 </div>
             )}
-
             {!isObjectEmpty(method.responseSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        {apiStrings.responseSchemaLabel}
+                        {this.props.apiStrings('responseSchemaLabel')}
                     </h5>
                     {this.renderSchema(method.responseSchema)}
                 </div>
@@ -207,7 +213,7 @@ export default class ApiDocs extends React.PureComponent {
         if (pending) {
             content = (
                 <p styleName="message">
-                    {apiStrings.loadingLabel}
+                    {this.props.apiStrings('loadingLabel')}
                 </p>
             );
         } else {

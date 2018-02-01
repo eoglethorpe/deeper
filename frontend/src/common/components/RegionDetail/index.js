@@ -27,12 +27,10 @@ import {
 import {
     regionDetailForRegionSelector,
     setRegionDetailsAction,
+    countriesStringsSelector,
+    notificationStringsSelector,
 } from '../../../common/redux';
 
-import {
-    countriesString,
-    notificationStrings,
-} from '../../../common/constants';
 import notify from '../../notify';
 
 
@@ -49,6 +47,8 @@ const propTypes = {
     setRegionDetails: PropTypes.func.isRequired,
     dataLoading: PropTypes.bool,
     projectId: PropTypes.number,
+    countriesStrings: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,6 +60,8 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: regionDetailForRegionSelector(state, props),
+    countriesStrings: countriesStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -153,9 +155,9 @@ export default class RegionDetail extends React.PureComponent {
                         projectId,
                     });
                     notify.send({
-                        title: notificationStrings.regionDetail,
+                        title: this.props.notificationStrings('regionDetail'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.regionDetailSuccess,
+                        message: this.props.notificationStrings('regionDetailSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.setState({ pristine: false });
@@ -165,9 +167,9 @@ export default class RegionDetail extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.regionDetail,
+                    title: this.props.notificationStrings('regionDetail'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.regionDetailFailure,
+                    message: this.props.notificationStrings('regionDetailFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -181,9 +183,9 @@ export default class RegionDetail extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.regionDetail,
+                    title: this.props.notificationStrings('regionDetail'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.regionDetailFatal,
+                    message: this.props.notificationStrings('regionDetailFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -280,12 +282,12 @@ export default class RegionDetail extends React.PureComponent {
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            {countriesString.cancelButtonLabel}
+                            {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
                         >
-                            {countriesString.saveButtonLabel}
+                            {this.props.countriesStrings('saveButtonLabel')}
                         </SuccessButton>
                     </div>
                 </header>
@@ -293,64 +295,64 @@ export default class RegionDetail extends React.PureComponent {
                     <TextInput
                         error={formFieldErrors.countryCode}
                         formname="countryCode"
-                        label={countriesString.countryCodeLabel}
-                        placeholder={countriesString.countryCodePlaceholder}
+                        label={this.props.countriesStrings('countryCodeLabel')}
+                        placeholder={this.props.countriesStrings('countryCodePlaceholder')}
                         styleName="text-input"
                         value={formValues.countryCode}
                     />
                     <TextInput
                         error={formFieldErrors.countryName}
                         formname="countryName"
-                        label={countriesString.countryNameLabel}
-                        placeholder={countriesString.countryNamePlaceholder}
+                        label={this.props.countriesStrings('countryNameLabel')}
+                        placeholder={this.props.countriesStrings('countryNamePlaceholder')}
                         styleName="text-input"
                         value={formValues.countryName}
                     />
                     <TextInput
                         error={formFieldErrors.wbRegion}
                         formname="wbRegion"
-                        label={countriesString.wbRegionLabel}
-                        placeholder={countriesString.wbRegionPlaceholer}
+                        label={this.props.countriesStrings('wbRegionLabel')}
+                        placeholder={this.props.countriesStrings('wbRegionPlaceholer')}
                         styleName="text-input"
                         value={formValues.wbRegion}
                     />
                     <TextInput
                         error={formFieldErrors.wbIncomeRegion}
                         formname="wbIncomeRegion"
-                        label={countriesString.wbIncomeRegionLabel}
-                        placeholder={countriesString.wbIncomeRegionPlaceholder}
+                        label={this.props.countriesStrings('wbIncomeRegionLabel')}
+                        placeholder={this.props.countriesStrings('wbIncomeRegionPlaceholder')}
                         styleName="text-input"
                         value={formValues.wbIncomeRegion}
                     />
                     <TextInput
                         error={formFieldErrors.ochaRegion}
                         formname="ochaRegion"
-                        label={countriesString.ochaRegionLabel}
-                        placeholder={countriesString.ochaRegionPlaceholder}
+                        label={this.props.countriesStrings('ochaRegionLabel')}
+                        placeholder={this.props.countriesStrings('ochaRegionPlaceholder')}
                         styleName="text-input"
                         value={formValues.ochaRegion}
                     />
                     <TextInput
                         error={formFieldErrors.echoRegion}
                         formname="echoRegion"
-                        label={countriesString.echoRegionLabel}
-                        placeholder={countriesString.echoRegionPlaceholder}
+                        label={this.props.countriesStrings('echoRegionLabel')}
+                        placeholder={this.props.countriesStrings('echoRegionPlaceholder')}
                         styleName="text-input"
                         value={formValues.echoRegion}
                     />
                     <TextInput
                         error={formFieldErrors.unGeoRegion}
                         formname="unGeoRegion"
-                        label={countriesString.unGeoRegionLabel}
-                        placeholder={countriesString.unGeoRegionPlaceholer}
+                        label={this.props.countriesStrings('unGeoRegionLabel')}
+                        placeholder={this.props.countriesStrings('unGeoRegionPlaceholer')}
                         styleName="text-input"
                         value={formValues.unGeoRegion}
                     />
                     <TextInput
                         error={formFieldErrors.unGeoSubregion}
                         formname="unGeoSubregion"
-                        label={countriesString.unGeoSubregionLabel}
-                        placeholder={countriesString.unGeoSubregionPlaceholer}
+                        label={this.props.countriesStrings('unGeoSubregionLabel')}
+                        placeholder={this.props.countriesStrings('unGeoSubregionPlaceholer')}
                         styleName="text-input"
                         value={formValues.unGeoSubregion}
                     />

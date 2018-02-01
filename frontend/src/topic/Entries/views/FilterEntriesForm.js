@@ -18,9 +18,6 @@ import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
 import {
-    entryStrings,
-} from '../../../common/constants';
-import {
     activeProjectSelector,
     entriesViewFilterSelector,
     setEntriesViewFilterAction,
@@ -31,6 +28,7 @@ import {
     entryFilterOptionsForProjectSelector,
     setEntryFilterOptionsAction,
     setGeoOptionsAction,
+    entryStringsSelector,
 } from '../../../common/redux';
 import {
     createUrlForGeoOptions,
@@ -50,6 +48,7 @@ const mapStateToProps = (state, props) => ({
     filters: filtersForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     entryFilterOptions: entryFilterOptionsForProjectSelector(state, props),
+    entryStrings: entryStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -74,6 +73,8 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     entryFilterOptions: PropTypes.object.isRequired,
     setEntryFilterOptions: PropTypes.func.isRequired,
+
+    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -160,7 +161,7 @@ export default class FilterEntriesForm extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -168,9 +169,9 @@ export default class FilterEntriesForm extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
-                    message: entryStrings.geoOptionsFatalMessage,
+                    message: this.props.entryStrings('geoOptionsFatalMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -327,9 +328,9 @@ export default class FilterEntriesForm extends React.PureComponent {
                 <TextInput
                     className="entries-filter"
                     key="search"
-                    label={entryStrings.searchFilterLabel}
+                    label={this.props.entryStrings('searchFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('search', value); }}
-                    placeholder={entryStrings.searchFilterPlaceholder}
+                    placeholder={this.props.entryStrings('searchFilterPlaceholder')}
                     showHintAndError={false}
                     value={filters.search}
                     disabled={this.props.pending}
@@ -340,7 +341,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     keySelector={FilterEntriesForm.optionKeySelector}
                     labelSelector={FilterEntriesForm.optionLabelSelector}
                     options={createdBy}
-                    label={entryStrings.createdByFilterLabel}
+                    label={this.props.entryStrings('createdByFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}
                     value={filters.created_by || emptyList}
@@ -349,7 +350,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                 <DateFilter
                     className="entries-filter"
                     key="created-at"
-                    label={entryStrings.createdAtFilterLabel}
+                    label={this.props.entryStrings('createdAtFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('created_at', value); }}
                     showHintAndError={false}
                     value={filters.created_at}
@@ -363,7 +364,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                             onClick={this.handleApplyFilter}
                             disabled={pending || pristine}
                         >
-                            {entryStrings.applyFilterButtonLabel}
+                            {this.props.entryStrings('applyFilterButtonLabel')}
                         </Button>
                     )
                 }
@@ -373,7 +374,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     type="button"
                     disabled={pending || isFilterEmpty}
                 >
-                    {entryStrings.clearFilterButtonLabel}
+                    {this.props.entryStrings('clearFilterButtonLabel')}
                 </DangerButton>
             </div>
         );

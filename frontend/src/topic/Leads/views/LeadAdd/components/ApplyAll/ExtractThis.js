@@ -1,15 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import {
-    AccentButton,
-    // WarningButton,
-} from '../../../../../../public/components/Action';
+import { AccentButton } from '../../../../../../public/components/Action';
+import { leadsStringsSelector } from '../../../../../../common/redux';
 
 import {
     iconNames,
-    leadsString,
 } from '../../../../../../common/constants';
 
 import styles from './styles.scss';
@@ -19,11 +17,17 @@ const propTypes = {
     disabled: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
+    leadsStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: undefined,
 };
 
+const mapStateToProps = state => ({
+    leadsStrings: leadsStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ExtractThis extends React.PureComponent {
     static propTypes = propTypes;
@@ -45,7 +49,7 @@ export default class ExtractThis extends React.PureComponent {
                         styleName="apply-button"
                         transparent
                         type="button"
-                        title={leadsString.extractLead} // TODO: use strings
+                        title={this.props.leadsStrings('extractLead')}
                         disabled={disabled}
                         onClick={onClick}
                         tabIndex="-1"

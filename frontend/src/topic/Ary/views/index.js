@@ -1,108 +1,731 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import { Table } from '../../../public/components/View';
 import {
-    // pageTitles,
-    strings,
+    selectedRawStringsSelector,
+    selectedViewStringsSelector,
+} from '../../../common/redux';
 
-    leadsString,
-    countriesString,
-    notificationStrings,
-    userStrings,
-    projectStrings,
-    ceStrings,
-    exportStrings,
-    afStrings,
-    loginStrings,
-    apiStrings,
-    entryStrings,
-    fourHundredFourStrings,
-    homescreenStrings,
-    commonStrings,
-} from '../../../common/constants';
+// import { pageTitles } from '../../../common/constants';
 
 import styles from './styles.scss';
 
-// Merge duplicates (manually)
+// TODO:
+// Identify strings to be translated
+//      (change language to np, anything not set by user must be translated)
+// Identify bad translations
+//      (look at console.warn on pages where translation is bad)
 
-// *Identify duplicates on lang/en.js
-// *Identify usage count on lang/en.js
-// *Find entry in lang/eng (sort in order of word-count and alphabetically)
-// *Identify undefined import on strings
-// Identify duplicate import on strings (not important)
-
+// Search
 // Add/Delete entry in lang/en (ewan)
 // Find entry in strings (no sort)
 // Add/Delete entry in strings (dev)
 // Add category for strings
 // Browse category for strings
 
-// Get inverted map
-const invertedStrings = {};
-Object.keys(strings).forEach((key) => {
-    const value = strings[key].toLowerCase();
-    invertedStrings[value] = key;
-});
+// NOTE: needs manual code inspection
+const usedMaps = {
+    notification: {
+        browserExtensionSuccessTitle: true,
+        browserExtensionSuccessMessage: true,
+        browserExtensionFailureTitle: true,
+        browserExtensionFailureMessage: true,
+        userProjectCreate: true,
+        userProjectCreateSuccess: true,
+        userProjectCreateFailure: true,
+        userProjectCreateFatal: true,
+        userMembershipDelete: true,
+        userMembershipDeleteSuccess: true,
+        userMembershipDeleteFailure: true,
+        userMembershipDeleteFatal: true,
+        userMembershipRole: true,
+        userMembershipRoleSuccess: true,
+        userMembershipRoleFailure: true,
+        userMembershipRoleFatal: true,
+        leadSave: true,
+        leadSaveSuccess: true,
+        leadSaveFailure: true,
+        leadSaveFatal: true,
+        adminLevelDelete: true,
+        adminLevelDeleteSuccess: true,
+        adminLevelDeleteFailure: true,
+        adminLevelDeleteFatal: true,
+        countryCreate: true,
+        countryCreateSuccess: true,
+        countryCreateFailure: true,
+        countryCreateFatal: true,
+        adminLevelEdit: true,
+        adminLevelEditSuccess: true,
+        adminLevelEditFailure: true,
+        adminLevelEditFatal: true,
+        adminLevelCreate: true,
+        adminLevelCreateSuccess: true,
+        adminLevelCreateFailure: true,
+        adminLevelCreateFatal: true,
+        ceUpdate: true,
+        ceUpdateOverridden: true,
+        invalidDropSource: true,
+        validDropAlert: true,
+        regionDetail: true,
+        regionDetailSuccess: true,
+        regionDetailFailure: true,
+        regionDetailFatal: true,
+        afUpdate: true,
+        afUpdateOverridden: true,
+        afTitle: true,
+        afSaveSuccess: true,
+        afCreate: true,
+        afCreateSuccess: true,
+        afCreateFailure: true,
+        afCreateFatal: true,
+        afFormEdit: true,
+        afFormEditSuccess: true,
+        afFormEditFailure: true,
+        afFormEditFatal: true,
+        projectDetails: true,
+        projectDetailsSuccess: true,
+        projectDetailsFailure: true,
+        projectDetailsFatal: true,
+        countryDelete: true,
+        countryDeleteSuccess: true,
+        countryDeleteFailure: true,
+        countryDeleteFatal: true,
+        userMembershipCreate: true,
+        userMembershipCreateSuccess: true,
+        userMembershipCreateFailure: true,
+        userMembershipCreateFatal: true,
+        userProjectDelete: true,
+        userProjectDeleteSuccess: true,
+        userProjectDeleteFailure: true,
+        userProjectDeleteFatal: true,
+        userGroupDelete: true,
+        userGroupDeleteSuccess: true,
+        userGroupDeleteFailure: true,
+        userGroupDeleteFatal: true,
+        userGroupCreate: true,
+        userGroupCreateSuccess: true,
+        userGroupCreateFailure: true,
+        userGroupCreateFatal: true,
+        userProfileEdit: true,
+        userEditSuccess: true,
+        userEditFailure: true,
+        userEditFatal: true,
+        leadDiscard: true,
+        leadDiscardSuccess: true,
+        leadsDiscard: true,
+        leadsDiscardSuccess: true,
+        userGroupEdit: true,
+        userGroupEditSuccess: true,
+        userGroupEditFailure: true,
+        userGroupEditFatal: true,
+        entryUpdate: true,
+        entryUpdateOverridden: true,
+        entrySave: true,
+        entrySaveSuccess: true,
+        entrySaveFailure: true,
+        entrySaveFatal: true,
+    },
+    common: {
+        openDropboxChooserText: true,
+        loadingMessages1: true,
+        loadingMessages2: true,
+        loadingMessages3: true,
+        loadingMessages4: true,
+        loadingMessages5: true,
+        loadingMessages6: true,
+        loadingMessages7: true,
+        loadingMessages8: true,
+        loadingMessages9: true,
+        loadingMessages10: true,
+        loadingMessages11: true,
+        loadingMessages12: true,
+        loadingMessages13: true,
+        loadingMessages14: true,
+        loadingMessages15: true,
+        loadingFileLabel: true,
+        anonymousLabel: true,
+        deepLabel: true,
+        betaLabel: true,
+        selectEventPlaceholder: true,
+        adminPanelLabel: true,
+        logoutLabel: true,
+        serverErrorText: true,
+        connectionFailureText: true,
+        previewNotAvailable: true,
+        openGoogleChooserText: true,
+        erverErrorText: true,
+        mapNotAvailable: true,
+        youHaveUnsavedChanges: true,
+        tableHeaderSelect: true,
+        tableHeaderType: true,
+        tableHeaderName: true,
+        tableHeaderDateCreated: true,
+        searchGalleryPlaceholder: true,
+        searchGalleryLabel: true,
+        cancelButtonLabel: true,
+        addButtonLabel: true,
+        altUser: true,
+    },
+    user: {
+        addProjectModalLabel: true,
+        addProjectModalPlaceholder: true,
+        modalCancel: true,
+        modalCreate: true,
+        revokeAdminLinkTitle: true,
+        grantAdminLinkTitle: true,
+        deleteMemberLinkTitle: true,
+        confirmTextRevokeAdmin: true,
+        confirmTextGrantAdmin: true,
+        tableHeaderMembers: true,
+        placeholderSearch: true,
+        addMemberButtonLabel: true,
+        userNotFound: true,
+        editProfileModalHeader: true,
+        userGroupNotFound: true,
+        userGroupTitle: true,
+        userGroupActivtyLogTitle: true,
+        userGroupEditModalLabel: true,
+        tableHeaderTitle: true,
+        tableHeaderRights: true,
+        tableHeaderCreatedAt: true,
+        tableHeaderLastModifiedAt: true,
+        tableHeaderStatus: true,
+        tableHeaderActions: true,
+        viewProjectLinkTitle: true,
+        editProjectLinkTitle: true,
+        deleteProjectLinkTitle: true,
+        headerProjects: true,
+        addProjectButtonLabel: true,
+        tableHeaderJoinedAt: true,
+        viewUsergroupLinkTitle: true,
+        editUsergroupLinkTitle: true,
+        deleteUsergroupLinkTitle: true,
+        headerGroups: true,
+        addUserGroupButtonLabel: true,
+        addUserGroupModalLabel: true,
+        addUserGroupModalPlaceholder: true,
+        firstNameLabel: true,
+        firstNamePlaceholder: true,
+        lastNameLabel: true,
+        lastNamePlaceholder: true,
+        organizationLabel: true,
+        organizationPlaceholder: true,
+        modalSave: true,
+        userGroupModalDescriptionLabel: true,
+        tableHeaderStartDate: true,
+        confirmTextDeleteProject: true,
+        tableHeaderName: true,
+        tableHeaderEmail: true,
+        viewMemberLinkTitle: true,
+    },
+    af: {
+        textWidgetLabel: true,
+        imageWidgetLabel: true,
+        geoWidgetLabel: true,
+        multiselectWidgetLabel: true,
+        numberWidgetLabel: true,
+        scaleWidgetLabel: true,
+        dateWidgetLabel: true,
+        excerptWidgetLabel: true,
 
-// Calculate usage count and identify bad import
-const usageCountStrings = {};
-Object.keys(strings).forEach((key) => {
-    usageCountStrings[key] = 0;
-});
-const pageStrings = [
-    leadsString,
-    countriesString,
-    notificationStrings,
-    userStrings,
-    projectStrings,
-    ceStrings,
-    exportStrings,
-    afStrings,
-    loginStrings,
-    apiStrings,
-    entryStrings,
-    fourHundredFourStrings,
-    homescreenStrings,
-    commonStrings,
-];
-pageStrings.forEach((pageString) => {
-    Object.keys(pageString).forEach((pageStringKey) => {
-        const value = pageString[pageStringKey];
-        if (!value) {
-            console.warn('Undefined for ', pageStringKey);
-            return;
-        }
-        const keyFromInvertedStrings = invertedStrings[value.toLowerCase()];
-        if (keyFromInvertedStrings) {
-            usageCountStrings[keyFromInvertedStrings] += 1;
-        }
-    });
-});
 
-// Get array of strings
-const stringArrayForDisplay = Object.keys(strings)
-    .reduce(
-        (acc, id) => acc.concat({ id, value: strings[id] }),
-        [],
-    )
-    .map(({ id, value }) => ({
-        id,
-        value,
-        usageCount: usageCountStrings[id],
-    }));
-    /*
-    .filter(({ usageCount }) => (
-        usageCount > 0
-    ));
-    */
+        textOrImageExcerptWidgetLabel: true,
+        editTitleModalHeader: true,
+        titleLabel: true,
+        widgetTitlePlaceholder: true,
+        cancelButtonLabel: true,
+        saveButtonLabel: true,
+        altEntryLabel: true,
+        numberPlaceholder: true,
+        geoAreaButtonLabel: true,
+        colorLabel: true,
+        titlePlaceholderScale: true,
+        defaultButtonLabel: true,
+        editScaleModalTitle: true,
+        addscaleUnitButtonLabel: true,
+        optionLabel: true,
+        optionPlaceholder: true,
+        editMultiselectModalTitle: true,
+        addOptionButtonLabel: true,
+        optionsHeader: true,
+        informationDateCheckboxLabel: true,
+        matrix2DWidgetLabel: true,
+        tooltipTitle: true,
+        tooltipPlaceholder: true,
+        editRowModalTitle: true,
+        addRowButtonLabel: true,
+        matrix1DWidgetLabel: true,
+        numberMatrixWidgetLabel: true,
+        titlePlaceholderRow: true,
+        titlePlaceholderColumn: true,
+        editNumberMatrixModalTitle: true,
+        rowsLabel: true,
+        addRowUnitButtonLabel: true,
+        columnsLabel: true,
+        addColumnUnitButtonLabel: true,
+        titlePlaceholderOverview: true,
+        matrix1DModalTitle: true,
+        addCellButtonLabel: true,
+        analysisFramework: true,
+        headerOverview: true,
+        gotoListButtonLabel: true,
+        exitButtonLabel: true,
+        headerList: true,
+        gotoOverviewButtonLabel: true,
+        organigramWidgetLabel: true,
+        applyButtonLabel: true,
+        organPlaceholder: true,
+        addChildButtonTitle: true,
+        removeElementButtonTitle: true,
+        editOrganigramModaltitle: true,
+        subsectorsLabel: true,
+        dimensionXLabel: true,
+        dimensionYLabel: true,
+        untiledDimensionTitle: true,
+        title: true,
+        tooltip: true,
+        empty: true,
+        color: true,
+        subdimensions: true,
+        addSubdimensionButtonTitle: true,
+        editModalTitle: true,
+        addDimensionButtonTitle: true,
+        cancelButtonTitle: true,
+        saveButtonTitle: true,
+    },
+    leads: {
+        extractLead: true,
+        applyAllButtonTitle: true,
+        applyAllBelowButtonTitle: true,
+        urlLabel: true,
+        urlPlaceholderLabel: true,
+        websiteLabel: true,
+        textLabel: true,
+        textareaPlaceholderLabel: true,
+        projectLabel: true,
+        projectPlaceholderLabel: true,
+        titleLabel: true,
+        titlePlaceHolderLabel: true,
+        publisherLabel: true,
+        publisherPlaceHolderLabel: true,
+        confidentialityLabel: true,
+        selectInputPlaceholderLabel: true,
+        assigneeLabel: true,
+        datePublishedLabel: true,
+        datePublishedPlaceholderLabel: true,
+        cannotPreviewUrl: true,
+        invalidUrl: true,
+        gatheringWebsiteInfoLabel: true,
+        filterSourceType: true,
+        tableHeaderPublisher: true,
+        tableHeaderDatePublished: true,
+        tableHeaderOwner: true,
+        tableHeaderDateCreated: true,
+        tableHeaderConfidentiality: true,
+        tableHeaderStatus: true,
+        tableHeaderNoOfEntries: true,
+        tableHeaderActions: true,
+        searchSimilarLeadButtonTitle: true,
+        editLeadButtonTitle: true,
+        removeLeadLeadButtonTitle: true,
+        addEntryFromLeadButtonTitle: true,
+        leadDeleteSuccess: true,
+        leadDelete: true,
+        leadDeleteFailure: true,
+        addSourcesButtonLabel: true,
+        leadDeleteConfirmText: true,
+        previousButtonLabel: true,
+        nextButtonLabel: true,
+        removeButtonTitle: true,
+        removeCurrentButtonTitle: true,
+        removeAllFilteredButtonTitle: true,
+        removeAllButtonTitle: true,
+        saveCurrentButtonTitle: true,
+        saveAllFilteredButtonTitle: true,
+        saveAllButtonTitle: true,
+        deleteLeadConfirmText: true,
+        placeholderAnybody: true,
+        filterDateCreated: true,
+        placeholderAnytime: true,
+        filterDatePublished: true,
+        filterConfidentiality: true,
+        placeholderAny: true,
+        filterStatus: true,
+        placeholderSearch: true,
+        filterApplyFilter: true,
+        filterClearFilter: true,
+        filterClearSimilarFilter: true,
+        sourcePreview: true,
+        previewNotAvailable: true,
+        applyToAll: true,
+        applyToAllBelow: true,
+        filterPublisher: true,
+        addSourceFromLabel: true,
+        googleDriveLabel: true,
+        dropboxLabel: true,
+        localDiskLabel: true,
+    },
+    entry: {
+        regionSelectTitle: true,
+        regionSelectPlaceholder: true,
+        locationSelectTitle: true,
+        locationSelectPlaceholder: true,
+        cancelGeoSelectionButtonLabel: true,
+        setGeoSelectionButtonLabel: true,
+        entriesTabLabel: true,
+        editEntryLinkTitle: true,
+        editEntryButtonLabel: true,
+        geoOptionsFatalMessage: true,
+        searchFilterLabel: true,
+        searchFilterPlaceholder: true,
+        createdByFilterLabel: true,
+        createdAtFilterLabel: true,
+        applyFilterButtonLabel: true,
+        clearFilterButtonLabel: true,
+        applyAllButtonTitle: true,
+        applyAllBelowButtonTitle: true,
+        gotoOverviewButtonLabel: true,
+        saveButtonLabel: true,
+        noEntryFound: true,
+        applyToAll: true,
+        applyToAllBelow: true,
+        altLabel: true,
+        imageLabel: true,
+        excerptLabel: true,
+        previewNotAvailableText: true,
+        simplifiedTabLabel: true,
+        assistedTabLabel: true,
+        originalTabLabel: true,
+        imagesTabLabel: true,
+        selectExcerptPlaceholder: true,
+        addEntryButtonTitle: true,
+        removeEntryButtonTitle: true,
+        undoRemoveEntryButtonTitle: true,
+        gotoListButtonLabel: true,
+        nlpLabel: true,
+        entitiesLabel: true,
+        ceLabel: true,
+        serverErrorText: true,
+        connectionFailureText: true,
+        assitedTaggingFeedbackTitle: true,
+        assitedTaggingFeedbackMessage: true,
+        sourceNLP: true,
+        sourceNER: true,
+        sourceCE: true,
+        accurateTextTitle: true,
+        notAccurateTextTitle: true,
+        showSuggestionText: true,
+        addEntryButtonLabel: true,
+    },
+    export: {
+        serverErrorText: true,
+        connectionFailureText: true,
+        previewNotAvailableLabel: true,
+        selectLabel: true,
+        titleLabel: true,
+        createdAtLabel: true,
+        projectLabel: true,
+        cantLoadProject: true,
+        afLabel: true,
+        cantLoadAf: true,
+        leadsLabel: true,
+        cantLoadLeads: true,
+        entryAttributesLabel: true,
+        leadAttributesLabel: true,
+        documentTypeHeaderLabel: true,
+        exportedAtHeaderLabel: true,
+        exportTitleHeaderLabel: true,
+        statusHeaderLabel: true,
+        pendingStatusLabel: true,
+        errorStatusLabel: true,
+        completedStatusLabel: true,
+        exportTypeHeaderLabel: true,
+        exportDownloadHeaderLabel: true,
+        userExportsTitle: true,
+        userExportsFataMessage: true,
+        userExportsHeader: true,
+        goBackToExportLabel: true,
+        docxLabel: true,
+        pdfLabel: true,
+        xlxsLabel: true,
+        jsonLabel: true,
+        noMatrixAfText: true,
+        reportStructureLabel: true,
+        decoupledEntriesLabel: true,
+        decoupledEntriesTitle2: true,
+        decoupledEntriesTitle: true,
+        noOptionsAvailable: true,
+        headerExport: true,
+        exportStartedNotifyMessage: true,
+        viewAllExportsButtonLabel: true,
+        showPreviewButtonLabel: true,
+        startExportButtonLabel: true,
+    },
+    countries: {
+        levelLabel: true,
+        adminLevelNameText: true,
+        namePropertyLabel: true,
+        pcodePropertyLabel: true,
+        parentNamePropPlaceholder: true,
+        parentCodePropLabel: true,
+        actionsLabel: true,
+        adminLevelsHeader: true,
+        addAdminLevelButtonLabel: true,
+        editAdminLevelModalTitle: true,
+        removeAdminLevelConfirm: true,
+        adminLevelLabel: true,
+        adminLevelPlaceholder: true,
+        adminLevelNameLabel: true,
+        adminLevelNamePlaceholder: true,
+        namePropertyPlaceholder: true,
+        pcodePropertyPlaceholder: true,
+        parentNamePropLabel: true,
+        parentCodePropPlaceholder: true,
+        parentAdminLevelLabel: true,
+        parentAdminLevelPlaceholder: true,
+        geoShapeFile: true,
+        loadGeoShapeFile: true,
+        cancelButtonLabel: true,
+        saveChangesButtonLabel: true,
+        noCountriesText: true,
+        selectCountryText: true,
+        countryNotFoundText: true,
+        countriesLabel: true,
+        addCountryButtonLabel: true,
+        searchCountryPlaceholer: true,
+        saveButtonLabel: true,
+        countryCodeLabel: true,
+        countryCodePlaceholder: true,
+        countryNameLabel: true,
+        countryNamePlaceholder: true,
+        wbRegionLabel: true,
+        wbRegionPlaceholer: true,
+        wbIncomeRegionLabel: true,
+        wbIncomeRegionPlaceholder: true,
+        ochaRegionLabel: true,
+        ochaRegionPlaceholder: true,
+        echoRegionLabel: true,
+        echoRegionPlaceholder: true,
+        unGeoRegionLabel: true,
+        unGeoRegionPlaceholer: true,
+        unGeoSubregionLabel: true,
+        unGeoSubregionPlaceholer: true,
+        totalPopulationLabel: true,
+        totalPopulationPlaceholder: true,
+        sourceLabel: true,
+        sourcePlaceholder: true,
+        humanDevelopmentIndexLabel: true,
+        indexLabel: true,
+        geoRankLabel: true,
+        geoScoreLabel: true,
+        rankLabel: true,
+        underFiveMortalityLabel: true,
+        u5mLabel: true,
+        uprootedPeopleLabel: true,
+        numberOfRefugeesLabel: true,
+        percentageUprootedPeopleLabel: true,
+        numberIdpLabel: true,
+        numberReturnedRefugeesLabel: true,
+        informScoreLabel: true,
+        riskClassLabel: true,
+        informRiskIndexLabel: true,
+        hazardAndExposureLabel: true,
+        vulnerabilityLabel: true,
+        lackOfCopingCapacityLabel: true,
+        deleteCountryButtonLabel: true,
+        deleteCountryConfirm: true,
+        generalTabLabel: true,
+        keyFiguesTabLabel: true,
+        populationTabLabel: true,
+        seasonalTabLabel: true,
+        mediaTabLabel: true,
+    },
+    project: {
+        revokeAdminRghtsTitle: true,
+        addRegionTitleLabel: true,
+        addRegionTitlePlaceholder: true,
+        addRegionCodeLabel: true,
+        addRegionCodePlaceholder: true,
+        headerProjects: true,
+        addProjectButtonLabel: true,
+        searchProjectPlaceholder: true,
+        addProjectModalTitle: true,
+        noProjectText: true,
+        generalDetailsLabel: true,
+        regionsLabel: true,
+        analysisFrameworkLabel: true,
+        categoryEditorLabel: true,
+        forbiddenText: true,
+        addAfTitleLabel: true,
+        addAfTitlePlaceholder: true,
+        modalCancel: true,
+        modalAdd: true,
+        tableHeaderName: true,
+        tableHeaderId: true,
+        modalUpdate: true,
+        useAfButtonLabel: true,
+        editAfButtonLabel: true,
+        cloneEditAfButtonLabel: true,
+        confirmUseAf: true,
+        confirmUseAfText: true,
+        confirmCloneAf: true,
+        modalRevert: true,
+        modalSave: true,
+        projectDescriptionLabel: true,
+        projectDescriptionPlaceholder: true,
+        tableHeaderEmail: true,
+        tableHeaderRights: true,
+        tableHeaderJoinedAt: true,
+        tableHeaderActions: true,
+        viewMemberLinkTitle: true,
+        grantAdminRightsTitle: true,
+        deleteMemberLinkTitle: true,
+        confirmTextRevokeAdmin: true,
+        confirmTextGrantAdmin: true,
+        confirmText: true,
+        confirmTextRemove: true,
+        headerMembers: true,
+        addMemberButtonLabel: true,
+        noCeText: true,
+        searchCePlaceholder: true,
+        addCeButtonLabel: true,
+        addCeModalTitle: true,
+        useCeButtonLabel: true,
+        editCeButtonLabel: true,
+        cloneEditCeButtonLabel: true,
+        confirmUseCe: true,
+        confirmUseCeText: true,
+        confirmCloneCe: true,
+        confirmCloneCeText: true,
+        removeRegionButtonLabel: true,
+        cloneEditButtonLabel: true,
+        confirmRemoveText: true,
+        confirmCloneText: true,
+        addCeTitlePlaceholder: true,
+        noAfText: true,
+        searchAfPlaceholder: true,
+        addAfButtonLabel: true,
+        addAfModalTitle: true,
+        useExistingRegionText: true,
+        createNewRegionText: true,
+        noRegionText: true,
+        searchRegionPlaceholder: true,
+        addRegionButtonLabel: true,
+        addRegionModalTitle: true,
+        addCeTitleLabel: true,
+        projectNameLabel: true,
+        projectNamePlaceholder: true,
+        projectStartDateLabel: true,
+        projectStartDatePlaceholder: true,
+        projectEndDateLabel: true,
+        projectEndDatePlaceholder: true,
+        projectRegionLabel: true,
+        projectRegionPlaceholder: true,
+        projectUserGroupLabel: true,
+        projectUserGroupPlaceholder: true,
+    },
+    ce: {
+        confirmTextDeleteCategory: true,
+        saveCeButtonLabel: true,
+        exitButtonLabel: true,
+        headerCategoryLabel: true,
+        selectCategoryPlaceholder: true,
+        addCategoryTooltip: true,
+        editCategoryTooltip: true,
+        deleteCategoryTooltip: true,
+        nothingHereText: true,
+        documentTabLabel: true,
+        simplifiedTabLabel: true,
+        ngramsTabLabel: true,
+        confirmTextDeleteSubCategory: true,
+        subCategoryDetailsText: true,
+        removeCategoryButtonLabel: true,
+        subCategoryTitleLabel: true,
+        subCategoryTitlePlaceholder: true,
+        subCategoryDescriptionLabel: true,
+        subCategoryDescriptionPlaceholder: true,
+        numberOfWordsLabel: true,
+        noWordsText: true,
+        addWordManuallyButtonLabel: true,
+        addNewSubCategoryModalTitle: true,
+        addSubCategoryTitleLabel: true,
+        addSubCategoryTitlePlaceholder: true,
+        addSubCategoryDescriptionLabel: true,
+        addSubCategoryDescriptionPlaceholder: true,
+        modalCancel: true,
+        modalOk: true,
+        addCategoryTitleLabel: true,
+        addCategoryTitlePlaceholder: true,
+        addNewWordModalTitle: true,
+        addNewWordLabel: true,
+        addNewWordPlaceholder: true,
+        titleLabel: true,
+        selectFromGalleryButtonLabel: true,
+        applyButtonLabel: true,
+    },
+    fourHundredFour: {
+        errorFourHundredFour: true,
+        message1: true,
+        message2: true,
+        goToDeep: true,
+    },
+    homescreen: {
+        welcomeText: true,
+        deepLabel: true,
+        message1: true,
+        message2: true,
+        goToProfile: true,
+    },
+    api: {
+        requestSchemaLabel: true,
+        responseSchemaLabel: true,
+        loadingLabel: true,
+    },
+    login: {
+        welcomeToText: true,
+        logInWIthHid: true,
+        orText: true,
+        emailLabel: true,
+        passwordLabel: true,
+        forgotPasswordText: true,
+        loginLabel: true,
+        noAccountYetText: true,
+        registerLabel: true,
+        firstNameLabel: true,
+        firstNamePlaceholder: true,
+        lastNameLabel: true,
+        lastNamePlaceholder: true,
+        organizationLabel: true,
+        organizationPlaceholder: true,
+        emailPlaceholder: true,
+        passwordHint: true,
+        alreadyHaveAccountText: true,
+        checkInboxText: true,
+        submitForgetPasswordPristine: true,
+        submitForgetPassword: true,
+        goBackToLoginText: true,
+    },
+};
 
 const propTypes = {
+    // eslint-disable-next-line react/forbid-prop-types
+    selectedRawStrings: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    selectedViewStrings: PropTypes.object.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    selectedRawStrings: selectedRawStringsSelector(state),
+    selectedViewStrings: selectedViewStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Ary extends React.PureComponent {
     static propTypes = propTypes;
@@ -111,13 +734,20 @@ export default class Ary extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const sortNumber = (a, b) => (a - b);
+        const sortString = (a, b) => a.localeCompare(b);
+        const sortStringByWord = (a, b) => (a.split(' ').length - b.split(' ').length);
+        const sortStringAsNumber = (a, b) => (+a) - (+b);
+        // eslint-disable-next-line no-nested-ternary
+        const sortBoolean = (a, b) => (a === b ? 0 : (a ? 1 : -1));
+
         this.headers = [
             {
                 key: 'id',
                 label: 'Id',
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.id.localeCompare(b.id),
+                comparator: (a, b) => sortStringAsNumber(a.id, b.id),
             },
             {
                 key: 'value',
@@ -125,22 +755,91 @@ export default class Ary extends React.PureComponent {
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (
-                    (a.value.split(' ').length - b.value.split(' ').length) ||
-                    a.value.localeCompare(b.value)
+                    sortStringByWord(a.value, b.value) ||
+                    sortString(a.value, b.value)
                 ),
             },
             {
                 key: 'usageCount',
-                label: 'Usage Count',
+                label: 'Reference Count',
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.usageCount - b.usageCount,
+                comparator: (a, b) => sortNumber(a.usageCount, b.usageCount),
+            },
+            {
+                key: 'duplicated',
+                label: 'Duplicated',
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => (
+                    -sortBoolean(!!a.duplicated, !!b.duplicated) ||
+                    sortStringByWord(a.value, b.value) ||
+                    sortString(a.value, b.value)
+                ),
+                modifier: a => (a.duplicated ? a.duplicated : '-'),
             },
         ];
         this.defaultSort = {
-            key: 'usageCount',
-            order: 'dsc',
+            key: 'duplicated',
+            order: 'asc',
         };
+
+        const { selectedRawStrings: strings, selectedViewStrings: viewsIds } = this.props;
+        this.errors = [];
+
+        // Get duplicated strings
+        const invertedStrings = {};
+        const duplicatedStrings = {};
+        Object.keys(strings).forEach((id) => {
+            const value = strings[id].toLowerCase();
+            const oldId = invertedStrings[value];
+            if (oldId) {
+                // duplicated
+                duplicatedStrings[id] = oldId;
+            } else {
+                invertedStrings[value] = id;
+            }
+        });
+
+        // Calculate usage count and identify bad import
+        const usageCountStrings = {};
+        Object.keys(strings).forEach((id) => {
+            usageCountStrings[id] = 0;
+        });
+        // leads { af: {}, ce: {} }
+        Object.keys(viewsIds).forEach((id) => {
+            // af { name: 1, title: 2}
+            const viewIds = viewsIds[id];
+            Object.keys(viewIds).forEach((key) => {
+                if (!usedMaps[id][key]) {
+                    this.errors.push(
+                        `WARNING: ${key} not used for ${id}`,
+                    );
+                }
+                // name 1, 2
+                const viewId = viewIds[key];
+                if (viewId && strings[viewId]) {
+                    usageCountStrings[viewId] += 1;
+                } else {
+                    this.errors.push(
+                        `ERROR: Value not defined for ${key} (${viewId})`,
+                    );
+                }
+            });
+        });
+
+        // Get array of strings
+        this.stringArrayForDisplay = Object.keys(strings)
+            .reduce(
+                (acc, id) => acc.concat({ id, value: strings[id] }),
+                [],
+            )
+            .map(({ id, value }) => ({
+                id,
+                value,
+                usageCount: usageCountStrings[id],
+                duplicated: duplicatedStrings[id],
+            }));
     }
 
     keyExtractor = e => e.id;
@@ -149,8 +848,17 @@ export default class Ary extends React.PureComponent {
         // { pageTitles.ary }
         return (
             <div>
+                <div>
+                    {
+                        this.errors.map(string => (
+                            <p key={string}>
+                                {string}
+                            </p>
+                        ))
+                    }
+                </div>
                 <Table
-                    data={stringArrayForDisplay}
+                    data={this.stringArrayForDisplay}
                     headers={this.headers}
                     keyExtractor={this.keyExtractor}
                     defaultSort={this.defaultSort}

@@ -15,6 +15,7 @@ import { randomString } from '../../../../../public/utils/common';
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
+    leadsStringsSelector,
 } from '../../../../../common/redux';
 import DropboxChooser from '../../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../../common/components/GooglePicker';
@@ -23,10 +24,7 @@ import {
     googleDriveClientId,
     googleDriveDeveloperKey,
 } from '../../../../../common/config/google-drive';
-import {
-    leadsString,
-    iconNames,
-} from '../../../../../common/constants';
+import { iconNames } from '../../../../../common/constants';
 
 import { LEAD_TYPE } from '../../../../../common/entities/lead';
 import styles from '../styles.scss';
@@ -57,10 +55,12 @@ const propTypes = {
     onFileSelect: PropTypes.func.isRequired,
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
+    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -256,7 +256,7 @@ export default class LeadButtons extends React.PureComponent {
         return (
             <div styleName="add-lead-buttons">
                 <h3 styleName="heading">
-                    {leadsString.addSourceFromLabel}
+                    {this.props.leadsStrings('addSourceFromLabel')}
                 </h3>
                 <GooglePicker
                     styleName="add-lead-btn"
@@ -270,7 +270,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.googleDrive} />
                     <p>
-                        {leadsString.googleDriveLabel}
+                        {this.props.leadsStrings('googleDriveLabel')}
                     </p>
                 </GooglePicker>
                 <DropboxChooser
@@ -285,7 +285,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.dropbox} />
                     <p>
-                        {leadsString.dropboxLabel}
+                        {this.props.leadsStrings('dropboxLabel')}
                     </p>
                 </DropboxChooser>
                 <FileInput
@@ -297,7 +297,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.upload} />
                     <p>
-                        {leadsString.localDiskLabel}
+                        {this.props.leadsStrings('localDiskLabel')}
                     </p>
                 </FileInput>
                 <Button
@@ -307,7 +307,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.globe} />
                     <p>
-                        {leadsString.websiteLabel}
+                        {this.props.leadsStrings('websiteLabel')}
                     </p>
                 </Button>
                 <Button
@@ -317,7 +317,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.clipboard} />
                     <p>
-                        {leadsString.textLabel}
+                        {this.props.leadsStrings('textLabel')}
                     </p>
                 </Button>
             </div>

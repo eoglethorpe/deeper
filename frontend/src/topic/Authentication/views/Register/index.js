@@ -8,6 +8,8 @@ import {
     Redirect,
     Link,
 } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {
     LoadingAnimation,
@@ -25,10 +27,8 @@ import { PrimaryButton } from '../../../../public/components/Action';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
-import {
-    pathNames,
-    loginStrings,
-} from '../../../../common/constants';
+import { loginStringsSelector } from '../../../../common/redux';
+import { pathNames } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
@@ -39,11 +39,17 @@ import {
 import styles from './styles.scss';
 
 const propTypes = {
+    loginStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    loginStrings: loginStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
@@ -206,37 +212,37 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.firstname}
                             formname="firstname"
                             value={formValues.firstname}
-                            label={loginStrings.firstNameLabel}
-                            placeholder={loginStrings.firstNamePlaceholder}
+                            label={this.props.loginStrings('firstNameLabel')}
+                            placeholder={this.props.loginStrings('firstNamePlaceholder')}
                             autoFocus
                         />
                         <TextInput
                             error={formFieldErrors.lastname}
                             formname="lastname"
                             value={formValues.lastname}
-                            label={loginStrings.lastNameLabel}
-                            placeholder={loginStrings.lastNamePlaceholder}
+                            label={this.props.loginStrings('lastNameLabel')}
+                            placeholder={this.props.loginStrings('lastNamePlaceholder')}
                         />
                         <TextInput
                             error={formFieldErrors.organization}
                             formname="organization"
                             value={formValues.organization}
-                            label={loginStrings.organizationLabel}
-                            placeholder={loginStrings.organizationPlaceholder}
+                            label={this.props.loginStrings('organizationLabel')}
+                            placeholder={this.props.loginStrings('organizationPlaceholder')}
                         />
                         <TextInput
                             error={formFieldErrors.email}
                             formname="email"
                             value={formValues.email}
-                            label={loginStrings.emailLabel}
-                            placeholder={loginStrings.emailPlaceholder}
+                            label={this.props.loginStrings('emailLabel')}
+                            placeholder={this.props.loginStrings('emailPlaceholder')}
                         />
                         <TextInput
                             error={formFieldErrors.password}
                             formname="password"
-                            hint={loginStrings.passwordHint}
+                            hint={this.props.loginStrings('passwordHint')}
                             value={formValues.password}
-                            label={loginStrings.passwordLabel}
+                            label={this.props.loginStrings('passwordLabel')}
                             required
                             type="password"
                         />
@@ -244,19 +250,19 @@ export default class Login extends React.PureComponent {
                             <PrimaryButton
                                 disabled={pending}
                             >
-                                { loginStrings.registerLabel }
+                                { this.props.loginStrings('registerLabel')}
                             </PrimaryButton>
                         </div>
                     </Form>
                     <div styleName="login-link-container">
                         <p>
-                            {loginStrings.alreadyHaveAccountText}
+                            {this.props.loginStrings('alreadyHaveAccountText')}
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}
                             styleName="login-link"
                         >
-                            {loginStrings.loginLabel}
+                            {this.props.loginStrings('loginLabel')}
                         </Link>
                     </div>
                 </div>

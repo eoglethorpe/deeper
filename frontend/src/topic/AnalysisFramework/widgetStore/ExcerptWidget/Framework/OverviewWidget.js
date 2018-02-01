@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     TextInput,
@@ -15,7 +16,7 @@ import {
     ModalBody,
     ModalFooter,
 } from '../../../../../public/components/View';
-import { afStrings } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -23,8 +24,14 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    afStrings: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
@@ -72,14 +79,14 @@ export default class ExcerptTextOverview extends React.PureComponent {
 
         return (
             <div styleName="excerpt-overview">
-                {afStrings.textOrImageExcerptWidgetLabel}
+                {this.props.afStrings('textOrImageExcerptWidgetLabel')}
                 { showEditModal &&
                     <Modal>
-                        <ModalHeader title={afStrings.editTitleModalHeader} />
+                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
                         <ModalBody>
                             <TextInput
-                                label={afStrings.titleLabel}
-                                placeholder={afStrings.widgetTitlePlaceholder}
+                                label={this.props.afStrings('titleLabel')}
+                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
                                 onChange={this.handleWidgetTitleChange}
                                 value={title}
                                 showHintAndError={false}
@@ -89,10 +96,10 @@ export default class ExcerptTextOverview extends React.PureComponent {
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.handleModalCancelButtonClick}>
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

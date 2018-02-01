@@ -17,14 +17,12 @@ import {
     categoryEditorDocumentsSelector,
     setCeFilesAction,
     ceIdFromRouteSelector,
+    ceStringsSelector,
 } from '../../../../common/redux';
 
 import DeepGalleryFileSelect from '../../../../common/components/DeepGalleryFileSelect';
 
-import {
-    iconNames,
-    ceStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -35,6 +33,7 @@ const propTypes = {
     })),
     setCeDeepGalleryFiles: PropTypes.func.isRequired,
     categoryEditorId: PropTypes.number.isRequired,
+    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,6 +44,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     selectedFiles: categoryEditorDocumentsSelector(state, props),
     categoryEditorId: ceIdFromRouteSelector(state, props),
+    ceStrings: ceStringsSelector(state),
 });
 
 
@@ -171,14 +171,14 @@ export default class DocumentSelect extends React.PureComponent {
                         styleName="button"
                         onClick={this.handleSelectFromGallery}
                     >
-                        {ceStrings.selectFromGalleryButtonLabel}
+                        {this.props.ceStrings('selectFromGalleryButtonLabel')}
                     </Button>
                     <PrimaryButton
                         styleName="button"
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >
-                        {ceStrings.applyButtonLabel}
+                        {this.props.ceStrings('applyButtonLabel')}
                     </PrimaryButton>
                 </div>
                 <DeepGalleryFileSelect

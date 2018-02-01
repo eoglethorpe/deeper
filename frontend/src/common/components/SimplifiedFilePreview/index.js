@@ -1,23 +1,20 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
+import { LoadingAnimation } from '../../../public/components/View';
+
 import {
     createParamsForGenericGet,
     createParamsForFileExtractionTrigger,
     createUrlForSimplifiedFilePreview,
     urlForFileExtractionTrigger,
 } from '../../../common/rest';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-
-import {
-    commonStrings,
-} from '../../../common/constants';
+import { commonStringsSelector } from '../../../common/redux';
 
 const propTypes = {
     className: PropTypes.string,
@@ -28,6 +25,7 @@ const propTypes = {
     onLoad: PropTypes.func,
     preLoad: PropTypes.func,
     postLoad: PropTypes.func,
+    commonStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: '',
@@ -39,6 +37,11 @@ const defaultProps = {
 };
 
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class SimplifiedFilePreview extends React.PureComponent {
     static propTypes = propTypes;
@@ -154,12 +157,12 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             })
             .failure(() => {
                 this.endProcess({
-                    error: commonStrings.serverErrorText,
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.endProcess({
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -183,12 +186,12 @@ export default class SimplifiedFilePreview extends React.PureComponent {
             })
             .failure(() => {
                 this.endProcess({
-                    error: commonStrings.serverErrorText,
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.endProcess({
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -218,7 +221,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                {commonStrings.previewNotAvailable}
+                {this.props.commonStrings('previewNotAvailable')}
             </div>
         );
     }

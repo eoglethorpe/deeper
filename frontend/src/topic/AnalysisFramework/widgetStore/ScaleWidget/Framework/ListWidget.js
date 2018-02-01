@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 import {
     SortableContainer,
     SortableElement,
@@ -27,11 +28,11 @@ import {
     ModalFooter,
     ListView,
 } from '../../../../../public/components/View';
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
+
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
+
 
 import styles from './styles.scss';
 
@@ -41,6 +42,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -54,6 +56,11 @@ const DragHandle = SortableHandle(() => (
 const emptyList = [];
 const emptyObject = {};
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class ScaleFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
@@ -159,15 +166,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
             >
                 <DragHandle />
                 <ColorInput
-                    label={afStrings.colorLabel}
+                    label={this.props.afStrings('colorLabel')}
                     onChange={newColor => this.handleColorChange(newColor, key)}
                     value={data.color}
                     showHintAndError={false}
                 />
                 <TextInput
                     className={styles['title-input']}
-                    label={afStrings.titleLabel}
-                    placeholder={afStrings.titlePlaceholderScale}
+                    label={this.props.afStrings('titleLabel')}
+                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                     onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
                     value={data.title}
                     showHintAndError={false}
@@ -190,7 +197,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         className={styles.label}
                         htmlFor={`${key}-check-button`}
                     >
-                        {afStrings.defaultButtonLabel}
+                        {this.props.afStrings('defaultButtonLabel')}
                     </label>
                     <span className={defaultIconName} />
                 </AccentButton>
@@ -341,14 +348,14 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         onClose={this.handleEditModalClose}
                     >
                         <ModalHeader
-                            title={afStrings.editScaleModalTitle}
+                            title={this.props.afStrings('editScaleModalTitle')}
                             rightComponent={
                                 <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddScaleUnitButtonClick}
                                     transparent
                                 >
-                                    {afStrings.addscaleUnitButtonLabel}
+                                    {this.props.afStrings('addscaleUnitButtonLabel')}
                                 </PrimaryButton>
                             }
                         />
@@ -356,8 +363,8 @@ export default class ScaleFrameworkList extends React.PureComponent {
                             <div styleName="general-info-container">
                                 <TextInput
                                     className={styles['title-input']}
-                                    label={afStrings.titleLabel}
-                                    placeholder={afStrings.titlePlaceholderScale}
+                                    label={this.props.afStrings('titleLabel')}
+                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                                     onChange={this.handleScaleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
@@ -379,12 +386,12 @@ export default class ScaleFrameworkList extends React.PureComponent {
                             <Button
                                 onClick={this.handleModalCancelButtonClick}
                             >
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton
                                 onClick={this.handleModalSaveButtonClick}
                             >
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

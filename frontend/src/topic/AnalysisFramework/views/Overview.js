@@ -20,7 +20,6 @@ import {
 
 import {
     iconNames,
-    afStrings,
     pathNames,
 } from '../../../common/constants';
 import {
@@ -34,6 +33,7 @@ import {
     updateAfViewWidgetAction,
 
     activeProjectSelector,
+    afStringsSelector,
 } from '../../../common/redux';
 
 import widgetStore from '../widgetStore';
@@ -47,6 +47,7 @@ const propTypes = {
     removeWidget: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
     mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -57,6 +58,7 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
     projectId: activeProjectSelector(state, props),
+    afStrings: afStringsSelector(state),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -241,7 +243,7 @@ export default class Overview extends React.PureComponent {
             .filter(widget => widget.analysisFramework.overviewComponent)
             .map(widget => ({
                 id: widget.id,
-                title: widget.title,
+                title: this.props.afStrings(widget.title),
                 overviewComponent: widget.analysisFramework.overviewComponent,
                 listComponent: widget.analysisFramework.listComponent,
                 overviewMinSize: widget.analysisFramework.overviewMinSize,
@@ -269,7 +271,11 @@ export default class Overview extends React.PureComponent {
             <div styleName="overview">
                 <header styleName="header">
                     <h2>
-                        {afStrings.analysisFramework} / <small>{afStrings.headerOverview}</small>
+                        {this.props.afStrings('analysisFramework')}
+                        /
+                        <small>
+                            {this.props.afStrings('headerOverview')}
+                        </small>
                     </h2>
                     <div styleName="actions">
                         <Link
@@ -277,15 +283,13 @@ export default class Overview extends React.PureComponent {
                             to="/list"
                             replace
                         >
-                            {afStrings.gotoListButtonLabel}
+                            {this.props.afStrings('gotoListButtonLabel')}
                         </Link>
                         <SuccessButton onClick={this.props.onSave} >
-                            {afStrings.saveButtonLabel}
+                            {this.props.afStrings('saveButtonLabel')}
                         </SuccessButton>
-                        <PrimaryButton
-                            onClick={() => this.handleExitButtonClick()}
-                        >
-                            {afStrings.exitButtonLabel}
+                        <PrimaryButton onClick={() => this.handleExitButtonClick()}>
+                            {this.props.afStrings('exitButtonLabel')}
                         </PrimaryButton>
                     </div>
                 </header>

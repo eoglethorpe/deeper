@@ -20,6 +20,7 @@ describe('<AddLeadListItem />', () => {
                 active={false}
                 onClick={() => {}}
                 lead={{ data: { type: 'dropbox' }, form: { values: {} } }}
+                leadState="pending"
                 choice="error"
                 leadKey="key"
                 upload={{ progress: 1 }}

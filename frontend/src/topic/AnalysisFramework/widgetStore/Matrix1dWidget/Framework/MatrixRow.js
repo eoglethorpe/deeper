@@ -7,9 +7,10 @@ import {
     SortableHandle,
     arrayMove,
 } from 'react-sortable-hoc';
+import { connect } from 'react-redux';
 
 import { randomString } from '../../../../../public/utils/common';
-import MatrixCell from './MatrixCell';
+import update from '../../../../../public/utils/immutable-update';
 import {
     DangerButton,
     PrimaryButton,
@@ -26,18 +27,18 @@ import {
     ListView,
 } from '../../../../../public/components/View';
 
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
-import update from '../../../../../public/utils/immutable-update';
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
+
+import MatrixCell from './MatrixCell';
 import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string,
     cells: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     onChange: PropTypes.func,
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,6 +51,11 @@ const DragHandle = SortableHandle(() => (
     <span className={`${iconNames.hamburger} drag-handle`} />
 ));
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class MatrixRow extends React.PureComponent {
     static propTypes = propTypes;
@@ -158,8 +164,8 @@ export default class MatrixRow extends React.PureComponent {
             <DragHandle />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.titleLabel}
-                placeholder={afStrings.titlePlaceholderOverview}
+                label={this.props.afStrings('titleLabel')}
+                placeholder={this.props.afStrings('titlePlaceholderOverview')}
                 onChange={value => this.handleCellValueInputChange(key, value)}
                 value={data.value}
                 autoFocus
@@ -222,13 +228,13 @@ export default class MatrixRow extends React.PureComponent {
                         onClose={this.handleEditModalClose}
                     >
                         <ModalHeader
-                            title={afStrings.matrix1DModalTitle}
+                            title={this.props.afStrings('matrix1DModalTitle')}
                             rightComponent={
                                 <PrimaryButton
                                     iconName={iconNames.add}
                                     onClick={this.handleAddCellButtonClick}
                                 >
-                                    {afStrings.addCellButtonLabel}
+                                    {this.props.afStrings('addCellButtonLabel')}
                                 </PrimaryButton>
                             }
                         />
@@ -245,12 +251,12 @@ export default class MatrixRow extends React.PureComponent {
                             <Button
                                 onClick={this.handleModalCancelButtonClick}
                             >
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton
                                 onClick={this.handleModalSaveButtonClick}
                             >
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

@@ -22,6 +22,7 @@ import {
     addLeadViewLeadChangeAction,
     addLeadViewCopyAllBelowAction,
     addLeadViewCopyAllAction,
+    leadsStringsSelector,
 } from '../../../../../common/redux';
 
 import LeadForm from './LeadForm';
@@ -36,9 +37,6 @@ import {
     urlForWebInfo,
     createParamsForWebInfo,
 } from '../../../../../common/rest';
-import {
-    leadsString,
-} from '../../../../../common/constants';
 import styles from '../styles.scss';
 
 const propTypes = {
@@ -53,9 +51,15 @@ const propTypes = {
 
     addLeadViewCopyAllBelow: PropTypes.func.isRequired,
     addLeadViewCopyAll: PropTypes.func.isRequired,
+
+    leadsStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
 };
+
+const mapStateToProps = state => ({
+    leadsStrings: leadsStringsSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
@@ -68,7 +72,7 @@ const APPLY_MODE = {
     allBelow: 'allBelow',
 };
 
-@connect(undefined, mapDispatchToProps, null, { withRef: true })
+@connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
@@ -285,7 +289,7 @@ export default class LeadFormItem extends React.PureComponent {
                             ) : (
                                 <div className={styles['preview-text']}>
                                     <h1>
-                                        {leadsString.sourcePreview}
+                                        {this.props.leadsStrings('sourcePreview')}
                                     </h1>
                                 </div>
                             )
@@ -304,7 +308,7 @@ export default class LeadFormItem extends React.PureComponent {
                             ) :
                                 <div className={styles['preview-text']}>
                                     <h1>
-                                        {leadsString.previewNotAvailable}
+                                        {this.props.leadsStrings('previewNotAvailable')}
                                     </h1>
                                 </div>
                         }
@@ -363,9 +367,9 @@ export default class LeadFormItem extends React.PureComponent {
                         <p>
                             {
                                 applyMode === APPLY_MODE.all ? (
-                                    leadsString.applyToAll
+                                    this.props.leadsStrings('applyToAll')
                                 ) : (
-                                    leadsString.applyToAllBelow
+                                    this.props.leadsStrings('applyToAllBelow')
                                 )
                             }
                         </p>

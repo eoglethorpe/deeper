@@ -7,14 +7,10 @@ import {
     SortableHandle,
     arrayMove,
 } from 'react-sortable-hoc';
+import { connect } from 'react-redux';
 
-import MatrixRow from './MatrixRow';
-
-import {
-    iconNames,
-    afStrings,
-} from '../../../../../common/constants';
 import { randomString } from '../../../../../public/utils/common';
+import update from '../../../../../public/utils/immutable-update';
 import {
     Button,
     PrimaryButton,
@@ -31,8 +27,11 @@ import {
     ModalFooter,
     ListView,
 } from '../../../../../public/components/View';
-import update from '../../../../../public/utils/immutable-update';
 
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
+
+import MatrixRow from './MatrixRow';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -41,6 +40,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,6 +53,11 @@ const DragHandle = SortableHandle(() => (
     <span className={`${iconNames.hamburger} drag-handle`} />
 ));
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -261,22 +266,22 @@ export default class Matrix1dOverview extends React.PureComponent {
         >
             <DragHandle />
             <ColorInput
-                label={afStrings.colorLabel}
+                label={this.props.afStrings('colorLabel')}
                 onChange={newColor => this.handleColorChange(newColor, key)}
                 value={data.color}
             />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.titleLabel}
-                placeholder={afStrings.optionPlaceholder}
+                label={this.props.afStrings('titleLabel')}
+                placeholder={this.props.afStrings('optionPlaceholder')}
                 onChange={value => this.handleRowValueInputChange(key, value, 'title')}
                 value={data.title}
                 autoFocus
             />
             <TextInput
                 className={styles['title-input']}
-                label={afStrings.tooltipTitle}
-                placeholder={afStrings.tooltipPlaceholder}
+                label={this.props.afStrings('tooltipTitle')}
+                placeholder={this.props.afStrings('tooltipPlaceholder')}
                 onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
                 value={data.tooltip}
             />
@@ -342,13 +347,13 @@ export default class Matrix1dOverview extends React.PureComponent {
                 { showEditModal &&
                     <Modal styleName="edit-row-modal">
                         <ModalHeader
-                            title={afStrings.editRowModalTitle}
+                            title={this.props.afStrings('editRowModalTitle')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddRowButtonClick}
                                     transparent
                                 >
-                                    {afStrings.addRowButtonLabel}
+                                    {this.props.afStrings('addRowButtonLabel')}
                                 </PrimaryButton>
                             }
                         />
@@ -356,8 +361,8 @@ export default class Matrix1dOverview extends React.PureComponent {
                             <div styleName="general-info-container">
                                 <TextInput
                                     className={styles['title-input']}
-                                    label={afStrings.titleLabel}
-                                    placeholder={afStrings.titlePlaceholderScale}
+                                    label={this.props.afStrings('titleLabel')}
+                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
@@ -379,12 +384,12 @@ export default class Matrix1dOverview extends React.PureComponent {
                             <Button
                                 onClick={this.handleModalCancelButtonClick}
                             >
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton
                                 onClick={this.handleModalSaveButtonClick}
                             >
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

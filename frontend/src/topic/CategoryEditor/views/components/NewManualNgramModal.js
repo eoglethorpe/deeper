@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import {
     ModalHeader,
@@ -12,20 +13,24 @@ import {
 } from '../../../../public/components/Action';
 import { TextInput } from '../../../../public/components/Input';
 
-import {
-    ceStrings,
-} from '../../../../common/constants';
+import { ceStringsSelector } from '../../../../common/redux';
 
 import styles from '../styles.scss';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    ceStrings: ceStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 export default class NewManualNgramModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
@@ -56,12 +61,12 @@ export default class NewManualNgramModal extends React.PureComponent {
         return ([
             <ModalHeader
                 key="header"
-                title={ceStrings.addNewWordModalTitle}
+                title={this.props.ceStrings('addNewWordModalTitle')}
             />,
             <ModalBody key="body">
                 <TextInput
-                    label={ceStrings.addNewWordLabel}
-                    placeholder={ceStrings.addNewWordPlaceholder}
+                    label={this.props.ceStrings('addNewWordLabel')}
+                    placeholder={this.props.ceStrings('addNewWordPlaceholder')}
                     onChange={this.handleWordValueChange}
                     value={this.state.wordValue}
                     autoFocus
@@ -69,13 +74,13 @@ export default class NewManualNgramModal extends React.PureComponent {
             </ModalBody>,
             <ModalFooter key="footer">
                 <Button onClick={this.handleModalClose}>
-                    {ceStrings.modalCancel}
+                    {this.props.ceStrings('modalCancel')}
                 </Button>
                 <PrimaryButton
                     onClick={this.handleModalOk}
                     className={styles['ok-button']}
                 >
-                    {ceStrings.modalOk}
+                    {this.props.ceStrings('modalOk')}
                 </PrimaryButton>
             </ModalFooter>,
         ]);

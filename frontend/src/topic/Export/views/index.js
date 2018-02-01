@@ -12,10 +12,7 @@ import {
 } from '../../../public/components/View';
 import update from '../../../public/utils/immutable-update';
 import { isFalsy, listToMap } from '../../../public/utils/common';
-import {
-    iconNames,
-    exportStrings,
-} from '../../../common/constants';
+import { iconNames } from '../../../common/constants';
 import {
     createUrlForProject,
     createUrlForAnalysisFramework,
@@ -35,6 +32,7 @@ import {
     leadPageFilterSelector,
     setAnalysisFrameworkAction,
     setProjectAction,
+    exportStringsSelector,
 } from '../../../common/redux';
 
 
@@ -51,6 +49,7 @@ const mapStateToProps = (state, props) => ({
     analysisFramework: analysisFrameworkForProjectSelector(state, props),
     entriesFilters: entriesViewFilterSelector(state, props),
     filters: leadPageFilterSelector(state, props),
+    exportStrings: exportStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -65,6 +64,7 @@ const propTypes = {
     projectId: PropTypes.number.isRequired,
     entriesFilters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    exportStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -121,7 +121,7 @@ export default class Export extends React.PureComponent {
         this.headers = [
             {
                 key: 'select',
-                label: exportStrings.selectLabel,
+                label: this.props.exportStrings('selectLabel'),
                 order: 1,
                 sortable: false,
                 modifier: (d) => {
@@ -141,14 +141,14 @@ export default class Export extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: exportStrings.titleLabel,
+                label: this.props.exportStrings('titleLabel'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: exportStrings.createdAtLabel,
+                label: this.props.exportStrings('createdAtLabel'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
@@ -267,7 +267,7 @@ export default class Export extends React.PureComponent {
                 this.setState({ pendingAf: false });
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: exportStrings.projectLabel,
+                    title: this.props.exportStrings('projectLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -276,9 +276,9 @@ export default class Export extends React.PureComponent {
             .fatal(() => {
                 this.setState({ pendingAf: false });
                 notify.send({
-                    title: exportStrings.projectLabel,
+                    title: this.props.exportStrings('projectLabel'),
                     type: notify.type.ERROR,
-                    message: exportStrings.cantLoadProject,
+                    message: this.props.exportStrings('cantLoadProject'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -313,7 +313,7 @@ export default class Export extends React.PureComponent {
                 console.warn(response);
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: exportStrings.afLabel,
+                    title: this.props.exportStrings('afLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -321,9 +321,9 @@ export default class Export extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: exportStrings.afLabel,
+                    title: this.props.exportStrings('afLabel'),
                     type: notify.type.ERROR,
-                    message: exportStrings.cantLoadAf,
+                    message: this.props.exportStrings('cantLoadAf'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -359,7 +359,7 @@ export default class Export extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: exportStrings.leadsLabel,
+                    title: this.props.exportStrings('leadsLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -367,9 +367,9 @@ export default class Export extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: exportStrings.leadsLabel,
+                    title: this.props.exportStrings('leadsLabel'),
                     type: notify.type.ERROR,
-                    message: exportStrings.cantLoadLeads,
+                    message: this.props.exportStrings('cantLoadLeads'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -449,7 +449,7 @@ export default class Export extends React.PureComponent {
                     <section styleName="filters" >
                         <div>
                             <h4 styleName="heading">
-                                {exportStrings.entryAttributesLabel}
+                                {this.props.exportStrings('entryAttributesLabel')}
                             </h4>
                             <FilterEntriesForm
                                 applyOnChange
@@ -459,7 +459,7 @@ export default class Export extends React.PureComponent {
                         <div styleName="lead-filters">
                             <div styleName="lead-attributes">
                                 <h4 styleName="heading">
-                                    {exportStrings.leadAttributesLabel}
+                                    {this.props.exportStrings('leadAttributesLabel')}
                                 </h4>
                                 <FilterLeadsForm />
                             </div>

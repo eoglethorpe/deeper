@@ -39,6 +39,8 @@ import {
     activeUserSelector,
     currentUserInformationSelector,
     currentUserProjectsSelector,
+
+    commonStringsSelector,
 } from '../../../common/redux';
 
 import {
@@ -47,7 +49,6 @@ import {
     pathNames,
     validLinks,
     hideNavbar,
-    commonStrings,
 } from '../../constants';
 
 import Cloak from '../Cloak';
@@ -62,6 +63,7 @@ const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
     userInformation: currentUserInformationSelector(state),
     userProjects: currentUserProjectsSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -92,6 +94,7 @@ const propTypes = {
     location: PropTypes.shape({
         pathname: PropTypes.string,
     }).isRequired,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -298,8 +301,11 @@ export default class Navbar extends React.PureComponent {
         const projectSelectInputLink = currentValidLinks.projectSelect;
         const adminPanelLink = currentValidLinks.adminPanel;
 
-        const userName = userInformation.displayName || activeUser.displayName
-        || commonStrings.anonymousLabel;
+        const userName = (
+            userInformation.displayName ||
+            activeUser.displayName ||
+            this.props.commonStrings('anonymousLabel')
+        );
         return (
             <nav
                 className={className}
@@ -315,10 +321,10 @@ export default class Navbar extends React.PureComponent {
                         path={logo}
                     />
                     <div styleName="title">
-                        {commonStrings.deepLabel}
+                        {this.props.commonStrings('deepLabel')}
                     </div>
                     <span styleName="beta-label">
-                        {commonStrings.betaLabel}
+                        {this.props.commonStrings('betaLabel')}
                     </span>
                 </Link>
                 <Cloak
@@ -335,7 +341,7 @@ export default class Navbar extends React.PureComponent {
                                 labelSelector={this.projectLabelSelector}
                                 onChange={this.handleProjectChange}
                                 options={userProjects}
-                                placeholder={commonStrings.selectEventPlaceholder}
+                                placeholder={this.props.commonStrings('selectEventPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
                                 className={styles['project-select-input']}
@@ -378,7 +384,7 @@ export default class Navbar extends React.PureComponent {
                                         target="_blank"
                                     >
                                         <span className={`${styles.icon} ${iconNames.locked}`} />
-                                        {commonStrings.adminPanelLabel}
+                                        {this.props.commonStrings('adminPanelLabel')}
                                     </a>
                                 )
                             }
@@ -394,7 +400,7 @@ export default class Navbar extends React.PureComponent {
                                         onClick={this.handleLogoutButtonClick}
                                     >
                                         <span className={`${styles.icon} ${iconNames.logout}`} />
-                                        {commonStrings.logoutLabel}
+                                        {this.props.commonStrings('logoutLabel')}
                                     </button>
                                 </DropdownGroup>
                             )

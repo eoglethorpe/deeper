@@ -24,13 +24,12 @@ import {
     SelectInput,
 } from '../../../../public/components/Input';
 
-import {
-    iconNames,
-    entryStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 import {
     setActiveEntryAction,
     editEntryViewCurrentLeadSelector,
+    entryStringsSelector,
+    afStringsSelector,
 } from '../../../../common/redux';
 
 import widgetStore from '../../../AnalysisFramework/widgetStore';
@@ -72,6 +71,9 @@ const propTypes = {
     onEntryAdd: PropTypes.func.isRequired,
     onEntryDelete: PropTypes.func.isRequired,
     onSaveAll: PropTypes.func.isRequired,
+
+    entryStrings: PropTypes.func.isRequired,
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -81,6 +83,8 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     lead: editEntryViewCurrentLeadSelector(state, props),
+    entryStrings: entryStringsSelector(state),
+    afStrings: afStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -160,7 +164,7 @@ export default class Overview extends React.PureComponent {
             .filter(widget => widget.tagging.overviewComponent)
             .map(widget => ({
                 id: widget.id,
-                title: widget.title,
+                title: this.props.afStrings(widget.title),
                 overviewComponent: widget.tagging.overviewComponent,
             }));
 
@@ -244,7 +248,7 @@ export default class Overview extends React.PureComponent {
                 <img
                     className="image"
                     src={values.image}
-                    alt={entryStrings.altLabel}
+                    alt={this.props.entryStrings('altLabel')}
                 />
             );
         }
@@ -258,13 +262,13 @@ export default class Overview extends React.PureComponent {
     calcEntryLabelLimited = (entry) => {
         const values = entryAccessor.getValues(entry);
         if (values.entryType === 'image') {
-            return entryStrings.imageLabel;
+            return this.props.entryStrings('imageLabel');
         }
         const characterLimit = 64;
         const text = values.excerpt;
 
         if (!text) {
-            return entryStrings.excerptLabel;
+            return this.props.entryStrings('excerptLabel');
         }
 
         const limitedEntry = text.slice(0, characterLimit);
@@ -407,7 +411,7 @@ export default class Overview extends React.PureComponent {
         return (
             <div styleName="empty-text">
                 <h1>
-                    {entryStrings.previewNotAvailableText}
+                    {this.props.entryStrings('previewNotAvailableText')}
                 </h1>
             </div>
         );
@@ -436,9 +440,9 @@ export default class Overview extends React.PureComponent {
         showOriginal = true,
         showSimplified = true,
         showAssisted = true,
-        labelSimplified = entryStrings.simplifiedTabLabel,
-        labelAssisted = entryStrings.assistedTabLabel,
-        labelOriginal = entryStrings.originalTabLabel,
+        labelSimplified = this.props.entryStrings('simplifiedTabLabel'),
+        labelAssisted = this.props.entryStrings('assistedTabLabel'),
+        labelOriginal = this.props.entryStrings('originalTabLabel'),
     }) => {
         const {
             lead,
@@ -489,14 +493,14 @@ export default class Overview extends React.PureComponent {
                                 styleName="tab-header"
                                 to="images-preview"
                             >
-                                {entryStrings.imagesTabLabel}
+                                {this.props.entryStrings('imagesTabLabel')}
                             </TabLink>
                     }
                     <TabLink
                         styleName="tab-header"
                         to="entries-listing"
                     >
-                        {entryStrings.entriesTabLabel}
+                        {this.props.entryStrings('entriesTabLabel')}
                     </TabLink>
                     <div styleName="empty-tab" />
                 </div>
@@ -581,7 +585,7 @@ export default class Overview extends React.PureComponent {
                 });
             case LEAD_PANE_TYPE.image:
                 return this.renderLeft({
-                    labelOriginal: entryStrings.imagesTabLabel,
+                    labelOriginal: this.props.entryStrings('imagesTabLabel'),
                     showSimplified: false,
                     showAssisted: false,
                 });
@@ -636,7 +640,7 @@ export default class Overview extends React.PureComponent {
                         <div styleName="entry-actions">
                             <SelectInput
                                 styleName="select-input"
-                                placeholder={entryStrings.selectExcerptPlaceholder}
+                                placeholder={this.props.entryStrings('selectExcerptPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
                                 hideClearButton
@@ -647,14 +651,14 @@ export default class Overview extends React.PureComponent {
                                 onChange={this.handleEntrySelectChange}
                             />
                             <PrimaryButton
-                                title={entryStrings.addEntryButtonTitle}
+                                title={this.props.entryStrings('addEntryButtonTitle')}
                                 onClick={onEntryAdd}
                             >
                                 <i className={iconNames.add} />
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
-                                    title={entryStrings.removeEntryButtonTitle}
+                                    title={this.props.entryStrings('removeEntryButtonTitle')}
                                     onClick={() => onEntryDelete(true)}
                                 >
                                     <i className={iconNames.delete} />
@@ -662,7 +666,7 @@ export default class Overview extends React.PureComponent {
                             }
                             { selectedEntry && isMarkedForDelete &&
                                 <Button
-                                    title={entryStrings.undoRemoveEntryButtonTitle}
+                                    title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
                                     onClick={() => onEntryDelete(false)}
                                 >
                                     <i className={iconNames.undo} />
@@ -675,14 +679,14 @@ export default class Overview extends React.PureComponent {
                                 to="/list"
                                 replace
                             >
-                                {entryStrings.gotoListButtonLabel}
+                                {this.props.entryStrings('gotoListButtonLabel')}
                             </Link>
                             <SuccessButton
                                 styleName="save-button"
                                 onClick={onSaveAll}
                                 disabled={saveAllDisabled}
                             >
-                                {entryStrings.saveButtonLabel}
+                                {this.props.entryStrings('saveButtonLabel')}
                             </SuccessButton>
                         </div>
                     </header>,

@@ -1,11 +1,12 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 import {
-    afStrings,
-} from '../../../../../common/constants';
+    afStringsSelector,
+} from '../../../../../common/redux';
 
 const IMAGE = 'image';
 
@@ -17,12 +18,19 @@ const propTypes = {
         entryType: PropTypes.string,
     }).isRequired,
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     attribute: undefined,
 };
 
+
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class ExcerptTextList extends React.PureComponent {
     static propTypes = propTypes;
@@ -54,7 +62,7 @@ export default class ExcerptTextList extends React.PureComponent {
                         <img
                             styleName="image"
                             src={attribute.image}
-                            alt={afStrings.altEntryLabel}
+                            alt={this.props.afStrings('altEntryLabel')}
                         />
                     ) : (
                         <span styleName="textarea">

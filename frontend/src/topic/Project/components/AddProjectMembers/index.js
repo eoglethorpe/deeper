@@ -16,11 +16,7 @@ import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
-import {
-    iconNames,
-    notificationStrings,
-    projectStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
@@ -37,6 +33,8 @@ import {
 
     projectDetailsSelector,
     setUsersProjectMembershipAction,
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
 import notify from '../../../../common/notify';
 
@@ -50,6 +48,8 @@ const propTypes = {
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setUsers: PropTypes.func.isRequired,
     setUsersProjectMembership: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,6 +60,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -109,21 +111,21 @@ export default class AddProjectMembers extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'displayName',
-                label: projectStrings.tableHeaderName,
+                label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.displayName.localeCompare(b.displayName),
             },
             {
                 key: 'email',
-                label: projectStrings.tableHeaderEmail,
+                label: this.props.projectStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.email.localeCompare(b.email),
             },
             {
                 key: 'actions',
-                label: projectStrings.tableHeaderActions,
+                label: this.props.projectStrings('tableHeaderActions'),
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -244,9 +246,9 @@ export default class AddProjectMembers extends React.PureComponent {
                         projectMembership: response.results,
                     });
                     notify.send({
-                        title: notificationStrings.userMembershipCreate,
+                        title: this.props.notificationStrings('userMembershipCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userMembershipCreateSuccess,
+                        message: this.props.notificationStrings('userMembershipCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onModalClose();
@@ -256,9 +258,9 @@ export default class AddProjectMembers extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userMembershipCreate,
+                    title: this.props.notificationStrings('userMembershipCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipCreateFailure,
+                    message: this.props.notificationStrings('userMembershipCreateFailure'),
                     duration: notify.duration.SLOW,
                 });
                 const {
@@ -272,13 +274,14 @@ export default class AddProjectMembers extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipCreate,
+                    title: this.props.notificationStrings('userMembershipCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipCreateFatal,
+                    message: this.props.notificationStrings('userMembershipCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to :ave project.'],
+                    // FIXME: use strings
+                    formErrors: ['Error while trying to save project.'],
                 });
             })
             .build();
@@ -371,10 +374,10 @@ export default class AddProjectMembers extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {projectStrings.modalCancel}
+                        {this.props.projectStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine}>
-                        {projectStrings.modalUpdate}
+                        {this.props.projectStrings('modalUpdate')}
                     </PrimaryButton>
                 </div>
             </Form>

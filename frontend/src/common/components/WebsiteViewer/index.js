@@ -1,11 +1,14 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { AccentButton } from '../../../public/components/Action';
 import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
+import { leadsStringsSelector } from '../../../common/redux';
+import { iconNames } from '../../../common/constants';
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
 import Screenshot from '../../../common/components/Screenshot';
@@ -13,10 +16,6 @@ import {
     urlForWebsiteFetch,
     createParamsForWebsiteFetch,
 } from '../../../../src/common/rest';
-import {
-    iconNames,
-    leadsString,
-} from '../../../common/constants';
 
 import styles from './styles.scss';
 
@@ -26,6 +25,7 @@ const propTypes = {
     showUrl: PropTypes.bool,
     showScreenshot: PropTypes.bool,
     onScreenshotCapture: PropTypes.func,
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,6 +36,11 @@ const defaultProps = {
     onScreenshotCapture: undefined,
 };
 
+const mapStateToProps = state => ({
+    leadsStrings: leadsStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class WebsiteViewer extends React.PureComponent {
     static propTypes = propTypes;
@@ -216,7 +221,7 @@ export default class WebsiteViewer extends React.PureComponent {
                 styleName="loading-animation"
             />
             <span styleName="waiting-text">
-                {leadsString.gatheringWebsiteInfoLabel}
+                {this.props.leadsStrings('gatheringWebsiteInfoLabel')}
             </span>
         </div>
     )
@@ -286,8 +291,8 @@ export default class WebsiteViewer extends React.PureComponent {
                 <span>
                     {
                         invalidUrl
-                            ? leadsString.invalidUrl
-                            : leadsString.cannotPreviewUrl
+                            ? this.props.leadsStrings('invalidUrl')
+                            : this.props.leadsStrings('cannotPreviewUrl')
                     }
                 </span>
             </div>

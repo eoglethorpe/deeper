@@ -5,13 +5,10 @@ import { connect } from 'react-redux';
 
 import {
     regionDetailForRegionSelector,
+    countriesStringsSelector,
 } from '../../../common/redux';
 
 import styles from './styles.scss';
-
-import {
-    countriesString,
-} from '../../../common/constants';
 
 const propTypes = {
     className: PropTypes.string,
@@ -21,6 +18,7 @@ const propTypes = {
         title: PropTypes.string,
         regionalGroups: PropTypes.shape({}),
     }).isRequired,
+    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -29,6 +27,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: regionDetailForRegionSelector(state, props),
+    countriesStrings: countriesStringsSelector(state),
 });
 
 @connect(mapStateToProps, null)
@@ -88,7 +87,7 @@ export default class RegionDetailView extends React.PureComponent {
                 <h3
                     styleName="heading"
                 >
-                    {countriesString.regionGeneralInfoLabel}
+                    {this.props.countriesStrings('regionGeneralInfoLabel')}
                 </h3>
                 {
                     keyValues.map(data => (

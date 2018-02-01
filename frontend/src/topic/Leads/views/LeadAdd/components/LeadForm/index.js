@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     DateInput,
@@ -22,10 +23,9 @@ import {
     leadAccessor,
 } from '../../../../../../common/entities/lead';
 import DeepGallery from '../../../../../../common/components/DeepGallery';
-import { leadsString } from '../../../../../../common/constants';
+import { leadsStringsSelector } from '../../../../../../common/redux';
 
 import ApplyAll, { ExtractThis } from '../ApplyAll';
-
 import styles from './styles.scss';
 
 
@@ -54,12 +54,19 @@ const propTypes = {
     isExtractionDisabled: PropTypes.bool.isRequired,
     isExtractionLoading: PropTypes.bool.isRequired,
     onExtractClick: PropTypes.func.isRequired,
+
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
 
+const mapStateToProps = state => ({
+    leadsStrings: leadsStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -210,8 +217,8 @@ export default class LeadForm extends React.PureComponent {
                             <TextInput
                                 error={fieldErrors.url}
                                 formname="url"
-                                label={leadsString.urlLabel}
-                                placeholder={leadsString.urlPlaceholderLabel}
+                                label={this.props.leadsStrings('urlLabel')}
+                                placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
                                 value={values.url}
                                 disabled={isFormDisabled}
                                 autoFocus
@@ -221,8 +228,8 @@ export default class LeadForm extends React.PureComponent {
                             error={fieldErrors.website}
                             formname="website"
                             key="website"
-                            label={leadsString.websiteLabel}
-                            placeholder={leadsString.urlPlaceholderLabel}
+                            label={this.props.leadsStrings('websiteLabel')}
+                            placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
                             styleName="website"
                             value={values.website}
                             disabled={isFormDisabled}
@@ -234,8 +241,8 @@ export default class LeadForm extends React.PureComponent {
                         <TextArea
                             error={fieldErrors.text}
                             formname="text"
-                            label={leadsString.textLabel}
-                            placeholder={leadsString.textareaPlaceholderLabel}
+                            label={this.props.leadsStrings('textLabel')}
+                            placeholder={this.props.leadsStrings('textareaPlaceholderLabel')}
                             rows="3"
                             styleName="text"
                             value={values.text}
@@ -248,10 +255,10 @@ export default class LeadForm extends React.PureComponent {
                     error={fieldErrors.project}
                     formname="project"
                     keySelector={this.keySelector}
-                    label={leadsString.projectLabel}
+                    label={this.props.leadsStrings('projectLabel')}
                     labelSelector={this.labelSelector}
                     options={leadOptions.project}
-                    placeholder={leadsString.projectPlaceholderLabel}
+                    placeholder={this.props.leadsStrings('projectPlaceholderLabel')}
                     showHintAndError
                     showLabel
                     styleName="project"
@@ -264,8 +271,8 @@ export default class LeadForm extends React.PureComponent {
                     styleName="title"
                     error={fieldErrors.title}
                     formname="title"
-                    label={leadsString.titleLabel}
-                    placeholder={leadsString.titlePlaceHolderLabel}
+                    label={this.props.leadsStrings('titleLabel')}
+                    placeholder={this.props.leadsStrings('titlePlaceHolderLabel')}
                     value={values.title}
                     disabled={isFormDisabled}
                 />
@@ -280,8 +287,8 @@ export default class LeadForm extends React.PureComponent {
                     <TextInput
                         error={fieldErrors.source}
                         formname="source"
-                        label={leadsString.publisherLabel}
-                        placeholder={leadsString.publisherPlaceHolderLabel}
+                        label={this.props.leadsStrings('publisherLabel')}
+                        placeholder={this.props.leadsStrings('publisherPlaceHolderLabel')}
                         value={values.source}
                         disabled={isFormDisabled}
                     />
@@ -297,10 +304,10 @@ export default class LeadForm extends React.PureComponent {
                         error={fieldErrors.confidentiality}
                         formname="confidentiality"
                         keySelector={this.keySelector}
-                        label={leadsString.confidentialityLabel}
+                        label={this.props.leadsStrings('confidentialityLabel')}
                         labelSelector={this.labelSelector}
                         options={leadOptions.confidentiality}
-                        placeholder={leadsString.selectInputPlaceholderLabel}
+                        placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
                         value={values.confidentiality}
@@ -319,10 +326,10 @@ export default class LeadForm extends React.PureComponent {
                         error={fieldErrors.assignee}
                         formname="assignee"
                         keySelector={this.keySelector}
-                        label={leadsString.assigneeLabel}
+                        label={this.props.leadsStrings('assigneeLabel')}
                         labelSelector={this.labelSelector}
                         options={leadOptions.assignee}
-                        placeholder={leadsString.selectInputPlaceholderLabel}
+                        placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
                         value={values.assignee}
@@ -340,8 +347,8 @@ export default class LeadForm extends React.PureComponent {
                     <DateInput
                         error={fieldErrors.publishedOn}
                         formname="publishedOn"
-                        label={leadsString.datePublishedLabel}
-                        placeholder={leadsString.datePublishedPlaceholderLabel}
+                        label={this.props.leadsStrings('datePublishedLabel')}
+                        placeholder={this.props.leadsStrings('datePublishedPlaceholderLabel')}
                         value={values.publishedOn}
                         disabled={isFormDisabled}
                     />

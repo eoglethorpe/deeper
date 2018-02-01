@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    BrowserRouter,
-} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import { FgRestBuilder } from './public/utils/rest';
 import { getRandomFromList } from './public/utils/common';
@@ -12,7 +10,6 @@ import { initializeGa } from './common/config/google-analytics';
 
 import schema from './common/schema';
 
-import { commonStrings } from './common/constants';
 import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
@@ -33,6 +30,7 @@ import {
     tokenSelector,
     currentUserProjectsSelector,
     activeUserSelector,
+    commonStringsSelector,
 } from './common/redux';
 
 import getUserConfirmation from './common/utils/getUserConfirmation';
@@ -43,6 +41,7 @@ const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
     token: tokenSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -63,37 +62,38 @@ const propTypes = {
     stopSiloTasks: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     logout: PropTypes.func.isRequired,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class App extends React.PureComponent {
     static propTypes = propTypes;
 
-    static loadingMessages = [
-        commonStrings.loadingMessages1,
-        commonStrings.loadingMessages2,
-        commonStrings.loadingMessages3,
-        commonStrings.loadingMessages4,
-        commonStrings.loadingMessages5,
-        commonStrings.loadingMessages6,
-        commonStrings.loadingMessages7,
-        commonStrings.loadingMessages8,
-        commonStrings.loadingMessages9,
-        commonStrings.loadingMessages10,
-        commonStrings.loadingMessages11,
-        commonStrings.loadingMessages12,
-        commonStrings.loadingMessages13,
-        commonStrings.loadingMessages14,
-        commonStrings.loadingMessages15,
-    ];
-
     constructor(props) {
         super(props);
 
         this.state = { pending: true };
 
+        const loadingMessages = [
+            this.props.commonStrings('loadingMessages1'),
+            this.props.commonStrings('loadingMessages2'),
+            this.props.commonStrings('loadingMessages3'),
+            this.props.commonStrings('loadingMessages4'),
+            this.props.commonStrings('loadingMessages5'),
+            this.props.commonStrings('loadingMessages6'),
+            this.props.commonStrings('loadingMessages7'),
+            this.props.commonStrings('loadingMessages8'),
+            this.props.commonStrings('loadingMessages9'),
+            this.props.commonStrings('loadingMessages10'),
+            this.props.commonStrings('loadingMessages11'),
+            this.props.commonStrings('loadingMessages12'),
+            this.props.commonStrings('loadingMessages13'),
+            this.props.commonStrings('loadingMessages14'),
+            this.props.commonStrings('loadingMessages15'),
+        ];
+
         // Get a random message from the loading message list
-        this.randomMessage = getRandomFromList(App.loadingMessages);
+        this.randomMessage = getRandomFromList(loadingMessages);
 
         // Style for random message page
         this.randomMessageStyle = {

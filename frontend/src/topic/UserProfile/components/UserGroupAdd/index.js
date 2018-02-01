@@ -32,11 +32,9 @@ import {
 import {
     activeUserSelector,
     setUserGroupAction,
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
-import {
-    notificationStrings,
-    userStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -45,6 +43,8 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -52,6 +52,8 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -108,9 +110,9 @@ export default class UserGroupAdd extends React.PureComponent {
                         userGroup: response,
                     });
                     notify.send({
-                        title: notificationStrings.userGroupCreate,
+                        title: this.props.notificationStrings('userGroupCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userGroupCreateSuccess,
+                        message: this.props.notificationStrings('userGroupCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -120,9 +122,9 @@ export default class UserGroupAdd extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userGroupCreate,
+                    title: this.props.notificationStrings('userGroupCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupCreateFailure,
+                    message: this.props.notificationStrings('userGroupCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -136,9 +138,9 @@ export default class UserGroupAdd extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userGroupCreate,
+                    title: this.props.notificationStrings('userGroupCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupCreateFatal,
+                    message: this.props.notificationStrings('userGroupCreateFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
@@ -202,9 +204,9 @@ export default class UserGroupAdd extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={userStrings.addUserGroupModalLabel}
+                    label={this.props.userStrings('addUserGroupModalLabel')}
                     formname="title"
-                    placeholder={userStrings.addUserGroupModalPlaceholder}
+                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
@@ -216,10 +218,10 @@ export default class UserGroupAdd extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        {userStrings.modalCancel}
+                        {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {userStrings.modalCreate}
+                        {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>
             </Form>

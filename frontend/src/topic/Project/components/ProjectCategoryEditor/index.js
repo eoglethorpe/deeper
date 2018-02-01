@@ -30,12 +30,10 @@ import {
     projectDetailsSelector,
 
     setCategoryEditorsAction,
+    projectStringsSelector,
 } from '../../../../common/redux';
 
-import {
-    iconNames,
-    projectStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 
 import ProjectCeDetail from '../ProjectCeDetail';
 import AddCategoryEditor from '../AddCategoryEditor';
@@ -47,6 +45,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setCategoryEditors: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -55,6 +54,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     categoryEditorList: categoryEditorListSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -211,7 +211,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         if (categoryEditorList.length <= 0) {
             return (
                 <h1 styleName="no-category-editor">
-                    {projectStrings.noCeText}
+                    {this.props.projectStrings('noCeText')}
                 </h1>
             );
         }
@@ -248,7 +248,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             styleName="search-input"
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
-                            placeholder={projectStrings.searchCePlaceholder}
+                            placeholder={this.props.projectStrings('searchCePlaceholder')}
                             type="search"
                         />
                         <PrimaryButton
@@ -256,7 +256,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                             iconName={iconNames.add}
                             onClick={this.handleAddCeButtonClick}
                         >
-                            {projectStrings.addCeButtonLabel}
+                            {this.props.projectStrings('addCeButtonLabel')}
                         </PrimaryButton>
                         { this.state.addCeModalShow &&
                             <Modal
@@ -264,7 +264,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                                 onClose={this.handleModalClose}
                                 closeOnBlur
                             >
-                                <ModalHeader title={projectStrings.addCeModalTitle} />
+                                <ModalHeader title={this.props.projectStrings('addCeModalTitle')} />
                                 <ModalBody>
                                     <AddCategoryEditor
                                         projectId={projectId}

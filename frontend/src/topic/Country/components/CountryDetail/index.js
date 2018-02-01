@@ -20,6 +20,8 @@ import {
     countryDetailSelector,
     unSetRegionAction,
     activeUserSelector,
+    notificationStringsSelector,
+    countriesStringsSelector,
 } from '../../../../common/redux';
 
 import CountryGeneral from '../CountryGeneral';
@@ -30,10 +32,6 @@ import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
 import RegionDetailView from '../../../../common/components/RegionDetailView';
 import RegionMap from '../../../../common/components/RegionMap';
 
-import {
-    notificationStrings,
-    countriesString,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -46,6 +44,8 @@ const propTypes = {
     }).isRequired,
     unSetRegion: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
+    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -56,6 +56,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     countryDetail: countryDetailSelector(state, props),
     activeUser: activeUserSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,9 +99,9 @@ export default class CountryDetail extends React.PureComponent {
                 try {
                     this.props.unSetRegion({ regionId });
                     notify.send({
-                        title: notificationStrings.countryDelete,
+                        title: this.props.notificationStrings('countryDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.countryDeleteSuccess,
+                        message: this.props.notificationStrings('countryDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -111,17 +113,17 @@ export default class CountryDetail extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.countryDelete,
+                    title: this.props.notificationStrings('countryDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryDeleteFailure,
+                    message: this.props.notificationStrings('countryDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.countryDelete,
+                    title: this.props.notificationStrings('countryDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryDeleteFatal,
+                    message: this.props.notificationStrings('countryDeleteFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -169,7 +171,7 @@ export default class CountryDetail extends React.PureComponent {
                     {
                         activeUser.isSuperuser &&
                             <DangerButton onClick={this.onClickDeleteButton}>
-                                {countriesString.deleteCountryButtonLabel}
+                                {this.props.countriesStrings('deleteCountryButtonLabel')}
                             </DangerButton>
                     }
                     <Confirm
@@ -177,7 +179,7 @@ export default class CountryDetail extends React.PureComponent {
                         closeOnEscape
                         onClose={this.deleteActiveCountry}
                     >
-                        <p>{`${countriesString.deleteCountryConfirm}
+                        <p>{`${this.props.countriesStrings('deleteCountryConfirm')}
                             ${countryDetail.title}?`}</p>
                     </Confirm>
                 </header>
@@ -202,31 +204,31 @@ export default class CountryDetail extends React.PureComponent {
                                 styleName="tab-header"
                                 to="general"
                             >
-                                {countriesString.generalTabLabel}
+                                {this.props.countriesStrings('generalTabLabel')}
                             </TabLink>
                             <TabLink
                                 styleName="tab-header"
                                 to="key-figures"
                             >
-                                {countriesString.keyFiguesTabLabel}
+                                {this.props.countriesStrings('keyFiguesTabLabel')}
                             </TabLink>
                             <TabLink
                                 styleName="tab-header"
                                 to="population-data"
                             >
-                                {countriesString.populationTabLabel}
+                                {this.props.countriesStrings('populationTabLabel')}
                             </TabLink>
                             <TabLink
                                 styleName="tab-header"
                                 to="seasonal-calendar"
                             >
-                                {countriesString.seasonalTabLabel}
+                                {this.props.countriesStrings('seasonalTabLabel')}
                             </TabLink>
                             <TabLink
                                 styleName="tab-header"
                                 to="media-sources"
                             >
-                                {countriesString.mediaTabLabel}
+                                {this.props.countriesStrings('mediaTabLabel')}
                             </TabLink>
                             {/* Essential for border bottom, for more info contact AdityaKhatri */}
                             <div styleName="empty-tab" />

@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     Button,
@@ -22,7 +23,9 @@ import {
 } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
 
-import { afStrings } from '../../../../../common/constants';
+import {
+    afStringsSelector,
+} from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -33,6 +36,7 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,6 +64,11 @@ const buildSettings = (indices, action, value, wrapper) => (
     )
 );
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class Organigram extends React.PureComponent {
     static propTypes = propTypes;
@@ -199,7 +208,7 @@ export default class Organigram extends React.PureComponent {
                         value={organ.title}
                         styleName="title-input"
                         showHintAndError={false}
-                        placeholder={afStrings.organPlaceholder}
+                        placeholder={this.props.afStrings('organPlaceholder')}
                         showLabel={false}
                         onChange={this.handleChange(nextIndices)}
                         autoFocus
@@ -208,7 +217,7 @@ export default class Organigram extends React.PureComponent {
                         <PrimaryButton
                             styleName="action-button"
                             onClick={this.handleAdd(nextIndices)}
-                            title={afStrings.addChildButtonTitle}
+                            title={this.props.afStrings('addChildButtonTitle')}
                             tabIndex="-1"
                             transparent
                         >
@@ -218,7 +227,7 @@ export default class Organigram extends React.PureComponent {
                             <DangerButton
                                 styleName="action-button"
                                 onClick={this.handleRemove(indices, j)}
-                                title={afStrings.removeElementButtonTitle}
+                                title={this.props.afStrings('removeElementButtonTitle')}
                                 tabIndex="-1"
                                 transparent
                             >
@@ -248,16 +257,16 @@ export default class Organigram extends React.PureComponent {
 
         return (
             <div styleName="organigram-list">
-                {afStrings.organigramWidgetLabel}
+                {this.props.afStrings('organigramWidgetLabel')}
                 { showEditModal &&
                     <Modal styleName="edit-value-modal">
-                        <ModalHeader title={afStrings.editOrganigramModaltitle} />
+                        <ModalHeader title={this.props.afStrings('editOrganigramModaltitle')} />
                         <ModalBody styleName="modal-body">
                             <div styleName="general-info-container">
                                 <TextInput
                                     className={styles['title-input']}
-                                    label={afStrings.titleLabel}
-                                    placeholder={afStrings.titlePlaceholderScale}
+                                    label={this.props.afStrings('titleLabel')}
+                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
                                     onChange={this.handleWidgetTitleChange}
                                     value={title}
                                     showHintAndError={false}
@@ -269,10 +278,10 @@ export default class Organigram extends React.PureComponent {
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.handleModalCancelButtonClick}>
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {afStrings.saveButtonLabel}
+                                {this.props.afStrings('saveButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

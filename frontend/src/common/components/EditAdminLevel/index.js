@@ -27,11 +27,7 @@ import {
 } from '../../../public/components/View';
 import DeepGallery from '../../../common/components/DeepGallery';
 
-import {
-    countriesString,
-    notificationStrings,
-    iconNames,
-} from '../../../common/constants';
+import { iconNames } from '../../../common/constants';
 import notify from '../../notify';
 
 
@@ -46,6 +42,8 @@ import {
 } from '../../../common/rest';
 import {
     addAdminLevelForRegionAction,
+    countriesStringsSelector,
+    notificationStringsSelector,
 } from '../../../common/redux';
 import styles from './styles.scss';
 
@@ -66,18 +64,24 @@ const propTypes = {
     }),
     onClose: PropTypes.func.isRequired,
     addAdminLevelForRegion: PropTypes.func.isRequired,
+    countriesStrings: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     adminLevelDetail: {},
 };
 
+const mapStateToProps = state => ({
+    countriesStrings: countriesStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+});
+
 const mapDispatchToProps = dispatch => ({
     addAdminLevelForRegion: params => dispatch(addAdminLevelForRegionAction(params)),
 });
 
-
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles)
 export default class EditAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
@@ -162,9 +166,9 @@ export default class EditAdminLevel extends React.PureComponent {
                         regionId: data.region,
                     });
                     notify.send({
-                        title: notificationStrings.adminLevelEdit,
+                        title: this.props.notificationStrings('adminLevelEdit'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.adminLevelEditSuccess,
+                        message: this.props.notificationStrings('adminLevelEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onClose();
@@ -174,9 +178,9 @@ export default class EditAdminLevel extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.adminLevelEdit,
+                    title: this.props.notificationStrings('adminLevelEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.adminLevelEditFailure,
+                    message: this.props.notificationStrings('adminLevelEditFailure'),
                     duration: notify.duration.SLOW,
                 });
                 const {
@@ -190,9 +194,9 @@ export default class EditAdminLevel extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.adminLevelEdit,
+                    title: this.props.notificationStrings('adminLevelEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.adminLevelEditFatal,
+                    message: this.props.notificationStrings('adminLevelEditFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -221,9 +225,9 @@ export default class EditAdminLevel extends React.PureComponent {
                         regionId: data.region,
                     });
                     notify.send({
-                        title: notificationStrings.adminLevelCreate,
+                        title: this.props.notificationStrings('adminLevelCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.adminLevelCreateSuccess,
+                        message: this.props.notificationStrings('adminLevelCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onClose();
@@ -233,9 +237,9 @@ export default class EditAdminLevel extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.adminLevelCreate,
+                    title: this.props.notificationStrings('adminLevelCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.adminLevelCreateFailure,
+                    message: this.props.notificationStrings('adminLevelCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -249,9 +253,9 @@ export default class EditAdminLevel extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.adminLevelCreate,
+                    title: this.props.notificationStrings('adminLevelCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.adminLevelCreateFatal,
+                    message: this.props.notificationStrings('adminLevelCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -362,8 +366,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.level}
                             formname="level"
-                            label={countriesString.adminLevelLabel}
-                            placeholder={countriesString.adminLevelPlaceholder}
+                            label={this.props.countriesStrings('adminLevelLabel')}
+                            placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
                             styleName="text-input"
                             type="number"
                             error={formFieldErrors.level}
@@ -374,8 +378,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.title}
                             formname="title"
-                            label={countriesString.adminLevelNameLabel}
-                            placeholder={countriesString.adminLevelNamePlaceholder}
+                            label={this.props.countriesStrings('adminLevelNameLabel')}
+                            placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.title}
                             disabled={pending}
@@ -383,8 +387,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.nameProp || undefined}
                             formname="nameProp"
-                            label={countriesString.namePropertyLabel}
-                            placeholder={countriesString.namePropertyPlaceholder}
+                            label={this.props.countriesStrings('namePropertyLabel')}
+                            placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.nameProp}
                             disabled={pending}
@@ -392,8 +396,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.codeProp || undefined}
                             formname="codeProp"
-                            label={countriesString.pcodePropertyLabel}
-                            placeholder={countriesString.pcodePropertyPlaceholder}
+                            label={this.props.countriesStrings('pcodePropertyLabel')}
+                            placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.codeProp}
                             disabled={pending}
@@ -401,8 +405,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.parentNameProp || undefined}
                             formname="parentNameProp"
-                            label={countriesString.parentNamePropLabel}
-                            placeholder={countriesString.parentNamePropPlaceholder}
+                            label={this.props.countriesStrings('parentNamePropLabel')}
+                            placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.parentNameProp}
                             disabled={pending}
@@ -410,8 +414,8 @@ export default class EditAdminLevel extends React.PureComponent {
                         <TextInput
                             value={formValues.parentCodeProp || undefined}
                             formname="parentCodeProp"
-                            label={countriesString.parentCodePropLabel}
-                            placeholder={countriesString.parentCodePropPlaceholder}
+                            label={this.props.countriesStrings('parentCodePropLabel')}
+                            placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.parentCodeProp}
                             disabled={pending}
@@ -424,8 +428,8 @@ export default class EditAdminLevel extends React.PureComponent {
                             showHintAndError={false}
                             value={formValues.parent || undefined}
                             formname="parent"
-                            label={countriesString.parentAdminLevelLabel}
-                            placeholder={countriesString.parentAdminLevelPlaceholder}
+                            label={this.props.countriesStrings('parentAdminLevelLabel')}
+                            placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             styleName="text-input"
                             error={formFieldErrors.parent}
                             disabled={pending}
@@ -441,12 +445,12 @@ export default class EditAdminLevel extends React.PureComponent {
                                 formValues.geoShapeFile ?
                                     <span styleName="show">
                                         <i className={iconNames.documentText} />
-                                        {countriesString.geoShapeFile}
+                                        {this.props.countriesStrings('geoShapeFile')}
                                     </span>
                                     :
                                     <span styleName="load">
                                         <i className={iconNames.uploadFa} />
-                                        {countriesString.loadGeoShapeFile}
+                                        {this.props.countriesStrings('loadGeoShapeFile')}
                                     </span>
                             }
                             <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
@@ -462,13 +466,13 @@ export default class EditAdminLevel extends React.PureComponent {
                             onClick={onClose}
                             type="button"
                         >
-                            {countriesString.cancelButtonLabel}
+                            {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <PrimaryButton
                             styleName="save-btn"
                             disabled={pending || !pristine}
                         >
-                            {countriesString.saveChangesButtonLabel}
+                            {this.props.countriesStrings('saveChangesButtonLabel')}
                         </PrimaryButton>
                     </div>
                 </Form>
