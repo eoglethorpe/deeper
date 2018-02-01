@@ -252,8 +252,8 @@ export default class WebsiteViewer extends React.PureComponent {
                     <iframe
                         styleName="doc"
                         sandbox="allow-scripts allow-same-origin"
-                        title={httpsUrl}
-                        src={httpsUrl}
+                        title={httpsUrl || url}
+                        src={httpsUrl || url}
                     />
                 </div>
             </div>
