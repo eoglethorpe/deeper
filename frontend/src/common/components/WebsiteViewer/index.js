@@ -47,11 +47,9 @@ export default class WebsiteViewer extends React.PureComponent {
         super(props);
 
         this.initialState = {
-            pending: false,
-            canShow: false,
+            pending: true,
+            canShowIframe: false,
             mimeType: undefined,
-            isSameOrigin: undefined,
-            isSecure: undefined,
             isDoc: undefined,
             httpsUrl: undefined,
             invalidUrl: undefined,
@@ -98,18 +96,34 @@ export default class WebsiteViewer extends React.PureComponent {
             .success((response) => {
                 try {
                     // FIXME: write schema
-                    const isSameOrigin = !!(response.headers['X-Frame-Options'] || '').toLowerCase().match('sameorigin');
-                    const isSecure = !!(response.headers['Set-Cookie'] || '').toLowerCase().match('secure');
                     const mimeType = response.headers['Content-Type'];
                     const isDoc = GalleryMapping[mimeType] === ComponentType.DOC;
+
                     const httpsUrl = response.httpsUrl;
-                    const contentSecurityPolicy = response.headers['Content-Security-Policy'] || '';
-                    const canShow = !contentSecurityPolicy.match('frame-ancestors');
+                    const xFrameOptions = response.headers['X-Frame-Options'];
+                    const contentSecurityPolicy = response.headers['Content-Security-Policy'];
+                    let canShowIframe = true;
+
+                    // Older policy
+                    if (xFrameOptions) {
+                        const options = xFrameOptions.toLowerCase();
+                        // TODO: allow-from check if deep url is allowed
+                        if (options.match('sameorigin|deny|allow-from')) {
+                            canShowIframe = false;
+                        }
+                    }
+
+                    // New policy
+                    if (canShowIframe && contentSecurityPolicy) {
+                        const options = contentSecurityPolicy.toLowerCase();
+                        // TODO: uri check if deep url is allowed
+                        if (options.match('frame-ancestors')) {
+                            canShowIframe = false;
+                        }
+                    }
 
                     this.setState({
-                        canShow,
-                        isSameOrigin,
-                        isSecure,
+                        canShowIframe,
                         mimeType,
                         isDoc,
                         httpsUrl,
@@ -284,9 +298,7 @@ export default class WebsiteViewer extends React.PureComponent {
     render() {
         const {
             pending,
-            canShow,
-            isSameOrigin,
-            isSecure,
+            canShowIframe,
             mimeType,
             isDoc,
             httpsUrl,
@@ -320,13 +332,13 @@ export default class WebsiteViewer extends React.PureComponent {
                     className={className}
                     docUrl={url}
                     mimeType={mimeType}
-                    isSameOrigin={isSameOrigin}
+                    canShowIframe={canShowIframe}
                 />
             );
         }
 
         return (
-            (canShow && !isSameOrigin && isSecure && httpsUrl) ?
+            (canShowIframe && (httpsUrl || window.location.protocol === 'http:')) ?
                 this.renderIFrame() : this.renderError()
         );
     }
