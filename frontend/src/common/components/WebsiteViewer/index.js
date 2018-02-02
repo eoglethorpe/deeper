@@ -2,25 +2,23 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './styles.scss';
+import { AccentButton } from '../../../public/components/Action';
+import { TextInput } from '../../../public/components/Input';
+import { FgRestBuilder } from '../../../public/utils/rest';
 
+import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
+import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
+import Screenshot from '../../../common/components/Screenshot';
+import {
+    urlForWebsiteFetch,
+    createParamsForWebsiteFetch,
+} from '../../../../src/common/rest';
 import {
     iconNames,
     leadsString,
 } from '../../../common/constants';
 
-import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
-import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
-
-import Screenshot from '../../../common/components/Screenshot';
-
-import { AccentButton } from '../../../public/components/Action';
-import { TextInput } from '../../../public/components/Input';
-import { FgRestBuilder } from '../../../public/utils/rest';
-import {
-    urlForWebsiteFetch,
-    createParamsForWebsiteFetch,
-} from '../../../../src/common/rest';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
@@ -58,14 +56,11 @@ export default class WebsiteViewer extends React.PureComponent {
         };
 
         this.state = { ...this.initialState };
-
-        if (props.url) {
-            this.urlRequest = this.createRequestForUrl(props.url);
-        }
     }
 
     componentWillMount() {
-        if (this.urlRequest) {
+        if (this.props.url) {
+            this.urlRequest = this.createRequestForUrl(this.props.url);
             this.urlRequest.start();
         }
     }
@@ -85,6 +80,27 @@ export default class WebsiteViewer extends React.PureComponent {
         if (this.urlRequest) {
             this.urlRequest.stop();
         }
+    }
+
+    getContainerClassName = () => {
+        const { className, showUrl } = this.props;
+        const classNames = [
+            className,
+            'website-viewer',
+            styles['website-viewer'],
+        ];
+        if (showUrl) {
+            classNames.push(styles['urlbar-shown']);
+        }
+        return classNames.join(' ');
+    }
+
+    getDocContainerClassName = () => {
+        const docContainerClassNames = [
+            styles['doc-container'],
+            'doc-container',
+        ];
+        return docContainerClassNames.join(' ');
     }
 
     createRequestForUrl = (url) => {
@@ -193,115 +209,98 @@ export default class WebsiteViewer extends React.PureComponent {
         );
     }
 
-    renderIFrame = () => {
-        const {
-            className,
-            showUrl,
-            showScreenshot,
-            url,
-        } = this.props;
-        const { httpsUrl, screenshotMode } = this.state;
+    renderPendingScreen = () => (
+        <div styleName="pending-container">
+            <span
+                className={iconNames.loading}
+                styleName="loading-animation"
+            />
+            <span styleName="waiting-text">
+                {leadsString.gatheringWebsiteInfoLabel}
+            </span>
+        </div>
+    )
 
-        const docContainerClassNames = [
-            styles['doc-container'],
-            'doc-container',
-        ];
+    renderBar = (previewError) => {
+        const { httpsUrl, invalidUrl } = this.state;
+        const { url, showUrl, showScreenshot } = this.props;
 
-        const classNames = [
-            className,
-            'website-viewer',
-            styles['website-viewer'],
-        ];
+        const isUrlShowable = showUrl || previewError;
+        const isScreenshotable = showScreenshot && !previewError;
 
-        if (showUrl) {
-            classNames.push(styles['urlbar-shown']);
+        if (!isUrlShowable) {
+            return null;
         }
 
-
         return (
-            <div className={classNames.join(' ')}>
-                {
-                    showUrl &&
-                        <div styleName="urlbar">
-                            <TextInput
-                                styleName="url"
-                                value={httpsUrl || url}
-                                readOnly
-                                showLabel={false}
-                                showHintAndError={false}
-                                selectOnFocus
-                            />
-                            <div styleName="action-buttons">
-                                <a
-                                    styleName="open-link"
-                                    href={httpsUrl || url}
-                                    target="_blank"
-                                >
-                                    <span className={iconNames.openLink} />
-                                </a>
-                                { showScreenshot && this.renderScreenshotButton() }
-                            </div>
-                        </div>
+            <div styleName="urlbar">
+                <TextInput
+                    styleName="url"
+                    value={httpsUrl || url}
+                    readOnly
+                    showLabel={false}
+                    showHintAndError={false}
+                    selectOnFocus
+                />
+                { !invalidUrl &&
+                    <div styleName="action-buttons">
+                        <a
+                            styleName="open-link"
+                            href={httpsUrl || url}
+                            target="_blank"
+                        >
+                            <span className={iconNames.openLink} />
+                        </a>
+                        { isScreenshotable && this.renderScreenshotButton() }
+                    </div>
                 }
-                <div className={docContainerClassNames.join(' ')}>
-                    { screenshotMode && (
-                        <Screenshot
-                            onCapture={this.handleScreenshot}
-                        />
-                    ) }
-                    <iframe
-                        styleName="doc"
-                        sandbox="allow-scripts allow-same-origin"
-                        title={httpsUrl || url}
-                        src={httpsUrl || url}
-                    />
-                </div>
             </div>
         );
     }
 
-    renderError = () => {
+    renderIframe = () => {
         const {
-            className,
-            url,
-        } = this.props;
-        const {
+            screenshotMode,
             httpsUrl,
-            invalidUrl,
         } = this.state;
+        const { url } = this.props;
 
+        const docContainerClassName = this.getDocContainerClassName();
         return (
-            <div className={className}>
-                {
-                    !invalidUrl ?
-                        <div styleName="error-website-msg">
-                            <span>
-                                {leadsString.cannotPreviewUrl}
-                            </span>
-                            <a
-                                styleName="url"
-                                href={httpsUrl || url}
-                                target="_blank"
-                            >
-                                {httpsUrl || url}
-                            </a>
-                        </div>
-                        :
-                        <span styleName="error-website-msg">
-                            {leadsString.invalidUrl}
-                        </span>
-                }
+            <div className={docContainerClassName}>
+                { screenshotMode && <Screenshot onCapture={this.handleScreenshot} /> }
+                <iframe
+                    styleName="doc"
+                    sandbox="allow-scripts allow-same-origin"
+                    title={httpsUrl || url}
+                    src={httpsUrl || url}
+                />
+            </div>
+        );
+    }
+
+    renderErrorScreen = () => {
+        const { invalidUrl } = this.state;
+        return (
+            <div styleName="error-website-msg">
+                <span>
+                    {
+                        invalidUrl
+                            ? leadsString.invalidUrl
+                            : leadsString.cannotPreviewUrl
+                    }
+                </span>
             </div>
         );
     }
 
     render() {
         const {
-            pending,
             canShowIframe,
-            mimeType,
-            isDoc,
             httpsUrl,
+            isDoc,
+            mimeType,
+            pending,
         } = this.state;
 
         const {
@@ -310,23 +309,8 @@ export default class WebsiteViewer extends React.PureComponent {
         } = this.props;
 
         if (pending) {
-            return (
-                <div
-                    styleName="pending-container"
-                    className={className}
-                >
-                    <span
-                        className={iconNames.loading}
-                        styleName="loading-animation"
-                    />
-                    <span styleName="waiting-text">
-                        {leadsString.gatheringWebsiteInfoLabel}
-                    </span>
-                </div>
-            );
-        }
-
-        if (isDoc) {
+            return this.renderPendingScreen();
+        } else if (isDoc) {
             return (
                 <GalleryDocs
                     className={className}
@@ -335,11 +319,19 @@ export default class WebsiteViewer extends React.PureComponent {
                     canShowIframe={canShowIframe}
                 />
             );
-        }
+        } // else website
 
+        // NOTE: Error can occur if
+        // 1. We cannot show iframe
+        // 2. If there is no alternative https url and current url is http
+        const previewError = !canShowIframe || (!httpsUrl && window.location.protocol !== 'http:');
+
+        const containerClassName = this.getContainerClassName();
         return (
-            (canShowIframe && (httpsUrl || window.location.protocol === 'http:')) ?
-                this.renderIFrame() : this.renderError()
+            <div className={containerClassName}>
+                { this.renderBar(previewError)}
+                { !previewError ? this.renderIframe() : this.renderErrorScreen() }
+            </div>
         );
     }
 }
