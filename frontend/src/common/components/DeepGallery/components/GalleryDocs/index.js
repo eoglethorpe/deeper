@@ -53,7 +53,6 @@ export default class GalleryDocs extends React.PureComponent {
             styles['gallery-docs'],
         ];
 
-        console.warn();
         return (
             <div className={classNames.join(' ')}>
                 {
