@@ -133,7 +133,7 @@ export default class ExportPreview extends React.PureComponent {
                 <GalleryDocs
                     docUrl={exportObj.file}
                     mimeType={exportObj.mimeType}
-                    isSameOrigin
+                    canShowIframe={false}
                 />
             );
         }

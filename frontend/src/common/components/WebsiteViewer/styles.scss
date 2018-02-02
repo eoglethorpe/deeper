@@ -67,17 +67,19 @@
     }
 }
 
-.loading-animation {
-    display: inline-block;
-    animation: spin 1s linear infinite;
-}
-
-.waiting-text {
-    color: $color-text-disabled;
-}
-
 .pending-container {
     display: flex;
+    flex-grow: 1;
     align-items: center;
     justify-content: center;
+
+    .loading-animation {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+        margin-right: $spacing-small;
+    }
+
+    .waiting-text {
+        color: $color-text-disabled;
+    }
 }
