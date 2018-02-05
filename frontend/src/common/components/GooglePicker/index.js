@@ -2,13 +2,13 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import loadScript from 'load-script';
+import { connect } from 'react-redux';
 
 import { PrimaryButton } from '../../../public/components/Action';
-import { commonStrings } from '../../../common/constants';
-
-import styles from './styles.scss';
+import { commonStringsSelector } from '../../../common/redux';
 
 import { GOOGLE_SDK_URL } from '../../../common/config/google-drive';
+import styles from './styles.scss';
 
 let scriptLoadingStarted = false;
 
@@ -33,6 +33,7 @@ const propTypes = {
     // Api load delay and limit
     retryDelay: PropTypes.number, // in miliseconds
     retryLimit: PropTypes.number,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -54,6 +55,11 @@ const defaultProps = {
     retryLimit: 10,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GooglePicker extends React.Component {
     static propTypes = propTypes;
@@ -201,9 +207,13 @@ export default class GooglePicker extends React.Component {
                 transparent
             >
                 {
-                    this.props.children ?
-                        this.props.children :
-                        <button>{commonStrings.openGoogleChooserText}</button>
+                    this.props.children ? (
+                        this.props.children
+                    ) : (
+                        <button>
+                            {this.props.commonStrings('openGoogleChooserText')}
+                        </button>
+                    )
                 }
             </PrimaryButton>
         );

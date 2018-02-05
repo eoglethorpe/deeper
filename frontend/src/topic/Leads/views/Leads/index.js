@@ -52,6 +52,7 @@ import {
     setLeadPageActivePageAction,
 
     addLeadViewAddLeadsAction,
+    leadsStringsSelector,
 } from '../../../../common/redux';
 
 import schema from '../../../../common/schema';
@@ -61,7 +62,6 @@ import { leadTypeIconMap } from '../../../../common/entities/lead';
 import {
     iconNames,
     pathNames,
-    leadsString,
 } from '../../../../common/constants/';
 import notify from '../../../../common/notify';
 
@@ -82,6 +82,8 @@ const propTypes = {
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     addLeads: PropTypes.func.isRequired,
+
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -97,6 +99,7 @@ const mapStateToProps = (state, props) => ({
     activePage: leadPageActivePageSelector(state, props),
     activeSort: leadPageActiveSortSelector(state, props),
     filters: leadPageFilterSelector(state, props),
+    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -158,7 +161,7 @@ export default class Leads extends React.PureComponent {
         this.headers = [
             {
                 key: 'attachmentMimeType',
-                label: leadsString.filterSourceType,
+                label: this.props.leadsStrings('filterSourceType'),
                 order: 1,
                 sortable: false,
                 modifier: (row) => {
@@ -189,19 +192,19 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: leadsString.titleLabel,
+                label: this.props.leadsStrings('titleLabel'),
                 order: 2,
                 sortable: true,
             },
             {
                 key: 'source',
-                label: leadsString.tableHeaderPublisher,
+                label: this.props.leadsStrings('tableHeaderPublisher'),
                 order: 3,
                 sortable: true,
             },
             {
                 key: 'published_on',
-                label: leadsString.tableHeaderDatePublished,
+                label: this.props.leadsStrings('tableHeaderDatePublished'),
                 order: 4,
                 sortable: true,
                 modifier: row => (
@@ -213,7 +216,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'created_by',
-                label: leadsString.tableHeaderOwner,
+                label: this.props.leadsStrings('tableHeaderOwner'),
                 order: 5,
                 sortable: true,
                 modifier: row => (
@@ -227,7 +230,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'created_at',
-                label: leadsString.tableHeaderDateCreated,
+                label: this.props.leadsStrings('tableHeaderDateCreated'),
                 order: 6,
                 sortable: true,
                 modifier: row => (
@@ -239,7 +242,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'confidentiality',
-                label: leadsString.tableHeaderConfidentiality,
+                label: this.props.leadsStrings('tableHeaderConfidentiality'),
                 sortable: true,
                 order: 7,
                 modifier: row => (
@@ -250,7 +253,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: leadsString.tableHeaderStatus,
+                label: this.props.leadsStrings('tableHeaderStatus'),
                 sortable: true,
                 order: 8,
                 modifier: row => (
@@ -261,20 +264,20 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'no_of_entries',
-                label: leadsString.tableHeaderNoOfEntries,
+                label: this.props.leadsStrings('tableHeaderNoOfEntries'),
                 order: 9,
                 sortable: true,
                 modifier: row => row.noOfEntries,
             },
             {
                 key: 'actions',
-                label: leadsString.tableHeaderActions,
+                label: this.props.leadsStrings('tableHeaderActions'),
                 order: 10,
                 sortable: false,
                 modifier: row => (
                     <div>
                         <Button
-                            title={leadsString.searchSimilarLeadButtonTitle}
+                            title={this.props.leadsStrings('searchSimilarLeadButtonTitle')}
                             onClick={() => this.handleSearchSimilarLead(row)}
                             smallVerticalPadding
                             transparent
@@ -282,7 +285,7 @@ export default class Leads extends React.PureComponent {
                             <i className={iconNames.search} />
                         </Button>
                         <Button
-                            title={leadsString.editLeadButtonTitle}
+                            title={this.props.leadsStrings('editLeadButtonTitle')}
                             onClick={() => this.handleEditLeadClick(row)}
                             smallVerticalPadding
                             transparent
@@ -290,7 +293,7 @@ export default class Leads extends React.PureComponent {
                             <i className={iconNames.edit} />
                         </Button>
                         <DangerButton
-                            title={leadsString.removeLeadLeadButtonTitle}
+                            title={this.props.leadsStrings('removeLeadLeadButtonTitle')}
                             onClick={() => this.handleRemoveLead(row)}
                             smallVerticalPadding
                             transparent
@@ -298,7 +301,7 @@ export default class Leads extends React.PureComponent {
                             <i className={iconNames.delete} />
                         </DangerButton>
                         <AccentButton
-                            title={leadsString.addEntryFromLeadButtonTitle}
+                            title={this.props.leadsStrings('addEntryFromLeadButtonTitle')}
                             onClick={() => this.handleAddEntryClick(row)}
                             smallVerticalPadding
                             transparent
@@ -439,7 +442,7 @@ export default class Leads extends React.PureComponent {
                 notify.send({
                     title: 'Leads', // FIXME: strings
                     type: notify.type.SUCCESS,
-                    message: leadsString.leadDeleteSuccess,
+                    message: this.props.leadsStrings('leadDeleteSuccess'),
                     duration: notify.duration.MEDIUM,
                 });
 
@@ -458,7 +461,7 @@ export default class Leads extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: leadsString.leadDelete,
+                    title: this.props.leadsStrings('leadDelete'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -466,9 +469,9 @@ export default class Leads extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: leadsString.leadDelete,
+                    title: this.props.leadsStrings('leadDelete'),
                     type: notify.type.ERROR,
-                    message: leadsString.leadDeleteFailure,
+                    message: this.props.leadsStrings('leadDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -639,7 +642,7 @@ export default class Leads extends React.PureComponent {
                         onClick={this.handleAddLeadClick}
                         iconName={iconNames.add}
                     >
-                        {leadsString.addSourcesButtonLabel}
+                        {this.props.leadsStrings('addSourcesButtonLabel')}
                     </PrimaryButton>
                 </header>
                 <div styleName="table-container">
@@ -660,7 +663,7 @@ export default class Leads extends React.PureComponent {
                     onClose={this.handleDeleteModalClose}
                 >
                     <p>
-                        {leadsString.leadDeleteConfirmText}
+                        {this.props.leadsStrings('leadDeleteConfirmText')}
                     </p>
                 </Confirm>
                 <footer styleName="footer">

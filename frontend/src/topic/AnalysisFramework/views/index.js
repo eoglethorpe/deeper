@@ -25,10 +25,10 @@ import {
     setAfViewAnalysisFrameworkAction,
 
     afViewCurrentAnalysisFrameworkSelector,
+    notificationStringsSelector,
 } from '../../../common/redux';
 
 import notify from '../../../common/notify';
-import { notificationStrings } from '../../../common/constants';
 
 import styles from './styles.scss';
 import Overview from './Overview';
@@ -39,6 +39,7 @@ const propTypes = {
     analysisFrameworkId: PropTypes.number.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
     history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -48,6 +49,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     analysisFramework: afViewCurrentAnalysisFrameworkSelector(state, props),
     analysisFrameworkId: afIdFromRoute(state, props),
+    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,8 +99,8 @@ export default class AnalysisFramework extends React.PureComponent {
                     } else if (analysisFramework.versionId < response.versionId) {
                         notify.send({
                             type: notify.type.WARNING,
-                            title: notificationStrings.afUpdate,
-                            message: notificationStrings.afUpdateOverridden,
+                            title: this.props.notificationStrings('afUpdate'),
+                            message: this.props.notificationStrings('afUpdateOverridden'),
                             duration: notify.duration.SLOW,
                         });
                         this.props.setAnalysisFramework({
@@ -127,9 +129,9 @@ export default class AnalysisFramework extends React.PureComponent {
                         analysisFramework: response,
                     });
                     notify.send({
-                        title: notificationStrings.afTitle,
+                        title: this.props.notificationStrings('afTitle'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.afSaveSuccess,
+                        message: this.props.notificationStrings('afSaveSuccess'),
                         duration: notify.duration.SLOW,
                     });
                 } catch (er) {

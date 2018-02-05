@@ -29,11 +29,9 @@ import {
     projectOptionsSelector,
 
     setProjectAction,
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
-import {
-    notificationStrings,
-    projectStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -46,6 +44,8 @@ const propTypes = {
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
     onRegionsAdd: PropTypes.func,
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -57,6 +57,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -99,14 +101,14 @@ export default class AddExistingRegion extends React.PureComponent {
         this.regionsHeader = [
             {
                 key: 'value',
-                label: projectStrings.tableHeaderName,
+                label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.value.localeCompare(b.value),
             },
             {
                 key: 'key',
-                label: projectStrings.tableHeaderId,
+                label: this.props.projectStrings('tableHeaderId'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.key - b.key,
@@ -138,9 +140,9 @@ export default class AddExistingRegion extends React.PureComponent {
                         project: response,
                     });
                     notify.send({
-                        title: notificationStrings.countryCreate,
+                        title: this.props.notificationStrings('countryCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.countryCreateSuccess,
+                        message: this.props.notificationStrings('countryCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     if (this.props.onRegionsAdd) {
@@ -153,9 +155,9 @@ export default class AddExistingRegion extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.countryCreate,
+                    title: this.props.notificationStrings('countryCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryCreateFailure,
+                    message: this.props.notificationStrings('countryCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -169,9 +171,9 @@ export default class AddExistingRegion extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.countryCreate,
+                    title: this.props.notificationStrings('countryCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryCreateFatal,
+                    message: this.props.notificationStrings('countryCreateFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
@@ -278,10 +280,10 @@ export default class AddExistingRegion extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {projectStrings.modalCancel}
+                        {this.props.projectStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {projectStrings.modalUpdate}
+                        {this.props.projectStrings('modalUpdate')}
                     </PrimaryButton>
                 </div>
             </Form>

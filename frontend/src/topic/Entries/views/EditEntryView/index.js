@@ -36,6 +36,8 @@ import {
     removeAllEntriesAction,
 
     routeUrlSelector,
+    notificationStringsSelector,
+    commonStringsSelector,
 } from '../../../../common/redux';
 import {
     createParamsForUser,
@@ -55,10 +57,6 @@ import {
     createUrlForDeleteEntry,
     createParamsForDeleteEntry,
 } from '../../../../common/rest';
-import {
-    notificationStrings,
-    commonStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 import schema from '../../../../common/schema';
 
@@ -97,6 +95,9 @@ const propTypes = {
     removeAllEntries: PropTypes.func.isRequired,
 
     routeUrl: PropTypes.string.isRequired,
+
+    notificationStrings: PropTypes.func.isRequired,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -111,6 +112,9 @@ const mapStateToProps = (state, props) => ({
     filteredEntries: editEntryViewFilteredEntriesSelector(state, props),
     selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
     routeUrl: routeUrlSelector(state),
+
+    notificationStrings: notificationStringsSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -333,8 +337,8 @@ export default class EditEntryView extends React.PureComponent {
                     }
                     notify.send({
                         type: notify.type.WARNING,
-                        title: notificationStrings.entryUpdate,
-                        message: notificationStrings.entryUpdateOverridden,
+                        title: this.props.notificationStrings('entryUpdate'),
+                        message: this.props.notificationStrings('entryUpdateOverridden'),
                         duration: notify.duration.SLOW,
                     });
                 } catch (er) {
@@ -410,8 +414,8 @@ export default class EditEntryView extends React.PureComponent {
                     this.props.saveEntry({ leadId, entryId, data });
                     notify.send({
                         type: notify.type.SUCCESS,
-                        title: notificationStrings.entrySave,
-                        message: notificationStrings.entrySaveSuccess,
+                        title: this.props.notificationStrings('entrySave'),
+                        message: this.props.notificationStrings('entrySaveSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -429,8 +433,8 @@ export default class EditEntryView extends React.PureComponent {
                 this.saveRequestCoordinator.notifyComplete(entryId);
                 notify.send({
                     type: notify.type.ERROR,
-                    title: notificationStrings.entrySave,
-                    message: notificationStrings.entrySaveFailure,
+                    title: this.props.notificationStrings('entrySave'),
+                    message: this.props.notificationStrings('entrySaveFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -441,8 +445,8 @@ export default class EditEntryView extends React.PureComponent {
                 this.saveRequestCoordinator.notifyComplete(entryId);
                 notify.send({
                     type: notify.type.ERROR,
-                    title: notificationStrings.entrySave,
-                    message: notificationStrings.entrySaveFatal,
+                    title: this.props.notificationStrings('entrySave'),
+                    message: this.props.notificationStrings('entrySaveFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -685,7 +689,7 @@ export default class EditEntryView extends React.PureComponent {
                         location.pathname === this.props.routeUrl ? (
                             true
                         ) : (
-                            commonStrings.youHaveUnsavedChanges
+                            this.props.commonStrings('youHaveUnsavedChanges')
                         )
                     )
                 }

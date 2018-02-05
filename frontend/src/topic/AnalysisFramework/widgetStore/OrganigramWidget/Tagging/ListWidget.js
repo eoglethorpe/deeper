@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     Button,
@@ -18,8 +19,10 @@ import {
 } from '../../../../../public/components/Visualization';
 import {
     iconNames,
-    afStrings,
 } from '../../../../../common/constants';
+import {
+    afStringsSelector,
+} from '../../../../../common/redux';
 
 
 import styles from './styles.scss';
@@ -31,6 +34,7 @@ const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,6 +42,11 @@ const defaultProps = {
     attribute: {},
 };
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class OrganigramTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
@@ -117,7 +126,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
                 />
                 { this.state.showEditModal &&
                     <Modal styleName="edit-value-modal">
-                        <ModalHeader title={afStrings.organigramWidgetLabel} />
+                        <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
                         <ModalBody>
                             <OrgChart
                                 data={this.props.data}
@@ -130,10 +139,10 @@ export default class OrganigramTaggingList extends React.PureComponent {
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.handleCancelClick} >
-                                {afStrings.cancelButtonLabel}
+                                {this.props.afStrings('cancelButtonLabel')}
                             </Button>
                             <PrimaryButton onClick={this.handleSaveClick} >
-                                {afStrings.applyButtonLabel}
+                                {this.props.afStrings('applyButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

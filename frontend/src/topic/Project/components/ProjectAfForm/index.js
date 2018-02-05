@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     Form,
@@ -14,9 +15,7 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
-import {
-    projectStrings,
-} from '../../../../common/constants';
+import { projectStringsSelector } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -31,6 +30,7 @@ const propTypes = {
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
     readOnly: PropTypes.bool,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -40,6 +40,11 @@ const defaultProps = {
     readOnly: false,
 };
 
+const mapStateToProps = state => ({
+    projectStrings: projectStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectAfForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -89,20 +94,20 @@ export default class ProjectAfForm extends React.PureComponent {
                             type="button"
                             disabled={pending || !pristine}
                         >
-                            {projectStrings.modalRevert}
+                            {this.props.projectStrings('modalRevert')}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
                         >
-                            {projectStrings.modalSave}
+                            {this.props.projectStrings('modalSave')}
                         </SuccessButton>
                     </div>
                 }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={projectStrings.addAfTitleLabel}
+                    label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"
-                    placeholder={projectStrings.addAfTitlePlaceholder}
+                    placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}
@@ -110,9 +115,9 @@ export default class ProjectAfForm extends React.PureComponent {
                     readOnly={readOnly}
                 />
                 <TextArea
-                    label={projectStrings.projectDescriptionLabel}
+                    label={this.props.projectStrings('projectDescriptionLabel')}
                     formname="description"
-                    placeholder={projectStrings.projectDescriptionPlaceholder}
+                    placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
                     styleName="description"
                     rows={3}
                     value={formValues.description}

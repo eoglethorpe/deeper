@@ -1,17 +1,10 @@
-import {
-    FrameworkListWidget,
-} from './Framework';
-import {
-    TaggingListWidget,
-} from './Tagging';
-import {
-    ViewListWidget,
-} from './View';
-import { afStrings } from '../../../../common/constants';
+import { FrameworkListWidget } from './Framework';
+import { TaggingListWidget } from './Tagging';
+import { ViewListWidget } from './View';
 
 const multiselectWidget = {
     id: 'organigramWidget',
-    title: afStrings.organigramWidgetLabel,
+    title: 'organigramWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,
         listMinSize: { width: 216, height: 108 },

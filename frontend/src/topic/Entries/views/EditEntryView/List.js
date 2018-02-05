@@ -29,11 +29,10 @@ import {
     projectIdFromRouteSelector,
 
     setGeoOptionsAction,
+    entryStringsSelector,
+    afStringsSelector,
 } from '../../../../common/redux';
-import {
-    entryStrings,
-    iconNames,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 import { entryAccessor } from '../../../../common/entities/entry';
 
 import widgetStore from '../../../AnalysisFramework/widgetStore';
@@ -51,6 +50,9 @@ const propTypes = {
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
     setGeoOptions: PropTypes.func.isRequired,
+
+    entryStrings: PropTypes.func.isRequired,
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -61,6 +63,8 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     leadDetails: editEntryViewCurrentLeadSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
+    entryStrings: entryStringsSelector(state),
+    afStrings: afStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -198,7 +202,7 @@ export default class List extends React.PureComponent {
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -206,9 +210,9 @@ export default class List extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: entryStrings.entriesTabLabel,
+                    title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,
-                    message: entryStrings.geoOptionsFatalMessage,
+                    message: this.props.entryStrings('geoOptionsFatalMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -221,7 +225,7 @@ export default class List extends React.PureComponent {
             .filter(widget => widget.tagging.listComponent)
             .map(widget => ({
                 id: widget.id,
-                title: widget.title,
+                title: this.props.afStrings(widget.title),
                 listComponent: widget.tagging.listComponent,
             }));
 
@@ -271,7 +275,7 @@ export default class List extends React.PureComponent {
             <AccentButton
                 className={styles['apply-button']}
                 type="button"
-                title={entryStrings.applyAllButtonTitle}
+                title={this.props.entryStrings('applyAllButtonTitle')}
                 onClick={() =>
                     this.setState({
                         showApplyModal: true,
@@ -288,7 +292,7 @@ export default class List extends React.PureComponent {
             <WarningButton
                 className={styles['apply-button']}
                 type="button"
-                title={entryStrings.applyAllBelowButtonTitle}
+                title={this.props.entryStrings('applyAllBelowButtonTitle')}
                 onClick={() =>
                     this.setState({
                         showApplyModal: true,
@@ -332,21 +336,23 @@ export default class List extends React.PureComponent {
                             to="/overview"
                             replace
                         >
-                            {entryStrings.gotoOverviewButtonLabel}
+                            {this.props.entryStrings('gotoOverviewButtonLabel')}
                         </Link>
                         <SuccessButton
                             onClick={onSaveAll}
                             disabled={saveAllDisabled}
                             styleName="save-button"
                         >
-                            {entryStrings.saveButtonLabel}
+                            {this.props.entryStrings('saveButtonLabel')}
                         </SuccessButton>
                     </div>
                 </header>
                 {
                     (!entries || entries.length <= 0) ? (
                         <div styleName="no-entry-wrapper">
-                            <h2>{entryStrings.noEntryFound}</h2>
+                            <h2>
+                                {this.props.entryStrings('noEntryFound')}
+                            </h2>
                         </div>
                     ) : (
                         <div styleName="entry-list">
@@ -377,9 +383,9 @@ export default class List extends React.PureComponent {
                     <p>
                         {
                             applyMode === APPLY_MODE.all ? (
-                                entryStrings.applyToAll
+                                this.props.entryStrings('applyToAll')
                             ) : (
-                                entryStrings.applyToAllBelow
+                                this.props.entryStrings('applyToAllBelow')
                             )
                         }
                     </p>

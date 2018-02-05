@@ -5,9 +5,6 @@ import {
     urlForUpload,
     createParamsForFileUpload,
 } from '../../../../../../common/rest';
-import {
-    leadsString,
-} from '../../../../../../common/constants';
 
 export default class FileUploadBuilder {
     constructor(parent) {
@@ -75,7 +72,7 @@ export default class FileUploadBuilder {
         addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            formErrors: [`${leadsString.fileUploadFailText} ${response.errors.file[0]}`],
+            formErrors: [`${this.parent.props.leadsString('fileUploadFailText')} ${response.errors.file[0]}`],
         });
 
         // FOR UPLAOD

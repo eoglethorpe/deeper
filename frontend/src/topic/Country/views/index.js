@@ -23,7 +23,6 @@ import {
 
 import {
     iconNames,
-    countriesString,
 } from '../../../common/constants';
 import schema from '../../../common/schema';
 import {
@@ -36,6 +35,7 @@ import {
 
     setRegionsAction,
     activeUserSelector,
+    countriesStringsSelector,
 } from '../../../common/redux';
 
 import CountryDetail from '../components/CountryDetail';
@@ -48,6 +48,7 @@ const propTypes = {
     setRegions: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number,
+    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -59,6 +60,7 @@ const mapStateToProps = (state, props) => ({
     countries: regionsListSelector(state),
     activeUser: activeUserSelector(state),
     countryId: countryIdFromRouteSelector(state, props),
+    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -199,7 +201,7 @@ export default class CountryPanel extends React.PureComponent {
         if (countries.length <= 0) {
             return (
                 <div styleName="country-detail-alt">
-                    {countriesString.noCountriesText}
+                    {this.props.countriesStrings('noCountriesText')}
                 </div>
             );
         }
@@ -207,7 +209,7 @@ export default class CountryPanel extends React.PureComponent {
         if (!activeCountryId) {
             return (
                 <div styleName="country-detail-alt">
-                    {countriesString.selectCountryText}
+                    {this.props.countriesStrings('selectCountryText')}
                 </div>
             );
         }
@@ -228,7 +230,7 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div styleName="country-detail-alt">
-                {countriesString.countryNotFoundText}
+                {this.props.countriesStrings('countryNotFoundText')}
             </div>
         );
     }
@@ -245,7 +247,7 @@ export default class CountryPanel extends React.PureComponent {
                 <div styleName="sidebar">
                     <header styleName="header">
                         <h3 styleName="heading">
-                            {countriesString.countriesLabel}
+                            {this.props.countriesStrings('countriesLabel')}
                         </h3>
                         {
                             activeUser.isSuperuser &&
@@ -253,13 +255,13 @@ export default class CountryPanel extends React.PureComponent {
                                 iconName={iconNames.add}
                                 onClick={this.onAddCountry}
                             >
-                                {countriesString.addCountryButtonLabel}
+                                {this.props.countriesStrings('addCountryButtonLabel')}
                             </PrimaryButton>
                         }
                         <TextInput
                             styleName="search-input"
                             onChange={this.handleSearchInputChange}
-                            placeholder={countriesString.searchCountryPlaceholer}
+                            placeholder={this.props.countriesStrings('searchCountryPlaceholer')}
                             type="search"
                             value={this.state.searchInputValue}
                             showLabel={false}

@@ -22,10 +22,10 @@ import {
 } from '../../../public/components/Action';
 import {
     geoOptionsForProjectSelector,
+    entryStringsSelector,
 } from '../../../common/redux';
 import {
     iconNames,
-    entryStrings,
 } from '../../constants';
 import update from '../../../public/utils/immutable-update';
 
@@ -40,6 +40,7 @@ const propTypes = {
     regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,6 +54,7 @@ const emptyObject = {};
 
 const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
+    entryStrings: entryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -351,22 +353,22 @@ export default class GeoSelection extends React.PureComponent {
                                     <SelectInput
                                         hideClearButton
                                         keySelector={this.regionKeySelector}
-                                        label={entryStrings.regionSelectTitle}
+                                        label={this.props.entryStrings('regionSelectTitle')}
                                         labelSelector={this.regionLabelSelector}
                                         onChange={this.handleRegionSelection}
                                         options={regions}
                                         optionsIdentifier="region-select-options"
-                                        placeholder={entryStrings.regionSelectPlaceholder}
+                                        placeholder={this.props.entryStrings('regionSelectPlaceholder')}
                                         showHintAndError={false}
                                         value={selectedRegion}
                                     />
                                     <MultiSelectInput
-                                        label={entryStrings.locationSelectTitle}
+                                        label={this.props.entryStrings('locationSelectTitle')}
                                         labelSelector={GeoSelection.shortLabelSelector}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
                                         optionsIdentifier="location-select-options"
-                                        placeholder={entryStrings.locationSelectPlaceholder}
+                                        placeholder={this.props.entryStrings('locationSelectPlaceholder')}
                                         showHintAndError={false}
                                         styleName="map-selection-select"
                                         value={values[selectedRegion]}
@@ -394,12 +396,12 @@ export default class GeoSelection extends React.PureComponent {
                             <Button
                                 onClick={this.handleModalCancelButtonClick}
                             >
-                                {entryStrings.cancelGeoSelectionButtonLabel}
+                                {this.props.entryStrings('cancelGeoSelectionButtonLabel')}
                             </Button>
                             <PrimaryButton
                                 onClick={this.handleModalSetButtonClick}
                             >
-                                {entryStrings.setGeoSelectionButtonLabel}
+                                {this.props.entryStrings('setGeoSelectionButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

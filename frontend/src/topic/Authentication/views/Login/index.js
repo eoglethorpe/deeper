@@ -27,10 +27,7 @@ import {
 } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
 
-import {
-    pathNames,
-    loginStrings,
-} from '../../../../common/constants';
+import { pathNames } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
 import {
@@ -55,6 +52,7 @@ import {
     authenticateAction,
 
     currentUserProjectsSelector,
+    loginStringsSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
@@ -66,6 +64,7 @@ const propTypes = {
     login: PropTypes.func.isRequired,
     startRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
+    loginStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -73,6 +72,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     currentUserProjects: currentUserProjectsSelector(state),
+    loginStrings: loginStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -274,7 +274,10 @@ export default class Login extends React.PureComponent {
                         path={logo}
                     />
                     <h2 styleName="heading">
-                        <small>{loginStrings.welcomeToText}</small><br />
+                        <small>
+                            {this.props.loginStrings('welcomeToText')}
+                        </small>
+                        <br />
                     </h2>
                 </div>
                 <div styleName="login-form-container">
@@ -287,14 +290,18 @@ export default class Login extends React.PureComponent {
                             <img
                                 styleName="logo"
                                 src={hidLogo}
-                                alt={loginStrings.logInWIthHid}
+                                alt={this.props.loginStrings('logInWIthHid')}
                                 draggable="false"
                             />
-                            <span>{loginStrings.logInWIthHid}</span>
+                            <span>
+                                {this.props.loginStrings('logInWIthHid')}
+                            </span>
                         </a>
                         <div styleName="or-container">
                             <hr />
-                            <span styleName="or">{loginStrings.orText}</span>
+                            <span styleName="or">
+                                {this.props.loginStrings('orText')}
+                            </span>
                         </div>
                     </div>
                     <Form
@@ -312,7 +319,8 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.email}
                             formname="email"
                             value={formValues.email}
-                            label={loginStrings.emailLabel}
+                            label={this.props.loginStrings('emailLabel')}
+                            // FIXME: use strings
                             placeholder="john.doe@mail.com"
                             autoFocus
                         />
@@ -321,7 +329,8 @@ export default class Login extends React.PureComponent {
                             error={formFieldErrors.password}
                             formname="password"
                             value={formValues.password}
-                            label={loginStrings.passwordLabel}
+                            label={this.props.loginStrings('passwordLabel')}
+                            // FIXME: use strings
                             placeholder="**********"
                             required
                             type="password"
@@ -331,24 +340,22 @@ export default class Login extends React.PureComponent {
                                 styleName="forgot-password-link"
                                 to={reverseRoute(pathNames.passwordReset, {})}
                             >
-                                {loginStrings.forgotPasswordText}
+                                {this.props.loginStrings('forgotPasswordText')}
                             </Link>
-                            <PrimaryButton
-                                disabled={pending}
-                            >
-                                { loginStrings.loginLabel }
+                            <PrimaryButton disabled={pending}>
+                                {this.props.loginStrings('loginLabel')}
                             </PrimaryButton>
                         </div>
                     </Form>
                     <div styleName="register-link-container">
                         <p>
-                            {loginStrings.noAccountYetText}
+                            {this.props.loginStrings('noAccountYetText')}
                         </p>
                         <Link
                             styleName="register-link"
                             to={reverseRoute(pathNames.register, {})}
                         >
-                            {loginStrings.registerLabel}
+                            {this.props.loginStrings('registerLabel')}
                         </Link>
                     </div>
                 </div>

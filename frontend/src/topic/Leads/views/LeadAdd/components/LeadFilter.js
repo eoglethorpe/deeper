@@ -24,6 +24,7 @@ import {
     addLeadViewFiltersSelector,
     addLeadViewIsFilterEmptySelector,
     setLeadFilterOptionsAction,
+    leadsStringsSelector,
 } from '../../../../../common/redux';
 import {
     createParamsForUser,
@@ -34,7 +35,6 @@ import {
     LEAD_FILTER_STATUS,
 } from '../../../../../common/entities/lead';
 
-import { leadsString } from '../../../../../common/constants';
 import styles from '../styles.scss';
 
 
@@ -59,12 +59,14 @@ const defaultProps = { }; const propTypes = {
     setLeadViewFilters: PropTypes.func.isRequired,
     unsetLeadViewFilters: PropTypes.func.isRequired,
     setLeadFilterOptions: PropTypes.func.isRequired,
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     filters: addLeadViewFiltersSelector(state),
     isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
+    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -157,35 +159,35 @@ export default class LeadFilter extends React.PureComponent {
                 styleName="lead-filters"
             >
                 <TextInput
-                    label={leadsString.placeholderSearch}
+                    label={this.props.leadsStrings('placeholderSearch')}
                     onChange={this.handleSearchChange}
                     value={filters.search}
-                    placeholder={leadsString.placeholderSearch}
+                    placeholder={this.props.leadsStrings('placeholderSearch')}
                     type="search"
                     showHintAndError={false}
                 />
                 <TextInput
-                    label={leadsString.filterPublisher}
-                    placeholder={leadsString.placeholderAny}
+                    label={this.props.leadsStrings('filterPublisher')}
+                    placeholder={this.props.leadsStrings('placeholderAny')}
                     value={filters.source}
                     onChange={this.handleLeadSourceFilterChange}
                     showHintAndError={false}
                 />
                 <SelectInput
-                    label={leadsString.filterStatus}
+                    label={this.props.leadsStrings('filterStatus')}
                     showLabel
                     options={leadStatusFilterOptions}
-                    placeholder={leadsString.placeholderAny}
+                    placeholder={this.props.leadsStrings('placeholderAny')}
                     value={filters.status}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadStatusFilterChange}
                     showHintAndError={false}
                 />
                 <MultiSelectInput
-                    label={leadsString.filterSourceType}
+                    label={this.props.leadsStrings('filterSourceType')}
                     showLabel
                     options={leadTypeOptions}
-                    placeholder={leadsString.placeholderAny}
+                    placeholder={this.props.leadsStrings('placeholderAny')}
                     value={filters.type}
                     optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadTypeFilterChange}
@@ -196,7 +198,7 @@ export default class LeadFilter extends React.PureComponent {
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
-                    {leadsString.filterClearFilter}
+                    {this.props.leadsStrings('filterClearFilter')}
                 </DangerButton>
             </div>
         );

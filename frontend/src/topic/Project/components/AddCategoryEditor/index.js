@@ -26,10 +26,8 @@ import {
 } from '../../../../common/rest';
 import {
     addNewCeAction,
+    projectStringsSelector,
 } from '../../../../common/redux';
-import {
-    projectStrings,
-} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import styles from './styles.scss';
 
@@ -38,6 +36,7 @@ const propTypes = {
     addNewCe: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,11 +44,15 @@ const defaultProps = {
     projectId: undefined,
 };
 
+const mapStateToProps = state => ({
+    projectStrings: projectStringsSelector(state),
+});
+
 const mapDispatchToProps = dispatch => ({
     addNewCe: params => dispatch(addNewCeAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddCategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
@@ -183,9 +186,9 @@ export default class AddCategoryEditor extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={projectStrings.addAfTitleLabel}
+                    label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"
-                    placeholder={projectStrings.addCeTitlePlaceholder}
+                    placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     autoFocus
@@ -196,10 +199,10 @@ export default class AddCategoryEditor extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {projectStrings.modalCancel}
+                        {this.props.projectStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {projectStrings.modalAdd}
+                        {this.props.projectStrings('modalAdd')}
                     </PrimaryButton>
                 </div>
             </Form>

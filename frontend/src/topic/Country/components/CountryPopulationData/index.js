@@ -1,5 +1,7 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 import {
@@ -15,12 +17,26 @@ import {
 } from '../../../../public/components/Action';
 
 import {
-    countriesString,
-} from '../../../../common/constants';
+    countriesStringsSelector,
+} from '../../../../common/redux';
 
 
+const propTypes = {
+    countriesStrings: PropTypes.func.isRequired,
+};
+const defaultProps = {
+};
+
+const mapStateToProps = state => ({
+    countriesStrings: countriesStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
+    static propTypes = propTypes;
+    static defaultProps = defaultProps;
+
     constructor(props) {
         super(props);
 
@@ -86,24 +102,24 @@ export default class CountryPopulationData extends React.PureComponent {
                         onClick={this.handleFormCancel}
                         disabled={pending}
                     >
-                        {countriesString.cancelButtonLabel}
+                        {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {countriesString.saveChangesButtonLabel}
+                        {this.props.countriesStrings('saveChangesButtonLabel')}
                     </PrimaryButton>
                 </div>
                 <div styleName="population-container">
                     <TextInput
-                        label={countriesString.totalPopulationLabel}
+                        label={this.props.countriesStrings('totalPopulationLabel')}
                         styleName="population"
-                        placeholder={countriesString.totalPopulationPlaceholder}
+                        placeholder={this.props.countriesStrings('totalPopulationPlaceholder')}
                         formname="population"
                     />
                     <TextInput
-                        label={countriesString.sourceLabel}
+                        label={this.props.countriesStrings('sourceLabel')}
                         styleName="source"
                         formname="source"
-                        placeholder={countriesString.sourcePlaceholder}
+                        placeholder={this.props.countriesStrings('sourcePlaceholder')}
                     />
                 </div>
             </Form>

@@ -1,11 +1,10 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
-import {
-    NumberInput,
-} from '../../../../../public/components/Input';
-import { afStrings } from '../../../../../common/constants';
+import { NumberInput } from '../../../../../public/components/Input';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -15,12 +14,18 @@ const propTypes = {
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     attribute: undefined,
 };
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberTaggingList extends React.PureComponent {
     static propTypes = propTypes;
@@ -54,7 +59,7 @@ export default class NumberTaggingList extends React.PureComponent {
                     onChange={this.handleChange}
                     styleName="number-input"
                     value={value}
-                    placeholder={afStrings.numberPlaceholder}
+                    placeholder={this.props.afStrings('numberPlaceholder')}
                     showLabel={false}
                     showHintAndError={false}
                     separator=" "

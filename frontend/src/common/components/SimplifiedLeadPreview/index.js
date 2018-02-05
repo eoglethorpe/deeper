@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 
@@ -11,22 +12,18 @@ import {
     createUrlForLeadExtractionTrigger,
     createUrlForSimplifiedLeadPreview,
 } from '../../../common/rest';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-import {
-    isFalsy,
-} from '../../../public/utils/common';
-import {
-    commonStrings,
-} from '../../../common/constants';
+import { LoadingAnimation } from '../../../public/components/View';
+import { isFalsy } from '../../../public/utils/common';
+import { commonStringsSelector } from '../../../common/redux';
 
 const propTypes = {
     className: PropTypes.string,
     leadId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     highlights: PropTypes.arrayOf(PropTypes.object),
     highlightModifier: PropTypes.func,
+    commonStrings: PropTypes.func.isRequired,
 };
+
 const defaultProps = {
     className: '',
     leadId: undefined,
@@ -35,7 +32,11 @@ const defaultProps = {
     onLoad: undefined,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
 
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class SimplifiedLeadPreview extends React.PureComponent {
     static propTypes = propTypes;
@@ -112,13 +113,13 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.serverErrorText,
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -158,13 +159,13 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.serverErrorText,
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: commonStrings.connectionFailureText,
+                    error: this.props.commonStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -199,7 +200,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
 
         return (
             <div className={styles.message}>
-                {commonStrings.previewNotAvailable}
+                {this.props.commonStrings('previewNotAvailable')}
             </div>
         );
     }

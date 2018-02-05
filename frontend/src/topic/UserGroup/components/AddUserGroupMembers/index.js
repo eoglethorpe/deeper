@@ -16,11 +16,7 @@ import {
     DangerButton,
     PrimaryButton,
 } from '../../../../public/components/Action';
-import {
-    iconNames,
-    notificationStrings,
-    userStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import schema from '../../../../common/schema';
@@ -37,6 +33,9 @@ import {
 
     groupSelector,
     setUsersMembershipAction,
+
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
 import notify from '../../../../common/notify';
 
@@ -50,6 +49,9 @@ const propTypes = {
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setUsers: PropTypes.func.isRequired,
     setUsersMembership: PropTypes.func.isRequired,
+
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,6 +62,9 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
     userGroupDetails: groupSelector(state, props),
+
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -109,28 +114,28 @@ export default class AddUserGroupMembers extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'displayName',
-                label: userStrings.tableHeaderName,
+                label: this.props.userStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.displayName.localeCompare(b.displayName),
             },
             {
                 key: 'email',
-                label: userStrings.tableHeaderEmail,
+                label: this.props.userStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.email.localeCompare(b.email),
             },
             {
                 key: 'actions',
-                label: userStrings.tableHeaderActions,
+                label: this.props.userStrings('tableHeaderActions'),
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
                     const title = isAdmin ? (
-                        userStrings.revokeAdminLinkTitle
+                        this.props.userStrings('revokeAdminLinkTitle')
                     ) : (
-                        userStrings.grantAdminLinkTitle
+                        this.props.userStrings('grantAdminLinkTitle')
                     );
                     const handleClick = () => this.handleRoleChangeForNewMember({
                         memberId: row.id,
@@ -244,9 +249,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         userGroupId,
                     });
                     notify.send({
-                        title: notificationStrings.userMembershipCreate,
+                        title: this.props.notificationStrings('userMembershipCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userMembershipCreateSuccess,
+                        message: this.props.notificationStrings('userMembershipCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onModalClose();
@@ -256,9 +261,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userMembershipCreate,
+                    title: this.props.notificationStrings('userMembershipCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipCreateFailure,
+                    message: this.props.notificationStrings('userMembershipCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -272,9 +277,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipCreate,
+                    title: this.props.notificationStrings('userMembershipCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipCreateFatal,
+                    message: this.props.notificationStrings('userMembershipCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -372,10 +377,10 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {userStrings.modalCancel}
+                        {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine}>
-                        {userStrings.modalSave}
+                        {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
             </Form>

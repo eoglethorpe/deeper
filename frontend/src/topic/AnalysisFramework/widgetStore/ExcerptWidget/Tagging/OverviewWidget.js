@@ -1,13 +1,14 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import {
     TextArea,
 } from '../../../../../public/components/Input';
 import {
-    afStrings,
-} from '../../../../../common/constants';
+    afStringsSelector,
+} from '../../../../../common/redux';
 import styles from './styles.scss';
 
 const IMAGE = 'image';
@@ -17,6 +18,7 @@ const propTypes = {
     entryId: PropTypes.string,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -24,6 +26,11 @@ const defaultProps = {
     entryId: undefined,
 };
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
@@ -145,7 +152,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                             <img
                                 styleName="image"
                                 src={attribute.image}
-                                alt={afStrings.altEntryLabel}
+                                alt={this.props.afStrings('altEntryLabel')}
                             />
                         ) : (
                             <TextArea

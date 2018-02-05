@@ -1,3 +1,4 @@
+export * from './selectors/lang';
 export * from './selectors/auth';
 export * from './selectors/notify';
 export * from './selectors/route';
@@ -5,6 +6,7 @@ export * from './selectors/domainData';
 export * from './selectors/siloDomainData';
 
 // NOTE: named exports from reducers are action-creators and action-types
+export * from './reducers/lang';
 export * from './reducers/auth';
 export * from './reducers/notify';
 export * from './reducers/route';

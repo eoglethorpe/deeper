@@ -30,13 +30,11 @@ import {
     urlForProjectCreate,
 } from '../../../common/rest';
 import {
+    notificationStringsSelector,
+    userStringsSelector,
     setProjectAction,
     activeUserSelector,
 } from '../../../common/redux';
-import {
-    notificationStrings,
-    userStrings,
-} from '../../constants';
 import notify from '../../notify';
 
 import styles from './styles.scss';
@@ -49,6 +47,8 @@ const propTypes = {
     userGroups: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.isRequired,
     })),
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -58,6 +58,8 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -119,9 +121,9 @@ export default class UserProjectAdd extends React.PureComponent {
                         this.props.onProjectAdded(response.id);
                     }
                     notify.send({
-                        title: notificationStrings.userProjectCreate,
+                        title: this.props.notificationStrings('userProjectCreate'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userProjectCreateSuccess,
+                        message: this.props.notificationStrings('userProjectCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -131,9 +133,9 @@ export default class UserProjectAdd extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userProjectCreate,
+                    title: this.props.notificationStrings('userProjectCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userProjectCreateFailure,
+                    message: this.props.notificationStrings('userProjectCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -147,9 +149,9 @@ export default class UserProjectAdd extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userProjectCreate,
+                    title: this.props.notificationStrings('userProjectCreate'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userProjectCreateFatal,
+                    message: this.props.notificationStrings('userProjectCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -213,9 +215,9 @@ export default class UserProjectAdd extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={userStrings.addProjectModalLabel}
+                    label={this.props.userStrings('addProjectModalLabel')}
                     formname="title"
-                    placeholder={userStrings.addProjectModalPlaceholder}
+                    placeholder={this.props.userStrings('addProjectModalPlaceholder')}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
@@ -227,10 +229,10 @@ export default class UserProjectAdd extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        {userStrings.modalCancel}
+                        {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {userStrings.modalCreate}
+                        {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>
             </Form>

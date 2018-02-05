@@ -31,11 +31,11 @@ import {
 import {
     userGalleryFilesSelector,
     setUserGalleryFilesAction,
+    commonStringsSelector,
 } from '../../../common/redux';
 
 import {
     iconNames,
-    commonStrings,
 } from '../../../common/constants';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
@@ -49,6 +49,7 @@ const propTypes = {
     galleryFiles: PropTypes.arrayOf(
         PropTypes.shape({}),
     ),
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -57,6 +58,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     galleryFiles: userGalleryFilesSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -78,13 +80,13 @@ export default class DgSelect extends React.PureComponent {
         this.galleryFilesHeader = [
             {
                 key: 'actions',
-                label: commonStrings.tableHeaderSelect,
+                label: this.props.commonStrings('tableHeaderSelect'),
                 order: 1,
                 modifier: row => this.renderCheckbox(row),
             },
             {
                 key: 'mimeType',
-                label: commonStrings.tableHeaderType,
+                label: this.props.commonStrings('tableHeaderType'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
@@ -92,14 +94,14 @@ export default class DgSelect extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: commonStrings.tableHeaderName,
+                label: this.props.commonStrings('tableHeaderName'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'createdAt',
-                label: commonStrings.tableHeaderDateCreated,
+                label: this.props.commonStrings('tableHeaderDateCreated'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.createdAt.localeCompare(b.createdAt),
@@ -281,10 +283,10 @@ export default class DgSelect extends React.PureComponent {
                 rightComponent={
                     <TextInput
                         onChange={this.handleSearchInputChange}
-                        placeholder={commonStrings.searchGalleryPlaceholder}
+                        placeholder={this.props.commonStrings('searchGalleryPlaceholder')}
                         className={styles['search-input']}
                         type="search"
-                        label={commonStrings.searchGalleryLabel}
+                        label={this.props.commonStrings('searchGalleryLabel')}
                         value={searchInputValue}
                         showLabel={false}
                         showHintAndError={false}
@@ -308,13 +310,13 @@ export default class DgSelect extends React.PureComponent {
                 <Button
                     onClick={this.onClose}
                 >
-                    {commonStrings.cancelButtonLabel}
+                    {this.props.commonStrings('cancelButtonLabel')}
                 </Button>
                 <PrimaryButton
                     onClick={this.onAdd}
                     disabled={pending}
                 >
-                    {commonStrings.addButtonLabel}
+                    {this.props.commonStrings('addButtonLabel')}
                 </PrimaryButton>
             </ModalFooter>,
         ]);

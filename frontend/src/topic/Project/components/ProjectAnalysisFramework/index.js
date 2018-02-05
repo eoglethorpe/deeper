@@ -30,12 +30,10 @@ import {
     projectDetailsSelector,
 
     setAnalysisFrameworksAction,
+    projectStringsSelector,
 } from '../../../../common/redux';
 
-import {
-    iconNames,
-    projectStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
 
 import ProjectAfDetail from '../ProjectAfDetail';
 import AddAnalysisFramework from '../AddAnalysisFramework';
@@ -48,6 +46,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setAnalysisFrameworks: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -56,6 +55,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -212,7 +212,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         if (analysisFrameworkList.length <= 0) {
             return (
                 <h1 styleName="no-analysis-framework">
-                    {projectStrings.noAfText}
+                    {this.props.projectStrings('noAfText')}
                 </h1>
             );
         }
@@ -249,7 +249,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             styleName="search-input"
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
-                            placeholder={projectStrings.searchAfPlaceholder}
+                            placeholder={this.props.projectStrings('searchAfPlaceholder')}
                             type="search"
                         />
                         <PrimaryButton
@@ -257,7 +257,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                             iconName={iconNames.add}
                             onClick={this.handleAddAfButtonClick}
                         >
-                            {projectStrings.addAfButtonLabel}
+                            {this.props.projectStrings('addAfButtonLabel')}
                         </PrimaryButton>
                         { this.state.addAfModalShow &&
                             <Modal
@@ -265,7 +265,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                                 onClose={this.handleModalClose}
                                 closeOnBlur
                             >
-                                <ModalHeader title={projectStrings.addAfModalTitle} />
+                                <ModalHeader title={this.props.projectStrings('addAfModalTitle')} />
                                 <ModalBody>
                                     <AddAnalysisFramework
                                         projectId={projectId}

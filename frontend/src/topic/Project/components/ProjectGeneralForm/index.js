@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
     LoadingAnimation,
@@ -19,9 +20,7 @@ import {
     SuccessButton,
 } from '../../../../public/components/Action';
 
-import {
-    projectStrings,
-} from '../../../../common/constants';
+import { projectStringsSelector } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -37,6 +36,7 @@ const propTypes = {
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,6 +45,11 @@ const defaultProps = {
     className: '',
 };
 
+const mapStateToProps = state => ({
+    projectStrings: projectStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectGeneralForm extends React.PureComponent {
     static propTypes = propTypes;
@@ -102,52 +107,52 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         type="button"
                         disabled={pending || !pristine}
                     >
-                        {projectStrings.modalRevert}
+                        {this.props.projectStrings('modalRevert')}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                     >
-                        {projectStrings.modalSave}
+                        {this.props.projectStrings('modalSave')}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={projectStrings.projectNameLabel}
+                    label={this.props.projectStrings('projectNameLabel')}
                     formname="title"
-                    placeholder={projectStrings.projectNamePlaceholder}
+                    placeholder={this.props.projectStrings('projectNamePlaceholder')}
                     styleName="name"
                     value={formValues.title}
                     error={formFieldErrors.title}
                 />
                 <TextArea
-                    label={projectStrings.projectDescriptionLabel}
+                    label={this.props.projectStrings('projectDescriptionLabel')}
                     formname="description"
-                    placeholder={projectStrings.projectDescriptionPlaceholder}
+                    placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
                     styleName="description"
                     rows={3}
                     value={formValues.description}
                     error={formFieldErrors.description}
                 />
                 <DateInput
-                    label={projectStrings.projectStartDateLabel}
+                    label={this.props.projectStrings('projectStartDateLabel')}
                     formname="startDate"
-                    placeholder={projectStrings.projectStartDatePlaceholder}
+                    placeholder={this.props.projectStrings('projectStartDatePlaceholder')}
                     styleName="start-date"
                     value={formValues.startDate}
                     error={formFieldErrors.startDate}
                 />
                 <DateInput
-                    label={projectStrings.projectEndDateLabel}
+                    label={this.props.projectStrings('projectEndDateLabel')}
                     formname="endDate"
-                    placeholder={projectStrings.projectEndDatePlaceholder}
+                    placeholder={this.props.projectStrings('projectEndDatePlaceholder')}
                     styleName="end-date"
                     value={formValues.endDate}
                     error={formFieldErrors.endDate}
                 />
                 <MultiSelectInput
-                    label={projectStrings.projectRegionLabel}
+                    label={this.props.projectStrings('projectRegionLabel')}
                     formname="regions"
-                    placeholder={projectStrings.projectRegionPlaceholder}
+                    placeholder={this.props.projectStrings('projectRegionPlaceholder')}
                     styleName="regions"
                     value={formValues.regions}
                     options={regionOptions}
@@ -156,9 +161,9 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     error={formFieldErrors.regions}
                 />
                 <MultiSelectInput
-                    label={projectStrings.projectUserGroupLabel}
+                    label={this.props.projectStrings('projectUserGroupLabel')}
                     formname="userGroups"
-                    placeholder={projectStrings.projectUserGroupPlaceholder}
+                    placeholder={this.props.projectStrings('projectUserGroupPlaceholder')}
                     styleName="user-groups"
                     value={formValues.userGroups}
                     options={userGroupsOptions}

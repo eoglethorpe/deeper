@@ -23,7 +23,6 @@ import {
 import {
     iconNames,
     pathNames,
-    projectStrings,
 } from '../../../common/constants';
 import {
 } from '../../../common/rest';
@@ -31,6 +30,7 @@ import {
     currentUserAdminProjectsSelector,
     setActiveProjectAction,
     projectIdFromRouteSelector,
+    projectStringsSelector,
 } from '../../../common/redux';
 
 import UserProjectAdd from '../../../common/components/UserProjectAdd';
@@ -47,6 +47,7 @@ const propTypes = {
         }),
     ),
     projectId: PropTypes.number,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -58,6 +59,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userProjects: currentUserAdminProjectsSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -165,17 +167,17 @@ export default class ProjectPanel extends React.PureComponent {
                     {pending && <LoadingAnimation />}
                     <header styleName="header">
                         <h3 styleName="heading">
-                            {projectStrings.headerProjects}
+                            {this.props.projectStrings('headerProjects')}
                         </h3>
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
                             iconName={iconNames.add}
                         >
-                            {projectStrings.addProjectButtonLabel}
+                            {this.props.projectStrings('addProjectButtonLabel')}
                         </PrimaryButton>
                         <TextInput
                             onChange={this.handleSearchInputChange}
-                            placeholder={projectStrings.searchProjectPlaceholder}
+                            placeholder={this.props.projectStrings('searchProjectPlaceholder')}
                             styleName="search-input"
                             type="search"
                             value={this.state.searchInputValue}
@@ -188,7 +190,7 @@ export default class ProjectPanel extends React.PureComponent {
                                 onClose={this.handleAddProjectModalClose}
                             >
                                 <ModalHeader
-                                    title={projectStrings.addProjectModalTitle}
+                                    title={this.props.projectStrings('addProjectModalTitle')}
                                     rightComponent={
                                         <PrimaryButton
                                             onClick={this.handleAddProjectModalClose}
@@ -223,7 +225,9 @@ export default class ProjectPanel extends React.PureComponent {
                             mainHistory={history}
                         />
                     ) : (
-                        <p styleName="no-project-text">{projectStrings.noProjectText}</p>
+                        <p styleName="no-project-text">
+                            {this.props.projectStrings('noProjectText')}
+                        </p>
                     )
                 }
             </div>

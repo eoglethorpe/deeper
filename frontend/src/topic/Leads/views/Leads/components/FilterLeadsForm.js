@@ -32,11 +32,8 @@ import {
     leadPageFilterSelector,
     setLeadFilterOptionsAction,
     unsetLeadPageFilterAction,
+    leadsStringsSelector,
 } from '../../../../../common/redux';
-
-import {
-    leadsString,
-} from '../../../../../common/constants';
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
@@ -53,6 +50,7 @@ const propTypes = {
     unsetLeadPageFilter: PropTypes.func.isRequired,
 
     applyOnChange: PropTypes.bool,
+    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -64,6 +62,7 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     filters: leadPageFilterSelector(state),
     leadFilterOptions: leadFilterOptionsForProjectSelector(state, props),
+    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -232,10 +231,10 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsString.assigneeLabel}
+                    label={this.props.leadsStrings('assigneeLabel')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={assignee}
-                    placeholder={leadsString.placeholderAnybody}
+                    placeholder={this.props.leadsStrings('placeholderAnybody')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -243,8 +242,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="created_at"
-                    label={leadsString.filterDateCreated}
-                    placeholder={leadsString.placeholderAnytime}
+                    label={this.props.leadsStrings('filterDateCreated')}
+                    placeholder={this.props.leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -252,8 +251,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <DateFilter
                     formname="published_on"
-                    label={leadsString.filterDatePublished}
-                    placeholder={leadsString.placeholderAnytime}
+                    label={this.props.leadsStrings('filterDatePublished')}
+                    placeholder={this.props.leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -262,10 +261,10 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsString.filterConfidentiality}
+                    label={this.props.leadsStrings('filterConfidentiality')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={confidentiality}
-                    placeholder={leadsString.placeholderAny}
+                    placeholder={this.props.leadsStrings('placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -274,10 +273,10 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsString.filterStatus}
+                    label={this.props.leadsStrings('filterStatus')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={status}
-                    placeholder={leadsString.placeholderAny}
+                    placeholder={this.props.leadsStrings('placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -285,8 +284,8 @@ export default class FilterLeadsForm extends React.PureComponent {
                 />
                 <TextInput
                     formname="search"
-                    label={leadsString.placeholderSearch}
-                    placeholder={leadsString.placeholderSearch}
+                    label={this.props.leadsStrings('placeholderSearch')}
+                    placeholder={this.props.leadsStrings('placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -298,7 +297,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                         className="button apply-filter-button"
                         disabled={!pristine}
                     >
-                        {leadsString.filterApplyFilter}
+                        {this.props.leadsStrings('filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
@@ -307,7 +306,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >
-                    {leadsString.filterClearFilter}
+                    {this.props.leadsStrings('filterClearFilter')}
                 </DangerButton>
                 {
                     isTruthy(this.props.filters.similar) && (
@@ -316,7 +315,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                             type="button"
                             onClick={this.handleClearSimilarSelection}
                         >
-                            {leadsString.filterClearSimilarFilter}
+                            {this.props.leadsStrings('filterClearSimilarFilter')}
                         </DangerButton>
                     )
                 }

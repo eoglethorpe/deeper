@@ -28,9 +28,7 @@ import { reverseRoute } from '../../../../public/utils/common';
 
 import {
     iconNames,
-    notificationStrings,
     pathNames,
-    userStrings,
 } from '../../../../common/constants';
 
 import schema from '../../../../common/schema';
@@ -47,6 +45,8 @@ import {
     activeUserSelector,
     unSetUserGroupAction,
     userIdFromRouteSelector,
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
 import notify from '../../../../common/notify';
 
@@ -63,6 +63,8 @@ const propTypes = {
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     unSetUserGroup: PropTypes.func.isRequired,
     userId: PropTypes.number.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -75,6 +77,8 @@ const mapStateToProps = (state, props) => ({
     userGroups: userGroupsSelector(state, props),
     activeUser: activeUserSelector(state),
     userId: userIdFromRouteSelector(state, props),
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -121,14 +125,14 @@ export default class UserGroup extends React.PureComponent {
         this.userGroupsTableHeaders = [
             {
                 key: 'title',
-                label: userStrings.tableHeaderTitle,
+                label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.title.localeCompare(b.title),
             },
             {
                 key: 'rights',
-                label: userStrings.tableHeaderRights,
+                label: this.props.userStrings('tableHeaderRights'),
                 order: 2,
                 modifier: (row) => {
                     const { userId } = this.props;
@@ -139,7 +143,7 @@ export default class UserGroup extends React.PureComponent {
             },
             {
                 key: 'joinedAt',
-                label: userStrings.tableHeaderJoinedAt,
+                label: this.props.userStrings('tableHeaderJoinedAt'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => dateComparator(a.joinedAt, b.joinedAt),
@@ -158,7 +162,7 @@ export default class UserGroup extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: userStrings.tableHeaderActions,
+                label: this.props.userStrings('tableHeaderActions'),
                 order: 4,
                 modifier: (d) => {
                     const { activeUser } = this.props;
@@ -173,7 +177,7 @@ export default class UserGroup extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
-                                title={userStrings.viewUsergroupLinkTitle}
+                                title={this.props.userStrings('viewUsergroupLinkTitle')}
                                 to={linkToUserGroup}
                                 className={styles.link}
                             >
@@ -184,7 +188,7 @@ export default class UserGroup extends React.PureComponent {
 
                     return ([
                         <Link
-                            title={userStrings.editUsergroupLinkTitle}
+                            title={this.props.userStrings('editUsergroupLinkTitle')}
                             key="usergroup-panel"
                             to={linkToUserGroup}
                             className={styles.link}
@@ -193,7 +197,7 @@ export default class UserGroup extends React.PureComponent {
                         </Link>,
                         <DangerButton
                             key="delete"
-                            title={userStrings.deleteUsergroupLinkTitle}
+                            title={this.props.userStrings('deleteUsergroupLinkTitle')}
                             onClick={() => this.handleDeleteUserGroupClick(d)}
                             iconName={iconNames.delete}
                             smallVerticalPadding
@@ -240,9 +244,9 @@ export default class UserGroup extends React.PureComponent {
                         userId,
                     });
                     notify.send({
-                        title: notificationStrings.userGroupDelete,
+                        title: this.props.notificationStrings('userGroupDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userGroupDeleteSuccess,
+                        message: this.props.notificationStrings('userGroupDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -257,17 +261,17 @@ export default class UserGroup extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.userGroupDelete,
+                    title: this.props.notificationStrings('userGroupDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupDeleteFailure,
+                    message: this.props.notificationStrings('userGroupDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userGroupDelete,
+                    title: this.props.notificationStrings('userGroupDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupDeleteFatal,
+                    message: this.props.notificationStrings('userGroupDeleteFatal'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -356,13 +360,15 @@ export default class UserGroup extends React.PureComponent {
             >
                 {deletePending && <LoadingAnimation />}
                 <div styleName="header">
-                    <h2>{userStrings.headerGroups}</h2>
+                    <h2>
+                        {this.props.userStrings('headerGroups')}
+                    </h2>
                     {
                         isCurrentUser && (
                             <PrimaryButton
                                 onClick={this.handleAddUserGroupClick}
                             >
-                                {userStrings.addUserGroupButtonLabel}
+                                {this.props.userStrings('addUserGroupButtonLabel')}
                             </PrimaryButton>
                         )
                     }
@@ -373,7 +379,7 @@ export default class UserGroup extends React.PureComponent {
                         onClose={this.handleAddUserGroupClose}
                     >
                         <ModalHeader
-                            title={userStrings.addUserGroupButtonLabel}
+                            title={this.props.userStrings('addUserGroupButtonLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddUserGroupClose}

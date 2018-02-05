@@ -1,18 +1,14 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import update from '../../../../../public/utils/immutable-update';
-import {
-    ListView,
-} from '../../../../../public/components/View';
-import {
-    MultiSelectInput,
-} from '../../../../../public/components/Input';
+import { ListView } from '../../../../../public/components/View';
+import { MultiSelectInput } from '../../../../../public/components/Input';
 
 import { updateAttribute } from './utils';
-import { afStrings } from '../../../../../common/constants';
-
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
@@ -22,6 +18,7 @@ const propTypes = {
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -31,6 +28,11 @@ const defaultProps = {
 
 const emptyList = [];
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -234,8 +236,8 @@ export default class Matrix2dList extends React.PureComponent {
                     options={data.sector.subsectors}
                     keySelector={Matrix2dList.subsectorKeySelector}
                     labelSelector={Matrix2dList.subsectorLabelSelector}
-                    placeholder={afStrings.subsectorsLabel}
-                    label={afStrings.subsectorsLabel}
+                    placeholder={this.props.afStrings('subsectorsLabel')}
+                    label={this.props.afStrings('subsectorsLabel')}
                     onChange={subsectors => this.handleSelectSubsectorChange(
                         data.dimension.id,
                         data.subdimension.id,

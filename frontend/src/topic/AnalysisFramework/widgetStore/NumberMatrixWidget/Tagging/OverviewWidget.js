@@ -1,16 +1,13 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import update from '../../../../../public/utils/immutable-update';
+import { NumberInput } from '../../../../../public/components/Input';
+import { List } from '../../../../../public/components/View';
 
-import {
-    NumberInput,
-} from '../../../../../public/components/Input';
-import {
-    List,
-} from '../../../../../public/components/View';
-import { afStrings } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -20,6 +17,7 @@ const propTypes = {
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -30,6 +28,11 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
+const mapStateToProps = state => ({
+    afStrings: afStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
@@ -123,7 +126,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 key={`${rowKey}-${key}`}
             >
                 <NumberInput
-                    placeholder={afStrings.numberPlaceholder}
+                    placeholder={this.props.afStrings('numberPlaceholder')}
                     showLabel={false}
                     onChange={newValue => this.onChangeNumberField(rowKey, key, newValue)}
                     value={value}

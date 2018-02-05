@@ -26,12 +26,10 @@ import {
 
     activeUserSelector,
     groupIdFromRouteSelector,
+    userStringsSelector,
 } from '../../../common/redux';
 
-import {
-    iconNames,
-    userStrings,
-} from '../../../common/constants';
+import { iconNames } from '../../../common/constants';
 
 import {
     createParamsForUser,
@@ -49,6 +47,7 @@ const propTypes = {
     unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userGroupId: PropTypes.string.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -58,6 +57,7 @@ const mapStateToProps = (state, props) => ({
     userGroup: groupSelector(state, props),
     activeUser: activeUserSelector(state),
     userGroupId: groupIdFromRouteSelector(state, props),
+    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -187,7 +187,7 @@ export default class UserGroup extends React.PureComponent {
             return (
                 <div styleName="usergroup">
                     <div styleName="usergroup-alt">
-                        {userStrings.userGroupNotFound}
+                        {this.props.userStrings('userGroupNotFound')}
                     </div>
                 </div>
             );
@@ -196,7 +196,9 @@ export default class UserGroup extends React.PureComponent {
         return (
             <div styleName="usergroup">
                 <header styleName="header">
-                    <h2>{userStrings.userGroupTitle}</h2>
+                    <h2>
+                        {this.props.userStrings('userGroupTitle')}
+                    </h2>
                 </header>
                 <div styleName="info">
                     <div styleName="title-container">
@@ -217,7 +219,7 @@ export default class UserGroup extends React.PureComponent {
                 </div>
                 <div styleName="stats">
                     <h2>
-                        {userStrings.userGroupActivtyLogTitle}
+                        {this.props.userStrings('userGroupActivtyLogTitle')}
                     </h2>
                 </div>
                 <ProjectsTable
@@ -239,7 +241,7 @@ export default class UserGroup extends React.PureComponent {
                         styleName="user-group-edit-modal"
                     >
                         <ModalHeader
-                            title={`${userStrings.userGroupEditModalLabel}: ${userGroup.title}`}
+                            title={`${this.props.userStrings('userGroupEditModalLabel')}: ${userGroup.title}`}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleUserGroupEditModalClose}

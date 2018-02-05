@@ -39,11 +39,9 @@ import {
 } from '../../../../common/rest';
 import {
     setUserInformationAction,
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
-import {
-    notificationStrings,
-    userStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -56,16 +54,24 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
+});
+
 const mapDispatchToProps = dispatch => ({
     setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserEdit extends React.PureComponent {
     static propTypes = propTypes;
@@ -130,9 +136,9 @@ export default class UserEdit extends React.PureComponent {
                         information: response,
                     });
                     notify.send({
-                        title: notificationStrings.userProfileEdit,
+                        title: this.props.notificationStrings('userProfileEdit'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userEditSuccess,
+                        message: this.props.notificationStrings('userEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -142,9 +148,9 @@ export default class UserEdit extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userProfileEdit,
+                    title: this.props.notificationStrings('userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userEditFailure,
+                    message: this.props.notificationStrings('userEditFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -158,9 +164,9 @@ export default class UserEdit extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userProfileEdit,
+                    title: this.props.notificationStrings('userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userEditFatal,
+                    message: this.props.notificationStrings('userEditFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
@@ -289,26 +295,26 @@ export default class UserEdit extends React.PureComponent {
                     disabled={pending}
                 />
                 <TextInput
-                    label={userStrings.firstNameLabel}
+                    label={this.props.userStrings('firstNameLabel')}
                     formname="firstName"
-                    placeholder={userStrings.firstNamePlaceholder}
+                    placeholder={this.props.userStrings('firstNamePlaceholder')}
                     value={formValues.firstName}
                     error={formFieldErrors.firstName}
                     disabled={pending}
                     autoFocus
                 />
                 <TextInput
-                    label={userStrings.lastNameLabel}
+                    label={this.props.userStrings('lastNameLabel')}
                     formname="lastName"
-                    placeholder={userStrings.lastNamePlaceholder}
+                    placeholder={this.props.userStrings('lastNamePlaceholder')}
                     value={formValues.lastName}
                     error={formFieldErrors.lastName}
                     disabled={pending}
                 />
                 <TextInput
-                    label={userStrings.organizationLabel}
+                    label={this.props.userStrings('organizationLabel')}
                     formname="organization"
-                    placeholder={userStrings.organizationPlaceholder}
+                    placeholder={this.props.userStrings('organizationPlaceholder')}
                     value={formValues.organization}
                     error={formFieldErrors.organization}
                     disabled={pending}
@@ -319,10 +325,10 @@ export default class UserEdit extends React.PureComponent {
                         type="button"
                         disabled={pending}
                     >
-                        {userStrings.modalCancel}
+                        {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {userStrings.modalSave}
+                        {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
             </Form>

@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 
@@ -9,10 +10,8 @@ import {
     createHeaderForGalleryFile,
 } from '../../../common/rest';
 
-import {
-    iconNames,
-    commonStrings,
-} from '../../../common/constants';
+import { commonStringsSelector } from '../../../common/redux';
+import { iconNames } from '../../../common/constants';
 
 import Screenshot from '../../../common/components/Screenshot';
 
@@ -40,18 +39,24 @@ const propTypes = {
     showUrl: PropTypes.bool,
     showScreenshot: PropTypes.bool,
     onScreenshotCapture: PropTypes.func,
+    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
     galleryId: undefined,
     onlyFileName: false,
-    label: commonStrings.loadingFileLabel,
+    label: undefined,
     showUrl: false,
     showScreenshot: false,
     onScreenshotCapture: undefined,
 };
 
+const mapStateToProps = state => ({
+    commonStrings: commonStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class DeepGallery extends React.PureComponent {
     static propTypes = propTypes;
@@ -236,6 +241,7 @@ export default class DeepGallery extends React.PureComponent {
             onlyFileName,
             showUrl,
             showScreenshot,
+            label,
         } = this.props;
 
         if (onlyFileName) {
@@ -243,7 +249,7 @@ export default class DeepGallery extends React.PureComponent {
                 return (
                     <div styleName="upload-filename">
                         <span styleName="label" >
-                            {this.props.label}
+                            { label || this.props.commonStrings('loadingFileLabel') }
                         </span>
                         <span
                             className={`${iconNames.loading} ${className}`}

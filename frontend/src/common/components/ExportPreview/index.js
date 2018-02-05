@@ -1,6 +1,7 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import styles from './styles.scss';
 
@@ -15,14 +16,13 @@ import {
     LoadingAnimation,
 } from '../../../public/components/View';
 
-import {
-    exportStrings,
-} from '../../../common/constants';
+import { exportStringsSelector } from '../../../common/redux';
 
 const propTypes = {
     className: PropTypes.string,
     exportId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onLoad: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
+    exportStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: '',
@@ -30,7 +30,11 @@ const defaultProps = {
     onLoad: undefined,
 };
 
+const mapStateToProps = state => ({
+    exportStrings: exportStringsSelector(state),
+});
 
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ExportPreview extends React.PureComponent {
     static propTypes = propTypes;
@@ -102,13 +106,13 @@ export default class ExportPreview extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: exportStrings.erverErrorText,
+                    error: this.props.exportStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: exportStrings.connectionFailureText,
+                    error: this.props.exportStrings('connectionFailureText'),
                 });
             })
             .build()
@@ -140,7 +144,7 @@ export default class ExportPreview extends React.PureComponent {
 
         return (
             <div styleName="message">
-                {exportStrings.previewNotAvailableLabel}
+                {this.props.exportStrings('previewNotAvailableLabel')}
             </div>
         );
     }

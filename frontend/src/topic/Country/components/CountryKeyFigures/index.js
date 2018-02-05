@@ -26,11 +26,11 @@ import {
 } from '../../../../common/rest';
 import {
     iconNames,
-    countriesString,
 } from '../../../../common/constants';
 import {
     countryDetailSelector,
     setRegionDetailsAction,
+    countriesStringsSelector,
 } from '../../../../common/redux';
 import styles from './styles.scss';
 
@@ -42,6 +42,7 @@ const propTypes = {
         keyFigures: PropTypes.shape({}),
     }).isRequired,
     setRegionDetails: PropTypes.func.isRequired,
+    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,6 +51,7 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: countryDetailSelector(state, props),
+    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -277,16 +279,16 @@ export default class CountryKeyFigures extends React.PureComponent {
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            {countriesString.cancelButtonLabel}
+                            {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <PrimaryButton disabled={pending || !pristine} >
-                            {countriesString.saveChangesButtonLabel}
+                            {this.props.countriesStrings('saveChangesButtonLabel')}
                         </PrimaryButton>
                     </div>
                 </header>
                 <div styleName="section">
                     <h3>
-                        {countriesString.humanDevelopmentIndexLabel}
+                        {this.props.countriesStrings('humanDevelopmentIndexLabel')}
                         <a
                             href="http://www.hdr.undp.org/en/countries"
                             target="_blank"
@@ -295,12 +297,13 @@ export default class CountryKeyFigures extends React.PureComponent {
                             <span
                                 className={iconNames.link}
                                 styleName="icon"
+                                // FIXME: use strings
                                 title="Click to open"
                             />
                         </a>
                     </h3>
                     <TextInput
-                        label={countriesString.indexLabel}
+                        label={this.props.countriesStrings('indexLabel')}
                         styleName="text-input"
                         type="number"
                         step="any"
@@ -311,7 +314,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.index}
                     />
                     <TextInput
-                        label={countriesString.geoRankLabel}
+                        label={this.props.countriesStrings('geoRankLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoRank"
@@ -319,7 +322,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoRank}
                     />
                     <TextInput
-                        label={countriesString.geoScoreLabel}
+                        label={this.props.countriesStrings('geoScoreLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoScore"
@@ -327,7 +330,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoScore}
                     />
                     <TextInput
-                        label={countriesString.rankLabel}
+                        label={this.props.countriesStrings('rankLabel')}
                         styleName="text-input"
                         formname="rank"
                         value={formValues.rank}
@@ -336,7 +339,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                        {countriesString.underFiveMortalityLabel}
+                        {this.props.countriesStrings('underFiveMortalityLabel')}
                         <a
                             href="http://www.inform-index.org/"
                             target="_blank"
@@ -345,12 +348,13 @@ export default class CountryKeyFigures extends React.PureComponent {
                             <span
                                 className={iconNames.link}
                                 styleName="icon"
+                                // FIXME: use strings
                                 title="Click to open"
                             />
                         </a>
                     </h3>
                     <TextInput
-                        label={countriesString.u5mLabel}
+                        label={this.props.countriesStrings('u5mLabel')}
                         styleName="text-input"
                         formname="u5m"
                         value={formValues.u5m}
@@ -358,7 +362,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         type="number"
                     />
                     <TextInput
-                        label={countriesString.geoScoreLabel}
+                        label={this.props.countriesStrings('geoScoreLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoScoreU5m"
@@ -368,7 +372,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                        {countriesString.uprootedPeopleLabel}
+                        {this.props.countriesStrings('uprootedPeopleLabel')}
                         <a
                             href="http://www.inform-index.org/"
                             target="_blank"
@@ -382,14 +386,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label={countriesString.numberOfRefugeesLabel}
+                        label={this.props.countriesStrings('numberOfRefugeesLabel')}
                         styleName="text-input"
                         formname="numberOfRefugees"
                         value={formValues.numberOfRefugees}
                         error={formFieldErrors.numberOfRefugees}
                     />
                     <TextInput
-                        label={countriesString.percentageUprootedPeopleLabel}
+                        label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
                         styleName="text-input"
                         readOnly
                         formname="percentageUprootedPeople"
@@ -397,7 +401,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.percentageUprootedPeople}
                     />
                     <TextInput
-                        label={countriesString.geoScoreLabel}
+                        label={this.props.countriesStrings('geoScoreLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoScoreUprooted"
@@ -405,14 +409,14 @@ export default class CountryKeyFigures extends React.PureComponent {
                         error={formFieldErrors.geoScoreUprooted}
                     />
                     <TextInput
-                        label={countriesString.numberIdpLabel}
+                        label={this.props.countriesStrings('numberIdpLabel')}
                         styleName="text-input"
                         formname="numberIdp"
                         value={formValues.numberIdp}
                         error={formFieldErrors.numberIdp}
                     />
                     <TextInput
-                        label={countriesString.numberReturnedRefugeesLabel}
+                        label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
                         styleName="text-input"
                         formname="numberReturnedRefugees"
                         value={formValues.numberReturnedRefugees}
@@ -421,7 +425,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 </div>
                 <div styleName="section">
                     <h3>
-                        {countriesString.informScoreLabel}
+                        {this.props.countriesStrings('informScoreLabel')}
                         <a
                             href="http://www.hdr.undp.org/en/countries"
                             target="_blank"
@@ -435,35 +439,35 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </a>
                     </h3>
                     <TextInput
-                        label={countriesString.riskClassLabel}
+                        label={this.props.countriesStrings('riskClassLabel')}
                         styleName="text-input"
                         formname="riskClass"
                         value={formValues.riskClass}
                         error={formFieldErrors.riskClass}
                     />
                     <TextInput
-                        label={countriesString.informRiskIndexLabel}
+                        label={this.props.countriesStrings('informRiskIndexLabel')}
                         styleName="text-input"
                         formname="informRiskIndex"
                         value={formValues.informRiskIndex}
                         error={formFieldErrors.informRiskIndex}
                     />
                     <TextInput
-                        label={countriesString.hazardAndExposureLabel}
+                        label={this.props.countriesStrings('hazardAndExposureLabel')}
                         styleName="text-input"
                         formname="hazardAndExposure"
                         value={formValues.hazardAndExposure}
                         error={formFieldErrors.hazardAndExposure}
                     />
                     <TextInput
-                        label={countriesString.vulnerabilityLabel}
+                        label={this.props.countriesStrings('vulnerabilityLabel')}
                         styleName="text-input"
                         formname="vulnerability"
                         value={formValues.vulnerability}
                         error={formFieldErrors.vulnerability}
                     />
                     <TextInput
-                        label={countriesString.lackOfCopingCapacityLabel}
+                        label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
                         styleName="text-input"
                         formname="lackOfCopingCapacity"
                         value={formValues.lackOfCopingCapacity}

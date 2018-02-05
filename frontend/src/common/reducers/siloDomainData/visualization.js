@@ -1,10 +1,8 @@
 import update from '../../../public/utils/immutable-update';
-// import { randomString } from '../../../public/utils/common';
 
 // TYPE
 
 export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
-// export const SET_LEAD_VISUALIZATION_STALE = 'domain-data/VISUALIZATION/LEAD/STALE';
 
 // ACTION-CREATOR
 
@@ -15,12 +13,6 @@ export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation
     correlation,
     geoPoints,
 });
-
-/*
-export const setLeadVisualizationStaleAction = () => ({
-    type: SET_LEAD_VISUALIZATION_STALE,
-});
-*/
 
 // UTILS
 const getHierarchialTopic = (keywords) => {
@@ -146,11 +138,6 @@ const setLeadVisualization = (state, action) => {
             forceDirectedData: {
                 $auto: { $set: getForceDirectedData(correlation) },
             },
-            /*
-            barData: {
-                $auto: getCorrelationData(correlation),
-            },
-            */
         };
     }
 
@@ -165,24 +152,9 @@ const setLeadVisualization = (state, action) => {
     return update(state, settings);
 };
 
-/*
-const setLeadVisualizationStale = (state) => {
-    const settings = {
-        visualization: { $auto: {
-            stale: {
-                $set: randomString(4),
-            },
-        } },
-    };
-    return update(state, settings);
-};
-*/
-
-
 // REDUCER MAP
 
 const reducers = {
     [SET_LEAD_VISUALIZATION]: setLeadVisualization,
-    // [SET_LEAD_VISUALIZATION_STALE]: setLeadVisualizationStale,
 };
 export default reducers;

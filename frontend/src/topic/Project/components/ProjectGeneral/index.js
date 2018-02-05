@@ -25,8 +25,6 @@ import {
 import {
     pathNames,
     iconNames,
-    notificationStrings,
-    projectStrings,
 } from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
@@ -47,6 +45,9 @@ import {
     setUserProjectMembershipAction,
     unsetUserProjectMembershipAction,
     setProjectAction,
+
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
 import ProjectGeneralForm from '../ProjectGeneralForm';
@@ -62,6 +63,8 @@ const propTypes = {
     setUserProjectMembership: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -72,6 +75,8 @@ const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
     activeUser: activeUserSelector(state),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -124,28 +129,28 @@ export default class ProjectGeneral extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'memberName',
-                label: projectStrings.tableHeaderName,
+                label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => a.memberName.localeCompare(b.memberName),
             },
             {
                 key: 'memberEmail',
-                label: projectStrings.tableHeaderEmail,
+                label: this.props.projectStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
             },
             {
                 key: 'role',
-                label: projectStrings.tableHeaderRights,
+                label: this.props.projectStrings('tableHeaderRights'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => a.role.localeCompare(b.role),
             },
             {
                 key: 'joinedAt',
-                label: projectStrings.tableHeaderJoinedAt,
+                label: this.props.projectStrings('tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => a.joinedAt - b.joinedAt,
@@ -153,7 +158,7 @@ export default class ProjectGeneral extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: projectStrings.tableHeaderActions,
+                label: this.props.projectStrings('tableHeaderActions'),
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -163,7 +168,7 @@ export default class ProjectGeneral extends React.PureComponent {
                             <div>
                                 <Link
                                     className={styles['view-member-link']}
-                                    title={projectStrings.viewMemberLinkTitle}
+                                    title={this.props.projectStrings('viewMemberLinkTitle')}
                                     key={row.member}
                                     to={reverseRoute(pathNames.userProfile, { userId: row.member })}
                                 >
@@ -176,15 +181,18 @@ export default class ProjectGeneral extends React.PureComponent {
                         <div>
                             <PrimaryButton
                                 smallVerticalPadding
-                                title={isAdmin ? projectStrings.revokeAdminRightsTitle :
-                                    projectStrings.grantAdminRightsTitle}
+                                title={
+                                    isAdmin
+                                        ? this.props.projectStrings('revokeAdminRightsTitle')
+                                        : this.props.projectStrings('grantAdminRightsTitle')
+                                }
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 transparent
                             />
                             <DangerButton
                                 smallVerticalPadding
-                                title={projectStrings.deleteMemberLinkTitle}
+                                title={this.props.projectStrings('deleteMemberLinkTitle')}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                                 iconName={iconNames.delete}
                                 transparent
@@ -244,9 +252,9 @@ export default class ProjectGeneral extends React.PureComponent {
                         project: response,
                     });
                     notify.send({
-                        title: notificationStrings.projectDetails,
+                        title: this.props.notificationStrings('projectDetails'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.projectDetailsSuccess,
+                        message: this.props.notificationStrings('projectDetailsSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -255,9 +263,9 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.projectDetails,
+                    title: this.props.notificationStrings('projectDetails'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.projectDetailsFailure,
+                    message: this.props.notificationStrings('projectDetailsFailure'),
                     duration: notify.duration.SLOW,
                 });
                 const {
@@ -271,9 +279,9 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.projectDetails,
+                    title: this.props.notificationStrings('projectDetails'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.projectDetailsFatal,
+                    message: this.props.notificationStrings('projectDetailsFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -368,9 +376,9 @@ export default class ProjectGeneral extends React.PureComponent {
                         projectId,
                     });
                     notify.send({
-                        title: notificationStrings.userMembershipDelete,
+                        title: this.props.notificationStrings('userMembershipDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userMembershipDeleteSuccess,
+                        message: this.props.notificationStrings('userMembershipDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -379,17 +387,17 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipDelete,
+                    title: this.props.notificationStrings('userMembershipDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipDeleteFailure,
+                    message: this.props.notificationStrings('userMembershipDeleteFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipDelete,
+                    title: this.props.notificationStrings('userMembershipDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipDeleteFatal,
+                    message: this.props.notificationStrings('userMembershipDeleteFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -418,9 +426,9 @@ export default class ProjectGeneral extends React.PureComponent {
                         projectId,
                     });
                     notify.send({
-                        title: notificationStrings.userMembershipRole,
+                        title: this.props.notificationStrings('userMembershipRole'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userMembershipRoleSuccess,
+                        message: this.props.notificationStrings('userMembershipRoleSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -429,17 +437,17 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipRole,
+                    title: this.props.notificationStrings('userMembershipRole'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipRoleFailure,
+                    message: this.props.notificationStrings('userMembershipRoleFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userMembershipRole,
+                    title: this.props.notificationStrings('userMembershipRole'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userMembershipRoleFatal,
+                    message: this.props.notificationStrings('userMembershipRoleFatal'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -468,11 +476,11 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     handleToggleMemberRoleClick = (member) => {
-        const accessRight = member.role === 'admin' ?
-            projectStrings.confirmTextRevokeAdmin :
-            projectStrings.confirmTextGrantAdmin;
+        const accessRight = member.role === 'admin'
+            ? this.props.projectStrings('confirmTextRevokeAdmin')
+            : this.props.projectStrings('confirmTextGrantAdmin');
 
-        const confirmText = `${projectStrings.confirmText} ${accessRight} ${member.memberName}?`;
+        const confirmText = `${this.props.projectStrings('confirmText')} ${accessRight} ${member.memberName}?`;
         this.setState({
             toggleRoleConfirmShow: true,
             confirmText,
@@ -496,7 +504,7 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     handleDeleteMemberClick = (member) => {
-        const confirmText = `${projectStrings.confirmTextRemove} ${member.memberName} from this project?`;
+        const confirmText = `${this.props.projectStrings('confirmTextRemove')} ${member.memberName} from this project?`;
         this.setState({
             deleteMemberConfirmShow: true,
             confirmText,
@@ -559,13 +567,15 @@ export default class ProjectGeneral extends React.PureComponent {
                 />
                 <div styleName="members">
                     <header styleName="header">
-                        <h2>{projectStrings.headerMembers}</h2>
+                        <h2>
+                            {this.props.projectStrings('headerMembers')}
+                        </h2>
                         <div styleName="action-buttons">
                             <PrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddMemberClick}
                             >
-                                {projectStrings.addMemberButtonLabel}
+                                {this.props.projectStrings('addMemberButtonLabel')}
                             </PrimaryButton>
                         </div>
                     </header>
@@ -576,7 +586,7 @@ export default class ProjectGeneral extends React.PureComponent {
                             closeOnEscape
                         >
                             <ModalHeader
-                                title={projectStrings.addMemberButtonLabel}
+                                title={this.props.projectStrings('addMemberButtonLabel')}
                                 rightComponent={
                                     <Button
                                         onClick={this.handleModalClose}

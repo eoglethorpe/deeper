@@ -93,7 +93,7 @@ const routes = {
     userExports: { type: ROUTE.private },
     analysisFramework: { type: ROUTE.private },
     categoryEditor: { type: ROUTE.private },
-    apiDocs: { type: ROUTE.public },
+    apiDocs: { type: ROUTE.private },
     browserExtension: { type: ROUTE.private },
     fourHundredFour: { type: ROUTE.public },
 };

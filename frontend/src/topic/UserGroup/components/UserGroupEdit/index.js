@@ -32,11 +32,9 @@ import {
 } from '../../../../common/rest';
 import {
     setUserGroupAction,
+    notificationStringsSelector,
+    userStringsSelector,
 } from '../../../../common/redux';
-import {
-    notificationStrings,
-    userStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -49,6 +47,8 @@ const propTypes = {
         description: PropTypes.string.isRequired,
     }).isRequired,
     setUserGroup: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
+    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -58,7 +58,12 @@ const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
 });
 
-@connect(undefined, mapDispatchToProps)
+const mapStateToProps = state => ({
+    notificationStrings: notificationStringsSelector(state),
+    userStrings: userStringsSelector(state),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserGroupEdit extends React.PureComponent {
     static propTypes = propTypes;
@@ -112,9 +117,9 @@ export default class UserGroupEdit extends React.PureComponent {
                         userGroup: response,
                     });
                     notify.send({
-                        title: notificationStrings.userGroupEdit,
+                        title: this.props.notificationStrings('userGroupEdit'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.userGroupEditSuccess,
+                        message: this.props.notificationStrings('userGroupEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -124,9 +129,9 @@ export default class UserGroupEdit extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: notificationStrings.userGroupEdit,
+                    title: this.props.notificationStrings('userGroupEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupEditFailure,
+                    message: this.props.notificationStrings('userGroupEditFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const {
@@ -140,12 +145,13 @@ export default class UserGroupEdit extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.userGroupEdit,
+                    title: this.props.notificationStrings('userGroupEdit'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.userGroupEditFatal,
+                    message: this.props.notificationStrings('userGroupEditFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
+                    // FIXME: use strings
                     formErrors: ['Error while trying to save user group.'],
                 });
             })
@@ -209,19 +215,19 @@ export default class UserGroupEdit extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={userStrings.addUserGroupModalLabel}
+                    label={this.props.userStrings('addUserGroupModalLabel')}
                     formname="title"
-                    placeholder={userStrings.addUserGroupModalPlaceholder}
+                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     value={formValues.title}
                     error={formFieldErrors.title}
                     disabled={pending}
                     autoFocus
                 />
                 <TextArea
-                    label={userStrings.userGroupModalDescriptionLabel}
+                    label={this.props.userStrings('userGroupModalDescriptionLabel')}
                     formname="description"
                     styleName="description"
-                    placeholder={userStrings.addUserGroupModalPlaceholder}
+                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     rows={3}
                     value={formValues.description}
                     error={formFieldErrors.description}
@@ -232,10 +238,10 @@ export default class UserGroupEdit extends React.PureComponent {
                         onClick={this.handleFormClose}
                         disabled={pending}
                     >
-                        {userStrings.modalCancel}
+                        {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton disabled={pending || !pristine} >
-                        {userStrings.modalSave}
+                        {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
             </Form>

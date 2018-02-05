@@ -27,12 +27,11 @@ import {
     setRegionDetailsAction,
     removeProjectRegionAction,
     addNewRegionAction,
+
+    notificationStringsSelector,
+    projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
-import {
-    notificationStrings,
-    projectStrings,
-} from '../../../../common/constants';
 import notify from '../../../../common/notify';
 
 import RegionMap from '../../../../common/components/RegionMap';
@@ -51,6 +50,9 @@ const propTypes = {
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
     onRegionClone: PropTypes.func,
+
+    notificationStrings: PropTypes.func.isRequired,
+    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -62,7 +64,10 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     regionDetails: regionDetailForRegionSelector(state, props),
+    notificationStrings: notificationStringsSelector(state),
+    projectStrings: projectStringsSelector(state),
 });
+
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
     setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
@@ -162,9 +167,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         regionId: removedRegionId,
                     });
                     notify.send({
-                        title: notificationStrings.countryDelete,
+                        title: this.props.notificationStrings('countryDelete'),
                         type: notify.type.SUCCESS,
-                        message: notificationStrings.countryDeleteSuccess,
+                        message: this.props.notificationStrings('countryDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -173,17 +178,17 @@ export default class ProjectRegionDetail extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: notificationStrings.countryDelete,
+                    title: this.props.notificationStrings('countryDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryDeleteFailure,
+                    message: this.props.notificationStrings('countryDeleteFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: notificationStrings.countryDelete,
+                    title: this.props.notificationStrings('countryDelete'),
                     type: notify.type.ERROR,
-                    message: notificationStrings.countryDeleteFatal,
+                    message: this.props.notificationStrings('countryDeleteFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -255,7 +260,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             disabled={dataLoading}
                             onClick={this.handleRegionRemoveClick}
                         >
-                            {projectStrings.removeRegionButtonLabel}
+                            {this.props.projectStrings('removeRegionButtonLabel')}
                         </DangerButton>
                         {
                             isPublic && (
@@ -264,7 +269,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                     styleName="clone-btn"
                                     onClick={this.handleRegionCloneClick}
                                 >
-                                    {projectStrings.cloneEditButtonLabel}
+                                    {this.props.projectStrings('cloneEditButtonLabel')}
                                 </PrimaryButton>
                             )
                         }
@@ -276,7 +281,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             deleteConfirm, projectDetails, countryId,
                         )}
                     >
-                        <p>{`${projectStrings.confirmRemoveText}
+                        <p>{`${this.props.projectStrings('confirmRemoveText')}
                             ${regionDetails.title} from project ${projectDetails.title}?`}</p>
                     </Confirm>
                     <Confirm
@@ -285,7 +290,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             cloneConfirm, countryId, activeProject,
                         )}
                     >
-                        <p>{`${projectStrings.confirmCloneText} ${regionDetails.title}?`}</p>
+                        <p>{`${this.props.projectStrings('confirmCloneText')} ${regionDetails.title}?`}</p>
                     </Confirm>
                 </header>
                 {

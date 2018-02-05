@@ -1,13 +1,12 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import { AccentButton } from '../../../../public/components/Action';
 import { ListView } from '../../../../public/components/View';
-import {
-    iconNames,
-    ceStrings,
-} from '../../../../common/constants';
+import { iconNames } from '../../../../common/constants';
+import { ceStringsSelector } from '../../../../common/redux';
 
 import styles from '../styles.scss';
 
@@ -28,15 +27,21 @@ const propTypes = {
 
     isLastColumn: PropTypes.bool,
     title: PropTypes.string,
+    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     subcategories: [],
-    title: ceStrings.titleLabel,
+    title: undefined,
     selectedSubcategoryId: undefined,
     isLastColumn: false,
 };
 
+const mapStateToProps = state => ({
+    ceStrings: ceStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class SubcategoryColumn extends React.PureComponent {
     static propTypes = propTypes;
@@ -156,17 +161,21 @@ export default class SubcategoryColumn extends React.PureComponent {
     )
 
     render() {
-        const { subcategories } = this.props;
+        const {
+            subcategories,
+            title = this.props.ceStrings('titleLabel'),
+        } = this.props;
 
         return (
             <div styleName="column" >
                 <header styleName="header">
                     <h4 styleName="heading" >
-                        {this.props.title}
+                        {title}
                     </h4>
                     <AccentButton
                         onClick={this.handleNewSubcategoryButtonClick}
-                        title={`Add subcategory in ${this.props.title}`}
+                        // TODO: use strings
+                        title={`Add subcategory in ${title}`}
                         iconName={iconNames.add}
                         transparent
                     />

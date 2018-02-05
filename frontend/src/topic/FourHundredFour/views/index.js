@@ -2,20 +2,27 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
-import {
-    pathNames,
-    fourHundredFourStrings,
-} from '../../../common/constants';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import { fourHundredFourStringsSelector } from '../../../common/redux';
+import { pathNames } from '../../../common/constants';
 
 import styles from './styles.scss';
 import logo from '../../../img/deep-logo.svg';
 
 const propTypes = {
+    fourHundredFourStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
+const mapStateToProps = state => ({
+    fourHundredFourStrings: fourHundredFourStringsSelector(state),
+});
+
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class FourHundredFour extends React.PureComponent {
     static propTypes = propTypes;
@@ -29,17 +36,17 @@ export default class FourHundredFour extends React.PureComponent {
                     path={logo}
                 />
                 <h1 styleName="heading">
-                    {fourHundredFourStrings.errorFourHundredFour}
+                    {this.props.fourHundredFourStrings('errorFourHundredFour')}
                 </h1>
                 <p styleName="message">
-                    {fourHundredFourStrings.message1}<br />
-                    {fourHundredFourStrings.message2}
+                    {this.props.fourHundredFourStrings('message1')}<br />
+                    {this.props.fourHundredFourStrings('message2')}
                 </p>
                 <Link
                     to={pathNames.homeScreen}
                     styleName="home-screen-link"
                 >
-                    {fourHundredFourStrings.goToDeep}
+                    {this.props.fourHundredFourStrings('goToDeep')}
                 </Link>
             </div>
         );
