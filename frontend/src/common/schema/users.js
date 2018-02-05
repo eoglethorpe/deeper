@@ -1,5 +1,8 @@
 const userSchema = [];
 
+// Email types changed to string because large number of
+// migrated users do not have valid email
+
 {
     const name = 'user-s';
     const schema = {
@@ -9,7 +12,7 @@ const userSchema = [];
         },
         fields: {
             displayName: { type: 'string', required: true },
-            email: { type: 'email', required: true },
+            email: { type: 'string', required: true },
             id: { type: 'uint', required: true },
         },
     };
@@ -26,7 +29,7 @@ const userSchema = [];
         fields: {
             displayName: { type: 'string', required: true },
             displayPicture: { type: 'uint' }, // id
-            email: { type: 'email', required: true },
+            email: { type: 'string', required: true },
             firstName: { type: 'string', required: true },
             id: { type: 'uint', required: true },
             lastName: { type: 'string', required: true },
@@ -95,7 +98,7 @@ const userSchema = [];
             description: 'Response for POST /password/reset/',
         },
         fields: {
-            email: { type: 'email', required: true },
+            email: { type: 'string', required: true },
         },
     };
     userSchema.push({ name, schema });
