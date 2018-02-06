@@ -4,6 +4,7 @@ import React from 'react';
 
 import ListView from '../../../../../public/components/View/List/ListView';
 
+import BoundError from '../../../../../common/components/BoundError';
 import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
@@ -23,6 +24,7 @@ const defaultProps = {
 const emptyObject = {};
 const emptyList = [];
 
+@BoundError
 @CSSModules(styles)
 export default class ScaleTaggingList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

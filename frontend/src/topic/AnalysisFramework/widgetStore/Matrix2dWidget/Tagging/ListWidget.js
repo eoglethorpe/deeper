@@ -8,6 +8,7 @@ import ListView from '../../../../../public/components/View/List/ListView';
 import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
 
 import { afStringsSelector } from '../../../../../common/redux';
+import BoundError from '../../../../../common/components/BoundError';
 
 import { updateAttribute } from './utils';
 import styles from './styles.scss';
@@ -32,6 +33,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dList extends React.PureComponent {

@@ -2,6 +2,7 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import BoundError from '../../../../../common/components/BoundError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -11,6 +12,8 @@ const propTypes = {
 const defaultProps = {
     attribute: undefined,
 };
+
+@BoundError
 @CSSModules(styles)
 export default class OrganigramList extends React.PureComponent {
     static propTypes = propTypes;

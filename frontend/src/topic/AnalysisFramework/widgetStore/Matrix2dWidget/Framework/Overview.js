@@ -24,6 +24,7 @@ import {
 
 import update from '../../../../../public/utils/immutable-update';
 import { afStringsSelector } from '../../../../../common/redux';
+import BoundError from '../../../../../common/components/BoundError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -49,6 +50,7 @@ const mapStateToProps = state => ({
 
 const emptyList = [];
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dOverview extends React.PureComponent {

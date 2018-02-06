@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ListView from '../../../../../public/components/View/List/ListView';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -18,6 +19,7 @@ const defaultProps = {
 
 const emptyList = [];
 
+@BoundError
 @CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

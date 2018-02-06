@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import ListView from '../../../../../public/components/View/List/ListView';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -18,6 +19,8 @@ const defaultProps = {
     data: {},
     attribute: undefined,
 };
+
+@BoundError
 @CSSModules(styles)
 export default class MultiselectList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

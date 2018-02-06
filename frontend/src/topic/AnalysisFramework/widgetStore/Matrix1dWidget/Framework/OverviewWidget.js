@@ -24,6 +24,7 @@ import DangerButton from '../../../../../public/components/Action/Button/DangerB
 import ListView from '../../../../../public/components/View/List/ListView';
 
 import { iconNames } from '../../../../../common/constants';
+import BoundError from '../../../../../common/components/BoundError';
 import { afStringsSelector } from '../../../../../common/redux';
 
 import MatrixRow from './MatrixRow';
@@ -52,6 +53,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {

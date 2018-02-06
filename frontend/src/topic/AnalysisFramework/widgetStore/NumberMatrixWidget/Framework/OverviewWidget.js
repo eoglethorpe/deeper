@@ -22,6 +22,7 @@ import ModalBody from '../../../../../public/components/View/Modal/Body';
 import ModalFooter from '../../../../../public/components/View/Modal/Footer';
 import ListView from '../../../../../public/components/View/List/ListView';
 import List from '../../../../../public/components/View/List';
+import BoundError from '../../../../../common/components/BoundError';
 
 import { iconNames } from '../../../../../common/constants';
 import { afStringsSelector } from '../../../../../common/redux';
@@ -52,6 +53,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {

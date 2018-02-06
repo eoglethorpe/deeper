@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import NumberInput from '../../../../../public/components/Input/NumberInput';
-
+import BoundError from '../../../../../common/components/BoundError';
 import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
@@ -26,6 +26,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberTaggingList extends React.PureComponent {

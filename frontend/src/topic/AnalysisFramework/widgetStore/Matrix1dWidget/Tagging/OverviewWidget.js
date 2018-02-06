@@ -7,6 +7,7 @@ import ListView from '../../../../../public/components/View/List/ListView';
 
 import MatrixRow from './MatrixRow';
 import { updateAttribute } from './utils';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -22,6 +23,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
+@BoundError
 @CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
