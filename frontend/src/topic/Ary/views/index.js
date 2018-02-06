@@ -127,6 +127,8 @@ const usedMaps = {
         entrySaveSuccess: true,
         entrySaveFailure: true,
         entrySaveFatal: true,
+        invalidFileSelection: true,
+        fileSelection: true,
     },
     common: {
         openDropboxChooserText: true,

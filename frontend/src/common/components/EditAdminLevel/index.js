@@ -303,7 +303,16 @@ export default class EditAdminLevel extends React.PureComponent {
         this.requestForAlForRegion.start();
     };
 
-    handleGeoFileInputChange = (files) => {
+    handleGeoFileInputChange = (files, { invalidFiles }) => {
+        if (invalidFiles > 0) {
+            notify.send({
+                title: this.props.notificationStrings('fileSelection'),
+                type: notify.type.WARNING,
+                message: this.props.notificationStrings('invalidFileSelection'),
+                duration: notify.duration.SLOW,
+            });
+        }
+
         if (files.length <= 0) {
             console.warn('No files selected');
             return;

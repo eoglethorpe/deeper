@@ -269,6 +269,13 @@ export default class LeadFormItem extends React.PureComponent {
 
     // RENDER
 
+
+    referenceForLeadDetail = (elem) => {
+        if (elem) {
+            this.containerRef = elem.getWrappedInstance();
+        }
+    }
+
     renderLeadPreview = ({ lead }) => {
         const type = leadAccessor.getType(lead);
         const values = leadAccessor.getValues(lead);
@@ -345,7 +352,7 @@ export default class LeadFormItem extends React.PureComponent {
                 topChild={[
                     <LeadForm
                         key="form"
-                        ref={(ref) => { this.containerRef = ref; }}
+                        ref={this.referenceForLeadDetail}
                         className={styles['add-lead-form']}
                         lead={lead}
                         onChange={this.handleFormChange}

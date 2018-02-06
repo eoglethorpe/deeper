@@ -187,9 +187,7 @@ export default class Screenshot extends React.PureComponent {
                 className={className}
                 styleName="screenshot"
             >
-                <canvas
-                    ref={(ref) => { this.canvas = ref; }}
-                />
+                <canvas ref={(ref) => { this.canvas = ref; }} />
             </div>
         );
     }

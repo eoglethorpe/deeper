@@ -66,7 +66,7 @@ const mapStateToProps = state => ({
     leadsStrings: leadsStringsSelector(state),
 });
 
-@connect(mapStateToProps)
+@connect(mapStateToProps, null, null, { withRef: true })
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
