@@ -12,10 +12,12 @@ import { Button } from '../../../../../public/components/Action';
 import { FileInput } from '../../../../../public/components/Input';
 import { randomString } from '../../../../../public/utils/common';
 
+import notify from '../../../../../common/notify';
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
     leadsStringsSelector,
+    notificationStringsSelector,
 } from '../../../../../common/redux';
 import DropboxChooser from '../../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../../common/components/GooglePicker';
@@ -56,11 +58,13 @@ const propTypes = {
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
     leadsStrings: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectSelector(state),
     leadsStrings: leadsStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -159,9 +163,18 @@ export default class LeadButtons extends React.PureComponent {
         this.setState({ dropboxDisabled: false });
     }
 
-    handleLeadAddFromDisk = (e) => {
-        const files = Object.values(e);
+    handleLeadAddFromDisk = (files, { invalidFiles }) => {
+        if (invalidFiles > 0) {
+            notify.send({
+                title: this.props.notificationStrings('fileSelection'),
+                type: notify.type.WARNING,
+                message: this.props.notificationStrings('invalidFileSelection'),
+                duration: notify.duration.SLOW,
+            });
+        }
+
         if (files.length <= 0) {
+            console.warn('No files selected');
             return;
         }
 

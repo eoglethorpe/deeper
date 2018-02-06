@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import DeepGallery from '../../../../common/components/DeepGallery';
-import { supportedMimeType } from '../../../../common/components/DeepGallery/components/GalleryImage';
 
 import {
     Form,
@@ -171,6 +170,7 @@ export default class UserEdit extends React.PureComponent {
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
+                    // FIXME: use strings
                     formErrors: ['Error while trying to save user.'],
                 });
             })
@@ -214,22 +214,22 @@ export default class UserEdit extends React.PureComponent {
     }
 
     // Image Input Change
-    handleImageInputChange = (files) => {
+    handleImageInputChange = (files, { invalidFiles }) => {
+        if (invalidFiles > 0) {
+            notify.send({
+                title: this.props.notificationStrings('fileSelection'),
+                type: notify.type.WARNING,
+                message: this.props.notificationStrings('invalidFileSelection'),
+                duration: notify.duration.SLOW,
+            });
+        }
+
         if (files.length <= 0) {
             console.warn('No files selected');
             return;
         }
 
         const file = files[0];
-        if (supportedMimeType.findIndex(m => m === file.type) === -1) {
-            notify.send({
-                title: this.props.notificationStrings('userProfileEdit'),
-                type: notify.type.ERROR,
-                message: `${this.props.notificationStrings('userEditImageInvalidMimeType')} (${file.type})`,
-                duration: notify.duration.MEDIUM,
-            });
-            return;
-        }
 
         if (this.uploader) {
             this.uploader.stop();
@@ -258,7 +258,7 @@ export default class UserEdit extends React.PureComponent {
                     title: this.props.notificationStrings('userProfileEdit'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('userEditImageUploadFailure'),
-                    duration: notify.duration.MEDIUM,
+                    duration: notify.duration.SLOW,
                 });
             })
             .fatal((response) => {
@@ -267,7 +267,7 @@ export default class UserEdit extends React.PureComponent {
                     title: this.props.notificationStrings('userProfileEdit'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('userEditImageUploadFailure'),
-                    duration: notify.duration.MEDIUM,
+                    duration: notify.duration.SLOW,
                 });
             })
             .progress((progress) => {
@@ -286,8 +286,6 @@ export default class UserEdit extends React.PureComponent {
             pristine,
             showGalleryImage,
         } = this.state;
-
-        console.log('form values', formValues);
 
         return (
             <Form
@@ -322,6 +320,7 @@ export default class UserEdit extends React.PureComponent {
                     styleName="display-picture"
                     onChange={this.handleImageInputChange}
                     disabled={pending}
+                    accept="image/png, image/jpeg, image/fig, image/gif"
                 />
                 <TextInput
                     label={this.props.userStrings('firstNameLabel')}
