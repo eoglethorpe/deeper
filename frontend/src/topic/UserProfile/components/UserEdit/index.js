@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import DeepGallery from '../../../../common/components/DeepGallery';
+import { supportedMimeType } from '../../../../common/components/DeepGallery/components/GalleryImage';
 
 import {
     Form,
@@ -219,12 +220,23 @@ export default class UserEdit extends React.PureComponent {
             return;
         }
 
+        const file = files[0];
+        if (supportedMimeType.findIndex(m => m === file.type) === -1) {
+            notify.send({
+                title: this.props.notificationStrings('userProfileEdit'),
+                type: notify.type.ERROR,
+                message: `${this.props.notificationStrings('userEditImageInvalidMimeType')} (${file.type})`,
+                duration: notify.duration.MEDIUM,
+            });
+            return;
+        }
+
         if (this.uploader) {
             this.uploader.stop();
         }
 
         this.uploader = new UploadBuilder()
-            .file(files[0])
+            .file(file)
             .url(urlForUpload)
             .params(() => createParamsForFileUpload({ is_public: true }))
             .preLoad(() => {
@@ -240,11 +252,28 @@ export default class UserEdit extends React.PureComponent {
                     pending: false,
                 });
             })
+            .failure((response) => {
+                console.warn('Failure', response);
+                notify.send({
+                    title: this.props.notificationStrings('userProfileEdit'),
+                    type: notify.type.ERROR,
+                    message: this.props.notificationStrings('userEditImageUploadFailure'),
+                    duration: notify.duration.MEDIUM,
+                });
+            })
+            .fatal((response) => {
+                console.warn('Failure', response);
+                notify.send({
+                    title: this.props.notificationStrings('userProfileEdit'),
+                    type: notify.type.ERROR,
+                    message: this.props.notificationStrings('userEditImageUploadFailure'),
+                    duration: notify.duration.MEDIUM,
+                });
+            })
             .progress((progress) => {
                 console.warn(progress);
             })
             .build();
-        // TODO: notify on fatal and failure
         this.uploader.start();
     }
 

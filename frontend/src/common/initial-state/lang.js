@@ -455,6 +455,8 @@ const initialLangState = {
                 973: 'Lead Save Successful',
                 974: 'Lead Save Failed.',
                 975: 'Lead Save Failed. Please check your network connection and try again',
+                976: 'Can\'t upload image. Unsupported mimeType',
+                978: 'Image Upload Failed, Try again later',
                 977: 'Lead Successfully Deleted',
                 981: 'Analysis Framework was updated in server.',
                 982: 'Your copy was overridden by server\'s copy',
@@ -1042,6 +1044,8 @@ const initialLangState = {
                     entrySaveSuccess: 989,
                     entrySaveFailure: 990,
                     entrySaveFatal: 975,
+                    userEditImageInvalidMimeType: 976,
+                    userEditImageUploadFailure: 978,
                 },
                 project: {
                     headerProjects: 173,

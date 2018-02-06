@@ -8,7 +8,7 @@ import { commonStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 
-export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig'];
+export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig', 'image/gif'];
 
 const propTypes = {
     className: PropTypes.string,
