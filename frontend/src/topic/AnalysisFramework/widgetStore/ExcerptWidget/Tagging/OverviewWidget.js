@@ -7,6 +7,12 @@ import {
     TextArea,
 } from '../../../../../public/components/Input';
 import {
+    AccentButton,
+} from '../../../../../public/components/Action';
+import {
+    iconNames,
+} from '../../../../../common/constants';
+import {
     afStringsSelector,
 } from '../../../../../common/redux';
 import styles from './styles.scss';
@@ -73,6 +79,16 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 .addAttribute(id, newAttribute)
                 .apply();
         }
+    }
+
+    handleFormatText = () => {
+        const { id, entryId, api } = this.props;
+        const attribute = this.getAttribute();
+        const value = attribute.excerpt && attribute.excerpt.replace(/\s+/g, ' ');
+        api.getEntryModifier(entryId)
+            .setExcerpt(value)
+            .setAttribute(id, { ...attribute, excerpt: value })
+            .apply();
     }
 
     handleExcerptDrop = (e) => {
@@ -164,6 +180,14 @@ export default class ExcerptTextOverview extends React.PureComponent {
                             />
                         )
                     )
+                }
+                { !dragOver && attribute.type !== IMAGE && this.props.entryId &&
+                    <AccentButton
+                        onClick={this.handleFormatText}
+                        styleName="format-button"
+                        iconName={iconNames.textFormat}
+                        transparent
+                    />
                 }
             </div>
         );

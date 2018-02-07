@@ -84,6 +84,7 @@ const iconNames = {
     chart: 'fa fa-sitemap',
     eye: 'ion-eye',
     camera: 'ion-camera',
+    textFormat: 'ion-ios-circle-filled',
 };
 
 export default iconNames;
