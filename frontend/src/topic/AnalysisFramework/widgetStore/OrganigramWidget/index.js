@@ -4,6 +4,7 @@ import { ViewListWidget } from './View';
 
 const multiselectWidget = {
     id: 'organigramWidget',
+    // NOTE: used as afStrings('organigramWidgetLabel')
     title: 'organigramWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,

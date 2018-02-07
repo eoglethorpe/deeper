@@ -4,6 +4,7 @@ import { ViewListWidget } from './View';
 
 const numberWidget = {
     id: 'numberWidget',
+    // NOTE: used as afStrings('numberWidgetLabel')
     title: 'numberWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,

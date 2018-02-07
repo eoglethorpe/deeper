@@ -266,7 +266,12 @@ module.exports = {
 
     new ShellRun({
       messageBefore: 'Generating language map.',
-      command: `find ${paths.appSrc} -name *.js | xargs /usr/bin/gawk -f ${paths.appSrc}/finder.awk > "${paths.appSrc}/usage.js"`,
+        command: `
+            find ${paths.appSrc} -name *.js |
+            xargs /usr/bin/gawk -f ${paths.appSrc}/finder.awk > usage.tmp &&
+            rsync -c usage.tmp ${paths.appSrc}/usage.js;
+            rm usage.tmp;
+        `,
       messageAfter: 'Done.',
     }),
   ],

@@ -523,8 +523,6 @@ const initialLangState = {
                     dateWidgetLabel: 704,
                     excerptWidgetLabel: 514,
                     textOrImageExcerptWidgetLabel: 706,
-                    textWidgetLabel: 20,
-                    imageWidgetLabel: 513,
                     geoWidgetLabel: 709,
                     geoAreaButtonLabel: 713,
                     matrix1DWidgetLabel: 718,

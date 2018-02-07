@@ -20,6 +20,17 @@ class ShellRun {
                 console.log(this.opt.messageAfter);
             }
         });
+
+        compiler.plugin('watch-run', (watching, done) => {
+            const changedTimes = watching.compiler.watchFileSystem.watcher.mtimes;
+            const changedFiles = Object.keys(changedTimes)
+                .map(file => `\n  ${file}`)
+                .join('');
+            if (changedFiles.length) {
+                console.log('New build triggered, files changed:', changedFiles);
+            }
+            done();
+        });
     }
 }
 

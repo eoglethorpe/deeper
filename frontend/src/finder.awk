@@ -40,7 +40,7 @@ END {
     print "const usage = {"
 
     for (class in uniqueClasses) {
-        print SP "'" class "': ["
+        print SP "'" class "': {"
 
         lastVal = ""
         for (labelId in labels[class]) {
@@ -48,19 +48,16 @@ END {
             if (label == lastVal) {
                 # print "\t", labels[class][label] "*"
             } else {
-                print SP SP "{"
-                print SP SP SP "'label': '" label "',"
-                print SP SP SP "'files': ["
+                print SP SP "'" label "': ["
                 lastVal = label
                 for (filenameId in filenames[label]) {
                     filename = filenames[label][filenameId]
-                    print SP SP SP SP "'" filename "',"
+                    print SP SP SP "'" filename "',"
                 }
-                print SP SP SP "],"
-                print SP SP "},"
+                print SP SP "],"
             }
         }
-        print SP "],"
+        print SP "},"
     }
     print "};"
     print "/* eslint-enable quote-props */"

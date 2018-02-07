@@ -14,6 +14,7 @@ import {
 
 const excerptTextWidget = {
     id: 'excerptWidget',
+    // NOTE: used as afStrings('excerptWidgetLabel')
     title: 'excerptWidgetLabel',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,

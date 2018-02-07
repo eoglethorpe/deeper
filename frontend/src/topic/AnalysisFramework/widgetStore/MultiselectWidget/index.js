@@ -10,6 +10,7 @@ import {
 
 const multiselectWidget = {
     id: 'multiselectWidget',
+    // NOTE: used as afStrings('multiselectWidgetLabel')
     title: 'multiselectWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,
