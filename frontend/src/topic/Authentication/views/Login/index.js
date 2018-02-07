@@ -112,22 +112,6 @@ export default class Login extends React.PureComponent {
                 lengthGreaterThanCondition(4),
             ],
         };
-        /*
-        // TODO: remove this validation later, just for example
-        this.validation = createValidation('email', 'password', (email, password) => {
-            if (password.length > email.length) {
-                return {
-                    ok: false,
-                    formErrors: [loginStrings.formErrors],
-                    formFieldErrors: {
-                        email: loginStrings.formFieldErrorsEmail,
-                        password: loginStrings.formFieldErrorsPassword,
-                    },
-                };
-            }
-            return { ok: true };
-        });
-        */
     }
 
     componentWillMount() {

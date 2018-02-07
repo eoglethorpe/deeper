@@ -15,6 +15,7 @@
 
 .excerpt-overview {
     display: flex;
+    position: relative;
     flex-direction: column;
     height: 100%;
     overflow: auto;
@@ -40,6 +41,20 @@
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
+    }
+
+    .format-button {
+        @include transition-medium;
+        position: absolute;
+        right: $spacing-medium;
+        bottom: $spacing-medium;
+        opacity: 0;
+    }
+
+    &:hover {
+        .format-button {
+            opacity: 1;
+        }
     }
 }
 
