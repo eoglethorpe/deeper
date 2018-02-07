@@ -7,11 +7,11 @@ import { AccentButton } from '../../../public/components/Action';
 import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
 
-import { leadsStringsSelector } from '../../../common/redux';
-import { iconNames } from '../../../common/constants';
+import Screenshot from '../../../common/components/Screenshot';
 import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
 import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
-import Screenshot from '../../../common/components/Screenshot';
+import { leadsStringsSelector } from '../../../common/redux';
+import { iconNames } from '../../../common/constants';
 import {
     urlForWebsiteFetch,
     createParamsForWebsiteFetch,
@@ -306,6 +306,7 @@ export default class WebsiteViewer extends React.PureComponent {
             isDoc,
             mimeType,
             pending,
+            screenshotMode,
         } = this.state;
 
         const {
@@ -313,25 +314,30 @@ export default class WebsiteViewer extends React.PureComponent {
             url,
         } = this.props;
 
-        if (pending) {
-            return this.renderPendingScreen();
-        } else if (isDoc) {
-            return (
-                <GalleryDocs
-                    className={className}
-                    docUrl={url}
-                    mimeType={mimeType}
-                    canShowIframe={canShowIframe}
-                />
-            );
-        } // else website
+        const containerClassName = this.getContainerClassName();
 
         // NOTE: Error can occur if
         // 1. We cannot show iframe
         // 2. If there is no alternative https url and current url is http
         const previewError = !canShowIframe || (!httpsUrl && window.location.protocol !== 'http:');
 
-        const containerClassName = this.getContainerClassName();
+        if (pending) {
+            return this.renderPendingScreen();
+        } else if (isDoc) {
+            return (
+                <div className={containerClassName}>
+                    { this.renderBar(previewError) }
+                    { screenshotMode && <Screenshot onCapture={this.handleScreenshot} /> }
+                    <GalleryDocs
+                        className={className}
+                        docUrl={url}
+                        mimeType={mimeType}
+                        canShowIframe={canShowIframe}
+                    />
+                </div>
+            );
+        } // else website
+
         return (
             <div className={containerClassName}>
                 { this.renderBar(previewError)}
