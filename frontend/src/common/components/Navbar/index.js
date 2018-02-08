@@ -202,6 +202,7 @@ export default class Navbar extends React.PureComponent {
         ];
         // Don't show apiDocs in production
         if (process.env.NODE_ENV === 'development') {
+            dropLinks.push('stringManagement');
             dropLinks.push('apiDocs');
         }
 
@@ -227,12 +228,14 @@ export default class Navbar extends React.PureComponent {
             projectId: activeProject,
             countryId: activeCountry,
             userId: activeUser.userId,
+            // TODO: why is analysis framework 1 here
             analysisFrameworkId: 1,
         };
 
         const dropdownItemIcons = {
             apiDocs: iconNames.code,
             userProfile: iconNames.person,
+            stringManagement: iconNames.globe,
         };
 
         const iconName = dropdownItemIcons[key];

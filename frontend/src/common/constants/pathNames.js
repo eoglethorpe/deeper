@@ -37,6 +37,7 @@ const pathNames = {
     homeScreen: '/',
 
     fourHundredFour: undefined,
+    stringManagement: '/string-management/',
 };
 
 export default pathNames;

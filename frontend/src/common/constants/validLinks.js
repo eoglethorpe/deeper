@@ -20,6 +20,8 @@ const allLinks = {
     userExports: lp,
 
     adminPanel: la,
+    stringManagement: la,
+
     projectSelect: l,
 };
 
@@ -75,6 +77,7 @@ const validLinks = {
     apiDocs: allLinksWithProjectDisabled,
 
     userExports: allLinks,
+    stringManagement: allLinksWithProjectDisabled,
 };
 
 export default validLinks;
