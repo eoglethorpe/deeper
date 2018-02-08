@@ -229,7 +229,7 @@ export default class Navbar extends React.PureComponent {
             countryId: activeCountry,
             userId: activeUser.userId,
             // TODO: why is analysis framework 1 here
-            analysisFrameworkId: 1,
+            // analysisFrameworkId: 1,
         };
 
         const dropdownItemIcons = {
@@ -393,6 +393,14 @@ export default class Navbar extends React.PureComponent {
                             }
                         />
                     </DropdownGroup>
+                    <Link
+                        target="_blank"
+                        className={styles['dropdown-item']}
+                        to="https://chrome.google.com/webstore/detail/deep-2-add-lead/kafonkgglonkbldmcigbdojiadfcmcdc"
+                    >
+                        <span className={`${styles.icon} ${iconNames.chrome}`} />
+                        Extension
+                    </Link>
                     <Cloak
                         requireLogin
                         render={

@@ -85,6 +85,7 @@ const iconNames = {
     eye: 'ion-eye',
     camera: 'ion-camera',
     textFormat: 'ion-ios-circle-filled',
+    chrome: 'ion-social-chrome',
 };
 
 export default iconNames;

@@ -1,6 +1,6 @@
 const initialSettingsState = {
-    serverAddress: 'https://deeper.togglecorp.com',
-    apiAddress: 'https://api.deeper.togglecorp.com',
+    serverAddress: 'https://beta.thedeep.io',
+    apiAddress: 'https://api.thedeep.io',
 };
 
 export default initialSettingsState;
