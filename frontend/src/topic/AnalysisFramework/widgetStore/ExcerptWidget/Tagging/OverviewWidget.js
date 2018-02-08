@@ -10,6 +10,9 @@ import {
     AccentButton,
 } from '../../../../../public/components/Action';
 import {
+    formatPdfText,
+} from '../../../../../public/utils/common';
+import {
     iconNames,
 } from '../../../../../common/constants';
 import {
@@ -84,7 +87,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
     handleFormatText = () => {
         const { id, entryId, api } = this.props;
         const attribute = this.getAttribute();
-        const value = attribute.excerpt && attribute.excerpt.replace(/\s+/g, ' ');
+        const value = attribute.excerpt && formatPdfText(attribute.excerpt);
         api.getEntryModifier(entryId)
             .setExcerpt(value)
             .setAttribute(id, { ...attribute, excerpt: value })
