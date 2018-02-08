@@ -510,6 +510,7 @@ const initialLangState = {
                 5555: 'Discard',
                 5556: 'Invalid file(s) selected.',
                 5557: 'File Selection',
+                5558: 'Do you want to remove this widget?',
             },
             views: {
                 af: {
@@ -581,6 +582,7 @@ const initialLangState = {
                     cancelButtonTitle: 61,
                     editModalTitle: 792,
                     empty: 406,
+                    confirmDeletewWidget: 5558,
                 },
                 api: {},
                 ce: {
