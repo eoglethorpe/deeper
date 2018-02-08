@@ -58,6 +58,7 @@ const routesOrder = [
     'weeklySnapshot',
     'apiDocs',
     'homeScreen',
+    'stringManagement',
     'fourHundredFour',
 ];
 
@@ -96,6 +97,7 @@ const routes = {
     apiDocs: { type: ROUTE.private },
     browserExtension: { type: ROUTE.private },
     fourHundredFour: { type: ROUTE.public },
+    stringManagement: { type: ROUTE.private },
 };
 
 const propTypes = {

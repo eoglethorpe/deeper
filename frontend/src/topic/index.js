@@ -43,6 +43,7 @@ const importers = {
     fourHundredFour: () => import('./FourHundredFour/views'),
 
     browserExtension: () => import('./BrowserExtension/'),
+    stringManagement: () => import('./StringManagement/views'),
 };
 
 const views = Object.keys(importers).reduce(

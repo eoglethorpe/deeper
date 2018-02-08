@@ -10,6 +10,7 @@ import { ViewListWidget } from './View';
 
 const numberMatrixWidget = {
     id: 'numberMatrixWidget',
+    // NOTE: used as afStrings('numberMatrixWidgetLabel')
     title: 'numberMatrixWidgetLabel',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,

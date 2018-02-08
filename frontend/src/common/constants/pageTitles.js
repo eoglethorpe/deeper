@@ -36,6 +36,7 @@ const pageTitles = {
     fourHundredFour: '404',
 
     browserExtension: 'Browser Extension',
+    stringManagement: 'String Management',
 };
 
 export default pageTitles;

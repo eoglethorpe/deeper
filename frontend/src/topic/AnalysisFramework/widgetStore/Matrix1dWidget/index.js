@@ -10,6 +10,7 @@ import { ViewListWidget } from './View';
 
 const excerptWidget = {
     id: 'matrix1dWidget',
+    // NOTE: used as afStrings('matrix1DWidgetLabel')
     title: 'matrix1DWidgetLabel',
     analysisFramework: {
         overviewComponent: FrameworkOverviewWidget,
