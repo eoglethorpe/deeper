@@ -45,7 +45,7 @@ const routesOrder = [
 
     // NOTE: Do not remove following line
     // pageTitleStrings('adminPanel');
-    'adminPanel',
+    // 'adminPanel',
 
     // pageTitleStrings('projects');
     'projects',
