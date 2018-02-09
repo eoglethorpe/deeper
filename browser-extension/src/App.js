@@ -11,6 +11,7 @@ import {
     setTokenAction,
     setCurrentTabInfoAction,
     tokenSelector,
+    serverAddressSelector,
 } from './common/redux';
 
 import { AccentButton } from './public-components/Action';
@@ -23,6 +24,7 @@ import {
 
 const mapStateToProps = state => ({
     token: tokenSelector(state),
+    serverAddress: serverAddressSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -37,6 +39,7 @@ const propTypes = {
     }).isRequired,
     setCurrentTabInfo: PropTypes.func.isRequired,
     setToken: PropTypes.func.isRequired,
+    serverAddress: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -56,6 +59,19 @@ export const transformResponseErrorToFormError = (errors) => {
     return { formFieldErrors, formErrors };
 };
 
+// TODO: Move this to utils
+const getWebsiteFromUrl = (url) => {
+    const pathArray = url.split('/');
+    const protocol = pathArray[0];
+    const host = pathArray[2];
+    const website = `${protocol}//${host}`;
+    return website;
+};
+
+
+const ADD_LEAD_VIEW = 'add-lead';
+const SETTINGS_VIEW = 'settings-view';
+
 @connect(mapStateToProps, mapDispatchToProps)
 class App extends React.PureComponent {
     static propTypes = propTypes;
@@ -65,33 +81,41 @@ class App extends React.PureComponent {
         super(props);
 
         this.state = {
-            pendingTabInfo: true,
-            pendingRefresh: undefined,
-            error: undefined,
-            authorized: false,
-            currentView: 'add-lead',
+            pending: false,
+            authenticated: false,
+            errorMessage: undefined,
+            currentView: ADD_LEAD_VIEW,
         };
-
-        this.fetchingToken = false;
-
-        chrome.runtime.onMessage.addListener(this.handleMessageReceive);
     }
 
     componentWillMount() {
+        chrome.runtime.onMessage.addListener(this.handleMessageReceive);
+
         this.getCurrentTabInfo();
-        chrome.runtime.sendMessage({ message: 'token' }, this.handleGetTokenMessageResponse);
+
+        const { serverAddress } = this.props;
+        if (serverAddress) {
+            this.getTokenFromBackground(serverAddress);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
-        const { token: newToken } = nextProps;
-        const { token: oldToken } = this.props;
+        const { serverAddress: newServerAddress } = nextProps;
+        const { serverAddress: oldServerAddress } = this.props;
 
-        if (!(this.fetchingToken || newToken.refresh === oldToken.refresh)) {
-            if (newToken.refresh) {
-                this.tokenRefreshRequest = this.createRequestForTokenRefresh(newToken);
-                this.tokenRefreshRequest.start();
-            } else {
-                this.setState({ authorized: false });
+        if (oldServerAddress !== newServerAddress) {
+            this.getTokenFromBackground(newServerAddress);
+        } else {
+            const { token: newToken } = nextProps;
+            const { token: oldToken } = this.props;
+
+            if (newToken.refresh !== oldToken.refresh) {
+                if (newToken.refresh) {
+                    this.tokenRefreshRequest = this.createRequestForTokenRefresh(newToken);
+                    this.tokenRefreshRequest.start();
+                } else {
+                    this.setState({ authenticated: false });
+                }
             }
         }
     }
@@ -101,6 +125,16 @@ class App extends React.PureComponent {
             this.tokenRefreshRequest.stop();
         }
         chrome.runtime.onMessage.removeListener(this.handleMessageReceive);
+    }
+
+    getTokenFromBackground = (serverAddress) => {
+        const EXTENSION_GET_TOKEN = 'get-token';
+
+        const serverWebsite = getWebsiteFromUrl(serverAddress);
+        chrome.runtime.sendMessage({
+            message: EXTENSION_GET_TOKEN,
+            website: serverWebsite,
+        }, this.handleGetTokenMessageResponse);
     }
 
     getCurrentTabInfo = () => {
@@ -128,10 +162,8 @@ class App extends React.PureComponent {
             .url(createUrlForTokenRefresh())
             .params(() => createParamsForTokenRefresh(token))
             .preLoad(() => {
-                this.fetchingToken = true;
                 this.setState({
-                    pendingRefresh: true,
-                    authorized: false,
+                    pending: true,
                 });
             })
             .success((response) => {
@@ -145,51 +177,48 @@ class App extends React.PureComponent {
                 };
 
                 setToken(params);
-                this.fetchingToken = false;
                 this.setState({
-                    error: undefined,
-                    pendingRefresh: false,
-                    authorized: true,
+                    pending: false,
+                    errorMessage: undefined,
+                    authenticated: true,
                 });
             })
             .failure((response) => {
-                console.log(response);
+                console.error(response);
                 const { formErrors } = transformResponseErrorToFormError(response);
-                this.fetchingToken = false;
                 this.setState({
-                    authorized: false,
-                    pendingRefresh: false,
-                    error: formErrors.join(', '),
+                    pending: false,
+                    errorMessage: formErrors.join(', '),
+                    authenticated: false,
                 });
-                this.fetchingToken = false;
             })
             .fatal((response) => {
-                console.log(response);
+                console.error(response);
                 this.setState({
-                    authorized: false,
+                    pending: false,
                     error: 'Oops, something went wrong',
-                    pendingRefresh: false,
+                    authenticated: false,
                 });
-                this.fetchingToken = false;
             })
             .build();
         return tokenRefreshRequest;
     }
 
-    handleGetTokenMessageResponse = (response) => {
-        const { token } = response;
+    handleGetTokenMessageResponse = (response = {}) => {
+        const token = response;
         const { setToken } = this.props;
 
-        // console.warn('FG: Received token', response);
         setToken({ token });
 
-        // console.warn(response);
         if (token && token.refresh) {
-            this.fetchingToken = true;
+            console.info('Got token from bg', token);
             this.tokenRefreshRequest = this.createRequestForTokenRefresh(token);
             this.tokenRefreshRequest.start();
         } else {
-            this.setState({ authorized: false });
+            this.setState({
+                authenticated: false,
+            });
+
             chrome.tabs.create({
                 url: createUrlForBrowserExtensionPage(),
                 active: false,
@@ -198,29 +227,39 @@ class App extends React.PureComponent {
     }
 
     handleMessageReceive = (request, sender) => {
+        const EXTENSION_SET_TOKEN_FG = 'set-token-fg';
+
         if (chrome.runtime.id === sender.id) {
-            if (request.message === 'token') {
-                const { setToken } = this.props;
-                setToken({ token: request.token });
+            if (request.message === EXTENSION_SET_TOKEN_FG) {
+                const {
+                    setToken,
+                    serverAddress,
+                } = this.props;
+
+                const serverWebsite = getWebsiteFromUrl(serverAddress);
+                if (request.sender === serverWebsite) {
+                    console.info('Got token from site', request.token);
+                    setToken({ token: request.token });
+                }
             }
         }
     }
 
     handleAddLeadSettingsButtonClick = () => {
         this.setState({
-            currentView: 'settings',
+            currentView: SETTINGS_VIEW,
         });
     }
 
     handleSettingsButtonClick = () => {
         this.setState({
-            currentView: 'settings',
+            currentView: SETTINGS_VIEW,
         });
     }
 
     handleSettingsBackButtonClick = () => {
         this.setState({
-            currentView: 'add-lead',
+            currentView: ADD_LEAD_VIEW,
         });
     }
 
@@ -249,16 +288,15 @@ class App extends React.PureComponent {
 
     render() {
         const {
-            pendingTabInfo,
-            pendingRefresh,
-            authorized,
+            pending,
+            authenticated,
             currentView,
-            error,
+            errorMessage,
         } = this.state;
 
         const Message = this.renderMessage;
 
-        if (currentView === 'settings') {
+        if (currentView === SETTINGS_VIEW) {
             return (
                 <Settings
                     onBackButtonClick={this.handleSettingsBackButtonClick}
@@ -266,16 +304,16 @@ class App extends React.PureComponent {
             );
         }
 
-        if (error) {
-            return <Message message={error} />;
+        if (errorMessage) {
+            return <Message message={errorMessage} />;
         }
 
-        if (pendingTabInfo || pendingRefresh) {
+        if (pending) {
             return <Message message="Loading..." />;
         }
 
         return (
-            authorized ? (
+            authenticated ? (
                 <AddLead
                     onSettingsButtonClick={this.handleAddLeadSettingsButtonClick}
                 />

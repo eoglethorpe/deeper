@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "DEEP-2: Add Lead",
     "short_name": "DEEP Extension",
-    "version": "1.02",
+    "version": "1.03",
 
     "description": "Browser Extension for DEEP",
     "icons": {
@@ -25,6 +25,6 @@
     "permissions": ["activeTab", "<all_urls>", "storage"],
 
     "externally_connectable": {
-        "matches": ["*://www.thedeep.io/*", "*://*.togglecorp.com/*", "*://localhost:*/*"]
+        "matches": ["*://*.thedeep.io/*", "*://*.togglecorp.com/*", "*://localhost:*/*"]
     }
 }

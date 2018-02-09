@@ -81,6 +81,8 @@ const propTypes = {
 const defaultProps = {
 };
 
+const renderEmpty = () => 'Select a project for available option(s)';
+
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
@@ -91,7 +93,9 @@ export default class AddLead extends React.PureComponent {
         super(props);
 
         this.state = {
-            pending: false,
+            pendingProjectList: false,
+            pendingLeadOptions: false,
+            pendingWebInfo: false,
             leadSubmittedSuccessfully: undefined,
         };
 
@@ -171,8 +175,24 @@ export default class AddLead extends React.PureComponent {
         const webInfoRequest = new FgRestBuilder()
             .url(createUrlForWebInfo())
             .params(() => createParamsForWebInfo({ url }))
+            .preLoad(() => {
+                this.setState({
+                    pendingWebInfo: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    pendingWebInfo: false,
+                });
+            })
             .success((response) => {
                 this.fillWebInfo(response);
+            })
+            .failure((response) => {
+                console.error(response);
+            })
+            .fatal((response) => {
+                console.error(response);
             })
             .build();
         return webInfoRequest;
@@ -196,14 +216,28 @@ export default class AddLead extends React.PureComponent {
         const projectListRequest = new FgRestBuilder()
             .url(projectListUrl)
             .params(() => createParamsForProjectList())
+            .preLoad(() => {
+                this.setState({
+                    pendingProjectList: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    pendingProjectList: false,
+                });
+            })
             .success((response) => {
                 const { setProjectList } = this.props;
-
                 const params = {
                     projects: response.results,
                 };
-
                 setProjectList(params);
+            })
+            .failure((response) => {
+                console.error(response);
+            })
+            .fatal((response) => {
+                console.error(response);
             })
             .build();
         return projectListRequest;
@@ -214,8 +248,29 @@ export default class AddLead extends React.PureComponent {
         const request = new FgRestBuilder()
             .url(url)
             .params(createParamsForLeadOptions)
+            .preLoad(() => {
+                this.setState({
+                    pendingLeadOptions: true,
+                });
+            })
+            .postLoad(() => {
+                this.setState({
+                    pendingLeadOptions: false,
+                });
+            })
             .success((response) => {
                 this.props.setLeadOptions({ leadOptions: response });
+            })
+            .failure((response) => {
+                console.error(response);
+            })
+            .fatal((response) => {
+                console.error(response);
+            })
+            .abort(() => {
+                this.setState({
+                    pendingLeadOptions: false,
+                });
             })
             .build();
         return request;
@@ -233,23 +288,29 @@ export default class AddLead extends React.PureComponent {
             .url(url)
             .params(() => createParamsForLeadCreate(maker(values)))
             .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
+                this.setState({ pendingLeadCreate: true });
             })
             .success(() => {
                 const { currentTabId } = this.props;
-                this.setState({ leadSubmittedSuccessfully: true });
+                this.setState({
+                    leadSubmittedSuccessfully: true,
+                    pendingLeadCreate: false,
+                });
                 this.props.clearInputValue({
                     tabId: currentTabId,
                 });
             })
             .failure(() => {
-                this.setState({ leadSubmittedSuccessfully: false });
+                this.setState({
+                    leadSubmittedSuccessfully: false,
+                    pendingLeadCreate: false,
+                });
             })
             .fatal(() => {
-                this.setState({ leadSubmittedSuccessfully: false });
+                this.setState({
+                    leadSubmittedSuccessfully: false,
+                    pendingLeadCreate: false,
+                });
             })
             .build();
         return request;
@@ -266,6 +327,7 @@ export default class AddLead extends React.PureComponent {
         if (webInfo.project && (!inputValues.project || inputValues.project.length === 0)) {
             values.project = [webInfo.project];
         }
+
         if (webInfo.date && !inputValues.date) {
             values.publishedOn = webInfo.date;
         }
@@ -363,9 +425,11 @@ export default class AddLead extends React.PureComponent {
         } = this.props;
         const { formFieldErrors = emptyObject } = uiState;
         const {
-            pending,
+            pendingProjectList,
+            pendingLeadOptions,
+            pendingWebInfo,
+            pendingLeadCreate,
             leadSubmittedSuccessfully,
-
         } = this.state;
 
         if (leadSubmittedSuccessfully === true) {
@@ -381,6 +445,11 @@ export default class AddLead extends React.PureComponent {
                 </div>
             );
         }
+
+        const pending = pendingProjectList
+            || pendingLeadOptions
+            || pendingWebInfo
+            || pendingLeadCreate;
 
         return (
             <div styleName="add-lead">
@@ -440,6 +509,7 @@ export default class AddLead extends React.PureComponent {
                         keySelector={d => d.key}
                         labelSelector={d => d.value}
                         disabled={pending}
+                        renderEmpty={renderEmpty}
                     />
                     <MultiSelectInput
                         formname="assignee"
@@ -450,6 +520,7 @@ export default class AddLead extends React.PureComponent {
                         keySelector={d => d.key}
                         labelSelector={d => d.value}
                         disabled={pending}
+                        renderEmpty={renderEmpty}
                     />
                     <DateInput
                         formname="publishedOn"
