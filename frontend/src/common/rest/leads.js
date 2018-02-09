@@ -14,6 +14,9 @@ export const urlForWebsiteFetch = `${wsEndpoint}/lead-website-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
 export const createUrlForLeadDelete = leadId => `${urlForLead}${leadId}/`;
 
+// GET [For cache response]
+export const createUrlForWebsiteFetch = url => `${wsEndpoint}/lead-website-fetch/?${p({ url })}`;
+
 export const createParamsForLeadCreate = data => ({
     method: POST,
     headers: commonHeaderForPost,

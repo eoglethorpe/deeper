@@ -15,6 +15,7 @@ import ModalBody from '../../../public/components/View/Modal/Body';
 import ModalHeader from '../../../public/components/View/Modal/Header';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
+import { InternalGallery } from '../../../common/components/DeepGallery';
 import {
     createParamsForUser,
     createUrlForUser,
@@ -28,7 +29,6 @@ import {
 
     userStringsSelector,
 } from '../../../common/redux';
-import DeepGallery from '../../../common/components/DeepGallery';
 import schema from '../../../common/schema';
 import { iconNames } from '../../../common/constants';
 
@@ -176,8 +176,9 @@ export default class UserProfile extends React.PureComponent {
                 </header>
                 <div styleName="info">
                     {/* FIXME: add a default image in img */}
-                    <DeepGallery
+                    <InternalGallery
                         galleryId={userInformation.displayPicture}
+                        notFoundMessage={this.props.userStrings('userImageNotFound')}
                         styleName="display-picture"
                     />
                     <div styleName="detail">

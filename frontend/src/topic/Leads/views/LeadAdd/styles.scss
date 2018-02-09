@@ -172,6 +172,7 @@
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
+                height: 100%;
                 min-height: 100px;
 
                 .lead-preview {
@@ -179,30 +180,15 @@
                     flex-direction: column;
                     flex-grow: 1;
                     border-top: $width-separator-thin solid $color-separator;
+                    height: 100%;
                     overflow-y: auto;
 
                     .gallery-file {
-                        display: flex;
-                        flex-direction: column;
-                        flex-grow: 1;
+                        height: 100%;
+                        overflow-y: auto;
 
-                        :global {
-                            .doc-container {
-                                display: flex;
-                                flex-direction: column;
-                                flex-grow: 1;
-
-                                >div {
-                                    display: flex;
-                                    flex-direction: column;
-                                    flex-grow: 1;
-                                }
-                            }
-
-                            iframe {
-                                flex-grow: 1;
-                                border: 0;
-                            }
+                        .preview {
+                            height: 100%;
                         }
                     }
 

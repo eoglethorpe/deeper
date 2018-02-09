@@ -1,0 +1,90 @@
+@import '../../../../../stylesheets/base';
+
+
+.deep-gallery {
+    .urlbar {
+        display: flex;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-small;
+
+        .url {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+
+            :global .input {
+                border: $width-separator-thin solid $color-separator;
+                border-radius: 3px;
+                background-color: $color-foreground;
+                padding: $spacing-small $spacing-extra-small;
+            }
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            margin-left: $spacing-small;
+
+            .open-link {
+                @extend %transparent-button-like-link;
+                color: $color-accent;
+            }
+        }
+    }
+
+    .doc-container {
+        position: relative;
+        height: 100%;
+
+        .doc {
+            border: 0;
+            height: 100%;
+        }
+    }
+
+    &.urlbar-shown {
+        .doc-container {
+            height: calc(100% - 48px);
+        }
+    }
+}
+
+.gallery-file-name {
+    color: $color-accent;
+}
+
+.pending-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .label {
+        margin-right: $spacing-small;
+    }
+
+    .loading-animation {
+        display: inline-block;
+        animation: spin 1s linear infinite;
+    }
+
+    &.file-name {
+        display: inline;
+    }
+}
+
+.show-404 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .label {
+        margin-right: $spacing-small;
+        text-align: center;
+    }
+
+    &.file-name {
+        display: inline;
+    }
+}

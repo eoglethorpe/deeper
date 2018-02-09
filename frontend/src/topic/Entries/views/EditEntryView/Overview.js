@@ -19,9 +19,11 @@ import SelectInput from '../../../../public/components/Input/SelectInput';
 import GridLayout from '../../../../public/components/View/GridLayout';
 
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
-import WebsiteViewer from '../../../../common/components/WebsiteViewer';
-import DeepGallery from '../../../../common/components/DeepGallery';
 import ImagesGrid from '../../../../common/components/ImagesGrid';
+import {
+    InternalGallery,
+    ExternalGallery,
+} from '../../../../common/components/DeepGallery';
 import {
     setActiveEntryAction,
     editEntryViewCurrentLeadSelector,
@@ -383,7 +385,7 @@ export default class Overview extends React.PureComponent {
 
         if (this.isTypeWithUrl(type) && lead.url) {
             return (
-                <WebsiteViewer
+                <ExternalGallery
                     styleName="preview"
                     url={lead.url}
                     onScreenshotCapture={this.handleScreenshot}
@@ -393,7 +395,7 @@ export default class Overview extends React.PureComponent {
             );
         } else if (this.isTypeWithAttachment(type) && lead.attachment) {
             return (
-                <DeepGallery
+                <InternalGallery
                     styleName="preview"
                     galleryId={lead.attachment.id}
                     onScreenshotCapture={this.handleScreenshot}

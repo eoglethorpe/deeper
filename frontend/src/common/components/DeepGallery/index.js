@@ -20,6 +20,10 @@ import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './compo
 import GalleryDocs, { supportedMimeType as GalleryDocsMimeType } from './components/GalleryDocs';
 import styles from './styles.scss';
 
+export ExternalGallery from './components/ExternalGallery';
+export InternalGallery from './components/InternalGallery';
+export GalleryViewer from './components/GalleryViewer';
+
 export const ComponentType = {
     IMAGE: 'image',
     DOC: 'doc',
@@ -77,6 +81,7 @@ export default class DeepGallery extends React.PureComponent {
     }
 
     componentWillMount() {
+        console.warn('DeepGallery is deprecated, Please use InternalGallery component');
         if (this.galleryFileRequest) {
             this.galleryFileRequest.start();
         }

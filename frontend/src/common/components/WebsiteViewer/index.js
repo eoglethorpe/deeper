@@ -64,6 +64,7 @@ export default class WebsiteViewer extends React.PureComponent {
     }
 
     componentWillMount() {
+        console.warn('WebsiteViewer is deprecated, Please use WebsiteViewer component');
         if (this.props.url) {
             this.urlRequest = this.createRequestForUrl(this.props.url);
             this.urlRequest.start();

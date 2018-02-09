@@ -16,6 +16,10 @@ import Confirm from '../../../../../public/components/View/Modal/Confirm';
 import ResizableV from '../../../../../public/components/View/Resizable/ResizableV';
 
 import {
+    InternalGallery,
+    ExternalGallery,
+} from '../../../../../common/components/DeepGallery';
+import {
     addLeadViewLeadChangeAction,
     addLeadViewCopyAllBelowAction,
     addLeadViewCopyAllAction,
@@ -29,8 +33,6 @@ import {
     urlForWebInfo,
     createParamsForWebInfo,
 } from '../../../../../common/rest';
-import DeepGallery from '../../../../../common/components/DeepGallery';
-import WebsiteViewer from '../../../../../common/components/WebsiteViewer';
 
 import LeadForm from './LeadForm';
 import styles from '../styles.scss';
@@ -284,7 +286,7 @@ export default class LeadFormItem extends React.PureComponent {
                     <div className={styles['lead-preview']} >
                         {
                             values.url ? (
-                                <WebsiteViewer
+                                <ExternalGallery
                                     className={styles['gallery-file']}
                                     url={values.url}
                                     showUrl
@@ -304,9 +306,11 @@ export default class LeadFormItem extends React.PureComponent {
                     <div className={styles['lead-preview']} >
                         {
                             values.attachment ? (
-                                <DeepGallery
+                                <InternalGallery
                                     className={styles['gallery-file']}
                                     galleryId={values.attachment && values.attachment.id}
+                                    notFoundMessage={this.props.leadsStrings('leadFileNotFound')}
+                                    showUrl
                                 />
                             ) :
                                 <div className={styles['preview-text']}>

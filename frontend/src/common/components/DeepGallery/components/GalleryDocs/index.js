@@ -6,16 +6,14 @@ import { createUrlForGoogleViewer } from '../../../../rest/external';
 
 import styles from './styles.scss';
 
-export const supportedMimeType = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/pdf', 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.ms-powerpoint', 'application/vnd.ms-excel', 'application/xml',
-    'application/msword', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+export { galleryDocsMimeType as supportedMimeType } from '../../../../config/deepMimeTypes';
 
 const propTypes = {
     className: PropTypes.string,
     docUrl: PropTypes.string,
     mimeType: PropTypes.string,
     canShowIframe: PropTypes.bool,
+    notHttps: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -23,8 +21,12 @@ const defaultProps = {
     docUrl: undefined,
     mimeType: undefined,
     canShowIframe: true,
+    notHttps: false,
 };
 
+/*
+ * Gallery viewer component for Docs [galleryDocsMimeType]
+ */
 @CSSModules(styles, { allowMultiple: true })
 export default class GalleryDocs extends React.PureComponent {
     static propTypes = propTypes;
@@ -36,6 +38,7 @@ export default class GalleryDocs extends React.PureComponent {
             docUrl,
             mimeType,
             canShowIframe,
+            notHttps,
         } = this.props;
 
         if (!docUrl) {
@@ -43,7 +46,6 @@ export default class GalleryDocs extends React.PureComponent {
         }
 
         const googleDriveViewerUrl = createUrlForGoogleViewer(docUrl);
-        const isHttps = !!docUrl.match(/^https:\/\//) || window.location.protocol === 'http:';
 
         const classNames = [
             className,
@@ -54,7 +56,7 @@ export default class GalleryDocs extends React.PureComponent {
         return (
             <div className={classNames.join(' ')}>
                 {
-                    mimeType === 'application/pdf' && canShowIframe && isHttps ?
+                    mimeType === 'application/pdf' && canShowIframe && !notHttps ?
                         <iframe
                             className="doc"
                             styleName="doc"

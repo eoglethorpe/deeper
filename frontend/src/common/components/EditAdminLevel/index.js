@@ -19,7 +19,7 @@ import Form, {
     integerCondition,
 } from '../../../public/components/Input/Form';
 
-import DeepGallery from '../../components/DeepGallery';
+import { InternalGallery } from '../../components/DeepGallery';
 import {
     transformResponseErrorToFormError,
     createParamsForAdminLevelsForRegionPOST,
@@ -444,7 +444,7 @@ export default class EditAdminLevel extends React.PureComponent {
                                     </span>
                                 )
                             }
-                            <DeepGallery
+                            <InternalGallery
                                 onlyFileName
                                 galleryId={formValues.geoShapeFile}
                             />
