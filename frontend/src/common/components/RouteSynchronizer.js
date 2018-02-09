@@ -12,10 +12,7 @@ import {
     reverseRoute,
 } from '../../public/utils/common';
 
-import {
-    pathNames,
-    pageTitles,
-} from '../../common/constants';
+import { pathNames } from '../../common/constants';
 
 import {
     activeProjectSelector,
@@ -23,6 +20,7 @@ import {
     setActiveProjectAction,
     setActiveCountryAction,
     setRouteParamsAction,
+    pageTitleStringsSelector,
 } from '../redux';
 
 const propTypes = {
@@ -45,6 +43,8 @@ const propTypes = {
     activeProjectId: PropTypes.number,
     activeCountryId: PropTypes.number,
     setRouteParams: PropTypes.func.isRequired,
+
+    pageTitleStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -55,6 +55,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     activeProjectId: activeProjectSelector(state),
     activeCountryId: activeCountrySelector(state),
+    pageTitleStrings: pageTitleStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -187,10 +188,12 @@ class RouteSynchronizer extends React.PureComponent {
     render() {
         const {
             match,
+            pageTitleStrings,
             ...otherProps
         } = this.props;
 
-        const title = pageTitles[getKeyByValue(pathNames, match.path)];
+        const titleKey = getKeyByValue(pathNames, match.path);
+        const title = pageTitleStrings(titleKey);
         return [
             <Helmet key={title}>
                 <meta charSet="utf-8" />

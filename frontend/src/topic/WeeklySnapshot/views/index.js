@@ -1,8 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 
-import { pageTitles } from '../../../common/constants';
-
 import styles from './styles.scss';
 
 const propTypes = {
@@ -20,7 +18,7 @@ export default class WeeklySnapshot extends React.PureComponent {
     render() {
         return (
             <div>
-                { pageTitles.weeklySnapshot }
+                Weekly snapshot
             </div>
         );
     }

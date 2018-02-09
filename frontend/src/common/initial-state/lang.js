@@ -510,6 +510,19 @@ const initialLangState = {
                 5555: 'Discard',
                 5556: 'Invalid file(s) selected.',
                 5557: 'File Selection',
+                5558: 'Password Reset',
+                5559: 'Home',
+                5560: 'Dashboard',
+                5561: 'Leads Visualization',
+                5562: 'Assessment Registry',
+                5564: 'Edit Entries',
+                5566: 'User Profile',
+                5567: 'Country Panel',
+                5568: 'Project Panel',
+                5569: 'Weekly Snapshot',
+                5570: 'Api Docs',
+                5571: '404',
+                5572: 'String Management',
                 6000: 'Do you want to remove this widget?',
             },
             views: {
@@ -1046,6 +1059,43 @@ const initialLangState = {
                     entrySaveFatal: 975,
                     invalidFileSelection: 5556,
                     fileSelection: 5557,
+                },
+                pageTitle: {
+                    login: 814,
+                    register: 811,
+                    passwordReset: 5558,
+
+                    homeScreen: 5559,
+                    dashboard: 5560,
+
+                    leads: 641,
+                    leadsViz: 5561,
+                    addLeads: 12,
+                    entries: 15,
+                    ary: 5562,
+                    export: 600,
+
+                    editEntries: 5564,
+
+                    userProfile: 5566,
+                    userGroup: 201,
+                    adminPanel: 1220,
+                    countries: 5567,
+                    projects: 5568,
+
+                    analysisFramework: 379,
+
+                    categoryEditor: 380,
+
+                    weeklySnapshot: 5569,
+
+                    apiDocs: 5570,
+                    userExports: 621,
+
+                    fourHundredFour: 5571,
+
+                    browserExtension: 2000,
+                    stringManagement: 5572,
                 },
                 project: {
                     headerProjects: 173,

@@ -1,29 +1,26 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-
+import { connect } from 'react-redux';
 import {
     withRouter,
     NavLink,
 } from 'react-router-dom';
 
-import {
-    reverseRoute,
-} from '../../../public/utils/common';
-
+import { reverseRoute } from '../../../public/utils/common';
 import { List } from '../../../public/components/View';
-import styles from './styles.scss';
-
-import {
-    DropdownMenu,
-} from '../../../public/components/Action';
+import { DropdownMenu } from '../../../public/components/Action';
 
 import {
     iconNames,
-    pageTitles,
     pathNames,
 } from '../../constants';
+import {
+    pageTitleStringsSelector,
+} from '../../redux';
+
 import Cloak from '../Cloak';
+import styles from './styles.scss';
 
 const propTypes = {
     links: PropTypes.arrayOf(
@@ -32,6 +29,7 @@ const propTypes = {
     projectId: PropTypes.number,
     countryId: PropTypes.number,
     className: PropTypes.string,
+    pageTitleStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -41,7 +39,12 @@ const defaultProps = {
     links: [],
 };
 
+const mapStateToProps = state => ({
+    pageTitleStrings: pageTitleStringsSelector(state),
+});
+
 @withRouter
+@connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class NavMenu extends React.PureComponent {
     static propTypes = propTypes;
@@ -105,7 +108,7 @@ export default class NavMenu extends React.PureComponent {
                             className={className}
                             exact
                         >
-                            { pageTitles[key] }
+                            { this.props.pageTitleStrings(key) }
                         </NavLink>
                     )
                 }

@@ -1,4 +1,15 @@
 // eslint-disable-next-line no-unused-vars
+const blacklistLinks = (links, blacklist) => {
+    const newLinks = { ...links };
+    blacklist.forEach((link) => {
+        newLinks[link] = undefined;
+    });
+    return newLinks;
+};
+
+// LINK TYPE
+
+// eslint-disable-next-line no-unused-vars
 const lap = { requireLogin: true, requireAdminRights: true, requireProject: true };
 const la = { requireLogin: true, requireAdminRights: true };
 const lp = { requireLogin: true, requireProject: true };
@@ -6,7 +17,10 @@ const l = { requireLogin: true };
 // eslint-disable-next-line no-unused-vars
 const x = { requireLogin: false };
 
+// COMMON LINK COMBINATION
+
 const noLinks = {};
+
 const allLinks = {
     leads: lp,
     entries: lp,
@@ -30,14 +44,7 @@ const allLinksWithProjectDisabled = {
     projectSelect: { ...l, disable: true },
 };
 
-// eslint-disable-next-line no-unused-vars
-const blacklistLinks = (links, blacklist) => {
-    const newLinks = { ...links };
-    blacklist.forEach((link) => {
-        newLinks[link] = undefined;
-    });
-    return newLinks;
-};
+// LINKS IN PAGES
 
 const validLinks = {
     login: noLinks,
