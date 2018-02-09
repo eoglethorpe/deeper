@@ -340,7 +340,7 @@ export default class List extends React.PureComponent {
                             show={this.state.showDeleteModal}
                         >
                             <p>
-                                Do you want to remove this widget?
+                                {this.props.afStrings('confirmDeletewWidget')}
                             </p>
                         </Confirm>
                         {/* FIXME: strings */}
@@ -353,7 +353,7 @@ export default class List extends React.PureComponent {
                                     key={widget.id}
                                 >
                                     <div styleName="title">
-                                        {widget.title}
+                                        {this.props.afStrings(widget.title)}
                                     </div>
                                     <div styleName="actions">
                                         <Button
