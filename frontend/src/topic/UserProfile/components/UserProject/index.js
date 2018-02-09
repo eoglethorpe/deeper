@@ -177,7 +177,7 @@ export default class UserProject extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderMembers'),
                 order: 6,
                 sortable: true,
-                comparator: (a, b) => a.memberships.length || [] - b.memberships.length || [],
+                comparator: (a, b) => (a.memberships || []).length - (b.memberships || []).length,
                 modifier: d => (d.memberships || []).length,
             },
             {
