@@ -47,56 +47,6 @@ export default class Ary extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const sortNumber = (a, b) => (a - b);
-        const sortString = (a, b) => a.localeCompare(b);
-        const sortStringByWord = (a, b) => (a.split(' ').length - b.split(' ').length);
-        const sortStringAsNumber = (a, b) => (+a) - (+b);
-        // eslint-disable-next-line no-nested-ternary
-        const sortBoolean = (a, b) => (a === b ? 0 : (a ? 1 : -1));
-
-        this.headers = [
-            {
-                key: 'id',
-                label: 'Id',
-                order: 1,
-                sortable: true,
-                comparator: (a, b) => sortStringAsNumber(a.id, b.id),
-            },
-            {
-                key: 'value',
-                label: 'String',
-                order: 2,
-                sortable: true,
-                comparator: (a, b) => (
-                    sortStringByWord(a.value, b.value) ||
-                    sortString(a.value, b.value)
-                ),
-            },
-            {
-                key: 'referenceCount',
-                label: 'Reference Count',
-                order: 3,
-                sortable: true,
-                comparator: (a, b) => sortNumber(a.referenceCount, b.referenceCount),
-            },
-            {
-                key: 'duplicated',
-                label: 'Duplicated',
-                order: 3,
-                sortable: true,
-                comparator: (a, b) => (
-                    -sortBoolean(!!a.duplicated, !!b.duplicated) ||
-                    sortStringByWord(a.value, b.value) ||
-                    sortString(a.value, b.value)
-                ),
-                modifier: a => (a.duplicated ? a.duplicated : '-'),
-            },
-        ];
-        this.defaultSort = {
-            key: 'duplicated',
-            order: 'asc',
-        };
-
         const {
             selectedRawStrings: strings,
             selectedViewStrings: views,
@@ -171,12 +121,63 @@ export default class Ary extends React.PureComponent {
                 referenceCount: stringsReferenceCount[id],
                 duplicated: duplicatedRawStrings[id],
             }));
+
+
+        // FINITO
+        const sortNumber = (a, b) => (a - b);
+        const sortString = (a, b) => a.localeCompare(b);
+        const sortStringByWord = (a, b) => (a.split(' ').length - b.split(' ').length);
+        const sortStringAsNumber = (a, b) => (+a) - (+b);
+        // eslint-disable-next-line no-nested-ternary
+        const sortBoolean = (a, b) => (a === b ? 0 : (a ? 1 : -1));
+
+        this.headers = [
+            {
+                key: 'id',
+                label: 'Id',
+                order: 4,
+                sortable: true,
+                comparator: (a, b) => sortStringAsNumber(a.id, b.id),
+            },
+            {
+                key: 'value',
+                label: 'String',
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => (
+                    sortStringByWord(a.value, b.value) ||
+                    sortString(a.value, b.value)
+                ),
+            },
+            {
+                key: 'referenceCount',
+                label: 'Reference Count',
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => sortNumber(a.referenceCount, b.referenceCount),
+            },
+            {
+                key: 'duplicated',
+                label: 'Duplicated',
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => (
+                    -sortBoolean(!!a.duplicated, !!b.duplicated) ||
+                    sortStringByWord(a.value, b.value) ||
+                    sortString(a.value, b.value)
+                ),
+                modifier: a => (a.duplicated ? a.duplicated : '-'),
+            },
+        ];
+        this.defaultSort = {
+            key: 'duplicated',
+            order: 'asc',
+        };
     }
 
     keyExtractor = e => e.id;
 
     render() {
-        // { pageTitles.ary }
         return (
             <div>
                 <div>

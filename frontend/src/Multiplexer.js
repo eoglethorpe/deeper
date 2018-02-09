@@ -34,31 +34,58 @@ const ROUTE = {
 };
 
 const routesOrder = [
+    // pageTitleStrings('login');
     'login',
+    // pageTitleStrings('register');
     'register',
+    // pageTitleStrings('passwordReset');
     'passwordReset',
+    // pageTitleStrings('browserExtension');
     'browserExtension',
 
+    // NOTE: Do not remove following line
+    // pageTitleStrings('adminPanel');
+    'adminPanel',
+
+    // pageTitleStrings('projects');
     'projects',
+    // pageTitleStrings('dashboard');
     'dashboard',
+    // pageTitleStrings('leads');
     'leads',
+    // pageTitleStrings('leadsViz');
     'leadsViz',
+    // pageTitleStrings('addLeads');
     'addLeads',
+    // pageTitleStrings('entries');
     'entries',
+    // pageTitleStrings('editEntries');
     'editEntries',
+    // pageTitleStrings('ary');
     'ary',
-    // 'editAry',
+    // pageTitleStrings('export');
     'export',
+    // pageTitleStrings('userExports');
     'userExports',
+    // pageTitleStrings('countries');
     'countries',
+    // pageTitleStrings('userProfile');
     'userProfile',
+    // pageTitleStrings('userGroup');
     'userGroup',
+    // pageTitleStrings('analysisFramework');
     'analysisFramework',
+    // pageTitleStrings('categoryEditor');
     'categoryEditor',
+    // pageTitleStrings('weeklySnapshot');
     'weeklySnapshot',
+    // pageTitleStrings('apiDocs');
     'apiDocs',
+    // pageTitleStrings('homeScreen');
     'homeScreen',
+    // pageTitleStrings('stringManagement');
     'stringManagement',
+    // pageTitleStrings('fourHundredFour');
     'fourHundredFour',
 ];
 
