@@ -70,10 +70,6 @@ export default class Settings extends React.PureComponent {
             serverAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
             apiAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
         };
-        this.validations = {
-            serverAddress: [requiredCondition],
-            apiAddress: [requiredCondition],
-        };
     }
 
     componentWillReceiveProps(nextProps) {
