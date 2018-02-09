@@ -1,7 +1,7 @@
-export const extensionId = 'nkipfcpknocfnlelgehlealjgknfkfhm'; // fhx
+// export const extensionId = 'nkipfcpknocfnlelgehlealjgknfkfhm'; // fhx
 // export const extensionId = 'caebgfaeglddaliobdbkcphpfegnedmp'; // tnagorra
 // export const extensionId = 'labjbplogbalfabkboldbkmgigdfblbk'; // bd
-// export const extensionId = 'kafonkgglonkbldmcigbdojiadfcmcdc'; // extension on store
+export const extensionId = 'kafonkgglonkbldmcigbdojiadfcmcdc'; // extension on store
 
 // TODO: make common constant for extension as well
 const EXTENSION_GET_SCREENSHOT = 'get-screenshot';
