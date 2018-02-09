@@ -251,6 +251,8 @@ export default class AddRegion extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
                 onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -258,16 +260,12 @@ export default class AddRegion extends React.PureComponent {
                     label={this.props.projectStrings('addRegionTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addRegionTitlePlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.name}
                     autoFocus
                 />
                 <TextInput
                     label={this.props.projectStrings('addRegionCodeLabel')}
                     formname="code"
                     placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
-                    value={formValues.code}
-                    error={formFieldErrors.code}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

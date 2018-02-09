@@ -227,6 +227,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 successCallback={this.handleSubmit}
                 changeCallback={this.handleChange}
                 elements={this.formElements}
+                value={formValues}
             >
                 <MultiSelectInput
                     formname="assignee"
@@ -238,7 +239,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.assignee}
                 />
                 <DateFilter
                     formname="created_at"
@@ -247,7 +247,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.created_at}
                 />
                 <DateFilter
                     formname="published_on"
@@ -256,7 +255,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.published_on}
                 />
                 <MultiSelectInput
                     formname="confidentiality"
@@ -268,7 +266,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.confidentiality}
                 />
                 <MultiSelectInput
                     formname="status"
@@ -280,7 +277,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.status}
                 />
                 <TextInput
                     formname="search"
@@ -290,7 +286,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showLabel
                     className="leads-filter"
                     type="search"
-                    value={formValues.search}
                 />
                 { !this.props.applyOnChange &&
                     <Button

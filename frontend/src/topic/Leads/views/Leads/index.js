@@ -501,9 +501,9 @@ export default class Leads extends React.PureComponent {
     handleEditLeadClick = (row) => {
         const newLeads = [];
 
-        const type = row.sourceType;
         const values = {
             title: row.title,
+            sourceType: row.sourceType,
             project: row.project,
             source: row.source,
             confidentiality: row.confidentiality,
@@ -521,7 +521,6 @@ export default class Leads extends React.PureComponent {
         newLeads.push({
             id: newLeadId,
 
-            type,
             serverId,
             values,
 

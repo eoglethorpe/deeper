@@ -203,45 +203,36 @@ export default class Login extends React.PureComponent {
                         elements={this.elements}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
-                        validation={this.validation}
                         validations={this.validations}
+                        value={formValues}
+                        error={formFieldErrors}
                     >
                         { pending && <LoadingAnimation /> }
                         <NonFieldErrors errors={formErrors} />
                         <TextInput
-                            error={formFieldErrors.firstname}
                             formname="firstname"
-                            value={formValues.firstname}
                             label={this.props.loginStrings('firstNameLabel')}
                             placeholder={this.props.loginStrings('firstNamePlaceholder')}
                             autoFocus
                         />
                         <TextInput
-                            error={formFieldErrors.lastname}
                             formname="lastname"
-                            value={formValues.lastname}
                             label={this.props.loginStrings('lastNameLabel')}
                             placeholder={this.props.loginStrings('lastNamePlaceholder')}
                         />
                         <TextInput
-                            error={formFieldErrors.organization}
                             formname="organization"
-                            value={formValues.organization}
                             label={this.props.loginStrings('organizationLabel')}
                             placeholder={this.props.loginStrings('organizationPlaceholder')}
                         />
                         <TextInput
-                            error={formFieldErrors.email}
                             formname="email"
-                            value={formValues.email}
                             label={this.props.loginStrings('emailLabel')}
                             placeholder={this.props.loginStrings('emailPlaceholder')}
                         />
                         <TextInput
-                            error={formFieldErrors.password}
                             formname="password"
                             hint={this.props.loginStrings('passwordHint')}
-                            value={formValues.password}
                             label={this.props.loginStrings('passwordLabel')}
                             required
                             type="password"

@@ -163,41 +163,39 @@ export default class PasswordReset extends React.PureComponent {
             <div styleName="reset-password">
                 <div styleName="form-container">
                     {
-                        resetSuccess ?
+                        resetSuccess ? (
                             <div styleName="info">
                                 <p>
                                     {this.props.loginStrings('checkInboxText')}
                                     {formValues.email || this.props.loginStrings('emailPlaceholder')}
                                 </p>
                             </div>
-                            :
+                        ) : (
                             <Form
                                 styleName="reset-password-form"
                                 changeCallback={this.changeCallback}
                                 elements={this.elements}
                                 failureCallback={this.failureCallback}
                                 successCallback={this.successCallback}
-                                validation={this.validation}
                                 validations={this.validations}
+                                value={formValues}
+                                error={formFieldErrors}
                             >
                                 { pending && <LoadingAnimation /> }
                                 <NonFieldErrors errors={formErrors} />
                                 <TextInput
                                     disabled={pending}
-                                    error={formFieldErrors.email}
                                     formname="email"
-                                    value={formValues.email}
                                     label={this.props.loginStrings('emailLabel')}
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
                                 />
                                 <div styleName="action-buttons">
-                                    <PrimaryButton
-                                        disabled={pending}
-                                    >
+                                    <PrimaryButton disabled={pending}>
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
                             </Form>
+                        )
                     }
                     <div styleName="go-back-container">
                         <Link

@@ -86,6 +86,8 @@ export default class ProjectAfForm extends React.PureComponent {
                 successCallback={successCallback}
                 validation={this.validation}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { !readOnly &&
                     <div styleName="action-buttons">
@@ -109,8 +111,6 @@ export default class ProjectAfForm extends React.PureComponent {
                     formname="title"
                     placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
                     styleName="name"
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                     disabled={pending}
                     readOnly={readOnly}
                 />
@@ -120,8 +120,6 @@ export default class ProjectAfForm extends React.PureComponent {
                     placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
                     styleName="description"
                     rows={3}
-                    value={formValues.description}
-                    error={formFieldErrors.description}
                     disabled={pending}
                     readOnly={readOnly}
                 />

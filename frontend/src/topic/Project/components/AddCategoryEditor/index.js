@@ -182,6 +182,8 @@ export default class AddCategoryEditor extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
                 onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -189,8 +191,6 @@ export default class AddCategoryEditor extends React.PureComponent {
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                     autoFocus
                 />
                 <div styleName="action-buttons">

@@ -295,17 +295,12 @@ export default class UserEdit extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
-                {/*
-                    TODO: Pass image src to ImageInput using advanced File Component
-                */}
-                <HiddenInput
-                    formname="displayPicture"
-                    value={formValues.displayPicture}
-                    error={formFieldErrors.displayPicture}
-                />
+                <HiddenInput formname="displayPicture" />
                 {
                     showGalleryImage && (
                         <DeepGallery
@@ -326,8 +321,6 @@ export default class UserEdit extends React.PureComponent {
                     label={this.props.userStrings('firstNameLabel')}
                     formname="firstName"
                     placeholder={this.props.userStrings('firstNamePlaceholder')}
-                    value={formValues.firstName}
-                    error={formFieldErrors.firstName}
                     disabled={pending}
                     autoFocus
                 />
@@ -335,16 +328,12 @@ export default class UserEdit extends React.PureComponent {
                     label={this.props.userStrings('lastNameLabel')}
                     formname="lastName"
                     placeholder={this.props.userStrings('lastNamePlaceholder')}
-                    value={formValues.lastName}
-                    error={formFieldErrors.lastName}
                     disabled={pending}
                 />
                 <TextInput
                     label={this.props.userStrings('organizationLabel')}
                     formname="organization"
                     placeholder={this.props.userStrings('organizationPlaceholder')}
-                    value={formValues.organization}
-                    error={formFieldErrors.organization}
                     disabled={pending}
                 />
                 <div styleName="action-buttons">

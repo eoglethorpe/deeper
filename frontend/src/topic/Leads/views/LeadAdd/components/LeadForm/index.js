@@ -193,6 +193,8 @@ export default class LeadForm extends React.PureComponent {
                 styleName="add-lead-form"
                 successCallback={onSuccess}
                 validations={this.validations}
+                error={fieldErrors}
+                value={values}
             >
                 {
                     (isFormLoading || isExtractionLoading) && <LoadingAnimation />
@@ -202,10 +204,7 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <NonFieldErrors errors={errors} />
                 </header>
-                <HiddenInput
-                    formname="sourceType"
-                    value={type}
-                />
+                <HiddenInput formname="sourceType" />
                 {
                     type === LEAD_TYPE.website && [
                         <ExtractThis
@@ -215,23 +214,19 @@ export default class LeadForm extends React.PureComponent {
                             onClick={onExtractClick}
                         >
                             <TextInput
-                                error={fieldErrors.url}
                                 formname="url"
                                 label={this.props.leadsStrings('urlLabel')}
                                 placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
-                                value={values.url}
                                 disabled={isFormDisabled}
                                 autoFocus
                             />
                         </ExtractThis>,
                         <TextInput
-                            error={fieldErrors.website}
                             formname="website"
                             key="website"
                             label={this.props.leadsStrings('websiteLabel')}
                             placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
                             styleName="website"
-                            value={values.website}
                             disabled={isFormDisabled}
                         />,
                     ]
@@ -239,20 +234,17 @@ export default class LeadForm extends React.PureComponent {
                 {
                     type === LEAD_TYPE.text &&
                         <TextArea
-                            error={fieldErrors.text}
                             formname="text"
                             label={this.props.leadsStrings('textLabel')}
                             placeholder={this.props.leadsStrings('textareaPlaceholderLabel')}
                             rows="3"
                             styleName="text"
-                            value={values.text}
                             disabled={isFormDisabled}
                             autoFocus
                         />
                 }
                 <SelectInput
                     disabled
-                    error={fieldErrors.project}
                     formname="project"
                     keySelector={this.keySelector}
                     label={this.props.leadsStrings('projectLabel')}
@@ -262,18 +254,15 @@ export default class LeadForm extends React.PureComponent {
                     showHintAndError
                     showLabel
                     styleName="project"
-                    value={values.project}
                 />
                 <div
                     styleName="line-break"
                 />
                 <TextInput
                     styleName="title"
-                    error={fieldErrors.title}
                     formname="title"
                     label={this.props.leadsStrings('titleLabel')}
                     placeholder={this.props.leadsStrings('titlePlaceHolderLabel')}
-                    value={values.title}
                     disabled={isFormDisabled}
                 />
 
@@ -285,11 +274,9 @@ export default class LeadForm extends React.PureComponent {
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 >
                     <TextInput
-                        error={fieldErrors.source}
                         formname="source"
                         label={this.props.leadsStrings('publisherLabel')}
                         placeholder={this.props.leadsStrings('publisherPlaceHolderLabel')}
-                        value={values.source}
                         disabled={isFormDisabled}
                     />
                 </ApplyAll>
@@ -301,7 +288,6 @@ export default class LeadForm extends React.PureComponent {
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 >
                     <SelectInput
-                        error={fieldErrors.confidentiality}
                         formname="confidentiality"
                         keySelector={this.keySelector}
                         label={this.props.leadsStrings('confidentialityLabel')}
@@ -310,7 +296,6 @@ export default class LeadForm extends React.PureComponent {
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
-                        value={values.confidentiality}
                         disabled={isFormDisabled}
                     />
                 </ApplyAll>
@@ -323,7 +308,6 @@ export default class LeadForm extends React.PureComponent {
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 >
                     <MultiSelectInput
-                        error={fieldErrors.assignee}
                         formname="assignee"
                         keySelector={this.keySelector}
                         label={this.props.leadsStrings('assigneeLabel')}
@@ -332,7 +316,6 @@ export default class LeadForm extends React.PureComponent {
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
-                        value={values.assignee}
                         disabled={isFormDisabled}
                     />
                 </ApplyAll>
@@ -345,11 +328,9 @@ export default class LeadForm extends React.PureComponent {
                     onApplyAllBelowClick={this.handleApplyAllBelowClick}
                 >
                     <DateInput
-                        error={fieldErrors.publishedOn}
                         formname="publishedOn"
                         label={this.props.leadsStrings('datePublishedLabel')}
                         placeholder={this.props.leadsStrings('datePublishedPlaceholderLabel')}
-                        value={values.publishedOn}
                         disabled={isFormDisabled}
                     />
                 </ApplyAll>

@@ -295,14 +295,14 @@ export default class Login extends React.PureComponent {
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
                         validations={this.validations}
+                        value={formValues}
+                        error={formFieldErrors}
                     >
                         { pending && <LoadingAnimation /> }
                         <NonFieldErrors errors={formErrors} />
                         <TextInput
                             disabled={pending}
-                            error={formFieldErrors.email}
                             formname="email"
-                            value={formValues.email}
                             label={this.props.loginStrings('emailLabel')}
                             // FIXME: use strings
                             placeholder="john.doe@mail.com"
@@ -310,9 +310,7 @@ export default class Login extends React.PureComponent {
                         />
                         <TextInput
                             disabled={pending}
-                            error={formFieldErrors.password}
                             formname="password"
-                            value={formValues.password}
                             label={this.props.loginStrings('passwordLabel')}
                             // FIXME: use strings
                             placeholder="**********"

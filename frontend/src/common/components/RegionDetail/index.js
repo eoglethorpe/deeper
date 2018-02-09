@@ -272,6 +272,8 @@ export default class RegionDetail extends React.PureComponent {
                 validations={this.validations}
                 className={className}
                 styleName="region-detail-form"
+                error={formFieldErrors}
+                value={formValues}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
@@ -293,68 +295,52 @@ export default class RegionDetail extends React.PureComponent {
                 </header>
                 <div styleName="input-container">
                     <TextInput
-                        error={formFieldErrors.countryCode}
                         formname="countryCode"
                         label={this.props.countriesStrings('countryCodeLabel')}
                         placeholder={this.props.countriesStrings('countryCodePlaceholder')}
                         styleName="text-input"
-                        value={formValues.countryCode}
                     />
                     <TextInput
-                        error={formFieldErrors.countryName}
                         formname="countryName"
                         label={this.props.countriesStrings('countryNameLabel')}
                         placeholder={this.props.countriesStrings('countryNamePlaceholder')}
                         styleName="text-input"
-                        value={formValues.countryName}
                     />
                     <TextInput
-                        error={formFieldErrors.wbRegion}
                         formname="wbRegion"
                         label={this.props.countriesStrings('wbRegionLabel')}
                         placeholder={this.props.countriesStrings('wbRegionPlaceholer')}
                         styleName="text-input"
-                        value={formValues.wbRegion}
                     />
                     <TextInput
-                        error={formFieldErrors.wbIncomeRegion}
                         formname="wbIncomeRegion"
                         label={this.props.countriesStrings('wbIncomeRegionLabel')}
                         placeholder={this.props.countriesStrings('wbIncomeRegionPlaceholder')}
                         styleName="text-input"
-                        value={formValues.wbIncomeRegion}
                     />
                     <TextInput
-                        error={formFieldErrors.ochaRegion}
                         formname="ochaRegion"
                         label={this.props.countriesStrings('ochaRegionLabel')}
                         placeholder={this.props.countriesStrings('ochaRegionPlaceholder')}
                         styleName="text-input"
-                        value={formValues.ochaRegion}
                     />
                     <TextInput
-                        error={formFieldErrors.echoRegion}
                         formname="echoRegion"
                         label={this.props.countriesStrings('echoRegionLabel')}
                         placeholder={this.props.countriesStrings('echoRegionPlaceholder')}
                         styleName="text-input"
-                        value={formValues.echoRegion}
                     />
                     <TextInput
-                        error={formFieldErrors.unGeoRegion}
                         formname="unGeoRegion"
                         label={this.props.countriesStrings('unGeoRegionLabel')}
                         placeholder={this.props.countriesStrings('unGeoRegionPlaceholer')}
                         styleName="text-input"
-                        value={formValues.unGeoRegion}
                     />
                     <TextInput
-                        error={formFieldErrors.unGeoSubregion}
                         formname="unGeoSubregion"
                         label={this.props.countriesStrings('unGeoSubregionLabel')}
                         placeholder={this.props.countriesStrings('unGeoSubregionPlaceholer')}
                         styleName="text-input"
-                        value={formValues.unGeoSubregion}
                     />
                 </div>
             </Form>

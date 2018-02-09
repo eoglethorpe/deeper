@@ -269,6 +269,8 @@ export default class CountryKeyFigures extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
@@ -310,31 +312,23 @@ export default class CountryKeyFigures extends React.PureComponent {
                         min="0"
                         max="1"
                         formname="index"
-                        value={formValues.index}
-                        error={formFieldErrors.index}
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoRankLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoRank"
-                        value={formValues.geoRank}
-                        error={formFieldErrors.geoRank}
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoScoreLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoScore"
-                        value={formValues.geoScore}
-                        error={formFieldErrors.geoScore}
                     />
                     <TextInput
                         label={this.props.countriesStrings('rankLabel')}
                         styleName="text-input"
                         formname="rank"
-                        value={formValues.rank}
-                        error={formFieldErrors.rank}
                     />
                 </div>
                 <div styleName="section">
@@ -357,8 +351,6 @@ export default class CountryKeyFigures extends React.PureComponent {
                         label={this.props.countriesStrings('u5mLabel')}
                         styleName="text-input"
                         formname="u5m"
-                        value={formValues.u5m}
-                        error={formFieldErrors.u5m}
                         type="number"
                     />
                     <TextInput
@@ -366,8 +358,6 @@ export default class CountryKeyFigures extends React.PureComponent {
                         styleName="text-input"
                         readOnly
                         formname="geoScoreU5m"
-                        value={formValues.geoScoreU5m}
-                        error={formFieldErrors.geoScoreU5m}
                     />
                 </div>
                 <div styleName="section">
@@ -389,38 +379,28 @@ export default class CountryKeyFigures extends React.PureComponent {
                         label={this.props.countriesStrings('numberOfRefugeesLabel')}
                         styleName="text-input"
                         formname="numberOfRefugees"
-                        value={formValues.numberOfRefugees}
-                        error={formFieldErrors.numberOfRefugees}
                     />
                     <TextInput
                         label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
                         styleName="text-input"
                         readOnly
                         formname="percentageUprootedPeople"
-                        value={formValues.percentageUprootedPeople}
-                        error={formFieldErrors.percentageUprootedPeople}
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoScoreLabel')}
                         styleName="text-input"
                         readOnly
                         formname="geoScoreUprooted"
-                        value={formValues.geoScoreUprooted}
-                        error={formFieldErrors.geoScoreUprooted}
                     />
                     <TextInput
                         label={this.props.countriesStrings('numberIdpLabel')}
                         styleName="text-input"
                         formname="numberIdp"
-                        value={formValues.numberIdp}
-                        error={formFieldErrors.numberIdp}
                     />
                     <TextInput
                         label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
                         styleName="text-input"
                         formname="numberReturnedRefugees"
-                        value={formValues.numberReturnedRefugees}
-                        error={formFieldErrors.numberReturnedRefugees}
                     />
                 </div>
                 <div styleName="section">
@@ -442,36 +422,26 @@ export default class CountryKeyFigures extends React.PureComponent {
                         label={this.props.countriesStrings('riskClassLabel')}
                         styleName="text-input"
                         formname="riskClass"
-                        value={formValues.riskClass}
-                        error={formFieldErrors.riskClass}
                     />
                     <TextInput
                         label={this.props.countriesStrings('informRiskIndexLabel')}
                         styleName="text-input"
                         formname="informRiskIndex"
-                        value={formValues.informRiskIndex}
-                        error={formFieldErrors.informRiskIndex}
                     />
                     <TextInput
                         label={this.props.countriesStrings('hazardAndExposureLabel')}
                         styleName="text-input"
                         formname="hazardAndExposure"
-                        value={formValues.hazardAndExposure}
-                        error={formFieldErrors.hazardAndExposure}
                     />
                     <TextInput
                         label={this.props.countriesStrings('vulnerabilityLabel')}
                         styleName="text-input"
                         formname="vulnerability"
-                        value={formValues.vulnerability}
-                        error={formFieldErrors.vulnerability}
                     />
                     <TextInput
                         label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
                         styleName="text-input"
                         formname="lackOfCopingCapacity"
-                        value={formValues.lackOfCopingCapacity}
-                        error={formFieldErrors.lackOfCopingCapacity}
                     />
                 </div>
             </Form>

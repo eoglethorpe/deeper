@@ -211,6 +211,8 @@ export default class UserProjectAdd extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -218,8 +220,6 @@ export default class UserProjectAdd extends React.PureComponent {
                     label={this.props.userStrings('addProjectModalLabel')}
                     formname="title"
                     placeholder={this.props.userStrings('addProjectModalPlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                     disabled={pending}
                     autoFocus
                 />

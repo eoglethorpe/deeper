@@ -366,6 +366,8 @@ export default class EditAdminLevel extends React.PureComponent {
                     successCallback={this.successCallback}
                     elements={this.elements}
                     validations={this.validations}
+                    value={formValues}
+                    error={formFieldErrors}
                 >
                     {
                         pending && <LoadingAnimation />
@@ -373,60 +375,48 @@ export default class EditAdminLevel extends React.PureComponent {
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="admin-level-details" >
                         <TextInput
-                            value={formValues.level}
                             formname="level"
                             label={this.props.countriesStrings('adminLevelLabel')}
                             placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
                             styleName="text-input"
                             type="number"
-                            error={formFieldErrors.level}
                             disabled={pending}
                             min={0}
                             autoFocus
                         />
                         <TextInput
-                            value={formValues.title}
                             formname="title"
                             label={this.props.countriesStrings('adminLevelNameLabel')}
                             placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.title}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.nameProp || undefined}
                             formname="nameProp"
                             label={this.props.countriesStrings('namePropertyLabel')}
                             placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.nameProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.codeProp || undefined}
                             formname="codeProp"
                             label={this.props.countriesStrings('pcodePropertyLabel')}
                             placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.codeProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.parentNameProp || undefined}
                             formname="parentNameProp"
                             label={this.props.countriesStrings('parentNamePropLabel')}
                             placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parentNameProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.parentCodeProp || undefined}
                             formname="parentCodeProp"
                             label={this.props.countriesStrings('parentCodePropLabel')}
                             placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parentCodeProp}
                             disabled={pending}
                         />
                         <SelectInput
@@ -435,12 +425,10 @@ export default class EditAdminLevel extends React.PureComponent {
                             options={adminLevelsOfRegion}
                             optionsIdentifier="select-input-inside-modal"
                             showHintAndError={false}
-                            value={formValues.parent || undefined}
                             formname="parent"
                             label={this.props.countriesStrings('parentAdminLevelLabel')}
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parent}
                             disabled={pending}
                         />
                         <FileInput
@@ -451,23 +439,24 @@ export default class EditAdminLevel extends React.PureComponent {
                             accept=".zip, .json, .geojson"
                         >
                             {
-                                formValues.geoShapeFile ?
+                                formValues.geoShapeFile ? (
                                     <span styleName="show">
                                         <i className={iconNames.documentText} />
                                         {this.props.countriesStrings('geoShapeFile')}
                                     </span>
-                                    :
+                                ) : (
                                     <span styleName="load">
                                         <i className={iconNames.uploadFa} />
                                         {this.props.countriesStrings('loadGeoShapeFile')}
                                     </span>
+                                )
                             }
-                            <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
+                            <DeepGallery
+                                onlyFileName
+                                galleryId={formValues.geoShapeFile}
+                            />
                         </FileInput>
-                        <HiddenInput
-                            value={formValues.geoShapeFile}
-                            formname="geoShapeFile"
-                        />
+                        <HiddenInput formname="geoShapeFile" />
                     </div>
                     <div styleName="action-buttons">
                         <DangerButton

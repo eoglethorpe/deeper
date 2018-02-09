@@ -102,11 +102,10 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: LEAD_TYPE.drive,
-
                 values: {
                     title: doc.name,
                     project: activeProject,
+                    sourceType: LEAD_TYPE.drive,
                 },
 
                 pristine: false,
@@ -140,11 +139,10 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: LEAD_TYPE.dropbox,
-
                 values: {
                     title: doc.name,
                     project: activeProject,
+                    sourceType: LEAD_TYPE.dropbox,
                 },
 
                 pristine: false,
@@ -188,11 +186,10 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                type: LEAD_TYPE.file,
-
                 values: {
                     title: file.name,
                     project: activeProject,
+                    sourceType: LEAD_TYPE.file,
                 },
 
                 pristine: false,
@@ -217,11 +214,10 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            type: LEAD_TYPE.website,
-
             values: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
                 project: activeProject,
+                sourceType: LEAD_TYPE.website,
             },
 
             pristine: false,
@@ -239,11 +235,10 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            type: LEAD_TYPE.text,
-
             values: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
                 project: activeProject,
+                sourceType: LEAD_TYPE.text,
             },
 
             pristine: false,
