@@ -376,7 +376,7 @@ export default class Navbar extends React.PureComponent {
                         to="https://chrome.google.com/webstore/detail/deep-2-add-lead/kafonkgglonkbldmcigbdojiadfcmcdc"
                     >
                         <span className={`${styles.icon} ${iconNames.chrome}`} />
-                        Extension
+                        { this.props.pageTitleStrings('browserExtension') }
                     </Link>
                     <Cloak
                         requireLogin
