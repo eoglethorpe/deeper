@@ -4,18 +4,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { bound } from '../../../../public/utils/common';
-import {
-    PrimaryButton,
-    DangerButton,
-} from '../../../../public/components/Action';
-import {
-    TextInput,
-    TextArea,
-} from '../../../../public/components/Input';
-import {
-    ListView,
-    Confirm,
-} from '../../../../public/components/View';
+import ListView from '../../../../public/components/View/List/ListView';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import TextInput from '../../../../public/components/Input/TextInput';
+import TextArea from '../../../../public/components/Input/TextArea';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
 
 import {
     selectedSubcategorySelector,

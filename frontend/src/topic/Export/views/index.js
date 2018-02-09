@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../public/utils/rest';
-import { AccentButton } from '../../../public/components/Action';
-import {
-    Table,
-    LoadingAnimation,
-    FormattedDate,
-} from '../../../public/components/View';
-import update from '../../../public/utils/immutable-update';
 import { isFalsy, listToMap } from '../../../public/utils/common';
-import { iconNames } from '../../../common/constants';
+import update from '../../../public/utils/immutable-update';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import AccentButton from '../../../public/components/Action/Button/AccentButton';
+import Table from '../../../public/components/View/Table';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import FormattedDate from '../../../public/components/View/FormattedDate';
+
+import ExportPreview from '../../../common/components/ExportPreview';
 import {
     createUrlForProject,
     createUrlForAnalysisFramework,
@@ -22,9 +21,6 @@ import {
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
-import notify from '../../../common/notify';
-import schema from '../../../common/schema';
-
 import {
     entriesViewFilterSelector,
     analysisFrameworkForProjectSelector,
@@ -34,14 +30,15 @@ import {
     setProjectAction,
     exportStringsSelector,
 } from '../../../common/redux';
-
-
-import ExportHeader from './components/ExportHeader';
-import ExportTypePane from './components/ExportTypePane';
+import { iconNames } from '../../../common/constants';
+import notify from '../../../common/notify';
+import schema from '../../../common/schema';
 
 import FilterLeadsForm from '../../Leads/views/Leads/components/FilterLeadsForm';
 import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
-import ExportPreview from '../../../common/components/ExportPreview';
+
+import ExportHeader from './components/ExportHeader';
+import ExportTypePane from './components/ExportTypePane';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({

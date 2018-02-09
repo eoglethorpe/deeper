@@ -3,23 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ListView,
-    SortableList,
-} from '../../../../../public/components/View';
-import {
-    DangerButton,
-    Button,
-    PrimaryButton,
-} from '../../../../../public/components/Action';
-import {
-    TextInput,
-    ColorInput,
-} from '../../../../../public/components/Input';
+import ColorInput from '../../../../../public/components/Input/ColorInput';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
+import ListView from '../../../../../public/components/View/List/ListView';
+import SortableList from '../../../../../public/components/View/SortableList';
 
 import { iconNames } from '../../../../../common/constants';
 

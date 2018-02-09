@@ -6,17 +6,16 @@ import { Link } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
-import {
-    SunBurstView,
-    ChordDiagramView,
-    TreeMapView,
-    CorrelationMatrixView,
-    ForceDirectedGraphView,
-    CollapsibleTreeView,
-    RadialDendrogramView,
-    GeoReferencedMap,
-} from '../../../../public/components/Visualization';
-import { FormattedDate } from '../../../../public/components/View';
+
+import SunBurstView from '../../../../public/components/Visualization/SunBurstView';
+import ChordDiagramView from '../../../../public/components/Visualization/ChordDiagramView';
+import TreeMapView from '../../../../public/components/Visualization/TreeMapView';
+import CorrelationMatrixView from '../../../../public/components/Visualization/CorrelationMatrixView';
+import ForceDirectedGraphView from '../../../../public/components/Visualization/ForceDirectedGraphView';
+import CollapsibleTreeView from '../../../../public/components/Visualization/CollapsibleTreeView';
+import RadialDendrogramView from '../../../../public/components/Visualization/RadialDendrogramView';
+import GeoReferencedMap from '../../../../public/components/Visualization/GeoReferencedMap';
+import FormattedDate from '../../../../public/components/View/FormattedDate';
 
 import {
     urlForLeadTopicModeling,
@@ -40,17 +39,12 @@ import {
     forceDirectedDataSelector,
     geoPointsDataSelector,
 } from '../../../../common/redux';
-
 import schema from '../../../../common/schema';
-
-import {
-    pathNames,
-} from '../../../../common/constants/';
-
 import notify from '../../../../common/notify';
+import { pathNames } from '../../../../common/constants/';
 
+// TODO: move this to common
 import FilterLeadsForm from '../Leads/components/FilterLeadsForm';
-
 import styles from './styles.scss';
 
 const propTypes = {

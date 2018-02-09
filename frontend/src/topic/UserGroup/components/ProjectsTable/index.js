@@ -4,31 +4,21 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-    Confirm,
-    Table,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    FormattedDate,
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    TextInput,
-} from '../../../../public/components/Input';
-import {
-    PrimaryButton,
-    DangerButton,
-} from '../../../../public/components/Action';
-import { FgRestBuilder } from '../../../../public/utils/rest';
-import {
     reverseRoute,
     caseInsensitiveSubmatch,
 } from '../../../../public/utils/common';
+import { FgRestBuilder } from '../../../../public/utils/rest';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import FormattedDate from '../../../../public/components/View/FormattedDate';
+import Modal from '../../../../public/components/View/Modal';
+import ModalBody from '../../../../public/components/View/Modal/Body';
+import ModalHeader from '../../../../public/components/View/Modal/Header';
+import Table from '../../../../public/components/View/Table';
+import TextInput from '../../../../public/components/Input/TextInput';
 
-import {
-    iconNames,
-    pathNames,
-} from '../../../../common/constants';
 import {
     userGroupProjectSelector,
     setUserProjectsAction,
@@ -43,7 +33,10 @@ import {
     createParamsForProjectDelete,
     createUrlForProject,
 } from '../../../../common/rest';
-
+import {
+    iconNames,
+    pathNames,
+} from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
 

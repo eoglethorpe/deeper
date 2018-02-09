@@ -3,24 +3,22 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
+import AccentButton from '../../../public/components/Action/Button/AccentButton';
+import TextInput from '../../../public/components/Input/TextInput';
+import { FgRestBuilder } from '../../../public/utils/rest';
+
+import Screenshot from '../../components/Screenshot';
 
 import {
     createUrlForGalleryFile,
     createHeaderForGalleryFile,
-} from '../../../common/rest';
-
-import { commonStringsSelector } from '../../../common/redux';
-import { iconNames } from '../../../common/constants';
-
-import Screenshot from '../../../common/components/Screenshot';
-
-import { AccentButton } from '../../../public/components/Action';
-import { TextInput } from '../../../public/components/Input';
-import { FgRestBuilder } from '../../../public/utils/rest';
+} from '../../rest';
+import { commonStringsSelector } from '../../redux';
+import { iconNames } from '../../constants';
 
 import GalleryImage, { supportedMimeType as GalleryImageMimeType } from './components/GalleryImage';
 import GalleryDocs, { supportedMimeType as GalleryDocsMimeType } from './components/GalleryDocs';
+import styles from './styles.scss';
 
 export const ComponentType = {
     IMAGE: 'image',

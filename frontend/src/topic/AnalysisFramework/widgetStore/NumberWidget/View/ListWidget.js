@@ -2,9 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    Numeral,
-} from '../../../../../public/components/View';
+import Numeral from '../../../../../public/components/View/Numeral';
 
 import styles from './styles.scss';
 

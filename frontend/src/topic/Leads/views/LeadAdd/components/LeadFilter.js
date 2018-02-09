@@ -8,14 +8,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import schema from '../../../../../common/schema';
-import {
-    MultiSelectInput,
-    SelectInput,
-    TextInput,
-} from '../../../../../public/components/Input';
-import { DangerButton } from '../../../../../public/components/Action';
 import { BgRestBuilder } from '../../../../../public/utils/rest';
+import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
+import SelectInput from '../../../../../public/components/Input/SelectInput';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
 
 import {
     activeProjectSelector,
@@ -34,6 +31,7 @@ import {
     LEAD_TYPE,
     LEAD_FILTER_STATUS,
 } from '../../../../../common/entities/lead';
+import schema from '../../../../../common/schema';
 
 import styles from '../styles.scss';
 

@@ -3,22 +3,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-
-import GeoJsonMap from '../GeoJsonMap';
-
 import { FgRestBuilder } from '../../../public/utils/rest';
+import SegmentButton from '../../../public/components/Action/SegmentButton';
+import Button from '../../../public/components/Action/Button';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
-import {
-    Button,
-    SegmentButton,
-} from '../../../public/components/Action';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-
-import { iconNames } from '../../constants';
-import { commonStringsSelector } from '../../redux';
 import {
     createParamsForAdminLevelsForRegionGET,
     createUrlForAdminLevelsForRegion,
@@ -26,6 +15,11 @@ import {
     createUrlForGeoJsonMap,
     createUrlForGeoJsonBounds,
 } from '../../rest';
+import { commonStringsSelector } from '../../redux';
+import { iconNames } from '../../constants';
+import GeoJsonMap from '../GeoJsonMap';
+
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

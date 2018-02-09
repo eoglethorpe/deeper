@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { AccentButton } from '../../../../../../public/components/Action';
-import { leadsStringsSelector } from '../../../../../../common/redux';
+import AccentButton from '../../../../../../public/components/Action/Button/AccentButton';
 
-import {
-    iconNames,
-} from '../../../../../../common/constants';
+import { leadsStringsSelector } from '../../../../../../common/redux';
+import { iconNames } from '../../../../../../common/constants';
 
 import styles from './styles.scss';
 

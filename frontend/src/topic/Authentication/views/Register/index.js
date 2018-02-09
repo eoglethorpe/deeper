@@ -11,30 +11,26 @@ import {
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    emailCondition,
-    lengthGreaterThanCondition,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import { PrimaryButton } from '../../../../public/components/Action';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import Form, {
+    requiredCondition,
+    emailCondition,
+    lengthGreaterThanCondition,
+} from '../../../../public/components/Input/Form';
 
-import { loginStringsSelector } from '../../../../common/redux';
-import { pathNames } from '../../../../common/constants';
-import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../../../common/rest';
+import { loginStringsSelector } from '../../../../common/redux';
+import { pathNames } from '../../../../common/constants';
+import schema from '../../../../common/schema';
 
 import styles from './styles.scss';
 

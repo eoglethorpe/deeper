@@ -4,19 +4,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    Form,
-    TextInput,
-    NonFieldErrors,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Form from '../../../../public/components/Input/Form';
+import TextInput from '../../../../public/components/Input/TextInput';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+
 import {
     transformResponseErrorToFormError,
     createParamsForRegionPatch,
@@ -25,13 +19,13 @@ import {
     createParamsForUser,
 } from '../../../../common/rest';
 import {
-    iconNames,
-} from '../../../../common/constants';
-import {
     countryDetailSelector,
     setRegionDetailsAction,
     countriesStringsSelector,
 } from '../../../../common/redux';
+import { iconNames } from '../../../../common/constants';
+import schema from '../../../../common/schema';
+
 import styles from './styles.scss';
 
 const propTypes = {

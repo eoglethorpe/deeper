@@ -6,23 +6,16 @@ import { connect } from 'react-redux';
 
 import { reverseRoute } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import {
-    Button,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import notify from '../../../../common/notify';
+import Button from '../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
 
-import {
-    pathNames,
-} from '../../../../common/constants';
-import {
-    exportStringsSelector,
-} from '../../../../common/redux';
 import {
     urlForExportTrigger,
     createParamsForExportTrigger,
 } from '../../../../common/rest';
-
+import { pathNames } from '../../../../common/constants';
+import { exportStringsSelector } from '../../../../common/redux';
+import notify from '../../../../common/notify';
 
 import styles from '../styles.scss';
 

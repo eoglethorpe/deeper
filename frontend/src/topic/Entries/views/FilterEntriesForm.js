@@ -2,20 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isObjectEmpty } from '../../../public/utils/common';
-import {
-    TextInput,
-    DateFilter,
-    RangeFilter,
-    MultiSelectInput,
-} from '../../../public/components/Input';
-import {
-    Button,
-    DangerButton,
-} from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import schema from '../../../common/schema';
-import notify from '../../../common/notify';
+import { isObjectEmpty } from '../../../public/utils/common';
+import TextInput from '../../../public/components/Input/TextInput';
+import DateFilter from '../../../public/components/Input/DateFilter';
+import RangeFilter from '../../../public/components/Input/RangeFilter';
+import MultiSelectInput from '../../../public/components/Input/SelectInput/MultiSelectInput';
+import Button from '../../../public/components/Action/Button';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
 
 import {
     activeProjectSelector,
@@ -39,7 +33,8 @@ import {
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
-
+import schema from '../../../common/schema';
+import notify from '../../../common/notify';
 import GeoSelection from '../../../common/components/GeoSelection';
 
 const mapStateToProps = (state, props) => ({

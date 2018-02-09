@@ -6,14 +6,12 @@ import {
     Link,
 } from 'react-router-dom';
 
-import {
-    Table,
-    FormattedDate,
-    LoadingAnimation,
-} from '../../../public/components/View';
-import {
-    reverseRoute,
-} from '../../../public/utils/common';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import { reverseRoute } from '../../../public/utils/common';
+import Table from '../../../public/components/View/Table';
+import FormattedDate from '../../../public/components/View/FormattedDate';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+
 import {
     createUrlForExport,
     createParamsForUserExportsGET,
@@ -21,7 +19,6 @@ import {
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
-
 import {
     userExportsListSelector,
     setUserExportsAction,
@@ -30,17 +27,14 @@ import {
     projectIdFromRouteSelector,
     exportStringsSelector,
 } from '../../../common/redux';
-
-import schema from '../../../common/schema';
-import notify from '../../../common/notify';
-import ExportPreview from '../../../common/components/ExportPreview';
 import {
     pathNames,
     iconNames,
 } from '../../../common/constants';
-
 import { leadTypeIconMap } from '../../../common/entities/lead';
-import { FgRestBuilder } from '../../../public/utils/rest';
+import schema from '../../../common/schema';
+import notify from '../../../common/notify';
+import ExportPreview from '../../../common/components/ExportPreview';
 
 import styles from './styles.scss';
 

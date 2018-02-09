@@ -8,11 +8,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Button } from '../../../../../public/components/Action';
-import { FileInput } from '../../../../../public/components/Input';
 import { randomString } from '../../../../../public/utils/common';
+import Button from '../../../../../public/components/Action/Button';
+import FileInput from '../../../../../public/components/Input/FileInput';
 
-import notify from '../../../../../common/notify';
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
@@ -21,14 +20,15 @@ import {
 } from '../../../../../common/redux';
 import DropboxChooser from '../../../../../common/components/DropboxChooser';
 import GooglePicker from '../../../../../common/components/GooglePicker';
+import notify from '../../../../../common/notify';
+import { iconNames } from '../../../../../common/constants';
+import { LEAD_TYPE } from '../../../../../common/entities/lead';
 import { dropboxAppKey } from '../../../../../common/config/dropbox';
 import {
     googleDriveClientId,
     googleDriveDeveloperKey,
 } from '../../../../../common/config/google-drive';
-import { iconNames } from '../../../../../common/constants';
 
-import { LEAD_TYPE } from '../../../../../common/entities/lead';
 import styles from '../styles.scss';
 
 const supportedGoogleDriveMimeTypes = [

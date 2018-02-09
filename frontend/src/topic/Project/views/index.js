@@ -5,35 +5,29 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    Modal,
-    ModalBody,
-    ModalHeader,
-    ListView,
-    LoadingAnimation,
-} from '../../../public/components/View';
-import { TextInput } from '../../../public/components/Input';
-import {
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
     reverseRoute,
     caseInsensitiveSubmatch,
 } from '../../../public/utils/common';
+import Modal from '../../../public/components/View/Modal';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ListView from '../../../public/components/View/List/ListView';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import TextInput from '../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 
-import {
-    iconNames,
-    pathNames,
-} from '../../../common/constants';
-import {
-} from '../../../common/rest';
+import UserProjectAdd from '../../../common/components/UserProjectAdd';
 import {
     currentUserAdminProjectsSelector,
     setActiveProjectAction,
     projectIdFromRouteSelector,
     projectStringsSelector,
 } from '../../../common/redux';
+import {
+    iconNames,
+    pathNames,
+} from '../../../common/constants';
 
-import UserProjectAdd from '../../../common/components/UserProjectAdd';
 import ProjectDetails from '../components/ProjectDetails';
 import styles from './styles.scss';
 

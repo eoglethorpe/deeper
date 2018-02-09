@@ -4,35 +4,29 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
-import schema from '../../../common/schema';
-import {
-    DangerButton,
-    SuccessButton,
-} from '../../../public/components/Action';
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import SuccessButton from '../../../public/components/Action/Button/SuccessButton';
+import TextInput from '../../../public/components/Input/TextInput';
+import NonFieldErrors from '../../../public/components/Input/NonFieldErrors';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import Form, {
     requiredCondition,
-} from '../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
+} from '../../../public/components/Input/Form';
 
 import {
     transformResponseErrorToFormError,
     createParamsForRegionPatch,
     createUrlForRegion,
-} from '../../../common/rest';
+} from '../../rest';
 import {
     regionDetailForRegionSelector,
     setRegionDetailsAction,
     countriesStringsSelector,
     notificationStringsSelector,
-} from '../../../common/redux';
+} from '../../redux';
+import schema from '../../schema';
 
 import notify from '../../notify';
-
 
 import styles from './styles.scss';
 

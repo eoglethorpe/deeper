@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-
 const propTypes = {
     className: PropTypes.string,
     text: PropTypes.string.isRequired,

@@ -4,13 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import {
-    Confirm,
-} from '../../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+
 import {
     createParamsForUser,
     createParamsForRegionClone,

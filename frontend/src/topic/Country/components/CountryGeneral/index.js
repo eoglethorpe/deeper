@@ -9,12 +9,10 @@ import {
     createParamsForUser,
     createUrlForRegionWithField,
 } from '../../../../common/rest';
-
 import {
     countryDetailSelector,
     setRegionDetailsAction,
 } from '../../../../common/redux';
-
 import schema from '../../../../common/schema';
 import RegionDetail from '../../../../common/components/RegionDetail';
 import RegionAdminLevel from '../../../../common/components/RegionAdminLevel';

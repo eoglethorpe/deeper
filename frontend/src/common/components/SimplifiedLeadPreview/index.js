@@ -3,18 +3,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-
-import HighlightedText from '../HighlightedText';
 import { FgRestBuilder } from '../../../public/utils/rest';
+import { isFalsy } from '../../../public/utils/common';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+
 import {
     createParamsForGenericGet,
     createUrlForLeadExtractionTrigger,
     createUrlForSimplifiedLeadPreview,
-} from '../../../common/rest';
-import { LoadingAnimation } from '../../../public/components/View';
-import { isFalsy } from '../../../public/utils/common';
-import { commonStringsSelector } from '../../../common/redux';
+} from '../../rest';
+import { commonStringsSelector } from '../../redux';
+
+import HighlightedText from '../HighlightedText';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

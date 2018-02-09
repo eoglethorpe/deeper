@@ -3,33 +3,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSVG from 'react-svg';
 import { connect } from 'react-redux';
-
 import {
     withRouter,
     Link,
     matchPath,
 } from 'react-router-dom';
-import { List } from '../../../public/components/View';
-import {
-    DropdownMenu,
-    DropdownGroup,
-} from '../../../public/components/Action';
-import { SelectInput } from '../../../public/components/Input';
+
+
 import {
     isTruthy,
     reverseRoute,
 } from '../../../public/utils/common';
+import List from '../../../public/components/View/List';
+import DropdownMenu from '../../../public/components/Action/DropdownMenu';
+import DropdownGroup from '../../../public/components/Action/DropdownMenu/Group';
+import SelectInput from '../../../public/components/Input/SelectInput';
 
-import {
-    stopSiloBackgroundTasksAction,
-} from '../../../common/middlewares/siloBackgroundTasks';
-import {
-    stopRefreshAction,
-} from '../../../common/middlewares/refresher';
-import {
-    adminEndpoint,
-} from '../../../common/config/rest';
-
+import { stopSiloBackgroundTasksAction } from '../../../common/middlewares/siloBackgroundTasks';
+import { stopRefreshAction } from '../../../common/middlewares/refresher';
+import { adminEndpoint } from '../../../common/config/rest';
 import {
     logoutAction,
     setActiveProjectAction,
@@ -50,10 +42,9 @@ import {
     validLinks,
     hideNavbar,
 } from '../../constants';
-
-import Cloak from '../Cloak';
 import logo from '../../../img/deep-logo-simplified.svg';
 
+import Cloak from '../Cloak';
 import NavMenu from './NavMenu';
 import styles from './styles.scss';
 

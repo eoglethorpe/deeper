@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    TextArea,
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import SuccessButton from '../../../../public/components/Action/Button/SuccessButton';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import TextArea from '../../../../public/components/Input/TextArea';
+import Form, {
     requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    SuccessButton,
-} from '../../../../public/components/Action';
+} from '../../../../public/components/Input/Form';
 
 import { projectStringsSelector } from '../../../../common/redux';
 

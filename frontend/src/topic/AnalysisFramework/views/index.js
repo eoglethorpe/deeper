@@ -8,12 +8,8 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
-import schema from '../../../common/schema';
 import { FgRestBuilder } from '../../../public/utils/rest';
-
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
 import {
     createParamsForUser,
@@ -27,12 +23,12 @@ import {
     afViewCurrentAnalysisFrameworkSelector,
     notificationStringsSelector,
 } from '../../../common/redux';
-
 import notify from '../../../common/notify';
+import schema from '../../../common/schema';
 
-import styles from './styles.scss';
 import Overview from './Overview';
 import List from './List';
+import styles from './styles.scss';
 
 const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types

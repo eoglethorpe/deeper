@@ -3,16 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    LoadingAnimation,
-} from '../../../public/components/View';
-import {
-    PrimaryButton,
-} from '../../../public/components/Action';
-import styles from './styles.scss';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../public/components/View/Modal';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
 import MembersTable from '../components/MembersTable';
 import ProjectsTable from '../components/ProjectsTable';
@@ -28,17 +24,15 @@ import {
     groupIdFromRouteSelector,
     userStringsSelector,
 } from '../../../common/redux';
-
-import { iconNames } from '../../../common/constants';
-
 import {
     createParamsForUser,
     createUrlForUserGroup,
     createUrlForUsers,
 } from '../../../common/rest';
-
-import { FgRestBuilder } from '../../../public/utils/rest';
+import { iconNames } from '../../../common/constants';
 import schema from '../../../common/schema';
+
+import styles from './styles.scss';
 
 const propTypes = {
     userGroup: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

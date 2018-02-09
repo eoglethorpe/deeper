@@ -2,13 +2,11 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import styles from './styles.scss';
 
-import {
-    Modal,
-} from '../../../public/components/View';
+import Modal from '../../../public/components/View/Modal';
 
 import DeepGallerySelect from './DeepGallerySelect';
+import styles from './styles.scss';
 
 const propTypes = {
     show: PropTypes.bool,

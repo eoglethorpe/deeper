@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from '../../../../public/components/View';
-import {
-    Button,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import { TextInput } from '../../../../public/components/Input';
+import ModalHeader from '../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../public/components/View/Modal/Footer';
+import Button from '../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import TextInput from '../../../../public/components/Input/TextInput';
 
 import { ceStringsSelector } from '../../../../common/redux';
 

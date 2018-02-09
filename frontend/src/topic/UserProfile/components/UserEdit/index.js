@@ -10,26 +10,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DeepGallery from '../../../../common/components/DeepGallery';
 
-import {
-    Form,
-    NonFieldErrors,
-    ImageInput,
-    TextInput,
-    HiddenInput,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { UploadBuilder } from '../../../../public/utils/upload';
+import Form, { requiredCondition } from '../../../../public/components/Input/Form';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import ImageInput from '../../../../public/components/Input/FileInput/ImageInput';
+import TextInput from '../../../../public/components/Input/TextInput';
+import HiddenInput from '../../../../public/components/Input/HiddenInput';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 
-import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForFileUpload,
@@ -42,6 +33,7 @@ import {
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../../common/redux';
+import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';

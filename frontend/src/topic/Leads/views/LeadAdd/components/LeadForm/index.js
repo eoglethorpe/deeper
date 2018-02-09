@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    DateInput,
-    Form,
-    HiddenInput,
-    NonFieldErrors,
-    SelectInput,
-    MultiSelectInput,
-    TextArea,
-    TextInput,
+import Form, {
     requiredCondition,
     urlCondition,
-} from '../../../../../../public/components/Input';
-import { LoadingAnimation } from '../../../../../../public/components/View';
+} from '../../../../../../public/components/Input/Form';
+import NonFieldErrors from '../../../../../../public/components/Input/NonFieldErrors';
+import SelectInput from '../../../../../../public/components/Input/SelectInput';
+import MultiSelectInput from '../../../../../../public/components/Input/SelectInput/MultiSelectInput';
+import TextInput from '../../../../../../public/components/Input/TextInput';
+import TextArea from '../../../../../../public/components/Input/TextArea';
+import HiddenInput from '../../../../../../public/components/Input/HiddenInput';
+import DateInput from '../../../../../../public/components/Input/DateInput';
+import LoadingAnimation from '../../../../../../public/components/View/LoadingAnimation';
 
 import {
     LEAD_TYPE,

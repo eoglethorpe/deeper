@@ -3,34 +3,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import schema from '../../../common/schema';
 import { BgRestBuilder } from '../../../public/utils/rest';
 import { UploadBuilder } from '../../../public/utils/upload';
-
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    Form,
-    TextInput,
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import TextInput from '../../../public/components/Input/TextInput';
+import NonFieldErrors from '../../../public/components/Input/NonFieldErrors';
+import HiddenInput from '../../../public/components/Input/HiddenInput';
+import FileInput from '../../../public/components/Input/FileInput';
+import SelectInput from '../../../public/components/Input/SelectInput';
+import Form, {
+    greaterThanOrEqualToCondition,
     requiredCondition,
     integerCondition,
-    greaterThanOrEqualToCondition,
-    NonFieldErrors,
-    HiddenInput,
-    FileInput,
-    SelectInput,
-} from '../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-import DeepGallery from '../../../common/components/DeepGallery';
+} from '../../../public/components/Input/Form';
 
-import { iconNames } from '../../../common/constants';
-import notify from '../../notify';
-
-
+import DeepGallery from '../../components/DeepGallery';
 import {
     transformResponseErrorToFormError,
     createParamsForAdminLevelsForRegionPOST,
@@ -39,12 +28,16 @@ import {
     createUrlForAdminLevel,
     urlForAdminLevels,
     urlForUpload,
-} from '../../../common/rest';
+} from '../../rest';
 import {
     addAdminLevelForRegionAction,
     countriesStringsSelector,
     notificationStringsSelector,
-} from '../../../common/redux';
+} from '../../redux';
+import schema from '../../schema';
+import { iconNames } from '../../constants';
+
+import notify from '../../notify';
 import styles from './styles.scss';
 
 const propTypes = {

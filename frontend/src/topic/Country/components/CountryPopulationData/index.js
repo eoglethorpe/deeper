@@ -3,23 +3,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Form from '../../../../public/components/Input/Form';
+import TextInput from '../../../../public/components/Input/TextInput';
+
+import { countriesStringsSelector } from '../../../../common/redux';
+
 import styles from './styles.scss';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    Form,
-    TextInput,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-
-import {
-    countriesStringsSelector,
-} from '../../../../common/redux';
-
 
 const propTypes = {
     countriesStrings: PropTypes.func.isRequired,

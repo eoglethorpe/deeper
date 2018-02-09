@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
 
+import ListView from '../../../../../public/components/View/List/ListView';
+
 import MatrixCell from './MatrixCell';
-import {
-    ListView,
-} from '../../../../../public/components/View';
 
 const propTypes = {
     title: PropTypes.string,

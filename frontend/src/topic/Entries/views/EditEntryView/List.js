@@ -4,19 +4,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import {
-    GridLayout,
-    LoadingAnimation,
-    Confirm,
-} from '../../../../public/components/View';
-import {
-    AccentButton,
-    WarningButton,
-    SuccessButton,
-} from '../../../../public/components/Action';
+import GridLayout from '../../../../public/components/View/GridLayout';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import AccentButton from '../../../../public/components/Action/Button/AccentButton';
+import WarningButton from '../../../../public/components/Action/Button/WarningButton';
+import SuccessButton from '../../../../public/components/Action/Button/SuccessButton';
+
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
-import notify from '../../../../common/notify';
 
 import {
     createUrlForGeoOptions,
@@ -34,6 +29,8 @@ import {
 } from '../../../../common/redux';
 import { iconNames } from '../../../../common/constants';
 import { entryAccessor } from '../../../../common/entities/entry';
+import schema from '../../../../common/schema';
+import notify from '../../../../common/notify';
 
 import widgetStore from '../../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';

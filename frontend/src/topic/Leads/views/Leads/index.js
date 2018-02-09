@@ -7,26 +7,21 @@ import {
     Redirect,
 } from 'react-router-dom';
 
-import { FgRestBuilder } from '../../../../public/utils/rest';
-import {
-    Confirm,
-    FormattedDate,
-    LoadingAnimation,
-    Pager,
-    RawTable,
-    TableHeader,
-} from '../../../../public/components/View';
-import {
-    PrimaryButton,
-    AccentButton,
-    Button,
-    DangerButton,
-} from '../../../../public/components/Action';
-
 import {
     reverseRoute,
     randomString,
 } from '../../../../public/utils/common';
+import { FgRestBuilder } from '../../../../public/utils/rest';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import FormattedDate from '../../../../public/components/View/FormattedDate';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Pager from '../../../../public/components/View/Pager';
+import RawTable from '../../../../public/components/View/RawTable';
+import TableHeader from '../../../../public/components/View/TableHeader';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../public/components/Action/Button/AccentButton';
+import Button from '../../../../public/components/Action/Button';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 
 import {
     createParamsForUser,
@@ -54,19 +49,15 @@ import {
     addLeadViewAddLeadsAction,
     leadsStringsSelector,
 } from '../../../../common/redux';
-
-import schema from '../../../../common/schema';
-
-import { leadTypeIconMap } from '../../../../common/entities/lead';
-
 import {
     iconNames,
     pathNames,
 } from '../../../../common/constants/';
+import { leadTypeIconMap } from '../../../../common/entities/lead';
+import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
 
 import FilterLeadsForm from './components/FilterLeadsForm';
-
 import styles from './styles.scss';
 
 const propTypes = {

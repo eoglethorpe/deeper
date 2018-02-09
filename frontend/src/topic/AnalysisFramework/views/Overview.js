@@ -6,27 +6,21 @@ import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-import {
-    GridLayout,
-    Confirm,
-} from '../../../public/components/View';
-
-import {
-    Button,
-    DangerButton,
-    SuccessButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
-
-import {
-    iconNames,
-    pathNames,
-} from '../../../common/constants';
+import GridLayout from '../../../public/components/View/GridLayout';
+import Confirm from '../../../public/components/View/Modal/Confirm';
+import Button from '../../../public/components/Action/Button';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import SuccessButton from '../../../public/components/Action/Button/SuccessButton';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 import {
     randomString,
     reverseRoute,
 } from '../../../public/utils/common';
 
+import {
+    iconNames,
+    pathNames,
+} from '../../../common/constants';
 import {
     addAfViewWidgetAction,
     removeAfViewWidgetAction,

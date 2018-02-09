@@ -3,22 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Button,
-    PrimaryButton,
-} from '../../../../../public/components/Action';
-import {
-    TextInput,
-} from '../../../../../public/components/Input';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from '../../../../../public/components/View';
-import {
-    afStringsSelector,
-} from '../../../../../common/redux';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 

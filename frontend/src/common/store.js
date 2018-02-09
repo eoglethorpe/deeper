@@ -3,6 +3,8 @@ import thunk from 'redux-thunk';
 import logger from './middlewares/logger';
 import refresher from './middlewares/refresher';
 import siloBackgroundTasks from './middlewares/siloBackgroundTasks';
+import { sendToken } from './utils/browserExtension';
+import { commonHeaderForPost, authorizationHeaderForPost } from './config/rest';
 
 import reducer from './reducers';
 
@@ -29,4 +31,36 @@ const enhancer = applicableComposer(
 );
 
 // NOTE: replace undefined with an initialState if required
-export default createStore(reducer, undefined, enhancer);
+const store = createStore(reducer, undefined, enhancer);
+
+const noOp = () => {};
+
+if (process.env.NODE_ENV !== 'test') {
+    // eslint-disable-next-line global-require
+    const tokenSelector = require('./selectors/auth').tokenSelector;
+
+    let currentAccess;
+    let currentRefresh;
+    store.subscribe(() => {
+        const prevAccess = currentAccess;
+        const prevRefresh = currentRefresh;
+        const token = tokenSelector(store.getState());
+        currentAccess = token.access;
+        currentRefresh = token.refresh;
+        if (prevAccess !== currentAccess) {
+            if (currentAccess) {
+                commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
+                authorizationHeaderForPost.Authorization = `Bearer ${currentAccess}`;
+            } else {
+                commonHeaderForPost.Authorization = undefined;
+                authorizationHeaderForPost.Authorization = undefined;
+            }
+        }
+
+        if (prevRefresh !== currentRefresh) {
+            sendToken(token).then(noOp, noOp);
+        }
+    });
+}
+
+export default store;

@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { AccentButton } from '../../../public/components/Action';
-import { TextInput } from '../../../public/components/Input';
 import { FgRestBuilder } from '../../../public/utils/rest';
+import AccentButton from '../../../public/components/Action/Button/AccentButton';
+import TextInput from '../../../public/components/Input/TextInput';
 
-import Screenshot from '../../../common/components/Screenshot';
-import GalleryDocs from '../../../common/components/DeepGallery/components/GalleryDocs';
-import { GalleryMapping, ComponentType } from '../../../common/components/DeepGallery';
-import { leadsStringsSelector } from '../../../common/redux';
-import { iconNames } from '../../../common/constants';
+import Screenshot from '../../components/Screenshot';
+import GalleryDocs from '../../components/DeepGallery/components/GalleryDocs';
+import { GalleryMapping, ComponentType } from '../../components/DeepGallery';
+import { leadsStringsSelector } from '../../redux';
+import { iconNames } from '../../constants';
 import {
     urlForWebsiteFetch,
     createParamsForWebsiteFetch,
-} from '../../../../src/common/rest';
+} from '../../rest';
 
 import styles from './styles.scss';
 

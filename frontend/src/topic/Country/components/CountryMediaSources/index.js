@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
 import { countriesStringsSelector } from '../../../../common/redux';
+
+import styles from './styles.scss';
 
 const propTypes = {
     countryId: PropTypes.number.isRequired,

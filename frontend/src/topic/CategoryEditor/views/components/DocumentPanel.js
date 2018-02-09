@@ -4,10 +4,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 // import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
-import {
-    List,
-    LoadingAnimation,
-} from '../../../../public/components/View';
+import List from '../../../../public/components/View/List';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 
 import {
     categoryEditorDocumentsSelector,
@@ -17,7 +15,6 @@ import {
     ceIdFromRouteSelector,
     ceStringsSelector,
 } from '../../../../common/redux';
-
 import SimplifiedFilePreview from '../../../../common/components/SimplifiedFilePreview';
 
 import DocumentNGram from './DocumentNGram';

@@ -11,8 +11,8 @@ import {
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 import update from '../../../../public/utils/immutable-update';
-import { LoadingAnimation } from '../../../../public/components/View';
 import { randomString } from '../../../../public/utils/common';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 
 import {
     leadIdFromRoute,
@@ -57,9 +57,6 @@ import {
     createUrlForDeleteEntry,
     createParamsForDeleteEntry,
 } from '../../../../common/rest';
-import notify from '../../../../common/notify';
-import schema from '../../../../common/schema';
-
 import {
     ENTRY_STATUS,
     entryAccessor,
@@ -68,11 +65,13 @@ import {
     getApplicableDiffCount,
     getApplicableAndModifyingDiffCount,
 } from '../../../../common/entities/entry';
+import notify from '../../../../common/notify';
+import schema from '../../../../common/schema';
 
-import styles from './styles.scss';
 import API from './API';
 import Overview from './Overview';
 import List from './List';
+import styles from './styles.scss';
 
 const propTypes = {
     leadId: PropTypes.number.isRequired,

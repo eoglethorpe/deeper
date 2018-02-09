@@ -3,13 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import usedMaps from '../../../usage';
-import { Table } from '../../../public/components/View';
+import Table from '../../../public/components/View/Table';
 import {
     selectedRawStringsSelector,
     selectedViewStringsSelector,
 } from '../../../common/redux';
 
+import usedMaps from '../../../usage';
 import styles from './styles.scss';
 
 // TODO:

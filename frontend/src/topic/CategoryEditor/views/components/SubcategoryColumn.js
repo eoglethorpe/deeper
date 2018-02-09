@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { AccentButton } from '../../../../public/components/Action';
-import { ListView } from '../../../../public/components/View';
+import AccentButton from '../../../../public/components/Action/Button/AccentButton';
+import ListView from '../../../../public/components/View/List/ListView';
+
 import { iconNames } from '../../../../common/constants';
 import { ceStringsSelector } from '../../../../common/redux';
 

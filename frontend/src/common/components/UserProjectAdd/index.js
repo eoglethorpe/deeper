@@ -7,36 +7,28 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    requiredCondition,
-} from '../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
-
 import { FgRestBuilder } from '../../../public/utils/rest';
+import Form, { requiredCondition } from '../../../public/components/Input/Form';
+import NonFieldErrors from '../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../public/components/Input/TextInput';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 
-import schema from '../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForProjectCreate,
     urlForProjectCreate,
-} from '../../../common/rest';
+} from '../../rest';
 import {
     notificationStringsSelector,
     userStringsSelector,
     setProjectAction,
     activeUserSelector,
-} from '../../../common/redux';
-import notify from '../../notify';
+} from '../../redux';
+import schema from '../../schema';
 
+import notify from '../../notify';
 import styles from './styles.scss';
 
 const propTypes = {

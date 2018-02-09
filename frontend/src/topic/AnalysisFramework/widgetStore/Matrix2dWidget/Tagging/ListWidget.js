@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import update from '../../../../../public/utils/immutable-update';
-import { ListView } from '../../../../../public/components/View';
-import { MultiSelectInput } from '../../../../../public/components/Input';
+import ListView from '../../../../../public/components/View/List/ListView';
+import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
 
-import { updateAttribute } from './utils';
 import { afStringsSelector } from '../../../../../common/redux';
 
+import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {

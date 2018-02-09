@@ -2,8 +2,8 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { ListView } from '../../../../public/components/View';
-import { DangerButton } from '../../../../public/components/Action';
+import ListView from '../../../../public/components/View/List/ListView';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 
 import { iconNames } from '../../../../common/constants';
 

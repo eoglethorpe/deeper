@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 import { connect } from 'react-redux';
 
-import { Button } from '../../../public/components/Action';
-import { commonStringsSelector } from '../../../common/redux';
-import styles from './styles.scss';
+import Button from '../../../public/components/Action/Button';
 
-import { DROPBOX_SDK_URL, SCRIPT_ID } from '../../../common/config/dropbox';
+import { DROPBOX_SDK_URL, SCRIPT_ID } from '../../config/dropbox';
+import { commonStringsSelector } from '../../redux';
+
+import styles from './styles.scss';
 
 let scriptLoadingStarted = false;
 

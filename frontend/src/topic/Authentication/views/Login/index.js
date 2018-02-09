@@ -10,26 +10,20 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    emailCondition,
-    lengthGreaterThanCondition,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import { PrimaryButton } from '../../../../public/components/Action';
-import {
     FgRestBuilder,
     RestRequest,
 } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import Form, {
+    requiredCondition,
+    emailCondition,
+    lengthGreaterThanCondition,
+} from '../../../../public/components/Input/Form';
 
-import { pathNames } from '../../../../common/constants';
-import schema from '../../../../common/schema';
-import { hidUrl } from '../../../../common/config/hid';
 import {
     transformResponseErrorToFormError,
     createParamsForTokenCreate,
@@ -37,16 +31,6 @@ import {
     createParamsForTokenCreateHid,
     urlForTokenCreateHid,
 } from '../../../../common/rest';
-
-import {
-    startRefreshAction,
-} from '../../../../common/middlewares/refresher';
-import {
-    startSiloBackgroundTasksAction,
-} from '../../../../common/middlewares/siloBackgroundTasks';
-import logo from '../../../../img/deep-logo.svg';
-import hidLogo from '../../../../img/hid-logo.png';
-
 import {
     loginAction,
     authenticateAction,
@@ -54,6 +38,14 @@ import {
     currentUserProjectsSelector,
     loginStringsSelector,
 } from '../../../../common/redux';
+import { startRefreshAction } from '../../../../common/middlewares/refresher';
+import { startSiloBackgroundTasksAction } from '../../../../common/middlewares/siloBackgroundTasks';
+import { pathNames } from '../../../../common/constants';
+import schema from '../../../../common/schema';
+import { hidUrl } from '../../../../common/config/hid';
+
+import logo from '../../../../img/deep-logo.svg';
+import hidLogo from '../../../../img/hid-logo.png';
 
 import styles from './styles.scss';
 

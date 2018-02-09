@@ -3,21 +3,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    TextArea,
-} from '../../../../../public/components/Input';
-import {
-    AccentButton,
-} from '../../../../../public/components/Action';
-import {
-    formatPdfText,
-} from '../../../../../public/utils/common';
-import {
-    iconNames,
-} from '../../../../../common/constants';
-import {
-    afStringsSelector,
-} from '../../../../../common/redux';
+import TextArea from '../../../../../public/components/Input/TextArea';
+import AccentButton from '../../../../../public/components/Action/Button/AccentButton';
+
+import { formatPdfText } from '../../../../../public/utils/common';
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 import styles from './styles.scss';
 
 const IMAGE = 'image';

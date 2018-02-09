@@ -3,32 +3,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ListView,
-} from '../../../public/components/View';
-import {
-    SelectInput,
-    MultiSelectInput,
-} from '../../../public/components/Input';
-import {
-    Button,
-    PrimaryButton,
-    AccentButton,
-    DangerButton,
-} from '../../../public/components/Action';
+import Modal from '../../../public/components/View/Modal';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../public/components/View/Modal/Footer';
+import ListView from '../../../public/components/View/List/ListView';
+import SelectInput from '../../../public/components/Input/SelectInput';
+import MultiSelectInput from '../../../public/components/Input/SelectInput/MultiSelectInput';
+import Button from '../../../public/components/Action/Button';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../public/components/Action/Button/AccentButton';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+
+import update from '../../../public/utils/immutable-update';
+
 import {
     geoOptionsForProjectSelector,
     entryStringsSelector,
-} from '../../../common/redux';
-import {
-    iconNames,
-} from '../../constants';
-import update from '../../../public/utils/immutable-update';
+} from '../../redux';
 
+import { iconNames } from '../../constants';
 import RegionMap from '../RegionMap';
 import styles from './styles.scss';
 

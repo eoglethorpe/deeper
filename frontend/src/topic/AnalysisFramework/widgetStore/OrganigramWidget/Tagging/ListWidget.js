@@ -3,27 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Button,
-    PrimaryButton,
-    AccentButton,
-} from '../../../../../public/components/Action';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} from '../../../../../public/components/View';
-import {
-    OrgChart,
-} from '../../../../../public/components/Visualization';
-import {
-    iconNames,
-} from '../../../../../common/constants';
-import {
-    afStringsSelector,
-} from '../../../../../common/redux';
+import OrgChart from '../../../../../public/components/Visualization/OrgChart';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../../public/components/Action/Button/AccentButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
 
+import { iconNames } from '../../../../../common/constants';
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';

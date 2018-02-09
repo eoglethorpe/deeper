@@ -9,13 +9,10 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import {
-    List,
-    LoadingAnimation,
-} from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import List from '../../../../public/components/View/List';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 
-import schema from '../../../../common/schema';
 import {
     createParamsForUser,
     createUrlForProject,
@@ -28,6 +25,7 @@ import {
     setProjectOptionsAction,
     projectStringsSelector,
 } from '../../../../common/redux';
+import schema from '../../../../common/schema';
 
 import ProjectGeneral from '../ProjectGeneral';
 import ProjectRegions from '../ProjectRegions';

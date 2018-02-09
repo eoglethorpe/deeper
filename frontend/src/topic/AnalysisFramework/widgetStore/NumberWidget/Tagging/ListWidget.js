@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { NumberInput } from '../../../../../public/components/Input';
+import NumberInput from '../../../../../public/components/Input/NumberInput';
+
 import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';

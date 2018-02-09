@@ -7,18 +7,6 @@ import {
     Prompt,
 } from 'react-router-dom';
 
-import { FgRestBuilder } from '../../../public/utils/rest';
-import { SelectInput } from '../../../public/components/Input';
-import {
-    PrimaryButton,
-    DangerButton,
-    SuccessButton,
-} from '../../../public/components/Action';
-import {
-    LoadingAnimation,
-    Modal,
-    Confirm,
-} from '../../../public/components/View';
 import {
     isTruthy,
     isFalsy,
@@ -27,11 +15,14 @@ import {
     splitInWhitespace,
     reverseRoute,
 } from '../../../public/utils/common';
-
-import {
-    iconNames,
-    pathNames,
-} from '../../../common/constants';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import SelectInput from '../../../public/components/Input/SelectInput';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import SuccessButton from '../../../public/components/Action/Button/SuccessButton';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import Modal from '../../../public/components/View/Modal';
+import Confirm from '../../../public/components/View/Modal/Confirm';
 
 import {
     categoryEditorViewTitleSelector,
@@ -64,9 +55,12 @@ import {
     createParamsForCeViewPatch,
     transformResponseErrorToFormError,
 } from '../../../common/rest';
+import {
+    iconNames,
+    pathNames,
+} from '../../../common/constants';
 import schema from '../../../common/schema';
 import notify from '../../../common/notify';
-
 
 import DocumentPanel from './components/DocumentPanel';
 import SubcategoryColumn from './components/SubcategoryColumn';

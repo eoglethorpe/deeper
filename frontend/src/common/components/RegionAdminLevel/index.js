@@ -3,40 +3,33 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    PrimaryButton,
-    DangerButton,
-} from '../../../public/components/Action';
-import {
-    Modal,
-    ModalBody,
-    ModalHeader,
-    Confirm,
-    Table,
-    LoadingAnimation,
-} from '../../../public/components/View';
-
 import { BgRestBuilder } from '../../../public/utils/rest';
-import schema from '../../../common/schema';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import Confirm from '../../../public/components/View/Modal/Confirm';
+import Modal from '../../../public/components/View/Modal';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import Table from '../../../public/components/View/Table';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+
 import {
     createUrlForAdminLevelsForRegion,
     createParamsForAdminLevelsForRegionGET,
     createParamsForAdminLevelDelete,
     createUrlForAdminLevel,
-} from '../../../common/rest';
+} from '../../rest';
 import {
     adminLevelForRegionSelector,
     setAdminLevelsForRegionAction,
     unsetAdminLevelForRegionAction,
     notificationStringsSelector,
     countriesStringsSelector,
-} from '../../../common/redux';
-import {
-    iconNames,
-} from '../../../common/constants';
+} from '../../redux';
+import schema from '../../schema';
+import { iconNames } from '../../constants';
+
 import notify from '../../notify';
-
-
 import EditAdminLevel from '../EditAdminLevel';
 import styles from './styles.scss';
 
