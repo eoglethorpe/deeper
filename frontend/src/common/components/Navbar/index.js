@@ -113,7 +113,9 @@ export default class Navbar extends React.PureComponent {
     static dropdownItemIcons = {
         apiDocs: iconNames.code,
         userProfile: iconNames.person,
-        stringManagement: iconNames.globe,
+        stringManagement: iconNames.world,
+        projects: iconNames.map,
+        countries: iconNames.globe,
     };
 
     static getDropItemKey = item => item.key
@@ -188,14 +190,17 @@ export default class Navbar extends React.PureComponent {
         const navLinks = [
             'leads',
             'entries',
-            'projects',
-            'countries',
             'export',
-            'ary',
         ];
+        if (process.env.NODE_ENV === 'development') {
+            // NOTE: ary isn't ready now, so only visible in dev mode
+            navLinks.push('ary');
+        }
 
         const dropLinks = [
             'userProfile',
+            'projects',
+            'countries',
         ];
         // NOTE: Don't show in production
         if (process.env.NODE_ENV === 'development') {
