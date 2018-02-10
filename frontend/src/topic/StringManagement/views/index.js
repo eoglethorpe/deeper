@@ -9,8 +9,18 @@ import {
     selectedViewStringsSelector,
 } from '../../../common/redux';
 
-import usedMaps from '../../../usage';
 import styles from './styles.scss';
+
+let usedMaps = {};
+try {
+    /* eslint-disable global-require */
+    /* eslint-disable import/no-unresolved */
+    usedMaps = require('../../../usage').default;
+    /* eslint-enable global-require */
+    /* eslint-enable import/no-unresolved */
+} catch (ex) {
+    console.warn(ex);
+}
 
 // TODO:
 // Identify strings to be translated
@@ -80,7 +90,9 @@ export default class Ary extends React.PureComponent {
 
             Object.keys(view).forEach((stringName) => {
                 const stringId = view[stringName];
-                const totalReferencesInCode = (usedMaps[viewName][stringName] || []).length;
+                const totalReferencesInCode = (usedMaps[viewName] && usedMaps[viewName][stringName])
+                    ? usedMaps[viewName][stringName].length
+                    : 0;
 
                 // Identify non-referenced string in code
                 if (totalReferencesInCode <= 0) {
@@ -98,7 +110,7 @@ export default class Ary extends React.PureComponent {
 
         // Identify bad-referenced string in code
         Object.keys(usedMaps).forEach((viewName) => {
-            const view = usedMaps[viewName];
+            const view = usedMaps[viewName] || {};
 
             Object.keys(view).forEach((stringName) => {
                 const stringId = views[viewName][stringName];
@@ -135,14 +147,14 @@ export default class Ary extends React.PureComponent {
             {
                 key: 'id',
                 label: 'Id',
-                order: 4,
+                order: 1,
                 sortable: true,
                 comparator: (a, b) => sortStringAsNumber(a.id, b.id),
             },
             {
                 key: 'value',
                 label: 'String',
-                order: 3,
+                order: 2,
                 sortable: true,
                 comparator: (a, b) => (
                     sortStringByWord(a.value, b.value) ||
@@ -152,14 +164,14 @@ export default class Ary extends React.PureComponent {
             {
                 key: 'referenceCount',
                 label: 'Reference Count',
-                order: 2,
+                order: 3,
                 sortable: true,
                 comparator: (a, b) => sortNumber(a.referenceCount, b.referenceCount),
             },
             {
                 key: 'duplicated',
                 label: 'Duplicated',
-                order: 1,
+                order: 4,
                 sortable: true,
                 comparator: (a, b) => (
                     -sortBoolean(!!a.duplicated, !!b.duplicated) ||
@@ -170,7 +182,7 @@ export default class Ary extends React.PureComponent {
             },
         ];
         this.defaultSort = {
-            key: 'duplicated',
+            key: 'value',
             order: 'asc',
         };
     }
