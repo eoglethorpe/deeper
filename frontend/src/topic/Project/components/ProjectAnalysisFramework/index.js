@@ -3,24 +3,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import {
-    TextInput,
-} from '../../../../public/components/Input';
-import {
-    ListItem,
-    ListView,
-    LoadingAnimation,
-    Modal,
-    ModalHeader,
-    ModalBody,
-} from '../../../../public/components/View';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 
-import schema from '../../../../common/schema';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import TextInput from '../../../../public/components/Input/TextInput';
+import ListView from '../../../../public/components/View/List/ListView';
+import ListItem from '../../../../public/components/View/List/ListItem';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Modal from '../../../../public/components/View/Modal';
+import ModalHeader from '../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../public/components/View/Modal/Body';
+
 import {
     urlForAnalysisFrameworks,
     createParamsForUser,
@@ -32,7 +26,7 @@ import {
     setAnalysisFrameworksAction,
     projectStringsSelector,
 } from '../../../../common/redux';
-
+import schema from '../../../../common/schema';
 import { iconNames } from '../../../../common/constants';
 
 import ProjectAfDetail from '../ProjectAfDetail';

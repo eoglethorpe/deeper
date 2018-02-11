@@ -2,11 +2,8 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {
-    ListView,
-} from '../../../../../public/components/View';
-
 import update from '../../../../../public/utils/immutable-update';
+import ListView from '../../../../../public/components/View/List/ListView';
 
 import MatrixRow from './MatrixRow';
 import { updateAttribute } from './utils';

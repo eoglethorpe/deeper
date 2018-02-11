@@ -2,11 +2,12 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 
-import App from './App';
+import reduxSync from './public/utils/redux-sync';
+
 import store from './common/store';
 import storeConfig from './common/config/store';
 
-import reduxSync from './public/utils/redux-sync';
+import App from './App';
 
 export default class Root extends React.Component {
     constructor(props) {

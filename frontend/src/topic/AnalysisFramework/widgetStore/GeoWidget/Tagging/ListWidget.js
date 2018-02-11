@@ -2,13 +2,12 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    ListView,
-} from '../../../../../public/components/View';
+import ListView from '../../../../../public/components/View/List/ListView';
 
 import GeoSelection from '../../../../../common/components/GeoSelection';
-import styles from './styles.scss';
+
 import { updateAttribute } from './utils';
+import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,

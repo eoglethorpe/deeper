@@ -3,7 +3,6 @@ import { entryAccessor } from '../../../../common/entities/entry';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#e0e0e0';
 
-
 class EntryModifier {
     constructor(
         entry,

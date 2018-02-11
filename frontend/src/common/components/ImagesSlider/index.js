@@ -2,15 +2,10 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    Button,
-} from '../../../public/components/Action';
-import {
-    iconNames,
-} from '../../constants';
+import Button from '../../../public/components/Action/Button';
 
 import DeepGallery from '../DeepGallery';
-
+import { iconNames } from '../../constants';
 import styles from './styles.scss';
 
 

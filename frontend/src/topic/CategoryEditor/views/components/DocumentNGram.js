@@ -7,7 +7,7 @@ import {
     trimWhitespace,
     splitInWhitespace,
 } from '../../../../public/utils/common';
-import { ListView } from '../../../../public/components/View';
+import ListView from '../../../../public/components/View/List/ListView';
 
 import {
     categoryEditorNgramsSelector,

@@ -3,14 +3,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
-import {
-    List,
-    ListView,
-} from '../../../public/components/View';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty } from '../../../public/utils/common';
-import { apiStringsSelector } from '../../../common/redux';
+import List from '../../../public/components/View/List';
+import ListView from '../../../public/components/View/List/ListView';
 
+import { apiStringsSelector } from '../../../common/redux';
 import { urlForApiDocs } from '../../../common/rest';
 
 import styles from './styles.scss';

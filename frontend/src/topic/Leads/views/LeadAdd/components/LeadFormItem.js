@@ -7,16 +7,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { FgRestBuilder } from '../../../../../public/utils/rest';
 import {
     requiredCondition,
     urlCondition,
-} from '../../../../../public/components/Input';
-import {
-    Confirm,
-    ResizableV,
-} from '../../../../../public/components/View';
-
-import { FgRestBuilder } from '../../../../../public/utils/rest';
+} from '../../../../../public/components/Input/Form';
+import Confirm from '../../../../../public/components/View/Modal/Confirm';
+import ResizableV from '../../../../../public/components/View/Resizable/ResizableV';
 
 import {
     addLeadViewLeadChangeAction,
@@ -24,11 +21,6 @@ import {
     addLeadViewCopyAllAction,
     leadsStringsSelector,
 } from '../../../../../common/redux';
-
-import LeadForm from './LeadForm';
-import DeepGallery from '../../../../../common/components/DeepGallery';
-import WebsiteViewer from '../../../../../common/components/WebsiteViewer';
-
 import {
     LEAD_TYPE,
     leadAccessor,
@@ -37,6 +29,10 @@ import {
     urlForWebInfo,
     createParamsForWebInfo,
 } from '../../../../../common/rest';
+import DeepGallery from '../../../../../common/components/DeepGallery';
+import WebsiteViewer from '../../../../../common/components/WebsiteViewer';
+
+import LeadForm from './LeadForm';
 import styles from '../styles.scss';
 
 const propTypes = {

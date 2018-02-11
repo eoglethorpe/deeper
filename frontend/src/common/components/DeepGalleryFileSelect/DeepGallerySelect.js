@@ -2,45 +2,33 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
+import Table from '../../../public/components/View/Table';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../public/components/View/Modal/Footer';
+import FormattedDate from '../../../public/components/View/FormattedDate';
+import Button from '../../../public/components/Action/Button';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../public/components/Action/Button/AccentButton';
+import TextInput from '../../../public/components/Input/TextInput';
 
-import {
-    Table,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    FormattedDate,
-    LoadingAnimation,
-} from '../../../public/components/View';
-import { TextInput } from '../../../public/components/Input';
-import {
-    PrimaryButton,
-    AccentButton,
-    Button,
-} from '../../../public/components/Action';
-
-import {
-    caseInsensitiveSubmatch,
-} from '../../../public/utils/common';
+import { FgRestBuilder } from '../../../public/utils/rest';
+import { caseInsensitiveSubmatch } from '../../../public/utils/common';
 
 import {
     urlForUsersGalleryFiles,
     createHeaderForGalleryFile,
-} from '../../../common/rest';
-
+} from '../../rest';
 import {
     userGalleryFilesSelector,
     setUserGalleryFilesAction,
     commonStringsSelector,
-} from '../../../common/redux';
+} from '../../redux';
+import { iconNames } from '../../constants';
+import { leadTypeIconMap } from '../../entities/lead';
 
-import {
-    iconNames,
-} from '../../../common/constants';
-
-import { FgRestBuilder } from '../../../public/utils/rest';
-
-import { leadTypeIconMap } from '../../../common/entities/lead';
+import styles from './styles.scss';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,

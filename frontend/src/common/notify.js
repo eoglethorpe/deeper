@@ -2,9 +2,7 @@ import store from './store';
 
 import { notifySendAction } from './redux';
 
-import {
-    NOTIFICATION,
-} from '../public/components/View';
+import { NOTIFICATION } from '../public/components/View/Toast';
 
 const notify = {
     type: NOTIFICATION,

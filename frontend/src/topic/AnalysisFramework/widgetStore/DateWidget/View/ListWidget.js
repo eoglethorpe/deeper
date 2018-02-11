@@ -2,9 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    FormattedDate,
-} from '../../../../../public/components/View';
+import FormattedDate from '../../../../../public/components/View/FormattedDate';
 
 import styles from './styles.scss';
 

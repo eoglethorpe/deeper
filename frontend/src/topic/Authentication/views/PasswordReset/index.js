@@ -8,31 +8,25 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    emailCondition,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import { PrimaryButton } from '../../../../public/components/Action';
-import {
-    FgRestBuilder,
-} from '../../../../public/utils/rest';
+import { FgRestBuilder } from '../../../../public/utils/rest';
 import { reverseRoute } from '../../../../public/utils/common';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import Form, {
+    requiredCondition,
+    emailCondition,
+} from '../../../../public/components/Input/Form';
 
-import { pathNames } from '../../../../common/constants';
-import { loginStringsSelector } from '../../../../common/redux';
-
-import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForUserPasswordReset,
     urlForUserPasswordReset,
 } from '../../../../common/rest';
+import { pathNames } from '../../../../common/constants';
+import { loginStringsSelector } from '../../../../common/redux';
+import schema from '../../../../common/schema';
 
 import styles from './styles.scss';
 
@@ -163,41 +157,39 @@ export default class PasswordReset extends React.PureComponent {
             <div styleName="reset-password">
                 <div styleName="form-container">
                     {
-                        resetSuccess ?
+                        resetSuccess ? (
                             <div styleName="info">
                                 <p>
                                     {this.props.loginStrings('checkInboxText')}
                                     {formValues.email || this.props.loginStrings('emailPlaceholder')}
                                 </p>
                             </div>
-                            :
+                        ) : (
                             <Form
                                 styleName="reset-password-form"
                                 changeCallback={this.changeCallback}
                                 elements={this.elements}
                                 failureCallback={this.failureCallback}
                                 successCallback={this.successCallback}
-                                validation={this.validation}
                                 validations={this.validations}
+                                value={formValues}
+                                error={formFieldErrors}
                             >
                                 { pending && <LoadingAnimation /> }
                                 <NonFieldErrors errors={formErrors} />
                                 <TextInput
                                     disabled={pending}
-                                    error={formFieldErrors.email}
                                     formname="email"
-                                    value={formValues.email}
                                     label={this.props.loginStrings('emailLabel')}
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
                                 />
                                 <div styleName="action-buttons">
-                                    <PrimaryButton
-                                        disabled={pending}
-                                    >
+                                    <PrimaryButton disabled={pending}>
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
                             </Form>
+                        )
                     }
                     <div styleName="go-back-container">
                         <Link

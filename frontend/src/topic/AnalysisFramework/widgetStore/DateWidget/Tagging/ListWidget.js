@@ -2,9 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    DateInput,
-} from '../../../../../public/components/Input';
+import DateInput from '../../../../../public/components/Input/DateInput';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';

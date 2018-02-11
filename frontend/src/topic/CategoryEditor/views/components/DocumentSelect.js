@@ -3,15 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    ListView,
-    ListItem,
-} from '../../../../public/components/View';
-import {
-    Button,
-    PrimaryButton,
-    DangerButton,
-} from '../../../../public/components/Action';
+import ListView from '../../../../public/components/View/List/ListView';
+import ListItem from '../../../../public/components/View/List/ListItem';
+import Button from '../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 
 import {
     categoryEditorDocumentsSelector,
@@ -19,10 +15,9 @@ import {
     ceIdFromRouteSelector,
     ceStringsSelector,
 } from '../../../../common/redux';
-
 import DeepGalleryFileSelect from '../../../../common/components/DeepGalleryFileSelect';
-
 import { iconNames } from '../../../../common/constants';
+
 import styles from '../styles.scss';
 
 const propTypes = {

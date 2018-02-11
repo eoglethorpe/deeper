@@ -3,10 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { afStringsSelector } from '../../../../../common/redux';
 import styles from './styles.scss';
-import {
-    afStringsSelector,
-} from '../../../../../common/redux';
 
 const IMAGE = 'image';
 

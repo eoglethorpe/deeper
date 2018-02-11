@@ -2,22 +2,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import schema from '../../../../../common/schema';
-import {
-    Button,
-    DangerButton,
-} from '../../../../../public/components/Action';
-import {
-    Form,
-    MultiSelectInput,
-    TextInput,
-    DateFilter,
-} from '../../../../../public/components/Input';
-import { FgRestBuilder } from '../../../../../public/utils/rest';
 import {
     isTruthy,
     isObjectEmpty,
 } from '../../../../../public/utils/common';
+import { FgRestBuilder } from '../../../../../public/utils/rest';
+import Button from '../../../../../public/components/Action/Button';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
+import Form from '../../../../../public/components/Input/Form';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import DateFilter from '../../../../../public/components/Input/DateFilter';
+import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
 
 import {
     createParamsForUser,
@@ -34,6 +29,8 @@ import {
     unsetLeadPageFilterAction,
     leadsStringsSelector,
 } from '../../../../../common/redux';
+import schema from '../../../../../common/schema';
+
 
 const propTypes = {
     activeProject: PropTypes.number.isRequired,
@@ -227,6 +224,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 successCallback={this.handleSubmit}
                 changeCallback={this.handleChange}
                 elements={this.formElements}
+                value={formValues}
             >
                 <MultiSelectInput
                     formname="assignee"
@@ -238,7 +236,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.assignee}
                 />
                 <DateFilter
                     formname="created_at"
@@ -247,7 +244,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.created_at}
                 />
                 <DateFilter
                     formname="published_on"
@@ -256,7 +252,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.published_on}
                 />
                 <MultiSelectInput
                     formname="confidentiality"
@@ -268,7 +263,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.confidentiality}
                 />
                 <MultiSelectInput
                     formname="status"
@@ -280,7 +274,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    value={formValues.status}
                 />
                 <TextInput
                     formname="search"
@@ -290,7 +283,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showLabel
                     className="leads-filter"
                     type="search"
-                    value={formValues.search}
                 />
                 { !this.props.applyOnChange &&
                     <Button

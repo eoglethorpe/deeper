@@ -3,22 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    DateInput,
-    Form,
-    NonFieldErrors,
-    TextInput,
-    TextArea,
-    MultiSelectInput,
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import SuccessButton from '../../../../public/components/Action/Button/SuccessButton';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import DateInput from '../../../../public/components/Input/DateInput';
+import TextArea from '../../../../public/components/Input/TextArea';
+import MultiSelectInput from '../../../../public/components/Input/SelectInput/MultiSelectInput';
+import Form, {
     requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    SuccessButton,
-} from '../../../../public/components/Action';
+} from '../../../../public/components/Input/Form';
 
 import { projectStringsSelector } from '../../../../common/redux';
 
@@ -99,6 +94,8 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 successCallback={successCallback}
                 validation={this.validation}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <div styleName="action-buttons">
@@ -121,8 +118,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     formname="title"
                     placeholder={this.props.projectStrings('projectNamePlaceholder')}
                     styleName="name"
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                 />
                 <TextArea
                     label={this.props.projectStrings('projectDescriptionLabel')}
@@ -130,46 +125,36 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
                     styleName="description"
                     rows={3}
-                    value={formValues.description}
-                    error={formFieldErrors.description}
                 />
                 <DateInput
                     label={this.props.projectStrings('projectStartDateLabel')}
                     formname="startDate"
                     placeholder={this.props.projectStrings('projectStartDatePlaceholder')}
                     styleName="start-date"
-                    value={formValues.startDate}
-                    error={formFieldErrors.startDate}
                 />
                 <DateInput
                     label={this.props.projectStrings('projectEndDateLabel')}
                     formname="endDate"
                     placeholder={this.props.projectStrings('projectEndDatePlaceholder')}
                     styleName="end-date"
-                    value={formValues.endDate}
-                    error={formFieldErrors.endDate}
                 />
                 <MultiSelectInput
                     label={this.props.projectStrings('projectRegionLabel')}
                     formname="regions"
                     placeholder={this.props.projectStrings('projectRegionPlaceholder')}
                     styleName="regions"
-                    value={formValues.regions}
                     options={regionOptions}
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
-                    error={formFieldErrors.regions}
                 />
                 <MultiSelectInput
                     label={this.props.projectStrings('projectUserGroupLabel')}
                     formname="userGroups"
                     placeholder={this.props.projectStrings('projectUserGroupPlaceholder')}
                     styleName="user-groups"
-                    value={formValues.userGroups}
                     options={userGroupsOptions}
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
-                    error={formFieldErrors.userGroups}
                 />
             </Form>
         );

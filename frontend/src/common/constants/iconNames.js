@@ -53,6 +53,8 @@ const iconNames = {
     error: 'ion-android-alert',
     forward: 'ion-forward',
     globe: 'ion-android-globe',
+    world: 'ion-ios-world',
+    map: 'ion-android-map',
     googleDrive: 'ion-social-googleplus-outline',
     hamburger: 'ion-android-menu',
     help: 'ion-help-circled',

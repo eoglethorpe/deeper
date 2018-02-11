@@ -4,29 +4,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { reverseRoute } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import {
-    Table,
-    FormattedDate,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    Confirm,
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    Button,
-    PrimaryButton,
-    DangerButton,
-} from '../../../../public/components/Action';
-import {
-    reverseRoute,
-} from '../../../../public/utils/common';
-import {
-    pathNames,
-    iconNames,
-} from '../../../../common/constants';
-import notify from '../../../../common/notify';
+import Table from '../../../../public/components/View/Table';
+import FormattedDate from '../../../../public/components/View/FormattedDate';
+import Modal from '../../../../public/components/View/Modal';
+import ModalBody from '../../../../public/components/View/Modal/Body';
+import ModalHeader from '../../../../public/components/View/Modal/Header';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Button from '../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 
 import {
     transformResponseErrorToFormError,
@@ -50,6 +39,12 @@ import {
     projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
+import {
+    pathNames,
+    iconNames,
+} from '../../../../common/constants';
+import notify from '../../../../common/notify';
+
 import ProjectGeneralForm from '../ProjectGeneralForm';
 import AddProjectMembers from '../AddProjectMembers';
 import styles from './styles.scss';

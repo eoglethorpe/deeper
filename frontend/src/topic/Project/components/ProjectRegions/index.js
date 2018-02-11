@@ -3,31 +3,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import {
-    RadioInput,
-    TextInput,
-} from '../../../../public/components/Input';
-import {
-    ListItem,
-    ListView,
-    Modal,
-    ModalHeader,
-    ModalBody,
-} from '../../../../public/components/View';
-import {
-    iconNames,
-} from '../../../../common/constants';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import TextInput from '../../../../public/components/Input/TextInput';
+import RadioInput from '../../../../public/components/Input/RadioInput';
+import ListItem from '../../../../public/components/View/List/ListItem';
+import ListView from '../../../../public/components/View/List/ListView';
+import Modal from '../../../../public/components/View/Modal';
+import ModalHeader from '../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../public/components/View/Modal/Body';
 
 import {
     projectDetailsSelector,
     projectStringsSelector,
 } from '../../../../common/redux';
-
+import { iconNames } from '../../../../common/constants';
 import AddRegion from '../../../../common/components/AddRegion';
+
 import AddExistingRegion from '../AddExistingRegion';
 import ProjectRegionDetail from '../ProjectRegionDetail';
 import styles from './styles.scss';

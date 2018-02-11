@@ -11,25 +11,18 @@ import { connect } from 'react-redux';
 
 import { randomString } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
-import {
-    DangerButton,
-    PrimaryButton,
-    Button,
-} from '../../../../../public/components/Action';
-import {
-    TextInput,
-} from '../../../../../public/components/Input';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ListView,
-} from '../../../../../public/components/View';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
+import ListView from '../../../../../public/components/View/List/ListView';
 
 import { iconNames } from '../../../../../common/constants';
 import { afStringsSelector } from '../../../../../common/redux';
-
 
 import MatrixCell from './MatrixCell';
 import styles from './styles.scss';

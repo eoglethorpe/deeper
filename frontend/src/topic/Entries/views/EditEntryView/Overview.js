@@ -7,44 +7,38 @@ import { Link } from 'react-router-dom';
 
 import { getColorOnBgColor } from '../../../../public/utils/common';
 
-import {
-    Button,
-    DangerButton,
-    PrimaryButton,
-    SuccessButton,
-} from '../../../../public/components/Action';
-import {
-    GridLayout,
-    ListItem,
-    ListView,
-    LoadingAnimation,
-    ResizableH,
-} from '../../../../public/components/View';
-import {
-    SelectInput,
-} from '../../../../public/components/Input';
+import Button from '../../../../public/components/Action/Button';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import SuccessButton from '../../../../public/components/Action/Button/SuccessButton';
+import ListView from '../../../../public/components/View/List/ListView';
+import ListItem from '../../../../public/components/View/List/ListItem';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import ResizableH from '../../../../public/components/View/Resizable/ResizableH';
+import SelectInput from '../../../../public/components/Input/SelectInput';
+import GridLayout from '../../../../public/components/View/GridLayout';
 
-import { iconNames } from '../../../../common/constants';
+import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
+import WebsiteViewer from '../../../../common/components/WebsiteViewer';
+import DeepGallery from '../../../../common/components/DeepGallery';
+import ImagesGrid from '../../../../common/components/ImagesGrid';
 import {
     setActiveEntryAction,
     editEntryViewCurrentLeadSelector,
     entryStringsSelector,
     afStringsSelector,
 } from '../../../../common/redux';
-
-import widgetStore from '../../../AnalysisFramework/widgetStore';
-import WebsiteViewer from '../../../../common/components/WebsiteViewer';
-import DeepGallery from '../../../../common/components/DeepGallery';
-import ImagesGrid from '../../../../common/components/ImagesGrid';
-import AssistedTagging from '../AssistedTagging';
-
 import {
     LEAD_TYPE,
     LEAD_PANE_TYPE,
     leadPaneTypeMap,
 } from '../../../../common/entities/lead';
+import { iconNames } from '../../../../common/constants';
 import { entryAccessor, ENTRY_STATUS } from '../../../../common/entities/entry';
-import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
+
+import widgetStore from '../../../AnalysisFramework/widgetStore';
+
+import AssistedTagging from '../AssistedTagging';
 import styles from './styles.scss';
 
 const propTypes = {

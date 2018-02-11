@@ -3,34 +3,23 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import schema from '../../../common/schema';
 import { BgRestBuilder } from '../../../public/utils/rest';
 import { UploadBuilder } from '../../../public/utils/upload';
-
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    Form,
-    TextInput,
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import TextInput from '../../../public/components/Input/TextInput';
+import NonFieldErrors from '../../../public/components/Input/NonFieldErrors';
+import HiddenInput from '../../../public/components/Input/HiddenInput';
+import FileInput from '../../../public/components/Input/FileInput';
+import SelectInput from '../../../public/components/Input/SelectInput';
+import Form, {
+    greaterThanOrEqualToCondition,
     requiredCondition,
     integerCondition,
-    greaterThanOrEqualToCondition,
-    NonFieldErrors,
-    HiddenInput,
-    FileInput,
-    SelectInput,
-} from '../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-import DeepGallery from '../../../common/components/DeepGallery';
+} from '../../../public/components/Input/Form';
 
-import { iconNames } from '../../../common/constants';
-import notify from '../../notify';
-
-
+import DeepGallery from '../../components/DeepGallery';
 import {
     transformResponseErrorToFormError,
     createParamsForAdminLevelsForRegionPOST,
@@ -39,12 +28,16 @@ import {
     createUrlForAdminLevel,
     urlForAdminLevels,
     urlForUpload,
-} from '../../../common/rest';
+} from '../../rest';
 import {
     addAdminLevelForRegionAction,
     countriesStringsSelector,
     notificationStringsSelector,
-} from '../../../common/redux';
+} from '../../redux';
+import schema from '../../schema';
+import { iconNames } from '../../constants';
+
+import notify from '../../notify';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -366,6 +359,8 @@ export default class EditAdminLevel extends React.PureComponent {
                     successCallback={this.successCallback}
                     elements={this.elements}
                     validations={this.validations}
+                    value={formValues}
+                    error={formFieldErrors}
                 >
                     {
                         pending && <LoadingAnimation />
@@ -373,60 +368,48 @@ export default class EditAdminLevel extends React.PureComponent {
                     <NonFieldErrors errors={formErrors} />
                     <div styleName="admin-level-details" >
                         <TextInput
-                            value={formValues.level}
                             formname="level"
                             label={this.props.countriesStrings('adminLevelLabel')}
                             placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
                             styleName="text-input"
                             type="number"
-                            error={formFieldErrors.level}
                             disabled={pending}
                             min={0}
                             autoFocus
                         />
                         <TextInput
-                            value={formValues.title}
                             formname="title"
                             label={this.props.countriesStrings('adminLevelNameLabel')}
                             placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.title}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.nameProp || undefined}
                             formname="nameProp"
                             label={this.props.countriesStrings('namePropertyLabel')}
                             placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.nameProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.codeProp || undefined}
                             formname="codeProp"
                             label={this.props.countriesStrings('pcodePropertyLabel')}
                             placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.codeProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.parentNameProp || undefined}
                             formname="parentNameProp"
                             label={this.props.countriesStrings('parentNamePropLabel')}
                             placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parentNameProp}
                             disabled={pending}
                         />
                         <TextInput
-                            value={formValues.parentCodeProp || undefined}
                             formname="parentCodeProp"
                             label={this.props.countriesStrings('parentCodePropLabel')}
                             placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parentCodeProp}
                             disabled={pending}
                         />
                         <SelectInput
@@ -435,12 +418,10 @@ export default class EditAdminLevel extends React.PureComponent {
                             options={adminLevelsOfRegion}
                             optionsIdentifier="select-input-inside-modal"
                             showHintAndError={false}
-                            value={formValues.parent || undefined}
                             formname="parent"
                             label={this.props.countriesStrings('parentAdminLevelLabel')}
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             styleName="text-input"
-                            error={formFieldErrors.parent}
                             disabled={pending}
                         />
                         <FileInput
@@ -451,23 +432,24 @@ export default class EditAdminLevel extends React.PureComponent {
                             accept=".zip, .json, .geojson"
                         >
                             {
-                                formValues.geoShapeFile ?
+                                formValues.geoShapeFile ? (
                                     <span styleName="show">
                                         <i className={iconNames.documentText} />
                                         {this.props.countriesStrings('geoShapeFile')}
                                     </span>
-                                    :
+                                ) : (
                                     <span styleName="load">
                                         <i className={iconNames.uploadFa} />
                                         {this.props.countriesStrings('loadGeoShapeFile')}
                                     </span>
+                                )
                             }
-                            <DeepGallery onlyFileName galleryId={formValues.geoShapeFile} />
+                            <DeepGallery
+                                onlyFileName
+                                galleryId={formValues.geoShapeFile}
+                            />
                         </FileInput>
-                        <HiddenInput
-                            value={formValues.geoShapeFile}
-                            formname="geoShapeFile"
-                        />
+                        <HiddenInput formname="geoShapeFile" />
                     </div>
                     <div styleName="action-buttons">
                         <DangerButton

@@ -3,23 +3,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Form,
-    NonFieldErrors,
-    requiredCondition,
-    TabularSelectInput,
-} from '../../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import { iconNames } from '../../../../common/constants';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import schema from '../../../../common/schema';
+import Form, { requiredCondition } from '../../../../public/components/Input/Form';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import TabularSelectInput from '../../../../public/components/Input/TabularSelectInput';
+
 import {
     transformResponseErrorToFormError,
     urlForUserMembership,
@@ -37,7 +28,9 @@ import {
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../../common/redux';
+import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
+import { iconNames } from '../../../../common/constants';
 
 import styles from './styles.scss';
 

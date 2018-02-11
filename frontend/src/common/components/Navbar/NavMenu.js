@@ -8,8 +8,8 @@ import {
 } from 'react-router-dom';
 
 import { reverseRoute } from '../../../public/utils/common';
-import { List } from '../../../public/components/View';
-import { DropdownMenu } from '../../../public/components/Action';
+import List from '../../../public/components/View/List';
+import DropdownMenu from '../../../public/components/Action/DropdownMenu';
 
 import {
     iconNames,

@@ -4,29 +4,18 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    PrimaryButton,
-    SuccessButton,
-    WarningButton,
-    SegmentButton,
-} from '../../../../public/components/Action';
-import {
-    FloatingContainer,
-    ListView,
-} from '../../../../public/components/View';
-import {
-    MultiSelectInput,
-} from '../../../../public/components/Input';
-
-import {
     getColorOnBgColor,
     getHexFromString,
 } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import notify from '../../../../common/notify';
-import schema from '../../../../common/schema';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import SuccessButton from '../../../../public/components/Action/Button/SuccessButton';
+import WarningButton from '../../../../public/components/Action/Button/WarningButton';
+import SegmentButton from '../../../../public/components/Action/SegmentButton';
+import FloatingContainer from '../../../../public/components/View/FloatingContainer';
+import ListView from '../../../../public/components/View/List/ListView';
+import MultiSelectInput from '../../../../public/components/Input/SelectInput/MultiSelectInput';
 
-import { entryStringsSelector } from '../../../../common/redux';
-import { iconNames } from '../../../../common/constants';
 import {
     urlForLeadClassify,
     urlForNer,
@@ -37,8 +26,12 @@ import {
     createParamsForNer,
     createParamsForFeedback,
 } from '../../../../common/rest';
-
+import { entryStringsSelector } from '../../../../common/redux';
+import { iconNames } from '../../../../common/constants';
+import notify from '../../../../common/notify';
+import schema from '../../../../common/schema';
 import SimplifiedLeadPreview from '../../../../common/components/SimplifiedLeadPreview';
+
 import styles from './styles.scss';
 
 // const NLP_THRESHOLD = 0;

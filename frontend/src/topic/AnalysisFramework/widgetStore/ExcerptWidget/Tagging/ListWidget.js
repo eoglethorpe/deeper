@@ -3,12 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    TextArea,
-} from '../../../../../public/components/Input';
-import {
-    afStringsSelector,
-} from '../../../../../common/redux';
+import TextArea from '../../../../../public/components/Input/TextArea';
+
+import { afStringsSelector } from '../../../../../common/redux';
 
 import styles from './styles.scss';
 

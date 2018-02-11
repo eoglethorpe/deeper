@@ -3,21 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import TextInput from '../../../../public/components/Input/TextInput';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import Form, {
+    requiredCondition,
+} from '../../../../public/components/Input/Form';
 
 import {
     transformResponseErrorToFormError,
@@ -29,6 +23,7 @@ import {
     projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -182,6 +177,8 @@ export default class AddCategoryEditor extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
                 onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -189,8 +186,6 @@ export default class AddCategoryEditor extends React.PureComponent {
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                     autoFocus
                 />
                 <div styleName="action-buttons">

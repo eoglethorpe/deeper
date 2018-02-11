@@ -10,26 +10,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DeepGallery from '../../../../common/components/DeepGallery';
 
-import {
-    Form,
-    NonFieldErrors,
-    ImageInput,
-    TextInput,
-    HiddenInput,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { UploadBuilder } from '../../../../public/utils/upload';
+import Form, { requiredCondition } from '../../../../public/components/Input/Form';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import ImageInput from '../../../../public/components/Input/FileInput/ImageInput';
+import TextInput from '../../../../public/components/Input/TextInput';
+import HiddenInput from '../../../../public/components/Input/HiddenInput';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 
-import schema from '../../../../common/schema';
 import {
     transformResponseErrorToFormError,
     createParamsForFileUpload,
@@ -42,6 +33,7 @@ import {
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../../common/redux';
+import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
@@ -295,17 +287,12 @@ export default class UserEdit extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
-                {/*
-                    TODO: Pass image src to ImageInput using advanced File Component
-                */}
-                <HiddenInput
-                    formname="displayPicture"
-                    value={formValues.displayPicture}
-                    error={formFieldErrors.displayPicture}
-                />
+                <HiddenInput formname="displayPicture" />
                 {
                     showGalleryImage && (
                         <DeepGallery
@@ -326,8 +313,6 @@ export default class UserEdit extends React.PureComponent {
                     label={this.props.userStrings('firstNameLabel')}
                     formname="firstName"
                     placeholder={this.props.userStrings('firstNamePlaceholder')}
-                    value={formValues.firstName}
-                    error={formFieldErrors.firstName}
                     disabled={pending}
                     autoFocus
                 />
@@ -335,16 +320,12 @@ export default class UserEdit extends React.PureComponent {
                     label={this.props.userStrings('lastNameLabel')}
                     formname="lastName"
                     placeholder={this.props.userStrings('lastNamePlaceholder')}
-                    value={formValues.lastName}
-                    error={formFieldErrors.lastName}
                     disabled={pending}
                 />
                 <TextInput
                     label={this.props.userStrings('organizationLabel')}
                     formname="organization"
                     placeholder={this.props.userStrings('organizationPlaceholder')}
-                    value={formValues.organization}
-                    error={formFieldErrors.organization}
                     disabled={pending}
                 />
                 <div styleName="action-buttons">

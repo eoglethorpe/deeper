@@ -3,28 +3,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { caseInsensitiveSubmatch } from '../../../public/utils/common';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import {
-    TextInput,
-    requiredCondition,
-} from '../../../public/components/Input';
-import {
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    ListView,
-    Modal,
-    ModalHeader,
-    ModalBody,
-} from '../../../public/components/View';
-import {
-    caseInsensitiveSubmatch,
-} from '../../../public/utils/common';
+import TextInput from '../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import ListView from '../../../public/components/View/List/ListView';
+import Modal from '../../../public/components/View/Modal';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ModalBody from '../../../public/components/View/Modal/Body';
 
-import {
-    iconNames,
-} from '../../../common/constants';
-import schema from '../../../common/schema';
 import {
     createParamsForUser,
     urlForRegions,
@@ -37,10 +24,12 @@ import {
     activeUserSelector,
     countriesStringsSelector,
 } from '../../../common/redux';
+import schema from '../../../common/schema';
+import { iconNames } from '../../../common/constants';
+import AddRegion from '../../../common/components/AddRegion';
 
 import CountryDetail from '../components/CountryDetail';
 import CountryListItem from '../components/CountryListItem';
-import AddRegion from '../../../common/components/AddRegion';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -84,15 +73,6 @@ export default class CountryPanel extends React.PureComponent {
             addCountryModal: false,
             displayCountryList,
             searchInputValue: '',
-        };
-
-        this.elements = [
-            'name',
-            'code',
-        ];
-        this.validations = {
-            name: [requiredCondition],
-            code: [requiredCondition],
         };
 
         this.countriesRequest = this.createRequestforCountries();

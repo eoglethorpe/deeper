@@ -2,10 +2,7 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
-import {
-    ListView,
-} from '../../../../../public/components/View';
+import ListView from '../../../../../public/components/View/List/ListView';
 
 import { updateAttribute } from './utils';
 import styles from './styles.scss';

@@ -11,23 +11,18 @@ import {
 
 import update from '../../../../../public/utils/immutable-update';
 
-import {
-    TextInput,
-    ColorInput,
-} from '../../../../../public/components/Input';
-import {
-    PrimaryButton,
-    AccentButton,
-    DangerButton,
-    Button,
-} from '../../../../../public/components/Action';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ListView,
-} from '../../../../../public/components/View';
+import ColorInput from '../../../../../public/components/Input/ColorInput';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../../public/components/Action/Button/AccentButton';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+import ListView from '../../../../../public/components/View/List/ListView';
+
 import { randomString } from '../../../../../public/utils/common';
 
 import { iconNames } from '../../../../../common/constants';

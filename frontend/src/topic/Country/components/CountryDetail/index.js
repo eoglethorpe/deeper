@@ -4,18 +4,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
-import { DangerButton } from '../../../../public/components/Action';
-import {
-    Confirm,
-    LoadingAnimation,
-} from '../../../../public/components/View';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+
 import {
     createParamsForCountryDelete,
     createUrlForRegion,
 } from '../../../../common/rest';
-
 import {
     countryDetailSelector,
     unSetRegionAction,
@@ -23,16 +20,15 @@ import {
     notificationStringsSelector,
     countriesStringsSelector,
 } from '../../../../common/redux';
+import RegionDetailView from '../../../../common/components/RegionDetailView';
+import RegionMap from '../../../../common/components/RegionMap';
+import notify from '../../../../common/notify';
 
 import CountryGeneral from '../CountryGeneral';
 import CountryKeyFigures from '../CountryKeyFigures';
 import CountryMediaSources from '../CountryMediaSources';
 import CountryPopulationData from '../CountryPopulationData';
 import CountrySeasonalCalendar from '../CountrySeasonalCalendar';
-import RegionDetailView from '../../../../common/components/RegionDetailView';
-import RegionMap from '../../../../common/components/RegionMap';
-
-import notify from '../../../../common/notify';
 
 import styles from './styles.scss';
 

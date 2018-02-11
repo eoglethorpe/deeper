@@ -7,22 +7,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    TextArea,
-    requiredCondition,
-} from '../../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../../public/components/Action';
-
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import Form, { requiredCondition } from '../../../../public/components/Input/Form';
+import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
+import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import TextInput from '../../../../public/components/Input/TextInput';
+import TextArea from '../../../../public/components/Input/TextArea';
 
 import schema from '../../../../common/schema';
 import {
@@ -211,6 +203,8 @@ export default class UserGroupEdit extends React.PureComponent {
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -218,8 +212,6 @@ export default class UserGroupEdit extends React.PureComponent {
                     label={this.props.userStrings('addUserGroupModalLabel')}
                     formname="title"
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.title}
                     disabled={pending}
                     autoFocus
                 />
@@ -229,8 +221,6 @@ export default class UserGroupEdit extends React.PureComponent {
                     styleName="description"
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     rows={3}
-                    value={formValues.description}
-                    error={formFieldErrors.description}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

@@ -8,29 +8,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    Modal,
-    ModalBody,
-    ModalHeader,
-    LoadingAnimation,
-} from '../../../public/components/View';
-
-import DeepGallery from '../../../common/components/DeepGallery';
-
-import {
-    UserProject,
-    UserGroup,
-    UserEdit,
-} from '../components/';
-
-import { iconNames } from '../../../common/constants';
-
 import { FgRestBuilder } from '../../../public/utils/rest';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../public/components/View/Modal';
+import ModalBody from '../../../public/components/View/Modal/Body';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
-import schema from '../../../common/schema';
 import {
     createParamsForUser,
     createUrlForUser,
@@ -44,7 +28,15 @@ import {
 
     userStringsSelector,
 } from '../../../common/redux';
+import DeepGallery from '../../../common/components/DeepGallery';
+import schema from '../../../common/schema';
+import { iconNames } from '../../../common/constants';
 
+import {
+    UserProject,
+    UserGroup,
+    UserEdit,
+} from '../components/';
 import styles from './styles.scss';
 
 const propTypes = {

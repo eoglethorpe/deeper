@@ -122,7 +122,6 @@ export const leadTypeIconMap = {
 const leadReference = {
     data: {
         id: 'lead-0',
-        type: 'void',
         serverId: undefined,
     },
     form: {
@@ -139,11 +138,10 @@ const leadReference = {
     },
 };
 
-export const createLead = ({ id, serverId, type, values = {}, pristine = false }) => {
+export const createLead = ({ id, serverId, values = {}, pristine = false }) => {
     const settings = {
         data: {
             id: { $set: id },
-            type: { $set: type },
             serverId: { $set: serverId },
         },
         form: {
@@ -156,11 +154,13 @@ export const createLead = ({ id, serverId, type, values = {}, pristine = false }
     return update(leadReference, settings);
 };
 
+// TODO: use leadAccessor
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     const { data, form, uiState } = lead;
     const { values } = form;
+    const { sourceType: type } = values;
     const { pristine, error } = uiState;
-    const { type, serverId } = data;
+    const { serverId } = data;
 
     const isFileUploading = () => upload && upload.progress <= 100;
     const isDriveUploading = () => drive && drive.pending;
@@ -196,7 +196,7 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
 export const leadAccessor = {
     getKey: lead => lead.data && lead.data.id,
     getServerId: lead => lead.data && lead.data.serverId,
-    getType: lead => lead.data && lead.data.type,
+    getType: lead => lead.form && lead.form.values && lead.form.values.sourceType,
 
     getValues: lead => lead.form && lead.form.values,
     getErrors: lead => lead.form && lead.form.errors,

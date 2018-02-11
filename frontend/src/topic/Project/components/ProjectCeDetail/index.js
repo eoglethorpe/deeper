@@ -4,10 +4,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { reverseRoute } from '../../../../public/utils/common';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
 
-import {
-    PrimaryButton,
-} from '../../../../public/components/Action';
 import {
     createParamsForProjectPatch,
     createUrlForProject,
@@ -18,10 +19,6 @@ import {
     createUrlForCategoryEditor,
 } from '../../../../common/rest';
 import {
-    LoadingAnimation,
-    Confirm,
-} from '../../../../public/components/View';
-import {
     categoryEditorDetailSelector,
     projectDetailsSelector,
 
@@ -31,11 +28,6 @@ import {
     projectStringsSelector,
 } from '../../../../common/redux';
 import schema from '../../../../common/schema';
-
-import {
-    reverseRoute,
-} from '../../../../public/utils/common';
-
 import {
     iconNames,
     pathNames,

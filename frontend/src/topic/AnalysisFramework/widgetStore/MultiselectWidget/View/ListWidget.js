@@ -2,11 +2,9 @@ import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import styles from './styles.scss';
-import {
-    ListView,
-} from '../../../../../public/components/View';
+import ListView from '../../../../../public/components/View/List/ListView';
 
+import styles from './styles.scss';
 
 const emptyList = [];
 const emptyObject = {};

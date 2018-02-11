@@ -2,21 +2,14 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    PrimaryButton,
-} from '../../../public/components/Action';
-import {
-    ListView,
-    Modal,
-    ModalHeader,
-    ModalBody,
-} from '../../../public/components/View';
-import {
-    iconNames,
-} from '../../constants';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import ListView from '../../../public/components/View/List/ListView';
+import Modal from '../../../public/components/View/Modal';
+import ModalHeader from '../../../public/components/View/Modal/Header';
+import ModalBody from '../../../public/components/View/Modal/Body';
 
+import { iconNames } from '../../constants';
 import styles from './styles.scss';
-
 
 const propTypes = {
     images: PropTypes.array, // eslint-disable-line react/forbid-prop-types

@@ -2,16 +2,11 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    MultiSelectInput,
-} from '../../../../../public/components/Input';
+import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
+import ListView from '../../../../../public/components/View/List/ListView';
 
-import {
-    ListView,
-} from '../../../../../public/components/View';
-
-import styles from './styles.scss';
 import { updateAttribute } from './utils';
+import styles from './styles.scss';
 
 const emptyList = [];
 

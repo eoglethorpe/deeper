@@ -2,9 +2,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {
-    createUrlForGoogleViewer,
-} from '../../../../../common/rest/external';
+import { createUrlForGoogleViewer } from '../../../../rest/external';
 
 import styles from './styles.scss';
 

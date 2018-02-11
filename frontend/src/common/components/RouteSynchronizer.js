@@ -3,16 +3,12 @@ import Helmet from 'react-helmet';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    Bundle,
-    withTracker,
-} from '../../public/components/General';
+import Bundle from '../../public/components/General/Bundle';
+import withTracker from '../../public/components/General/withTracker';
 import {
     getKeyByValue,
     reverseRoute,
 } from '../../public/utils/common';
-
-import { pathNames } from '../../common/constants';
 
 import {
     activeProjectSelector,
@@ -22,6 +18,7 @@ import {
     setRouteParamsAction,
     pageTitleStringsSelector,
 } from '../redux';
+import { pathNames } from '../constants';
 
 const propTypes = {
     match: PropTypes.shape({

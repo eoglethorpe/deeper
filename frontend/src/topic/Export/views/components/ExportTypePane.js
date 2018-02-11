@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Checkbox, TreeSelection } from '../../../../public/components/Input';
-import { List } from '../../../../public/components/View';
+import Checkbox from '../../../../public/components/Input/Checkbox';
+import TreeSelection from '../../../../public/components/Input/TreeSelection';
+import List from '../../../../public/components/View/List';
 
 import { iconNames } from '../../../../common/constants';
 import { exportStringsSelector } from '../../../../common/redux';
@@ -13,6 +14,7 @@ import wordIcon from '../../../../img/word.svg';
 import excelIcon from '../../../../img/excel.svg';
 import pdfIcon from '../../../../img/pdf.svg';
 import jsonIcon from '../../../../img/json.svg';
+
 import styles from '../styles.scss';
 
 const propTypes = {

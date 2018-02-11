@@ -3,24 +3,19 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    MultiSelectInput,
-    TextInput,
-} from '../../../../../public/components/Input';
-import {
-    Button,
-    DangerButton,
-    PrimaryButton,
-} from '../../../../../public/components/Action';
-import {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ListView,
-} from '../../../../../public/components/View';
 import { randomString } from '../../../../../public/utils/common';
 import update from '../../../../../public/utils/immutable-update';
+import TextInput from '../../../../../public/components/Input/TextInput';
+import Button from '../../../../../public/components/Action/Button';
+import PrimaryButton from '../../../../../public/components/Action/Button/PrimaryButton';
+import Modal from '../../../../../public/components/View/Modal';
+import ModalHeader from '../../../../../public/components/View/Modal/Header';
+import ModalBody from '../../../../../public/components/View/Modal/Body';
+import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+import ListView from '../../../../../public/components/View/List/ListView';
+import DangerButton from '../../../../../public/components/Action/Button/DangerButton';
+import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
+
 import { iconNames } from '../../../../../common/constants';
 import { afStringsSelector } from '../../../../../common/redux';
 

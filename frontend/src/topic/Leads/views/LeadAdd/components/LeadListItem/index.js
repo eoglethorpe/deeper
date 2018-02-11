@@ -2,19 +2,14 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import WarningButton from '../../../../../../public/components/Action/Button/WarningButton';
+
 import {
     LEAD_TYPE,
     LEAD_STATUS,
     leadAccessor,
 } from '../../../../../../common/entities/lead';
-
-import {
-    iconNames,
-} from '../../../../../../common/constants';
-
-import {
-    WarningButton,
-} from '../../../../../../public/components/Action';
+import { iconNames } from '../../../../../../common/constants';
 
 import styles from './styles.scss';
 

@@ -4,24 +4,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import {
-    FormattedDate,
-    GridLayout,
-    ListView,
-    LoadingAnimation,
-    Pager,
-} from '../../../public/components/View';
 import { isFalsy, reverseRoute } from '../../../public/utils/common';
-import { PrimaryButton } from '../../../public/components/Action';
 import { FgRestBuilder } from '../../../public/utils/rest';
+import FormattedDate from '../../../public/components/View/FormattedDate';
+import GridLayout from '../../../public/components/View/GridLayout';
+import ListView from '../../../public/components/View/List/ListView';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import Pager from '../../../public/components/View/Pager';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 
 import {
     iconNames,
     pathNames,
 } from '../../../common/constants';
-
-import schema from '../../../common/schema';
-
 import {
     setEntriesAction,
     setProjectAction,
@@ -43,7 +38,6 @@ import {
 
     entryStringsSelector,
 } from '../../../common/redux';
-
 import {
     createUrlForFilteredEntries,
 
@@ -54,10 +48,10 @@ import {
 
     transformResponseErrorToFormError,
 } from '../../../common/rest';
+import schema from '../../../common/schema';
 import notify from '../../../common/notify';
 
 import FilterEntriesForm from './FilterEntriesForm';
-// import widgetStore from '../../AnalysisFramework/widgetStore';
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({

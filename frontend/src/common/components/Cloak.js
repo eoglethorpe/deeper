@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
     activeUserSelector,
     currentUserProjectsSelector,
-} from '../../common/redux';
+} from '../redux';
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),

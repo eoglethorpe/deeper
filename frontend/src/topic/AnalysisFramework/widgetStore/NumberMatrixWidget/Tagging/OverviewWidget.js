@@ -4,13 +4,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import update from '../../../../../public/utils/immutable-update';
-import { NumberInput } from '../../../../../public/components/Input';
-import { List } from '../../../../../public/components/View';
+import NumberInput from '../../../../../public/components/Input/NumberInput';
+import List from '../../../../../public/components/View/List';
 
 import { afStringsSelector } from '../../../../../common/redux';
 
-import styles from './styles.scss';
 import { updateAttribute } from './utils';
+import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,

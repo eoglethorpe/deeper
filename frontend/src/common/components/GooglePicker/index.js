@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 import loadScript from 'load-script';
 import { connect } from 'react-redux';
 
-import { PrimaryButton } from '../../../public/components/Action';
-import { commonStringsSelector } from '../../../common/redux';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 
-import { GOOGLE_SDK_URL } from '../../../common/config/google-drive';
+import { commonStringsSelector } from '../../redux';
+import { GOOGLE_SDK_URL } from '../../config/google-drive';
+
 import styles from './styles.scss';
 
 let scriptLoadingStarted = false;

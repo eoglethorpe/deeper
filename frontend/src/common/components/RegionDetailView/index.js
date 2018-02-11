@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
     regionDetailForRegionSelector,
     countriesStringsSelector,
-} from '../../../common/redux';
+} from '../../redux';
 
 import styles from './styles.scss';
 

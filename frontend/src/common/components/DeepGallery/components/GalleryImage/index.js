@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { iconNames } from '../../../../../common/constants';
-import { commonStringsSelector } from '../../../../../common/redux';
+import { iconNames } from '../../../../constants';
+import { commonStringsSelector } from '../../../../redux';
 
 import styles from './styles.scss';
 

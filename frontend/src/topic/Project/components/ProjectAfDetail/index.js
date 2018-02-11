@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { reverseRoute } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
 
-import {
-    PrimaryButton,
-} from '../../../../public/components/Action';
 import {
     createParamsForProjectPatch,
     createUrlForProject,
@@ -18,10 +19,6 @@ import {
     createUrlForAnalysisFramework,
 } from '../../../../common/rest';
 import {
-    LoadingAnimation,
-    Confirm,
-} from '../../../../public/components/View';
-import {
     analysisFrameworkDetailSelector,
     projectDetailsSelector,
 
@@ -31,17 +28,13 @@ import {
     notificationStringsSelector,
     projectStringsSelector,
 } from '../../../../common/redux';
-import schema from '../../../../common/schema';
-
-import {
-    reverseRoute,
-} from '../../../../public/utils/common';
-
 import {
     iconNames,
     pathNames,
 } from '../../../../common/constants';
+import schema from '../../../../common/schema';
 import notify from '../../../../common/notify';
+
 import ProjectAfForm from '../ProjectAfForm';
 import styles from './styles.scss';
 

@@ -7,15 +7,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { ListView } from '../../../../../public/components/View';
+import ListView from '../../../../../public/components/View/List/ListView';
 
 import {
     addLeadViewActiveLeadIdSelector,
     addLeadViewSetActiveLeadIdAction,
 } from '../../../../../common/redux';
-
 import { leadAccessor } from '../../../../../common/entities/lead';
-
 
 import LeadListItem from './LeadListItem';
 import styles from './../styles.scss';

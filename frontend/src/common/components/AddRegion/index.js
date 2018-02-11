@@ -4,24 +4,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import {
-    Form,
-    NonFieldErrors,
-    TextInput,
-    requiredCondition,
-} from '../../../public/components/Input';
-import {
-    LoadingAnimation,
-} from '../../../public/components/View';
-import {
-    DangerButton,
-    PrimaryButton,
-} from '../../../public/components/Action';
+import TextInput from '../../../public/components/Input/TextInput';
+import Form, { requiredCondition } from '../../../public/components/Input/Form';
+import NonFieldErrors from '../../../public/components/Input/NonFieldErrors';
+import DangerButton from '../../../public/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
-
-import { pathNames } from '../../../common/constants';
 import { reverseRoute } from '../../../public/utils/common';
+
+import { pathNames } from '../../constants';
 
 import {
     transformResponseErrorToFormError,
@@ -36,6 +29,7 @@ import {
 } from '../../redux';
 import notify from '../../notify';
 import schema from '../../schema';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -251,6 +245,8 @@ export default class AddRegion extends React.PureComponent {
                 validation={this.validation}
                 validations={this.validations}
                 onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -258,16 +254,12 @@ export default class AddRegion extends React.PureComponent {
                     label={this.props.projectStrings('addRegionTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addRegionTitlePlaceholder')}
-                    value={formValues.title}
-                    error={formFieldErrors.name}
                     autoFocus
                 />
                 <TextInput
                     label={this.props.projectStrings('addRegionCodeLabel')}
                     formname="code"
                     placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
-                    value={formValues.code}
-                    error={formFieldErrors.code}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

@@ -9,18 +9,13 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
 import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
 import update from '../../../../public/utils/immutable-update';
-import {
-    Confirm,
-    List,
-} from '../../../../public/components/View/';
-import { CoordinatorBuilder } from '../../../../public/utils/coordinate';
-
-import {
-    Button,
-    DropdownMenu,
-} from '../../../../public/components/Action/';
+import Confirm from '../../../../public/components/View/Modal/Confirm';
+import List from '../../../../public/components/View/List';
+import Button from '../../../../public/components/Action/Button';
+import DropdownMenu from '../../../../public/components/Action/DropdownMenu';
 
 import {
     leadFilterOptionsSelector,
@@ -43,25 +38,24 @@ import {
     notificationStringsSelector,
     commonStringsSelector,
 } from '../../../../common/redux';
-
 import {
     LEAD_FILTER_STATUS,
     LEAD_STATUS,
     calcLeadState,
     leadAccessor,
 } from '../../../../common/entities/lead';
+import { iconNames } from '../../../../common/constants';
+import notify from '../../../../common/notify';
 
 import DropboxBuilder from './utils/builder/DropboxBuilder';
 import FileUploadBuilder from './utils/builder/FileUploadBuilder';
 import FormSaveBuilder from './utils/builder/FormSaveBuilder';
 import GoogleDriveBuilder from './utils/builder/GoogleDriveBuilder';
-
-import { iconNames } from '../../../../common/constants';
-import notify from '../../../../common/notify';
 import LeadFilter from './components/LeadFilter';
 import LeadButtons from './components/LeadButtons';
 import LeadList from './components/LeadList';
 import LeadFormItem from './components/LeadFormItem';
+
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
