@@ -4,7 +4,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { reverseRoute } from '../../../../public/utils/common';
+import {
+    reverseRoute,
+    compareString,
+    compareDate,
+} from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import Table from '../../../../public/components/View/Table';
 import FormattedDate from '../../../../public/components/View/FormattedDate';
@@ -127,29 +131,31 @@ export default class ProjectGeneral extends React.PureComponent {
                 label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.memberName.localeCompare(b.memberName),
+                comparator: (a, b) => compareString(a.memberName, b.memberName),
             },
             {
                 key: 'memberEmail',
                 label: this.props.projectStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
+                comparator: (a, b) => compareString(a.memberEmail, b.memberEmail),
             },
             {
                 key: 'role',
                 label: this.props.projectStrings('tableHeaderRights'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.role.localeCompare(b.role),
+                comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'joinedAt',
                 label: this.props.projectStrings('tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => a.joinedAt - b.joinedAt,
-                modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
+                comparator: (a, b) => compareDate(a.joinedAt, b.joinedAt),
+                modifier: row => (
+                    <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />
+                ),
             },
             {
                 key: 'actions',

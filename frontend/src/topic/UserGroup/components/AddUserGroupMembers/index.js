@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { compareString } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import Form, { requiredCondition } from '../../../../public/components/Input/Form';
 import NonFieldErrors from '../../../../public/components/Input/NonFieldErrors';
@@ -110,14 +111,14 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.displayName.localeCompare(b.displayName),
+                comparator: (a, b) => compareString(a.displayName, b.displayName),
             },
             {
                 key: 'email',
                 label: this.props.userStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.email.localeCompare(b.email),
+                comparator: (a, b) => compareString(a.email, b.email),
             },
             {
                 key: 'actions',

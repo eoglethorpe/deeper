@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import {
     reverseRoute,
     caseInsensitiveSubmatch,
+    compareLength,
+    compareString,
 } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
@@ -96,7 +98,7 @@ export default class ProjectsTable extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'createdAt',
@@ -116,15 +118,13 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 modifier: d => ((d.regions || []).length),
-                comparator: (a, b) => (a.regions || []).length - (b.regions || []).length,
+                comparator: (a, b) => compareLength(a.regions, b.regions),
             },
             {
                 key: 'status',
                 label: this.props.userStrings('tableHeaderStatus'),
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
-                // sortable: true,
-                // comparator: (a, b) => a.name.localeCompare(b.name),
             },
             {
                 key: 'modifiedAt',
@@ -138,7 +138,7 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 7,
                 sortable: true,
                 modifier: d => ((d.memberships || []).length),
-                comparator: (a, b) => (a.memberships || []).length - (b.memberships || []).length,
+                comparator: (a, b) => compareLength(a.memberships, b.memberships),
             },
             {
                 key: 'actions',

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
+import { caseInsensitiveSubmatch, compareString } from '../../../../public/utils/common';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
 import TextInput from '../../../../public/components/Input/TextInput';
 import ListView from '../../../../public/components/View/List/ListView';
@@ -231,7 +231,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         } = this.props;
 
         const sortedCes = [...displayCeList];
-        sortedCes.sort((a, b) => (a.title.localeCompare(b.title)));
+        sortedCes.sort((a, b) => compareString(a.title, b.title));
 
         return (
             <div styleName="project-category-editor">

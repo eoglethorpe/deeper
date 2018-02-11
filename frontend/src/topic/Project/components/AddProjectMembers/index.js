@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { compareString } from '../../../../public/utils/common';
 import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
@@ -109,14 +110,14 @@ export default class AddProjectMembers extends React.PureComponent {
                 label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.displayName.localeCompare(b.displayName),
+                comparator: (a, b) => compareString(a.displayName, b.displayName),
             },
             {
                 key: 'email',
                 label: this.props.projectStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.email.localeCompare(b.email),
+                comparator: (a, b) => compareString(a.email, b.email),
             },
             {
                 key: 'actions',

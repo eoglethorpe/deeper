@@ -10,7 +10,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { reverseRoute } from '../../../../public/utils/common';
+import {
+    reverseRoute,
+    compareDate,
+    compareLength,
+    compareString,
+} from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
@@ -79,20 +84,6 @@ const mapDispatchToProps = dispatch => ({
     unSetProject: params => dispatch(unSetProjectAction(params)),
 });
 
-// TODO: move this to common
-const dateComparator = (a, b) => {
-    if (!a && !b) {
-        return 1;
-    } else if (!a) {
-        return -1;
-    } else if (!b) {
-        return 1;
-    }
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateA.getTime() - dateB.getTime();
-};
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserProject extends React.PureComponent {
@@ -122,14 +113,14 @@ export default class UserProject extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'rights',
                 label: this.props.userStrings('tableHeaderRights'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.role.localeCompare(b.role),
+                comparator: (a, b) => compareString(a.role, b.role),
                 modifier: row => row.role,
             },
             {
@@ -137,7 +128,7 @@ export default class UserProject extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderCreatedAt'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => dateComparator(a.createdAt, b.createdAt),
+                comparator: (a, b) => compareDate(a.createdAt, b.createdAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}
@@ -150,7 +141,7 @@ export default class UserProject extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderLastModifiedAt'),
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => dateComparator(a.modifiedAt, b.modifiedAt),
+                comparator: (a, b) => compareDate(a.modifiedAt, b.modifiedAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.modifiedAt}
@@ -169,7 +160,7 @@ export default class UserProject extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderMembers'),
                 order: 6,
                 sortable: true,
-                comparator: (a, b) => (a.memberships || []).length - (b.memberships || []).length,
+                comparator: (a, b) => compareLength(a.memberships, b.memberships),
                 modifier: d => (d.memberships || []).length,
             },
             {

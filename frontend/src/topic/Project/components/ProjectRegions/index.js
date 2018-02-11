@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
+import { caseInsensitiveSubmatch, compareString } from '../../../../public/utils/common';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
 import TextInput from '../../../../public/components/Input/TextInput';
 import RadioInput from '../../../../public/components/Input/RadioInput';
@@ -214,7 +214,7 @@ export default class ProjectRegions extends React.PureComponent {
         } = this.state;
 
         const sortedRegions = [...displayRegionList];
-        sortedRegions.sort((a, b) => (a.title.localeCompare(b.title)));
+        sortedRegions.sort((a, b) => compareString(a.title, b.title));
 
         return (
             <div styleName="project-regions">

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { caseInsensitiveSubmatch } from '../../../public/utils/common';
+import { caseInsensitiveSubmatch, compareString } from '../../../public/utils/common';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import TextInput from '../../../public/components/Input/TextInput';
 import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
@@ -67,7 +67,7 @@ export default class CountryPanel extends React.PureComponent {
 
         const displayCountryList = [...this.props.countries];
 
-        displayCountryList.sort((a, b) => (a.title.localeCompare(b.title)));
+        displayCountryList.sort((a, b) => compareString(a.title, b.title));
 
         this.state = {
             addCountryModal: false,
@@ -89,7 +89,7 @@ export default class CountryPanel extends React.PureComponent {
             const displayCountryList = countries.filter(
                 country => caseInsensitiveSubmatch(country.title, searchInputValue),
             );
-            displayCountryList.sort((a, b) => (a.title.localeCompare(b.title)));
+            displayCountryList.sort((a, b) => compareString(a.title, b.title));
             this.setState({ displayCountryList });
         }
     }

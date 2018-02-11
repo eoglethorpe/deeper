@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { isObjectEmpty } from '../../../public/utils/common';
+import { isObjectEmpty, compareString } from '../../../public/utils/common';
 import List from '../../../public/components/View/List';
 import ListView from '../../../public/components/View/List/ListView';
 
@@ -89,14 +89,10 @@ export default class ApiDocs extends React.PureComponent {
 
     preprocessDocs = (docs) => {
         docs.apis.forEach((api) => {
-            api.endpoints.sort((e1, e2) => (
-                e1.title.localeCompare(e2.title)
-            ));
+            api.endpoints.sort((e1, e2) => compareString(e1.title, e2.title));
 
             api.endpoints.forEach(endpoint => (
-                endpoint.methods.sort((m1, m2) => (
-                    m1.title.localeCompare(m2.title)
-                ))
+                endpoint.methods.sort((m1, m2) => compareString(m1.title, m2.title))
             ));
         });
         return docs;

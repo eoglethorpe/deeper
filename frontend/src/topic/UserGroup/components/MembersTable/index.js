@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import {
     reverseRoute,
     caseInsensitiveSubmatch,
+    compareString,
+    compareDate,
 } from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
@@ -94,28 +96,28 @@ export default class MembersTable extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.memberName.localeCompare(b.memberName),
+                comparator: (a, b) => compareString(a.memberName, b.memberName),
             },
             {
                 key: 'memberEmail',
                 label: this.props.userStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.memberEmail.localeCompare(b.memberEmail),
+                comparator: (a, b) => compareString(a.memberEmail, b.memberEmail),
             },
             {
                 key: 'role',
                 label: this.props.userStrings('tableHeaderRights'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.role.localeCompare(b.role),
+                comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'joinedAt',
                 label: this.props.userStrings('tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => a.joinedAt - b.joinedAt,
+                comparator: (a, b) => compareDate(a.joinedAt, b.jointedAt),
                 modifier: row => <FormattedDate date={row.joinedAt} mode="dd-MM-yyyy hh:mm" />,
             },
             {

@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
-import { caseInsensitiveSubmatch } from '../../../../public/utils/common';
+import { caseInsensitiveSubmatch, compareString } from '../../../../public/utils/common';
 
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
 import TextInput from '../../../../public/components/Input/TextInput';
@@ -233,7 +233,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         } = this.props;
 
         const sortedAfs = [...displayAfList];
-        sortedAfs.sort((a, b) => (a.title.localeCompare(b.title)));
+        sortedAfs.sort((a, b) => compareString(a.title, b.title));
 
         return (
             <div styleName="project-analysis-framework">
