@@ -8,7 +8,7 @@ import { commonStringsSelector } from '../../../../redux';
 
 import styles from './styles.scss';
 
-export const supportedMimeType = ['image/png', 'image/jpeg', 'image/fig', 'image/gif'];
+export { galleryImageMimeType as supportedMimeType } from '../../../../config/deepMimeTypes';
 
 const propTypes = {
     className: PropTypes.string,
@@ -25,6 +25,9 @@ const mapStateToProps = state => ({
     commonStrings: commonStringsSelector(state),
 });
 
+/*
+ * Gallery viewer component for Images [galleryImageMimeType]
+ */
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class GalleryImage extends React.PureComponent {

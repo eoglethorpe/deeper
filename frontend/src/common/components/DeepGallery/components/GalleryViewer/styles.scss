@@ -1,7 +1,10 @@
-@import '../../../stylesheets/base';
+@import '../../../../../stylesheets/base';
 
 
-.deep-gallery {
+.gallery-viewer {
+    width: 100%;
+    height: 100%;
+
     .urlbar {
         display: flex;
         border-bottom: $width-separator-thin solid $color-separator;
@@ -36,10 +39,12 @@
 
     .doc-container {
         position: relative;
+        width: 100%;
         height: 100%;
 
         .doc {
             border: 0;
+            width: 100%;
             height: 100%;
         }
     }
@@ -51,24 +56,23 @@
     }
 }
 
-.gallery-file-name {
-    color: $color-accent;
-}
-
-.upload-filename {
-    .label {
-        margin-right: $spacing-small;
-    }
-
-    .loading-animation {
-        display: inline-block;
-        animation: spin 1s linear infinite;
-    }
-
-}
-
-.pending-container {
+.error-url {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin: auto;
+    padding: $spacing-medium;
+    height: 100%;
+    text-align: center;
+
+    .url {
+        display: inline-block;
+        text-transform: lowercase;
+        color: $color-accent;
+    }
+
+    .msg {
+        color: $color-danger;
+    }
 }

@@ -11,8 +11,8 @@ import {
     createUrlForExport,
 } from '../../rest';
 import { exportStringsSelector } from '../../redux';
+import { GalleryViewer } from '../DeepGallery';
 
-import GalleryDocs from '../DeepGallery/components/GalleryDocs';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -131,10 +131,12 @@ export default class ExportPreview extends React.PureComponent {
 
         if (exportObj) {
             return (
-                <GalleryDocs
-                    docUrl={exportObj.file}
+                <GalleryViewer
+                    url={exportObj.file}
                     mimeType={exportObj.mimeType}
                     canShowIframe={false}
+                    invalidUrlMessage={this.props.exportStrings('previewNotAvailableLabel')}
+                    showUrl
                 />
             );
         }

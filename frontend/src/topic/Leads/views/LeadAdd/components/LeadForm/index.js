@@ -21,7 +21,7 @@ import {
     ATTACHMENT_TYPES,
     leadAccessor,
 } from '../../../../../../common/entities/lead';
-import DeepGallery from '../../../../../../common/components/DeepGallery';
+import { InternalGallery } from '../../../../../../common/components/DeepGallery';
 import { leadsStringsSelector } from '../../../../../../common/redux';
 
 import ApplyAll, { ExtractThis } from '../ApplyAll';
@@ -340,7 +340,7 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            <DeepGallery
+                            <InternalGallery
                                 onlyFileName
                                 galleryId={values.attachment && values.attachment.id}
                             />

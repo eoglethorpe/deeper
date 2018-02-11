@@ -8,7 +8,7 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import DeepGallery from '../../../../common/components/DeepGallery';
+import { InternalGallery } from '../../../../common/components/DeepGallery';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import { UploadBuilder } from '../../../../public/utils/upload';
@@ -295,7 +295,7 @@ export default class UserEdit extends React.PureComponent {
                 <HiddenInput formname="displayPicture" />
                 {
                     showGalleryImage && (
-                        <DeepGallery
+                        <InternalGallery
                             styleName="gallery-image"
                             galleryId={formValues.displayPicture}
                         />
