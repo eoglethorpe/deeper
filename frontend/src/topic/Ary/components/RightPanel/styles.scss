@@ -1,0 +1,20 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+
+$width-right-panel-min: 640px;
+
+
+.tabs-container {
+
+    .tabs-header-container {
+        background-color: $color-foreground;
+    }
+
+    .tabs-content {
+        height: calc(100% - 39px);
+
+        .tab {
+            height: 100%;
+        }
+    }
+}

@@ -17,7 +17,7 @@ const importers = {
     entries: () => import('./Entries/views/'),
     editEntries: () => import('./Entries/views/EditEntryView'),
 
-    ary: () => import('./Ary/views/'),
+    ary: () => import('./Ary/'),
     // editAry: () => import(''),
 
     export: () => import('./Export/views/'),

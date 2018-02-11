@@ -1,0 +1,31 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/tabs';
+
+$width-entry-select-input: 400px;
+$width-left-panel-min: 460px;
+$width-right-panel-min: 640px;
+
+.ary {
+    display: flex;
+    height: 100%;
+
+    .left {
+        width: 24%;
+        min-width: $width-left-panel-min;
+    }
+
+    .right {
+        width: 70%;
+        min-width: $width-right-panel-min;
+    }
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

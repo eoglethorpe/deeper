@@ -1,0 +1,27 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+
+$width-left-panel-min: 460px;
+
+.tabs-container {
+    border-right: $width-separator-thin solid $color-separator;
+    height: 100%;
+
+    .tabs-header-container {
+        background-color: $color-foreground;
+    }
+
+    .tabs-content {
+        height: calc(100% - 39px);
+
+        .tab {
+            height: 100%;
+        }
+    }
+}
+
+.highlights-container {
+    background-color: $color-foreground-alt;
+    height: 100%;
+    overflow-y: auto;
+}
