@@ -335,7 +335,6 @@ export default class Overview extends React.PureComponent {
                         }
                     </div>
                 </button>
-
                 {
                     isMarkedForDelete ? (
                         <Button
@@ -343,6 +342,7 @@ export default class Overview extends React.PureComponent {
                             className="remove-button"
                             onClick={() => onEntryDelete(false, key)}
                             iconName={iconNames.undo}
+                            title={this.props.entryStrings('removeEntryButtonTitle')}
                         />
                     ) : (
                         <DangerButton
@@ -350,6 +350,7 @@ export default class Overview extends React.PureComponent {
                             className="remove-button"
                             onClick={() => onEntryDelete(true, key)}
                             iconName={iconNames.delete}
+                            title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
                         />
                     )
                 }
@@ -659,14 +660,6 @@ export default class Overview extends React.PureComponent {
                                 >
                                     <i className={iconNames.delete} />
                                 </DangerButton>
-                            }
-                            { selectedEntry && isMarkedForDelete &&
-                                <Button
-                                    title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
-                                    onClick={() => onEntryDelete(false)}
-                                >
-                                    <i className={iconNames.undo} />
-                                </Button>
                             }
                         </div>
                         <div styleName="action-buttons">

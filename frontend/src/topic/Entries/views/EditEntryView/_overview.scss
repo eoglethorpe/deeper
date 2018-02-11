@@ -137,9 +137,8 @@ $width-right-panel-min: 654px;
                         .remove-button {
                             display: none;
                             position: absolute;
-                            top: 50%;
-                            right: $spacing-medium;
-                            transform: translateY(-50%);
+                            top: $spacing-small;
+                            right: $spacing-small;
                         }
 
                         &:hover {
