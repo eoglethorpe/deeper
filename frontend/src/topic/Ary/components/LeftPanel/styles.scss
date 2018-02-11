@@ -1,8 +1,6 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
 
-$width-left-panel-min: 460px;
-
 .tabs-container {
     border-right: $width-separator-thin solid $color-separator;
     height: 100%;

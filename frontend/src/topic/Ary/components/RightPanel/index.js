@@ -8,6 +8,8 @@ import {
     afStringsSelector,
 } from '../../../../common/redux';
 
+import Metadata from './components/Metadata';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -99,7 +101,7 @@ export default class RightPanel extends React.PureComponent {
                         className={styles.tab}
                         for="metadata"
                     >
-                        Metadata
+                        <Metadata />
                     </TabContent>
                     <TabContent
                         className={styles.tab}

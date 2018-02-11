@@ -1,10 +1,8 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/tabs';
 
-$width-right-panel-min: 640px;
-
-
 .tabs-container {
+    height: 100%;
 
     .tabs-header-container {
         background-color: $color-foreground;

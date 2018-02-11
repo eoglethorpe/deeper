@@ -7,6 +7,7 @@ $width-right-panel-min: 640px;
 
 .ary {
     display: flex;
+    border: $width-separator-thin solid $color-separator;
     height: 100%;
 
     .left {
@@ -15,7 +16,7 @@ $width-right-panel-min: 640px;
     }
 
     .right {
-        width: 70%;
+        width: 76%;
         min-width: $width-right-panel-min;
     }
 }
