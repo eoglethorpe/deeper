@@ -3,6 +3,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import {
+    compareBoolean,
+    compareStringAsNumber,
+    compareStringByWordCount,
+    compareString,
+    compareNumber,
+} from '../../../public/utils/common';
 import Table from '../../../public/components/View/Table';
 import {
     selectedRawStringsSelector,
@@ -135,21 +142,13 @@ export default class Ary extends React.PureComponent {
             }));
 
 
-        // FINITO
-        const sortNumber = (a, b) => (a - b);
-        const sortString = (a, b) => a.localeCompare(b);
-        const sortStringByWord = (a, b) => (a.split(' ').length - b.split(' ').length);
-        const sortStringAsNumber = (a, b) => (+a) - (+b);
-        // eslint-disable-next-line no-nested-ternary
-        const sortBoolean = (a, b) => (a === b ? 0 : (a ? 1 : -1));
-
         this.headers = [
             {
                 key: 'id',
                 label: 'Id',
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => sortStringAsNumber(a.id, b.id),
+                comparator: (a, b) => compareStringAsNumber(a.id, b.id),
             },
             {
                 key: 'value',
@@ -157,8 +156,8 @@ export default class Ary extends React.PureComponent {
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (
-                    sortStringByWord(a.value, b.value) ||
-                    sortString(a.value, b.value)
+                    compareStringByWordCount(a.value, b.value) ||
+                    compareString(a.value, b.value)
                 ),
             },
             {
@@ -166,7 +165,7 @@ export default class Ary extends React.PureComponent {
                 label: 'Reference Count',
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => sortNumber(a.referenceCount, b.referenceCount),
+                comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
             },
             {
                 key: 'duplicated',
@@ -174,9 +173,9 @@ export default class Ary extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => (
-                    -sortBoolean(!!a.duplicated, !!b.duplicated) ||
-                    sortStringByWord(a.value, b.value) ||
-                    sortString(a.value, b.value)
+                    compareBoolean(!!a.duplicated, !!b.duplicated, -1) ||
+                    compareStringByWordCount(a.value, b.value) ||
+                    compareString(a.value, b.value)
                 ),
                 modifier: a => (a.duplicated ? a.duplicated : '-'),
             },

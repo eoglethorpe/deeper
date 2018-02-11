@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../public/utils/rest';
+import { compareString, compareNumber } from '../../../../public/utils/common';
 import LoadingAnimation from '../../../../public/components/View/LoadingAnimation';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
@@ -99,14 +100,14 @@ export default class AddExistingRegion extends React.PureComponent {
                 label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.value.localeCompare(b.value),
+                comparator: (a, b) => compareString(a.value, b.value),
             },
             {
                 key: 'key',
                 label: this.props.projectStrings('tableHeaderId'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.key - b.key,
+                comparator: (a, b) => compareNumber(a.key, b.key),
             },
         ];
 

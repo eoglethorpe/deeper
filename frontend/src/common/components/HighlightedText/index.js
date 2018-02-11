@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { compareNumber } from '../../../public/utils/common';
 
 const propTypes = {
     className: PropTypes.string,
@@ -35,7 +36,7 @@ export default class HighlightedText extends React.PureComponent {
         let lastPosition = 0;
 
         highlights.filter(h => h.start >= 0)
-            .sort((h1, h2) => h1.start - h2.start)
+            .sort((h1, h2) => compareNumber(h1.start, h2.start))
             .forEach((h) => {
                 const diff = h.start - lastPosition;
                 const index = Math.max(0, diff);

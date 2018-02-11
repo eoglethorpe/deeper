@@ -6,8 +6,13 @@ import {
     Link,
 } from 'react-router-dom';
 
+import {
+    reverseRoute,
+    compareString,
+    compareBoolean,
+    compareDate,
+} from '../../../public/utils/common';
 import { FgRestBuilder } from '../../../public/utils/rest';
-import { reverseRoute } from '../../../public/utils/common';
 import Table from '../../../public/components/View/Table';
 import FormattedDate from '../../../public/components/View/FormattedDate';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
@@ -85,7 +90,10 @@ export default class UserExports extends React.PureComponent {
                 label: this.props.exportStrings('documentTypeHeaderLabel'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
+                comparator: (a, b) => (
+                    compareString(a.mimeType, b.mimeType) ||
+                    compareString(a.title, b.title)
+                ),
                 modifier: (row) => {
                     const icon = leadTypeIconMap[row.mimeType] || iconNames.documentText;
                     const url = row.file;
@@ -103,7 +111,7 @@ export default class UserExports extends React.PureComponent {
                 label: this.props.exportStrings('exportedAtHeaderLabel'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.exportedAt.localeCompare(b.exportedAt),
+                comparator: (a, b) => compareDate(a.exportedAt, b.exportedAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.exportedAt}
@@ -116,19 +124,17 @@ export default class UserExports extends React.PureComponent {
                 label: this.props.exportStrings('exportTitleHeaderLabel'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'pending',
                 label: this.props.exportStrings('statusHeaderLabel'),
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => {
-                    if (a.pending !== b.pending) {
-                        return a.pending - b.pending;
-                    }
-                    return a.exportedAt.localeCompare(b.exportedAt);
-                },
+                comparator: (a, b) => (
+                    compareBoolean(a.pending, b.pending) ||
+                    compareDate(a.exportedAt, b.exportedAt)
+                ),
                 modifier: (row) => {
                     if (row.pending) {
                         return this.props.exportStrings('pendingStatusLabel');
@@ -143,7 +149,9 @@ export default class UserExports extends React.PureComponent {
                 label: this.props.exportStrings('exportTypeHeaderLabel'),
                 order: 5,
                 sortable: true,
-                comparator: (a, b) => a.type.localeCompare(b.type),
+                comparator: (a, b) => (
+                    compareString(a.type, b.type) || compareString(a.title, b.title)
+                ),
             },
             {
                 key: 'file',

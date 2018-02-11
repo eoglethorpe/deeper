@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isFalsy, listToMap } from '../../../public/utils/common';
+import {
+    isFalsy,
+    listToMap,
+    compareString,
+    compareDate,
+} from '../../../public/utils/common';
 import update from '../../../public/utils/immutable-update';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import AccentButton from '../../../public/components/Action/Button/AccentButton';
@@ -141,14 +146,17 @@ export default class Export extends React.PureComponent {
                 label: this.props.exportStrings('titleLabel'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'createdAt',
                 label: this.props.exportStrings('createdAtLabel'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => (
+                    compareDate(a.createdAt, b.createdAt) ||
+                    compareString(a.title, b.title)
+                ),
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}

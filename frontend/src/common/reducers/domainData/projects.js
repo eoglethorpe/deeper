@@ -1,4 +1,5 @@
 import update from '../../../public/utils/immutable-update';
+import { compareString } from '../../../public/utils/common';
 
 // TYPE
 
@@ -92,8 +93,8 @@ const setUserProjectOptions = (state, action) => {
     const regions = [...options.regions || emptyList];
     const userGroups = [...options.userGroups || emptyList];
 
-    regions.sort((a, b) => a.value.localeCompare(b.value));
-    userGroups.sort((a, b) => a.value.localeCompare(b.value));
+    regions.sort((a, b) => compareString(a.value, b.value));
+    userGroups.sort((a, b) => compareString(a.value, b.value));
 
     const newOptions = {
         userGroups,

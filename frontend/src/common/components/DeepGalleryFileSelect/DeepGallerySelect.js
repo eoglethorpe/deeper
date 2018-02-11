@@ -2,6 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import {
+    caseInsensitiveSubmatch,
+    compareString,
+    compareDate,
+} from '../../../public/utils/common';
+import { FgRestBuilder } from '../../../public/utils/rest';
 import Table from '../../../public/components/View/Table';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 import ModalHeader from '../../../public/components/View/Modal/Header';
@@ -13,8 +19,6 @@ import PrimaryButton from '../../../public/components/Action/Button/PrimaryButto
 import AccentButton from '../../../public/components/Action/Button/AccentButton';
 import TextInput from '../../../public/components/Input/TextInput';
 
-import { FgRestBuilder } from '../../../public/utils/rest';
-import { caseInsensitiveSubmatch } from '../../../public/utils/common';
 
 import {
     urlForUsersGalleryFiles,
@@ -77,7 +81,7 @@ export default class DgSelect extends React.PureComponent {
                 label: this.props.commonStrings('tableHeaderType'),
                 order: 2,
                 sortable: true,
-                comparator: (a, b) => (a.mimeType || '').localeCompare(b.mimeType || ''),
+                comparator: (a, b) => compareString(a.mimeType, b.mimeType),
                 modifier: row => this.renderGalleryFileType(row),
             },
             {
@@ -85,14 +89,14 @@ export default class DgSelect extends React.PureComponent {
                 label: this.props.commonStrings('tableHeaderName'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'createdAt',
                 label: this.props.commonStrings('tableHeaderDateCreated'),
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => a.createdAt.localeCompare(b.createdAt),
+                comparator: (a, b) => compareDate(a.createdAt, b.createdAt),
                 modifier: row => (
                     <FormattedDate
                         date={row.createdAt}

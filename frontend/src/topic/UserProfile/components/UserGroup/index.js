@@ -10,7 +10,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { reverseRoute } from '../../../../public/utils/common';
+import {
+    reverseRoute,
+    compareString,
+    compareDate,
+} from '../../../../public/utils/common';
 import { FgRestBuilder } from '../../../../public/utils/rest';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../public/components/Action/Button/PrimaryButton';
@@ -77,20 +81,6 @@ const mapDispatchToProps = dispatch => ({
     unSetUserGroup: params => dispatch(unSetUserGroupAction(params)),
 });
 
-// TODO: move this to common
-const dateComparator = (a, b) => {
-    if (!a && !b) {
-        return 1;
-    } else if (!a) {
-        return -1;
-    } else if (!b) {
-        return 1;
-    }
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateA.getTime() - dateB.getTime();
-};
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {
@@ -119,7 +109,7 @@ export default class UserGroup extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderTitle'),
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => a.title.localeCompare(b.title),
+                comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'rights',
@@ -137,7 +127,7 @@ export default class UserGroup extends React.PureComponent {
                 label: this.props.userStrings('tableHeaderJoinedAt'),
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => dateComparator(a.joinedAt, b.joinedAt),
+                comparator: (a, b) => compareDate(a.joinedAt, b.joinedAt),
                 modifier: (row) => {
                     const { userId } = this.props;
                     const { memberships = [] } = row;
