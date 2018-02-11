@@ -3,19 +3,22 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
-
-import Screenshot from '../../../../../common/components/Screenshot';
 import AccentButton from '../../../../../public/components/Action/Button/AccentButton';
 import TextInput from '../../../../../public/components/Input/TextInput';
-import urlRegex from '../../../../../../src/public/components/Input/Form/regexForWeburl';
-import { iconNames } from '../../../../../common/constants';
+import urlRegex from '../../../../../public/components/Input/Form/regexForWeburl';
 
-import { commonStringsSelector, leadsStringsSelector } from '../../../../../common/redux';
-
+import { iconNames } from '../../../../constants';
+import {
+    commonStringsSelector,
+    leadsStringsSelector,
+} from '../../../../redux';
 import { galleryMapping, galleryType } from '../../../../config/deepMimeTypes';
-import GalleryImage from '../.././components/GalleryImage';
-import GalleryDocs from '../.././components/GalleryDocs';
+
+import Screenshot from '../../../Screenshot';
+import GalleryImage from '../GalleryImage';
+import GalleryDocs from '../GalleryDocs';
+
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

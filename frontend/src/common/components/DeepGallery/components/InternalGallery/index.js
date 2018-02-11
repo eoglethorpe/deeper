@@ -3,20 +3,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import styles from './styles.scss';
+import { FgRestBuilder } from '../../../../../public/utils/rest';
 
 import {
     createUrlForGalleryFile,
     createHeaderForGalleryFile,
 } from '../../../../../common/rest';
-
 import { commonStringsSelector } from '../../../../../common/redux';
 import { iconNames } from '../../../../../common/constants';
 
-import { FgRestBuilder } from '../../../../../public/utils/rest';
-
 import GalleryViewer from '../GalleryViewer';
-
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

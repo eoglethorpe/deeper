@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../../public/utils/rest';
 
-import GalleryViewer from '../GalleryViewer';
 import { leadsStringsSelector } from '../../../../../common/redux';
 import { iconNames } from '../../../../../common/constants';
 import {
@@ -13,6 +12,7 @@ import {
     createParamsForGenericGet,
 } from '../../../../../../src/common/rest';
 
+import GalleryViewer from '../GalleryViewer';
 import styles from './styles.scss';
 
 const propTypes = {
