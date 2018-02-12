@@ -42,6 +42,7 @@ const createSelectorForView = name => createSelector(
 
 export const afStringsSelector = createSelectorForView('af');
 export const apiStringsSelector = createSelectorForView('api');
+export const aryStringsSelector = createSelectorForView('ary');
 export const ceStringsSelector = createSelectorForView('ce');
 export const commonStringsSelector = createSelectorForView('common');
 export const countriesStringsSelector = createSelectorForView('countries');

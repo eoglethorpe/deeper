@@ -1,0 +1,72 @@
+@import '../../../../../../stylesheets/base';
+@import '../../../../../../stylesheets/tabs';
+
+.meta-data {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: column;
+    background-color: $color-foreground-alt;
+    padding: $spacing-medium;
+    height: 100%;
+
+    .overview {
+        display: flex;
+        border-bottom: $width-separator-thin solid $color-separator;
+
+        .background,
+        .stakeholders,
+        .dates,
+        .status {
+            display: flex;
+            flex-basis: 24%;
+            flex-direction: column;
+            margin-right: $spacing-large;
+            padding: $spacing-small;
+
+            .heading {
+                margin-bottom: $spacing-large;
+                border-bottom: $width-separator-thin solid $color-separator;
+                color: $color-label;
+            }
+
+            .background-child,
+            .stakeholders-child,
+            .dates-child,
+            .status-child {
+                margin-bottom: $spacing-extra-large;
+            }
+        }
+    }
+
+
+    .structure {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin-right: $spacing-large;
+        padding: $spacing-small;
+
+        .heading {
+            flex-basis: 100%;
+            margin: $spacing-large 0;
+            color: $color-label;
+        }
+
+        .kobo,
+        .questionnaire,
+        .documents {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: $spacing-medium;
+            border: $width-separator-thin solid $color-separator;
+            border-style: dashed;
+            width: 32%;
+            height: 200px;
+            color: $color-text-disabled;
+        }
+
+
+    }
+}
