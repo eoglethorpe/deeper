@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -17,7 +18,7 @@ import { iconNames } from '../../../../../../common/constants';
 import styles from './styles.scss';
 
 const propTypes = {
-    // entryStrings: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -51,7 +52,7 @@ export default class Methodology extends React.PureComponent {
                 <div className={styles.overview}>
                     <div className={styles.technique}>
                         <h3 className={styles.heading}>
-                            Collection Technique
+                            {this.props.aryStrings('collectionTechniqueLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
@@ -60,22 +61,22 @@ export default class Methodology extends React.PureComponent {
                     </div>
                     <div className={styles.sampling}>
                         <h3 className={styles.heading}>
-                            Sampling
+                            {this.props.aryStrings('samplingLabel')}
                         </h3>
                         <TextInput
                             showHintAndError={false}
-                            label="Approach"
+                            label={this.props.aryStrings('approachLabel')}
                             className={styles['sampling-child']}
                         />
                         <TextInput
                             showHintAndError={false}
-                            label="Size"
+                            label={this.props.aryStrings('sizeLabel')}
                             className={styles['sampling-child']}
                         />
                     </div>
                     <div className={styles.proximity}>
                         <h3 className={styles.heading}>
-                            Proximity
+                            {this.props.aryStrings('proximityLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
@@ -84,7 +85,7 @@ export default class Methodology extends React.PureComponent {
                     </div>
                     <div className={styles.unit}>
                         <h3 className={styles.heading}>
-                            Unit of Analysis
+                            {this.props.aryStrings('unitOfAnalysisLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
@@ -93,7 +94,7 @@ export default class Methodology extends React.PureComponent {
                     </div>
                     <div className={styles.disaggregation}>
                         <h3 className={styles.heading}>
-                            Disaggregation
+                            {this.props.aryStrings('disaggregationLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
@@ -103,7 +104,7 @@ export default class Methodology extends React.PureComponent {
                     <div className={styles.questions}>
                         <div className={styles.heading}>
                             <h3>
-                                Questions
+                                {this.props.aryStrings('questionsLabel')}
                             </h3>
                             <PrimaryButton
                                 iconName={iconNames.add}
@@ -138,17 +139,17 @@ export default class Methodology extends React.PureComponent {
                 <div className={styles.middle}>
                     <div className={styles['topics-assessed']}>
                         <h3 className={styles.heading}>
-                            Topics Assessed
+                            {this.props.aryStrings('topicAssessedLabel')}
                         </h3>
                     </div>
                     <div className={styles['affected-groups']}>
                         <h3 className={styles.heading}>
-                            Affected Groups
+                            {this.props.aryStrings('affectedGroupsLabel')}
                         </h3>
                     </div>
                     <div className={styles.location}>
                         <h3 className={styles.heading}>
-                            Location
+                            {this.props.aryStrings('locationLabel')}
                         </h3>
                         <div
                             className={styles['map-container']}
@@ -159,22 +160,22 @@ export default class Methodology extends React.PureComponent {
                 </div>
                 <div className={styles.structure}>
                     <h3 className={styles.heading}>
-                        Structure Section
+                        {this.props.aryStrings('structureSectionLabel')}
                     </h3>
                     <div
                         className={styles['collection-technique']}
                     >
-                        Drag and Drop data collection techniques here
+                        {this.props.aryStrings('dragDataCollectionlabel')}
                     </div>
                     <div
                         className={styles['sampling-data']}
                     >
-                        Drag and Drop Sampling (site and respondent selection) here
+                        {this.props.aryStrings('dragSamplingLabel')}
                     </div>
                     <div
                         className={styles.limitations}
                     >
-                        Drag and Drop limitations here
+                        {this.props.aryStrings('dragLimitationsLabel')}
                     </div>
                 </div>
             </div>

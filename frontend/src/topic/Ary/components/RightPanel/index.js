@@ -1,11 +1,11 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import { connect } from 'react-redux';
 
 import {
-    entryStringsSelector,
-    afStringsSelector,
+    aryStringsSelector,
 } from '../../../../common/redux';
 
 import Metadata from './components/Metadata';
@@ -14,7 +14,7 @@ import Methodology from './components/Methodology';
 import styles from './styles.scss';
 
 const propTypes = {
-    // entryStrings: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -22,10 +22,8 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-    afStrings: afStringsSelector(state),
+    aryStrings: aryStringsSelector(state),
 });
-
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class RightPanel extends React.PureComponent {
@@ -69,31 +67,31 @@ export default class RightPanel extends React.PureComponent {
                         className={styles['tab-header']}
                         to="metadata"
                     >
-                        Metadata
+                        {this.props.aryStrings('metadataTabLabel')}
                     </TabLink>
                     <TabLink
                         className={styles['tab-header']}
                         to="methodology"
                     >
-                        Methodology
+                        {this.props.aryStrings('methodologyTabLabel')}
                     </TabLink>
                     <TabLink
                         className={styles['tab-header']}
                         to="entries"
                     >
-                        Entries
+                        {this.props.aryStrings('entriesTabLabel')}
                     </TabLink>
                     <TabLink
                         className={styles['tab-header']}
                         to="summary"
                     >
-                        Summary
+                        {this.props.aryStrings('summaryTabLabel')}
                     </TabLink>
                     <TabLink
                         className={styles['tab-header']}
                         to="score"
                     >
-                        Score
+                        {this.props.aryStrings('scoreTabLabel')}
                     </TabLink>
                     <div styleName="empty-tab" />
                 </div>
@@ -114,19 +112,19 @@ export default class RightPanel extends React.PureComponent {
                         className={styles.tab}
                         for="entries"
                     >
-                        Entries
+                        {this.props.aryStrings('entriesTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="summary"
                     >
-                        Summary
+                        {this.props.aryStrings('summaryTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="score"
                     >
-                        Score
+                        {this.props.aryStrings('scoreTabLabel')}
                     </TabContent>
                 </div>
             </Tabs>

@@ -1,5 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -15,7 +16,7 @@ import NumberInput from '../../../../../../public/components/Input/NumberInput';
 import styles from './styles.scss';
 
 const propTypes = {
-    // entryStrings: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,121 +39,121 @@ export default class Metadata extends React.PureComponent {
                 <div className={styles.overview}>
                     <div className={styles.background}>
                         <h3 className={styles.heading}>
-                            Background
+                            {this.props.aryStrings('backgroundLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            label="Crisis Type"
+                            label={this.props.aryStrings('crisisTypeLabel')}
                             className={styles['background-child']}
                         />
                         <DateInput
-                            label="Crisis Start Date"
+                            label={this.props.aryStrings('crisisStartDateLabel')}
                         />
                         <SelectInput
                             showHintAndError={false}
-                            label="Preparedness"
+                            label={this.props.aryStrings('preparednessLabel')}
                             className={styles['background-child']}
                         />
                         <SelectInput
                             showHintAndError={false}
-                            label="External Support"
+                            label={this.props.aryStrings('externalSupportLabel')}
                             className={styles['background-child']}
                         />
                         <SelectInput
                             showHintAndError={false}
-                            label="Coordination"
+                            label={this.props.aryStrings('coordinationLabel')}
                             className={styles['background-child']}
                         />
                         <NumberInput
                             showHintAndError={false}
-                            label="Cost"
+                            label={this.props.aryStrings('costLabel')}
                             className={styles['background-child']}
                         />
                     </div>
                     <div className={styles.stakeholders}>
                         <h3 className={styles.heading}>
-                            Stakeholders
+                            {this.props.aryStrings('stakeholdersLabel')}
                         </h3>
                         <TextInput
                             showHintAndError={false}
-                            label="Lead"
+                            label={this.props.aryStrings('leadLabel')}
                             className={styles['stakeholders-child']}
                         />
                         <TextInput
                             showHintAndError={false}
-                            label="Partners"
+                            label={this.props.aryStrings('partnersLabel')}
                             className={styles['stakeholders-child']}
                         />
                         <TextInput
                             showHintAndError={false}
-                            label="Government"
+                            label={this.props.aryStrings('governmentLabel')}
                             className={styles['stakeholders-child']}
                         />
                         <TextInput
                             showHintAndError={false}
-                            label="Donors"
+                            label={this.props.aryStrings('donorsLabel')}
                             className={styles['stateholders-child']}
                         />
                     </div>
                     <div className={styles.dates}>
                         <h3 className={styles.heading}>
-                            Dates
+                            {this.props.aryStrings('datesLabel')}
                         </h3>
                         <DateInput
                             showHintAndError={false}
-                            label="Start Date"
+                            label={this.props.aryStrings('startDateLabel')}
                             className={styles['dates-child']}
                         />
                         <DateInput
                             showHintAndError={false}
-                            label="End Date"
+                            label={this.props.aryStrings('endDateLabel')}
                             className={styles['dates-child']}
                         />
                         <DateInput
                             showHintAndError={false}
-                            label="Publication Date"
+                            label={this.props.aryStrings('publicationDateLabel')}
                             className={styles['dates-child']}
                         />
                     </div>
                     <div className={styles.status}>
                         <h3 className={styles.heading}>
-                            Status
+                            {this.props.aryStrings('statusLabel')}
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            label="Status"
+                            label={this.props.aryStrings('statusLabel')}
                             className={styles['status-child']}
                         />
                         <SelectInput
                             showHintAndError={false}
-                            label="Frequency"
+                            label={this.props.aryStrings('frequencyLabel')}
                             className={styles['status-child']}
                         />
                         <SelectInput
                             showHintAndError={false}
-                            label="Confidentiality"
+                            label={this.props.aryStrings('confidentialityLabel')}
                             className={styles['status-child']}
                         />
                     </div>
                 </div>
                 <div className={styles.structure}>
                     <h3 className={styles.heading}>
-                        Structure Section
+                        {this.props.aryStrings('structureSectionLabel')}
                     </h3>
                     <div
                         className={styles.kobo}
                     >
-                        Drag and Drop data here or use KOBO link
+                        {this.props.aryStrings('dragKoboLabel')}
                     </div>
                     <div
                         className={styles.questionnaire}
                     >
-                        Drag and Drop Questionnaire here or select page to cut
+                        {this.props.aryStrings('dragQuestionLabel')}
                     </div>
                     <div
                         className={styles.documents}
                     >
-                        Drag and Drop other documents here
+                        {this.props.aryStrings('dragDocumentLabel')}
                     </div>
                 </div>
             </div>

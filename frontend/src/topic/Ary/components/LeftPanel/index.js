@@ -6,13 +6,14 @@ import { connect } from 'react-redux';
 
 import {
     entryStringsSelector,
-    afStringsSelector,
+    aryStringsSelector,
 } from '../../../../common/redux';
 
 import styles from './styles.scss';
 
 const propTypes = {
     entryStrings: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -21,7 +22,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
-    afStrings: afStringsSelector(state),
+    aryStrings: aryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -91,7 +92,7 @@ export default class LeftPanel extends React.PureComponent {
                         className={styles['tab-header']}
                         to="highlights"
                     >
-                        Highlights
+                        {this.props.aryStrings('highlightsTabLabel')}
                     </TabLink>
                     <div styleName="empty-tab" />
                 </div>
@@ -100,32 +101,32 @@ export default class LeftPanel extends React.PureComponent {
                         className={styles.tab}
                         for="simplified-preview"
                     >
-                        Simplified View
+                        {this.props.entryStrings('simplifiedTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="assisted-tagging"
                     >
-                        Assisted Tagging
+                        {this.props.entryStrings('assistedTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="original-preview"
                     >
-                        Original Lead
+                        {this.props.entryStrings('originalTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="images-preview"
                     >
-                        Image
+                        {this.props.entryStrings('imagesTabLabel')}
                     </TabContent>
                     <TabContent
                         className={styles.tab}
                         for="highlights"
                     >
                         <div className={styles['highlights-container']}>
-                            Highlights
+                            {this.props.aryStrings('highlightsTabLabel')}
                         </div>
                     </TabContent>
                 </div>
