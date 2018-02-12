@@ -3,10 +3,8 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
 import UserEdit from '../index';
-import {
-    Form,
-    TextInput,
-} from '../../../../../public/components/Input';
+import Form from '../../../../../public/components/Input/Form';
+import TextInput from '../../../../../public/components/Input/TextInput';
 
 const initialState = {
 };
