@@ -9,6 +9,7 @@ import {
 } from '../../../../common/redux';
 
 import Metadata from './components/Metadata';
+import Methodology from './components/Methodology';
 
 import styles from './styles.scss';
 
@@ -35,7 +36,7 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabLeft: 'metadata',
+            currentTabRight: 'methodology',
         };
     }
 
@@ -107,7 +108,7 @@ export default class RightPanel extends React.PureComponent {
                         className={styles.tab}
                         for="methodology"
                     >
-                        Methodology
+                        <Methodology />
                     </TabContent>
                     <TabContent
                         className={styles.tab}

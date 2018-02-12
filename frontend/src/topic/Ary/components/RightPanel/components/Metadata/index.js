@@ -10,6 +10,8 @@ import {
 import {
     SelectInput,
     DateInput,
+    TextInput,
+    NumberInput,
 } from '../../../../../../public/components/Input';
 
 import styles from './styles.scss';
@@ -28,7 +30,7 @@ const mapStateToProps = state => ({
 
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class LeftPanel extends React.PureComponent {
+export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -63,7 +65,7 @@ export default class LeftPanel extends React.PureComponent {
                             label="Coordination"
                             className={styles['background-child']}
                         />
-                        <SelectInput
+                        <NumberInput
                             showHintAndError={false}
                             label="Cost"
                             className={styles['background-child']}
@@ -73,22 +75,22 @@ export default class LeftPanel extends React.PureComponent {
                         <h3 className={styles.heading}>
                             Stakeholders
                         </h3>
-                        <SelectInput
+                        <TextInput
                             showHintAndError={false}
                             label="Lead"
                             className={styles['stakeholders-child']}
                         />
-                        <SelectInput
+                        <TextInput
                             showHintAndError={false}
                             label="Partners"
                             className={styles['stakeholders-child']}
                         />
-                        <SelectInput
+                        <TextInput
                             showHintAndError={false}
                             label="Government"
                             className={styles['stakeholders-child']}
                         />
-                        <SelectInput
+                        <TextInput
                             showHintAndError={false}
                             label="Donors"
                             className={styles['stateholders-child']}
