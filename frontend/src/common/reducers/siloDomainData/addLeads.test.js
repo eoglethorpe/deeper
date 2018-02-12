@@ -216,10 +216,10 @@ test('should add new leads', () => {
         },
     };
     const action = addLeadViewAddLeadsAction([
-        { id: 1, serverId: 1, type: 'file' },
-        { id: 2, serverId: 2, type: 'file' },
-        { id: 3, serverId: 3, type: 'file' },
-        { id: 5, type: 'file' },
+        { id: 1, serverId: 1 },
+        { id: 2, serverId: 2 },
+        { id: 3, serverId: 3 },
+        { id: 5 },
     ]);
     const after = {
         addLeadView: {
@@ -232,22 +232,22 @@ test('should add new leads', () => {
             },
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
@@ -266,7 +266,7 @@ test('should change lead', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
@@ -286,7 +286,6 @@ test('should change lead', () => {
                     data: {
                         id: 1,
                         serverId: 1,
-                        type: 'file',
                     },
                     form: {
                         errors: [],
@@ -310,7 +309,7 @@ test('should change lead', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: true },
                 },
@@ -332,7 +331,6 @@ test('should change lead', () => {
                     data: {
                         id: 1,
                         serverId: 1,
-                        type: 'file',
                     },
                     form: {
                         errors: ['Network problem'],
@@ -356,7 +354,7 @@ test('should save lead', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, type: 'file' },
+                    data: { id: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
@@ -375,7 +373,6 @@ test('should save lead', () => {
                     data: {
                         id: 1,
                         serverId: 12,
-                        type: 'file',
                     },
                     form: {
                         errors: [],
@@ -399,22 +396,22 @@ test('should copy values in all lead', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: true },
                 },
@@ -430,22 +427,22 @@ test('should copy values in all lead', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
@@ -461,22 +458,22 @@ test('should copy values in leads below', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'md' } },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: true },
                 },
@@ -492,22 +489,22 @@ test('should copy values in leads below', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: true },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: { title: 'ld' } },
                     uiState: { error: false, pristine: true },
                 },
@@ -523,22 +520,22 @@ test('should copy values in all lead, for assignee', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: { project: 1 } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: { assignee: 'error' }, values: { assignee: 'ld', project: 1 } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { project: 2 } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
@@ -554,22 +551,22 @@ test('should copy values in all lead, for assignee', () => {
             activeLeadId: 1,
             leads: [
                 {
-                    data: { id: 1, serverId: 1, type: 'file' },
+                    data: { id: 1, serverId: 1 },
                     form: { errors: [], fieldErrors: {}, values: { assignee: 'ld', project: 1 } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 2, serverId: 2, type: 'file' },
+                    data: { id: 2, serverId: 2 },
                     form: { errors: [], fieldErrors: { assignee: 'error' }, values: { assignee: 'ld', project: 1 } },
                     uiState: { error: true, pristine: false },
                 },
                 {
-                    data: { id: 3, serverId: 3, type: 'file' },
+                    data: { id: 3, serverId: 3 },
                     form: { errors: [], fieldErrors: {}, values: { project: 2 } },
                     uiState: { error: false, pristine: false },
                 },
                 {
-                    data: { id: 5, serverId: undefined, type: 'file' },
+                    data: { id: 5, serverId: undefined },
                     form: { errors: [], fieldErrors: {}, values: {} },
                     uiState: { error: false, pristine: false },
                 },
