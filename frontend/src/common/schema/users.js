@@ -35,6 +35,7 @@ const userSchema = [];
             lastName: { type: 'string', required: true },
             organization: { type: 'string', required: true },
             username: { type: 'string', required: true },
+            lastActiveProject: { type: 'uint' },
         },
     };
     userSchema.push({ name, schema });
