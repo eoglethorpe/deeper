@@ -44,6 +44,8 @@ import FilterEntriesForm from '../../Entries/views/FilterEntriesForm';
 
 import ExportHeader from './components/ExportHeader';
 import ExportTypePane from './components/ExportTypePane';
+import BoundError from '../../../common/components/BoundError';
+
 import styles from './styles.scss';
 
 const mapStateToProps = (state, props) => ({
@@ -72,7 +74,7 @@ const propTypes = {
 const defaultProps = {
 };
 
-
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Export extends React.PureComponent {

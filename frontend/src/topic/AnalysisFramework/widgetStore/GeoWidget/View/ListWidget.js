@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import ListView from '../../../../../public/components/View/List/ListView';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -14,6 +15,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
+@BoundError
 @CSSModules(styles)
 export default class GeoViewList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

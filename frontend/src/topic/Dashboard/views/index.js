@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
     currentUserActiveProjectSelector,
 } from '../../../common/redux';
+import BoundError from '../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -18,6 +19,7 @@ const mapStateToProps = (state, props) => ({
     currentUserActiveProject: currentUserActiveProjectSelector(state, props),
 });
 
+@BoundError
 @connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class Dashboard extends React.PureComponent {

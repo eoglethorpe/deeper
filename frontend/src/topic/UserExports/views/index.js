@@ -32,6 +32,8 @@ import {
     projectIdFromRouteSelector,
     exportStringsSelector,
 } from '../../../common/redux';
+
+import BoundError from '../../../common/components/BoundError';
 import {
     pathNames,
     iconNames,
@@ -69,6 +71,7 @@ const mapDispatchToProps = dispatch => ({
 
 const emptyList = [];
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserExports extends React.PureComponent {

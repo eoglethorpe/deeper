@@ -5,8 +5,9 @@ import React from 'react';
 import ListView from '../../../../../public/components/View/List/ListView';
 
 import GeoSelection from '../../../../../common/components/GeoSelection';
-
+import BoundError from '../../../../../common/components/BoundError';
 import { updateAttribute } from './utils';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -22,6 +23,7 @@ const defaultProps = {
 
 const emptyList = [];
 
+@BoundError
 @CSSModules(styles)
 export default class GeoTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

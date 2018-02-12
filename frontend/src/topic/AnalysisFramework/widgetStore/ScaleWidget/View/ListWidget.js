@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import ListView from '../../../../../public/components/View/List/ListView';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -19,6 +20,7 @@ const defaultProps = {
 const emptyObject = {};
 const emptyList = [];
 
+@BoundError
 @CSSModules(styles)
 export default class ScaleViewWidget extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

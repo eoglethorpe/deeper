@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import ListView from '../../../../../public/components/View/List/ListView';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -20,6 +21,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
+@BoundError
 @CSSModules(styles)
 export default class NumberMatrixList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

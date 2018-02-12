@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import ListView from '../../../../../public/components/View/List/ListView';
 
 import { updateAttribute } from './utils';
+import BoundError from '../../../../../common/components/BoundError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -19,6 +20,7 @@ const defaultProps = {
 
 const emptyList = [];
 
+@BoundError
 @CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
     static rowKeyExtractor = d => d.title;

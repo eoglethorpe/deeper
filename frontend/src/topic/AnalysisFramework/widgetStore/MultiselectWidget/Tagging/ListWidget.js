@@ -5,7 +5,9 @@ import React from 'react';
 import MultiSelectInput from '../../../../../public/components/Input/SelectInput/MultiSelectInput';
 import ListView from '../../../../../public/components/View/List/ListView';
 
+import BoundError from '../../../../../common/components/BoundError';
 import { updateAttribute } from './utils';
+
 import styles from './styles.scss';
 
 const emptyList = [];
@@ -23,6 +25,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
+@BoundError
 @CSSModules(styles)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

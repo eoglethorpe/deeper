@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import update from '../../../../../public/utils/immutable-update';
 import NumberInput from '../../../../../public/components/Input/NumberInput';
 import List from '../../../../../public/components/View/List';
+import BoundError from '../../../../../common/components/BoundError';
 
 import { afStringsSelector } from '../../../../../common/redux';
 
@@ -32,6 +33,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {

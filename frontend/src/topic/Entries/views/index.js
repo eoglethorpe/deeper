@@ -12,6 +12,7 @@ import ListView from '../../../public/components/View/List/ListView';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 import Pager from '../../../public/components/View/Pager';
 import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
+import BoundError from '../../../common/components/BoundError';
 
 import {
     iconNames,
@@ -105,6 +106,7 @@ const defaultProps = {
 const MAX_ENTRIES_PER_REQUEST = 5;
 const emptyList = [];
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Entries extends React.PureComponent {

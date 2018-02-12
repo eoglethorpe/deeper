@@ -6,6 +6,7 @@ import update from '../../../../../public/utils/immutable-update';
 import { getColorOnBgColor } from '../../../../../public/utils/common';
 
 import { updateAttribute } from './utils';
+import BoundError from '../../../../../common/components/BoundError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -20,6 +21,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
+@BoundError
 @CSSModules(styles)
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

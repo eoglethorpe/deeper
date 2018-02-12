@@ -11,6 +11,7 @@ import Modal from '../../../../../public/components/View/Modal';
 import ModalHeader from '../../../../../public/components/View/Modal/Header';
 import ModalBody from '../../../../../public/components/View/Modal/Body';
 import ModalFooter from '../../../../../public/components/View/Modal/Footer';
+import BoundError from '../../../../../common/components/BoundError';
 
 import { afStringsSelector } from '../../../../../common/redux';
 
@@ -31,6 +32,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberFrameworkList extends React.PureComponent {

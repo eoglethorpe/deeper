@@ -12,6 +12,7 @@ import ModalBody from '../../../../../public/components/View/Modal/Body';
 import ModalFooter from '../../../../../public/components/View/Modal/Footer';
 
 import { afStringsSelector } from '../../../../../common/redux';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 
@@ -26,6 +27,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {

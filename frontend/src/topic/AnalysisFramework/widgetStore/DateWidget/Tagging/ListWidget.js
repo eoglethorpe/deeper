@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import DateInput from '../../../../../public/components/Input/DateInput';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -20,6 +21,7 @@ const defaultProps = {
     data: undefined,
 };
 
+@BoundError
 @CSSModules(styles)
 export default class DateTaggingList extends React.PureComponent {
     static propTypes = propTypes;

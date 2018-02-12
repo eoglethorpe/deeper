@@ -16,6 +16,7 @@ import CollapsibleTreeView from '../../../../public/components/Visualization/Col
 import RadialDendrogramView from '../../../../public/components/Visualization/RadialDendrogramView';
 import GeoReferencedMap from '../../../../public/components/Visualization/GeoReferencedMap';
 import FormattedDate from '../../../../public/components/View/FormattedDate';
+import BoundError from '../../../../common/components/BoundError';
 
 import {
     urlForLeadTopicModeling,
@@ -78,6 +79,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadVisualization: parms => dispatch(setLeadVisualizationAction(parms)),
 });
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class LeadsViz extends React.PureComponent {

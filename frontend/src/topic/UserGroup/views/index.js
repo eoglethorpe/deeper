@@ -9,6 +9,7 @@ import Modal from '../../../public/components/View/Modal';
 import ModalBody from '../../../public/components/View/Modal/Body';
 import ModalHeader from '../../../public/components/View/Modal/Header';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
+import BoundError from '../../../common/components/BoundError';
 
 import MembersTable from '../components/MembersTable';
 import ProjectsTable from '../components/ProjectsTable';
@@ -62,6 +63,7 @@ const mapDispatchToProps = dispatch => ({
 
 const emptyList = [];
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {

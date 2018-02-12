@@ -14,6 +14,7 @@ import ModalFooter from '../../../../../public/components/View/Modal/Footer';
 
 import { iconNames } from '../../../../../common/constants';
 import { afStringsSelector } from '../../../../../common/redux';
+import BoundError from '../../../../../common/components/BoundError';
 
 import styles from './styles.scss';
 import { updateAttribute } from './utils';
@@ -36,6 +37,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class OrganigramTaggingList extends React.PureComponent {

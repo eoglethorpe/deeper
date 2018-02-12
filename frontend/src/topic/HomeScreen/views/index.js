@@ -8,6 +8,7 @@ import { Redirect, Link } from 'react-router-dom';
 import { reverseRoute } from '../../../public/utils/common';
 
 import logo from '../../../img/deep-logo.svg';
+import BoundError from '../../../common/components/BoundError';
 import {
     pathNames,
 } from '../../../common/constants';
@@ -43,6 +44,7 @@ const defaultProps = {
     activeUser: {},
 };
 
+@BoundError
 @connect(mapStateToProps, undefined)
 @CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
