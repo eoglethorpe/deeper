@@ -12,11 +12,12 @@ import PrivateRoute from './public/components/General/PrivateRoute';
 import Toast from './public/components/View/Toast';
 
 import Navbar from './common/components/Navbar';
-
 import { pathNames } from './common/constants';
-import { authenticatedSelector } from './common/selectors/auth';
-import { lastNotifySelector } from './common/selectors/notify';
-import { notifyHideAction } from './common/redux';
+import {
+    authenticatedSelector,
+    lastNotifySelector,
+    notifyHideAction,
+} from './common/redux';
 
 import views from './topic';
 

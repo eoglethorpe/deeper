@@ -7,7 +7,7 @@ import { Redirect, Link } from 'react-router-dom';
 
 import { reverseRoute } from '../../../public/utils/common';
 
-import logo from '../../../img/deep-logo.svg';
+import logo from '../../../resources/img/deep-logo.svg';
 import BoundError from '../../../common/components/BoundError';
 import {
     pathNames,

@@ -10,7 +10,7 @@ import { fourHundredFourStringsSelector } from '../../../common/redux';
 import { pathNames } from '../../../common/constants';
 
 import styles from './styles.scss';
-import logo from '../../../img/deep-logo.svg';
+import logo from '../../../resources/img/deep-logo.svg';
 
 const propTypes = {
     fourHundredFourStrings: PropTypes.func.isRequired,

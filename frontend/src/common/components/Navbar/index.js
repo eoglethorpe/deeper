@@ -19,8 +19,8 @@ import DropdownMenu from '../../../public/components/Action/DropdownMenu';
 import DropdownGroup from '../../../public/components/Action/DropdownMenu/Group';
 import SelectInput from '../../../public/components/Input/SelectInput';
 
-import { stopSiloBackgroundTasksAction } from '../../../common/middlewares/siloBackgroundTasks';
-import { stopRefreshAction } from '../../../common/middlewares/refresher';
+import { stopSiloBackgroundTasksAction } from '../../../common/redux/middlewares/siloBackgroundTasks';
+import { stopRefreshAction } from '../../../common/redux/middlewares/refresher';
 import { adminEndpoint } from '../../../common/config/rest';
 import {
     logoutAction,
@@ -42,7 +42,7 @@ import {
     validLinks,
     hideNavbar,
 } from '../../constants';
-import logo from '../../../img/deep-logo-simplified.svg';
+import logo from '../../../resources/img/deep-logo-simplified.svg';
 
 import Cloak from '../Cloak';
 import NavMenu from './NavMenu';

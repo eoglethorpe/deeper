@@ -17,11 +17,11 @@ import {
 import {
     startRefreshAction,
     stopRefreshAction,
-} from './common/middlewares/refresher';
+} from './common/redux/middlewares/refresher';
 import {
     startSiloBackgroundTasksAction,
     stopSiloBackgroundTasksAction,
-} from './common/middlewares/siloBackgroundTasks';
+} from './common/redux/middlewares/siloBackgroundTasks';
 
 import {
     setAccessTokenAction,

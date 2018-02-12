@@ -10,10 +10,10 @@ import List from '../../../../public/components/View/List';
 import { iconNames } from '../../../../common/constants';
 import { exportStringsSelector } from '../../../../common/redux';
 
-import wordIcon from '../../../../img/word.svg';
-import excelIcon from '../../../../img/excel.svg';
-import pdfIcon from '../../../../img/pdf.svg';
-import jsonIcon from '../../../../img/json.svg';
+import wordIcon from '../../../../resources/img/word.svg';
+import excelIcon from '../../../../resources/img/excel.svg';
+import pdfIcon from '../../../../resources/img/pdf.svg';
+import jsonIcon from '../../../../resources/img/json.svg';
 
 import styles from '../styles.scss';
 

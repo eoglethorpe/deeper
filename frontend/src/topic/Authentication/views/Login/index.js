@@ -38,14 +38,14 @@ import {
     currentUserProjectsSelector,
     loginStringsSelector,
 } from '../../../../common/redux';
-import { startRefreshAction } from '../../../../common/middlewares/refresher';
-import { startSiloBackgroundTasksAction } from '../../../../common/middlewares/siloBackgroundTasks';
+import { startRefreshAction } from '../../../../common/redux/middlewares/refresher';
+import { startSiloBackgroundTasksAction } from '../../../../common/redux/middlewares/siloBackgroundTasks';
 import { pathNames } from '../../../../common/constants';
 import schema from '../../../../common/schema';
 import { hidUrl } from '../../../../common/config/hid';
 
-import logo from '../../../../img/deep-logo.svg';
-import hidLogo from '../../../../img/hid-logo.png';
+import logo from '../../../../resources/img/deep-logo.svg';
+import hidLogo from '../../../../resources/img/hid-logo.png';
 
 import styles from './styles.scss';
 

@@ -1,12 +1,12 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import logger from './middlewares/logger';
-import refresher from './middlewares/refresher';
-import siloBackgroundTasks from './middlewares/siloBackgroundTasks';
+import logger from './redux/middlewares/logger';
+import refresher from './redux/middlewares/refresher';
+import siloBackgroundTasks from './redux/middlewares/siloBackgroundTasks';
 import { sendToken } from './utils/browserExtension';
 import { commonHeaderForPost, authorizationHeaderForPost } from './config/rest';
 
-import reducer from './reducers';
+import reducer from './redux/reducers';
 
 // Invoke refresh access token every 10m
 const middleware = [
@@ -37,7 +37,7 @@ const noOp = () => {};
 
 if (process.env.NODE_ENV !== 'test') {
     // eslint-disable-next-line global-require
-    const tokenSelector = require('./selectors/auth').tokenSelector;
+    const tokenSelector = require('./redux/selectors/auth').tokenSelector;
 
     let currentAccess;
     let currentRefresh;
