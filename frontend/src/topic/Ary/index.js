@@ -7,9 +7,7 @@ import {
     afStringsSelector,
 } from '../../common/redux';
 
-import {
-    ResizableH,
-} from '../../public/components/View';
+import ResizableH from '../../public/components/View/Resizable/ResizableH';
 
 import LeftPanel from './components/LeftPanel';
 import RightPanel from './components/RightPanel';

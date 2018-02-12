@@ -7,12 +7,10 @@ import {
 } from '../../../../../../common/redux';
 
 
-import {
-    SelectInput,
-    DateInput,
-    TextInput,
-    NumberInput,
-} from '../../../../../../public/components/Input';
+import SelectInput from '../../../../../../public/components/Input/SelectInput';
+import DateInput from '../../../../../../public/components/Input/DateInput';
+import TextInput from '../../../../../../public/components/Input/TextInput';
+import NumberInput from '../../../../../../public/components/Input/NumberInput';
 
 import styles from './styles.scss';
 

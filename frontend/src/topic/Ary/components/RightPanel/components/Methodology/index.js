@@ -6,15 +6,9 @@ import {
     aryStringsSelector,
 } from '../../../../../../common/redux';
 
-
-import {
-    SelectInput,
-    DateInput,
-    TextInput,
-} from '../../../../../../public/components/Input';
-import {
-    TransparentPrimaryButton,
-} from '../../../../../../public/components/Action';
+import SelectInput from '../../../../../../public/components/Input/SelectInput';
+import TextInput from '../../../../../../public/components/Input/TextInput';
+import PrimaryButton from '../../../../../../public/components/Action/Button';
 
 import RegionMap from '../../../../../../common/components/RegionMap';
 
@@ -111,9 +105,10 @@ export default class Methodology extends React.PureComponent {
                             <h3>
                                 Questions
                             </h3>
-                            <TransparentPrimaryButton
+                            <PrimaryButton
                                 iconName={iconNames.add}
                                 onClick={this.handleAddQuestionButtonClick}
+                                transparent
                             />
                         </div>
                         <div className={styles['questions-list']}>

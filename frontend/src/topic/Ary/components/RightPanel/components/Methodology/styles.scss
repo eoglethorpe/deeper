@@ -74,7 +74,7 @@
         .topics-assessed,
         .affected-groups,
         .location {
-            flex-basis: 32%;
+            flex-basis: 24%;
             margin-right: $spacing-medium;
             color: $color-text-disabled;
 
@@ -87,6 +87,10 @@
                 border: $width-separator-thin solid $color-separator;
                 height: 350px;
             }
+        }
+
+        .location {
+            flex-basis: 50%;
         }
     }
 

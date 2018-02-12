@@ -9,6 +9,7 @@
     }
 
     .tabs-content {
+        background-color: $color-foreground-alt;
         height: calc(100% - 39px);
 
         .tab {

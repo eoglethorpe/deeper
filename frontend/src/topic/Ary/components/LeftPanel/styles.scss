@@ -10,6 +10,7 @@
     }
 
     .tabs-content {
+        background-color: $color-foreground-alt;
         height: calc(100% - 39px);
 
         .tab {
@@ -19,7 +20,6 @@
 }
 
 .highlights-container {
-    background-color: $color-foreground-alt;
     height: 100%;
     overflow-y: auto;
 }
