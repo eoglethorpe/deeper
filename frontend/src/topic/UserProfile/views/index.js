@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import BoundError from '../../../common/components/BoundError';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import PrimaryButton from '../../../public/components/Action/Button/PrimaryButton';
 import Modal from '../../../public/components/View/Modal';
@@ -65,6 +66,7 @@ const mapDispatchToProps = dispatch => ({
     unsetUser: params => dispatch(unsetUserAction(params)),
 });
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class UserProfile extends React.PureComponent {

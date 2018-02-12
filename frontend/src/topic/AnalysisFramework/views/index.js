@@ -8,6 +8,7 @@ import {
     HashRouter,
 } from 'react-router-dom';
 
+import BoundError from '../../../common/components/BoundError';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import LoadingAnimation from '../../../public/components/View/LoadingAnimation';
 
@@ -52,6 +53,7 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAfViewAnalysisFrameworkAction(params)),
 });
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AnalysisFramework extends React.PureComponent {

@@ -22,6 +22,7 @@ import PrimaryButton from '../../../../public/components/Action/Button/PrimaryBu
 import AccentButton from '../../../../public/components/Action/Button/AccentButton';
 import Button from '../../../../public/components/Action/Button';
 import DangerButton from '../../../../public/components/Action/Button/DangerButton';
+import BoundError from '../../../../common/components/BoundError';
 
 import {
     createParamsForUser,
@@ -105,6 +106,7 @@ const mapDispatchToProps = dispatch => ({
 
 const MAX_LEADS_PER_REQUEST = 24;
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Leads extends React.PureComponent {

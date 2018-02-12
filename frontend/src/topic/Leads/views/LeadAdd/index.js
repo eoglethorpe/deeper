@@ -16,6 +16,7 @@ import Confirm from '../../../../public/components/View/Modal/Confirm';
 import List from '../../../../public/components/View/List';
 import Button from '../../../../public/components/Action/Button';
 import DropdownMenu from '../../../../public/components/Action/DropdownMenu';
+import BoundError from '../../../../common/components/BoundError';
 
 import {
     leadFilterOptionsSelector,
@@ -114,6 +115,7 @@ const DELETE_MODE = {
     single: 'single',
 };
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSBuilders(styles, { allowMultiple: true })
 export default class LeadAdd extends React.PureComponent {

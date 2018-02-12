@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
+import BoundError from '../../../common/components/BoundError';
 import { FgRestBuilder } from '../../../public/utils/rest';
 import { isObjectEmpty, compareString } from '../../../public/utils/common';
 import List from '../../../public/components/View/List';
@@ -24,6 +25,7 @@ const mapStateToProps = state => ({
     apiStrings: apiStringsSelector(state),
 });
 
+@BoundError
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ApiDocs extends React.PureComponent {

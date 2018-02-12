@@ -28,6 +28,7 @@ import {
     pathNames,
 } from '../../../common/constants';
 
+import BoundError from '../../../common/components/BoundError';
 import ProjectDetails from '../components/ProjectDetails';
 import styles from './styles.scss';
 
@@ -60,6 +61,7 @@ const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
 });
 
+@BoundError
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectPanel extends React.PureComponent {
