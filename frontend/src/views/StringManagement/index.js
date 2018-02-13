@@ -22,7 +22,7 @@ let usedMaps = {};
 try {
     /* eslint-disable global-require */
     /* eslint-disable import/no-unresolved */
-    usedMaps = require('../../usage').default;
+    usedMaps = require('../../generated/usage').default;
     /* eslint-enable global-require */
     /* eslint-enable import/no-unresolved */
 } catch (ex) {
