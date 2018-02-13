@@ -1,0 +1,52 @@
+@import '../../stylesheets/base';
+
+.region-detail-form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-end;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-medium;
+
+        .action-buttons {
+            button {
+                margin-left: $spacing-medium;
+            }
+        }
+
+        .non-field-errors {
+            .error {
+                color: $color-danger;
+
+                &.empty {
+                    color: transparent;
+                    user-select: none;
+                }
+
+                &:not(:last-child) {
+                    &::after {
+                        content: ', ';
+                    }
+                }
+            }
+        }
+    }
+
+    .input-container {
+        flex-grow: 1;
+        padding: $spacing-medium-alt;
+        overflow-y: auto;
+
+        .text-input {
+            padding: 0;
+
+            input {
+                background-color: transparent;
+            }
+        }
+    }
+}

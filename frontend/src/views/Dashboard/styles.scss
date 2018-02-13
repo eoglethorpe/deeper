@@ -1,0 +1,9 @@
+@import '../../stylesheets/base';
+
+.dashboard {
+    @extend %main-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-foreground-alt;
+}

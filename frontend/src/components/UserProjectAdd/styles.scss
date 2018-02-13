@@ -1,0 +1,14 @@
+@import '../../stylesheets/base';
+
+.user-project-add-form {
+    position: relative;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+}

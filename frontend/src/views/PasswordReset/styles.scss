@@ -1,0 +1,48 @@
+@import '../../stylesheets/base';
+
+$width-reset-form: 420px;
+
+.reset-password {
+    @extend %main-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-primary;
+
+    .form-container {
+        width: $width-reset-form;
+
+        .info {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            background-color: $color-foreground;
+            padding: $spacing-large;
+        }
+
+        .reset-password-form {
+            position: relative;
+            background-color: $color-foreground;
+            padding: $spacing-small $spacing-large $spacing-large;
+
+            .action-buttons {
+                display: flex;
+                justify-content: flex-end;
+            }
+        }
+
+        .go-back-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: $spacing-extra-small;
+            background-color: $color-foreground;
+            padding: $spacing-large;
+
+            .go-back-link {
+                color: $color-accent;
+            }
+        }
+    }
+}

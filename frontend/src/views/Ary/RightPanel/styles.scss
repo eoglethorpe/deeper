@@ -1,0 +1,19 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+.tabs-container {
+    height: 100%;
+
+    .tabs-header-container {
+        background-color: $color-foreground;
+    }
+
+    .tabs-content {
+        background-color: $color-foreground-alt;
+        height: calc(100% - 39px);
+
+        .tab {
+            height: 100%;
+        }
+    }
+}

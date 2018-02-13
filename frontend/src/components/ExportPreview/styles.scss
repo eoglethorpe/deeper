@@ -1,0 +1,19 @@
+@import '../../stylesheets/base';
+
+.export-preview {
+    display: flex;
+    position: relative;
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .message {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        color: $color-text-disabled;
+        font-size: $font-size-large;
+        font-weight: $font-weight-medium;
+    }
+}

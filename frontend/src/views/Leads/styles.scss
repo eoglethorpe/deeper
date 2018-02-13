@@ -1,0 +1,114 @@
+@import '../../stylesheets/base';
+
+.leads {
+    @extend %main-content;
+    display: flex;
+    flex-direction: column;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $color-foreground;
+        padding: $spacing-small;
+
+        .add-lead-button {
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin: $spacing-small;
+            padding: $spacing-small $spacing-medium-alt;
+            font-size: $font-size-large;
+        }
+
+        .filters {
+            display: flex;
+            flex-grow: 1;
+
+            :global {
+                .leads-filter {
+                    margin: $spacing-small;
+                }
+
+                .button {
+                    flex-shrink: 0;
+                    align-self: flex-end;
+                    margin: $spacing-small;
+                }
+            }
+        }
+    }
+
+    .table-container {
+        position: relative;
+        flex-grow: 1;
+        background-color: $color-background-row-alt;
+        overflow-y: auto;
+
+        .leads-table {
+            :global {
+                .header {
+                    position: sticky;
+                    top: 0;
+                }
+
+                .capitalize {
+                    text-transform: capitalize;
+                }
+
+                .icon-wrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: $font-size-large;
+
+                    a {
+                        color: $color-accent;
+                    }
+                }
+
+                .attachmentMimeType {
+                    width: 64px;
+                }
+
+                .title {
+                    width: 30%;
+                }
+
+                .actions {
+                    width: 150px;
+                }
+            }
+        }
+    }
+
+    .viz-container {
+        display: grid;
+        flex-grow: 1;
+    }
+
+    .footer {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-between;
+        border-top: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground-alt;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .pager {
+            display: flex;
+            justify-content: center;
+        }
+
+        .link-container {
+            display: flex;
+            height: 32px;
+
+            .link {
+                @extend %button-like-link;
+                background-color: $color-primary;
+                color: $color-foreground-alt;
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+@import '../../../../../stylesheets/base';
+
+.project-general-form {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        padding: $spacing-small $spacing-medium-alt;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+
+    .name,
+    .description,
+    .start-date,
+    .end-date,
+    .other-members,
+    .admins,
+    .regions,
+    .user-groups {
+        flex-basis: 100%;
+        margin: 0 $spacing-large;
+    }
+
+    .description {
+        :global .input {
+            resize: none;
+        }
+    }
+}

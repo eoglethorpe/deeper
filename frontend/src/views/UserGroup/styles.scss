@@ -1,0 +1,105 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/tabs';
+
+$header-height: 48px;
+$info-height: 144px;
+
+.usergroup {
+    @extend %main-content;
+    display: grid;
+    grid-template-areas:
+        "header projects"
+        "info projects"
+        "stats projects"
+        "stats members";
+    grid-template-columns: 3fr 7fr;
+    grid-template-rows: $header-height $info-height 3fr 2fr;
+
+    .header {
+        display: flex;
+        align-items: center;
+        border-right: $width-separator-thin solid $color-separator;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: 0 $spacing-medium-alt;
+        grid-area: header;
+    }
+
+    .usergroup-alt {
+        @include shadow-medium;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        background-color: $color-foreground;
+        padding: $spacing-medium-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+        grid-area: info / info / groups / groups;
+    }
+
+    >* {
+        background-color: $color-foreground;
+    }
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    border-right: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    grid-area: info;
+
+    .title-container {
+        display: flex;
+        flex-shrink: 0;
+        align-items: flex-start;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .name {
+            color: $color-text;
+            font-size: $font-size-super-large;
+        }
+    }
+
+    .label {
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0 $spacing-medium-alt;
+        text-transform: uppercase;
+        color: $color-label;
+        font-size: $font-size-small;
+    }
+
+    .description {
+        flex-grow: 1;
+        margin: 0;
+        padding: 0 $spacing-medium-alt;
+        text-align: justify;
+        overflow-y: auto;
+    }
+
+    button {
+        margin-left: $spacing-small;
+    }
+}
+
+.stats {
+    border-right: $width-separator-thin solid $color-separator;
+    padding: $spacing-medium;
+    grid-area: stats;
+}
+
+.projects {
+    border-bottom: $width-separator-thin solid $color-separator;
+    grid-area: projects;
+}
+
+.members {
+    grid-area: groups;
+}
+
+.user-group-edit-modal {
+    width: 480px;
+}

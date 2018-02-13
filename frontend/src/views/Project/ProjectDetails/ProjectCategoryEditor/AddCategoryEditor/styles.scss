@@ -1,0 +1,19 @@
+@import '../../../../../stylesheets/base';
+
+.add-category-editor-form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: $spacing-medium;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+}
+

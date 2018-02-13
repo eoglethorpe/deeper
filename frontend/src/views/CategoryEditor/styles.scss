@@ -1,0 +1,449 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/modal';
+@import '../../stylesheets/tabs';
+
+.category-editor {
+    @extend %main-content;
+    display: flex;
+    position: relative;
+
+    %tab {
+        flex-grow: 1;
+        outline: 0;
+        border: 0;
+        border-bottom: $width-separator-medium solid $color-separator;
+        background-color: transparent;
+        cursor: pointer;
+        padding: $spacing-small $spacing-medium;
+        color: $color-text;
+        font-family: inherit;
+        font-size: inherit;
+
+        &.active {
+            border-bottom-color: $color-accent;
+            color: $color-accent;
+        }
+    }
+
+    %ngram-selects {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        border-top: $width-separator-medium solid $color-separator;
+        background-color: $color-foreground;
+
+        .heading {
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .ngram-select-list {
+            padding: $spacing-small $spacing-medium;
+
+            .ngram-select {
+                outline: 0;
+                border: 0;
+                background-color: transparent;
+                cursor: pointer;
+                padding: $spacing-small $spacing-medium;
+                font-family: inherit;
+
+                &.active {
+                    background-color: $color-accent;
+                    color: $color-text-on-accent;
+                }
+            }
+        }
+    }
+
+    .left {
+        display: flex;
+        flex-basis: 24%;
+        flex-direction: column;
+        background-color: $color-foreground;
+        width: 24%;
+
+        .document-panel {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            border-right: $width-separator-medium solid $color-separator;
+
+            .header {
+                display: flex;
+                flex-shrink: 0;
+                justify-content: space-between;
+
+                .tab-header {
+                    @extend %tab;
+                    padding: $spacing-medium;
+                    text-transform: uppercase;
+                }
+            }
+
+            .content {
+                display: flex;
+                position: relative;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .tab-content {
+                    display: none;
+
+                    &.active {
+                        display: flex;
+                        flex-grow: 1;
+                    }
+                }
+
+                .document-tab {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+
+                    .file-list-view {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                        overflow-y: auto;
+
+                        .file-list-item {
+                            display: flex;
+                            flex-shrink: 0;
+                            align-items: center;
+                            justify-content: space-between;
+                            border-bottom: $width-separator-thin solid $color-separator;
+
+                            .title {
+                                flex-grow: 1;
+                            }
+
+                            .icon {
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+
+                    .bottom-bar {
+                        display: flex;
+                        flex-shrink: 0;
+                        justify-content: flex-end;
+                        border-top: $width-separator-thin solid $color-separator;
+                        background-color: $color-foreground-alt;
+                        padding: $spacing-medium-alt $spacing-small;
+
+                        .button {
+                            margin-left: $spacing-small;
+                        }
+                    }
+                }
+
+                .simplified-tab {
+                    flex-grow: 1;
+                    padding: $spacing-medium;
+                    width: 100%;
+                    text-align: justify;
+                    overflow-y: auto;
+                }
+
+                .ngrams-tab {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    background-color: $color-foreground-alt;
+
+                    .ngram-selects {
+                        @extend %ngram-selects;
+                    }
+
+                    .ngram-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+
+                        .ngram {
+                            display: flex;
+                            border-bottom: $width-separator-thin solid $color-separator;
+                            padding: $spacing-medium;
+
+                            .title {
+                                flex-grow: 1;
+                            }
+
+                            .strength {
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .right {
+        display: flex;
+        flex-basis: 76%;
+        flex-direction: column;
+        background-color: $color-foreground-alt;
+        width: 76%;
+
+        >.header {
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-medium;
+
+            .header-content {
+                display: flex;
+                flex-basis: 100%;
+
+                h2 {
+                    flex-grow: 1;
+                    font-weight: $font-weight-medium;
+                }
+
+                button {
+                    flex-shrink: 0;
+                }
+
+                .link-to-pp {
+                    @extend %button-like-link;
+                    margin-left: $spacing-medium;
+                    background-color: $color-primary;
+                    color: $color-foreground-alt;
+                }
+            }
+
+
+            .action-btn {
+                display: flex;
+                flex-basis: 100%;
+                align-items: flex-end;
+                justify-content: flex-start;
+
+                .category-select {
+                    flex-basis: 23%;
+                    margin-right: $spacing-medium;
+
+                    .input {
+                        text-transform: uppercase;
+                    }
+                }
+
+                .add-category-btn {
+                    margin-right: $spacing-medium;
+
+                    i {
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+
+        .content {
+            display: flex;
+            flex-grow: 1;
+
+            .sub-categories {
+                display: flex;
+                flex-basis: 70%;
+                background-color: $color-background-alt;
+                overflow-x: auto;
+
+                .column {
+                    display: flex;
+                    flex-basis: calc(100% / 3);
+                    flex-direction: column;
+                    flex-shrink: 0;
+                    border-right: $width-separator-medium solid $color-separator;
+
+                    %button {
+                        outline: 0;
+                        border: 0;
+                        background-color: transparent;
+                        cursor: pointer;
+                        padding: $spacing-medium;
+                        color: $color-text;
+                        font-family: inherit;
+                        font-size: inherit;
+                    }
+
+                    .header {
+                        display: flex;
+                        flex-shrink: 0;
+                        align-items: center;
+                        justify-content: space-between;
+                        border-bottom: $width-separator-medium solid $color-separator;
+
+                        .heading {
+                            padding: $spacing-medium;
+                            color: $color-text;
+                            font-weight: $font-weight-bold;
+                        }
+
+                        button {
+                            @extend %button;
+                            text-transform: uppercase;
+                            color: $color-accent;
+                        }
+                    }
+
+                    .sub-category-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+
+                        .sub-category {
+                            @extend %button;
+                            display: flex;
+                            border-bottom: $width-separator-thin solid $color-separator;
+                            padding: $spacing-small;
+                            width: 100%;
+                            text-align: left;
+
+                            .title {
+                                flex-grow: 1;
+                                border: $width-separator-medium solid transparent;
+                                padding: $spacing-small;
+                                color: $color-text;
+                                pointer-events: none;
+                            }
+
+                            .number {
+                                flex-shrink: 0;
+                                padding: $spacing-extra-small $spacing-small;
+                                pointer-events: none;
+                            }
+
+                            &.selected {
+                                background-color: $color-background-selected;
+                            }
+
+                            &.active {
+                                background-color: $color-accent;
+                                color: $color-text-on-accent;
+
+                                .title {
+                                    color: $color-text-on-accent;
+                                }
+                            }
+
+                            &.drag-enter {
+                                .title {
+                                    border: $width-separator-medium dashed $color-separator-alt;
+                                }
+
+                                &.active {
+                                    .title {
+                                        border: $width-separator-medium dashed $color-text-on-accent;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            .property-panel {
+                display: flex;
+                flex-basis: 30%;
+                flex-direction: column;
+                border-left: $width-separator-medium solid $color-separator;
+                background-color: $color-foreground;
+
+                .header {
+                    display: flex;
+                    flex-shrink: 0;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    padding: $spacing-small 0;
+
+                    .heading {
+                        padding: 0 $spacing-medium;
+                    }
+
+                    .action-buttons {
+                        padding: 0 $spacing-medium;
+                    }
+                }
+
+                .properties {
+                    flex-shrink: 0;
+                    padding: $spacing-medium;
+
+                    textarea {
+                        resize: none;
+                    }
+
+                }
+
+                .ngrams {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+
+                    .ngram-selects {
+                        @extend %ngram-selects;
+                    }
+
+                    .ngram {
+                        flex-grow: 1;
+                        overflow-y: auto;
+
+                        .keyword {
+                            display: flex;
+                            align-items: center;
+                            border-bottom: $width-separator-thin solid $color-separator;
+                            padding: $spacing-small $spacing-medium;
+
+                            .title {
+                                flex-grow: 1;
+                            }
+
+                            .action-buttons {
+                                flex-shrink: 0;
+                            }
+                        }
+                    }
+
+                    > .action-buttons {
+                        flex-shrink: 0;
+                        padding: $spacing-small;
+                        text-align: right;
+                    }
+                }
+
+            }
+        }
+
+        .empty {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+            color: $color-label;
+        }
+    }
+}
+
+%modal {
+    width: 320px;
+
+    .ok-button {
+        min-width: 72px;
+    }
+}
+
+.new-category-modal {
+    @extend %modal;
+}
+
+.edit-category-modal {
+    @extend %modal;
+}
+
+.new-subcategory-modal {
+    @extend %modal;
+}
+
+.new-manual-ngram-modal {
+    @extend %modal;
+}

@@ -3,25 +3,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
-import { FgRestBuilder } from './public/utils/rest';
-import { getRandomFromList } from './public/utils/common';
+import { FgRestBuilder } from './vendor/react-store/utils/rest';
+import { getRandomFromList } from './vendor/react-store/utils/common';
 
-import { initializeGa } from './common/config/google-analytics';
+import { initializeGa } from './config/google-analytics';
 
-import schema from './common/schema';
+import schema from './schema';
 
 import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
-} from './common/rest';
+} from './rest';
 import {
     startRefreshAction,
     stopRefreshAction,
-} from './common/redux/middlewares/refresher';
+} from './redux/middlewares/refresher';
 import {
     startSiloBackgroundTasksAction,
     stopSiloBackgroundTasksAction,
-} from './common/redux/middlewares/siloBackgroundTasks';
+} from './redux/middlewares/siloBackgroundTasks';
 
 import {
     setAccessTokenAction,
@@ -31,9 +31,9 @@ import {
     currentUserProjectsSelector,
     activeUserSelector,
     commonStringsSelector,
-} from './common/redux';
+} from './redux';
 
-import getUserConfirmation from './common/utils/getUserConfirmation';
+import getUserConfirmation from './utils/getUserConfirmation';
 
 import Multiplexer from './Multiplexer';
 
