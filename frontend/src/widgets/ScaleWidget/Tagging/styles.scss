@@ -1,0 +1,32 @@
+@import '../../../stylesheets/base';
+
+.scales {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: center;
+    padding: $spacing-extra-small 0;
+    height: $height-scale-widget-unit-selected;
+
+    .scale {
+        display: flex;
+        align-items: center;
+
+        .scale-unit {
+            transition: .1s all ease-in-out;
+            margin-left: $spacing-extra-small;
+            outline: 0;
+            border: 0;
+            cursor: pointer;
+            padding: 0;
+            width: $width-scale-widget-unit;
+            height: $height-scale-widget-unit;
+
+            &.selected {
+                width: $width-scale-widget-unit-selected;
+                height: $height-scale-widget-unit-selected;
+            }
+        }
+    }
+}

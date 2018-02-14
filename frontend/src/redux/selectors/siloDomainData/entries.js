@@ -4,7 +4,7 @@ import {
     projectsSelector,
     projectIdFromRoute,
 } from '../domainData';
-import widgetStore from '../../../views/AnalysisFramework/widgetStore';
+import widgetStore from '../../../widgets';
 
 const emptyList = [];
 const emptyObject = {};

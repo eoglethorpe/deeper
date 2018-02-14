@@ -38,7 +38,7 @@ import {
 import { iconNames } from '../../../constants';
 import { entryAccessor, ENTRY_STATUS } from '../../../entities/entry';
 
-import widgetStore from '../../AnalysisFramework/widgetStore';
+import widgetStore from '../../../widgets';
 
 import AssistedTagging from './AssistedTagging';
 import styles from '../styles.scss';

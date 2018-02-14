@@ -1,6 +1,6 @@
 import update from '../../../vendor/react-store/utils/immutable-update';
 import { isEqualAndTruthy } from '../../../vendor/react-store/utils/common';
-import widgetStore from '../../../views/AnalysisFramework/widgetStore';
+import widgetStore from '../../../widgets';
 
 // TYPE
 

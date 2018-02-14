@@ -1,0 +1,34 @@
+@import '../../../stylesheets/base';
+
+.organigram-list {
+    position: relative;
+    padding: $spacing-small;
+    height: 100%;
+
+    .show-organigram-button {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}
+
+%modal {
+    width: 72vw;
+
+    :global {
+        .responsive-wrapper {
+            height: 100%;
+        }
+
+        .modal-body {
+            width: auto;
+            min-width: 600px;
+            height: 400px;
+            max-width: 96vw;
+        }
+    }
+}
+
+.edit-value-modal {
+    @extend %modal;
+}

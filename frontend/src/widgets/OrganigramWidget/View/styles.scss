@@ -1,0 +1,11 @@
+@import '../../../stylesheets/base';
+
+.organigram-list {
+    display: flex;
+    justify-content: flex-start;
+    height: 100%;
+
+    .organigram {
+        width: 100%;
+    }
+}

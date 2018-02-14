@@ -32,7 +32,7 @@ import { entryAccessor } from '../../../entities/entry';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
-import widgetStore from '../../AnalysisFramework/widgetStore';
+import widgetStore from '../../../widgets';
 import styles from '../styles.scss';
 
 

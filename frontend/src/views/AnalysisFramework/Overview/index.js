@@ -30,7 +30,7 @@ import {
     afStringsSelector,
 } from '../../../redux';
 
-import widgetStore from '../widgetStore';
+import widgetStore from '../../../widgets';
 import styles from '../styles.scss';
 
 const propTypes = {

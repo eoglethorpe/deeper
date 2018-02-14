@@ -1,0 +1,211 @@
+@import '../../../stylesheets/base';
+
+.matrix-one-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 $spacing-small;
+    height: 100%;
+}
+
+.matrix-cell {
+    flex-shrink: 0;
+    margin: $spacing-extra-small;
+    background-color: $color-background;
+    padding: $spacing-small $spacing-medium;
+    color: $color-text;
+    user-select: none;
+
+    &.active {
+        background-color: $color-accent;
+        color: $color-text-on-accent;
+    }
+}
+
+.matrix-row {
+    display: flex;
+    align-items: center;
+    border: $width-separator-thin solid $color-separator;
+
+    .title {
+        flex-basis: $width-matrix-1d-title;
+        flex-shrink: 0;
+        padding: $spacing-medium;
+    }
+
+    .cells {
+        display: flex;
+        flex-basis: 100%;
+        flex-grow: 1;
+        flex-wrap: wrap;
+    }
+
+    .action-buttons {
+        flex-shrink: 0;
+    }
+}
+
+.tagging-matrix-1d,
+.framework-matrix-1d {
+    width: 100%;
+}
+
+.tagging-matrix-1d {
+    .matrix-row {
+        border: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+
+        .matrix-cell {
+            outline: 0;
+            border: 0;
+            font-family: inherit;
+            font-size: inherit;
+        }
+    }
+}
+
+%modal {
+    width: 480px;
+
+    :global .modal-body {
+        height: 400px;
+    }
+}
+
+.edit-cell-modal {
+    @extend %modal;
+
+    .edit-cell-body {
+        padding: 0;
+
+        .edit-cell {
+            border-top: 0;
+        }
+    }
+}
+
+.edit-row-modal {
+    @extend %modal;
+    width: 512px;
+
+    .edit-row-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        width: 100%;
+
+        .general-info-container {
+            flex-shrink: 0;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+
+            .title-input {
+                width: auto;
+            }
+        }
+
+        .modal-rows-content {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .row-list {
+            flex-grow: 1;
+            border-left: $width-separator-thin solid $color-separator;
+            overflow-y: auto;
+
+            .edit-row {
+                border-top: 0;
+            }
+
+            &.no-items {
+                flex-basis: 100%;
+            }
+        }
+    }
+
+    :global .modal-content {
+        width: 100%;
+    }
+}
+
+.edit-cell {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-foreground;
+
+    .title-input {
+        flex-grow: 1;
+        margin-left: $spacing-extra-small;
+    }
+
+    .delete-button {
+        flex-shrink: 0;
+    }
+}
+
+.edit-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    border-left: $width-separator-thick solid transparent;
+    background-color: $color-foreground;
+
+    .color-box-container {
+        display: flex;
+        flex-basis: 48px;
+        flex-direction: column;
+        flex-shrink: 0;
+        padding: $spacing-extra-small;
+        padding-bottom: 0;
+        width: 48px;
+        height: 40px;
+
+        .color-label {
+            flex-shrink: 0;
+            text-transform: uppercase;
+            color: $color-label;
+            font-size: $font-size-extra-small;
+        }
+
+        .color-box {
+            flex-grow: 1;
+            margin-right: $spacing-small;
+            outline: 0;
+            border: 0;
+            cursor: pointer;
+        }
+    }
+
+    .title-input {
+        flex-grow: 1;
+        margin-left: $spacing-extra-small;
+    }
+
+    .delete-button {
+        flex-shrink: 0;
+    }
+
+    &.active {
+        border-left: $width-separator-thick solid $color-accent;
+    }
+}
+
+:global .drag-handle {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+    justify-content: center;
+    cursor: row-resize;
+    padding: $spacing-medium $spacing-large;
+    font-size: $font-size-large;
+}
+
+.draggable-item {
+    z-index: 11111;
+}

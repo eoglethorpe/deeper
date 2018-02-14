@@ -1,0 +1,81 @@
+@import '../../../stylesheets/base';
+
+%textarea {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: $spacing-small;
+    width: 100%;
+
+    :global .input {
+        flex-grow: 1;
+        resize: none;
+    }
+}
+
+.excerpt-overview {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+
+    .drop-here-container {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        text-transform: uppercase;
+        color: $color-label;
+    }
+
+    .textarea {
+        @extend %textarea;
+    }
+
+    .image {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .format-button {
+        @include transition-medium;
+        position: absolute;
+        right: $spacing-medium;
+        bottom: $spacing-medium;
+        opacity: 0;
+    }
+
+    &:hover {
+        .format-button {
+            opacity: 1;
+        }
+    }
+}
+
+.excerpt-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+
+    .textarea {
+        @extend %textarea;
+    }
+
+    .image {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+        border: $width-separator-medium dashed $color-label;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+}
