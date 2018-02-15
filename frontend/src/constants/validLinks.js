@@ -14,8 +14,15 @@ const lap = { requireLogin: true, requireAdminRights: true, requireProject: true
 const la = { requireLogin: true, requireAdminRights: true };
 const lp = { requireLogin: true, requireProject: true };
 const l = { requireLogin: true };
-// eslint-disable-next-line no-unused-vars
 const x = { requireLogin: false };
+
+// eslint-disable-next-line no-unused-vars
+const lapd = { ...lap, requireDevMode: true };
+const lad = { ...la, requireDevMode: true };
+const lpd = { ...lp, requireDevMode: true };
+const ld = { ...l, requireDevMode: true };
+// eslint-disable-next-line no-unused-vars
+const xd = { ...x, requireDevMode: true };
 
 // COMMON LINK COMBINATION
 
@@ -24,17 +31,17 @@ const noLinks = {};
 const allLinks = {
     leads: lp,
     entries: lp,
-    ary: lp,
+    ary: lpd,
     projects: l,
     countries: l,
     export: lp,
 
     userProfile: l,
-    apiDocs: l,
+    apiDocs: ld,
     userExports: lp,
 
     adminPanel: la,
-    stringManagement: la,
+    stringManagement: lad,
 
     projectSelect: l,
 };

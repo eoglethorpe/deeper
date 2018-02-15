@@ -25,6 +25,7 @@ const propTypes = {
     requireAdminRights: PropTypes.bool,
     requireProject: PropTypes.bool,
     requireLogin: PropTypes.bool,
+    requireDevMode: PropTypes.bool,
     render: PropTypes.func.isRequired,
 };
 
@@ -34,6 +35,7 @@ const defaultProps = {
     requireAdminRights: false,
     requireProject: false,
     requireLogin: false,
+    requireDevMode: false,
 };
 
 @connect(mapStateToProps, undefined)
@@ -49,10 +51,14 @@ export default class Navbar extends React.PureComponent {
             requireAdminRights,
             requireProject,
             requireLogin,
+            requireDevMode,
             render,
         } = this.props;
 
-        if (requireProject && userProjects.length <= 0) {
+
+        if (requireDevMode && process.env.NODE_ENV !== 'development') {
+            return null;
+        } if (requireProject && userProjects.length <= 0) {
             return null;
         } else if (requireLogin && !activeUser.userId) {
             return null;

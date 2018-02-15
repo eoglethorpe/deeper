@@ -191,22 +191,16 @@ export default class Navbar extends React.PureComponent {
             'leads',
             'entries',
             'export',
+            'ary',
         ];
-        if (process.env.NODE_ENV === 'development') {
-            // NOTE: ary isn't ready now, so only visible in dev mode
-            navLinks.push('ary');
-        }
 
         const dropLinks = [
             'userProfile',
             'projects',
             'countries',
+            'stringManagement',
+            'apiDocs',
         ];
-        // NOTE: Don't show in production
-        if (process.env.NODE_ENV === 'development') {
-            dropLinks.push('stringManagement');
-            dropLinks.push('apiDocs');
-        }
 
         this.validNavLinks = Navbar.getValidLinks(navLinks, this.currentPath);
         this.validDropLinks = Navbar.getValidLinks(dropLinks, this.currentPath);
@@ -245,6 +239,7 @@ export default class Navbar extends React.PureComponent {
                 requireLogin={item.requireLogin}
                 requireAdminRights={item.requireAdminRights}
                 requireProject={item.requireProject}
+                requireDevMode={item.requireDevMode}
                 render={() => (
                     <Link
                         to={reverseRoute(pathNames[key], params)}
@@ -306,9 +301,8 @@ export default class Navbar extends React.PureComponent {
                 <Cloak
                     requireLogin={projectSelectInputLink.requireLogin}
                     requireAdminRights={projectSelectInputLink.requireAdminRights}
-                    requireProject={
-                        projectSelectInputLink.requireProject
-                    }
+                    requireProject={projectSelectInputLink.requireProject}
+                    requireDevMode={projectSelectInputLink.requireDevMode}
                     render={
                         () => (
                             <SelectInput
@@ -352,6 +346,7 @@ export default class Navbar extends React.PureComponent {
                             requireLogin={adminPanelLink.requireLogin}
                             requireAdminRights={adminPanelLink.requireAdminRights}
                             requireProject={adminPanelLink.requireProject}
+                            requireDevMode={adminPanelLink.requireDevMode}
                             render={
                                 () => (
                                     <a
