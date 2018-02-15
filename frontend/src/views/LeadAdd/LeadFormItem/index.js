@@ -177,7 +177,7 @@ export default class LeadFormItem extends React.PureComponent {
         this.leadSaveRequest.start();
     }
 
-    handleFormChange = (values, { formErrors, formFieldErrors }) => {
+    handleFormChange = (values, { formErrors, formFieldErrors } = {}) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,
@@ -192,7 +192,7 @@ export default class LeadFormItem extends React.PureComponent {
         });
     }
 
-    handleFormFailure = ({ formErrors, formFieldErrors }) => {
+    handleFormFailure = ({ formErrors, formFieldErrors } = {}) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,

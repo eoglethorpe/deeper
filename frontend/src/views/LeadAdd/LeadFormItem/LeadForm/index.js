@@ -15,6 +15,7 @@ import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import HiddenInput from '../../../../vendor/react-store/components/Input/HiddenInput';
 import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
+import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 
 import {
     LEAD_TYPE,
@@ -22,7 +23,10 @@ import {
     leadAccessor,
 } from '../../../../entities/lead';
 import { InternalGallery } from '../../../../components/DeepGallery';
-import { leadsStringsSelector } from '../../../../redux';
+import {
+    leadsStringsSelector,
+    activeUserSelector,
+} from '../../../../redux';
 
 import ApplyAll, { ExtractThis } from './ApplyAll';
 import styles from './styles.scss';
@@ -30,6 +34,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     lead: PropTypes.shape({
         dummy: PropTypes.string,
@@ -63,6 +69,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     leadsStrings: leadsStringsSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 @connect(mapStateToProps, null, null, { withRef: true })
@@ -70,6 +77,33 @@ const mapStateToProps = state => ({
 export default class LeadForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static keySelector = d => (d || {}).key
+    static labelSelector = d => (d || {}).value
+
+    static setDefaultValues = (props) => {
+        const { leadOptions, lead, activeUser } = props;
+        const values = leadAccessor.getValues(lead);
+        const activeUserId = activeUser.userId;
+        if (
+            !values.confidentiality &&
+            leadOptions && leadOptions.confidentiality && leadOptions.confidentiality.length > 0
+        ) {
+            const confidentiality = LeadForm.keySelector(leadOptions.confidentiality[0]);
+            props.onChange({ confidentiality });
+        }
+        if (
+            (!values.assignee || values.assignee.length === 0) &&
+            leadOptions && leadOptions.assignee && leadOptions.assignee.length > 0 &&
+            leadOptions.assignee.find(user => LeadForm.keySelector(user) === activeUserId)
+        ) {
+            props.onChange({ assignee: [activeUserId] });
+        }
+        if (!values.publishedOn) {
+            const now = new Date();
+            props.onChange({ publishedOn: FormattedDate.format(now, 'yyyy-MM-dd') });
+        }
+    }
 
     constructor(props) {
         super(props);
@@ -141,6 +175,21 @@ export default class LeadForm extends React.PureComponent {
         }
     }
 
+    componentWillMount() {
+        LeadForm.setDefaultValues(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { leadOptions: oldLeadOptions } = this.props;
+        if (nextProps.leadOptions !== oldLeadOptions) {
+            LeadForm.setDefaultValues(nextProps);
+        }
+    }
+
+    handleApplyAllClick = name => this.props.onApplyAllClick(name);
+
+    handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
+
     submit = () => {
         if (this.formRef && !this.props.isSaveDisabled) {
             this.formRef.submit();
@@ -148,14 +197,6 @@ export default class LeadForm extends React.PureComponent {
         }
         return false;
     }
-
-    handleApplyAllClick = name => this.props.onApplyAllClick(name);
-
-    handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
-
-    keySelector = d => (d || {}).key
-
-    labelSelector = d => (d || {}).value
 
     render() {
         const {
@@ -245,9 +286,9 @@ export default class LeadForm extends React.PureComponent {
                 <SelectInput
                     disabled
                     formname="project"
-                    keySelector={this.keySelector}
+                    keySelector={LeadForm.keySelector}
                     label={this.props.leadsStrings('projectLabel')}
-                    labelSelector={this.labelSelector}
+                    labelSelector={LeadForm.labelSelector}
                     options={leadOptions.project}
                     placeholder={this.props.leadsStrings('projectPlaceholderLabel')}
                     showHintAndError
@@ -288,9 +329,9 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <SelectInput
                         formname="confidentiality"
-                        keySelector={this.keySelector}
+                        keySelector={LeadForm.keySelector}
                         label={this.props.leadsStrings('confidentialityLabel')}
-                        labelSelector={this.labelSelector}
+                        labelSelector={LeadForm.labelSelector}
                         options={leadOptions.confidentiality}
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
@@ -308,9 +349,9 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <MultiSelectInput
                         formname="assignee"
-                        keySelector={this.keySelector}
+                        keySelector={LeadForm.keySelector}
                         label={this.props.leadsStrings('assigneeLabel')}
-                        labelSelector={this.labelSelector}
+                        labelSelector={LeadForm.labelSelector}
                         options={leadOptions.assignee}
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
