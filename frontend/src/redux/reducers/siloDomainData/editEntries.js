@@ -118,7 +118,7 @@ const editEntryViewAddEntry = (state, action) => {
     const { entry, leadId } = action;
 
     // Add order to entries during creation
-    const entries = editEntryView[leadId].entries;
+    const entries = (editEntryView[leadId] || {}).entries || [];
     const maxEntryOrder = entries.reduce(
         (acc, e) => {
             const entryValue = entryAccessor.getValues(e);
