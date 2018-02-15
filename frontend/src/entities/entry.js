@@ -1,5 +1,11 @@
 import update from '../vendor/react-store/utils/immutable-update';
-import { listToMap, randomString } from '../vendor/react-store/utils/common';
+import {
+    listToMap,
+    randomString,
+    compareDate,
+    compareNumber,
+    isTruthy,
+} from '../vendor/react-store/utils/common';
 
 export const ENTRY_STATUS = {
     // A rest request is in session
@@ -59,7 +65,7 @@ const entryReference = {
 
 export const createEntry = ({
     id, serverId, versionId, values = {}, pristine = false, error = false,
-}) => {
+}, order = undefined) => {
     const settings = {
         data: {
             id: { $set: id },
@@ -67,7 +73,7 @@ export const createEntry = ({
             versionId: { $set: versionId },
         },
         widget: {
-            values: { $set: values },
+            values: { $set: isTruthy(order) ? { ...values, order } : values },
         },
         uiState: {
             pristine: { $set: pristine },
@@ -96,7 +102,15 @@ export const calcEntryState = ({ entry, rest, deleteRest }) => {
 };
 
 const getValuesFromRemoteEntry = ({
-    excerpt, image, lead, analysisFramework, attributes, exportData, filterData,
+    excerpt,
+    image,
+    lead,
+    analysisFramework,
+    attributes,
+    exportData,
+    filterData,
+    order,
+    createdAt,
 }) => ({
     excerpt,
     image,
@@ -105,6 +119,8 @@ const getValuesFromRemoteEntry = ({
     attributes,
     exportData,
     filterData,
+    order,
+    createdAt,
 });
 
 export const calcEntriesDiff = (locals, remotes) => {
@@ -227,40 +243,58 @@ export const getApplicableAndModifyingDiffCount = diffs => (
     getApplicableDiffs(diffs).filter(diff => diff.action !== DIFF_ACTION.add)
 );
 
-export const calcNewEntries = (localEntries = [], diffs = []) => diffs.reduce(
-    (acc, diff) => {
-        const index = localEntries.findIndex(e => e.data.id === diff.id);
-        switch (diff.action) {
-            case DIFF_ACTION.add: {
-                const remoteEntry = diff.entry;
-                if (!diff.skip) {
-                    acc.push(remoteEntry);
-                } // else don't push
-                break;
-            }
-            case DIFF_ACTION.remove:
-                if (diff.skip) {
-                    acc.push(localEntries[index]);
-                } // else skip adding to push
-                break;
-            case DIFF_ACTION.replace: {
-                if (!diff.skip) {
-                    acc.push(diff.entry);
-                } else {
-                    acc.push(diff.entryOnSkip);
+export const calcNewEntries = (localEntries = [], diffs = []) => (
+    diffs
+        .reduce(
+            (acc, diff) => {
+                const index = localEntries.findIndex(e => e.data.id === diff.id);
+                switch (diff.action) {
+                    case DIFF_ACTION.add: {
+                        const remoteEntry = diff.entry;
+                        if (!diff.skip) {
+                            acc.push(remoteEntry);
+                        } // else don't push
+                        break;
+                    }
+                    case DIFF_ACTION.remove:
+                        if (diff.skip) {
+                            acc.push(localEntries[index]);
+                        } // else skip adding to push
+                        break;
+                    case DIFF_ACTION.replace: {
+                        if (!diff.skip) {
+                            acc.push(diff.entry);
+                        } else {
+                            acc.push(diff.entryOnSkip);
+                        }
+                        break;
+                    }
+                    case DIFF_ACTION.noop: {
+                        // push as it is
+                        acc.push(localEntries[index]);
+                        break;
+                    }
+                    default:
+                        console.warn(`Error: action not valid ${diff.action}`);
+                        break;
                 }
-                break;
-            }
-            case DIFF_ACTION.noop: {
-                // push as it is
-                acc.push(localEntries[index]);
-                break;
-            }
-            default:
-                console.warn(`Error: action not valid ${diff.action}`);
-                break;
-        }
-        return acc;
-    },
-    [],
+                return acc;
+            },
+            [],
+        )
+        .map((a) => {
+            console.warn(a);
+            return a;
+        })
+        .sort((a, b) => {
+            const aValue = entryAccessor.getValues(a);
+            const aOrder = aValue.order;
+            const aCreatedAt = aValue.createdAt;
+
+            const bValue = entryAccessor.getValues(b);
+            const bOrder = bValue.order;
+            const bCreatedAt = bValue.createdAt;
+
+            return compareNumber(aOrder, bOrder, -1) || compareDate(aCreatedAt, bCreatedAt, -1);
+        })
 );

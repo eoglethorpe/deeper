@@ -1,8 +1,9 @@
-import { getElementAround } from '../../../vendor/react-store/utils/common';
+import { isFalsy, getElementAround } from '../../../vendor/react-store/utils/common';
 import update from '../../../vendor/react-store/utils/immutable-update';
 import {
     createEntry,
     calcNewEntries,
+    entryAccessor,
 } from '../../../entities/entry';
 
 // TYPE
@@ -80,6 +81,7 @@ export const setActiveEntryAction = ({ leadId, entryId }) => ({
 
 // HELPER
 
+// FIXME: use accessor for entry
 const getIdFromEntry = e => e.data.id;
 const getEntriesByLeadId = (editEntryView, leadId) => (
     editEntryView[leadId].entries
@@ -104,8 +106,6 @@ const editEntryViewSetLead = (state, action) => {
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
-                // FIXME: why not setting leadId here?
-                // but setting it on addEntry
                 lead: { $set: lead },
             } },
         },
@@ -114,15 +114,29 @@ const editEntryViewSetLead = (state, action) => {
 };
 
 const editEntryViewAddEntry = (state, action) => {
+    const { editEntryView } = state;
     const { entry, leadId } = action;
-    const newEntry = createEntry(entry);
+
+    // Add order to entries during creation
+    const entries = editEntryView[leadId].entries;
+    const maxEntryOrder = entries.reduce(
+        (acc, e) => {
+            const entryValue = entryAccessor.getValues(e);
+            const entryOrder = entryValue.order;
+            if (isFalsy(entryOrder)) {
+                return acc;
+            }
+            return Math.max(acc, entryOrder);
+        },
+        0,
+    );
+
+    const newEntry = createEntry(entry, maxEntryOrder + 1);
     const newEntryId = getIdFromEntry(newEntry);
 
     const settings = {
         editEntryView: {
             [leadId]: { $auto: {
-                // FIXME: why are we setting leadId here
-                leadId: { $set: leadId },
                 selectedEntryId: { $set: newEntryId },
                 entries: { $autoArray: {
                     $unshift: [newEntry],
@@ -132,7 +146,6 @@ const editEntryViewAddEntry = (state, action) => {
     };
     return update(state, settings);
 };
-
 
 const editEntryViewSaveEntry = (state, action) => {
     const { editEntryView } = state;
