@@ -1,0 +1,28 @@
+@import '../../../stylesheets/base';
+
+.multiselect-list {
+    padding: $spacing-small;
+    height: 100%;
+
+    .multiselect {
+        width: 100%;
+    }
+
+    .multiselect-list-view {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+
+        .multiselect-content {
+            display: flex;
+            flex-grow: 1;
+
+            .multiselect-name {
+                flex-grow: 1;
+                margin-bottom: $spacing-small;
+                padding: $spacing-extra-small $spacing-small;
+            }
+        }
+
+    }
+}

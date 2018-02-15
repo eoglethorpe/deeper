@@ -1,0 +1,31 @@
+@import '../../../../../stylesheets/base';
+
+.add-region-form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    .non-field-errors {
+        flex-shrink: 0;
+    }
+
+    .tabular-select {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-end;
+        margin-top: $spacing-medium;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+}
+
+:global #select-input-inside-modal {
+    z-index: 1001;
+}

@@ -1,0 +1,130 @@
+@import '../../stylesheets/base';
+
+.login {
+    @extend %main-content;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-primary;
+
+    .deep-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: $spacing-extra-large;
+
+        .logo {
+            margin-bottom: $spacing-extra-large;
+            width: 256px;
+            height: 256px;
+
+            path {
+                fill: $color-accent;
+            }
+        }
+
+        .heading {
+            color: $color-text-on-primary;
+            font-weight: $font-weight-medium;
+
+            small {
+                text-transform: none;
+            }
+        }
+    }
+
+    .login-form-container {
+        display: flex;
+        flex-direction: column;
+        padding: $spacing-extra-large;
+        width: $width-login-form;
+
+        .hid-link-container {
+            display: flex;
+            flex-basis: 100%;
+            flex-direction: column;
+            align-items: center;
+            background-color: $color-foreground;
+            padding: $spacing-large;
+
+            .hid-link {
+                display: flex;
+                flex-basis: 100%;
+                align-items: center;
+                margin-bottom: $spacing-large;
+                border: $width-separator-thin solid $color-separator-alt;
+                border-radius: 3px;
+                padding: $spacing-small $spacing-large;
+                font-size: $font-size-medium-alt;
+
+                .logo {
+                    margin-right: $spacing-small;
+                    height: $font-size-medium-alt;
+                }
+            }
+
+            .or-container {
+                position: relative;
+                width: 100%;
+                vertical-align: baseline;
+
+                hr {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    border: $width-separator-thin solid $color-separator;
+                    width: 100%;
+                }
+
+                .or {
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    transform: translate(-50%);
+                    background-color: $color-foreground;
+                    padding: 0 $spacing-extra-small;
+                    text-transform: uppercase;
+                    color: $color-label;
+                    font-size: $font-size-small;
+                }
+            }
+        }
+
+        .login-form {
+            position: relative;
+            background-color: $color-foreground;
+            padding: $spacing-small $spacing-large $spacing-large;
+            width: 100%;
+
+            .action-buttons {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+
+                .forgot-password-link {
+                    color: $color-label;
+                    font-size: $font-size-extra-small;
+                }
+            }
+        }
+
+        .register-link-container {
+            display: flex;
+            flex-basis: 100%;
+            align-items: center;
+            justify-content: center;
+            margin-top: $spacing-extra-small;
+            background-color: $color-foreground;
+            padding: $spacing-large;
+
+            p {
+                margin: $spacing-small;
+            }
+
+            .register-link {
+                color: $color-accent;
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/tabs';
+
+.project-panel {
+    @extend %main-content;
+    display: flex;
+
+    .sidebar {
+        display: flex;
+        position: relative;
+        flex-basis: 16%;
+        flex-direction: column;
+        border-right: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        min-width: 320px;
+
+        .header {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: $width-separator-medium solid $color-separator;
+            padding: $spacing-medium;
+
+            .heading {
+                flex-grow: 1;
+            }
+
+            .search-input {
+                flex-basis: 100%;
+                padding: 0;
+            }
+        }
+
+        .project-list {
+            flex-grow: 1;
+            overflow-y: auto;
+
+            .list-item {
+                display: block;
+                border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
+
+                .link {
+                    display: block;
+                    padding: $spacing-medium $spacing-medium-alt;
+                    width: 100%;
+                    height: 100%;
+                    text-transform: capitalize;
+                }
+            }
+
+            .active {
+                border-left: $width-separator-thick solid $color-accent;
+                background-color: $color-hover;
+            }
+        }
+    }
+
+    .project-details {
+        flex-basis: 84%;
+        background-color: $color-foreground-alt;
+    }
+
+    .no-project-text {
+        display: flex;
+        flex-basis: 84%;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        background-color: $color-foreground-alt;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+    }
+}

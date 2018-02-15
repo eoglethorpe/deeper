@@ -1,0 +1,39 @@
+@import '../../../../../stylesheets/base';
+@import '../../../../../stylesheets/modal';
+
+.analysis-framework-detail {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-large;
+
+        .action-btns {
+            button {
+                margin-left: $spacing-medium-alt;
+            }
+        }
+    }
+
+    .af-details {
+        display: flex;
+        flex-basis: 100%;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .project-af-form {
+            flex-shrink: 0;
+        }
+
+        .images-container {
+            flex-grow: 1;
+            margin: $spacing-medium-alt;
+        }
+    }
+}

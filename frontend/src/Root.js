@@ -2,10 +2,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { persistStore } from 'redux-persist';
 
-import reduxSync from './public/utils/redux-sync';
+import reduxSync from './vendor/react-store/utils/redux-sync';
 
-import store from './common/store';
-import storeConfig from './common/config/store';
+import store from './store';
+import storeConfig from './config/store';
 
 import App from './App';
 

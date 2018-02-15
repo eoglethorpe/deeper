@@ -1,0 +1,28 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/modal';
+
+.groups {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    >.header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        padding: $spacing-small $spacing-medium;
+        height: $height-navbar;
+        background-color: $color-background-header;
+    }
+
+    .usergroup-table {
+        flex-grow: 1;
+        height: 100%;
+        overflow-y: auto;
+
+        .link {
+            padding: 0 $spacing-medium;
+        }
+    }
+}

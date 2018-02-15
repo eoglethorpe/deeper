@@ -1,0 +1,64 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/grid-item';
+
+%widget-list {
+    background-color: $color-background-row;
+    overflow-y: auto;
+
+    .widget-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $color-background-row;
+        padding: $spacing-small $spacing-medium;
+
+        .title {
+            color: $color-text;
+        }
+
+        &:nth-child(odd) {
+            background-color: $color-background-row-alt;
+        }
+    }
+}
+
+%page {
+    display: flex;
+    flex-direction: column;
+    background-color: $color-foreground-alt;
+    height: 100%;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .actions {
+            >* {
+                margin-left: $spacing-medium;
+            }
+
+            .link-to-overview,
+            .link-to-list {
+                @extend %button-like-link;
+            }
+        }
+    }
+
+    .content {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+}
+
+.analysis-framework {
+    @extend %main-content;
+    position: relative;
+
+    @import 'Overview/overview';
+    @import 'List/list';
+}

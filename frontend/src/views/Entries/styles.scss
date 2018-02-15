@@ -1,0 +1,111 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/grid-item';
+
+.entries {
+    @extend %main-content;
+    display: flex;
+    position: relative;
+    flex-direction: column;
+
+    :global {
+        .entries-filters {
+            display: flex;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            border-bottom: $width-separator-thin solid $color-separator;
+            background-color: $color-foreground;
+            padding: $spacing-small;
+
+            .entries-filter,
+            .select-input {
+                margin: $spacing-small;
+
+                &.flat-select-input {
+                    margin: 0;
+                }
+            }
+
+            .range-filter {
+                display: flex;
+                justify-content: space-between;
+                margin: 0;
+
+                .single-select-input {
+                    margin: $spacing-small;
+                }
+            }
+
+            >.button {
+                flex-shrink: 0;
+                margin: $spacing-small;
+            }
+        }
+    }
+
+    .lead-entries-container {
+        position: relative;
+        flex-grow: 1;
+        background-color: $color-background-row-alt;
+        overflow-y: auto;
+
+        .lead-entries-list {
+            .lead-entries {
+                background-color: $color-background;
+
+                .header {
+                    display: flex;
+                    position: sticky;
+                    top: 0;
+                    justify-content: space-between;
+                    z-index: 11;
+                    border-bottom: $width-separator-medium solid $color-separator;
+                    background-color: $color-background-header;
+                    padding: $spacing-small $spacing-medium-alt;
+
+                    .heading {
+                        text-transform: none;
+                        font-weight: $font-weight-medium;
+                    }
+
+                    .detail {
+                        margin: $spacing-small 0;
+
+                        span {
+                            margin-right: $spacing-small;
+                        }
+                    }
+                }
+
+                .entry {
+                    @include shadow-small;
+                    display: flex;
+                    align-items: center;
+                    background-color: $color-background-row;
+                    padding: $spacing-small;
+                    overflow-x: auto;
+
+                    :global {
+                        .grid-item {
+                            @extend %grid-item;
+                        }
+                    }
+
+                    &:nth-child(even) {
+                        background-color: $color-background-row-alt;
+                    }
+                }
+            }
+        }
+    }
+
+    .footer {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: flex-end;
+        border-top: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small;
+    }
+}

@@ -1,0 +1,27 @@
+@import '../../stylesheets/base';
+@import '../../stylesheets/modal';
+
+.admin-levels {
+    display: flex;
+    flex-direction: column;
+    border-top: $width-separator-thin solid $color-separator;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-medium;
+        text-transform: uppercase;
+        font-size: $font-size-extra-large;
+        background-color: $color-background-header;
+    }
+
+    .admin-levels-list {
+        flex-grow: 1;
+        overflow: auto;
+        background-color: $color-background-row-alt;
+
+    }
+}

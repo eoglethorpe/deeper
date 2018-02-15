@@ -1,0 +1,9 @@
+@import '../../../stylesheets/base';
+
+.geo-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 $spacing-small;
+    height: 100%;
+}

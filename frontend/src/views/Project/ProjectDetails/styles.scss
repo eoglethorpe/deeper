@@ -1,0 +1,52 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+.project-details {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+
+    .header {
+        flex-shrink: 0;
+        padding: 0;
+
+        .heading {
+            padding: $spacing-small $spacing-large;
+        }
+
+        .tabs {
+            display: flex;
+
+            .tab {
+                flex-shrink: 0;
+                border-bottom: $width-separator-medium solid $color-separator;
+                padding: $spacing-medium $spacing-large;
+
+                &.active {
+                    border-bottom: $width-separator-medium solid $color-accent;
+                }
+            }
+
+            .empty-space {
+                flex-grow: 1;
+                border-bottom: $width-separator-medium solid $color-separator;
+            }
+        }
+    }
+
+    .content {
+        flex-grow: 1;
+    }
+
+    .forbidden-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        color: $color-label;
+        font-size: $font-size-extra-large;
+    }
+}
