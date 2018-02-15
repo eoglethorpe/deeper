@@ -257,21 +257,17 @@ export default class Overview extends React.PureComponent {
 
     calcEntryLabelLimited = (entry) => {
         const values = entryAccessor.getValues(entry);
-        if (values.entryType === 'image') {
-            return this.props.entryStrings('imageLabel');
-        }
-        const characterLimit = 64;
         const text = values.excerpt;
 
-        if (!text) {
-            return this.props.entryStrings('excerptLabel');
-        }
-
+        /*
+        const characterLimit = 64;
         const limitedEntry = text.slice(0, characterLimit);
         if (text.length > characterLimit) {
             return `${limitedEntry}...`;
         }
         return limitedEntry;
+        */
+        return text;
     }
 
     isTypeWithUrl = t => t === LEAD_TYPE.website;

@@ -157,6 +157,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                         styleName="drop-here-container"
                     >
                         Drop excerpt here
+                        {/* FIXME: use strings */}
                     </div>
                 }
                 {!dragOver &&

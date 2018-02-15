@@ -65,7 +65,14 @@ const entryReference = {
 
 export const createEntry = ({
     id, serverId, versionId, values = {}, pristine = false, error = false,
-}, order = undefined) => {
+}, order = undefined, excerpt = undefined) => {
+    let newValues = values;
+    if (isTruthy(order)) {
+        newValues = { ...newValues, order };
+    }
+    if (isTruthy(excerpt)) {
+        newValues = { ...newValues, excerpt };
+    }
     const settings = {
         data: {
             id: { $set: id },
@@ -73,7 +80,7 @@ export const createEntry = ({
             versionId: { $set: versionId },
         },
         widget: {
-            values: { $set: isTruthy(order) ? { ...values, order } : values },
+            values: { $set: newValues },
         },
         uiState: {
             pristine: { $set: pristine },

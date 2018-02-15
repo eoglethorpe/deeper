@@ -132,6 +132,12 @@ $width-right-panel-min: 654px;
                                     color: $color-success;
                                 }
                             }
+
+                            &:disabled {
+                                .image {
+                                    opacity: 0.5;
+                                }
+                            }
                         }
 
                         .remove-button {

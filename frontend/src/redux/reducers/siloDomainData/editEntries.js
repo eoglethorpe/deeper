@@ -131,7 +131,11 @@ const editEntryViewAddEntry = (state, action) => {
         0,
     );
 
-    const newEntry = createEntry(entry, maxEntryOrder + 1);
+    let { values: { excerpt } } = entry;
+    if (isFalsy(excerpt)) {
+        excerpt = `Excerpt ${maxEntryOrder + 1}`;
+    }
+    const newEntry = createEntry(entry, maxEntryOrder + 1, excerpt);
     const newEntryId = getIdFromEntry(newEntry);
 
     const settings = {
