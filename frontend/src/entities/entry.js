@@ -289,10 +289,6 @@ export const calcNewEntries = (localEntries = [], diffs = []) => (
             },
             [],
         )
-        .map((a) => {
-            console.warn(a);
-            return a;
-        })
         .sort((a, b) => {
             const aValue = entryAccessor.getValues(a);
             const aOrder = aValue.order;
