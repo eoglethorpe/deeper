@@ -330,7 +330,15 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE FORM
 
     handleFormSubmitSuccess = (lead, newValues) => {
-        const formSaveBuilder = new FormSaveBuilder(this);
+        const formSaveBuilder = new FormSaveBuilder(
+            this,
+            {
+                formCoordinator: this.formCoordinator,
+                notificationStrings: this.props.notificationStrings,
+                addLeadViewLeadSave: this.props.addLeadViewLeadSave,
+                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            },
+        );
         const request = formSaveBuilder.createRequest(lead, newValues);
         return request;
     }
