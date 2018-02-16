@@ -17,8 +17,21 @@ import {
 } from '../../../entities/lead';
 
 export default class FormSaveBuilder {
-    constructor(parent) {
-        this.parent = parent;
+    constructor(parent, params) {
+        this.setState = (state) => {
+            parent.setState(state);
+        };
+
+        const {
+            formCoordinator,
+            notificationStrings,
+            addLeadViewLeadChange,
+            addLeadViewLeadSave,
+        } = params;
+        this.formCoordinator = formCoordinator;
+        this.notificationStrings = notificationStrings;
+        this.addLeadViewLeadSave = addLeadViewLeadSave;
+        this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
 
     createRequest = (lead, newValues) => {
@@ -50,7 +63,7 @@ export default class FormSaveBuilder {
 
     handleLeadSavePreLoad = leadId => () => {
         // FOR REST
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const restSettings = {
                 [leadId]: { $auto: {
                     pending: { $set: true },
@@ -62,7 +75,7 @@ export default class FormSaveBuilder {
     }
     handleLeadSavePostLoad = leadId => () => {
         // FOR REST
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const restSettings = {
                 [leadId]: { $auto: {
                     pending: { $set: false },
@@ -77,16 +90,16 @@ export default class FormSaveBuilder {
             schema.validate(response, 'lead');
 
             notify.send({
-                title: this.parent.props.notificationStrings('leadSave'),
+                title: this.notificationStrings('leadSave'),
                 type: notify.type.SUCCESS,
-                message: this.parent.props.notificationStrings('leadSaveSuccess'),
+                message: this.notificationStrings('leadSaveSuccess'),
                 duration: notify.duration.MEDIUM,
             });
-            this.parent.props.addLeadViewLeadSave({
+            this.addLeadViewLeadSave({
                 leadId,
                 serverId: response.id,
             });
-            this.parent.formCoordinator.notifyComplete(leadId);
+            this.formCoordinator.notifyComplete(leadId);
         } catch (err) {
             console.warn(err);
         }
@@ -94,9 +107,9 @@ export default class FormSaveBuilder {
     handleLeadSaveFailure = leadId => (response) => {
         // console.error('Failed lead request:', response);
         notify.send({
-            title: this.parent.props.notificationStrings('leadSave'),
+            title: this.notificationStrings('leadSave'),
             type: notify.type.ERROR,
-            message: this.parent.props.notificationStrings('leadSaveFailure'),
+            message: this.notificationStrings('leadSaveFailure'),
             duration: notify.duration.SLOW,
         });
         const {
@@ -104,28 +117,28 @@ export default class FormSaveBuilder {
             formErrors,
         } = transformResponseErrorToFormError(response.errors);
 
-        this.parent.props.addLeadViewLeadChange({
+        this.addLeadViewLeadChange({
             leadId,
             formErrors,
             formFieldErrors,
             uiState: { pristine: true },
         });
-        this.parent.formCoordinator.notifyComplete(leadId);
+        this.formCoordinator.notifyComplete(leadId);
     }
     handleLeadSaveFatal = leadId => () => {
         notify.send({
-            title: this.parent.props.notificationStrings('leadSave'),
+            title: this.notificationStrings('leadSave'),
             type: notify.type.ERROR,
-            message: this.parent.props.notificationStrings('leadSaveFatal'),
+            message: this.notificationStrings('leadSaveFatal'),
             duration: notify.duration.SLOW,
         });
 
-        this.parent.props.addLeadViewLeadChange({
+        this.addLeadViewLeadChange({
             leadId,
             // FIXME: use strings
             formErrors: ['Error while trying to save lead.'],
             uiState: { pristine: true },
         });
-        this.parent.formCoordinator.notifyComplete(leadId);
+        this.formCoordinator.notifyComplete(leadId);
     }
 }

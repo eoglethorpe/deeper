@@ -8,9 +8,19 @@ import {
 } from '../../../rest';
 
 export default class DropboxBuilder {
-    constructor(parent) {
-        this.parent = parent;
+    constructor(parent, params) {
+        this.setState = (state) => {
+            parent.setState(state);
+        };
+
+        const {
+            dropboxUploadCoordinator,
+            addLeadViewLeadChange,
+        } = params;
+        this.dropboxUploadCoordinator = dropboxUploadCoordinator;
+        this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
+
 
     createRequest = ({ leadId, title, fileUrl }) => {
         const dropboxUploadRequest = new FgRestBuilder()
@@ -27,8 +37,7 @@ export default class DropboxBuilder {
         try {
             schema.validate(response, 'galleryFile');
 
-            const { addLeadViewLeadChange } = this.parent.props;
-            addLeadViewLeadChange({
+            this.addLeadViewLeadChange({
                 leadId,
                 values: { attachment: { id: response.id } },
                 upload: {
@@ -39,7 +48,7 @@ export default class DropboxBuilder {
             });
 
             // FOR UPLAOD
-            this.parent.setState((state) => {
+            this.setState((state) => {
                 const uploadSettings = {
                     [leadId]: { $auto: {
                         pending: { $set: undefined },
@@ -49,7 +58,7 @@ export default class DropboxBuilder {
                 return { leadDropboxRests };
             });
 
-            this.parent.dropboxUploadCoordinator.notifyComplete(leadId);
+            this.dropboxUploadCoordinator.notifyComplete(leadId);
         } catch (err) {
             console.error(err);
         }

@@ -8,8 +8,18 @@ import {
 } from '../../../rest';
 
 export default class GoogleDriveUploadModule {
-    constructor(parent) {
-        this.parent = parent;
+    constructor(parent, params) {
+        this.setState = (state) => {
+            parent.setState(state);
+        };
+
+        const {
+            driveUploadCoordinator,
+            addLeadViewLeadChange,
+        } = params;
+        this.driveUploadCoordinator = driveUploadCoordinator;
+
+        this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
 
     createRequest = ({ leadId, title, accessToken, fileId, mimeType }) => {
@@ -29,8 +39,7 @@ export default class GoogleDriveUploadModule {
         try {
             schema.validate(response, 'galleryFile');
 
-            const { addLeadViewLeadChange } = this.parent.props;
-            addLeadViewLeadChange({
+            this.addLeadViewLeadChange({
                 leadId,
                 values: { attachment: { id: response.id } },
                 upload: {
@@ -41,7 +50,7 @@ export default class GoogleDriveUploadModule {
             });
 
             // FOR UPLAOD
-            this.parent.setState((state) => {
+            this.setState((state) => {
                 const uploadSettings = {
                     [leadId]: { $auto: {
                         pending: { $set: undefined },
@@ -51,7 +60,7 @@ export default class GoogleDriveUploadModule {
                 return { leadDriveRests };
             });
 
-            this.parent.driveUploadCoordinator.notifyComplete(leadId);
+            this.driveUploadCoordinator.notifyComplete(leadId);
         } catch (err) {
             console.error(err);
         }
