@@ -84,6 +84,7 @@ export default class List extends React.PureComponent {
 
         this.items = [];
         this.gridItems = {};
+        this.entries = {};
 
         this.updateAnalysisFramework(props.analysisFramework);
         this.updateGridItems(props.entries);
@@ -106,7 +107,6 @@ export default class List extends React.PureComponent {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.updateAnalysisFramework(nextProps.analysisFramework);
         } else if (this.props.entries !== nextProps.entries) {
-            this.updateGridItems(nextProps.entries);
             this.updateGridItems(nextProps.entries);
         }
     }
@@ -248,9 +248,16 @@ export default class List extends React.PureComponent {
     }
 
     updateGridItems(entries) {
-        this.gridItems = {};
+        const validIds = [];
         entries.forEach((entry) => {
             const entryId = entryAccessor.getKey(entry);
+            validIds.push(entryId);
+
+            if (this.entries[entryId] === entry) {
+                return;
+            }
+            this.entries[entryId] = entry;
+
             this.gridItems[entryId] = this.items.map(item => ({
                 id: item.id,
                 key: item.key,
@@ -264,6 +271,11 @@ export default class List extends React.PureComponent {
                 entryId,
                 headerRightComponent: this.renderActionButtons(item, entryId),
             }));
+        });
+
+        Object.keys(this.entries).filter(id => validIds.indexOf(id) === -1).forEach((id) => {
+            delete this.entries[id];
+            delete this.gridItems[id];
         });
     }
 
