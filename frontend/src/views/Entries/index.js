@@ -414,6 +414,7 @@ export default class Entries extends React.PureComponent {
             maxHeight,
             gridItems,
         } = this.props;
+
         return (
             <div
                 key={data.id}

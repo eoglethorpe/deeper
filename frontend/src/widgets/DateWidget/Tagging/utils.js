@@ -1,4 +1,4 @@
-import { FormattedDate } from '../../../vendor/react-store/components/View/FormattedDate';
+import FormattedDate from '../../../vendor/react-store/components/View/FormattedDate';
 
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
