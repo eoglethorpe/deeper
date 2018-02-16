@@ -15,7 +15,7 @@ before_install:
 
     - ./deploy/scripts/travis_decrypt.sh
 
-    - git clone https://github.com/toggle-corp/react-store.git frontend/src/public
+    - git clone https://github.com/toggle-corp/react-store.git frontend/src/vendor/react-store
     - mkdir -p frontend/src/vendor
     - git clone https://github.com/toggle-corp/ravl.git frontend/src/vendor/ravl
     - env > .env

@@ -2,8 +2,8 @@
 
 .msgbox {
     margin: $spacing-small;
-    padding: $spacing-small;
     border-radius: 3px;
+    padding: $spacing-small;
     color: $color-foreground;
 
     &.error {
