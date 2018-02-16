@@ -115,7 +115,7 @@ export default class RegionMap extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: this.props.commonStrings('erverErrorText'),
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {
@@ -166,7 +166,7 @@ export default class RegionMap extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: this.props.commonStrings('erverErrorText'),
+                    error: this.props.commonStrings('serverErrorText'),
                 });
             })
             .fatal(() => {

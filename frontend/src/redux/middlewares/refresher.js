@@ -40,6 +40,7 @@ class Refresher {
                     store.dispatch(setUserProjectsAction({
                         userId,
                         projects: response.results,
+                        extra: response.extra,
                     }));
 
                     if (this.loadCallback) {

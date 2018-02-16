@@ -287,6 +287,7 @@ export default class UserProject extends React.PureComponent {
                     this.props.setUserProjects({
                         userId,
                         projects: response.results,
+                        extra: response.extra,
                     });
                 } catch (er) {
                     console.error(er);
