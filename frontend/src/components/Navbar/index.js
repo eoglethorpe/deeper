@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 
 
+import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
 import {
     isTruthy,
     reverseRoute,
@@ -22,6 +23,10 @@ import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import { stopSiloBackgroundTasksAction } from '../../redux/middlewares/siloBackgroundTasks';
 import { stopRefreshAction } from '../../redux/middlewares/refresher';
 import { adminEndpoint } from '../../config/rest';
+import {
+    createUrlForSetUserProject,
+    createParamsForSetUserProject,
+} from '../../rest';
 import {
     logoutAction,
     setActiveProjectAction,
@@ -154,19 +159,16 @@ export default class Navbar extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        // NOTE: this maynot be needed as it is already done in redux
+        // TODO: move this block to reducers of siloDomainData:common
         const { userProjects: oldUserProjects } = this.props;
         const {
             userProjects: newUserProjects,
             activeProject,
             userProjects,
         } = nextProps;
-
         // If active project has changed, then set active project
-
         // NOTE: if active project id is not in userProjects,
         // then set first project id from users project
-        // TODO: move this to reduces of siloDomainData:common
         if (oldUserProjects !== newUserProjects) {
             const activeProjectIndex = newUserProjects.findIndex(
                 p => p.id === activeProject,
@@ -178,10 +180,42 @@ export default class Navbar extends React.PureComponent {
             }
         }
 
+        // Set user project in server
+        const { activeProject: oldActiveProject } = this.props;
+        const { activeProject: newActiveProject, activeUser: newActiveUser } = nextProps;
+        if (oldActiveProject !== newActiveProject) {
+            console.warn('Project id changed from ', oldActiveProject, 'to', newActiveProject);
+
+            if (this.setUserProjectRequest) {
+                this.setUserProjectRequest.stop();
+            }
+            this.setUserProjectRequest = new BgRestBuilder()
+                .url(createUrlForSetUserProject(newActiveUser.userId))
+                .params(() => createParamsForSetUserProject(newActiveProject))
+                .delay(1000) // more delay
+                .success(() => {
+                    console.warn('Successfully patched user project');
+                })
+                .failure((response) => {
+                    console.error('FAILURE: Failed to patch user project', response);
+                })
+                .fatal(() => {
+                    console.error('FATAL: Failed to patch user project');
+                })
+                .build();
+            this.setUserProjectRequest.start();
+        }
+
         const { location: oldLocation } = this.props;
         const { location: newLocation } = nextProps;
         if (oldLocation !== newLocation) {
             this.setLinksForLocation(newLocation);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.setUserProjectRequest) {
+            this.setUserProjectRequest.stop();
         }
     }
 
