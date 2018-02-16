@@ -7,9 +7,22 @@ import {
 } from '../../../rest';
 
 export default class FileUploadBuilder {
-    constructor(parent) {
-        this.parent = parent;
+    constructor(parent, params) {
+        this.setState = (state) => {
+            parent.setState(state);
+        };
+        this.getState = name => parent.state[name];
+
+        const {
+            uploadCoordinator,
+            addLeadViewLeadChange,
+            leadsStrings,
+        } = params;
+        this.addLeadViewLeadChange = addLeadViewLeadChange;
+        this.uploadCoordinator = uploadCoordinator;
+        this.leadsStrings = leadsStrings;
     }
+
 
     createRequest = ({ file, leadId }) => {
         const uploader = new UploadBuilder()
@@ -29,7 +42,7 @@ export default class FileUploadBuilder {
     // CALLBACKS
     handleLeadUploadPreLoad = leadId => () => {
         // FOR UPLOAD
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: 0 },
@@ -42,8 +55,7 @@ export default class FileUploadBuilder {
 
     handleLeadUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
-        const { addLeadViewLeadChange } = this.parent.props;
-        addLeadViewLeadChange({
+        this.addLeadViewLeadChange({
             leadId,
             values: { attachment: { id: response.id } },
             upload: {
@@ -53,7 +65,7 @@ export default class FileUploadBuilder {
         });
 
         // FOR UPLAOD
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: undefined },
@@ -63,20 +75,19 @@ export default class FileUploadBuilder {
             return { leadUploads };
         });
 
-        this.parent.uploadCoordinator.notifyComplete(leadId);
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadFailure = leadId => (response) => {
         // FOR DATA CHANGE
-        const { addLeadViewLeadChange } = this.parent.props;
-        addLeadViewLeadChange({
+        this.addLeadViewLeadChange({
             leadId,
             values: { attachment: undefined },
-            formErrors: [`${this.parent.props.leadsString('fileUploadFailText')} ${response.errors.file[0]}`],
+            formErrors: [`${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`],
         });
 
         // FOR UPLAOD
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: undefined },
@@ -86,16 +97,16 @@ export default class FileUploadBuilder {
             return { leadUploads };
         });
 
-        this.parent.uploadCoordinator.notifyComplete(leadId);
+        this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadProgress = leadId => (progress) => {
-        const theLeadUpload = this.parent.state.leadUploads[leadId];
+        const theLeadUpload = this.getState('leadUploads')[leadId];
         if (!theLeadUpload || theLeadUpload.progress === progress) {
             return;
         }
         // FOR UPLAOD
-        this.parent.setState((state) => {
+        this.setState((state) => {
             const uploadSettings = {
                 [leadId]: { $auto: {
                     progress: { $set: progress },

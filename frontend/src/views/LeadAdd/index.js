@@ -97,9 +97,7 @@ const propTypes = {
     addLeadViewCanNext: PropTypes.bool.isRequired,
     addLeadViewCanPrev: PropTypes.bool.isRequired,
 
-    // eslint-disable-next-line react/no-unused-prop-types
     addLeadViewLeadSave: PropTypes.func.isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
     addLeadViewLeadChange: PropTypes.func.isRequired,
 
     leadsStrings: PropTypes.func.isRequired,
@@ -255,7 +253,14 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE SELECTION
 
     handleGoogleDriveSelect = (uploads) => {
-        const googleDriveBuilder = new GoogleDriveBuilder(this);
+        const googleDriveBuilder = new GoogleDriveBuilder(
+            this,
+            {
+                driveUploadCoordinator: this.driveUploadCoordinator,
+                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            },
+        );
+
         uploads.forEach((upload) => {
             const request = googleDriveBuilder.createRequest(upload);
             this.driveUploadCoordinator.add(upload.leadId, request);
@@ -280,7 +285,15 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleDropboxSelect = (uploads) => {
-        const dropboxBuilder = new DropboxBuilder(this);
+        const dropboxBuilder = new DropboxBuilder(
+            this,
+            {
+                dropboxUploadCoordinator: this.dropboxUploadCoordinator,
+                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            },
+        );
+
+
         uploads.forEach((upload) => {
             const request = dropboxBuilder.createRequest(upload);
             this.dropboxUploadCoordinator.add(upload.leadId, request);
@@ -304,7 +317,15 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleFileSelect = (uploads) => {
-        const fileUploadBuilder = new FileUploadBuilder(this);
+        const fileUploadBuilder = new FileUploadBuilder(
+            this,
+            {
+                uploadCoordinator: this.uploadCoordinator,
+                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+                leadsStrings: this.props.leadsStrings,
+            },
+        );
+
         uploads.forEach((upload) => {
             const request = fileUploadBuilder.createRequest(upload);
             this.uploadCoordinator.add(upload.leadId, request);
