@@ -319,6 +319,7 @@ export default class GeoSelection extends React.PureComponent {
                     styleName="flat-select-input"
                     label={label}
                     showHintAndError={false}
+                    hideSelectAllButton
                     onChange={this.handleFlatSelectChange}
                     options={flatLocations}
                     value={flatValues}
