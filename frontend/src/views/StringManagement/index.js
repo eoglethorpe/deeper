@@ -103,14 +103,20 @@ export default class Ary extends React.PureComponent {
 
                 // Identify non-referenced string in code
                 if (totalReferencesInCode <= 0) {
-                    this.errors.push(`WARNING: ${viewName}:${stringName} not used.`);
+                    this.errors.push({
+                        type: 'warning',
+                        message: `${viewName}:${stringName} not used.`,
+                    });
                 }
 
                 // Identify bad-referenced string in view
                 if (stringId && strings[stringId]) {
                     stringsReferenceCount[stringId] += totalReferencesInCode;
                 } else {
-                    this.errors.push(`ERROR: Value not defined for ${viewName}:${stringName} id=${stringId}`);
+                    this.errors.push({
+                        type: 'error',
+                        message: `Value not defined for ${viewName}:${stringName} id=${stringId}`,
+                    });
                 }
             });
         });
@@ -123,7 +129,10 @@ export default class Ary extends React.PureComponent {
                 const stringId = views[viewName][stringName];
                 // Identify bad-referenced string in view
                 if (!stringId || !strings[stringId]) {
-                    this.errors.push(`ERROR: Value not defined for ${viewName}:${stringName} id=${stringId}`);
+                    this.errors.push({
+                        type: 'error',
+                        message: `Value not defined for ${viewName}:${stringName} id=${stringId}`,
+                    });
                 }
             });
         });
@@ -193,10 +202,10 @@ export default class Ary extends React.PureComponent {
             <div>
                 <div>
                     {
-                        this.errors.map(string => (
-                            <p key={string}>
-                                {string}
-                            </p>
+                        this.errors.map(err => (
+                            <div key={err.message} className={`${styles.msgbox} ${styles[err.type]}`}>
+                                {err.message}
+                            </div>
                         ))
                     }
                 </div>

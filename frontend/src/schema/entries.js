@@ -69,6 +69,7 @@ const entrySchema = [];
             exportData: { type: 'array.entryExport', required: true },
             filterData: { type: 'array.entryFilter', required: true },
             attributes: { type: 'array.entryAttributes', required: true },
+            order: { type: 'uint', required: true },
         },
         validator: (self, context) => {
             if (isFalsy(self.excerpt) && isFalsy(self.image)) {

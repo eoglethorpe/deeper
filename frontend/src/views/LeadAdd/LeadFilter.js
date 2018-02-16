@@ -50,7 +50,9 @@ const leadStatusFilterOptions = [
     { key: LEAD_FILTER_STATUS.unsaved, label: 'Unsaved' },
 ];
 
-const defaultProps = { }; const propTypes = {
+const defaultProps = { };
+
+const propTypes = {
     isFilterEmpty: PropTypes.bool.isRequired,
     filters: PropTypes.object.isRequired, // eslint-disable-line
     activeProject: PropTypes.number.isRequired,

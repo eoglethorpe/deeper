@@ -51,7 +51,6 @@ test('should add entry', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -61,6 +60,8 @@ test('should add entry', () => {
                         },
                         widget: { values: {
                             title: 'Entry #1',
+                            order: 1,
+                            excerpt: 'Excerpt 1',
                         } },
                         uiState: {
                             error: false,
@@ -89,7 +90,6 @@ test('should add entry', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -99,6 +99,8 @@ test('should add entry', () => {
                         },
                         widget: { values: {
                             title: 'Entry #1',
+                            order: 1,
+                            excerpt: 'Excerpt 1',
                         } },
                         uiState: {
                             error: false,
@@ -116,7 +118,6 @@ test('should save entry', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -149,7 +150,6 @@ test('should save entry', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -178,7 +178,6 @@ test('should change entry', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -221,7 +220,6 @@ test('should change entry', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -256,7 +254,6 @@ test('should mark for delete', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -284,7 +281,6 @@ test('should mark for delete', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: undefined,
                 entries: [
                     {
@@ -312,7 +308,6 @@ test('should delete entry at bottom', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -336,7 +331,6 @@ test('should delete entry at bottom', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'gksgk',
                 entries: [
                     {
@@ -355,7 +349,6 @@ test('should delete entry at top', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'gksgk',
                 entries: [
                     {
@@ -379,7 +372,6 @@ test('should delete entry at top', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -398,7 +390,6 @@ test('should set active entry', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'flksjal',
                 entries: [
                     {
@@ -422,7 +413,6 @@ test('should set active entry', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'gksgk',
                 entries: [
                     {
@@ -446,7 +436,6 @@ test('should apply diff', () => {
     const state = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'klklk',
                 entries: [
                     // replace skip
@@ -609,7 +598,6 @@ test('should apply diff', () => {
     const after = {
         editEntryView: {
             1: {
-                leadId: 1,
                 selectedEntryId: 'zzzzz',
                 entries: [
                     // newly added

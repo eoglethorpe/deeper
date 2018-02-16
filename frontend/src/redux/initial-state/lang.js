@@ -857,8 +857,10 @@ const initialLangState = {
                     saveButtonLabel: 25,
                     gotoListButtonLabel: 511,
                     altLabel: 512,
+                    /*
                     imageLabel: 513,
                     excerptLabel: 514,
+                    */
                     previewNotAvailableText: 132,
                     simplifiedTabLabel: 424,
                     assistedTabLabel: 517,

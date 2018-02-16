@@ -38,6 +38,7 @@ import {
     leadsStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
+    addLeadViewIsFilterEmptySelector,
 } from '../../redux';
 import {
     LEAD_FILTER_STATUS,
@@ -72,6 +73,7 @@ const mapStateToProps = state => ({
     leadsStrings: leadsStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
     commonStrings: commonStringsSelector(state),
+    isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -103,6 +105,7 @@ const propTypes = {
     leadsStrings: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     commonStrings: PropTypes.func.isRequired,
+    isFilterEmpty: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -122,26 +125,6 @@ const DELETE_MODE = {
 export default class LeadAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    static statusMatches = (leadStatus, status) => {
-        switch (status) {
-            case LEAD_FILTER_STATUS.invalid:
-                return (
-                    leadStatus === LEAD_STATUS.invalid ||
-                    leadStatus === LEAD_STATUS.warning
-                );
-            case LEAD_FILTER_STATUS.saved:
-                return leadStatus === LEAD_STATUS.complete;
-            case LEAD_FILTER_STATUS.unsaved:
-                return (
-                    leadStatus === LEAD_STATUS.nonPristine ||
-                    leadStatus === LEAD_STATUS.uploading ||
-                    leadStatus === LEAD_STATUS.requesting
-                );
-            default:
-                return false;
-        }
-    };
 
     static calcGlobalUiState = (
         { leadUploads, leadRests, leadDriveRests, leadDropboxRests },
@@ -176,6 +159,27 @@ export default class LeadAdd extends React.PureComponent {
     ))
 
     static createFilterFn = (globalUiState, { search, type, source, status }) => (lead) => {
+        // FIXME: static method statusMatches was undefined, so moved it here
+        const statusMatches = (leadStatus, stat) => {
+            switch (stat) {
+                case LEAD_FILTER_STATUS.invalid:
+                    return (
+                        leadStatus === LEAD_STATUS.invalid ||
+                        leadStatus === LEAD_STATUS.warning
+                    );
+                case LEAD_FILTER_STATUS.saved:
+                    return leadStatus === LEAD_STATUS.complete;
+                case LEAD_FILTER_STATUS.unsaved:
+                    return (
+                        leadStatus === LEAD_STATUS.nonPristine ||
+                        leadStatus === LEAD_STATUS.uploading ||
+                        leadStatus === LEAD_STATUS.requesting
+                    );
+                default:
+                    return false;
+            }
+        };
+
         const id = leadAccessor.getKey(lead);
         const leadType = leadAccessor.getType(lead);
         const {
@@ -191,7 +195,7 @@ export default class LeadAdd extends React.PureComponent {
             return false;
         } else if (type && type.length > 0 && type.indexOf(leadType) === -1) {
             return false;
-        } else if (status && status.length > 0 && !LeadAdd.statusMatches(leadStatus, status)) {
+        } else if (status && status.length > 0 && !statusMatches(leadStatus, status)) {
             return false;
         }
         return true;
@@ -511,6 +515,7 @@ export default class LeadAdd extends React.PureComponent {
             addLeadViewCanNext,
             addLeadViewLeads,
             filters,
+            isFilterEmpty,
         } = this.props;
 
         // calculate all globalUiState
@@ -524,12 +529,13 @@ export default class LeadAdd extends React.PureComponent {
         const filteredLeadsKeys = leadsFiltered.map(leadAccessor.getKey);
 
         const allEnabled = (
-            allLeadsKeys.length > 1
+            allLeadsKeys.length >= 1
         );
         const filteredEnabled = (
-            allLeadsKeys.length > 1 &&
-            allLeadsKeys.length !== filteredLeadsKeys.length &&
-            filteredLeadsKeys.length > 0
+            // allLeadsKeys.length >= 1 &&
+            // allLeadsKeys.length !== filteredLeadsKeys.length &&
+            !isFilterEmpty &&
+            filteredLeadsKeys.length >= 1
         );
 
         // identify if save is enabled for all-leads
