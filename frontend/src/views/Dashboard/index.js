@@ -2,13 +2,13 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
+import styles from './styles.scss';
 
 import {
     currentUserActiveProjectSelector,
 } from '../../redux';
 import BoundError from '../../components/BoundError';
-
-import styles from './styles.scss';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -30,7 +30,9 @@ export default class Dashboard extends React.PureComponent {
 
         return (
             <div styleName="dashboard">
-                Dashboard of {currentUserActiveProject.title}
+                <GeoReferencedMap
+                    styleName="dashboard-map"
+                />
             </div>
         );
     }
