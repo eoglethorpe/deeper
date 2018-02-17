@@ -10,146 +10,55 @@ import {
     compareString,
     compareNumber,
 } from '../../vendor/react-store/utils/common';
+import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Table from '../../vendor/react-store/components/View/Table';
 import {
-    selectedRawStringsSelector,
-    selectedViewStringsSelector,
+    allStringsSelector,
+    viewStringsSelector,
+    problemsWithRawStringsSelector,
 } from '../../redux';
+
 
 import styles from './styles.scss';
 
-let usedMaps = {};
-try {
-    /* eslint-disable global-require */
-    /* eslint-disable import/no-unresolved */
-    usedMaps = require('../../generated/usage').default;
-    /* eslint-enable global-require */
-    /* eslint-enable import/no-unresolved */
-} catch (ex) {
-    console.warn(ex);
-}
-
 // TODO:
-// Identify strings to be translated
-//      (change language to np, anything not set by user must be translated)
-
 // Search
-// Add/Delete entry in lang/en (ewan)
-// Find entry in strings (no sort)
-// Add/Delete entry in strings (dev)
-// Add category for strings
-// Browse category for strings
+// Add/Delete entry
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
-    selectedRawStrings: PropTypes.object.isRequired,
+    allStrings: PropTypes.array.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    selectedViewStrings: PropTypes.object.isRequired,
+    viewStrings: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    problemsWithAllStrings: PropTypes.array.isRequired,
 };
 
 const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    selectedRawStrings: selectedRawStringsSelector(state),
-    selectedViewStrings: selectedViewStringsSelector(state),
+    allStrings: allStringsSelector(state),
+    viewStrings: viewStringsSelector(state),
+    problemsWithAllStrings: problemsWithRawStringsSelector(state),
 });
 
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class Ary extends React.PureComponent {
+export default class StringManagement extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static keyExtractor = e => e.id;
+    static keyExtractor2 = e => e.name;
 
     constructor(props) {
         super(props);
 
-        const {
-            selectedRawStrings: strings,
-            selectedViewStrings: views,
-        } = this.props;
-        this.errors = [];
-
-        // Get duplicated strings
-        const duplicatedRawStrings = {};
-        {
-            const invertedStrings = {};
-            Object.keys(strings).forEach((stringId) => {
-                const value = strings[stringId].toLowerCase();
-                const oldId = invertedStrings[value];
-                if (oldId) {
-                    // duplicated
-                    duplicatedRawStrings[stringId] = oldId;
-                } else {
-                    invertedStrings[value] = stringId;
-                }
-            });
-        }
-
-        // Initialize reference count
-        const stringsReferenceCount = {};
-        Object.keys(strings).forEach((stringId) => {
-            stringsReferenceCount[stringId] = 0;
-        });
-        // Calculate reference count
-        Object.keys(views).forEach((viewName) => {
-            const view = views[viewName];
-
-            Object.keys(view).forEach((stringName) => {
-                const stringId = view[stringName];
-                const totalReferencesInCode = (usedMaps[viewName] && usedMaps[viewName][stringName])
-                    ? usedMaps[viewName][stringName].length
-                    : 0;
-
-                // Identify non-referenced string in code
-                if (totalReferencesInCode <= 0) {
-                    this.errors.push({
-                        type: 'warning',
-                        message: `${viewName}:${stringName} not used.`,
-                    });
-                }
-
-                // Identify bad-referenced string in view
-                if (stringId && strings[stringId]) {
-                    stringsReferenceCount[stringId] += totalReferencesInCode;
-                } else {
-                    this.errors.push({
-                        type: 'error',
-                        message: `Value not defined for ${viewName}:${stringName} id=${stringId}`,
-                    });
-                }
-            });
-        });
-
-        // Identify bad-referenced string in code
-        Object.keys(usedMaps).forEach((viewName) => {
-            const view = usedMaps[viewName] || {};
-
-            Object.keys(view).forEach((stringName) => {
-                const stringId = views[viewName][stringName];
-                // Identify bad-referenced string in view
-                if (!stringId || !strings[stringId]) {
-                    this.errors.push({
-                        type: 'error',
-                        message: `Value not defined for ${viewName}:${stringName} id=${stringId}`,
-                    });
-                }
-            });
-        });
-
-        // Get array of strings
-        this.stringArrayForDisplay = Object.keys(strings)
-            .reduce(
-                (acc, id) => acc.concat({ id, value: strings[id] }),
-                [],
-            )
-            .map(({ id, value }) => ({
-                id,
-                value,
-                referenceCount: stringsReferenceCount[id],
-                duplicated: duplicatedRawStrings[id],
-            }));
-
+        this.state = {
+            mode: 'string', // string or view
+            viewName: undefined,
+        };
 
         this.headers = [
             {
@@ -171,7 +80,7 @@ export default class Ary extends React.PureComponent {
             },
             {
                 key: 'referenceCount',
-                label: 'Reference Count',
+                label: 'Refs',
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
@@ -189,32 +98,116 @@ export default class Ary extends React.PureComponent {
                 modifier: a => (a.duplicated ? a.duplicated : '-'),
             },
         ];
+        this.headers2 = [
+            {
+                key: 'name',
+                label: 'Id',
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => compareString(a.name, b.name),
+            },
+            {
+                key: 'value',
+                label: 'String',
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => (
+                    compareStringByWordCount(a.value, b.value) ||
+                    compareString(a.value, b.value)
+                ),
+            },
+            {
+                key: 'referenceCount',
+                label: 'Refs',
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
+            },
+        ];
+
         this.defaultSort = {
             key: 'value',
             order: 'asc',
         };
+        this.defaultSort2 = {
+            key: 'name',
+            order: 'asc',
+        };
     }
 
-    keyExtractor = e => e.id;
+    renderError = (key, err) => (
+        <div
+            key={err.key}
+            className={`${styles.msgbox} ${styles[err.type]}`}
+        >
+            <div className={styles.title}>
+                {err.title}
+            </div>
+            <div className={styles.description}>
+                {err.description}
+            </div>
+        </div>
+    )
 
     render() {
         return (
-            <div>
-                <div>
+            <div styleName="string-panel">
+                <div styleName="sidebar">
+                    <h2 styleName="heading">
+                        String Management
+                    </h2>
+                    <button
+                        className={`${styles['sidebar-button']} ${this.state.mode === 'string' ? styles.active : ''}`}
+                        onClick={() => { this.setState({ mode: 'string' }); }}
+                    >
+                        All Strings
+                    </button>
+                    { Object.keys(this.props.viewStrings).map(viewName => (
+                        <button
+                            key={viewName}
+                            className={`${styles['sidebar-button']} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
+                            onClick={() => { this.setState({ mode: 'view', viewName }); }}
+                        >
+                            { viewName }
+                        </button>
+                    )) }
+                </div>
+                <div styleName="string-detail">
                     {
-                        this.errors.map(err => (
-                            <div key={err.message} className={`${styles.msgbox} ${styles[err.type]}`}>
-                                {err.message}
+                        this.state.mode === 'string' && ([
+                            <div
+                                styleName="content"
+                                key="content"
+                            >
+                                <Table
+                                    data={this.props.allStrings}
+                                    headers={this.headers}
+                                    keyExtractor={StringManagement.keyExtractor}
+                                    defaultSort={this.defaultSort}
+                                />
+                            </div>,
+                            <ListView
+                                key="sidebar-right"
+                                styleName="sidebar-right"
+                                data={this.props.problemsWithAllStrings}
+                                modifier={this.renderError}
+                                keyExtractor={StringManagement.keyExtractor}
+                            />,
+                        ])
+                    }
+                    {
+                        this.state.mode === 'view' && (
+                            <div styleName="content" >
+                                <Table
+                                    data={this.props.viewStrings[this.state.viewName]}
+                                    headers={this.headers2}
+                                    keyExtractor={StringManagement.keyExtractor2}
+                                    defaultSort={this.defaultSort2}
+                                />
                             </div>
-                        ))
+                        )
                     }
                 </div>
-                <Table
-                    data={this.stringArrayForDisplay}
-                    headers={this.headers}
-                    keyExtractor={this.keyExtractor}
-                    defaultSort={this.defaultSort}
-                />
             </div>
         );
     }
