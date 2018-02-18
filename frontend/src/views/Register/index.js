@@ -17,6 +17,7 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
 import Form, {
     requiredCondition,
     emailCondition,
@@ -30,6 +31,7 @@ import {
 } from '../../rest';
 import { loginStringsSelector } from '../../redux';
 import { pathNames } from '../../constants';
+import { reCaptchaSiteKey } from '../../config/reCaptcha';
 import schema from '../../schema';
 
 import styles from './styles.scss';
@@ -63,7 +65,7 @@ export default class Login extends React.PureComponent {
             redirectTo: undefined,
         };
 
-        this.elements = ['firstname', 'lastname', 'organization', 'email', 'password'];
+        this.elements = ['firstname', 'lastname', 'organization', 'email', 'password', 'recaptchaResponse'];
         this.validations = {
             firstname: [
                 requiredCondition,
@@ -81,6 +83,9 @@ export default class Login extends React.PureComponent {
             password: [
                 requiredCondition,
                 lengthGreaterThanCondition(4),
+            ],
+            recaptchaResponse: [
+                requiredCondition,
             ],
         };
     }
@@ -127,7 +132,8 @@ export default class Login extends React.PureComponent {
 
     // REGISTER REST API
 
-    createRequestRegister = ({ firstname, lastname, organization, country, email, password }) => {
+    createRequestRegister = (
+        { firstname, lastname, organization, country, email, password, recaptchaResponse }) => {
         const userCreateRequest = new FgRestBuilder()
             .url(urlForUserCreate)
             .params(() => createParamsForUserCreate({
@@ -137,6 +143,7 @@ export default class Login extends React.PureComponent {
                 country,
                 email,
                 password,
+                recaptchaResponse,
             }))
             .preLoad(() => {
                 this.setState({ pending: true, pristine: false });
@@ -232,6 +239,11 @@ export default class Login extends React.PureComponent {
                             label={this.props.loginStrings('passwordLabel')}
                             required
                             type="password"
+                        />
+                        <ReCaptcha
+                            formname="recaptchaResponse"
+                            siteKey={reCaptchaSiteKey}
+                            reset={pending}
                         />
                         <div styleName="action-buttons">
                             <PrimaryButton

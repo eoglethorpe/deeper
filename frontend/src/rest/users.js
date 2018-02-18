@@ -9,7 +9,7 @@ export const createUrlForUsers = (fields) => {
 
 export const urlForUserCreate = `${wsEndpoint}/users/`;
 export const createParamsForUserCreate = ({
-    firstName, lastName, organization, country, email, password, displayPicture,
+    firstName, lastName, organization, country, email, password, displayPicture, recaptchaResponse,
 }) => ({
     method: POST,
     headers: commonHeaderForPost,
@@ -22,6 +22,7 @@ export const createParamsForUserCreate = ({
         password,
         username: email,
         displayPicture,
+        recaptchaResponse,
     }),
 });
 

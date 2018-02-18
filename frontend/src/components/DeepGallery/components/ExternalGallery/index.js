@@ -65,6 +65,13 @@ export default class ExternalGallery extends React.PureComponent {
         }
     }
 
+    getHeaderValue = (headers, header) => {
+        const tHeader = Object.key(headers).find(key =>
+            key.toLowerCase() === header.toLowerCase(),
+        );
+        return headers[tHeader];
+    }
+
     startRequest = (url) => {
         if (!GalleryViewer.isUrlValid(url)) {
             this.setState({
@@ -91,10 +98,10 @@ export default class ExternalGallery extends React.PureComponent {
                 try {
                     // FIXME: write schema
                     const { headers, httpsUrl } = response;
-                    const contentType = headers['Content-Type'];
+                    const contentType = this.getHeaderValue(headers, 'Content-Type');
                     const mimeType = contentType.split(';')[0].trim();
 
-                    const xFrameOptions = headers['X-Frame-Options'];
+                    const xFrameOptions = this.getHeaderValue(headers, 'X-Frame-Options');
                     const contentSecurityPolicy = headers['Content-Security-Policy'];
                     let canShowIframe = true;
 
