@@ -111,6 +111,7 @@ export const calcEntryState = ({ entry, rest, deleteRest }) => {
 const getValuesFromRemoteEntry = ({
     excerpt,
     image,
+    entryType,
     lead,
     analysisFramework,
     attributes,
@@ -121,6 +122,7 @@ const getValuesFromRemoteEntry = ({
 }) => ({
     excerpt,
     image,
+    entryType,
     lead,
     analysisFramework,
     attributes,
