@@ -12,6 +12,7 @@ import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { reverseRoute } from '../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
+import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import Form, {
@@ -26,6 +27,7 @@ import {
 } from '../../rest';
 import { pathNames } from '../../constants';
 import { loginStringsSelector } from '../../redux';
+import { reCaptchaSiteKey } from '../../config/reCaptcha';
 import schema from '../../schema';
 
 import styles from './styles.scss';
@@ -58,11 +60,14 @@ export default class PasswordReset extends React.PureComponent {
         };
 
         // Data for form elements
-        this.elements = ['email'];
+        this.elements = ['email', 'recaptchaResponse'];
         this.validations = {
             email: [
                 requiredCondition,
                 emailCondition,
+            ],
+            recaptchaResponse: [
+                requiredCondition,
             ],
         };
     }
@@ -85,9 +90,9 @@ export default class PasswordReset extends React.PureComponent {
         });
     };
 
-    successCallback = ({ email }) => {
+    successCallback = ({ email, recaptchaResponse }) => {
         const url = urlForUserPasswordReset;
-        const params = createParamsForUserPasswordReset({ email });
+        const params = createParamsForUserPasswordReset({ email, recaptchaResponse });
         this.passwordReset({ url, params });
     };
 
@@ -182,6 +187,11 @@ export default class PasswordReset extends React.PureComponent {
                                     formname="email"
                                     label={this.props.loginStrings('emailLabel')}
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
+                                />
+                                <ReCaptcha
+                                    formname="recaptchaResponse"
+                                    siteKey={reCaptchaSiteKey}
+                                    reset={pending}
                                 />
                                 <div styleName="action-buttons">
                                     <PrimaryButton disabled={pending}>

@@ -59,9 +59,9 @@ export const createParamsForSetUserProject = projectId => ({
 });
 
 export const urlForUserPasswordReset = `${wsEndpoint}/password/reset/`;
-export const createParamsForUserPasswordReset = ({ email }) => ({
+export const createParamsForUserPasswordReset = ({ email, recaptchaResponse }) => ({
     method: POST,
     headers: commonHeaderForPost,
-    body: JSON.stringify({ email }),
+    body: JSON.stringify({ email, recaptchaResponse }),
 });
 

@@ -266,10 +266,7 @@ export default class Login extends React.PureComponent {
                         path={logo}
                     />
                     <h2 styleName="heading">
-                        <small>
-                            {this.props.loginStrings('welcomeToText')}
-                        </small>
-                        <br />
+                        <small>{this.props.loginStrings('welcomeToText')}</small><br />
                     </h2>
                 </div>
                 <div styleName="login-form-container">
@@ -285,15 +282,10 @@ export default class Login extends React.PureComponent {
                                 alt={this.props.loginStrings('logInWIthHid')}
                                 draggable="false"
                             />
-                            <span>
-                                {this.props.loginStrings('logInWIthHid')}
-                            </span>
+                            <span>{this.props.loginStrings('logInWIthHid')}</span>
                         </a>
                         <div styleName="or-container">
-                            <hr />
-                            <span styleName="or">
-                                {this.props.loginStrings('orText')}
-                            </span>
+                            <hr /><span styleName="or">{this.props.loginStrings('orText')}</span>
                         </div>
                     </div>
                     <Form
@@ -325,8 +317,7 @@ export default class Login extends React.PureComponent {
                             required
                             type="password"
                         />
-                        {
-                            showReCaptcha &&
+                        { showReCaptcha &&
                             <ReCaptcha
                                 formname="recaptchaResponse"
                                 siteKey={reCaptchaSiteKey}
@@ -346,9 +337,7 @@ export default class Login extends React.PureComponent {
                         </div>
                     </Form>
                     <div styleName="register-link-container">
-                        <p>
-                            {this.props.loginStrings('noAccountYetText')}
-                        </p>
+                        <p>{this.props.loginStrings('noAccountYetText')}</p>
                         <Link
                             styleName="register-link"
                             to={reverseRoute(pathNames.register, {})}
