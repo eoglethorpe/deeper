@@ -23,14 +23,15 @@ export const createExportData = attribute => ({
 });
 
 export const updateAttribute = ({ entryId, api, attribute, data, filters, exportable }) => {
-    if (!attribute || !attribute.values || !data) {
-        return;
-    }
+    console.warn('skipping');
+    // if (!attribute || !attribute.values || !data) {
+    //     return;
+    // }
 
-    if (filters && filters.length === 1 && exportable) {
-        api.getEntryModifier(entryId)
-            .setFilterData(filters[0].id, createFilterData(attribute, data))
-            .setExportData(exportable.id, createExportData(attribute, data))
-            .apply();
-    }
+    // if (filters && filters.length === 1 && exportable) {
+    //     api.getEntryModifier(entryId)
+    //         .setFilterData(filters[0].id, createFilterData(attribute, data))
+    //         .setExportData(exportable.id, createExportData(attribute, data))
+    //         .apply();
+    // }
 };
