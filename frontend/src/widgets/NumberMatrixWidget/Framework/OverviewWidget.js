@@ -31,7 +31,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -59,6 +58,7 @@ const mapStateToProps = state => ({
 export default class NumberMatrixOverview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static rowKeyExtractor = d => d.key;
 
     constructor(props) {
         super(props);
@@ -95,47 +95,6 @@ export default class NumberMatrixOverview extends React.PureComponent {
     getEditColumnUnits = (key, data, index) => (
         <this.SortableColumnUnit key={key} index={index} value={{ key, data }} />
     )
-
-    rowKeyExtractor = d => d.key;
-
-    createFilters = () => {
-        const { title, widgetKey } = this.props;
-
-        return [{
-            title,
-            widgetKey,
-            key: widgetKey,
-            filterType: 'list',
-            properties: {
-                type: 'number-2d',
-            },
-        }];
-    }
-
-    createExportable = (data) => {
-        const { widgetKey } = this.props;
-        const titles = [];
-
-        data.rowHeaders.forEach((rowHeader) => {
-            data.columnHeaders.forEach((columnHeader) => {
-                titles.push(`${rowHeader.title} - ${columnHeader.title}`);
-            });
-
-            titles.push(`${rowHeader.title} - Matches`);
-        });
-
-        const excel = {
-            type: 'multiple',
-            titles,
-        };
-
-        return {
-            widgetKey,
-            data: {
-                excel,
-            },
-        };
-    }
 
     SortableRowUnit = SortableElement(({ value: { data, key } }) => (
         <div
@@ -214,7 +173,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <ListView
                 className={`${styles.list} ${additionalStyle}`}
                 data={rowHeaders}
-                keyExtractor={this.rowKeyExtractor}
+                keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                 modifier={this.getEditRowUnits}
             />
         );
@@ -231,7 +190,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             <ListView
                 className={`${styles.list} ${additionalStyle}`}
                 data={columnHeaders}
-                keyExtractor={this.rowKeyExtractor}
+                keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                 modifier={this.getEditColumnUnits}
             />
         );
@@ -268,8 +227,6 @@ export default class NumberMatrixOverview extends React.PureComponent {
         };
         this.props.onChange(
             newData,
-            this.createFilters(),
-            this.createExportable(newData),
             title,
         );
     }
@@ -418,7 +375,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 <List
                     data={columnHeaders}
                     modifier={(colKey, colData) => this.renderColElement(colKey, colData, key)}
-                    keyExtractor={this.rowKeyExtractor}
+                    keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                 />
             </tr>
         );
@@ -435,13 +392,13 @@ export default class NumberMatrixOverview extends React.PureComponent {
                         <List
                             data={columnHeaders}
                             modifier={this.renderColHeader}
-                            keyExtractor={this.rowKeyExtractor}
+                            keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                         />
                     </tr>
                     <List
                         data={rowHeaders}
                         modifier={this.renderRow}
-                        keyExtractor={this.rowKeyExtractor}
+                        keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                     />
                 </tbody>
             </table>

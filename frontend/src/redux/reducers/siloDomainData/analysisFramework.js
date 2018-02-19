@@ -20,14 +20,10 @@ export const setAfViewAnalysisFrameworkAction = ({ analysisFramework }) => ({
 export const addAfViewWidgetAction = ({
     analysisFrameworkId,
     widget,
-    filters,
-    exportable,
 }) => ({
     type: AF__VIEW_ADD_WIDGET,
     analysisFrameworkId,
     widget,
-    filters,
-    exportable,
 });
 
 export const removeAfViewWidgetAction = ({
@@ -42,14 +38,10 @@ export const removeAfViewWidgetAction = ({
 export const updateAfViewWidgetAction = ({
     analysisFrameworkId,
     widget,
-    filters,
-    exportable,
 }) => ({
     type: AF__VIEW_UPDATE_WIDGET,
     analysisFrameworkId,
     widget,
-    filters,
-    exportable,
 });
 
 // HELPER
@@ -189,7 +181,7 @@ const afViewSetAnalysisFramework = (state, action) => {
 };
 
 const afViewAddWidget = (state, action) => {
-    const { analysisFrameworkId, widget, filters, exportable } = action;
+    const { analysisFrameworkId, widget } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
@@ -204,23 +196,6 @@ const afViewAddWidget = (state, action) => {
             },
         },
     };
-
-    if (filters) {
-        settings.analysisFrameworkView.analysisFramework.filters = {
-            $autoArray: {
-                $push: filters.map(f => ({ ...f, widgetKey: widget.key })),
-            },
-        };
-    }
-
-    if (exportable) {
-        settings.analysisFrameworkView.analysisFramework.exportables = {
-            $autoArray: {
-                $push: [{ ...exportable, widgetKey: widget.key }],
-            },
-        };
-    }
-
     const newState = update(state, settings);
     const newSettings = {
         analysisFrameworkView: {
@@ -244,8 +219,6 @@ const afViewRemoveWidget = (state, action) => {
         analysisFrameworkView: {
             analysisFramework: {
                 widgets: { $filter: w => getWidgetKey(w) !== widgetId },
-                filters: { $filter: f => getFilterWidgetKey(f) !== widgetId },
-                exportables: { $filter: e => getExportableWidgetKey(e) !== widgetId },
             },
         },
     };
@@ -253,7 +226,7 @@ const afViewRemoveWidget = (state, action) => {
 };
 
 const afViewUpdateWidget = (state, action) => {
-    const { analysisFrameworkId, widget, filters, exportable } = action;
+    const { analysisFrameworkId, widget } = action;
     const { analysisFrameworkView: { analysisFramework } } = state;
     if (!isAnalysisFrameworkValid(analysisFramework, analysisFrameworkId)) {
         return state;
@@ -276,49 +249,6 @@ const afViewUpdateWidget = (state, action) => {
         },
     };
 
-    if (filters) {
-        let filterSettings = {};
-
-        filters.forEach((filter) => {
-            const index = analysisFramework.filters.findIndex(
-                f => getFilterKey(f) === filter.key,
-                f => getFilterWidgetKey(f) === widget.key,
-            );
-
-            if (index === -1) {
-                filterSettings.$push = [{ ...filter, widgetKey: widget.key }];
-            } else {
-                filterSettings = {
-                    ...filterSettings,
-                    [index]: {
-                        $merge: { ...filter, widgetKey: widget.key },
-                    },
-                };
-            }
-        });
-
-        if (Object.keys(filterSettings).length > 0) {
-            settings.analysisFrameworkView.analysisFramework.filters = filterSettings;
-        }
-    }
-
-    if (exportable) {
-        let exportableSettings = {};
-        const index = analysisFramework.exportables.findIndex(
-            e => getExportableWidgetKey(e) === widget.key,
-        );
-
-        if (index === -1) {
-            exportableSettings = {
-                $push: [{ ...exportable, widgetKey: widget.key }],
-            };
-        } else {
-            exportableSettings = {
-                [index]: { $merge: { ...exportable, widgetKey: widget.key } },
-            };
-        }
-        settings.analysisFrameworkView.analysisFramework.exportables = exportableSettings;
-    }
     return update(state, settings);
 };
 

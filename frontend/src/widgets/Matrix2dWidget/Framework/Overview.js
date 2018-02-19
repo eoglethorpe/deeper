@@ -29,7 +29,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -74,115 +73,11 @@ export default class Matrix2dOverview extends React.PureComponent {
         editAction(this.handleWidgetEdit);
     }
 
-    componentWillMount() {
-        const { onChange } = this.props;
-
-        onChange(
-            this.state.data,
-            this.createFilters(this.state.data),
-            this.createExportable(this.state.data),
-            this.state.title,
-        );
-    }
-
     componentWillReceiveProps(nextProps) {
         this.setState({
             title: nextProps.title,
             data: nextProps.data,
         });
-    }
-
-    createFilters = (data) => {
-        const { title, widgetKey } = this.props;
-
-        const dimensionOptions = [];
-        data.dimensions.forEach((dimension) => {
-            dimensionOptions.push({
-                label: dimension.title,
-                key: dimension.id,
-            });
-
-            dimension.subdimensions.forEach((subdimension) => {
-                dimensionOptions.push({
-                    label: `${dimension.title} / ${subdimension.title}`,
-                    key: subdimension.id,
-                });
-            });
-        });
-
-        const dimensionsFilter = {
-            title: `${title} Dimensions`,
-            widgetKey,
-            key: `${widgetKey}-dimensions`,
-            filterType: 'list',
-            properties: {
-                type: 'multiselect',
-                options: dimensionOptions,
-            },
-        };
-
-        const sectorOptions = [];
-        data.sectors.forEach((sector) => {
-            sectorOptions.push({
-                label: sector.title,
-                key: sector.id,
-            });
-
-            if (!sector.subsectors) {
-                return;
-            }
-            sector.subsectors.forEach((subsector) => {
-                sectorOptions.push({
-                    label: `${sector.title} / ${subsector.title}`,
-                    key: subsector.id,
-                });
-            });
-        });
-
-        const sectorsFilter = {
-            title: `${title} Sectors`,
-            widgetKey,
-            key: `${widgetKey}-sectors`,
-            filterType: 'list',
-            properties: {
-                type: 'multiselect',
-                options: sectorOptions,
-            },
-        };
-        return [
-            dimensionsFilter,
-            sectorsFilter,
-        ];
-    }
-
-    createExportable = (data) => {
-        const excel = {
-            type: 'multiple',
-            titles: ['Dimension', 'Subdimension', 'Sector', 'Subsectors'],
-        };
-
-        const report = {
-            levels: data.sectors.map(sector => ({
-                id: sector.id,
-                title: sector.title,
-                sublevels: data.dimensions.map(dimension => ({
-                    id: `${sector.id}-${dimension.id}`,
-                    title: dimension.title,
-                    sublevels: dimension.subdimensions.map(subdimension => ({
-                        id: `${sector.id}-${dimension.id}-${subdimension.id}`,
-                        title: subdimension.title,
-                    })),
-                })),
-            })),
-        };
-
-        return {
-            widgetKey: this.props.widgetKey,
-            data: {
-                excel,
-                report,
-            },
-        };
     }
 
     handleTitleInputValueChange = (value) => {
@@ -210,8 +105,6 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         onChange(
             this.state.data,
-            this.createFilters(this.state.data),
-            this.createExportable(this.state.data),
             this.state.title,
         );
 

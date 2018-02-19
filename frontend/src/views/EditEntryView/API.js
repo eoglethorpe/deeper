@@ -123,80 +123,6 @@ class EntryModifier {
         return this;
     }
 
-    setFilterData(filterId, filterData) {
-        if (!this.entry) {
-            return this;
-        }
-
-        let index = -1;
-
-        if (!this.values.filterData) {
-            index = -1;
-        } else {
-            index = this.values.filterData.findIndex(attr => attr.filter === filterId);
-        }
-
-        let settings;
-        if (index === -1) {
-            settings = {
-                filterData: { $autoArray: {
-                    $push: [{
-                        filter: filterId,
-                        ...filterData,
-                    }],
-                } },
-            };
-        } else {
-            settings = {
-                filterData: {
-                    [index]: { $merge: {
-                        ...filterData,
-                    } },
-                },
-            };
-        }
-
-        this.values = update(this.values, settings);
-        return this;
-    }
-
-    setExportData(exportableId, exportData) {
-        if (!this.entry) {
-            return this;
-        }
-
-        let index = -1;
-
-        if (!this.values.exportData) {
-            index = -1;
-        } else {
-            index = this.values.exportData.findIndex(attr => attr.exportable === exportableId);
-        }
-
-        let settings;
-        if (index === -1) {
-            settings = {
-                exportData: { $autoArray: {
-                    $push: [{
-                        exportable: exportableId,
-                        data: exportData,
-                    }],
-                } },
-            };
-        } else {
-            settings = {
-                exportData: {
-                    [index]: { $merge: {
-                        data: exportData,
-                    } },
-                },
-            };
-        }
-
-        this.values = update(this.values, settings);
-        return this;
-    }
-
     apply() {
         if (this.entry) {
             this.changeEntryValues(
@@ -244,22 +170,6 @@ class EntryBuilder {
         this.attributes.push({
             widget: widgetId,
             data: attribute,
-        });
-        return this;
-    }
-
-    addFilterData(filterId, filterData) {
-        this.filterData.push({
-            filter: filterId,
-            ...filterData,
-        });
-        return this;
-    }
-
-    addExportData(exportableId, exportData) {
-        this.exportData.push({
-            exportable: exportableId,
-            data: exportData,
         });
         return this;
     }
@@ -371,18 +281,6 @@ export default class API {
             values.attributes.find(attr => attr.widget === widgetId)
         );
         return attribute && attribute.data;
-    }
-
-    getEntryFilterData(filterId, id = undefined) {
-        const entry = this.getEntry(id);
-        const values = entry && entryAccessor.getValues(entry);
-
-        const filterData = (
-            values &&
-            values.filterData &&
-            values.filterData.find(f => f.filter === filterId)
-        );
-        return { values: filterData.values, number: filterData.number };
     }
 
     getEntryForExcerpt(excerpt) {

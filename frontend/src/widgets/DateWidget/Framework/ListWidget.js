@@ -20,7 +20,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -56,43 +55,6 @@ export default class DateFrameworkList extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
-    componentDidMount() {
-        const { data, onChange } = this.props;
-
-        onChange(
-            data,
-            this.createFilters(),
-            this.createExportable(),
-        );
-    }
-
-    createFilters = () => {
-        const { title, widgetKey } = this.props;
-
-        return [{
-            title,
-            widgetKey,
-            key: widgetKey,
-            filterType: 'number',
-            properties: {
-                type: 'date',
-            },
-        }];
-    }
-
-    createExportable = () => {
-        const excel = {
-            title: this.props.title,
-        };
-
-        return {
-            widgetKey: this.props.widgetKey,
-            data: {
-                excel,
-            },
-        };
-    }
-
     handleWidgetTitleChange = (value) => {
         this.setState({ title: value });
     }
@@ -120,8 +82,6 @@ export default class DateFrameworkList extends React.PureComponent {
 
         this.props.onChange(
             data,
-            this.createFilters(),
-            this.createExportable(),
             title,
         );
     }
