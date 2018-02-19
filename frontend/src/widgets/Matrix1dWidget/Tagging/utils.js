@@ -80,13 +80,13 @@ export const updateAttribute = ({ id, entryId, api, attribute, data, filters, ex
     const modifier = api.getEntryModifier(entryId)
         .setHighlightColor(id, createHighlightColor(attribute, data));
 
-    if (filters && filters.length === 1) {
-        modifier.setFilterData(filters[0].id, createFilterData(attribute, data));
-    }
+    // if (filters && filters.length === 1) {
+    //     modifier.setFilterData(filters[0].id, createFilterData(attribute, data));
+    // }
 
-    if (exportable) {
-        modifier.setExportData(exportable.id, createExportData(attribute, data));
-    }
+    // if (exportable) {
+    //     modifier.setExportData(exportable.id, createExportData(attribute, data));
+    // }
 
     modifier.apply();
 };

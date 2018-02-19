@@ -120,14 +120,14 @@ export const updateAttribute = ({ id, entryId, api, attribute, data, filters, ex
     const modifier = api.getEntryModifier(entryId)
         .setHighlightColor(id, createHighlightColor(attribute, data));
 
-    if (filters && filters.length === 2) {
-        modifier.setFilterData(filters[0].id, createDimensionFilterData(attribute, data))
-            .setFilterData(filters[1].id, createSectorFilterData(attribute, data));
-    }
+    // if (filters && filters.length === 2) {
+    //     modifier.setFilterData(filters[0].id, createDimensionFilterData(attribute, data))
+    //         .setFilterData(filters[1].id, createSectorFilterData(attribute, data));
+    // }
 
-    if (exportable) {
-        modifier.setExportData(exportable.id, createExportData(attribute, data));
-    }
+    // if (exportable) {
+    //     modifier.setExportData(exportable.id, createExportData(attribute, data));
+    // }
 
     modifier.apply();
 };
