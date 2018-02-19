@@ -49,10 +49,6 @@ export const updateAfViewWidgetAction = ({
 const isAnalysisFrameworkValid = (af = {}, id) => isEqualAndTruthy(id, af.id);
 
 const getWidgetKey = widget => widget.key;
-const getFilterKey = filter => filter.key;
-const getFilterWidgetKey = filter => filter.widgetKey;
-const getExportableWidgetKey = exportable => exportable.widgetKey;
-
 const createWidgetKeyComparator = key => (w => w.key === key);
 
 // Check collision of widget at `index` with all other widgets

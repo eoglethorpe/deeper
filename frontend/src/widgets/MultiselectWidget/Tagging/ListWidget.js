@@ -6,7 +6,6 @@ import MultiSelectInput from '../../../vendor/react-store/components/Input/Selec
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import BoundError from '../../../components/BoundError';
-import { updateAttribute } from './utils';
 
 import styles from './styles.scss';
 
@@ -31,17 +30,6 @@ export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-    }
 
     handleChange = (value) => {
         const { api, id, entryId } = this.props;
