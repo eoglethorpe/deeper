@@ -218,10 +218,7 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     render() {
-        const {
-            displayCountryList,
-        } = this.state;
-
+        const { displayCountryList } = this.state;
         const { activeUser } = this.props;
 
         return (

@@ -1,16 +1,94 @@
 @import '../../stylesheets/base';
 
-.msgbox {
-    margin: $spacing-small;
-    border-radius: 3px;
-    padding: $spacing-small;
-    color: $color-foreground;
+$width-sidebar: 320px;
 
-    &.error {
-        background-color: $color-danger;
+.string-panel {
+    @extend %main-content;
+    display: flex;
+
+    .sidebar {
+        display: flex;
+        position: relative;
+        flex-basis: 16%;
+        flex-direction: column;
+        border-right: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground-alt;
+        min-width: $width-sidebar;
+        overflow-y: auto;
+
+        .heading {
+            border-bottom: $width-separator-thin solid $color-separator;
+            background-color: $color-foreground;
+            padding: $spacing-medium;
+        }
+
+        .sidebar-button {
+            outline: none;
+            border: 0;
+            border-bottom: $width-separator-thin solid $color-separator;
+            border-left: $width-separator-thick solid transparent;
+            background-color: $color-foreground-alt;
+            cursor: pointer;
+            padding: $spacing-medium;
+            text-align: left;
+
+            &.active {
+                border-left: $width-separator-thick solid $color-accent;
+            }
+
+        }
     }
 
-    &.warning {
-        background-color: $color-warning;
+    .string-detail {
+        @include shadow-medium;
+        display: flex;
+        flex-grow: 1;
+
+        .content {
+            display: flex;
+            position: relative;
+            flex-grow: 1;
+            background-color: darken($color-foreground, 1%);
+            overflow-y: auto;
+        }
+
+        .sidebar-right {
+            display: flex;
+            position: relative;
+            flex-basis: 24%;
+            flex-direction: column;
+            border-right: $width-separator-thin solid $color-separator;
+            background-color: $color-foreground-alt;
+            min-width: $width-sidebar;
+            overflow-y: auto;
+
+            .msgbox {
+                border-bottom: $width-separator-thin solid $color-separator;
+                padding: $spacing-small;
+
+                &.error {
+                    .title {
+                        color: $color-danger;
+                    }
+                }
+
+                &.warning {
+                    .title {
+                        color: $color-warning;
+                    }
+                }
+
+                .title {
+                    font-weight: bold;
+                }
+
+                .description {
+                    font-family: monospace;
+                }
+            }
+        }
     }
+
 }
+
+
