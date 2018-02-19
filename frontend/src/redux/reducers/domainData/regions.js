@@ -73,18 +73,18 @@ export const removeProjectRegionAction = ({ projectId, regionId }) => ({
 const setRegions = (state, action) => {
     const { regions } = action;
 
-    const regionSettings = regions.reduce(
+    const regionsObject = regions.reduce(
         (acc, region) => {
-            acc[region.id] = { $auto: {
-                $set: region,
-            } };
+            acc[region.id] = region;
             return acc;
         },
         {},
     );
 
     const settings = {
-        regions: regionSettings,
+        regions: {
+            $set: regionsObject,
+        },
     };
     return update(state, settings);
 };
