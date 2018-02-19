@@ -118,6 +118,9 @@ export default class PasswordReset extends React.PureComponent {
                 this.setState({ pending: true, pristine: false });
             })
             .postLoad(() => {
+                if (this.reCaptcha) {
+                    this.reCaptcha.reset();
+                }
                 this.setState({ pending: false });
             })
             .success((response) => {
@@ -189,9 +192,9 @@ export default class PasswordReset extends React.PureComponent {
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
                                 />
                                 <ReCaptcha
+                                    ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
                                     formname="recaptchaResponse"
                                     siteKey={reCaptchaSiteKey}
-                                    reset={pending}
                                 />
                                 <div styleName="action-buttons">
                                     <PrimaryButton disabled={pending}>

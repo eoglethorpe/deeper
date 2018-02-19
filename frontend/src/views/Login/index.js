@@ -82,6 +82,18 @@ export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static commonElements = ['email', 'password'];
+    static commonValidations = {
+        email: [
+            requiredCondition,
+            emailCondition,
+        ],
+        password: [
+            requiredCondition,
+            lengthGreaterThanCondition(4),
+        ],
+    };
+
     constructor(props) {
         super(props);
 
@@ -92,20 +104,9 @@ export default class Login extends React.PureComponent {
             pending: false,
             pristine: false,
             showReCaptcha: false,
-        };
 
-        // Data for form elements
-        this.elements = ['email', 'password', 'recaptchaResponse'];
-
-        this.validations = {
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-            password: [
-                requiredCondition,
-                lengthGreaterThanCondition(4),
-            ],
+            elements: Login.commonElements,
+            validations: Login.commonValidations,
         };
     }
 
@@ -183,8 +184,14 @@ export default class Login extends React.PureComponent {
     showReCaptcha = () => {
         this.setState({
             showReCaptcha: true,
+            elements: [...Login.commonElements, 'recaptchaResponse'],
+            validations: {
+                ...Login.commonValidations,
+                recaptchaResponse: [requiredCondition],
+            },
         });
     }
+
     // LOGIN REST API
 
     createRequestLogin = (url, params) => {
@@ -193,6 +200,11 @@ export default class Login extends React.PureComponent {
             .params(params)
             .preLoad(() => {
                 this.setState({ pending: true, pristine: false });
+            })
+            .postLoad(() => {
+                if (this.reCaptcha) {
+                    this.reCaptcha.reset();
+                }
             })
             .success((response) => {
                 try {
@@ -291,10 +303,10 @@ export default class Login extends React.PureComponent {
                     <Form
                         styleName="login-form"
                         changeCallback={this.changeCallback}
-                        elements={this.elements}
+                        elements={this.state.elements}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
-                        validations={this.validations}
+                        validations={this.state.validations}
                         value={formValues}
                         error={formFieldErrors}
                     >
@@ -319,9 +331,9 @@ export default class Login extends React.PureComponent {
                         />
                         { showReCaptcha &&
                             <ReCaptcha
+                                ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
                                 formname="recaptchaResponse"
                                 siteKey={reCaptchaSiteKey}
-                                reset={pending}
                             />
                         }
                         <div styleName="action-buttons">
