@@ -88,8 +88,6 @@ export default class Login extends React.PureComponent {
             formValues: {},
             pending: false,
             pristine: false,
-
-            uploadedFiles: [],
         };
 
         // Data for form elements
@@ -107,9 +105,13 @@ export default class Login extends React.PureComponent {
     }
 
     componentWillMount() {
-        console.log('MOUNTING Login');
-
         this.checkParamsFromHid();
+    }
+
+    componentWillUnmount() {
+        if (this.userLoginRequest) {
+            this.userLoginRequest.stop();
+        }
     }
 
     // HID
@@ -118,11 +120,6 @@ export default class Login extends React.PureComponent {
         // Just set it to pending
         // The anchor will redirect user to next page
         this.setState({ pending: true });
-    }
-
-    onUpload = (files) => {
-        const { uploadedFiles } = this.state;
-        this.setState({ uploadedFiles: [...uploadedFiles, ...files] });
     }
 
     checkParamsFromHid = () => {
@@ -170,8 +167,8 @@ export default class Login extends React.PureComponent {
         if (this.userLoginRequest) {
             this.userLoginRequest.stop();
         }
-        this.userLoginRequest = this.createRequestLogin(url, params);
 
+        this.userLoginRequest = this.createRequestLogin(url, params);
         this.userLoginRequest.start();
     };
 
@@ -187,6 +184,7 @@ export default class Login extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'tokenGetResponse');
+
                     const { refresh, access } = response;
                     this.props.login({ refresh, access });
 
@@ -195,14 +193,15 @@ export default class Login extends React.PureComponent {
                         console.warn('No projects in cache');
                         // if there is no projects, block and get from api
                         this.props.startRefresh(() => {
-                            this.props.authenticate();
                             this.setState({ pending: false });
+                            this.props.authenticate();
                         });
                     } else {
+                        this.setState({ pending: false });
                         this.props.startRefresh();
                         this.props.authenticate();
-                        this.setState({ pending: false });
                     }
+                    // FIXME: Maybe move immediately after authenticate()
                     // Start the locked silo tasks
                     this.props.startSiloTasks(() => {
                         console.log('Silo tasks started');

@@ -1,5 +1,5 @@
 import update from '../../../vendor/react-store/utils/immutable-update';
-import { compareString } from '../../../vendor/react-store/utils/common';
+import { isTruthy, compareString } from '../../../vendor/react-store/utils/common';
 
 // TYPE
 
@@ -13,10 +13,11 @@ export const UNSET_USER_PROJECT = 'domain-data/UNSET_USER_PROJECT';
 
 // ACTION-CREATOR
 
-export const setUserProjectsAction = ({ userId, projects }) => ({
+export const setUserProjectsAction = ({ userId, projects, extra }) => ({
     type: SET_USER_PROJECTS,
     userId,
     projects,
+    extra, // used to set active project if there is none
 });
 
 export const setProjectAction = ({ userId, project }) => ({
@@ -207,6 +208,7 @@ const unsetUserProject = (state, action) => {
 const setUserProjects = (state, action) => {
     const { projects, userId } = action;
 
+    const settings = {};
     const projectSettings = projects.reduce(
         (acc, project) => {
             acc[project.id] = { $auto: {
@@ -216,17 +218,19 @@ const setUserProjects = (state, action) => {
         },
         { },
     );
+    settings.projects = projectSettings;
 
-    const settings = {
-        projects: projectSettings,
-        users: {
+    // NOTE: userId not sent when setting projects for usergroup
+    if (isTruthy(userId)) {
+        const userSettings = {
             [userId]: { $auto: {
                 projects: { $autoArray: {
                     $set: projects.map(project => project.id),
                 } },
             } },
-        },
-    };
+        };
+        settings.users = userSettings;
+    }
     return update(state, settings);
 };
 

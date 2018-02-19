@@ -48,6 +48,15 @@ export const createParamsForUserPatch = ({
     }),
 });
 
+export const createUrlForSetUserProject = userId => `${wsEndpoint}/users/${userId}/`;
+export const createParamsForSetUserProject = projectId => ({
+    method: PATCH,
+    headers: commonHeaderForPost,
+    body: JSON.stringify({
+        lastActiveProject: projectId,
+    }),
+});
+
 export const urlForUserPasswordReset = `${wsEndpoint}/password/reset/`;
 export const createParamsForUserPasswordReset = ({ email }) => ({
     method: POST,

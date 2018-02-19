@@ -157,6 +157,7 @@ const initialLangState = {
                 188: 'Revoke Admin Rights',
                 189: 'Grant Admin Rights',
                 190: 'Delete Member',
+                191: 'Delete Lead',
                 192: 'Add Member',
                 193: 'Are you sure you want to delete the project',
                 195: 'Revoke admin rights form',
@@ -212,6 +213,7 @@ const initialLangState = {
                 373: 'If you use this category editor, you will recieve updates if the owner updates it.',
                 374: 'After cloning and editing this category editor, you will not recieve any updates made by owner.',
                 377: 'General Details',
+                378: 'General Info',
                 379: 'Analysis Framework',
                 380: 'Category Editor',
                 401: 'Category',
@@ -563,6 +565,10 @@ const initialLangState = {
                 7033: 'Drag and Drop data collection techniques here',
                 7034: 'Drag and Drop Sampling (site and respondent selection) here',
                 7035: 'Drag and Drop limitations here',
+                7036: 'Response Schema',
+                7037: 'Request Schema',
+                7038: 'Loading Api',
+                7039: 'Subsectors',
             },
             views: {
                 af: {
@@ -635,8 +641,13 @@ const initialLangState = {
                     editModalTitle: 792,
                     empty: 406,
                     confirmDeletewWidget: 6000,
+                    subsectorsLabel: 7039,
                 },
-                api: {},
+                api: {
+                    loadingLabel: 7038,
+                    responseSchemaLabel: 7036,
+                    requestSchemaLabel: 7037,
+                },
                 ary: {
                     highlightsTabLabel: 7000,
                     metadataTabLabel: 7001,
@@ -840,6 +851,8 @@ const initialLangState = {
                     editAdminLevelModalTitle: 956,
                     geoShapeFile: 124,
                     loadGeoShapeFile: 125,
+                    regionGeneralInfoLabel: 378,
+                    addRegionButtonLabel: 301,
                 },
                 entry: {
                     serverErrorText: 500,
@@ -1022,6 +1035,7 @@ const initialLangState = {
                     extractLead: 129,
                     applyToAll: 2003,
                     applyToAllBelow: 2004,
+                    leadDelete: 191,
                 },
                 login: {
                     welcomeToText: 803,
@@ -1199,6 +1213,7 @@ const initialLangState = {
                     tableHeaderActions: 16,
                     viewMemberLinkTitle: 187,
                     deleteMemberLinkTitle: 190,
+                    revokeAdminRightsTitle: 188,
                     grantAdminRightsTitle: 189,
                     confirmText: 316,
                     confirmTextRevokeAdmin: 195,
