@@ -346,7 +346,8 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 successCallback={this.successCallback}
                 validation={this.validation}
                 validations={this.validations}
-                onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
@@ -360,7 +361,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     options={usersWithRole}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddUserGroupMembers.optionLabelSelector}
-                    onChange={this.handleTabularSelectInputChange}
                     keySelector={AddUserGroupMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
                     error={formFieldErrors.memberships}
