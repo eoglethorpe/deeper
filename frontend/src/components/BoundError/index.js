@@ -1,7 +1,9 @@
 import React from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 
-const BoundError = WrappedComponent => (
-    class extends React.PureComponent {
+
+export default (WrappedComponent) => {
+    const Component = class extends React.PureComponent {
         constructor(props) {
             super(props);
 
@@ -25,7 +27,7 @@ const BoundError = WrappedComponent => (
 
             return <WrappedComponent {...this.props} />;
         }
-    }
-);
+    };
 
-export default BoundError;
+    return hoistNonReactStatics(Component, WrappedComponent);
+};
