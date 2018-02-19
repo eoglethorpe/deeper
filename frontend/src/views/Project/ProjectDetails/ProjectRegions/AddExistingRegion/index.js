@@ -251,7 +251,8 @@ export default class AddExistingRegion extends React.PureComponent {
                 successCallback={this.successCallback}
                 validation={this.validation}
                 validations={this.validations}
-                onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
@@ -265,7 +266,6 @@ export default class AddExistingRegion extends React.PureComponent {
                     options={regionOptions}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddExistingRegion.optionLabelSelector}
-                    onChange={this.handleTabularSelectInputChange}
                     keySelector={AddExistingRegion.optionKeySelector}
                     tableHeaders={this.regionsHeader}
                     error={formFieldErrors.regions}
@@ -278,7 +278,9 @@ export default class AddExistingRegion extends React.PureComponent {
                     >
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                    >
                         {this.props.projectStrings('modalUpdate')}
                     </PrimaryButton>
                 </div>

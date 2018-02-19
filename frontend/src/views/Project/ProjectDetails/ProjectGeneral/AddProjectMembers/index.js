@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import update from '../../../../../vendor/react-store/utils/immutable-update';
+
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import { compareString } from '../../../../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
@@ -188,12 +190,16 @@ export default class AddProjectMembers extends React.PureComponent {
     }
 
     handleRoleChangeForNewMember = ({ memberId, newRole }) => {
-        const newUserList = [...this.state.usersWithRole];
-        const index = newUserList.findIndex(user => user.id === memberId);
+        const index = this.state.usersWithRole.findIndex(user => user.id === memberId);
 
         if (index !== -1) {
-            newUserList[index].role = newRole;
-            this.setState({ usersWithRole: newUserList });
+            const settings = {
+                [index]: {
+                    role: { $set: newRole },
+                },
+            };
+            const newMembers = update(this.state.usersWithRole, settings);
+            this.setState({ usersWithRole: newMembers });
         }
     }
 
@@ -345,7 +351,8 @@ export default class AddProjectMembers extends React.PureComponent {
                 successCallback={this.successCallback}
                 validation={this.validation}
                 validations={this.validations}
-                onSubmit={this.handleSubmit}
+                value={formValues}
+                error={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
@@ -359,7 +366,6 @@ export default class AddProjectMembers extends React.PureComponent {
                     options={usersWithRole}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddProjectMembers.optionLabelSelector}
-                    onChange={this.handleTabularSelectInputChange}
                     keySelector={AddProjectMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
                     error={formFieldErrors.memberships}
