@@ -281,7 +281,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
             $filter: d => d.key !== key,
         };
         const newScaleUnits = update(this.state.scaleUnits, settings);
-        if (defaultScaleUnit === key) {
+        if (defaultScaleUnit === key && newScaleUnits.length > 0) {
             const newDefaultScaleUnit = newScaleUnits[0].key;
             this.setState({ defaultScaleUnit: newDefaultScaleUnit });
         }
@@ -310,7 +310,9 @@ export default class ScaleFrameworkList extends React.PureComponent {
             title: '',
             color: '#ffffff',
         };
-        if (defaultScaleUnit === undefined) {
+
+        const rowIndexForDefault = this.state.scaleUnits.findIndex(s => s.key === defaultScaleUnit);
+        if (rowIndexForDefault === -1) {
             newDefaultScaleUnit = newScaleUnit.key;
         }
 
