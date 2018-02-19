@@ -183,7 +183,8 @@ export default class Navbar extends React.PureComponent {
         // Set user project in server
         const { activeProject: oldActiveProject } = this.props;
         const { activeProject: newActiveProject, activeUser: newActiveUser } = nextProps;
-        if (oldActiveProject !== newActiveProject) {
+
+        if (oldActiveProject !== newActiveProject && isTruthy(newActiveUser.userId)) {
             console.warn('Project id changed from ', oldActiveProject, 'to', newActiveProject);
 
             if (this.setUserProjectRequest) {
