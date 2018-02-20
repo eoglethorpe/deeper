@@ -29,6 +29,10 @@ option_settings:
     - option_name: \"PAPERTRAIL_PORT\"
       value: \"$PAPERTRAIL_PORT\"
 
+    - option_name: \"RECAPTCHA_SECRET\"
+      value: \"$RECAPTCHA_SECRET\"
+
+
     - option_name: \"DJANGO_SECRET_KEY\"
       value: \"$DJANGO_SECRET_KEY\"
     - option_name: \"DJANGO_TIME_ZONE\"

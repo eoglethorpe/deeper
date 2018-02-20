@@ -18,6 +18,7 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
 import Form, {
     requiredCondition,
     emailCondition,
@@ -43,6 +44,7 @@ import { startSiloBackgroundTasksAction } from '../../redux/middlewares/siloBack
 import { pathNames } from '../../constants';
 import schema from '../../schema';
 import { hidUrl } from '../../config/hid';
+import { reCaptchaSiteKey } from '../../config/reCaptcha';
 
 import logo from '../../resources/img/deep-logo.svg';
 import hidLogo from '../../resources/img/hid-logo.png';
@@ -82,16 +84,19 @@ export default class Login extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
         this.state = {
             formErrors: [],
             formFieldErrors: {},
             formValues: {},
             pending: false,
             pristine: false,
+            showReCaptcha: false,
         };
 
         // Data for form elements
-        this.elements = ['email', 'password'];
+        this.elements = ['email', 'password', 'recaptchaResponse'];
+
         this.validations = {
             email: [
                 requiredCondition,
@@ -137,7 +142,6 @@ export default class Login extends React.PureComponent {
     }
 
     // FORM RELATED
-
     changeCallback = (values, { formErrors, formFieldErrors }) => {
         this.setState({
             formValues: { ...this.state.formValues, ...values },
@@ -154,9 +158,13 @@ export default class Login extends React.PureComponent {
         });
     };
 
-    successCallback = ({ email, password }) => {
+    successCallback = ({ email, password, recaptchaResponse }) => {
         const url = urlForTokenCreate;
-        const params = createParamsForTokenCreate({ username: email, password });
+        const params = createParamsForTokenCreate({
+            username: email,
+            password,
+            recaptchaResponse,
+        });
         this.login({ url, params });
     };
 
@@ -172,6 +180,11 @@ export default class Login extends React.PureComponent {
         this.userLoginRequest.start();
     };
 
+    showReCaptcha = () => {
+        this.setState({
+            showReCaptcha: true,
+        });
+    }
     // LOGIN REST API
 
     createRequestLogin = (url, params) => {
@@ -221,6 +234,9 @@ export default class Login extends React.PureComponent {
                     formErrors,
                     pending: false,
                 });
+                if (response.errorCode === 4004) {
+                    this.showReCaptcha();
+                }
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
@@ -239,6 +255,7 @@ export default class Login extends React.PureComponent {
             formFieldErrors,
             formValues,
             pending,
+            showReCaptcha,
         } = this.state;
 
         return (
@@ -249,10 +266,7 @@ export default class Login extends React.PureComponent {
                         path={logo}
                     />
                     <h2 styleName="heading">
-                        <small>
-                            {this.props.loginStrings('welcomeToText')}
-                        </small>
-                        <br />
+                        <small>{this.props.loginStrings('welcomeToText')}</small><br />
                     </h2>
                 </div>
                 <div styleName="login-form-container">
@@ -268,15 +282,10 @@ export default class Login extends React.PureComponent {
                                 alt={this.props.loginStrings('logInWIthHid')}
                                 draggable="false"
                             />
-                            <span>
-                                {this.props.loginStrings('logInWIthHid')}
-                            </span>
+                            <span>{this.props.loginStrings('logInWIthHid')}</span>
                         </a>
                         <div styleName="or-container">
-                            <hr />
-                            <span styleName="or">
-                                {this.props.loginStrings('orText')}
-                            </span>
+                            <hr /><span styleName="or">{this.props.loginStrings('orText')}</span>
                         </div>
                     </div>
                     <Form
@@ -308,6 +317,13 @@ export default class Login extends React.PureComponent {
                             required
                             type="password"
                         />
+                        { showReCaptcha &&
+                            <ReCaptcha
+                                formname="recaptchaResponse"
+                                siteKey={reCaptchaSiteKey}
+                                reset={pending}
+                            />
+                        }
                         <div styleName="action-buttons">
                             <Link
                                 styleName="forgot-password-link"
@@ -321,9 +337,7 @@ export default class Login extends React.PureComponent {
                         </div>
                     </Form>
                     <div styleName="register-link-container">
-                        <p>
-                            {this.props.loginStrings('noAccountYetText')}
-                        </p>
+                        <p>{this.props.loginStrings('noAccountYetText')}</p>
                         <Link
                             styleName="register-link"
                             to={reverseRoute(pathNames.register, {})}
