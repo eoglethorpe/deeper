@@ -160,7 +160,7 @@
             overflow-y: auto;
 
             .top {
-                min-height: 100px;
+                min-height: 108px;
                 overflow-y: auto;
 
                 .add-lead-form {
@@ -172,28 +172,45 @@
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
-                height: 100%;
-                min-height: 100px;
+                min-height: 196px;
 
                 .lead-preview {
                     display: flex;
                     flex-direction: column;
                     flex-grow: 1;
                     border-top: $width-separator-thin solid $color-separator;
-                    height: 100%;
-                    overflow-y: auto;
 
                     .gallery-file {
-                        height: 100%;
-                        overflow-y: auto;
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
 
-                        .preview {
-                            height: 100%;
+                        :global {
+                            .urlbar {
+                                flex-shrink: 0;
+                            }
+
+                            .doc-container {
+                                display: flex;
+                                flex-direction: column;
+                                flex-grow: 1;
+
+                                .gallery-docs {
+                                    display: flex;
+                                    flex-direction: column;
+                                    flex-grow: 1;
+                                }
+
+                                iframe {
+                                    flex-grow: 1;
+                                }
+                            }
                         }
                     }
 
                     .preview-text {
                         display: flex;
+                        flex-grow: 1;
                         margin: auto;
 
                         h1 {

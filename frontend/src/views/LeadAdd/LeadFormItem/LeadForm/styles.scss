@@ -12,9 +12,11 @@
         flex-basis: 100%;
         align-items: center;
         justify-content: space-between;
-        padding: $spacing-medium 0;
+        padding: $spacing-small 0;
 
         .non-field-errors {
+            font-size: $font-size-small;
+
             .error {
                 padding: $spacing-medium $spacing-large;
                 color: $color-danger;
