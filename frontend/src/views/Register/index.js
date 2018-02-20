@@ -4,10 +4,7 @@
 
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import {
-    Redirect,
-    Link,
-} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -21,7 +18,6 @@ import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
 import Form, {
     requiredCondition,
     emailCondition,
-    lengthGreaterThanCondition,
 } from '../../vendor/react-store/components/Input/Form';
 
 import {
@@ -61,11 +57,10 @@ export default class Register extends React.PureComponent {
             formValues: {},
             pending: false,
             pristine: false,
-
-            redirectTo: undefined,
+            success: false,
         };
 
-        this.elements = ['firstname', 'lastname', 'organization', 'email', 'password', 'recaptchaResponse'];
+        this.elements = ['firstname', 'lastname', 'organization', 'email', 'recaptchaResponse'];
         this.validations = {
             firstname: [
                 requiredCondition,
@@ -79,10 +74,6 @@ export default class Register extends React.PureComponent {
             email: [
                 requiredCondition,
                 emailCondition,
-            ],
-            password: [
-                requiredCondition,
-                lengthGreaterThanCondition(4),
             ],
             recaptchaResponse: [
                 requiredCondition,
@@ -133,7 +124,7 @@ export default class Register extends React.PureComponent {
     // REGISTER REST API
 
     createRequestRegister = (
-        { firstname, lastname, organization, country, email, password, recaptchaResponse }) => {
+        { firstname, lastname, organization, country, email, recaptchaResponse }) => {
         const userCreateRequest = new FgRestBuilder()
             .url(urlForUserCreate)
             .params(() => createParamsForUserCreate({
@@ -142,7 +133,6 @@ export default class Register extends React.PureComponent {
                 organization,
                 country,
                 email,
-                password,
                 recaptchaResponse,
             }))
             .preLoad(() => {
@@ -159,7 +149,7 @@ export default class Register extends React.PureComponent {
                     schema.validate(response, 'userCreateResponse');
                     // go to login
                     this.setState({
-                        redirectTo: reverseRoute(pathNames.login, {}),
+                        success: true,
                     });
                 } catch (er) {
                     console.error(er);
@@ -188,7 +178,7 @@ export default class Register extends React.PureComponent {
         return userCreateRequest;
     }
 
-    render() {
+    renderForm = () => {
         const {
             formErrors = [],
             formFieldErrors,
@@ -196,69 +186,79 @@ export default class Register extends React.PureComponent {
             pending,
         } = this.state;
 
-        if (this.state.redirectTo) {
-            return <Redirect to={this.state.redirectTo} />;
-        }
+        return (
+            <Form
+                styleName="register-form"
+                changeCallback={this.changeCallback}
+                elements={this.elements}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                validations={this.validations}
+                value={formValues}
+                error={formFieldErrors}
+            >
+                { pending && <LoadingAnimation /> }
+                <NonFieldErrors errors={formErrors} />
+                <TextInput
+                    formname="firstname"
+                    label={this.props.loginStrings('firstNameLabel')}
+                    placeholder={this.props.loginStrings('firstNamePlaceholder')}
+                    autoFocus
+                />
+                <TextInput
+                    formname="lastname"
+                    label={this.props.loginStrings('lastNameLabel')}
+                    placeholder={this.props.loginStrings('lastNamePlaceholder')}
+                />
+                <TextInput
+                    formname="organization"
+                    label={this.props.loginStrings('organizationLabel')}
+                    placeholder={this.props.loginStrings('organizationPlaceholder')}
+                />
+                <TextInput
+                    formname="email"
+                    label={this.props.loginStrings('emailLabel')}
+                    placeholder={this.props.loginStrings('emailPlaceholder')}
+                />
+                <ReCaptcha
+                    ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
+                    formname="recaptchaResponse"
+                    siteKey={reCaptchaSiteKey}
+                    reset={pending}
+                />
+                <div styleName="action-buttons">
+                    <PrimaryButton
+                        disabled={pending}
+                    >
+                        { this.props.loginStrings('registerLabel')}
+                    </PrimaryButton>
+                </div>
+            </Form>
+        );
+    }
+
+    renderSuccess = () => (
+        <div className={styles['register-success']}>
+            {this.props.loginStrings('checkYourEmailText')}
+            {this.state.formValues.email}
+        </div>
+    )
+
+    render() {
+        const {
+            success,
+        } = this.state;
 
         return (
             <div styleName="register">
                 <div styleName="register-box">
-                    <Form
-                        styleName="register-form"
-                        changeCallback={this.changeCallback}
-                        elements={this.elements}
-                        failureCallback={this.failureCallback}
-                        successCallback={this.successCallback}
-                        validations={this.validations}
-                        value={formValues}
-                        error={formFieldErrors}
-                    >
-                        { pending && <LoadingAnimation /> }
-                        <NonFieldErrors errors={formErrors} />
-                        <TextInput
-                            formname="firstname"
-                            label={this.props.loginStrings('firstNameLabel')}
-                            placeholder={this.props.loginStrings('firstNamePlaceholder')}
-                            autoFocus
-                        />
-                        <TextInput
-                            formname="lastname"
-                            label={this.props.loginStrings('lastNameLabel')}
-                            placeholder={this.props.loginStrings('lastNamePlaceholder')}
-                        />
-                        <TextInput
-                            formname="organization"
-                            label={this.props.loginStrings('organizationLabel')}
-                            placeholder={this.props.loginStrings('organizationPlaceholder')}
-                        />
-                        <TextInput
-                            formname="email"
-                            label={this.props.loginStrings('emailLabel')}
-                            placeholder={this.props.loginStrings('emailPlaceholder')}
-                        />
-                        <TextInput
-                            formname="password"
-                            hint={this.props.loginStrings('passwordHint')}
-                            label={this.props.loginStrings('passwordLabel')}
-                            required
-                            type="password"
-                        />
-                        <ReCaptcha
-                            ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
-                            formname="recaptchaResponse"
-                            siteKey={reCaptchaSiteKey}
-                        />
-                        <div styleName="action-buttons">
-                            <PrimaryButton
-                                disabled={pending}
-                            >
-                                { this.props.loginStrings('registerLabel')}
-                            </PrimaryButton>
-                        </div>
-                    </Form>
+                    { success ? this.renderSuccess() : this.renderForm() }
                     <div styleName="login-link-container">
                         <p>
-                            {this.props.loginStrings('alreadyHaveAccountText')}
+                            { success ?
+                                this.props.loginStrings('goBackToLoginText') :
+                                this.props.loginStrings('alreadyHaveAccountText')
+                            }
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}

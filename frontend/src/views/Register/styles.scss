@@ -12,17 +12,27 @@
     height: 100vh;
 
     .register-box {
-        .register-form {
+        %register-basic {
             position: relative;
             background-color: $color-foreground;
             padding: $spacing-small $spacing-large $spacing-large;
             width: $width-register-form;
+        }
+
+        .register-form {
+            @extend %register-basic;
 
             .action-buttons {
                 display: flex;
                 justify-content: flex-end;
                 margin-top: $spacing-medium;
             }
+        }
+
+        .register-success {
+            @extend %register-basic;
+            padding: $spacing-large;
+            text-align: center;
         }
 
         .login-link-container {
