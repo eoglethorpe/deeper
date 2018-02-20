@@ -176,13 +176,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     showHintAndError={false}
                     autoFocus
                 />
-                <DangerButton
-                    className={styles['delete-button']}
-                    onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
-                    transparent
-                >
-                    <span className={iconNames.delete} />
-                </DangerButton>
                 <AccentButton
                     className={styles['check-button']}
                     onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
@@ -197,6 +190,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     </label>
                     <span className={defaultIconName} />
                 </AccentButton>
+                <DangerButton
+                    className={styles['delete-button']}
+                    onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
+                    transparent
+                >
+                    <span className={iconNames.delete} />
+                </DangerButton>
             </div>
         );
     })

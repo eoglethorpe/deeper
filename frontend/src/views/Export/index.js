@@ -130,12 +130,13 @@ export default class Export extends React.PureComponent {
                 sortable: false,
                 modifier: (d) => {
                     const key = Export.leadKeyExtractor(d);
-                    const selected = this.state.selectedLeads[key];
-                    const iconName = selected ? iconNames.checkbox : iconNames.checkboxOutlineBlank;
+                    const iconName = d.selected ?
+                        iconNames.checkbox : iconNames.checkboxOutlineBlank;
+
                     return (
                         <AccentButton
-                            title={selected ? 'Unselect' : 'Select'}
-                            onClick={() => this.handleSelectLeadChange(key, !selected)}
+                            title={d.selected ? 'Unselect' : 'Select'}
+                            onClick={() => this.handleSelectLeadChange(key, !d.selected)}
                             smallVerticalPadding
                             transparent
                             iconName={iconName}
@@ -243,6 +244,23 @@ export default class Export extends React.PureComponent {
         if (this.analysisFrameworkRequest) {
             this.analysisFrameworkRequest.stop();
         }
+    }
+
+    setSelectedLeads = (response) => {
+        const selectedLeads = listToMap(response.results, d => d.id, () => true);
+        const leads = [];
+
+        (response.results || []).forEach((l) => {
+            leads.push({
+                selected: true,
+                ...l,
+            });
+        });
+
+        this.setState({
+            leads,
+            selectedLeads,
+        });
     }
 
     createRequestForProject = (projectId) => {
@@ -357,11 +375,7 @@ export default class Export extends React.PureComponent {
             })
             .success((response) => {
                 // FIXME: write schema
-                const selectedLeads = listToMap(response.results, d => d.id, () => true);
-                this.setState({
-                    leads: response.results,
-                    selectedLeads,
-                });
+                this.setSelectedLeads(response);
             })
             .failure((response) => {
                 const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
@@ -385,15 +399,32 @@ export default class Export extends React.PureComponent {
     }
 
     handleSelectLeadChange = (key, value) => {
-        const { selectedLeads } = this.state;
+        const {
+            leads,
+            selectedLeads,
+        } = this.state;
+
+        const rowIndex = leads.findIndex(d => d.id === key);
+
+        const leadsSettings = {
+            [rowIndex]: {
+                selected: { $set: value },
+            },
+        };
+
         const settings = {
             [key]: {
                 $set: value,
             },
         };
         const newSelectedLeads = update(selectedLeads, settings);
+        const newLeads = update(leads, leadsSettings);
 
-        this.setState({ selectedLeads: newSelectedLeads });
+        this.setState({
+            selectedLeads: newSelectedLeads,
+            leads: newLeads,
+        });
+        console.warn(newSelectedLeads, newLeads);
     }
 
     handleReportStructureChange = (value) => {
