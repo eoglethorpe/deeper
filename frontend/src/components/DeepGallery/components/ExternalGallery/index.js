@@ -66,7 +66,7 @@ export default class ExternalGallery extends React.PureComponent {
     }
 
     getHeaderValue = (headers, header) => {
-        const tHeader = Object.key(headers).find(key =>
+        const tHeader = Object.keys(headers).find(key =>
             key.toLowerCase() === header.toLowerCase(),
         );
         return headers[tHeader];
@@ -102,7 +102,7 @@ export default class ExternalGallery extends React.PureComponent {
                     const mimeType = contentType.split(';')[0].trim();
 
                     const xFrameOptions = this.getHeaderValue(headers, 'X-Frame-Options');
-                    const contentSecurityPolicy = headers['Content-Security-Policy'];
+                    const contentSecurityPolicy = this.getHeaderValue(headers, 'Content-Security-Policy');
                     let canShowIframe = true;
 
                     // Older policy
@@ -129,6 +129,7 @@ export default class ExternalGallery extends React.PureComponent {
                         httpsUrl,
                     });
                 } catch (err) {
+                    console.error('Error Occured', err);
                     this.setState({ ...this.initialState });
                 }
             })
