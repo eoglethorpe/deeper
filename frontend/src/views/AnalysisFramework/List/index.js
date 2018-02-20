@@ -149,8 +149,8 @@ export default class List extends React.PureComponent {
             data: itemData,
         } = item;
         const Component = listComponent;
-        const onChange = (data, filters, exportable, title) => {
-            this.handleItemChange(itemKey, data, filters, exportable, title);
+        const onChange = (data, title) => {
+            this.handleItemChange(itemKey, data, title);
         };
         const editAction = (handler) => {
             this.widgetEditActions[itemKey] = handler;
@@ -230,8 +230,6 @@ export default class List extends React.PureComponent {
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
-            filters: [],
-            exportable: {},
         });
     }
 
@@ -250,7 +248,7 @@ export default class List extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data, filters, exportable, title) => {
+    handleItemChange = (key, data, title) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             title: { $set: title || originalItem.title },
@@ -262,7 +260,7 @@ export default class List extends React.PureComponent {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
 
-        this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
+        this.props.updateWidget({ analysisFrameworkId, widget });
     }
 
     updateAnalysisFramework(analysisFramework) {

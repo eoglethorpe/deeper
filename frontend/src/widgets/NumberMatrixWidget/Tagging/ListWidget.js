@@ -6,7 +6,6 @@ import ListView from '../../../vendor/react-store/components/View/List/ListView'
 import BoundError from '../../../components/BoundError';
 
 import styles from './styles.scss';
-import { updateAttribute } from './utils';
 
 const propTypes = {
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -27,17 +26,6 @@ export default class NumberMatrixList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-    }
 
     getRowsData = (data, attribute) => {
         const dataRows = [];

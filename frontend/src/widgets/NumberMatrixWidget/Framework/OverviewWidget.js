@@ -31,7 +31,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -57,9 +56,9 @@ const mapStateToProps = state => ({
 @connect(mapStateToProps)
 @CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {
-    static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static rowKeyExtractor = d => d.key;
 
     constructor(props) {
         super(props);
@@ -96,45 +95,6 @@ export default class NumberMatrixOverview extends React.PureComponent {
     getEditColumnUnits = (key, data, index) => (
         <this.SortableColumnUnit key={key} index={index} value={{ key, data }} />
     )
-
-    createFilters = () => {
-        const { title, widgetKey } = this.props;
-
-        return [{
-            title,
-            widgetKey,
-            key: widgetKey,
-            filterType: 'list',
-            properties: {
-                type: 'number-2d',
-            },
-        }];
-    }
-
-    createExportable = (data) => {
-        const { widgetKey } = this.props;
-        const titles = [];
-
-        data.rowHeaders.forEach((rowHeader) => {
-            data.columnHeaders.forEach((columnHeader) => {
-                titles.push(`${rowHeader.title} - ${columnHeader.title}`);
-            });
-
-            titles.push(`${rowHeader.title} - Matches`);
-        });
-
-        const excel = {
-            type: 'multiple',
-            titles,
-        };
-
-        return {
-            widgetKey,
-            data: {
-                excel,
-            },
-        };
-    }
 
     SortableRowUnit = SortableElement(({ value: { data, key } }) => (
         <div
@@ -267,8 +227,6 @@ export default class NumberMatrixOverview extends React.PureComponent {
         };
         this.props.onChange(
             newData,
-            this.createFilters(),
-            this.createExportable(newData),
             title,
         );
     }

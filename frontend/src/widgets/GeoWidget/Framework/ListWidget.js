@@ -18,7 +18,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     afStrings: PropTypes.func.isRequired,
@@ -45,43 +44,6 @@ export default class GeoFrameworkList extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
-    componentDidMount() {
-        const { onChange } = this.props;
-
-        onChange(
-            undefined,
-            this.createFilters(),
-            this.createExportable(),
-        );
-    }
-
-    createFilters = () => {
-        const { title, widgetKey } = this.props;
-
-        return [{
-            title,
-            widgetKey,
-            key: widgetKey,
-            filterType: 'list',
-            properties: {
-                type: 'geo',
-            },
-        }];
-    }
-
-    createExportable = () => {
-        const excel = {
-            type: 'geo',
-        };
-
-        return {
-            widgetKey: this.props.widgetKey,
-            data: {
-                excel,
-            },
-        };
-    }
-
     handleWidgetTitleChange = (value) => {
         this.setState({ title: value });
     }
@@ -103,8 +65,6 @@ export default class GeoFrameworkList extends React.PureComponent {
 
         this.props.onChange(
             undefined,
-            this.createFilters(),
-            this.createExportable(),
             title,
         );
     }

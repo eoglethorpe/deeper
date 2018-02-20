@@ -6,7 +6,6 @@ import DateInput from '../../../vendor/react-store/components/Input/DateInput';
 import BoundError from '../../../components/BoundError';
 
 import styles from './styles.scss';
-import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -27,11 +26,6 @@ export default class DateTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
-
     componentDidMount() {
         const {
             data: { informationDateSelected } = {},
@@ -45,12 +39,6 @@ export default class DateTaggingList extends React.PureComponent {
                 .setAttribute(id, { value: api.getLeadDate() })
                 .setDate(api.getLeadDate())
                 .apply();
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
         }
     }
 

@@ -32,7 +32,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -75,17 +74,6 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
-    componentDidMount() {
-        const { onChange } = this.props;
-
-        onChange(
-            this.state.data,
-            this.createFilters(this.state.data),
-            this.createExportable(this.state.data),
-            this.state.title,
-        );
-    }
-
     componentWillReceiveProps(nextProps) {
         const data = nextProps.data || { rows: [] };
         this.setState({ data });
@@ -95,60 +83,6 @@ export default class Matrix1dOverview extends React.PureComponent {
         const data = { ...this.state.data };
         data.rows = arrayMove(data.rows, oldIndex, newIndex);
         this.setState({ data });
-    };
-
-    createFilters = ({ rows }) => {
-        const filterOptions = [];
-        rows.forEach((row) => {
-            filterOptions.push({
-                label: row.title,
-                key: row.key,
-            });
-
-            row.cells.forEach((cell) => {
-                filterOptions.push({
-                    label: `${row.title} / ${cell.value}`,
-                    key: cell.key,
-                });
-            });
-        });
-
-        return [{
-            title: this.props.title,
-            widgetKey: this.props.widgetKey,
-            key: this.props.widgetKey,
-            filterType: 'list',
-            properties: {
-                type: 'multiselect',
-                options: filterOptions,
-            },
-        }];
-    }
-
-    createExportable = ({ rows }) => {
-        const excel = {
-            type: 'multiple',
-            titles: ['Dimension', 'Subdimension'],
-        };
-
-        const report = {
-            levels: rows.map(row => ({
-                id: row.key,
-                title: row.title,
-                sublevels: row.cells.map(cell => ({
-                    id: `${row.key}-${cell.key}`,
-                    title: cell.value,
-                })),
-            })),
-        };
-
-        return {
-            widgetKey: this.props.widgetKey,
-            data: {
-                excel,
-                report,
-            },
-        };
     }
 
     handleColorChange = (newColor, key) => {
@@ -186,8 +120,6 @@ export default class Matrix1dOverview extends React.PureComponent {
 
         this.props.onChange(
             newData,
-            this.createFilters(newData),
-            this.createExportable(newData),
         );
     }
 
@@ -250,8 +182,6 @@ export default class Matrix1dOverview extends React.PureComponent {
         });
         this.props.onChange(
             this.state.data,
-            this.createFilters(this.state.data),
-            this.createExportable(this.state.data),
             this.state.title,
         );
     }

@@ -25,7 +25,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
-    widgetKey: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -97,35 +96,6 @@ export default class Organigram extends React.PureComponent {
         ];
     }
 
-    createFilters = (organigram) => {
-        const { title, widgetKey } = this.props;
-        return [{
-            title,
-            widgetKey,
-            key: widgetKey,
-            filterType: 'list',
-            properties: {
-                type: 'multiselect',
-                options: this.getValuesForOrgan(organigram),
-            },
-        }];
-    }
-
-    createExportable = () => {
-        const { title, widgetKey } = this.props;
-
-        const excel = {
-            title,
-        };
-
-        return {
-            widgetKey,
-            data: {
-                excel,
-            },
-        };
-    }
-
     handleEditClick = () => {
         this.setState({ showEditModal: true });
     }
@@ -146,8 +116,6 @@ export default class Organigram extends React.PureComponent {
         this.setState({ showEditModal: false });
         this.props.onChange(
             this.state.organigram,
-            this.createFilters(this.state.organigram),
-            this.createExportable(),
             this.state.title,
         );
     }

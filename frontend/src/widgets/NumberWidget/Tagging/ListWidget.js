@@ -8,7 +8,6 @@ import BoundError from '../../../components/BoundError';
 import { afStringsSelector } from '../../../redux';
 
 import styles from './styles.scss';
-import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -32,18 +31,6 @@ const mapStateToProps = state => ({
 export default class NumberTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-    }
-
 
     handleChange = (value) => {
         const { api, id, entryId } = this.props;

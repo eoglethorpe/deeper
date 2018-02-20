@@ -17,7 +17,6 @@ import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../components/BoundError';
 
 import styles from './styles.scss';
-import { updateAttribute } from './utils';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -53,8 +52,6 @@ export default class OrganigramTaggingList extends React.PureComponent {
             showEditModal: false,
             values,
         };
-
-        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -63,8 +60,6 @@ export default class OrganigramTaggingList extends React.PureComponent {
             this.setState({
                 values,
             });
-
-            updateAttribute(nextProps);
         }
     }
 

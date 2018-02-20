@@ -5,7 +5,6 @@ import React from 'react';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import BoundError from '../../../components/BoundError';
-import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -34,7 +33,6 @@ export default class ScaleTaggingList extends React.PureComponent {
     constructor(props) {
         super(props);
         this.createScaleUnits(props);
-        updateAttribute(props);
     }
 
     componentDidMount() {
@@ -54,10 +52,6 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-
         if (this.props.attribute !== nextProps.attribute ||
             this.props.data !== nextProps.data) {
             this.createScaleUnits(nextProps);

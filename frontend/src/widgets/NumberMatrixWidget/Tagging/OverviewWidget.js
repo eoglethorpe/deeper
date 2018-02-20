@@ -10,7 +10,6 @@ import BoundError from '../../../components/BoundError';
 
 import { afStringsSelector } from '../../../redux';
 
-import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -40,17 +39,6 @@ export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-    }
 
     onChangeNumberField = (rowKey, colKey, value) => {
         const { api, id } = this.props;

@@ -126,8 +126,8 @@ export default class Overview extends React.PureComponent {
                 widgetKey={item.key}
                 data={item.data}
                 editAction={(handler) => { this.widgetEditActions[item.key] = handler; }}
-                onChange={(data, filters, exportable, title) => {
-                    this.handleItemChange(item.key, data, filters, exportable, title);
+                onChange={(data, title) => {
+                    this.handleItemChange(item.key, data, title);
                 }}
                 className={styles.component}
             />
@@ -197,8 +197,6 @@ export default class Overview extends React.PureComponent {
         this.props.addWidget({
             analysisFrameworkId,
             widget: item,
-            filters: [],
-            exportable: {},
         });
     }
 
@@ -217,7 +215,7 @@ export default class Overview extends React.PureComponent {
         });
     }
 
-    handleItemChange = (key, data, filters, exportable, title) => {
+    handleItemChange = (key, data, title) => {
         const originalItem = this.items.find(i => i.key === key);
         const settings = {
             title: { $set: title || originalItem.title },
@@ -229,7 +227,7 @@ export default class Overview extends React.PureComponent {
         const analysisFrameworkId = this.props.analysisFramework.id;
         const widget = update(originalItem, settings);
 
-        this.props.updateWidget({ analysisFrameworkId, widget, filters, exportable });
+        this.props.updateWidget({ analysisFrameworkId, widget });
     }
 
     updateAnalysisFramework(analysisFramework) {

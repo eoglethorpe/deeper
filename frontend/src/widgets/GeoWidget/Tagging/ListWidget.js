@@ -6,7 +6,6 @@ import ListView from '../../../vendor/react-store/components/View/List/ListView'
 
 import GeoSelection from '../../../components/GeoSelection';
 import BoundError from '../../../components/BoundError';
-import { updateAttribute } from './utils';
 
 import styles from './styles.scss';
 
@@ -43,8 +42,6 @@ export default class GeoTaggingList extends React.PureComponent {
             values,
             flatValues,
         };
-
-        updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -56,8 +53,6 @@ export default class GeoTaggingList extends React.PureComponent {
                 values,
                 flatValues,
             });
-
-            updateAttribute(nextProps);
         }
     }
 

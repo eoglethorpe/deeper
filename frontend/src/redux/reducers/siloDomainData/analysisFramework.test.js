@@ -71,8 +71,6 @@ test('should add widget', () => {
 
     const action = addAfViewWidgetAction({
         widget: { key: '1', name: 'widget1' },
-        filters: [{ key: '1', properties: { dummy: true } }],
-        exportable: { data: { dummy: true } },
         analysisFrameworkId: 1,
     });
     const after = {
@@ -80,8 +78,6 @@ test('should add widget', () => {
             analysisFramework: {
                 id: 1,
                 widgets: [{ key: '1', name: 'widget1' }],
-                filters: [{ widgetKey: '1', key: '1', properties: { dummy: true } }],
-                exportables: [{ widgetKey: '1', data: { dummy: true } }],
             },
         },
     };
@@ -97,12 +93,6 @@ test('should remove widget', () => {
                     { key: '1', name: 'widget1' },
                     { key: '2', name: 'widget2' },
                 ],
-                filters: [
-                    { widgetKey: '2', key: '2', properties: { dummy: true } },
-                ],
-                exportables: [
-                    { widgetKey: '2', data: { dummy: true } },
-                ],
             },
         },
     };
@@ -117,8 +107,6 @@ test('should remove widget', () => {
                 widgets: [
                     { key: '1', name: 'widget1' },
                 ],
-                filters: [],
-                exportables: [],
             },
         },
     };
@@ -134,23 +122,11 @@ test('should update widget', () => {
                     { key: '1', name: 'widget1' },
                     { key: '2', name: 'widget2' },
                 ],
-                filters: [
-                    { widgetKey: '1', key: '1', name: 'f1', id: 'f1' },
-                    { widgetKey: '2', key: '1', name: 'f2', id: 'f2' },
-                ],
-                exportables: [
-                    { widgetKey: '1', a: 'x', b: 'y' },
-                ],
             },
         },
     };
     const action = updateAfViewWidgetAction({
         widget: { key: '1', name: 'widget3' },
-        filters: [
-            { key: '1', name: 'f_1', id: 'f1' },
-            { key: '2', name: 'f_2', id: 'f2' },
-        ],
-        exportable: { b: 'z' },
         analysisFrameworkId: 1,
     });
     const after = {
@@ -160,14 +136,6 @@ test('should update widget', () => {
                 widgets: [
                     { key: '1', name: 'widget3' },
                     { key: '2', name: 'widget2' },
-                ],
-                filters: [
-                    { widgetKey: '1', key: '1', name: 'f_1', id: 'f1' },
-                    { widgetKey: '2', key: '1', name: 'f2', id: 'f2' },
-                    { widgetKey: '1', key: '2', name: 'f_2', id: 'f2' },
-                ],
-                exportables: [
-                    { widgetKey: '1', a: 'x', b: 'z' },
                 ],
             },
         },
@@ -184,8 +152,6 @@ test('should skip updating widget', () => {
                     { key: '1', name: 'widget1' },
                     { key: '2', name: 'widget2' },
                 ],
-                filters: [],
-                exportables: [],
             },
         },
     };
@@ -201,8 +167,6 @@ test('should skip updating widget', () => {
                     { key: '1', name: 'widget1' },
                     { key: '2', name: 'widget2' },
                 ],
-                filters: [],
-                exportables: [],
             },
         },
     };
