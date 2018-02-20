@@ -351,7 +351,7 @@ const initialLangState = {
                 775: 'Options',
                 777: 'Information date',
                 778: 'Exit',
-                779: 'Default',
+                779: 'Default?',
                 780: 'List',
                 781: 'Overview',
                 782: 'Untitled dimension',
