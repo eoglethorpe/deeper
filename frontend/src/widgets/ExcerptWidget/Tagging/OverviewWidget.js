@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -34,7 +33,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -136,58 +134,97 @@ export default class ExcerptTextOverview extends React.PureComponent {
         e.preventDefault();
     }
 
-    render() {
+    renderDropContainer = () => {
         const { dragOver } = this.state;
 
+        if (!dragOver) {
+            return null;
+        }
+
+        // FIXME: use strings
+        const contentText = 'Drop image here';
+        return (
+            <div
+                className={styles['drop-container']}
+                onDragOver={this.handleChildDragOver}
+                onDrop={this.handleExcerptDrop}
+            >
+                { contentText }
+            </div>
+        );
+    }
+
+    renderExcerptContent = (p) => {
+        const { dragOver } = this.state;
+        const { afStrings } = this.props;
+
+        if (dragOver) {
+            return null;
+        }
+
+        const { attribute } = p;
+
+        if (attribute.type === IMAGE) {
+            return (
+                <img
+                    className={styles.image}
+                    src={attribute.image}
+                    alt={afStrings('altEntryLabel')}
+                />
+            );
+        }
+
+        return (
+            <TextArea
+                onChange={this.handleExcerptChange}
+                className={styles.textarea}
+                showLabel={false}
+                showHintAndError={false}
+                value={attribute.excerpt}
+            />
+        );
+    }
+
+    renderFormatButton = (p) => {
+        const { attribute } = p;
+        const { dragOver } = this.state;
+        const { entryId, afStrings } = this.props;
+
+        if (dragOver || attribute.type === IMAGE || !entryId) {
+            return null;
+        }
+
+        const buttonTitle = afStrings('formatExcerpt');
+        return (
+            <AccentButton
+                className={styles['format-button']}
+                iconName={iconNames.textFormat}
+                onClick={this.handleFormatText}
+                title={buttonTitle}
+                transparent
+            />
+        );
+    }
+
+    render() {
         const attribute = this.getAttribute();
         if (!attribute) {
             return null;
         }
 
+        const DropContainer = this.renderDropContainer;
+        const ExcerptContent = this.renderExcerptContent;
+        const FormatButton = this.renderFormatButton;
+
         return (
             <div
-                styleName="excerpt-overview"
+                className={styles['excerpt-overview']}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragExit}
             >
-                {dragOver &&
-                    <div
-                        onDrop={this.handleExcerptDrop}
-                        onDragOver={this.handleChildDragOver}
-                        styleName="drop-here-container"
-                    >
-                        Drop excerpt here
-                        {/* FIXME: use strings */}
-                    </div>
-                }
-                {!dragOver &&
-                    (
-                        (attribute.type === IMAGE) ? (
-                            <img
-                                styleName="image"
-                                src={attribute.image}
-                                alt={this.props.afStrings('altEntryLabel')}
-                            />
-                        ) : (
-                            <TextArea
-                                onChange={this.handleExcerptChange}
-                                styleName="textarea"
-                                showLabel={false}
-                                showHintAndError={false}
-                                value={attribute.excerpt}
-                            />
-                        )
-                    )
-                }
-                { !dragOver && attribute.type !== IMAGE && this.props.entryId &&
-                    <AccentButton
-                        onClick={this.handleFormatText}
-                        styleName="format-button"
-                        iconName={iconNames.textFormat}
-                        transparent
-                        title={this.props.afStrings('formatExcerpt')}
-                    />
-                }
+                <DropContainer />
+                <ExcerptContent attribute={attribute} />
+                <FormatButton attribute={attribute} />
             </div>
         );
     }

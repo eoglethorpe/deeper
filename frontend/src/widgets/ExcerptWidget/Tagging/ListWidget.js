@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -30,7 +29,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class ExcerptList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -63,18 +61,18 @@ export default class ExcerptList extends React.PureComponent {
         }
 
         return (
-            <div styleName="excerpt-list">
+            <div className={styles.list}>
                 {
                     attribute.type === IMAGE ? (
                         <img
-                            styleName="image"
+                            className={styles.image}
                             src={attribute.image}
                             alt={this.props.afStrings('altEntryLabel')}
                         />
                     ) : (
                         <TextArea
                             onChange={this.handleExcerptChange}
-                            styleName="textarea"
+                            className={styles.textarea}
                             showLabel={false}
                             showHintAndError={false}
                             value={attribute.excerpt}

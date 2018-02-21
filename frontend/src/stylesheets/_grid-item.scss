@@ -1,17 +1,23 @@
-$height-grid-header: 18px;
+$height-grid-item-header: 18px;
+$color-grid-item-border: $color-separator;
 
 %grid-item {
-    border: $width-separator-thin solid $color-separator;
+    // border: $width-separator-thin solid $color-grid-item-border;
+    border: 0;
+    background-color: transparent;
+    padding: $spacing-extra-small;
 
     .header {
         display: flex;
         align-items: center;
-        border-bottom: $width-separator-thin solid $color-separator;
+        border: $width-separator-thin solid $color-grid-item-border;
+        border-bottom: 0;
         background-color: $color-background-header;
-        height: $height-grid-header;
+        height: $height-grid-item-header;
 
         .heading {
-            padding: 0 $spacing-medium;
+            padding: 0 $spacing-small;
+            color: $color-label;
             font-weight: $font-weight-bold;
         }
 
@@ -21,13 +27,14 @@ $height-grid-header: 18px;
             opacity: 0;
             margin: 0 $spacing-extra-small;
 
-            button, span {
+            button,
+            span {
                 padding: 0 $spacing-extra-small-alt;
             }
 
             .icon {
-                color: $color-info;
                 cursor: pointer;
+                color: $color-info;
             }
         }
     }
@@ -41,7 +48,8 @@ $height-grid-header: 18px;
     }
 
     .content {
-        padding: $spacing-medium;
-        height: calc(100% - #{$height-grid-header});
+        border: $width-separator-thin solid $color-grid-item-border;
+        background-color: $color-foreground;
+        height: calc(100% - #{$height-grid-item-header});
     }
 }
