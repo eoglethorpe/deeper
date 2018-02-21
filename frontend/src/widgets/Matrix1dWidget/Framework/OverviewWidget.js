@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -54,7 +53,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -168,7 +166,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.setState({ data: newData });
     }
 
-    handleModalCancelButtonClick = () => {
+    handleEditRowModalCancelButtonClick = () => {
         this.setState({
             showEditModal: false,
             data: this.props.data,
@@ -176,7 +174,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         });
     }
 
-    handleModalSaveButtonClick = () => {
+    handleEditRowModalSaveButtonClick = () => {
         this.setState({
             showEditModal: false,
         });
@@ -256,71 +254,91 @@ export default class Matrix1dOverview extends React.PureComponent {
         <this.SortableEditRow key={key} index={index} value={{ key, data }} />
     );
 
-    render() {
+    renderEditRowModal = () => {
         const {
             data,
             showEditModal,
-            title,
+            title: titleValue,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+
+        const headerTitle = afStrings('editRowModalTitle');
+        const addRowButtonLabel = afStrings('addRowButtonLabel');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
         return (
-            <div styleName="framework-matrix-1d">
+            <Modal className={styles['edit-row-modal']}>
+                <ModalHeader
+                    title={headerTitle}
+                    rightComponent={
+                        <PrimaryButton
+                            onClick={this.handleAddRowButtonClick}
+                            transparent
+                        >
+                            { addRowButtonLabel }
+                        </PrimaryButton>
+                    }
+                />
+                <ModalBody className={styles.body}>
+                    <div className={styles['general-info-container']}>
+                        <TextInput
+                            autoFocus
+                            className={styles['title-input']}
+                            label={titleInputLabel}
+                            onChange={this.handleWidgetTitleChange}
+                            placeholder={titleInputPlaceholder}
+                            selectOnFocus
+                            showHintAndError={false}
+                            value={titleValue}
+                        />
+                    </div>
+                    <div className={styles['modal-rows-content']}>
+                        <this.SortableList
+                            items={data.rows}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            onSortEnd={this.onSortEnd}
+                            useDragHandle
+                        />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        onClick={this.handleEditRowModalCancelButtonClick}
+                    >
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton
+                        onClick={this.handleEditRowModalSaveButtonClick}
+                    >
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    render() {
+        const { data } = this.state;
+        const EditRowModal = this.renderEditRowModal;
+
+        return (
+            <div className={styles.overview}>
                 <ListView
                     data={data.rows}
                     className={styles.rows}
                     keyExtractor={Matrix1dOverview.rowKeyExtractor}
                     modifier={this.renderRow}
                 />
-                { showEditModal &&
-                    <Modal styleName="edit-row-modal">
-                        <ModalHeader
-                            title={this.props.afStrings('editRowModalTitle')}
-                            rightComponent={
-                                <PrimaryButton
-                                    onClick={this.handleAddRowButtonClick}
-                                    transparent
-                                >
-                                    {this.props.afStrings('addRowButtonLabel')}
-                                </PrimaryButton>
-                            }
-                        />
-                        <ModalBody styleName="edit-row-body">
-                            <div styleName="general-info-container">
-                                <TextInput
-                                    className={styles['title-input']}
-                                    label={this.props.afStrings('titleLabel')}
-                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
-                                    onChange={this.handleWidgetTitleChange}
-                                    value={title}
-                                    showHintAndError={false}
-                                    autoFocus
-                                    selectOnFocus
-                                />
-                            </div>
-                            <div styleName="modal-rows-content">
-                                <this.SortableList
-                                    items={data.rows}
-                                    onSortEnd={this.onSortEnd}
-                                    lockAxis="y"
-                                    lockToContainerEdges
-                                    useDragHandle
-                                />
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton
-                                onClick={this.handleModalSaveButtonClick}
-                            >
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <EditRowModal />
             </div>
         );
     }

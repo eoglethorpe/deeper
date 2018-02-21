@@ -183,18 +183,70 @@ export default class MatrixRow extends React.PureComponent {
         </MatrixCell>
     )
 
-    render() {
+    renderEditModal = () => {
         const {
             cells,
             showEditModal,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+
+        const headerTitle = afStrings('matrix1DModalTitle');
+        const addCellButtonLabel = afStrings('addCellButtonLabel');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
         return (
-            <div
-                styleName="matrix-row"
+            <Modal
+                onMouseDown={this.handleModalMouseDown}
+                className={styles['edit-cell-modal']}
+                onClose={this.handleEditModalClose}
             >
-                <div styleName="title">
-                    { this.props.title }
+                <ModalHeader
+                    title={headerTitle}
+                    rightComponent={
+                        <PrimaryButton
+                            iconName={iconNames.add}
+                            onClick={this.handleAddCellButtonClick}
+                        >
+                            { addCellButtonLabel }
+                        </PrimaryButton>
+                    }
+                />
+                <ModalBody className={styles['edit-cell-body']}>
+                    <this.SortableList
+                        items={cells}
+                        onSortEnd={this.onSortEnd}
+                        lockAxis="y"
+                        lockToContainerEdges
+                        useDragHandle
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    render() {
+        const { cells } = this.state;
+        const EditModal = this.renderEditModal;
+        const { title } = this.props;
+
+        return (
+            <div className={styles['matrix-row']}>
+                <div className={styles.title}>
+                    { title }
                 </div>
                 <ListView
                     data={cells}
@@ -202,58 +254,14 @@ export default class MatrixRow extends React.PureComponent {
                     keyExtractor={MatrixRow.cellKeyExtractor}
                     modifier={this.renderCell}
                 />
-                <div
-                    key="action-buttons"
-                    styleName="action-buttons"
-                >
+                <div className={styles['action-buttons']}>
                     <PrimaryButton
                         onClick={this.handleEditButtonClick}
                         transparent
-                    >
-                        <span className={iconNames.edit} />
-                    </PrimaryButton>
+                        iconName={iconNames.edit}
+                    />
                 </div>
-                { showEditModal &&
-                    <Modal
-                        key="modal"
-                        onMouseDown={this.handleModalMouseDown}
-                        styleName="edit-cell-modal"
-                        onClose={this.handleEditModalClose}
-                    >
-                        <ModalHeader
-                            title={this.props.afStrings('matrix1DModalTitle')}
-                            rightComponent={
-                                <PrimaryButton
-                                    iconName={iconNames.add}
-                                    onClick={this.handleAddCellButtonClick}
-                                >
-                                    {this.props.afStrings('addCellButtonLabel')}
-                                </PrimaryButton>
-                            }
-                        />
-                        <ModalBody styleName="edit-cell-body">
-                            <this.SortableList
-                                items={cells}
-                                onSortEnd={this.onSortEnd}
-                                lockAxis="y"
-                                lockToContainerEdges
-                                useDragHandle
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton
-                                onClick={this.handleModalSaveButtonClick}
-                            >
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <EditModal />
             </div>
         );
     }

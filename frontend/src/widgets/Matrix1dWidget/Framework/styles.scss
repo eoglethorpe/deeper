@@ -1,11 +1,44 @@
 @import '../../../stylesheets/base';
 
-.matrix-one-container {
+.list {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 0 $spacing-small;
     height: 100%;
+    color: $color-text-disabled;
+}
+
+.overview {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    .matrix-row {
+        display: flex;
+        align-items: center;
+
+        &:not(:last-child) {
+            border-bottom: $width-separator-thin solid $color-separator;
+        }
+
+        .title {
+            flex-basis: $width-matrix-1d-title;
+            flex-shrink: 0;
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .cells {
+            display: flex;
+            flex-basis: 100%;
+            flex-grow: 1;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            flex-shrink: 0;
+        }
+    }
 }
 
 .matrix-cell {
@@ -22,59 +55,7 @@
     }
 }
 
-.matrix-row {
-    display: flex;
-    align-items: center;
-    border: $width-separator-thin solid $color-separator;
-
-    .title {
-        flex-basis: $width-matrix-1d-title;
-        flex-shrink: 0;
-        padding: $spacing-medium;
-    }
-
-    .cells {
-        display: flex;
-        flex-basis: 100%;
-        flex-grow: 1;
-        flex-wrap: wrap;
-    }
-
-    .action-buttons {
-        flex-shrink: 0;
-    }
-}
-
-.tagging-matrix-1d,
-.framework-matrix-1d {
-    width: 100%;
-}
-
-.tagging-matrix-1d {
-    .matrix-row {
-        border: 0;
-        border-bottom: $width-separator-thin solid $color-separator;
-
-        .matrix-cell {
-            outline: 0;
-            border: 0;
-            font-family: inherit;
-            font-size: inherit;
-        }
-    }
-}
-
-%modal {
-    width: 480px;
-
-    :global .modal-body {
-        height: 400px;
-    }
-}
-
 .edit-cell-modal {
-    @extend %modal;
-
     .edit-cell-body {
         padding: 0;
 
@@ -84,11 +65,13 @@
     }
 }
 
-.edit-row-modal {
-    @extend %modal;
-    width: 512px;
+$height-edit-row-modal: 70vh;
 
-    .edit-row-body {
+.edit-row-modal {
+    width: $width-modal-medium;
+    height: $height-edit-row-modal;
+
+    .body {
         display: flex;
         flex-direction: column;
         padding: 0;
@@ -97,9 +80,9 @@
         .general-info-container {
             flex-shrink: 0;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-small $spacing-medium-alt;
 
             .title-input {
+                padding: $spacing-small $spacing-medium-alt;
                 width: auto;
             }
         }
@@ -122,10 +105,6 @@
                 flex-basis: 100%;
             }
         }
-    }
-
-    :global .modal-content {
-        width: 100%;
     }
 }
 
