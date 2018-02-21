@@ -42,6 +42,7 @@
         .entry {
             background-color: $color-background-row;
             padding: $spacing-small;
+            overflow-x: auto;
 
             .apply-buttons {
                 display: flex;

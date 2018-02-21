@@ -2,18 +2,15 @@
 
 .geo-selection {
     display: flex;
-    position: relative;
-    align-items: flex-end;
-
-    .map-modal-button {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
 
     .flat-select-input {
-        margin: 0;
-        width: 100%;
+        flex-grow: 1;
+    }
+
+    .map-modal-button {
+        flex-shrink: 0;
+        align-self: flex-end;
+        margin-bottom: $width-separator-medium;
     }
 }
 

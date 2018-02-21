@@ -1,12 +1,14 @@
 @import '../../../stylesheets/base';
 
-.geo-list {
+.list {
     display: flex;
     flex-direction: column;
-    padding: 0;
+    padding: 0 $spacing-small;
+    height: 100%;
 
     .geo-select {
         flex-shrink: 0;
+        margin: $spacing-small 0;
     }
 
     .region-list {
@@ -18,7 +20,7 @@
         .region-name {
             flex-shrink: 0;
             background-color: $color-background-row;
-            padding: $spacing-small $spacing-medium-alt;
+            padding: $spacing-small;
 
             &:nth-child(odd) {
                 background-color: $color-background-row-alt;
@@ -26,8 +28,10 @@
         }
 
         :global .empty {
-            justify-content: flex-start;
-            padding: 0 $spacing-small;
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
         }
     }
 }

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -29,19 +28,23 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class GeoFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
         super(props);
 
+        const {
+            title,
+            editAction,
+        } = props;
+
         this.state = {
             showEditModal: false,
-            title: props.title,
+            title,
         };
 
-        this.props.editAction(this.handleEdit);
+        editAction(this.handleEdit);
     }
 
     handleWidgetTitleChange = (value) => {
@@ -52,54 +55,78 @@ export default class GeoFrameworkList extends React.PureComponent {
         this.setState({ showEditModal: true });
     }
 
-    handleModalCancelButtonClick = () => {
+    handleEditModalCancelButtonClick = () => {
+        const { title } = this.props;
         this.setState({
             showEditModal: false,
-            title: this.props.title,
+            title,
         });
     }
 
-    handleModalSaveButtonClick = () => {
+    handleEditModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
         const { title } = this.state;
+        const { onChange } = this.props;
+        onChange(undefined, title);
+    }
 
-        this.props.onChange(
-            undefined,
-            title,
+    renderEditModal = () => {
+        const {
+            showEditModal,
+            title: titleValue,
+        } = this.state;
+
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editTitleModalHeader');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('widgetTitlePlaceholder');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
+        return (
+            <Modal>
+                <ModalHeader title={headerTitle} />
+                <ModalBody>
+                    <TextInput
+                        autoFocus
+                        label={titleInputLabel}
+                        onChange={this.handleWidgetTitleChange}
+                        placeholder={titleInputPlaceholder}
+                        selectOnFocus
+                        showHintAndError={false}
+                        value={titleValue}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleEditModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleEditModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
         );
     }
 
     render() {
-        const { showEditModal, title } = this.state;
+        const { afStrings } = this.props;
+        // FIXME: add appropriate text
+        const contentText = afStrings('geoAreaButtonLabel');
+        const EditModal = this.renderEditModal;
 
-        return (
-            <div styleName="geo-list">
-                {this.props.afStrings('geoAreaButtonLabel')}
-                { showEditModal &&
-                    <Modal>
-                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
-                        <ModalBody>
-                            <TextInput
-                                label={this.props.afStrings('titleLabel')}
-                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                                autoFocus
-                                selectOnFocus
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
-            </div>
-        );
+        return ([
+            <div
+                key="content"
+                className={styles.list}
+            >
+                { contentText }
+            </div>,
+            <EditModal key="modal" />,
+        ]);
     }
 }

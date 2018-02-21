@@ -8,7 +8,7 @@ const geoWidget = {
     title: 'geoWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 192, height: 240 },
+        listMinSize: { width: 160, height: 192 },
     },
     tagging: {
         listComponent: TaggingListWidget,
