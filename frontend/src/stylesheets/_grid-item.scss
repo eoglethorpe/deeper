@@ -16,6 +16,7 @@ $color-grid-item-border: $color-separator;
         height: $height-grid-item-header;
 
         .heading {
+            flex-grow: 1;
             padding: 0 $spacing-small;
             color: $color-label;
             font-weight: $font-weight-bold;
@@ -24,6 +25,7 @@ $color-grid-item-border: $color-separator;
         .action-buttons {
             @include transition-medium;
             display: flex;
+            flex-shrink: 0;
             opacity: 0;
             margin: 0 $spacing-extra-small;
 

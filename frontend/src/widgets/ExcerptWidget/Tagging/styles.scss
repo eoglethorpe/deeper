@@ -63,6 +63,6 @@
 
     .image {
         @extend %image;
-        border: $width-separator-medium dashed $color-label;
+        border: $width-separator-thin dashed $color-label;
     }
 }
