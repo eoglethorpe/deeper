@@ -119,6 +119,18 @@ export const leadTypeIconMap = {
     [mimeType.xml]: iconNames.xml,
 };
 
+export const leadAccessor = {
+    getKey: lead => lead.data && lead.data.id,
+    getServerId: lead => lead.data && lead.data.serverId,
+    getType: lead => lead.form && lead.form.values && lead.form.values.sourceType,
+
+    getValues: lead => lead.form && lead.form.values,
+    getErrors: lead => lead.form && lead.form.errors,
+    getFieldErrors: lead => lead.form && lead.form.fieldErrors,
+
+    getUiState: lead => lead.uiState,
+};
+
 const leadReference = {
     data: {
         id: 'lead-0',
@@ -154,13 +166,11 @@ export const createLead = ({ id, serverId, values = {}, pristine = false }) => {
     return update(leadReference, settings);
 };
 
-// TODO: use leadAccessor
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
-    const { data, form, uiState } = lead;
-    const { values } = form;
-    const { sourceType: type } = values;
-    const { pristine, error } = uiState;
-    const { serverId } = data;
+    const type = leadAccessor.getType(lead);
+    const serverId = leadAccessor.getServerId(lead);
+    const values = leadAccessor.getValues(lead);
+    const { pristine, error } = leadAccessor.getUiState(lead);
 
     const isFileUploading = () => upload && upload.progress <= 100;
     const isDriveUploading = () => drive && drive.pending;
@@ -191,16 +201,4 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
         return LEAD_STATUS.complete;
     }
     return LEAD_STATUS.pristine;
-};
-
-export const leadAccessor = {
-    getKey: lead => lead.data && lead.data.id,
-    getServerId: lead => lead.data && lead.data.serverId,
-    getType: lead => lead.form && lead.form.values && lead.form.values.sourceType,
-
-    getValues: lead => lead.form && lead.form.values,
-    getErrors: lead => lead.form && lead.form.errors,
-    getFieldErrors: lead => lead.form && lead.form.fieldErrors,
-
-    getUiState: lead => lead.uiState,
 };

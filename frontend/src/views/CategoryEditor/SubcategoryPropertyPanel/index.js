@@ -170,6 +170,12 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         });
     }
 
+    handleDelete = (keyword) => {
+        const { ngramKeys, selectedNGramIndex } = this.state;
+        const n = ngramKeys[selectedNGramIndex];
+        this.handleNgramRemove({ n, keyword });
+    }
+
     renderNGramSelect = (key, data, i) => (
         <button
             className={this.getNGramSelectStyleName(i)}
@@ -207,6 +213,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
             title,
             description,
         } = subcategory;
+
+        const keywords = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
             <div
@@ -258,12 +266,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                     {
                         (ngramKeys.length > 0) ? (
                             <NGram
-                                keywords={ngrams[ngramKeys[selectedNGramIndex]]}
-                                onDelete={keyword => this.handleNgramRemove({
-                                    // TODO: fix this mess later
-                                    n: ngramKeys[selectedNGramIndex],
-                                    keyword,
-                                })}
+                                keywords={keywords}
+                                onDelete={this.handleDelete}
                             />
                         ) : (
                             <div styleName="empty">

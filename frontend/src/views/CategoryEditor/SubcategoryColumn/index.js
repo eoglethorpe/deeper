@@ -175,8 +175,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     </h4>
                     <AccentButton
                         onClick={this.handleNewSubcategoryButtonClick}
-                        // TODO: use strings
-                        title={`Add subcategory in ${title}`}
+                        title={this.props.ceStrings('addSubcategory')}
                         iconName={iconNames.add}
                         transparent
                     />

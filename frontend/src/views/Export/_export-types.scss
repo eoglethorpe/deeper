@@ -2,7 +2,7 @@
     display: flex;
     flex-basis: 20%;
     flex-direction: column;
-    border-right: $width-separator-thin solid $color-separator;
+    border-left: $width-separator-thin solid $color-separator;
 
     .export-type-select-list {
         display: flex;

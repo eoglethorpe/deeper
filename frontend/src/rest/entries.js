@@ -18,7 +18,7 @@ export const createUrlForEntryEdit = entryId => (
     `${wsEndpoint}/entries/${entryId}/`
 );
 export const createUrlForEntries = projectId => (
-    `${wsEndpoint}/entries/?project=${projectId}`
+    `${wsEndpoint}/entries/?${p({ project: projectId })}`
 );
 
 export const createParamsForEntry = () => ({
@@ -27,6 +27,7 @@ export const createParamsForEntry = () => ({
 });
 
 
+// TODO: move this somewhere else
 const ONE_DAY = 24 * 60 * 60 * 1000;
 export const processEntryFilters = (filters) => {
     const result = [];

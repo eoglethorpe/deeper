@@ -1,3 +1,5 @@
+import { p } from './rest';
+
 const responseType = 'token';
 const scope = 'profile';
 const state = '12345';
@@ -19,7 +21,5 @@ if (process.env.REACT_APP_HID_CLIENT_ID) {
     hidAuthUrl = 'https://api2.dev.humanitarian.id';
 }
 
-// FIXME: use prepareQueryParams fn
 // eslint-disable-next-line import/prefer-default-export
-export const hidUrl = `${hidAuthUrl}/oauth/authorize?response_type=${responseType}&client_id=${clientId}&scope=${scope}&state=${state}&redirect_uri=${redirectUrl}`;
-// https://api2.dev.humanitarian.id/oauth/authorize?response_type=token&client_id=deep-local&scope=profile&state=12345&redirect_uri=http://localhost:8000/login/
+export const hidUrl = `${hidAuthUrl}/oauth/authorize?${p({ response_type: responseType, client_id: clientId, scope, state, redirect_url: redirectUrl })}`;

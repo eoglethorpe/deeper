@@ -73,19 +73,6 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         }
     }
 
-    getHighlights() {
-        const { highlights } = this.props;
-        const { extractedText } = this.state;
-
-        return highlights.map(h => ({
-            start: h.text ? extractedText.indexOf(h.text) : h.startPos,
-            length: h.text ? h.text.length : h.length,
-            item: h,
-        }));
-    }
-
-    // TODO Since this is also called by componentWillReceiveProps,
-    // take in the `props` param
     create({ leadId, onLoad }) {
         if (!leadId) {
             return;
@@ -172,6 +159,18 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .build()
     )
 
+    // TODO: only call this on component will receive props
+    calculateHighlights() {
+        const { highlights } = this.props;
+        const { extractedText } = this.state;
+
+        return highlights.map(h => ({
+            start: h.text ? extractedText.indexOf(h.text) : h.startPos,
+            length: h.text ? h.text.length : h.length,
+            item: h,
+        }));
+    }
+
     renderContent = () => {
         const { highlightModifier } = this.props;
 
@@ -186,14 +185,12 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                     { error }
                 </div>
             );
-        }
-
-        if (extractedText) {
+        } else if (extractedText) {
             return (
                 <HighlightedText
                     className={styles['highlighted-text']}
                     text={extractedText}
-                    highlights={this.getHighlights()}
+                    highlights={this.calculateHighlights()}
                     modifier={highlightModifier}
                 />
             );

@@ -84,7 +84,7 @@ export default class Export extends React.PureComponent {
     static exportButtonKeyExtractor = d => d.key;
     static leadKeyExtractor = d => d.id
 
-    // TODO: move this somewhere
+    // TODO: IMP move this somewhere
     static getFiltersForRequest = (filters) => {
         const requestFilters = {};
         Object.keys(filters).forEach((key) => {
@@ -475,15 +475,6 @@ export default class Export extends React.PureComponent {
                     pending={pendingLeads || pendingAf}
                 />
                 <div styleName="main-content">
-                    <ExportTypePane
-                        activeExportTypeKey={activeExportTypeKey}
-                        reportStructure={reportStructure}
-                        decoupledEntries={decoupledEntries}
-                        onExportTypeChange={this.handleExportTypeSelectButtonClick}
-                        onReportStructureChange={this.handleReportStructureChange}
-                        onDecoupledEntriesChange={this.handleDecoupledEntriesChange}
-                        analysisFramework={analysisFramework}
-                    />
                     <section styleName="filters" >
                         <div>
                             <h4 styleName="heading">
@@ -513,6 +504,15 @@ export default class Export extends React.PureComponent {
                             </div>
                         </div>
                     </section>
+                    <ExportTypePane
+                        activeExportTypeKey={activeExportTypeKey}
+                        reportStructure={reportStructure}
+                        decoupledEntries={decoupledEntries}
+                        onExportTypeChange={this.handleExportTypeSelectButtonClick}
+                        onReportStructureChange={this.handleReportStructureChange}
+                        onDecoupledEntriesChange={this.handleDecoupledEntriesChange}
+                        analysisFramework={analysisFramework}
+                    />
                     <ExportPreview
                         styleName="preview"
                         exportId={previewId}

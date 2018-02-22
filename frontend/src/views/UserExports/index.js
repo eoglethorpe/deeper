@@ -183,6 +183,10 @@ export default class UserExports extends React.PureComponent {
                 },
             },
         ];
+        this.defaultSort = {
+            key: 'exportedAt',
+            order: 'dsc',
+        };
     }
 
     componentWillMount() {
@@ -204,8 +208,6 @@ export default class UserExports extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { userExports: oldExports, projectId: oldProjectId } = this.props;
         const { userExports: newExports, projectId: newProjectId } = nextProps;
-
-        // TODO: handle project change?
 
         if (oldExports !== newExports) {
             if (this.exportPollRequests) {
@@ -357,8 +359,7 @@ export default class UserExports extends React.PureComponent {
                             keyExtractor={UserExports.tableKeyExtractor}
                             highlightRowKey={selectedExport}
                             onBodyClick={this.handleRowClick}
-                            // TODO: move this default sort in constructor
-                            defaultSort={{ key: 'exportedAt', order: 'dsc' }}
+                            defaultSort={this.defaultSort}
                         />
                     </div>
                     <ExportPreview

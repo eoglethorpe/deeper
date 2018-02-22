@@ -373,7 +373,6 @@ export default class ProjectsTable extends React.PureComponent {
                         />
                         <ModalBody>
                             <UserProjectAdd
-                                // TODO: fix this please
                                 userGroups={[userGroup]}
                                 handleModalClose={this.handleAddProjectModalClose}
                             />
