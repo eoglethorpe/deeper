@@ -9,6 +9,7 @@ import ColorInput from '../../../vendor/react-store/components/Input/ColorInput'
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -309,7 +310,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 key={key}
                 onClick={() => this.handleRowClick(key)}
             >
-                { data.title || this.props.afStrings('untiledRowTitle') }
+                { data.title || this.props.afStrings('untitledRowTitle') }
             </button>
         );
     }
@@ -431,12 +432,13 @@ export default class Matrix1dOverview extends React.PureComponent {
                         className={styles.header}
                     >
                         <h4>{ headerTitle }</h4>
-                        <PrimaryButton
+                        <AccentButton
                             iconName={iconNames.add}
                             onClick={this.handleAddCellButtonClick}
+                            transparent
                         >
                             { addCellButtonLabel }
-                        </PrimaryButton>
+                        </AccentButton>
                     </header>
                     <SortableList
                         className={`${styles['cell-list']} ${additionalStyle}`}

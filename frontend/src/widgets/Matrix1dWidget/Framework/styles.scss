@@ -123,6 +123,9 @@ $height-overview-edit-modal: 80vh;
                     }
 
                     .cell-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+
                         :global .drag-handle {
                             border-top: $width-separator-thin solid transparent;
                         }
@@ -206,7 +209,6 @@ $height-overview-edit-modal: 80vh;
     }
 }
 
-
 .row-list-item {
     display: flex;
     border-top: $width-separator-thin solid $color-separator;
@@ -220,7 +222,7 @@ $height-overview-edit-modal: 80vh;
         align-items: center;
         align-self: stretch;
         cursor: move;
-        padding: 0 $spacing-medium-alt;
+        padding: $spacing-small-alt $spacing-medium;
 
         &.active {
             background-color: $color-accent;
@@ -231,11 +233,12 @@ $height-overview-edit-modal: 80vh;
     .row-title-button {
         display: flex;
         flex-grow: 1;
+        align-self: stretch;
         outline: 0;
         border: 0;
         background-color: transparent;
         cursor: pointer;
-        padding: $spacing-medium-alt $spacing-small;
+        padding: $spacing-small-alt $spacing-medium;
         color: $color-text;
         font-family: inherit;
 

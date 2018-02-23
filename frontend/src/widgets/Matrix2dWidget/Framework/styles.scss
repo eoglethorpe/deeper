@@ -169,6 +169,14 @@ $height-overview-edit-modal: 80vh;
 .sub-dimensions {
     background-color: $color-background-row;
 
+    .drag-handle {
+        display: flex;
+        align-items: center;
+        align-self: stretch;
+        cursor: pointer;
+        padding: 0 $spacing-medium-alt;
+    }
+
     &:nth-child(odd) {
         background-color: $color-background-row-alt;
     }

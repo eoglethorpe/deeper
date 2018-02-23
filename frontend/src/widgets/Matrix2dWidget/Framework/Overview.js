@@ -542,12 +542,30 @@ export default class Matrix2dOverview extends React.PureComponent {
                 onChange={this.handleDimensionListSortChange}
                 sortableItemClass={styles['dimension-list-item']}
                 keyExtractor={Matrix2dOverview.rowKeyExtractor}
-                dragHandleModifier={this.renderDragHandle}
+                dragHandleModifier={this.renderDimensionDragHandle}
             />
         );
     }
 
-    renderDragHandle = (key, data, index) => {
+    renderDimensionDragHandle = (key, data, index) => {
+        const { activeDimensionIndex } = this.state;
+        const dragStyle = [styles['drag-handle']];
+        if (activeDimensionIndex === index) {
+            dragStyle.push(styles.active);
+        }
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
+    renderSubDimensionDragHandle = () => {
+        const dragStyle = [styles['drag-handle']];
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
+    renderDimensionDragHandle = (key, data, index) => {
         const { activeDimensionIndex } = this.state;
         const dragStyle = [styles['drag-handle']];
         if (activeDimensionIndex === index) {
@@ -673,6 +691,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         onChange={this.handleSubdimensionsSortChange}
                         sortableItemClass={styles['sub-dimensions']}
                         keyExtractor={Matrix2dOverview.rowKeyExtractor}
+                        dragHandleModifier={this.renderSubDimensionDragHandle}
                     />
                 </div>
             </div>
