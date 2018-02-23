@@ -8,8 +8,20 @@
     height: 100%;
     user-select: none;
 
-    canvas {
+    svg {
         flex-grow: 1;
         cursor: crosshair;
+
+        image {
+            flex-grow: 1;
+        }
+
+        :global {
+            .brush {
+                .extent {
+                    fill-opacity: .125;
+                }
+            }
+        }
     }
 }
