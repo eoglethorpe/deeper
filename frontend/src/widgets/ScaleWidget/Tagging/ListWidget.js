@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -24,7 +23,6 @@ const emptyObject = {};
 const emptyList = [];
 
 @BoundError
-@CSSModules(styles)
 export default class ScaleTaggingList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -52,19 +50,31 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute ||
-            this.props.data !== nextProps.data) {
+        const {
+            attribute: newAttribute,
+            data: newData,
+        } = nextProps;
+
+        const {
+            attribute: oldAttribute,
+            data: oldData,
+        } = this.props;
+
+        if (oldAttribute !== newAttribute || oldData !== newData) {
             this.createScaleUnits(nextProps);
         }
     }
 
-    getActiveSelectionStyle = (scaleUnit) => {
-        const scaleUnitStyle = ['scale-unit'];
+    getActiveSelectionClassName = (scaleUnit) => {
+        const classNames = [
+            styles['scale-unit'],
+        ];
+
         if (scaleUnit.selected) {
-            scaleUnitStyle.push('selected');
+            classNames.push(styles.selected);
         }
-        const styleNames = scaleUnitStyle.map(d => styles[d]);
-        return styleNames.join(' ');
+
+        return classNames.join(' ');
     }
 
     getScale = (key, scaleUnit) => (
@@ -72,7 +82,7 @@ export default class ScaleTaggingList extends React.PureComponent {
             key={key}
             onClick={() => this.handleScaleClick(key)}
             title={scaleUnit.title}
-            className={this.getActiveSelectionStyle(scaleUnit)}
+            className={this.getActiveSelectionClassName(scaleUnit)}
             style={{ backgroundColor: scaleUnit.color }}
         />
     )
@@ -96,14 +106,12 @@ export default class ScaleTaggingList extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="scales">
-                <ListView
-                    styleName="scale"
-                    data={this.scaleUnits}
-                    keyExtractor={ScaleTaggingList.rowKeyExtractor}
-                    modifier={this.getScale}
-                />
-            </div>
+            <ListView
+                className={styles.list}
+                data={this.scaleUnits}
+                keyExtractor={ScaleTaggingList.rowKeyExtractor}
+                modifier={this.getScale}
+            />
         );
     }
 }
