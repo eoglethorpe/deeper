@@ -46,7 +46,7 @@ export default class GoogleDriveUploadModule {
                     title: response.title,
                     url: response.file,
                 },
-                uiState: { pristine: false },
+                uiState: { pristine: false, serverError: false },
             });
 
             // FOR UPLAOD

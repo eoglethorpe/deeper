@@ -90,10 +90,10 @@ export const addLeadViewCopyAllAction = ({ leadId, attrName }) => ({
 
 // HELPER
 
-const hasError = (state, leadIndex) => {
-    const { addLeadView: { leads } } = state;
-    const lead = leads[leadIndex];
-    const { form: { errors, fieldErrors } } = lead;
+const hasError = (lead) => {
+    const errors = leadAccessor.getErrors(lead);
+    const fieldErrors = leadAccessor.getFieldErrors(lead);
+
     if (errors && errors.length > 0) {
         return true;
     }
@@ -110,10 +110,14 @@ const setErrorForLeads = (state, leadIndices) => {
 
     const leadSettings = newLeadIndices.reduce(
         (acc, leadIndex) => {
-            const error = hasError(state, leadIndex);
+            const lead = leads[leadIndex];
+            const error = hasError(lead);
+            const serverError = leadAccessor.hasServerError(lead);
             acc[leadIndex] = {
                 uiState: {
                     error: { $set: error },
+                    // clear serverError if there is no error
+                    serverError: { $set: serverError && error },
                 },
             };
             return acc;
@@ -121,7 +125,8 @@ const setErrorForLeads = (state, leadIndices) => {
         {},
     );
     const settings = { addLeadView: { leads: leadSettings } };
-    return update(state, settings);
+    const a = update(state, settings);
+    return a;
 };
 
 // REDUCER

@@ -117,6 +117,7 @@ export default class LeadAdd extends React.PureComponent {
     ) => (addLeadViewLeads.reduce(
         (acc, lead) => {
             const leadId = leadAccessor.getKey(lead);
+            const serverError = leadAccessor.hasServerError(lead);
             const leadState = calcLeadState({
                 lead,
                 rest: leadRests[leadId],
@@ -124,7 +125,12 @@ export default class LeadAdd extends React.PureComponent {
                 drive: leadDriveRests[leadId],
                 dropbox: leadDropboxRests[leadId],
             });
-            const isSaveDisabled = (leadState !== LEAD_STATUS.nonPristine);
+
+            // NOTE: for serverError save must be enabled
+            const isSaveDisabled = !(
+                leadState === LEAD_STATUS.nonPristine ||
+                (LEAD_STATUS.invalid && serverError)
+            );
             const isRemoveDisabled = (leadState === LEAD_STATUS.requesting);
             const isFormLoading = (leadState === LEAD_STATUS.requesting);
             const isFormDisabled = (

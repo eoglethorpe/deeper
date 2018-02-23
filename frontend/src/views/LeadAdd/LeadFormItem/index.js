@@ -157,7 +157,7 @@ export default class LeadFormItem extends React.PureComponent {
                     values,
                     formErrors: [],
                     formFieldErrors,
-                    uiState: { pristine: false },
+                    uiState: { pristine: false, serverError: false },
                 });
             })
             .build();
@@ -196,7 +196,7 @@ export default class LeadFormItem extends React.PureComponent {
             values,
             formErrors,
             formFieldErrors,
-            uiState: { pristine: false },
+            uiState: { pristine: false, serverError: false },
         });
     }
 
@@ -211,7 +211,7 @@ export default class LeadFormItem extends React.PureComponent {
             leadId,
             formErrors,
             formFieldErrors,
-            uiState: { pristine: true },
+            uiState: { pristine: true, serverError: false },
         });
         onFormSubmitFailure(leadId);
     }

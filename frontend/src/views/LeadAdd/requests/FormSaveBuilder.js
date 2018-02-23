@@ -121,7 +121,7 @@ export default class FormSaveBuilder {
             leadId,
             formErrors,
             formFieldErrors,
-            uiState: { pristine: true },
+            uiState: { pristine: true, serverError: true },
         });
         this.formCoordinator.notifyComplete(leadId);
     }
@@ -137,7 +137,7 @@ export default class FormSaveBuilder {
             leadId,
             // FIXME: use strings
             formErrors: ['Error while trying to save lead.'],
-            uiState: { pristine: true },
+            uiState: { pristine: true, serverError: true },
         });
         this.formCoordinator.notifyComplete(leadId);
     }

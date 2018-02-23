@@ -44,7 +44,7 @@ export default class DropboxBuilder {
                     title: response.title,
                     url: response.file,
                 },
-                uiState: { pristine: false },
+                uiState: { pristine: false, serverError: false },
             });
 
             // FOR UPLAOD
