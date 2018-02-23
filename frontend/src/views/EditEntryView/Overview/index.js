@@ -70,8 +70,6 @@ const mapDispatchToProps = dispatch => ({
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
 });
 
-const emptyList = [];
-
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {

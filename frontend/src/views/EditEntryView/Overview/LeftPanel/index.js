@@ -113,15 +113,18 @@ export default class LeftPanel extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.saveAllPending !== nextProps.saveAllPending) {
-            if (nextProps.saveAllPending && this.state.currentTab !== 'entries-listing') {
+        const { currentTab, oldTab } = this.state;
+        const { saveAllPending: oldSaveAllPending } = this.props;
+        const { saveAllPending: newSaveAllPending } = nextProps;
+        if (oldSaveAllPending !== newSaveAllPending) {
+            if (newSaveAllPending && currentTab !== 'entries-listing') {
                 this.setState({
                     currentTab: 'entries-listing',
-                    oldTab: this.state.currentTab,
+                    oldTab: currentTab,
                 });
-            } else if (!nextProps.saveAllPending && this.state.currentTab === 'entries-listing') {
+            } else if (!newSaveAllPending && currentTab === 'entries-listing') {
                 this.setState({
-                    currentTab: this.state.oldTab,
+                    currentTab: oldTab,
                     oldTab: undefined,
                 });
             }
@@ -464,9 +467,8 @@ export default class LeftPanel extends React.PureComponent {
         const leadPaneType = LeftPanel.getPaneType(lead);
         switch (leadPaneType) {
             case LEAD_PANE_TYPE.spreadsheet:
-                // tabular(original) entries
                 return this.renderContent({
-                    labelOriginal: 'Tabular', // FIXME: use strings
+                    labelOriginal: this.props.entryStrings('tabularTabLabel'),
                     showSimplified: false,
                     showAssisted: false,
                 });
@@ -478,7 +480,7 @@ export default class LeftPanel extends React.PureComponent {
                 });
             case LEAD_PANE_TYPE.text:
                 return this.renderContent({
-                    labelSimplified: 'Text', // FIXME: use strings
+                    labelSimplified: this.props.entryStrings('textTabLabel'),
                     showOriginal: false,
                 });
             case LEAD_PANE_TYPE.word:
@@ -487,10 +489,9 @@ export default class LeftPanel extends React.PureComponent {
             case LEAD_PANE_TYPE.website:
                 return this.renderContent({});
             default:
-                // FIXME: use strings
                 return (
                     <p>
-                        There seems to be some error with lead.
+                        {this.props.entryStrings('unrecognizedLeadMessage')}
                     </p>
                 );
         }
