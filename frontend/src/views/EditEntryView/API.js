@@ -3,6 +3,7 @@ import { entryAccessor } from '../../entities/entry';
 
 const DEFAULT_HIGHLIGHT_COLOR = '#e0e0e0';
 
+// FIXME: use entry constants
 class EntryModifier {
     constructor(
         entry,
