@@ -83,7 +83,7 @@ export default class Login extends React.PureComponent {
     static defaultProps = defaultProps;
 
     static commonElements = ['email', 'password'];
-    static commonValidations = {
+    static validations = {
         email: [
             requiredCondition,
             emailCondition,
@@ -92,6 +92,7 @@ export default class Login extends React.PureComponent {
             requiredCondition,
             lengthGreaterThanCondition(4),
         ],
+        recaptchaResponse: [requiredCondition],
     };
 
     constructor(props) {
@@ -106,7 +107,6 @@ export default class Login extends React.PureComponent {
             showReCaptcha: false,
 
             elements: Login.commonElements,
-            validations: Login.commonValidations,
         };
     }
 
@@ -185,10 +185,6 @@ export default class Login extends React.PureComponent {
         this.setState({
             showReCaptcha: true,
             elements: [...Login.commonElements, 'recaptchaResponse'],
-            validations: {
-                ...Login.commonValidations,
-                recaptchaResponse: [requiredCondition],
-            },
         });
     }
 
@@ -268,6 +264,7 @@ export default class Login extends React.PureComponent {
             formValues,
             pending,
             showReCaptcha,
+            elements,
         } = this.state;
 
         return (
@@ -303,10 +300,10 @@ export default class Login extends React.PureComponent {
                     <Form
                         styleName="login-form"
                         changeCallback={this.changeCallback}
-                        elements={this.state.elements}
+                        elements={elements}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
-                        validations={this.state.validations}
+                        validations={Login.validations}
                         value={formValues}
                         error={formFieldErrors}
                     >
