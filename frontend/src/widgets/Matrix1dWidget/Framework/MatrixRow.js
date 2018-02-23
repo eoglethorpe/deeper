@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -49,7 +48,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class MatrixRow extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -139,10 +137,12 @@ export default class MatrixRow extends React.PureComponent {
             additionalStyle = styles['no-items'];
         }
 
+        const className = `${styles['cell-list']} ${additionalStyle}`;
+
         return (
             <ListView
                 data={cells}
-                className={`${styles['cell-list']} ${additionalStyle}`}
+                className={className}
                 keyExtractor={MatrixRow.cellKeyExtractor}
                 modifier={this.renderEditCell}
             />
@@ -258,6 +258,7 @@ export default class MatrixRow extends React.PureComponent {
                     <PrimaryButton
                         onClick={this.handleEditButtonClick}
                         transparent
+                        smallVerticalPadding
                         iconName={iconNames.edit}
                     />
                 </div>

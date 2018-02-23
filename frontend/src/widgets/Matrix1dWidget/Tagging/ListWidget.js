@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -21,7 +20,6 @@ const defaultProps = {
 const emptyList = [];
 
 @BoundError
-@CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
     static rowKeyExtractor = d => d.title;
     static propTypes = propTypes;
@@ -29,25 +27,40 @@ export default class Matrix1dList extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.selectedRows = this.getSelectedRowsTitles(props.data, props.attribute);
+
+        const {
+            data,
+            attribute,
+        } = props;
+        this.selectedRows = this.getSelectedRowsTitles(data, attribute);
         updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
-        this.selectedRows = this.getSelectedRowsTitles(nextProps.data, nextProps.attribute);
-        if (this.props.attribute !== nextProps.attribute) {
+        const {
+            data: newData,
+            attribute: newAttribute,
+        } = nextProps;
+
+        this.selectedRows = this.getSelectedRowsTitles(newData, newAttribute);
+
+        const { attribute: oldAttribute } = this.props;
+        if (oldAttribute !== newAttribute) {
             updateAttribute(nextProps);
         }
     }
 
     getSelectedRowsTitles = (data, attribute) => {
+        const { rows = emptyList } = data;
         const selectedRows = [];
-        (data.rows || emptyList).forEach((row) => {
+
+        rows.forEach((row) => {
             const attributeRow = attribute[row.key];
             const selectedCells = [];
 
             if (attributeRow) {
-                (row.cells || emptyList).forEach((cell) => {
+                const { cells = emptyList } = row;
+                cells.forEach((cell) => {
                     if (attributeRow[cell.key]) {
                         selectedCells.push({
                             title: cell.value,
@@ -65,6 +78,7 @@ export default class Matrix1dList extends React.PureComponent {
                 });
             }
         });
+
         return selectedRows;
     }
 
@@ -73,9 +87,11 @@ export default class Matrix1dList extends React.PureComponent {
             key={key}
             className={styles.row}
         >
-            <span className={styles['row-title']}>{data.title}</span>
+            <div className={styles.title}>
+                {data.title}
+            </div>
             <ListView
-                className={styles['cell-container']}
+                className={styles.cells}
                 data={data.selectedCells}
                 keyExtractor={Matrix1dList.rowKeyExtractor}
                 modifier={this.renderCellData}
@@ -83,25 +99,32 @@ export default class Matrix1dList extends React.PureComponent {
         </div>
     )
 
-    renderCellData = (key, data) => (
-        <span
-            key={key}
-            className={styles.cell}
-        >
-            {data.title}
-        </span>
-    )
+    renderCellData = (key, data) => {
+        const marker = '●';
+
+        return (
+            <div
+                key={key}
+                className={styles.cell}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    { data.title }
+                </div>
+            </div>
+        );
+    }
 
     render() {
         return (
-            <div styleName="matrix-1d-list">
-                <ListView
-                    styleName="list"
-                    data={this.selectedRows}
-                    keyExtractor={Matrix1dList.rowKeyExtractor}
-                    modifier={this.renderRowData}
-                />
-            </div>
+            <ListView
+                className={styles.list}
+                data={this.selectedRows}
+                keyExtractor={Matrix1dList.rowKeyExtractor}
+                modifier={this.renderRowData}
+            />
         );
     }
 }
