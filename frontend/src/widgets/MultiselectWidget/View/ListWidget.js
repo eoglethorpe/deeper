@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -20,21 +19,30 @@ const defaultProps = {
     attribute: undefined,
 };
 
+const valueKeyExtractor = d => d.key;
+
 @BoundError
-@CSSModules(styles)
 export default class MultiselectList extends React.PureComponent {
-    static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    mapMultiselectList = (key, data) => (
-        <div
-            className={styles['multiselect-content']}
-            key={key}
-        >
-            <span className={styles['multiselect-name']}>{data.label}</span>
-        </div>
-    )
+    renderSelectedOption = (key, data) => {
+        const marker = '●';
+
+        return (
+            <div
+                className={styles['selected-option']}
+                key={key}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    {data.label}
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const {
@@ -45,18 +53,15 @@ export default class MultiselectList extends React.PureComponent {
                 options = emptyList,
             } = emptyObject,
         } = this.props;
+
         const selectedData = options.filter(d => value.includes(d.key));
         return (
-            <div
-                styleName="multiselect-list"
-            >
-                <ListView
-                    data={selectedData}
-                    className={styles['multiselect-list-view']}
-                    keyExtractor={MultiselectList.valueKeyExtractor}
-                    modifier={this.mapMultiselectList}
-                />
-            </div>
+            <ListView
+                data={selectedData}
+                className={styles.list}
+                keyExtractor={valueKeyExtractor}
+                modifier={this.renderSelectedOption}
+            />
         );
     }
 }

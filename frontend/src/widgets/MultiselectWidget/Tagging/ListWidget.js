@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -25,7 +24,6 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -40,16 +38,23 @@ export default class Multiselect extends React.PureComponent {
             .apply();
     }
 
-    mapMultiselectList = (key, data) => (
-        <div
-            className={styles['multiselect-content']}
-            key={key}
-        >
-            <span className={styles['multiselect-name']}>
-                {data.label}
-            </span>
-        </div>
-    )
+    renderSelectedOption = (key, data) => {
+        const marker = '●';
+
+        return (
+            <div
+                className={styles['selected-option']}
+                key={key}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    {data.label}
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const {
@@ -57,23 +62,25 @@ export default class Multiselect extends React.PureComponent {
             data,
         } = this.props;
 
-        const selectedData = (data.options || emptyList).filter(d => value.includes(d.key));
+        const { options = emptyList } = data;
+        const selectedData = options.filter(d => value.includes(d.key));
 
         return (
-            <div styleName="multiselect-list">
+            <div className={styles.list}>
                 <MultiSelectInput
                     onChange={this.handleChange}
-                    options={data.options}
+                    options={options}
                     hideClearButton
-                    styleName="multiselect"
+                    className={styles.input}
                     value={value}
                     keyExtractor={Multiselect.valueKeyExtractor}
+                    showHintAndError={false}
                 />
                 <ListView
                     data={selectedData}
-                    className={styles['multiselect-list-view']}
+                    className={styles['selected-options']}
                     keyExtractor={Multiselect.valueKeyExtractor}
-                    modifier={this.mapMultiselectList}
+                    modifier={this.renderSelectedOption}
                 />
             </div>
         );
