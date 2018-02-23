@@ -16,7 +16,7 @@ const excerptWidget = {
         overviewComponent: FrameworkOverviewWidget,
         listComponent: FrameworkListWidget,
         overviewMinSize: { width: 240, height: 108 },
-        listMinSize: { width: 240, height: 108 },
+        listMinSize: { width: 192, height: 192 },
     },
     tagging: {
         overviewComponent: TaggingOverviewWidget,

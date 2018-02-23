@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -21,7 +20,6 @@ import BoundError from '../../../components/BoundError';
 import { afStringsSelector } from '../../../redux';
 
 import styles from './styles.scss';
-
 
 const propTypes = {
     title: PropTypes.string.isRequired,
@@ -62,7 +60,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class Organigram extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -160,45 +157,50 @@ export default class Organigram extends React.PureComponent {
     renderOrgan = (organ, indices = [], j) => {
         const isFatherOrgan = isFalsy(j);
         const nextIndices = isFatherOrgan ? indices : [...indices, j];
+
+        const organPlaceholder = this.props.afStrings('organPlaceholder');
+        const addChildButtonTitle = this.props.afStrings('addChildButtonTitle');
+        const removeElementButtonTitle = this.props.afStrings('removeElementButtonTitle');
+
         return (
             <div
-                styleName="organ"
+                className={styles.organ}
                 key={organ.key}
             >
-                <div styleName="organ-header">
+                <div className={styles['organ-header']}>
                     <TextInput
                         value={organ.title}
-                        styleName="title-input"
+                        className={styles['title-input']}
                         showHintAndError={false}
-                        placeholder={this.props.afStrings('organPlaceholder')}
+                        placeholder={organPlaceholder}
                         showLabel={false}
                         onChange={this.handleChange(nextIndices)}
                         autoFocus
                     />
-                    <div styleName="action-buttons">
+                    <div className={styles['action-buttons']}>
                         <PrimaryButton
-                            styleName="action-button"
+                            className={styles['action-button']}
                             onClick={this.handleAdd(nextIndices)}
-                            title={this.props.afStrings('addChildButtonTitle')}
+                            title={addChildButtonTitle}
                             tabIndex="-1"
                             transparent
-                        >
-                            <span className="ion-fork-repo" />
-                        </PrimaryButton>
-                        { !isFatherOrgan &&
-                            <DangerButton
-                                styleName="action-button"
-                                onClick={this.handleRemove(indices, j)}
-                                title={this.props.afStrings('removeElementButtonTitle')}
-                                tabIndex="-1"
-                                transparent
-                            >
-                                <span className="ion-trash-b" />
-                            </DangerButton>
+                            iconName="ion-fork-repo"
+                        />
+                        {
+                            !isFatherOrgan && (
+                                <DangerButton
+                                    className={styles['action-button']}
+                                    onClick={this.handleRemove(indices, j)}
+                                    title={removeElementButtonTitle}
+                                    tabIndex="-1"
+                                    transparent
+                                    iconName="ion-trash-b"
+                                />
+                            )
                         }
                     </div>
                 </div>
-                <div styleName="organ-body">
+                <div className={styles['organ-body']}>
                     {
                         organ.organs.map(
                             (childOrgan, i) => this.renderOrgan(childOrgan, nextIndices, i),
@@ -209,46 +211,69 @@ export default class Organigram extends React.PureComponent {
         );
     };
 
-
-    render() {
+    renderEditModal = () => {
         const {
             showEditModal,
             organigram,
             title,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editOrganigramModaltitle');
+        const textInputLabel = afStrings('titleLabel');
+        const textInputPlaceholder = afStrings('titlePlaceholderScale');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
         return (
-            <div styleName="organigram-list">
-                {this.props.afStrings('organigramWidgetLabel')}
-                { showEditModal &&
-                    <Modal styleName="edit-value-modal">
-                        <ModalHeader title={this.props.afStrings('editOrganigramModaltitle')} />
-                        <ModalBody styleName="modal-body">
-                            <div styleName="general-info-container">
-                                <TextInput
-                                    className={styles['title-input']}
-                                    label={this.props.afStrings('titleLabel')}
-                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
-                                    onChange={this.handleWidgetTitleChange}
-                                    value={title}
-                                    showHintAndError={false}
-                                    autoFocus
-                                    selectOnFocus
-                                />
-                            </div>
-                            { this.renderOrgan(organigram) }
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
-            </div>
+            <Modal className={styles['edit-modal']}>
+                <ModalHeader title={headerTitle} />
+                <ModalBody className={styles.body}>
+                    <div className={styles['title-input-container']}>
+                        <TextInput
+                            className={styles['title-input']}
+                            label={textInputLabel}
+                            placeholder={textInputPlaceholder}
+                            onChange={this.handleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                            autoFocus
+                            selectOnFocus
+                        />
+                    </div>
+                    <div className={styles.organs}>
+                        { this.renderOrgan(organigram) }
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
         );
+    }
+
+    render() {
+        const EditModal = this.renderEditModal;
+        const { afStrings } = this.props;
+        const label = afStrings('organigramWidgetLabel');
+
+        return ([
+            <div
+                key="content"
+                className={styles.list}
+            >
+                { label }
+            </div>,
+            <EditModal key="modal" />,
+        ]);
     }
 }

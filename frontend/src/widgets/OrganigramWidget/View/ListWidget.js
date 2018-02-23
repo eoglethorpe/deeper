@@ -1,8 +1,8 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import BoundError from '../../../components/BoundError';
+import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -14,28 +14,41 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class OrganigramList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    renderSelectedOrgan = (key, data) => {
+        const {
+            id,
+            name,
+        } = data;
+        const marker = '●';
+
+        return (
+            <div
+                className={styles.organ}
+                key={id}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    { name }
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const { attribute: { values = [] } = {} } = this.props;
 
         return (
-            <div
-                styleName="organigram-list"
-            >
-                <ul>
-                    {
-                        values.map(value => (
-                            <li key={value.id}>
-                                {value.name}
-                            </li>
-                        ))
-                    }
-                </ul>
-            </div>
+            <ListView
+                className={styles.list}
+                data={values}
+                modifier={this.renderSelectedOrgan}
+            />
         );
     }
 }
