@@ -61,6 +61,10 @@ from analysis_framework.views import (
     FilterViewSet,
     WidgetViewSet,
 )
+from ary.views import (
+    AssessmentViewSet,
+    AssessmentTemplateViewSet,
+)
 from category_editor.views import (
     CategoryEditorViewSet,
     CategoryEditorCloneView,
@@ -150,6 +154,12 @@ router.register(r'analysis-framework-filters', FilterViewSet,
                 base_name='analysis_framework_filter')
 router.register(r'analysis-framework-exportables', ExportableViewSet,
                 base_name='analysis_framework_exportable')
+
+# Assessment registry
+router.register(r'assessments', AssessmentViewSet,
+                base_name='assessment')
+router.register(r'assessment-templates', AssessmentTemplateViewSet,
+                base_name='assessment_template')
 
 # Category editor routers
 router.register(r'category-editors', CategoryEditorViewSet,
