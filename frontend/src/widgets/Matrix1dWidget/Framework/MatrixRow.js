@@ -1,11 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    SortableContainer,
-    SortableElement,
-    SortableHandle,
-    arrayMove,
-} from 'react-sortable-hoc';
 import { connect } from 'react-redux';
 
 import { randomString } from '../../../vendor/react-store/utils/common';
@@ -19,6 +13,7 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { iconNames } from '../../../constants';
 import { afStringsSelector } from '../../../redux';
@@ -38,10 +33,6 @@ const defaultProps = {
     onChange: undefined,
     selectedCells: {},
 };
-
-const DragHandle = SortableHandle(() => (
-    <span className={`${iconNames.hamburger} drag-handle`} />
-));
 
 const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
@@ -68,11 +59,9 @@ export default class MatrixRow extends React.PureComponent {
         }
     }
 
-    onSortEnd = ({ oldIndex, newIndex }) => {
-        this.setState({
-            cells: arrayMove(this.state.cells, oldIndex, newIndex),
-        });
-    };
+    handleCellSortEnd = (cells) => {
+        this.setState({ cells });
+    }
 
     handleCellRemoveButtonClick = (key) => {
         const cellIndex = this.state.cells.findIndex(d => d.key === key);
@@ -130,31 +119,11 @@ export default class MatrixRow extends React.PureComponent {
         this.props.onChange(this.state.cells);
     }
 
-    SortableList = SortableContainer(({ items: cells }) => {
-        let additionalStyle = '';
-
-        if (cells.length === 0) {
-            additionalStyle = styles['no-items'];
-        }
-
-        const className = `${styles['cell-list']} ${additionalStyle}`;
-
-        return (
-            <ListView
-                data={cells}
-                className={className}
-                keyExtractor={MatrixRow.cellKeyExtractor}
-                modifier={this.renderEditCell}
-            />
-        );
-    })
-
-    SortableEditCell = SortableElement(({ value: { data, key } }) => (
+    renderEditCell = (key, data) => (
         <div
             className={`${styles['edit-cell']} ${styles['draggable-item']}`}
             key={key}
         >
-            <DragHandle />
             <TextInput
                 className={styles['title-input']}
                 label={this.props.afStrings('titleLabel')}
@@ -171,10 +140,6 @@ export default class MatrixRow extends React.PureComponent {
                 <span className={iconNames.delete} />
             </DangerButton>
         </div>
-    ))
-
-    renderEditCell = (key, data, index) => (
-        <this.SortableEditCell key={key} index={index} value={{ key, data }} />
     )
 
     renderCell = (key, data) => (
@@ -200,6 +165,12 @@ export default class MatrixRow extends React.PureComponent {
         const cancelButtonLabel = afStrings('cancelButtonLabel');
         const saveButtonLabel = afStrings('saveButtonLabel');
 
+        let additionalStyle = '';
+
+        if (cells.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
+
         return (
             <Modal
                 onMouseDown={this.handleModalMouseDown}
@@ -218,12 +189,12 @@ export default class MatrixRow extends React.PureComponent {
                     }
                 />
                 <ModalBody className={styles['edit-cell-body']}>
-                    <this.SortableList
-                        items={cells}
-                        onSortEnd={this.onSortEnd}
-                        lockAxis="y"
-                        lockToContainerEdges
-                        useDragHandle
+                    <SortableList
+                        className={`${styles['cell-list']} ${additionalStyle}`}
+                        data={cells}
+                        modifier={this.renderEditCell}
+                        onChange={this.handleCellSortEnd}
+                        keyExtractor={MatrixRow.cellKeyExtractor}
                     />
                 </ModalBody>
                 <ModalFooter>
