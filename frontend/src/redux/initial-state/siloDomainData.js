@@ -144,6 +144,16 @@ const initialSiloDomainData = {
         },
     },
 
+    assessmentRegistryView: {
+        /*
+        // index is assesment registry id
+        1: {
+            versionId: 0,
+            metadata: { },
+        },
+        */
+    },
+
     userGalleryFiles: [],
 
     visualization: {

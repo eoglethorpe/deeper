@@ -20,6 +20,7 @@ const urlValues = [
     'leadId',
     'analysisFrameworkId',
     'categoryEditorId',
+    'aryId',
     'countryId',
     'userGroupId',
     'userId',

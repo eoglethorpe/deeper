@@ -92,6 +92,7 @@ export default class NavMenu extends React.PureComponent {
             projectId,
             countryId,
             analysisFrameworkId: 1,
+            aryId: 1,
         };
 
         return (

@@ -55,6 +55,10 @@ export const categoryEditorsSelector = ({ domainData }) => (
     domainData.categoryEditors || emptyObject
 );
 
+export const aryTemplatesSelector = ({ domainData }) => (
+    domainData.aryTemplates || emptyObject
+);
+
 // COMPLEX
 
 export const usersInformationListSelector = createSelector(

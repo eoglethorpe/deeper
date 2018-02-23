@@ -21,6 +21,7 @@ import {
     groupsSelector,
     usersSelector,
     categoryEditorsSelector,
+    aryTemplatesSelector,
     regionsListSelector,
     userExportsSelector,
 } from './state';
@@ -207,6 +208,23 @@ export const projectOptionsSelector = createSelector(
     projectsOptionsSelector,
     projectIdFromRoute,
     (projectsOptions, activeProject) => projectsOptions[activeProject] || emptyObject,
+);
+
+// projectIdFromRoute
+export const aryTemplateSelector = createSelector(
+    aryTemplatesSelector,
+    projectDetailsSelector,
+    (aryTemplates, project) => (
+        // TODO: remove || 1
+        aryTemplates[project.assessmentTemplate || 1] || emptyObject
+    ),
+);
+
+export const aryTemplateMetadataSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.metadataGroups || emptyList
+    ),
 );
 
 // afIdFromRoute
