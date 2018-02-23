@@ -42,21 +42,26 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
+const emptyList = [];
+
 @BoundError
 @connect(mapStateToProps)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
+    static cellKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
 
-        const data = this.props.data || { rows: [] };
+        const data = this.props.data || { rows: emptyList };
+        const activeRow = data.rows[0] ? data.rows[0].key : 0;
 
         this.state = {
             showEditModal: false,
             title: props.title,
+            activeRow,
             data,
         };
 
@@ -64,8 +69,13 @@ export default class Matrix1dOverview extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const data = nextProps.data || { rows: [] };
-        this.setState({ data });
+        const data = nextProps.data || { rows: emptyList };
+        const activeRow = data.rows[0] ? data.rows[0].key : 0;
+
+        this.setState({
+            data,
+            activeRow,
+        });
     }
 
     handleRowSortEnd = (newData) => {
@@ -148,7 +158,7 @@ export default class Matrix1dOverview extends React.PureComponent {
             title: '',
             tooltip: '',
             color: '#000000',
-            cells: [],
+            cells: emptyList,
         };
         const settings = {
             rows: {
@@ -177,51 +187,280 @@ export default class Matrix1dOverview extends React.PureComponent {
         );
     }
 
+    handleCellSortEnd = (newCells) => {
+        const {
+            data: parentData,
+            activeRow,
+        } = this.state;
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
+
+        if (rowIndex !== -1) {
+            const settings = {
+                rows: {
+                    [rowIndex]: {
+                        cells: { $set: newCells },
+                    },
+                },
+            };
+            const newData = update(parentData, settings);
+            this.setState({ data: newData });
+        }
+    }
+
+    handleCellRemoveButtonClick = (key) => {
+        const {
+            data: parentData,
+            activeRow,
+        } = this.state;
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
+
+        if (rowIndex !== -1) {
+            const cells = parentData.rows[rowIndex].cells || emptyList;
+            const cellIndex = cells.findIndex(d => d.key === key);
+            const settings = {
+                rows: {
+                    [rowIndex]: {
+                        cells: { $splice: [[cellIndex, 1]] },
+                    },
+                },
+            };
+            const newData = update(parentData, settings);
+            this.setState({ data: newData });
+        }
+    }
+
+    handleAddCellButtonClick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const newCell = {
+            key: randomString(16).toLowerCase(),
+            value: '',
+        };
+        const {
+            data: parentData,
+            activeRow,
+        } = this.state;
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
+
+        if (rowIndex !== -1) {
+            const settings = {
+                rows: {
+                    [rowIndex]: {
+                        cells: { $auto: {
+                            $push: [newCell],
+                        } },
+                    },
+                },
+            };
+            const newData = update(parentData, settings);
+            this.setState({ data: newData });
+        }
+    }
+
+    handleCellValueInputChange = (key, value) => {
+        const {
+            data: parentData,
+            activeRow,
+        } = this.state;
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
+
+        if (rowIndex !== -1) {
+            const cells = parentData.rows[rowIndex].cells || emptyList;
+            const cellIndex = cells.findIndex(d => d.key === key);
+            const settings = {
+                rows: {
+                    [rowIndex]: {
+                        cells: {
+                            [cellIndex]: {
+                                value: { $set: value },
+                            },
+                        },
+                    },
+                },
+            };
+            const newData = update(parentData, settings);
+            this.setState({ data: newData });
+        }
+    }
+
     handleWidgetTitleChange = (value) => {
         this.setState({ title: value });
     }
 
-    renderEditRow = (key, data) => (
+    handleRowClick = (activeRow) => {
+        this.setState({ activeRow });
+    }
+
+    renderEditRow = (key, data) => {
+        const { activeRow } = this.state;
+        const rowStyle = [styles['row-title-button']];
+        if (activeRow === key) {
+            rowStyle.push(styles.active);
+        }
+
+        return (
+            <button
+                className={rowStyle.join(' ')}
+                key={key}
+                onClick={() => this.handleRowClick(key)}
+            >
+                { data.title || this.props.afStrings('untiledRowTitle') }
+            </button>
+        );
+    }
+
+    renderRowDragHandle = (key) => {
+        const { activeRow } = this.state;
+        const dragStyle = [styles['drag-handle']];
+        if (activeRow === key) {
+            dragStyle.push(styles.active);
+        }
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
+    renderCellDragHandle = () => {
+        const dragStyle = [styles['drag-handle']];
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
+    renderRowEditFields = () => {
+        const {
+            activeRow: key,
+            data: parentData,
+        } = this.state;
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === key);
+        if (rowIndex !== -1) {
+            const data = parentData.rows[rowIndex];
+
+            return (
+                <div className={styles['edit-row']}>
+                    <ColorInput
+                        label={this.props.afStrings('colorLabel')}
+                        onChange={newColor => this.handleColorChange(newColor, key)}
+                        showHintAndError={false}
+                        value={data.color}
+                    />
+                    <TextInput
+                        className={styles['title-input']}
+                        label={this.props.afStrings('titleLabel')}
+                        placeholder={this.props.afStrings('optionPlaceholder')}
+                        onChange={value => this.handleRowValueInputChange(key, value, 'title')}
+                        value={data.title}
+                        showHintAndError={false}
+                        autoFocus
+                    />
+                    <TextInput
+                        className={styles['title-input']}
+                        label={this.props.afStrings('tooltipTitle')}
+                        placeholder={this.props.afStrings('tooltipPlaceholder')}
+                        onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
+                        showHintAndError={false}
+                        value={data.tooltip}
+                    />
+                    <DangerButton
+                        className={styles['delete-button']}
+                        onClick={() => this.handleRowRemoveButtonClick(key)}
+                    >
+                        <span className={iconNames.delete} />
+                    </DangerButton>
+                </div>
+            );
+        }
+
+        return (
+            <span>{this.props.afStrings('noRowSelected')}</span>
+        );
+    }
+
+    renderEditCell = (key, data) => (
         <div
-            className={`${styles['edit-row']} ${styles['draggable-item']}`}
+            className={`${styles['edit-cell']} ${styles['draggable-item']}`}
             key={key}
         >
-            <ColorInput
-                label={this.props.afStrings('colorLabel')}
-                onChange={newColor => this.handleColorChange(newColor, key)}
-                value={data.color}
-            />
             <TextInput
                 className={styles['title-input']}
                 label={this.props.afStrings('titleLabel')}
-                placeholder={this.props.afStrings('optionPlaceholder')}
-                onChange={value => this.handleRowValueInputChange(key, value, 'title')}
-                value={data.title}
+                placeholder={this.props.afStrings('titlePlaceholderOverview')}
+                onChange={value => this.handleCellValueInputChange(key, value)}
+                showHintAndError={false}
+                value={data.value}
                 autoFocus
-            />
-            <TextInput
-                className={styles['title-input']}
-                label={this.props.afStrings('tooltipTitle')}
-                placeholder={this.props.afStrings('tooltipPlaceholder')}
-                onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
-                value={data.tooltip}
             />
             <DangerButton
                 className={styles['delete-button']}
-                onClick={() => this.handleRowRemoveButtonClick(key)}
-                transparent
+                onClick={() => this.handleCellRemoveButtonClick(key)}
             >
                 <span className={iconNames.delete} />
             </DangerButton>
         </div>
     )
 
+    renderRowCells = () => {
+        const { afStrings } = this.props;
+        const {
+            data: parentData,
+            activeRow,
+        } = this.state;
+
+        const headerTitle = afStrings('matrix1DModalTitle');
+        const addCellButtonLabel = afStrings('addCellButtonLabel');
+
+        const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
+        if (rowIndex !== -1) {
+            let additionalStyle = '';
+
+            const cells = parentData.rows[rowIndex].cells || emptyList;
+
+            if (cells.length === 0) {
+                additionalStyle = styles['no-items'];
+            }
+
+            return (
+                <div className={styles['matrix-cells']}>
+                    <header
+                        className={styles.header}
+                    >
+                        <h4>{ headerTitle }</h4>
+                        <PrimaryButton
+                            iconName={iconNames.add}
+                            onClick={this.handleAddCellButtonClick}
+                        >
+                            { addCellButtonLabel }
+                        </PrimaryButton>
+                    </header>
+                    <SortableList
+                        className={`${styles['cell-list']} ${additionalStyle}`}
+                        data={cells}
+                        modifier={this.renderEditCell}
+                        dragHandleModifier={this.renderCellDragHandle}
+                        sortableItemClass={styles['cell-list-item']}
+                        onChange={this.handleCellSortEnd}
+                        keyExtractor={Matrix1dOverview.cellKeyExtractor}
+                    />
+                </div>
+            );
+        }
+
+        return (
+            <span>{this.props.afStrings('noRowSelected')}</span>
+        );
+    }
+
     renderRow = (key, data) => (
         <MatrixRow
             key={key}
             title={data.title}
             cells={data.cells}
-            onChange={(value) => { this.handleRowDataChange(key, value); }}
         />
     )
 
@@ -244,6 +483,9 @@ export default class Matrix1dOverview extends React.PureComponent {
         const titleInputPlaceholder = afStrings('titlePlaceholderScale');
         const cancelButtonLabel = afStrings('cancelButtonLabel');
         const saveButtonLabel = afStrings('saveButtonLabel');
+
+        const RowDetail = this.renderRowEditFields;
+        const RowCells = this.renderRowCells;
 
         let additionalStyle = '';
 
@@ -278,15 +520,21 @@ export default class Matrix1dOverview extends React.PureComponent {
                         />
                     </div>
                     <div className={styles['modal-rows-content']}>
-                        <SortableList
-                            className={`${styles['row-list']} ${additionalStyle}`}
-                            data={data.rows}
-                            modifier={this.renderEditRow}
-                            onChange={this.handleRowSortEnd}
-                            sortableItemClass={styles['dimension-list-item']}
-                            keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                            dragHandleModifier={this.renderDragHandle}
-                        />
+                        <div className={styles['left-container']}>
+                            <SortableList
+                                className={`${styles['row-list']} ${additionalStyle}`}
+                                data={data.rows}
+                                modifier={this.renderEditRow}
+                                onChange={this.handleRowSortEnd}
+                                sortableItemClass={styles['row-list-item']}
+                                keyExtractor={Matrix1dOverview.rowKeyExtractor}
+                                dragHandleModifier={this.renderRowDragHandle}
+                            />
+                        </div>
+                        <div className={styles['right-container']}>
+                            <RowDetail />
+                            <RowCells />
+                        </div>
                     </div>
                 </ModalBody>
                 <ModalFooter>
