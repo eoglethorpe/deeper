@@ -1,11 +1,12 @@
 @import '../../../stylesheets/base';
 
-.number-matrix-container {
+.list {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 $spacing-small;
+    width: 100%;
     height: 100%;
+    color: $color-text-disabled;
 }
 
 .number-matrix-widget {

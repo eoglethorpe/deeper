@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -27,7 +26,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class NumberTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -40,18 +38,24 @@ export default class NumberTaggingList extends React.PureComponent {
     }
 
     render() {
-        const { attribute = {} } = this.props;
+        const {
+            attribute = {},
+            afStrings,
+        } = this.props;
         const { value } = attribute;
+        const inputPlaceholder = afStrings('numberPlaceholder');
+        const separatorText = ' ';
+
         return (
-            <div styleName="number-list">
+            <div className={styles.list}>
                 <NumberInput
                     onChange={this.handleChange}
-                    styleName="number-input"
+                    className={styles.input}
                     value={value}
-                    placeholder={this.props.afStrings('numberPlaceholder')}
+                    placeholder={inputPlaceholder}
                     showLabel={false}
                     showHintAndError={false}
-                    separator=" "
+                    separator={separatorText}
                 />
             </div>
         );

@@ -94,8 +94,8 @@ export default class GeoFrameworkList extends React.PureComponent {
                     <TextInput
                         autoFocus
                         label={titleInputLabel}
-                        onChange={this.handleWidgetTitleChange}
                         placeholder={titleInputPlaceholder}
+                        onChange={this.handleWidgetTitleChange}
                         selectOnFocus
                         showHintAndError={false}
                         value={titleValue}
