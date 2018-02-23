@@ -1,11 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    SortableContainer,
-    SortableElement,
-    SortableHandle,
-    arrayMove,
-} from 'react-sortable-hoc';
 import { connect } from 'react-redux';
 
 import { randomString } from '../../../vendor/react-store/utils/common';
@@ -21,6 +15,7 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { iconNames } from '../../../constants';
 import BoundError from '../../../components/BoundError';
@@ -42,10 +37,6 @@ const defaultProps = {
         rows: [],
     },
 };
-
-const DragHandle = SortableHandle(() => (
-    <span className={`${iconNames.hamburger} drag-handle`} />
-));
 
 const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
@@ -77,9 +68,11 @@ export default class Matrix1dOverview extends React.PureComponent {
         this.setState({ data });
     }
 
-    onSortEnd = ({ oldIndex, newIndex }) => {
-        const data = { ...this.state.data };
-        data.rows = arrayMove(data.rows, oldIndex, newIndex);
+    handleRowSortEnd = (newData) => {
+        const settings = {
+            rows: { $set: newData },
+        };
+        const data = update(this.state.data, settings);
         this.setState({ data });
     }
 
@@ -184,12 +177,15 @@ export default class Matrix1dOverview extends React.PureComponent {
         );
     }
 
-    SortableEditRow = SortableElement(({ value: { data, key } }) => (
+    handleWidgetTitleChange = (value) => {
+        this.setState({ title: value });
+    }
+
+    renderEditRow = (key, data) => (
         <div
             className={`${styles['edit-row']} ${styles['draggable-item']}`}
             key={key}
         >
-            <DragHandle />
             <ColorInput
                 label={this.props.afStrings('colorLabel')}
                 onChange={newColor => this.handleColorChange(newColor, key)}
@@ -218,28 +214,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 <span className={iconNames.delete} />
             </DangerButton>
         </div>
-    ))
-
-    SortableList = SortableContainer(({ items: rows }) => {
-        let additionalStyle = '';
-
-        if (rows.length === 0) {
-            additionalStyle = styles['no-items'];
-        }
-
-        return (
-            <ListView
-                data={rows}
-                className={`${styles['row-list']} ${additionalStyle}`}
-                keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                modifier={this.renderEditRow}
-            />
-        );
-    })
-
-    handleWidgetTitleChange = (value) => {
-        this.setState({ title: value });
-    }
+    )
 
     renderRow = (key, data) => (
         <MatrixRow
@@ -249,10 +224,6 @@ export default class Matrix1dOverview extends React.PureComponent {
             onChange={(value) => { this.handleRowDataChange(key, value); }}
         />
     )
-
-    renderEditRow = (key, data, index) => (
-        <this.SortableEditRow key={key} index={index} value={{ key, data }} />
-    );
 
     renderEditRowModal = () => {
         const {
@@ -273,6 +244,12 @@ export default class Matrix1dOverview extends React.PureComponent {
         const titleInputPlaceholder = afStrings('titlePlaceholderScale');
         const cancelButtonLabel = afStrings('cancelButtonLabel');
         const saveButtonLabel = afStrings('saveButtonLabel');
+
+        let additionalStyle = '';
+
+        if (data.rows.length === 0) {
+            additionalStyle = styles['no-items'];
+        }
 
         return (
             <Modal className={styles['edit-row-modal']}>
@@ -301,12 +278,14 @@ export default class Matrix1dOverview extends React.PureComponent {
                         />
                     </div>
                     <div className={styles['modal-rows-content']}>
-                        <this.SortableList
-                            items={data.rows}
-                            lockAxis="y"
-                            lockToContainerEdges
-                            onSortEnd={this.onSortEnd}
-                            useDragHandle
+                        <SortableList
+                            className={`${styles['row-list']} ${additionalStyle}`}
+                            data={data.rows}
+                            modifier={this.renderEditRow}
+                            onChange={this.handleRowSortEnd}
+                            sortableItemClass={styles['dimension-list-item']}
+                            keyExtractor={Matrix1dOverview.rowKeyExtractor}
+                            dragHandleModifier={this.renderDragHandle}
                         />
                     </div>
                 </ModalBody>
