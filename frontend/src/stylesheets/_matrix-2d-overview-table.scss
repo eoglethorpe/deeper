@@ -1,3 +1,5 @@
+$width-dimension-column: 96px;
+
 %matrix-2d-overview-table {
     width: 100%;
     border-collapse: separate;
@@ -10,18 +12,18 @@
             position: sticky;
             top: 0;
             background-color: $color-foreground;
-            padding: $spacing-small $spacing-medium;
+            padding: $spacing-extra-small $spacing-small;
         }
     }
 
     tbody {
         td {
             margin: $spacing-extra-small;
-            padding: $spacing-small;
+            padding: $spacing-extra-small-alt $spacing-small;
         }
 
         .dimension-td {
-            width: 96px;
+            width: $width-dimension-column;
         }
     }
 }

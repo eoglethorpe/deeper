@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -22,7 +21,6 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -183,9 +181,9 @@ export default class Matrix2dOverview extends React.PureComponent {
                 background: `repeating-linear-gradient(
                     -60deg,
                     ${rowStyle.backgroundColor} 0,
-                    ${rowStyle.color} 1px,
-                    ${rowStyle.color} 1px,
-                    ${rowStyle.backgroundColor} 2px,
+                    ${rowStyle.color} 2px,
+                    ${rowStyle.color} 2px,
+                    ${rowStyle.backgroundColor} 4px,
                     ${rowStyle.backgroundColor} 10px
                 )`,
             };
@@ -195,15 +193,17 @@ export default class Matrix2dOverview extends React.PureComponent {
                     style={rowStyle}
                     key={subdimension.id}
                 >
-                    {i === 0 && (
-                        <td
-                            rowSpan={dimension.subdimensions.length}
-                            className={styles['dimension-td']}
-                            title={dimension.tooltip}
-                        >
-                            {dimension.title}
-                        </td>
-                    )}
+                    {
+                        i === 0 && (
+                            <td
+                                rowSpan={dimension.subdimensions.length}
+                                className={styles['dimension-td']}
+                                title={dimension.tooltip}
+                            >
+                                {dimension.title}
+                            </td>
+                        )
+                    }
                     <td title={subdimension.tooltip}>
                         {subdimension.title}
                     </td>
@@ -248,16 +248,19 @@ export default class Matrix2dOverview extends React.PureComponent {
     }
 
     render() {
+        const HeadRow = this.renderHeadRow;
+        const BodyRows = this.renderBodyRows;
+
         return (
-            <div styleName="tagging-matrix-2d-overview">
-                <table styleName="table">
+            <div className={styles.overview}>
+                <table className={styles.table}>
                     <thead>
                         <tr>
-                            { this.renderHeadRow() }
+                            <HeadRow />
                         </tr>
                     </thead>
                     <tbody>
-                        { this.renderBodyRows() }
+                        <BodyRows />
                     </tbody>
                 </table>
             </div>

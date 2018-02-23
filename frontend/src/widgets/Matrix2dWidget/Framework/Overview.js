@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -51,7 +50,6 @@ const emptyList = [];
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.id;
     static propTypes = propTypes;
@@ -83,6 +81,7 @@ export default class Matrix2dOverview extends React.PureComponent {
     handleTitleInputValueChange = (value) => {
         this.setState({ title: value });
     }
+
     handleWidgetEdit = () => {
         this.setState({ showEditModal: true });
     }
@@ -490,9 +489,10 @@ export default class Matrix2dOverview extends React.PureComponent {
     }
 
     renderDimensionTypes = () => {
+        const { afStrings } = this.props;
         const dimensionTypes = [
-            this.props.afStrings('dimensionXLabel'),
-            this.props.afStrings('dimensionYLabel'),
+            afStrings('dimensionXLabel'),
+            afStrings('dimensionYLabel'),
         ];
 
         return (
@@ -512,13 +512,16 @@ export default class Matrix2dOverview extends React.PureComponent {
             classNames.push(styles.active);
         }
 
+        const { afStrings } = this.props;
+        const { untitled } = afStrings('untiledDimensionTitle');
+
         return (
             <button
                 key={data.id}
                 onClick={() => { this.setState({ activeDimensionIndex: i }); }}
                 className={classNames.join(' ')}
             >
-                { data.title || this.props.afStrings('untiledDimensionTitle') }
+                { data.title || untitled }
             </button>
         );
     }
@@ -593,13 +596,15 @@ export default class Matrix2dOverview extends React.PureComponent {
             activeDimensionIndex,
         } = this.state;
 
+        const { afStrings } = this.props;
+
         const dimensionData = [data.sectors, data.dimensions];
         const dimension = dimensionData[activeDimensionTypeIndex][activeDimensionIndex];
 
         if (!dimension) {
             return (
                 <div className={styles.empty}>
-                    { this.props.afStrings('empty') }
+                    { afStrings('empty') }
                 </div>
             );
         }
@@ -610,13 +615,19 @@ export default class Matrix2dOverview extends React.PureComponent {
         const showColorConditions = [false, true];
         const showColorInput = showColorConditions[activeDimensionTypeIndex];
 
+        const titleInputLabel = afStrings('title');
+        const tooltipInputLabel = afStrings('tooltip');
+        const colorInputLabel = afStrings('color');
+        const subdimensionsTitle = afStrings('subdimensions');
+        const addSubdimensionButtonTitle = afStrings('addSubdimensionButtonTitle');
+
         return (
             <div className={styles['dimension-detail']}>
                 <div className={styles['dimension-inputs']}>
                     <div className={styles.inputs}>
                         <TextInput
                             className={styles['text-input']}
-                            label={this.props.afStrings('title')}
+                            label={titleInputLabel}
                             value={dimension.title}
                             showHintAndError={false}
                             onChange={(value) => { this.handleDimensionInputValueChange('title', value); }}
@@ -624,7 +635,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         />
                         <TextInput
                             className={styles['text-input']}
-                            label={this.props.afStrings('tooltip')}
+                            label={tooltipInputLabel}
                             value={dimension.tooltip}
                             showHintAndError={false}
                             onChange={(value) => { this.handleDimensionInputValueChange('tooltip', value); }}
@@ -633,7 +644,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                             showColorInput && (
                                 <ColorInput
                                     className={styles['color-input']}
-                                    label={this.props.afStrings('color')}
+                                    label={colorInputLabel}
                                     value={dimension.color}
                                     showHintAndError={false}
                                     onChange={(value) => { this.handleDimensionInputValueChange('color', value); }}
@@ -650,9 +661,9 @@ export default class Matrix2dOverview extends React.PureComponent {
                 </div>
                 <div className={styles['subdimension-detail']}>
                     <header className={styles.header}>
-                        <h4>{ this.props.afStrings('subdimensions') }</h4>
+                        <h4>{ subdimensionsTitle }</h4>
                         <Button onClick={this.handleAddSubdimensionButtonClick}>
-                            { this.props.afStrings('addSubdimensionButtonTitle') }
+                            { addSubdimensionButtonTitle }
                         </Button>
                     </header>
                     <SortableList
@@ -682,14 +693,21 @@ export default class Matrix2dOverview extends React.PureComponent {
         const DimensionList = this.renderDimensionList;
         const DimensionDetail = this.renderDimensionDetail;
 
+        const { afStrings } = this.props;
+        const editModalTitle = afStrings('editModalTitle');
+        const addDimensionButtonTitle = afStrings('addDimensionButtonTitle');
+        const titleInputLabel = afStrings('title');
+        const cancelButtonTitle = afStrings('cancelButtonTitle');
+        const saveButtonTitle = afStrings('saveButtonTitle');
+
         return (
-            <Modal className={styles['framework-overview-edit-modal']}>
-                <ModalHeader title={this.props.afStrings('editModalTitle')} />
+            <Modal className={styles['overview-edit-modal']}>
+                <ModalHeader title={editModalTitle} />
                 <ModalBody className={styles.body}>
                     <header className={styles.header}>
                         <div className={styles.left}>
                             <TextInput
-                                label={this.props.afStrings('title')}
+                                label={titleInputLabel}
                                 showHintAndError={false}
                                 value={title}
                                 onChange={this.handleTitleInputValueChange}
@@ -700,7 +718,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         <DimensionTypes />
                         <div className={styles.right}>
                             <Button onClick={this.handleAddDimensionButtonClick}>
-                                { this.props.afStrings('addDimensionButtonTitle') }
+                                { addDimensionButtonTitle }
                             </Button>
                         </div>
                     </header>
@@ -711,10 +729,10 @@ export default class Matrix2dOverview extends React.PureComponent {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.handleModalCancelButtonClick}>
-                        { this.props.afStrings('cancelButtonTitle') }
+                        { cancelButtonTitle }
                     </Button>
                     <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                        { this.props.afStrings('saveButtonTitle') }
+                        { saveButtonTitle }
                     </PrimaryButton>
                 </ModalFooter>
             </Modal>
@@ -727,8 +745,8 @@ export default class Matrix2dOverview extends React.PureComponent {
         const EditMatrixModal = this.renderModal;
 
         return (
-            <div styleName="framework-overview">
-                <table styleName="table">
+            <div className={styles.overview}>
+                <table className={styles.table}>
                     <TableHeader />
                     <TableBody />
                 </table>

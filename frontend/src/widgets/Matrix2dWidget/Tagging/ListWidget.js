@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -35,7 +34,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static subsectorKeySelector = d => d.id;
@@ -220,50 +218,52 @@ export default class Matrix2dList extends React.PureComponent {
             className={styles['tag-unit']}
         >
             <div className={styles['tag-dimension']} >
-                {data.dimension.title}
-
-                <span
-                    className={styles['tag-sub-dimension']}
-                >
+                <div className={styles['dimension-title']}>
+                    {data.dimension.title}
+                </div>
+                <div className={styles['subdimension-title']}>
                     {data.subdimension.title}
-                </span>
+                </div>
             </div>
-            <div
-                className={styles['tag-sector']}
-            >
-                {data.sector.title}
+            <div className={styles['tag-sector']}>
+                <div className={styles.title}>
+                    {data.sector.title}
+                </div>
                 <MultiSelectInput
-                    className={styles['tag-sector-select']}
                     value={data.subsectors}
                     options={data.sector.subsectors}
                     keySelector={Matrix2dList.subsectorKeySelector}
                     labelSelector={Matrix2dList.subsectorLabelSelector}
                     placeholder={this.props.afStrings('subsectorsLabel')}
                     label={this.props.afStrings('subsectorsLabel')}
-                    onChange={subsectors => this.handleSelectSubsectorChange(
-                        data.dimension.id,
-                        data.subdimension.id,
-                        data.sector.id,
-                        subsectors,
-                    )}
+                    showHintAndError={false}
+                    onChange={(subsectors) => {
+                        this.handleSelectSubsectorChange(
+                            data.dimension.id,
+                            data.subdimension.id,
+                            data.sector.id,
+                            subsectors,
+                        );
+                    }}
                 />
             </div>
         </div>
     )
 
     render() {
-        const { data, attribute } = this.props;
-        const selectedSectors = this.getSelectedSectors(data, attribute);
+        const {
+            data,
+            attribute,
+        } = this.props;
+        const selectedSectors = this.getSelectedSectors(data, attribute) || emptyList;
 
         return (
-            <div styleName="matrix-2d-list">
-                <ListView
-                    keyExtractor={Matrix2dList.rowKeyExtractor}
-                    data={selectedSectors || emptyList}
-                    modifier={this.renderTagUnit}
-                    styleName="list"
-                />
-            </div>
+            <ListView
+                keyExtractor={Matrix2dList.rowKeyExtractor}
+                data={selectedSectors}
+                modifier={this.renderTagUnit}
+                className={styles.list}
+            />
         );
     }
 }

@@ -1,44 +1,52 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/matrix-2d-overview-table';
 
-.tagging-matrix-2d-overview {
-    .table {
-        @extend %matrix-2d-overview-table;
+.list {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+
+    .tag-unit {
+        display: flex;
+        background-color: $color-background-row;
+        padding: $spacing-small;
+
+        &:nth-child(even) {
+            background-color: $color-background-row-alt;
+        }
+
+        .tag-dimension {
+            flex-basis: 50%;
+            align-self: center;
+
+            .dimension-title {
+                color: $color-accent;
+                font-size: $font-size-small;
+                font-weight: $font-weight-bold;
+            }
+
+            .subdimension-title {
+                font-size: $font-size-medium;
+            }
+        }
+
+        .tag-sector {
+            flex-basis: 50%;
+
+            .title {
+                margin-bottom: $spacing-small;
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 }
 
-.matrix-2d-list {
-    padding: $spacing-small;
+.overview {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 
-    .list {
-        width: 100%;
-        overflow-y: auto;
-
-        .tag-unit {
-            display: flex;
-            padding-bottom: $spacing-extra-small;
-
-            .tag-dimension {
-                display: flex;
-                flex-basis: 50%;
-                flex-direction: column;
-                font-weight: $font-weight-bold;
-
-                .tag-sub-dimension {
-                    font-weight: $font-weight-normal;
-                }
-            }
-
-            .tag-sector {
-                display: flex;
-                flex-basis: 50%;
-                flex-direction: column;
-
-                .tag-sector-select {
-                    padding: 0 $spacing-extra-small;
-                    width: 160px;
-                }
-            }
-        }
+    .table {
+        @extend %matrix-2d-overview-table;
     }
 }
