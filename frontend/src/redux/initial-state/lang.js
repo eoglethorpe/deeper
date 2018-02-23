@@ -124,6 +124,7 @@ const initialLangState = {
                 136: 'Edit lead',
                 137: 'Remove lead',
                 138: 'Add entry from this lead',
+                139: 'Add subcategory',
                 141: 'Are you sure you want to remove this lead? The lead along with all the associated entries will be removed.',
                 150: 'First Name',
                 151: 'eg: John',
@@ -254,6 +255,7 @@ const initialLangState = {
                 512: 'Entry',
                 513: 'Image',
                 514: 'Excerpt',
+                515: 'Format excerpt',
                 517: 'Assisted',
                 518: 'Original',
                 519: 'Images',
@@ -642,6 +644,7 @@ const initialLangState = {
                     empty: 406,
                     confirmDeletewWidget: 6000,
                     subsectorsLabel: 7039,
+                    formatExcerpt: 515,
                 },
                 api: {
                     loadingLabel: 7038,
@@ -731,6 +734,7 @@ const initialLangState = {
                     confirmTextDeleteCategory: 428,
                     confirmTextDeleteSubCategory: 429,
                     exitButtonLabel: 778,
+                    addSubcategory: 139,
                 },
                 common: {
                     altUser: 1200,
@@ -870,10 +874,6 @@ const initialLangState = {
                     saveButtonLabel: 25,
                     gotoListButtonLabel: 511,
                     altLabel: 512,
-                    /*
-                    imageLabel: 513,
-                    excerptLabel: 514,
-                    */
                     previewNotAvailableText: 132,
                     simplifiedTabLabel: 424,
                     assistedTabLabel: 517,

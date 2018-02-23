@@ -1,7 +1,7 @@
 import { wsEndpoint, GET, POST, PATCH, DELETE, commonHeaderForPost, p } from '../config/rest';
 
 export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
-export const createUrlForProjectOptions = projectId => `${wsEndpoint}/project-options/?project=${projectId}`;
+export const createUrlForProjectOptions = projectId => `${wsEndpoint}/project-options/?${p({ project: projectId })}`;
 
 export const createUrlForProjectsOfUser = userId => (
     `${wsEndpoint}/projects/?${p({ user: userId })}`

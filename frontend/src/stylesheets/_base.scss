@@ -15,8 +15,8 @@ $font-family-icons: 'Ionicons';
 
     ::-webkit-scrollbar {
         background-color: $color-background-scrollbar;
-        width: $spacing-small;
-        height: $spacing-small;
+        width: $width-scrollbar;
+        height: $width-scrollbar;
     }
 
     ::-webkit-scrollbar-thumb {

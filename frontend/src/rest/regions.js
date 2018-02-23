@@ -6,11 +6,11 @@ export const urlForAdminLevels = `${wsEndpoint}/admin-levels/`;
 export const createUrlForRegion = regionId => `${wsEndpoint}/regions/${regionId}/`;
 export const createUrlForRegionClone = regionId => `${wsEndpoint}/clone-region/${regionId}/`;
 export const createUrlForAdminLevel = adminLevelId => `${wsEndpoint}/admin-levels/${adminLevelId}/`;
-export const createUrlForGeoOptions = projectId => `${wsEndpoint}/geo-options/?project=${projectId}`;
+export const createUrlForGeoOptions = projectId => `${wsEndpoint}/geo-options/?${p({ project: projectId })}`;
 
 const regionsUrlFields = ['id', 'code', 'title', 'public', 'created_at', 'modified_at', 'version_id'];
 export const urlForRegions = `${wsEndpoint}/regions/?${p({ fields: regionsUrlFields })}`;
-export const createUrlForAdminLevelsForRegion = regionId => `${wsEndpoint}/admin-levels/?region=${regionId}`;
+export const createUrlForAdminLevelsForRegion = regionId => `${wsEndpoint}/admin-levels/?${p({ region: regionId })}`;
 
 export const createUrlForRegionWithField = (regionId, fields) => {
     if (fields) {

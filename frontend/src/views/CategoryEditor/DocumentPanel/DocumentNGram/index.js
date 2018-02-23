@@ -114,8 +114,7 @@ export default class DocumentNGram extends React.PureComponent {
         const { selectedNGramIndex } = this.state;
 
         // TODO: use selector or move to componentWillReceiveProps
-        const ngramKeys = Object.keys(ngrams);
-        ngramKeys.sort();
+        const ngramKeys = Object.keys(ngrams).sort();
 
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
 

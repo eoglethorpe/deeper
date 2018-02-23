@@ -122,33 +122,41 @@ export default class LeadFormItem extends React.PureComponent {
                 this.setState({ pendingExtraction: false });
             })
             .success((response) => {
+                // FIXME: ravl?
                 const webInfo = response;
                 const values = {};
+                const formFieldErrors = {};
 
                 if (webInfo.project) {
                     values.project = [webInfo.project];
+                    formFieldErrors.project = undefined;
                 }
                 if (webInfo.date) {
                     values.publishedOn = webInfo.date;
+                    formFieldErrors.publishedOn = undefined;
                 }
                 if (webInfo.source) {
                     values.source = webInfo.source;
+                    formFieldErrors.source = undefined;
                 }
                 if (webInfo.website) {
                     values.website = webInfo.website;
+                    formFieldErrors.website = undefined;
                 }
                 if (webInfo.title) {
                     values.title = webInfo.title;
+                    formFieldErrors.title = undefined;
                 }
                 if (webInfo.url) {
                     values.url = webInfo.url;
+                    formFieldErrors.url = undefined;
                 }
 
                 this.props.addLeadViewLeadChange({
                     leadId: this.props.leadKey,
                     values,
                     formErrors: [],
-                    formFieldErrors: {},
+                    formFieldErrors,
                     uiState: { pristine: false },
                 });
             })
@@ -262,7 +270,8 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     stop = () => {
-        // no op, cleanup not required
+        // Cleanup not required
+        // no op
     }
 
     // RENDER

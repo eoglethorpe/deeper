@@ -181,11 +181,11 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 }
                 { !dragOver && attribute.type !== IMAGE && this.props.entryId &&
                     <AccentButton
-                        // TODO: Write title
                         onClick={this.handleFormatText}
                         styleName="format-button"
                         iconName={iconNames.textFormat}
                         transparent
+                        title={this.props.afStrings('formatExcerpt')}
                     />
                 }
             </div>

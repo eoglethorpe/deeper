@@ -1,4 +1,4 @@
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
+import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
 
 import { setGaUserId } from '../../config/google-analytics';
 import schema from '../../schema';
@@ -30,7 +30,7 @@ class Refresher {
     }
 
     createProjectsRequest = (store) => {
-        const projectsRequest = new FgRestBuilder()
+        const projectsRequest = new BgRestBuilder()
             .url(urlForProjects)
             .params(() => createParamsForProjects())
             .success((response) => {
@@ -52,13 +52,11 @@ class Refresher {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                // TODO: notify
-                // logout and send to login screen
+                // TODO: IMP logout and send to login screen
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
-                // TODO: notify
-                // user couldn't be verfied screen
+                // TODO: IMP user couldn't be verfied screen
             })
             .build();
         return projectsRequest;

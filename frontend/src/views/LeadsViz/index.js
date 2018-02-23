@@ -44,7 +44,6 @@ import schema from '../../schema';
 import notify from '../../notify';
 import { pathNames } from '../../constants/';
 
-// TODO: move this to common
 import FilterLeadsForm from '../Leads/FilterLeadsForm';
 import styles from './styles.scss';
 
@@ -87,7 +86,7 @@ export default class LeadsViz extends React.PureComponent {
     static defaultProps = defaultProps;
 
     // REST UTILS
-    // TODO: move this somewhere
+    // TODO: IMP move this somewhere
     static getFiltersForRequest = (filters) => {
         const requestFilters = {};
         Object.keys(filters).forEach((key) => {

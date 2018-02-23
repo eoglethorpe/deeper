@@ -113,8 +113,7 @@ export default class Leads extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    // REST UTILS
-    // TODO: move this somewhere
+    // TODO: IMP move this somewhere
     static getFiltersForRequest = (filters) => {
         const requestFilters = {};
         Object.keys(filters).forEach((key) => {
@@ -372,7 +371,7 @@ export default class Leads extends React.PureComponent {
         const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
         const leadRequestLimit = MAX_LEADS_PER_REQUEST;
 
-        // TODO: add required fields only
+        // TODO: VAGUE add required fields only
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             ordering: activeSort,
