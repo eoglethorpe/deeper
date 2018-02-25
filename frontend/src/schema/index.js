@@ -10,6 +10,7 @@ import token from './token';
 import userGroups from './userGroups';
 import users from './users';
 import analysisFrameworks from './analysisFrameworks';
+import assessmentRegistry from './assessmentRegistry';
 import categoryEditors from './categoryEditors';
 import galleryFile from './galleryFile';
 
@@ -82,6 +83,7 @@ const userDefinedSchemas = [];
     ...userGroups,
     ...users,
     ...analysisFrameworks,
+    ...assessmentRegistry,
     ...categoryEditors,
     ...galleryFile,
 ].forEach(({ name, schema }) => dict.put(name, schema));
