@@ -6,6 +6,7 @@ import ColorInput from '../../../vendor/react-store/components/Input/ColorInput'
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -513,7 +514,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         }
 
         const { afStrings } = this.props;
-        const { untitled } = afStrings('untiledDimensionTitle');
+        const untitled = afStrings('untitledDimensionTitle');
 
         return (
             <button
@@ -680,9 +681,12 @@ export default class Matrix2dOverview extends React.PureComponent {
                 <div className={styles['subdimension-detail']}>
                     <header className={styles.header}>
                         <h4>{ subdimensionsTitle }</h4>
-                        <Button onClick={this.handleAddSubdimensionButtonClick}>
+                        <AccentButton
+                            onClick={this.handleAddSubdimensionButtonClick}
+                            transparent
+                        >
                             { addSubdimensionButtonTitle }
-                        </Button>
+                        </AccentButton>
                     </header>
                     <SortableList
                         className={styles.content}
@@ -736,9 +740,12 @@ export default class Matrix2dOverview extends React.PureComponent {
                         </div>
                         <DimensionTypes />
                         <div className={styles.right}>
-                            <Button onClick={this.handleAddDimensionButtonClick}>
+                            <AccentButton
+                                onClick={this.handleAddDimensionButtonClick}
+                                transparent
+                            >
                                 { addDimensionButtonTitle }
-                            </Button>
+                            </AccentButton>
                         </div>
                     </header>
                     <div className={styles.content}>
