@@ -1,93 +1,60 @@
 @import '../../../stylesheets/base';
+@import '../row';
+@import '../cell';
 
-.matrix-1d-list {
-    display: flex;
-    padding: $spacing-small;
+.list {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 
-    .list {
-        width: 100%;
-        overflow-y: auto;
+    .row {
+        padding: $spacing-small;
 
-        .row {
+        &:not(:last-child) {
+            border-bottom: $width-separator-thin solid $color-separator;
+        }
+
+        .title {
+            margin-bottom: $spacing-small;
+            color: $color-accent;
+            font-size: $font-size-small;
+            font-weight: $font-weight-bold;
+        }
+
+        .cell {
             display: flex;
-            flex-direction: column;
-            padding-bottom: $spacing-extra-small;
 
-            .row-title {
-                font-weight: $font-weight-bold;
+            .marker {
+                flex-shrink: 0;
+                align-self: flex-start;
+                padding-right: $spacing-small;
+                color: $color-label;
             }
 
-            .cell {
-                margin-left: $spacing-extra-small;
-                word-wrap: break-word;
-
-                &:first-child {
-                    margin-left: 0;
-                }
-
-                &:not(:last-child) {
-                    &::after {
-                        content: ',';
-                    }
-                }
+            .label {
+                flex-grow: 1;
             }
         }
     }
 }
 
-.matrix-cell {
-    flex-shrink: 0;
-    margin: $spacing-extra-small;
-    background-color: $color-background;
-    cursor: pointer;
-    padding: $spacing-small $spacing-medium;
-    color: $color-text;
-    user-select: none;
-
-    &.active {
-        background-color: $color-accent;
-        color: $color-text-on-accent;
-    }
-}
-
-.matrix-row {
-    display: flex;
-    align-items: center;
-    border: $width-separator-thin solid $color-separator;
-
-    .title {
-        flex-basis: $width-matrix-1d-title;
-        flex-shrink: 0;
-        padding: $spacing-medium;
-    }
-
-    .cells {
-        display: flex;
-        flex-basis: 100%;
-        flex-grow: 1;
-        flex-wrap: wrap;
-    }
-
-    .action-buttons {
-        flex-shrink: 0;
-    }
-}
-
-.tagging-matrix-1d,
-.framework-matrix-1d {
-    width: 100%;
-}
-
-.tagging-matrix-1d {
+.overview {
     .matrix-row {
-        border: 0;
-        border-bottom: $width-separator-thin solid $color-separator;
+        @extend %matrix-1d-row;
 
-        .matrix-cell {
-            outline: 0;
-            border: 0;
-            font-family: inherit;
-            font-size: inherit;
+        .cells {
+            .matrix-cell {
+                @extend %matrix-1d-cell;
+                outline: 0;
+                border: 0;
+                font-family: inherit;
+                font-size: inherit;
+
+                &.active {
+                    background-color: $color-accent;
+                    color: $color-text-on-accent;
+                }
+            }
         }
     }
 }

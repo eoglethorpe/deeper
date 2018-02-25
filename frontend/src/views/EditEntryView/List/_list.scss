@@ -42,6 +42,7 @@
         .entry {
             background-color: $color-background-row;
             padding: $spacing-small;
+            overflow-x: auto;
 
             .apply-buttons {
                 display: flex;
@@ -55,6 +56,16 @@
             :global {
                 .grid-item {
                     @extend %grid-item;
+
+                    .header {
+                        border: 0;
+                        background-color: transparent;
+                    }
+
+                    .content {
+                        border: 0;
+                        background-color: transparent;
+                    }
                 }
             }
 

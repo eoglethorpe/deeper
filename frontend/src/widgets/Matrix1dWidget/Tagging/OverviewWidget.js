@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -24,7 +23,6 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -123,14 +121,12 @@ export default class Matrix1dOverview extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="tagging-matrix-1d">
-                <ListView
-                    data={data.rows}
-                    className={styles.rows}
-                    keyExtractor={Matrix1dOverview.rowKeyExtractor}
-                    modifier={this.renderRow}
-                />
-            </div>
+            <ListView
+                className={styles.overview}
+                data={data.rows}
+                keyExtractor={Matrix1dOverview.rowKeyExtractor}
+                modifier={this.renderRow}
+            />
         );
     }
 }

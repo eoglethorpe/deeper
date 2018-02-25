@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -33,7 +32,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class NumberFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -41,12 +39,17 @@ export default class NumberFrameworkList extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const {
+            title,
+            editAction,
+        } = this.props;
+
         this.state = {
             showEditModal: false,
-            title: props.title,
+            title,
         };
 
-        this.props.editAction(this.handleEdit);
+        editAction(this.handleEdit);
     }
 
     handleWidgetTitleChange = (value) => {
@@ -67,50 +70,72 @@ export default class NumberFrameworkList extends React.PureComponent {
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
         const { title } = this.state;
+        const { onChange } = this.props;
 
-        this.props.onChange(
+        onChange(
             undefined,
             title,
         );
     }
 
-    render() {
-        const { showEditModal, title } = this.state;
+    renderEditModal = () => {
+        const {
+            title,
+            showEditModal,
+        } = this;
+
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editTitleModalHeader');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('widgetTitlePlaceholder');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <div styleName="number-list">
+            <Modal>
+                <ModalHeader title={headerTitle} />
+                <ModalBody>
+                    <TextInput
+                        label={titleInputLabel}
+                        placeholder={titleInputPlaceholder}
+                        onChange={this.handleWidgetTitleChange}
+                        value={title}
+                        showHintAndError={false}
+                        autoFocus
+                        selectOnFocus
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    render() {
+        const EditModal = this.renderEditModal;
+        const separatorText = ' ';
+
+        return (
+            <div className={styles.list}>
                 <NumberInput
-                    styleName="number-input"
+                    className={styles.input}
                     placeholder={this.props.afStrings('numberPlaceholder')}
                     showLabel={false}
                     showHintAndError={false}
-                    separator=" "
+                    separator={separatorText}
                     disabled
                 />
-                { showEditModal &&
-                    <Modal>
-                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
-                        <ModalBody>
-                            <TextInput
-                                label={this.props.afStrings('titleLabel')}
-                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                                autoFocus
-                                selectOnFocus
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <EditModal />
             </div>
         );
     }

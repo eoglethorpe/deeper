@@ -574,6 +574,8 @@ const initialLangState = {
                 7037: 'Request Schema',
                 7038: 'Loading Api',
                 7039: 'Subsectors',
+                7040: 'Untitled Row',
+                7041: 'No row selected',
             },
             views: {
                 af: {
@@ -598,7 +600,9 @@ const initialLangState = {
                     matrix2DWidgetLabel: 723,
                     dimensionXLabel: 726,
                     dimensionYLabel: 724,
-                    untiledDimensionTitle: 782,
+                    untitledDimensionTitle: 782,
+                    untitledRowTitle: 7040,
+                    noRowSelected: 7041,
                     tooltipTitle: 733,
                     multiselectWidgetLabel: 737,
                     optionLabel: 738,

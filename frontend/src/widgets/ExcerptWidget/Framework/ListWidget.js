@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -21,15 +20,17 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class ExcerptTextList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     render() {
+        const { afStrings } = this.props;
+        const contentText = afStrings('textOrImageExcerptWidgetLabel');
+
         return (
-            <div styleName="excerpt-list">
-                {this.props.afStrings('textOrImageExcerptWidgetLabel')}
+            <div className={styles.list}>
+                {contentText}
             </div>
         );
     }

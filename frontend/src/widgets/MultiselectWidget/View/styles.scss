@@ -1,28 +1,25 @@
 @import '../../../stylesheets/base';
 
-.multiselect-list {
-    padding: $spacing-small 0;
+.list {
+    display: flex;
+    flex-direction: column;
+    padding: $spacing-small;
+    width: 100%;
     height: 100%;
+    overflow: auto;
 
-    .multiselect {
-        width: 100%;
-    }
-
-    .multiselect-list-view {
+    .selected-option {
         display: flex;
-        flex-direction: column;
-        overflow: auto;
 
-        .multiselect-content {
-            display: flex;
-            flex-grow: 1;
-
-            .multiselect-name {
-                flex-grow: 1;
-                margin-bottom: $spacing-small;
-                padding: $spacing-extra-small $spacing-small;
-            }
+        .marker {
+            flex-shrink: 0;
+            align-self: flex-start;
+            padding-right: $spacing-extra-small-alt;
+            color: $color-label;
         }
 
+        .label {
+            flex-grow: 1;
+        }
     }
 }

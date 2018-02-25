@@ -8,7 +8,7 @@ const multiselectWidget = {
     title: 'organigramWidgetLabel',
     analysisFramework: {
         listComponent: FrameworkListWidget,
-        listMinSize: { width: 216, height: 108 },
+        listMinSize: { width: 160, height: 192 },
     },
     tagging: {
         listComponent: TaggingListWidget,

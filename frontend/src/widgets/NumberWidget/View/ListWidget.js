@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -16,7 +15,6 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class NumberViewList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -25,13 +23,14 @@ export default class NumberViewList extends React.PureComponent {
         const { attribute = {} } = this.props;
         const { value } = attribute;
 
+        const separatorText = ' ';
+        const invalidText = '-';
+
         return (
-            <div
-                styleName="number-list"
-            >
+            <div className={styles.list}>
                 <Numeral
-                    separator=" "
-                    invalidText="-"
+                    separator={separatorText}
+                    invalidText={invalidText}
                     showThousandSeparator
                     precision={null}
                     value={value}

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -16,18 +15,15 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class DateViewList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     render() {
-        const {
-            attribute,
-        } = this.props;
+        const { attribute } = this.props;
 
         return (
-            <div styleName="date-list">
+            <div className={styles.list}>
                 <FormattedDate
                     date={attribute && attribute.value}
                     mode="dd-MM-yyyy"

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
+import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import { iconNames } from '../../../constants';
 import { afStringsSelector } from '../../../redux';
@@ -38,7 +38,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class OrganigramTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -49,7 +48,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
 
         const { attribute: { values = [] } = {} } = props;
         this.state = {
-            showEditModal: false,
+            showOrgChartModal: false,
             values,
         };
     }
@@ -64,18 +63,18 @@ export default class OrganigramTaggingList extends React.PureComponent {
     }
 
     handleShowModal = () => {
-        this.setState({ showEditModal: true });
+        this.setState({ showOrgChartModal: true });
     }
 
     handleCancelClick = () => {
-        this.setState({ showEditModal: false });
+        this.setState({ showOrgChartModal: false });
 
         const { attribute: { values = [] } = {} } = this.props;
         this.setState({ values });
     }
 
     handleSaveClick = () => {
-        this.setState({ showEditModal: false });
+        this.setState({ showOrgChartModal: false });
 
         const { api, id, entryId } = this.props;
         const attribute = { values: this.state.values };
@@ -93,47 +92,80 @@ export default class OrganigramTaggingList extends React.PureComponent {
     labelAccessor = organ => organ.title;
     childAccessor = organ => organ.organs;
 
-    render() {
+    renderOrgChartModal = () => {
+        const { showOrgChartModal } = this.state;
+        const { data } = this.props;
+
+        if (!showOrgChartModal) {
+            return null;
+        }
+
         return (
-            <div styleName="organigram-list">
-                <ul>
-                    {
-                        this.state.values.map(value => (
-                            <li key={value.id}>
-                                {value.name}
-                            </li>
-                        ))
-                    }
-                </ul>
-                <AccentButton
-                    styleName="show-organigram-button"
-                    onClick={this.handleShowModal}
-                    iconName={iconNames.chart}
-                    transparent
+            <Modal className={styles['org-chart-modal']}>
+                <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
+                <ModalBody className={styles.body}>
+                    <OrgChart
+                        data={data}
+                        labelAccessor={this.labelAccessor}
+                        idAccessor={this.idAccessor}
+                        childAccessor={this.childAccessor}
+                        onSelection={this.handleSelection}
+                        value={this.state.values}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleCancelClick} >
+                        {this.props.afStrings('cancelButtonLabel')}
+                    </Button>
+                    <PrimaryButton onClick={this.handleSaveClick} >
+                        {this.props.afStrings('applyButtonLabel')}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    renderSelectedOrgan = (key, data) => {
+        const {
+            id,
+            name,
+        } = data;
+        const marker = '●';
+
+        return (
+            <div
+                className={styles.organ}
+                key={id}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    { name }
+                </div>
+            </div>
+        );
+    }
+
+    render() {
+        const OrgChartModal = this.renderOrgChartModal;
+        const { values } = this.state;
+
+        return (
+            <div className={styles.list}>
+                <header className={styles.header}>
+                    <AccentButton
+                        onClick={this.handleShowModal}
+                        iconName={iconNames.chart}
+                        transparent
+                    />
+                </header>
+                <ListView
+                    className={styles['selected-organs']}
+                    data={values}
+                    modifier={this.renderSelectedOrgan}
                 />
-                { this.state.showEditModal &&
-                    <Modal styleName="edit-value-modal">
-                        <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
-                        <ModalBody>
-                            <OrgChart
-                                data={this.props.data}
-                                labelAccessor={this.labelAccessor}
-                                idAccessor={this.idAccessor}
-                                childAccessor={this.childAccessor}
-                                onSelection={this.handleSelection}
-                                value={this.state.values}
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleCancelClick} >
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleSaveClick} >
-                                {this.props.afStrings('applyButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <OrgChartModal />
             </div>
         );
     }

@@ -1,8 +1,5 @@
 @import '../../../stylesheets/base';
 
-.date-list {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 0;
+.list {
+    padding: $spacing-extra-small $spacing-small;
 }

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const defaultProps = {
 };
 
 @BoundError
-@CSSModules(styles)
 export default class DateTaggingList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -30,7 +28,9 @@ export default class DateTaggingList extends React.PureComponent {
         const {
             data: { informationDateSelected } = {},
             attribute = {},
-            api, id, entryId,
+            api,
+            id,
+            entryId,
         } = this.props;
 
 
@@ -43,10 +43,13 @@ export default class DateTaggingList extends React.PureComponent {
     }
 
     handleChange = (value) => {
-        const { api, id, entryId, data } = this.props;
-        const attribute = {
-            value,
-        };
+        const {
+            api,
+            id,
+            entryId,
+            data,
+        } = this.props;
+        const attribute = { value };
 
         const modifier = api.getEntryModifier(entryId)
             .setAttribute(id, attribute);
@@ -54,22 +57,19 @@ export default class DateTaggingList extends React.PureComponent {
         if (data && data.informationDateSelected) {
             modifier.setDate(value);
         }
-
         modifier.apply();
     }
 
     render() {
-        const {
-            attribute,
-        } = this.props;
+        const { attribute } = this.props;
 
         return (
-            <div styleName="date-list">
+            <div className={styles.list}>
                 <DateInput
-                    styleName="date-input"
+                    className={styles['date-input']}
                     onChange={this.handleChange}
-                    value={attribute && attribute.value}
                     showHintAndError={false}
+                    value={attribute && attribute.value}
                 />
             </div>
         );

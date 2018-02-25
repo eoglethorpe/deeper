@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -56,7 +55,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class ScaleFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -104,21 +102,18 @@ export default class ScaleFrameworkList extends React.PureComponent {
         />
     )
 
-    getScale = (key, data) => (
-        <button
-            key={key}
-            title={data.title}
-            className={this.getSelectedScaleStyle(key)}
-            style={{ backgroundColor: data.color }}
-        />
-    )
-
     SortableScaleUnit = SortableElement(({ value: { data, key } }) => {
         const { defaultScaleUnit } = this.state;
         let defaultIconName = iconNames.checkboxOutlineBlank;
         if (defaultScaleUnit === key) {
             defaultIconName = iconNames.checkbox;
         }
+
+        const { afStrings } = this.props;
+        const colorInputLabel = afStrings('colorLabel');
+        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
+        const titleInputLabel = afStrings('titleLabel');
+        const defaultButtonLabel = afStrings('defaultButtonLabel');
 
         return (
             <div
@@ -127,15 +122,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
             >
                 <DragHandle />
                 <ColorInput
-                    label={this.props.afStrings('colorLabel')}
+                    label={colorInputLabel}
                     onChange={newColor => this.handleColorChange(newColor, key)}
                     value={data.color}
                     showHintAndError={false}
                 />
                 <TextInput
                     className={styles['title-input']}
-                    label={this.props.afStrings('titleLabel')}
-                    placeholder={this.props.afStrings('titlePlaceholderScale')}
+                    label={titleInputLabel}
+                    placeholder={titleInputPlaceholder}
                     onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
                     value={data.title}
                     showHintAndError={false}
@@ -151,7 +146,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         className={styles.label}
                         htmlFor={`${key}-check-button`}
                     >
-                        {this.props.afStrings('defaultButtonLabel')}
+                        { defaultButtonLabel }
                     </label>
                     <span className={defaultIconName} />
                 </AccentButton>
@@ -167,15 +162,17 @@ export default class ScaleFrameworkList extends React.PureComponent {
     })
 
     SortableList = SortableContainer(({ items: scaleUnits }) => {
-        let additionalStyle = '';
+        const classNames = [
+            styles['sortable-list'],
+        ];
 
         if (scaleUnits.length === 0) {
-            additionalStyle = styles['no-items'];
+            classNames.push(styles['no-items']);
         }
 
         return (
             <ListView
-                className={`${styles.list} ${additionalStyle}`}
+                className={classNames.join(' ')}
                 data={scaleUnits}
                 keyExtractor={ScaleFrameworkList.rowKeyExtractor}
                 modifier={this.getEditScaleUnits}
@@ -200,22 +197,37 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     handleModalCancelButtonClick = () => {
+        const {
+            data = emptyObject,
+            title,
+        } = this.props;
+
         this.setState({
             showEditModal: false,
-            scaleUnits: (this.props.data || emptyObject).scaleUnits || emptyList,
-            title: this.props.title,
+            scaleUnits: data.scaleUnits || emptyList,
+            title,
         });
     }
 
     handleModalSaveButtonClick = () => {
-        this.setState({ showEditModal: false });
-        const { scaleUnits, title, defaultScaleUnit } = this.state;
+        const {
+            scaleUnits,
+            title,
+            defaultScaleUnit,
+        } = this.state;
+        const {
+            data,
+            onChange,
+        } = this.props;
+
         const newScaleUnits = {
-            ...this.props.data,
+            ...data,
             value: defaultScaleUnit,
             scaleUnits,
         };
-        this.props.onChange(
+
+        this.setState({ showEditModal: false });
+        onChange(
             newScaleUnits,
             title,
         );
@@ -288,76 +300,95 @@ export default class ScaleFrameworkList extends React.PureComponent {
         });
     }
 
-    render() {
+    renderScale = (key, data) => (
+        <button
+            key={key}
+            title={data.title}
+            className={this.getSelectedScaleStyle(key)}
+            style={{ backgroundColor: data.color }}
+        />
+    )
+
+    renderEditModal = () => {
         const {
             scaleUnits,
             showEditModal,
             title,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editScaleModalTitle');
+        const addScaleUnitButtonLabel = afStrings('addscaleUnitButtonLabel');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
         return (
-            <div styleName="scale-list">
-                <ListView
-                    styleName="scale"
-                    data={scaleUnits}
-                    keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-                    modifier={this.getScale}
+            <Modal className={styles['edit-modal']}>
+                <ModalHeader
+                    title={headerTitle}
+                    rightComponent={
+                        <PrimaryButton
+                            iconName={iconNames.add}
+                            onClick={this.handleAddScaleUnitButtonClick}
+                            transparent
+                        >
+                            { addScaleUnitButtonLabel }
+                        </PrimaryButton>
+                    }
                 />
-                { showEditModal &&
-                    <Modal
-                        styleName="edit-scales-modal"
-                        onClose={this.handleEditModalClose}
-                    >
-                        <ModalHeader
-                            title={this.props.afStrings('editScaleModalTitle')}
-                            rightComponent={
-                                <PrimaryButton
-                                    iconName={iconNames.add}
-                                    onClick={this.handleAddScaleUnitButtonClick}
-                                    transparent
-                                >
-                                    {this.props.afStrings('addscaleUnitButtonLabel')}
-                                </PrimaryButton>
-                            }
+                <ModalBody className={styles.body}>
+                    <div className={styles['title-input-container']} >
+                        <TextInput
+                            label={titleInputLabel}
+                            placeholder={titleInputPlaceholder}
+                            onChange={this.handleScaleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                            autoFocus
+                            selectOnFocus
                         />
-                        <ModalBody styleName="scale-modal-body">
-                            <div styleName="general-info-container">
-                                <TextInput
-                                    className={styles['title-input']}
-                                    label={this.props.afStrings('titleLabel')}
-                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
-                                    onChange={this.handleScaleWidgetTitleChange}
-                                    value={title}
-                                    showHintAndError={false}
-                                    autoFocus
-                                    selectOnFocus
-                                />
-                            </div>
-                            <div styleName="scale-units-container">
-                                <this.SortableList
-                                    items={scaleUnits}
-                                    onSortEnd={this.onSortEnd}
-                                    lockAxis="y"
-                                    lockToContainerEdges
-                                    useDragHandle
-                                />
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton
-                                onClick={this.handleModalSaveButtonClick}
-                            >
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
-            </div>
+                    </div>
+                    <div className={styles['scale-units']}>
+                        <this.SortableList
+                            items={scaleUnits}
+                            onSortEnd={this.onSortEnd}
+                            lockAxis="y"
+                            lockToContainerEdges
+                            useDragHandle
+                        />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
         );
+    }
+
+    render() {
+        const { scaleUnits } = this.state;
+        const EditModal = this.renderEditModal;
+
+        return ([
+            <ListView
+                key="content"
+                className={styles.list}
+                data={scaleUnits}
+                keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+                modifier={this.renderScale}
+            />,
+            <EditModal key="modal" />,
+        ]);
     }
 }

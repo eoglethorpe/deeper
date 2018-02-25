@@ -1,37 +1,26 @@
 @import '../../../stylesheets/base';
 
-.scale-list {
+.list {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: $spacing-small;
+    width: 100%;
     height: 100%;
+    overflow: auto;
 
-    .scale {
-        display: flex;
-        align-items: center;
-
-        .scale-unit {
-            margin-left: $spacing-extra-small;
-            outline: 0;
-            border: 0;
-            padding: 0;
-            width: $width-scale-widget-unit;
-            height: $height-scale-widget-unit;
-
-            &.selected {
-                width: $width-scale-widget-unit-selected;
-                height: $height-scale-widget-unit-selected;
-            }
-        }
-    }
-}
-
-%modal {
-    width: 480px;
-
-    :global .modal-body {
+    .scale-unit {
+        margin-left: $spacing-extra-small;
+        outline: 0;
+        border: 0;
         padding: 0;
-        height: 400px;
+        width: $width-scale-widget-unit;
+        height: $height-scale-widget-unit;
+
+        &.selected {
+            width: $width-scale-widget-unit-selected;
+            height: $height-scale-widget-unit-selected;
+        }
     }
 }
 
@@ -79,30 +68,29 @@
     }
 }
 
-.edit-scales-modal {
-    @extend %modal;
+$height-edit-modal: 72vh;
 
-    .scale-modal-body {
+.edit-modal {
+    width: $width-modal-medium;
+    height: $height-edit-modal;
+
+    .body {
         display: flex;
         flex-direction: column;
+        padding: 0;
 
-        .general-info-container {
-            flex-shrink: 0;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-small $spacing-medium-alt;
-
-            .title-input {
-                width: auto;
-            }
+        .title-input-container {
+            background-color: $color-foreground-alt;
+            padding: $spacing-medium;
         }
     }
 
-    .scale-units-container {
+    .scale-units {
         display: flex;
         flex-grow: 1;
         padding: 0;
 
-        .list {
+        .sortable-list {
             flex-basis: 100%;
             flex-shrink: 0;
             border-left: $width-separator-thin solid $color-separator;

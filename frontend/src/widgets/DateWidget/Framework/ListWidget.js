@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -38,7 +37,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class DateFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -46,13 +44,18 @@ export default class DateFrameworkList extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const {
+            title,
+            editAction,
+        } = props;
+
+        const informationDateSelected = (props.data || emptyObject).informationDateSelected;
         this.state = {
             showEditModal: false,
-            title: props.title,
-            informationDateSelected: (props.data || emptyObject).informationDateSelected,
+            title,
+            informationDateSelected,
         };
-
-        this.props.editAction(this.handleEdit);
+        editAction(this.handleEdit);
     }
 
     handleWidgetTitleChange = (value) => {
@@ -67,69 +70,93 @@ export default class DateFrameworkList extends React.PureComponent {
         this.setState({ showEditModal: true });
     }
 
-    handleModalCancelButtonClick = () => {
+    handleEditModalCancelButtonClick = () => {
+        const {
+            data,
+            title,
+        } = this.props;
+
         this.setState({
             showEditModal: false,
-            title: this.props.title,
-            informationDateSelected: this.props.data.informationDateSelected,
+            title,
+            informationDateSelected: data.informationDateSelected,
         });
     }
 
-    handleModalSaveButtonClick = () => {
+    handleEditModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
-        const { title, informationDateSelected } = this.state;
-        const data = { informationDateSelected };
-
-        this.props.onChange(
-            data,
+        const { onChange } = this.props;
+        const {
             title,
+            informationDateSelected,
+        } = this.state;
+        const data = { informationDateSelected };
+        onChange(data, title);
+    }
+
+    renderEditModal = () => {
+        const {
+            showEditModal,
+            title: titleValue,
+            informationDateSelected,
+        } = this.state;
+
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+
+        const headerTitle = afStrings('editTitleModalHeader');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('widgetTitlePlaceholder');
+        const checkboxLabel = afStrings('informationDateCheckboxLabel');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
+        return (
+            <Modal className={styles['edit-modal']}>
+                <ModalHeader title={headerTitle} />
+                <ModalBody>
+                    <TextInput
+                        autoFocus
+                        label={titleInputLabel}
+                        onChange={this.handleWidgetTitleChange}
+                        placeholder={titleInputPlaceholder}
+                        selectOnFocus
+                        showHintAndError={false}
+                        value={titleValue}
+                    />
+                    <Checkbox
+                        className={styles.checkbox}
+                        onChange={this.handleInformationDataCheck}
+                        value={informationDateSelected}
+                        label={checkboxLabel}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleEditModalCancelButtonClick}>
+                        {cancelButtonLabel}
+                    </Button>
+                    <PrimaryButton onClick={this.handleEditModalSaveButtonClick}>
+                        {saveButtonLabel}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
         );
     }
 
     render() {
-        const {
-            showEditModal,
-            title,
-            informationDateSelected,
-        } = this.state;
+        const EditModal = this.renderEditModal;
 
         return (
-            <div styleName="date-list">
+            <div className={styles.list}>
                 <DateInput
-                    styleName="date-input"
+                    className={styles['date-input']}
                     showHintAndError={false}
                     disabled
                 />
-                { showEditModal &&
-                    <Modal>
-                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
-                        <ModalBody styleName="modal-body">
-                            <TextInput
-                                label={this.props.afStrings('titleLabel')}
-                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                                autoFocus
-                                selectOnFocus
-                            />
-                            <Checkbox
-                                styleName="checkbox"
-                                onChange={this.handleInformationDataCheck}
-                                value={informationDateSelected}
-                                label={this.props.afStrings('informationDateCheckboxLabel')}
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <EditModal />
             </div>
         );
     }

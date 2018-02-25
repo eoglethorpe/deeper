@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styles from './styles.scss';
@@ -26,7 +25,6 @@ const defaultProps = {
     selectedCells: {},
 };
 
-@CSSModules(styles)
 export default class MatrixRow extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -67,8 +65,8 @@ export default class MatrixRow extends React.PureComponent {
     renderCell = (key, data) => (
         <MatrixCell
             key={key}
-            onClick={() => this.handleCellClick(key)}
-            onDrop={droppedData => this.handleCellDrop(key, droppedData)}
+            onClick={() => { this.handleCellClick(key); }}
+            onDrop={(droppedData) => { this.handleCellDrop(key, droppedData); }}
             active={this.props.selectedCells[key]}
         >
             { data.value }
@@ -83,11 +81,9 @@ export default class MatrixRow extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                styleName="matrix-row"
-            >
+            <div className={styles['matrix-row']}>
                 <div
-                    styleName="title"
+                    className={styles.title}
                     title={tooltip}
                 >
                     { title }

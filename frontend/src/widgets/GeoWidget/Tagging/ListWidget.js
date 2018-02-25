@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -23,7 +22,6 @@ const defaultProps = {
 const emptyList = [];
 
 @BoundError
-@CSSModules(styles)
 export default class GeoTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -84,21 +82,26 @@ export default class GeoTaggingList extends React.PureComponent {
             flatValues,
         } = this.state;
 
+        const { api } = this.props;
+        const regions = api.getProject().regions;
+        // FIXME: use strings
+        const emptyComponent = 'No location selected';
+
         return (
-            <div styleName="geo-list">
+            <div className={styles.list}>
                 <GeoSelection
-                    styleName="geo-select"
-                    onChange={this.handleGeoSelectionChange}
-                    regions={this.props.api.getProject().regions}
-                    value={flatValues}
+                    className={styles['geo-select']}
                     disabled={false}
+                    onChange={this.handleGeoSelectionChange}
+                    regions={regions}
+                    value={flatValues}
                 />
                 <ListView
-                    data={values}
                     className={styles['region-list']}
+                    data={values}
+                    emptyComponent={emptyComponent}
                     keyExtractor={GeoTaggingList.valueKeyExtractor}
                     modifier={this.mapRegionsList}
-                    emptyComponent="-"
                 />
             </div>
         );

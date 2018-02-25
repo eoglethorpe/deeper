@@ -1,9 +1,6 @@
 @import '../../../stylesheets/base';
 
-.date-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.list {
     padding: 0 $spacing-small;
     height: 100%;
 
@@ -12,8 +9,8 @@
     }
 }
 
-.modal-body {
-    padding: $spacing-medium-alt;
+.edit-modal {
+    width: $width-modal-extra-small;
 
     .checkbox {
         margin-top: $spacing-large;

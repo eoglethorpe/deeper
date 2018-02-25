@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -21,15 +20,17 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class Matrix1dList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     render() {
+        const { afStrings } = this.props;
+        const contentText = afStrings('matrix1DWidgetLabel');
+
         return (
-            <div styleName="matrix-one-container">
-                {this.props.afStrings('matrix1DWidgetLabel')}
+            <div className={styles.list}>
+                { contentText }
             </div>
         );
     }

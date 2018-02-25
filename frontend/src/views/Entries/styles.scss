@@ -82,12 +82,21 @@
                     display: flex;
                     align-items: center;
                     background-color: $color-background-row;
-                    padding: $spacing-small;
                     overflow-x: auto;
 
                     :global {
                         .grid-item {
                             @extend %grid-item;
+
+                            .header {
+                                border: 0;
+                                background-color: transparent;
+                            }
+
+                            .content {
+                                border: 0;
+                                background-color: transparent;
+                            }
                         }
                     }
 

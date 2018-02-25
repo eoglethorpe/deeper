@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -8,6 +7,7 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -44,7 +44,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -53,14 +52,20 @@ export default class Multiselect extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const options = props.data.options || emptyList;
+        const {
+            title,
+            data,
+            editAction,
+        } = this.props;
+        const options = data.options || emptyList;
+
         this.state = {
             showEditModal: false,
-            title: props.title,
+            title,
             options,
         };
 
-        this.props.editAction(this.handleEdit);
+        editAction(this.handleEdit);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -69,29 +74,6 @@ export default class Multiselect extends React.PureComponent {
             this.setState({ options });
         }
     }
-
-    getEditValue = (key, data) => (
-        <div
-            className={styles['edit-value']}
-            key={key}
-        >
-            <TextInput
-                className={styles['title-input']}
-                label={this.props.afStrings('optionLabel')}
-                placeholder={this.props.afStrings('optionPlaceholder')}
-                onChange={(value) => { this.handleValueInputChange(key, value); }}
-                value={data.label}
-                autoFocus
-            />
-            <DangerButton
-                className={styles['delete-button']}
-                onClick={() => { this.handleRemoveButtonClick(key); }}
-                transparent
-            >
-                <span className={iconNames.delete} />
-            </DangerButton>
-        </div>
-    )
 
     handleEdit = () => {
         this.setState({ showEditModal: true });
@@ -143,8 +125,10 @@ export default class Multiselect extends React.PureComponent {
     handleModalSaveButtonClick = () => {
         this.setState({ showEditModal: false });
         const { options } = this.state;
+        const { data } = this.props;
+
         const newData = {
-            ...this.props.data,
+            ...data,
             options,
         };
 
@@ -154,69 +138,111 @@ export default class Multiselect extends React.PureComponent {
         );
     }
 
-    render() {
+    renderEditOption = (key, data) => (
+        <div
+            className={styles['edit-option']}
+            key={key}
+        >
+            <TextInput
+                className={styles['title-input']}
+                label={this.props.afStrings('optionLabel')}
+                placeholder={this.props.afStrings('optionPlaceholder')}
+                onChange={(value) => { this.handleValueInputChange(key, value); }}
+                showHintAndError={false}
+                value={data.label}
+                autoFocus
+            />
+            <DangerButton
+                className={styles['delete-button']}
+                onClick={() => { this.handleRemoveButtonClick(key); }}
+                transparent
+            >
+                <span className={iconNames.delete} />
+            </DangerButton>
+        </div>
+    )
+
+    renderEditModal = () => {
         const {
             showEditModal,
             options,
             title,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editMultiselectModalTitle');
+        const titleInputLabel = afStrings('titleLabel');
+        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
+        const optionsTitle = afStrings('optionsHeader');
+        const addOptionButtonLabel = afStrings('addOptionButtonLabel');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
+
         return (
-            <div styleName="multiselect-list">
+            <Modal className={styles['edit-modal']}>
+                <ModalHeader title={headerTitle} />
+                <ModalBody className={styles.body}>
+                    <div className={styles['title-input-container']}>
+                        <TextInput
+                            className={styles['title-input']}
+                            label={titleInputLabel}
+                            placeholder={titleInputPlaceholder}
+                            onChange={this.handleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                            autoFocus
+                            selectOnFocus
+                        />
+                    </div>
+                    <div className={styles['option-inputs']}>
+                        <header className={styles.header}>
+                            <h4>
+                                { optionsTitle }
+                            </h4>
+                            <AccentButton
+                                onClick={this.handleAddOptionButtonClick}
+                                transparent
+                            >
+                                { addOptionButtonLabel }
+                            </AccentButton>
+                        </header>
+                        <ListView
+                            data={options}
+                            className={styles['edit-option-list']}
+                            keyExtractor={Multiselect.valueKeyExtractor}
+                            modifier={this.renderEditOption}
+                        />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        { cancelButtonLabel }
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        { saveButtonLabel }
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    render() {
+        const { options } = this.state;
+        const EditModal = this.renderEditModal;
+
+        return (
+            <div className={styles.list}>
                 <MultiSelectInput
+                    className={styles.input}
                     options={options}
-                    styleName="multiselect"
                     keyExtractor={Multiselect.valueKeyExtractor}
                     disabled
                 />
-                { showEditModal &&
-                    <Modal styleName="edit-value-modal">
-                        <ModalHeader
-                            title={this.props.afStrings('editMultiselectModalTitle')}
-                            rightComponent={
-                                <PrimaryButton
-                                    onClick={this.handleAddOptionButtonClick}
-                                    transparent
-                                >
-                                    {this.props.afStrings('addOptionButtonLabel')}
-                                </PrimaryButton>
-                            }
-                        />
-                        <ModalBody styleName="modal-body">
-                            <div styleName="general-info-container">
-                                <TextInput
-                                    className={styles['title-input']}
-                                    label={this.props.afStrings('titleLabel')}
-                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
-                                    onChange={this.handleWidgetTitleChange}
-                                    value={title}
-                                    showHintAndError={false}
-                                    autoFocus
-                                    selectOnFocus
-                                />
-                            </div>
-                            <header styleName="header">
-                                <h3>
-                                    {this.props.afStrings('optionsHeader')}
-                                </h3>
-                            </header>
-                            <ListView
-                                data={options}
-                                className={styles['value-list']}
-                                keyExtractor={Multiselect.valueKeyExtractor}
-                                modifier={this.getEditValue}
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                <EditModal />
             </div>
         );
     }

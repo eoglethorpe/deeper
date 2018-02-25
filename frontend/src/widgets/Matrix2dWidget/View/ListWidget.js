@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -20,7 +19,6 @@ const defaultProps = {
 const emptyList = [];
 
 @BoundError
-@CSSModules(styles, { allowMultiple: true })
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -83,18 +81,17 @@ export default class Matrix2dList extends React.PureComponent {
             className={styles['tag-unit']}
         >
             <div className={styles['tag-dimension']} >
-                {data.dimension.title}
-
-                <span className={styles['tag-sub-dimension']} >
+                <div className={styles['dimension-title']}>
+                    {data.dimension.title}
+                </div>
+                <div className={styles['subdimension-title']}>
                     {data.subdimension.title}
-                </span>
+                </div>
             </div>
-            <div
-                className={styles['tag-sector']}
-            >
-                <span className={styles['sector-title']} >
+            <div className={styles['tag-sector']}>
+                <div className={styles.title}>
                     {data.sector.title}
-                </span>
+                </div>
                 <ListView
                     className={styles['tag-sub-sector']}
                     data={data.subsectorsWithTitle || emptyList}
@@ -106,29 +103,38 @@ export default class Matrix2dList extends React.PureComponent {
         </div>
     )
 
-    renderSubSector = (key, data) => (
-        <span
-            key={key}
-            className={styles['sub-sector']}
-        >
-            {data.title}
-        </span>
-    )
+    renderSubSector = (key, data) => {
+        const marker = '●';
+
+        return (
+            <div
+                key={key}
+                className={styles['sub-sector']}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    { data.title }
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const { data, attribute } = this.props;
         const selectedSectors = this.getSelectedSectors(data, attribute);
 
+        const emptyComponent = 'Nothing here';
+
         return (
-            <div styleName="matrix-2d-list">
-                <ListView
-                    keyExtractor={Matrix2dList.rowKeyExtractor}
-                    data={selectedSectors || emptyList}
-                    modifier={this.renderTagUnit}
-                    emptyComponent={'-'}
-                    styleName="list"
-                />
-            </div>
+            <ListView
+                className={styles.list}
+                keyExtractor={Matrix2dList.rowKeyExtractor}
+                data={selectedSectors || emptyList}
+                modifier={this.renderTagUnit}
+                emptyComponent={emptyComponent}
+            />
         );
     }
 }

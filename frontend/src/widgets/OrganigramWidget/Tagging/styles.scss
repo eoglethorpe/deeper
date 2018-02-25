@@ -1,34 +1,64 @@
 @import '../../../stylesheets/base';
 
-.organigram-list {
-    position: relative;
-    padding: $spacing-small;
+.list {
+    width: 100%;
     height: 100%;
 
-    .show-organigram-button {
-        position: absolute;
-        top: 0;
-        right: 0;
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-end;
+    }
+
+    .selected-organs {
+        flex-grow: 1;
+        overflow: auto;
+
+        .organ {
+            display: flex;
+            padding: 0 $spacing-small;
+
+            .marker {
+                flex-shrink: 0;
+                align-self: flex-start;
+                padding-right: $spacing-small;
+                color: $color-label;
+            }
+
+            .label {
+                flex-grow: 1;
+            }
+        }
     }
 }
 
-%modal {
-    width: 72vw;
+$width-modal: 80vw;
+$height-modal: 80vh;
 
-    :global {
-        .responsive-wrapper {
-            height: 100%;
+.org-chart-modal {
+    width: $width-modal;
+    height: $height-modal;
+
+    .body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .header {
+            padding: 0 $spacing-small;
         }
 
-        .modal-body {
-            width: auto;
-            min-width: 600px;
-            height: 400px;
-            max-width: 96vw;
+        :global {
+            .responsive-wrapper {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                .org-chart-wrapper {
+                    flex-grow: 1;
+                }
+            }
         }
     }
 }
 
-.edit-value-modal {
-    @extend %modal;
-}

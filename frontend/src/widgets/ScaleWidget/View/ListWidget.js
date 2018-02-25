@@ -27,37 +27,40 @@ export default class ScaleViewWidget extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    getActiveSelectionStyle = (key) => {
-        const { selectedScale } = this.props.attribute || emptyObject;
-        const scaleUnitStyle = ['scale-unit'];
+    getActiveSelectionClassName = (key) => {
+        const { attribute = emptyObject } = this.props;
+        const { selectedScale } = attribute;
+
+        const classNames = [
+            styles['scale-unit'],
+        ];
+
         if (selectedScale === key) {
-            scaleUnitStyle.push('selected');
+            classNames.push(styles.selected);
         }
-        const styleNames = scaleUnitStyle.map(d => styles[d]);
-        return styleNames.join(' ');
+
+        return classNames.join(' ');
     }
 
     getScale = (key, data) => (
         <button
             key={key}
             title={data.title}
-            className={this.getActiveSelectionStyle(key)}
+            className={this.getActiveSelectionClassName(key)}
             style={{ backgroundColor: data.color }}
         />
     )
 
     render() {
-        const { data } = this.props;
+        const { data = emptyObject } = this.props;
 
         return (
-            <div styleName="scales">
-                <ListView
-                    styleName="scale"
-                    data={(data || emptyObject).scaleUnits || emptyList}
-                    keyExtractor={ScaleViewWidget.rowKeyExtractor}
-                    modifier={this.getScale}
-                />
-            </div>
+            <ListView
+                className={styles.list}
+                data={data.scaleUnits || emptyList}
+                keyExtractor={ScaleViewWidget.rowKeyExtractor}
+                modifier={this.getScale}
+            />
         );
     }
 }

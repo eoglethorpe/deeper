@@ -1,11 +1,24 @@
 @import '../../../stylesheets/base';
 
-.organigram-list {
-    display: flex;
-    justify-content: flex-start;
+.list {
+    padding: $spacing-small;
+    width: 100%;
     height: 100%;
+    overflow: auto;
 
-    .organigram {
-        width: 100%;
+    .organ {
+        display: flex;
+
+        .marker {
+            flex-shrink: 0;
+            align-self: flex-start;
+            padding-right: $spacing-small;
+            color: $color-label;
+        }
+
+        .label {
+            flex-grow: 1;
+        }
     }
 }
+

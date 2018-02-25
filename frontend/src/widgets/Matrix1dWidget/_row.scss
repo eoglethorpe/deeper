@@ -1,0 +1,21 @@
+%matrix-1d-row {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+        border-bottom: $width-separator-thin solid $color-separator;
+    }
+
+    .title {
+        flex-basis: $width-matrix-1d-title;
+        flex-shrink: 0;
+        padding: $spacing-extra-small $spacing-small;
+    }
+
+    .cells {
+        display: flex;
+        flex-basis: 100%;
+        flex-grow: 1;
+        flex-wrap: wrap;
+    }
+}

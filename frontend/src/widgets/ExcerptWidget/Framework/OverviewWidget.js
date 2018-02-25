@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -29,19 +28,23 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
 
     constructor(props) {
         super(props);
 
+        const {
+            title,
+            editAction,
+        } = props;
+
         this.state = {
             showEditModal: false,
-            title: props.title,
+            title,
         };
 
-        this.props.editAction(this.handleEdit);
+        editAction(this.handleEdit);
     }
 
     handleWidgetTitleChange = (value) => {
@@ -53,9 +56,10 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     handleModalCancelButtonClick = () => {
+        const { title } = this.props;
         this.setState({
             showEditModal: false,
-            title: this.props.title,
+            title,
         });
     }
 
@@ -71,37 +75,60 @@ export default class ExcerptTextOverview extends React.PureComponent {
         );
     }
 
-    render() {
-        const { showEditModal, title } = this.state;
+    renderEditModal = () => {
+        const {
+            showEditModal,
+            title,
+        } = this.state;
+
+        if (!showEditModal) {
+            return null;
+        }
+
+        const { afStrings } = this.props;
+        const headerTitle = afStrings('editTitleModalHeader');
+        const cancelButtonLabel = afStrings('cancelButtonLabel');
+        const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <div styleName="excerpt-overview">
-                {this.props.afStrings('textOrImageExcerptWidgetLabel')}
-                { showEditModal &&
-                    <Modal>
-                        <ModalHeader title={this.props.afStrings('editTitleModalHeader')} />
-                        <ModalBody>
-                            <TextInput
-                                label={this.props.afStrings('titleLabel')}
-                                placeholder={this.props.afStrings('widgetTitlePlaceholder')}
-                                onChange={this.handleWidgetTitleChange}
-                                value={title}
-                                showHintAndError={false}
-                                autoFocus
-                                selectOnFocus
-                            />
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button onClick={this.handleModalCancelButtonClick}>
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
-                            <PrimaryButton onClick={this.handleModalSaveButtonClick}>
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
-            </div>
+            <Modal className={styles['edit-overview-modal']}>
+                <ModalHeader title={headerTitle} />
+                <ModalBody>
+                    <TextInput
+                        autoFocus
+                        label={this.props.afStrings('titleLabel')}
+                        onChange={this.handleWidgetTitleChange}
+                        placeholder={this.props.afStrings('widgetTitlePlaceholder')}
+                        selectOnFocus
+                        showHintAndError={false}
+                        value={title}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.handleModalCancelButtonClick}>
+                        {cancelButtonLabel}
+                    </Button>
+                    <PrimaryButton onClick={this.handleModalSaveButtonClick}>
+                        {saveButtonLabel}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
         );
+    }
+
+    render() {
+        const { afStrings } = this.props;
+        const EditModal = this.renderEditModal;
+        const contentText = afStrings('textOrImageExcerptWidgetLabel');
+
+        return [
+            <div
+                key="content"
+                className={styles.overview}
+            >
+                {contentText}
+            </div>,
+            <EditModal key="modal" />,
+        ];
     }
 }
