@@ -2,7 +2,8 @@ import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { isTruthy } from '../../vendor/react-store/utils/common';
+import { brush as d3Brush } from 'd3-brush';
+import { select, event } from 'd3-selection';
 
 import { getScreenshot } from '../../utils/browserExtension';
 import styles from './styles.scss';
@@ -10,11 +11,13 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     onCapture: PropTypes.func,
+    onCaptureError: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
     onCapture: undefined,
+    onCaptureError: undefined,
 };
 
 
@@ -25,47 +28,31 @@ export default class Screenshot extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
-        this.mouseDown = false;
         this.state = {
             image: undefined,
-
-            offsetX: undefined,
-            offsetY: undefined,
-            width: undefined,
-            height: undefined,
-
-            startX: undefined,
-            startY: undefined,
-            endX: undefined,
-            endY: undefined,
+            offsetX: 0,
+            offsetY: 0,
+            width: 0,
+            height: 0,
         };
     }
 
     componentDidMount() {
         this.capture();
-
-        this.canvas.addEventListener('mousedown', this.handleMouseDown);
-        this.canvas.addEventListener('mousemove', this.handleMouseMove);
-        this.canvas.addEventListener('mouseup', this.handleMouseUp);
+        this.createBrush();
     }
 
     componentWillUnmount() {
-        this.canvas.removeEventListener('mousedown', this.handleMouseDown);
-        this.canvas.removeEventListener('mousemove', this.handleMouseMove);
-        this.canvas.removeEventListener('mouseup', this.handleMouseUp);
+        if (this.brushGroup) {
+            this.brushGroup.remove();
+        }
     }
 
-    getCroppedImage() {
+    getCroppedImage(startX, startY, endX, endY) {
         const { canvas } = this;
-        const {
-            image,
-            offsetX, offsetY,
-            startX, startY,
-            endX, endY,
-        } = this.state;
+        const { image } = this.state;
 
-        if (!canvas || !image || !startX || !startY || !endX || !endY) {
+        if (!canvas || !image) {
             return undefined;
         }
 
@@ -75,118 +62,103 @@ export default class Screenshot extends React.PureComponent {
         const context = canvas.getContext('2d');
         context.drawImage(
             image,
-            offsetX + startX, offsetY + startY, canvas.width, canvas.height,
+            startX, startY, canvas.width, canvas.height,
             0, 0, canvas.width, canvas.height,
         );
         const croppedImage = canvas.toDataURL('image/jpeg');
-        this.drawCanvas();
 
+        canvas.width = 0;
+        canvas.height = 0;
         return croppedImage;
     }
 
-    capture() {
+    createBrush() {
+        if (!this.svg || !this.brushContainer) {
+            return;
+        }
+
+        const rect = this.svg.getBoundingClientRect();
+
+        const container = select(this.brushContainer);
+        const g = container.append('g').attr('class', 'brush');
+        const brush = d3Brush()
+            .extent([[rect.left, rect.top], [rect.right, rect.bottom]])
+            .on('end', this.handleBrush);
+        g.call(brush);
+
+        this.g = g;
+    }
+
+    handleBrush = () => {
+        if (!this.props.onCapture) {
+            return;
+        }
+
+        const r = event.selection;
+        if (event.selection) {
+            this.props.onCapture(this.getCroppedImage(
+                r[0][0], r[0][1],
+                r[1][0], r[1][1],
+            ));
+        } else {
+            this.props.onCapture(undefined);
+        }
+    }
+
+    capture = () => {
         getScreenshot().then((result) => {
             const scale = window.devicePixelRatio;
 
-            const rect = this.canvas.getBoundingClientRect();
+            const rect = this.svg.getBoundingClientRect();
             const offsetX = rect.left * scale;
             const offsetY = rect.top * scale;
-            const width = (rect.right - rect.left) * scale;
-            const height = (rect.bottom - rect.top) * scale;
+            const width = rect.width * scale;
+            const height = rect.height * scale;
 
             const image = new Image();
             image.onload = () => {
                 this.setState({ image, offsetX, offsetY, width, height });
             };
             image.src = result.image;
-        });
-    }
+        }).catch(() => {
+            // TODO: Add to strings
+            const captureError = 'Failed to capture screenshot.\n ' +
+                'Please make sure you have latest browser extension installed.';
 
-    handleMouseDown = (e) => {
-        this.mouseDown = true;
-        this.setState({
-            startX: e.offsetX,
-            startY: e.offsetY,
-
-            endX: undefined,
-            endY: undefined,
-        });
-    }
-
-    handleMouseMove = (e) => {
-        if (!this.mouseDown) {
-            return;
-        }
-        this.setState({
-            endX: e.offsetX,
-            endY: e.offsetY,
-        });
-    }
-
-    handleMouseUp = (e) => {
-        this.mouseDown = false;
-        this.setState({
-            endX: e.offsetX,
-            endY: e.offsetY,
-        }, () => {
-            if (this.props.onCapture) {
-                this.props.onCapture(this.getCroppedImage());
+            console.error(captureError);
+            if (this.props.onCaptureError) {
+                this.props.onCaptureError(captureError);
             }
         });
-    }
-
-    drawCanvas() {
-        if (!this.canvas) {
-            return;
-        }
-        const {
-            image,
-            offsetX, offsetY,
-            width, height,
-            startX, startY,
-            endX, endY,
-        } = this.state;
-        const { canvas } = this;
-
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-
-        const context = canvas.getContext('2d');
-        context.clearRect(0, 0, canvas.width, canvas.height);
-
-        context.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
-        if (image) {
-            context.drawImage(
-                image,
-                offsetX, offsetY,
-                width, height,
-                0, 0,
-                canvas.width, canvas.height,
-            );
-        }
-
-        if (isTruthy(startX) && isTruthy(startY) && isTruthy(endX) && isTruthy(endY)) {
-            context.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            context.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-            context.fillRect(startX, startY, endX - startX, endY - startY);
-            context.strokeRect(startX, startY, endX - startX, endY - startY);
-        }
     }
 
     render() {
         const {
             className,
         } = this.props;
-        this.drawCanvas();
+        const {
+            image,
+            offsetX, offsetY,
+            width, height,
+        } = this.state;
 
         return (
             <div
                 className={className}
                 styleName="screenshot"
             >
-                <canvas ref={(ref) => { this.canvas = ref; }} />
+                <svg
+                    ref={(ref) => { this.svg = ref; }}
+                    viewBox={`${offsetX} ${offsetY} ${width} ${height}`}
+                >
+                    {image && (
+                        <image
+                            href={image.src}
+                        />
+                    )}
+                    <g ref={(ref) => { this.brushContainer = ref; }} />
+                </svg>
+                <canvas ref={(ref) => { this.canvas = ref; }} width={0} height={0} />
             </div>
         );
     }

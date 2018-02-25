@@ -14,6 +14,8 @@ import {
 } from '../../../../redux';
 import { galleryMapping, galleryType } from '../../../../config/deepMimeTypes';
 
+import notify from '../../../../notify';
+
 import Screenshot from '../../../Screenshot';
 import GalleryImage from '../GalleryImage';
 import GalleryDocs from '../GalleryDocs';
@@ -87,6 +89,16 @@ export default class GalleryViewer extends React.PureComponent {
     }
 
     handleScreenshotClose = () => {
+        this.setState({ screenshotMode: false });
+    }
+
+    handleScreenshotError = (message) => {
+        notify.send({
+            title: 'Screenshot', // FIXME: strings
+            type: notify.type.ERROR,
+            message,
+            duration: notify.duration.MEDIUM,
+        });
         this.setState({ screenshotMode: false });
     }
 
@@ -248,7 +260,12 @@ export default class GalleryViewer extends React.PureComponent {
                     })
                 }
                 <div className={docContainerClassNames.join(' ')}>
-                    { screenshotMode && <Screenshot onCapture={this.handleScreenshot} /> }
+                    { screenshotMode && (
+                        <Screenshot
+                            onCapture={this.handleScreenshot}
+                            onCaptureError={this.handleScreenshotError}
+                        />
+                    )}
                     {
                         this.renderPreview({
                             className: styles.doc,
