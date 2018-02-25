@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {
@@ -61,7 +60,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectDetails extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -243,8 +241,7 @@ export default class ProjectDetails extends React.PureComponent {
         return (
             <HashRouter>
                 <div
-                    className={className}
-                    styleName="project-details"
+                    className={`${className} ${styles['project-details']}`}
                 >
                     <Route
                         exact
@@ -256,18 +253,18 @@ export default class ProjectDetails extends React.PureComponent {
                         project.role === 'admin' ? ([
                             <header
                                 key="header"
-                                styleName="header"
+                                className={styles.header}
                             >
-                                <h2 styleName="heading">
+                                <h2 className={styles.heading}>
                                     { project.title }
                                 </h2>
-                                <div styleName="tabs">
+                                <div className={styles.tabs}>
                                     <List
                                         data={this.routes}
                                         modifier={this.renderLink}
                                         keyExtractor={ProjectDetails.keyExtractor}
                                     />
-                                    <div styleName="empty-space" />
+                                    <div className={styles['empty-space']} />
                                 </div>
                             </header>,
                             <List
@@ -277,7 +274,7 @@ export default class ProjectDetails extends React.PureComponent {
                                 keyExtractor={ProjectDetails.keyExtractor}
                             />,
                         ]) : (
-                            <p styleName="forbidden-text">
+                            <p className={styles['forbidden-text']}>
                                 {this.props.projectStrings('forbiddenText')}
                             </p>
                         )

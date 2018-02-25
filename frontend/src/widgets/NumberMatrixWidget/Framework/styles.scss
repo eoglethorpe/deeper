@@ -27,19 +27,6 @@
     }
 }
 
-.row-col-element {
-    display: flex;
-    flex-shrink: 0;
-    border-top: $width-separator-thin solid $color-separator;
-    border-bottom: $width-separator-thin solid $color-separator;
-    background-color: $color-foreground;
-    padding: $spacing-extra-small $spacing-medium-alt;
-
-    .title-input {
-        flex-grow: 1;
-        margin-left: $spacing-small;
-    }
-}
 
 .edit-matrix-modal {
     .modal-body {
@@ -79,13 +66,14 @@
                 }
             }
 
-            .list {
+            .edit-list {
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
                 overflow-y: auto;
 
-                .row-col-element {
+                .sortable-unit {
+                    flex-shrink: 0;
                     border-top: 0;
                 }
             }
@@ -95,4 +83,34 @@
 
 .draggable-item {
     z-index: 11111;
+}
+
+.sortable-unit {
+    display: flex;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-foreground;
+    padding: $spacing-small 0;
+
+    .drag-handle {
+        display: flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        align-items: center;
+        align-self: stretch;
+        cursor: move;
+        padding: 0 $spacing-medium;
+    }
+
+    .row-col-element {
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: $spacing-extra-small 0;
+
+        .title-input {
+            flex-grow: 1;
+            margin-left: $spacing-small;
+        }
+    }
 }
