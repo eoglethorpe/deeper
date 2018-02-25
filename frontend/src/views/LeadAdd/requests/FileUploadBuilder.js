@@ -62,6 +62,7 @@ export default class FileUploadBuilder {
                 title: response.title,
                 url: response.file,
             },
+            uiState: { serverError: false },
         });
 
         // FOR UPLAOD
@@ -84,6 +85,7 @@ export default class FileUploadBuilder {
             leadId,
             values: { attachment: undefined },
             formErrors: [`${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`],
+            uiState: { serverError: false },
         });
 
         // FOR UPLAOD

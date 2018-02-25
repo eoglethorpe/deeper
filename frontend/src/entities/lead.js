@@ -129,6 +129,7 @@ export const leadAccessor = {
     getFieldErrors: lead => lead.form && lead.form.fieldErrors,
 
     getUiState: lead => lead.uiState,
+    hasServerError: lead => lead.uiState && lead.uiState.serverError,
 };
 
 const leadReference = {
