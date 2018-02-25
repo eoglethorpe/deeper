@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import {
     aryStringsSelector,
+    aryViewMetadataSelector,
+    aryTemplateMetadataSelector,
+    updateAryMetadataAction,
 } from '../../../../redux';
 
 
@@ -17,23 +20,45 @@ import styles from './styles.scss';
 
 const propTypes = {
     aryStrings: PropTypes.func.isRequired,
+    metadata: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    updateMetadata: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
+    metadata: {},
+    aryTemplateMetadata: {},
 };
 
 const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
+    metadata: aryViewMetadataSelector(state),
+    aryTemplateMetadata: aryTemplateMetadataSelector(state),
 });
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => ({
+    updateMetadata: params => dispatch(updateAryMetadataAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    componentWillMount() {
+        this.props.updateMetadata({
+            metadata: {},
+            aryId: 1,
+        });
+    }
+
     render() {
+        const { metadata, aryTemplateMetadata } = this.props;
+
+        console.warn(metadata, aryTemplateMetadata);
+
         return (
             <div className={styles['meta-data']}>
                 <div className={styles.overview}>

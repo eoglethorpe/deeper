@@ -200,5 +200,9 @@ const initialDomainDataState = {
         */
     },
 
+    aryTemplates: {
+        // index is Ary Template id
+        // 1: { },
+    },
 };
 export default initialDomainDataState;

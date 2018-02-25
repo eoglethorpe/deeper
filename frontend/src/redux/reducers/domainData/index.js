@@ -2,6 +2,7 @@ import createReducerWithMap from '../../../utils/createReducerWithMap';
 
 import analysisFrameworksReducers from './analysisFrameworks';
 import categoryEditorsReducers from './categoryEditors';
+import assessmentRegistryReducers from './assessmentRegistry';
 import leadFilterReducers from './leadFilter';
 import entryFilterReducers from './entryFilter';
 import projectsReducers from './projects';
@@ -16,6 +17,7 @@ import initialDomainData from '../../initial-state/domainData';
 const reducers = {
     ...analysisFrameworksReducers,
     ...categoryEditorsReducers,
+    ...assessmentRegistryReducers,
     ...leadFilterReducers,
     ...entryFilterReducers,
     ...projectsReducers,

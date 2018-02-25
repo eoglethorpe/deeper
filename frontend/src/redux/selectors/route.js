@@ -19,6 +19,12 @@ export const ceIdFromRouteSelector = createSelector(
     routeParamsSelector,
     routeParams => routeParams.categoryEditorId,
 );
+
+export const aryIdFromRouteSelector = createSelector(
+    routeParamsSelector,
+    routeParams => routeParams.aryId,
+);
+
 export const countryIdFromRouteSelector = createSelector(
     routeParamsSelector,
     routeParams => routeParams.countryId,
