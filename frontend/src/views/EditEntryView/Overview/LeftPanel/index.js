@@ -1,9 +1,10 @@
 import CSSModules from 'react-css-modules';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
+import MultiViewContainer from '../../../../vendor/react-store/components/View/MultiViewContainer';
+import FixedTabs from '../../../../vendor/react-store/components/View/FixedTabs';
 import Button from '../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
@@ -110,6 +111,62 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
+        const {
+            api,
+            lead,
+            entries,
+        } = this.props;
+
+        const LeadPreview = this.renderLeadPreview;
+        this.views = {
+            'simplified-preview': {
+                component: () => (
+                    <SimplifiedLeadPreview
+                        className={styles['simplified-preview']}
+                        leadId={lead.id}
+                        highlights={api.getEntryHighlights()}
+                        highlightModifier={LeftPanel.highlightModifier}
+                        onLoad={this.handleLoadImages}
+                    />
+                ),
+            },
+            'assisted-tagging': {
+                component: () => (
+                    <AssistedTagging
+                        className={styles['assisted-tagging']}
+                        lead={lead}
+                        api={api}
+                    />
+                ),
+            },
+            'original-preview': {
+                component: () => (
+                    <div className={styles['original-preview']}>
+                        <LeadPreview lead={lead} />
+                    </div>
+                ),
+            },
+            'images-preview': {
+                component: () => (
+                    <ImagesGrid
+                        className={styles['images-preview']}
+                        images={this.state.images}
+                    />
+                ),
+            },
+            'entries-listing': {
+                component: () => (
+                    <div className={styles['entries-list-container']}>
+                        <ListView
+                            className={styles['entries-list']}
+                            modifier={this.renderEntriesList}
+                            data={entries}
+                            keyExtractor={LeftPanel.calcEntryKey}
+                        />
+                    </div>
+                ),
+            },
+        };
     }
 
     componentWillReceiveProps(nextProps) {
@@ -150,23 +207,69 @@ export default class LeftPanel extends React.PureComponent {
         );
     }
 
+    calculateTabsForLead = (lead, images) => {
+        const leadPaneType = LeftPanel.getPaneType(lead);
+
+        let tabs;
+        switch (leadPaneType) {
+            case LEAD_PANE_TYPE.spreadsheet:
+                tabs = {
+                    'original-preview': this.props.entryStrings('tabularTabLabel'),
+                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                };
+                break;
+            case LEAD_PANE_TYPE.image:
+                tabs = {
+                    'original-preview': this.props.entryStrings('imagesTabLabel'),
+                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                };
+                break;
+            case LEAD_PANE_TYPE.text:
+                tabs = {
+                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
+                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
+                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                };
+                break;
+            case LEAD_PANE_TYPE.word:
+            case LEAD_PANE_TYPE.pdf:
+            case LEAD_PANE_TYPE.presentation:
+            case LEAD_PANE_TYPE.website:
+                tabs = {
+                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
+                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
+                    'original-preview': this.props.entryStrings('originalTabLabel'),
+                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                };
+                break;
+            default:
+                return undefined;
+        }
+        if (!images || images.length <= 0) {
+            tabs['images-preview'] = undefined;
+        }
+        tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
+        return tabs;
+    }
+
     handleLoadImages = (response) => {
         if (response.images) {
             this.setState({ images: response.images });
         }
     }
 
-    handleTabSelect = (selectedTab) => {
-        if (selectedTab === this.state.currentTab) {
+    handleTabClick = (key) => {
+        if (key === this.state.currentTab) {
             return;
         }
+
         let oldTab;
-        if (selectedTab === 'entries-listing') {
+        if (key === 'entries-listing') {
             oldTab = this.state.currentTab;
         }
         this.setState({
             oldTab,
-            currentTab: selectedTab,
+            currentTab: key,
         });
     }
 
@@ -185,13 +288,13 @@ export default class LeftPanel extends React.PureComponent {
             .apply();
     }
 
-    renderLeadPreview = (lead) => {
+    renderLeadPreview = ({ lead }) => {
         const { sourceType: type } = lead;
 
         if (LeftPanel.isTypeWithUrl(type) && lead.url) {
             return (
                 <ExternalGallery
-                    styleName="preview"
+                    className={styles.preview}
                     url={lead.url}
                     onScreenshotCapture={this.handleScreenshot}
                     showScreenshot
@@ -201,7 +304,7 @@ export default class LeftPanel extends React.PureComponent {
         } else if (LeftPanel.isTypeWithAttachment(type) && lead.attachment) {
             return (
                 <InternalGallery
-                    styleName="preview"
+                    classname={styles.preview}
                     galleryId={lead.attachment.id}
                     onScreenshotCapture={this.handleScreenshot}
                     showScreenshot
@@ -210,7 +313,7 @@ export default class LeftPanel extends React.PureComponent {
             );
         }
         return (
-            <div styleName="empty-text">
+            <div className={styles['empty-text']}>
                 <h1>
                     {this.props.entryStrings('previewNotAvailableText')}
                 </h1>
@@ -240,6 +343,7 @@ export default class LeftPanel extends React.PureComponent {
                 return null;
         }
     }
+
     renderEntriesList = (key, entry) => {
         const {
             selectedEntryId,
@@ -301,199 +405,39 @@ export default class LeftPanel extends React.PureComponent {
         );
     }
 
-    renderContent = ({
-        showOriginal = true,
-        showSimplified = true,
-        showAssisted = true,
-        labelSimplified = this.props.entryStrings('simplifiedTabLabel'),
-        labelAssisted = this.props.entryStrings('assistedTabLabel'),
-        labelOriginal = this.props.entryStrings('originalTabLabel'),
-    }) => {
-        const {
-            lead,
-            entries,
-            api,
-        } = this.props;
-        const {
-            images,
-            currentTab,
-        } = this.state;
-
-        const tablinks = [];
-        const tabcontents = [];
-        if (showSimplified) {
-            tablinks.push((
-                <TabLink
-                    styleName="tab-header"
-                    to="simplified-preview"
-                    key="simplified-preview"
-                >
-                    {labelSimplified}
-                </TabLink>
-            ));
-            tabcontents.push((
-                <TabContent
-                    styleName="tab"
-                    for="simplified-preview"
-                    key="simplified-preview"
-                >
-                    <SimplifiedLeadPreview
-                        styleName="simplified-preview"
-                        leadId={lead.id}
-                        highlights={api.getEntryHighlights()}
-                        highlightModifier={LeftPanel.highlightModifier}
-                        onLoad={this.handleLoadImages}
-                    />
-                </TabContent>
-            ));
-        }
-        if (showAssisted) {
-            tablinks.push((
-                <TabLink
-                    styleName="tab-header"
-                    to="assisted-tagging"
-                    key="assisted-tagging"
-                >
-                    {labelAssisted}
-                </TabLink>
-            ));
-            tabcontents.push((
-                <TabContent
-                    styleName="tab"
-                    for="assisted-tagging"
-                    key="assisted-tagging"
-                >
-                    <AssistedTagging
-                        styleName="assisted-tagging"
-                        lead={lead}
-                        api={api}
-                    />
-                </TabContent>
-            ));
-        }
-        if (showOriginal) {
-            tablinks.push((
-                <TabLink
-                    styleName="tab-header"
-                    to="original-preview"
-                    key="original-preview"
-                >
-                    {labelOriginal}
-                </TabLink>
-            ));
-            tabcontents.push((
-                <TabContent
-                    styleName="tab"
-                    for="original-preview"
-                    key="original-preview"
-                >
-                    <div styleName="original-preview">
-                        {this.renderLeadPreview(lead)}
-                    </div>
-                </TabContent>
-            ));
-        }
-        if (images.length > 0) {
-            tablinks.push((
-                <TabLink
-                    styleName="tab-header"
-                    to="images-preview"
-                    key="images-preview"
-                >
-                    {this.props.entryStrings('imagesTabLabel')}
-                </TabLink>
-            ));
-            tabcontents.push((
-                <TabContent
-                    styleName="tab"
-                    for="images-preview"
-                    key="images-preview"
-                >
-                    <ImagesGrid
-                        styleName="images-preview"
-                        images={this.state.images}
-                    />
-                </TabContent>
-            ));
-        }
-        tablinks.push((
-            <TabLink
-                styleName="tab-header"
-                to="entries-listing"
-                key="entries-listing"
-            >
-                {this.props.entryStrings('entriesTabLabel')}
-            </TabLink>
-        ));
-        tabcontents.push((
-            <TabContent
-                styleName="tab"
-                for="entries-listing"
-                key="entries-listing"
-            >
-                <div styleName="entries-list-container">
-                    <ListView
-                        styleName="entries-list"
-                        modifier={this.renderEntriesList}
-                        data={entries}
-                        keyExtractor={LeftPanel.calcEntryKey}
-                    />
-                </div>
-            </TabContent>
-        ));
-
-        return (
-            <Tabs
-                name="leftPaneTabs"
-                selectedTab={currentTab}
-                handleSelect={this.handleTabSelect}
-                activeLinkStyle={{ none: 'none' }}
-                styleName="tabs-container"
-            >
-                <div styleName="tabs-header-container">
-                    { tablinks }
-                    <div styleName="empty-tab" />
-                </div>
-                <div styleName="tabs-content">
-                    { tabcontents }
-                </div>
-            </Tabs>
-        );
-    }
-
     render() {
         const { lead } = this.props;
+        const { images } = this.state;
+        let { currentTab } = this.state;
 
-        const leadPaneType = LeftPanel.getPaneType(lead);
-        switch (leadPaneType) {
-            case LEAD_PANE_TYPE.spreadsheet:
-                return this.renderContent({
-                    labelOriginal: this.props.entryStrings('tabularTabLabel'),
-                    showSimplified: false,
-                    showAssisted: false,
-                });
-            case LEAD_PANE_TYPE.image:
-                return this.renderContent({
-                    labelOriginal: this.props.entryStrings('imagesTabLabel'),
-                    showSimplified: false,
-                    showAssisted: false,
-                });
-            case LEAD_PANE_TYPE.text:
-                return this.renderContent({
-                    labelSimplified: this.props.entryStrings('textTabLabel'),
-                    showOriginal: false,
-                });
-            case LEAD_PANE_TYPE.word:
-            case LEAD_PANE_TYPE.pdf:
-            case LEAD_PANE_TYPE.presentation:
-            case LEAD_PANE_TYPE.website:
-                return this.renderContent({});
-            default:
-                return (
-                    <p>
-                        {this.props.entryStrings('unrecognizedLeadMessage')}
-                    </p>
-                );
+        const tabs = this.calculateTabsForLead(lead, images);
+
+        if (!tabs) {
+            return (
+                <p>
+                    {this.props.entryStrings('unrecognizedLeadMessage')}
+                </p>
+            );
         }
+
+        if (!currentTab) {
+            const tabKeys = Object.keys(tabs).filter(a => !!tabs[a]);
+            currentTab = tabKeys.length > 0 ? Object.keys(tabs)[0] : undefined;
+        }
+
+        return (
+            <Fragment>
+                <FixedTabs
+                    className={styles.tabs}
+                    active={currentTab}
+                    tabs={tabs}
+                    onClick={this.handleTabClick}
+                />
+                <MultiViewContainer
+                    active={currentTab}
+                    views={this.views}
+                />
+            </Fragment>
+        );
     }
 }

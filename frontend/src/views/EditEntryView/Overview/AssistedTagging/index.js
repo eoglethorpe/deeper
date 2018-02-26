@@ -100,6 +100,8 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     componentWillUnmount() {
+        console.warn('Umnouting AssistedTagging');
+
         if (this.nlpClassifyRequest) {
             this.nlpClassifyRequest.stop();
         }

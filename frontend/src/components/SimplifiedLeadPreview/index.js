@@ -65,6 +65,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     }
 
     componentWillUnmount() {
+        console.warn('Unmounting SimplifiedLeadPreview');
         if (this.triggerRequest) {
             this.triggerRequest.stop();
         }

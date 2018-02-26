@@ -1,17 +1,17 @@
-import CSSModules from 'react-css-modules';
-import React from 'react';
+// import CSSModules from 'react-css-modules';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+// import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import { connect } from 'react-redux';
 
-import {
-    aryStringsSelector,
-} from '../../../redux';
+import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
+import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
+
+import { aryStringsSelector } from '../../../redux';
 
 import Metadata from './Metadata';
 import Methodology from './Methodology';
-
-import styles from './styles.scss';
+// import styles from './styles.scss';
 
 const propTypes = {
     aryStrings: PropTypes.func.isRequired,
@@ -25,7 +25,7 @@ const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
 });
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
+// @CSSModules(styles, { allowMultiple: true })
 export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -33,101 +33,50 @@ export default class RightPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            currentTabRight: 'metadata',
+        this.state = { currentTabKey: 'metadata' };
+
+        const Entries = () => <div>{this.props.aryStrings('entriesTabLabel')}</div>;
+        const Summary = () => <div>{this.props.aryStrings('summaryTabLabel')}</div>;
+        const Score = () => <div>{this.props.aryStrings('scoreTabLabel')}</div>;
+
+        this.tabs = {
+            metadata: this.props.aryStrings('metadataTabLabel'),
+            methodology: this.props.aryStrings('methodologyTabLabel'),
+            entries: this.props.aryStrings('entriesTabLabel'),
+            summary: this.props.aryStrings('summaryTabLabel'),
+            score: this.props.aryStrings('scoreTabLabel'),
+        };
+
+        this.views = {
+            metadata: { component: Metadata },
+            methodology: { component: Methodology },
+            entries: { component: Entries },
+            summary: { component: Summary },
+            score: { component: Score },
         };
     }
 
-    handleRightTabSelect = (selectedTab) => {
-        if (selectedTab === this.state.currentTabRight) {
-            return;
+    handleTabClick = (key) => {
+        if (key !== this.state.currentTabKey) {
+            this.setState({ currentTabKey: key });
         }
-        let oldTab;
-        this.setState({
-            oldTab,
-            currentTabRight: selectedTab,
-        });
     }
 
     render() {
-        const {
-            currentTabRight,
-        } = this.state;
+        const { currentTabKey } = this.state;
 
         return (
-            <Tabs
-                name="rightPaneTabs"
-                selectedTab={currentTabRight}
-                handleSelect={this.handleRightTabSelect}
-                activeLinkStyle={{ none: 'none' }}
-                className={styles['tabs-container']}
-            >
-                <div className={styles['tabs-header-container']}>
-                    <TabLink
-                        className={styles['tab-header']}
-                        to="metadata"
-                    >
-                        {this.props.aryStrings('metadataTabLabel')}
-                    </TabLink>
-                    <TabLink
-                        className={styles['tab-header']}
-                        to="methodology"
-                    >
-                        {this.props.aryStrings('methodologyTabLabel')}
-                    </TabLink>
-                    <TabLink
-                        className={styles['tab-header']}
-                        to="entries"
-                    >
-                        {this.props.aryStrings('entriesTabLabel')}
-                    </TabLink>
-                    <TabLink
-                        className={styles['tab-header']}
-                        to="summary"
-                    >
-                        {this.props.aryStrings('summaryTabLabel')}
-                    </TabLink>
-                    <TabLink
-                        className={styles['tab-header']}
-                        to="score"
-                    >
-                        {this.props.aryStrings('scoreTabLabel')}
-                    </TabLink>
-                    <div styleName="empty-tab" />
-                </div>
-                <div className={styles['tabs-content']}>
-                    <TabContent
-                        className={styles.tab}
-                        for="metadata"
-                    >
-                        <Metadata />
-                    </TabContent>
-                    <TabContent
-                        className={styles.tab}
-                        for="methodology"
-                    >
-                        <Methodology />
-                    </TabContent>
-                    <TabContent
-                        className={styles.tab}
-                        for="entries"
-                    >
-                        {this.props.aryStrings('entriesTabLabel')}
-                    </TabContent>
-                    <TabContent
-                        className={styles.tab}
-                        for="summary"
-                    >
-                        {this.props.aryStrings('summaryTabLabel')}
-                    </TabContent>
-                    <TabContent
-                        className={styles.tab}
-                        for="score"
-                    >
-                        {this.props.aryStrings('scoreTabLabel')}
-                    </TabContent>
-                </div>
-            </Tabs>
+            <Fragment>
+                <FixedTabs
+                    active={currentTabKey}
+                    tabs={this.tabs}
+                    onClick={this.handleTabClick}
+                />
+                <MultiViewContainer
+                    active={currentTabKey}
+                    views={this.views}
+                />
+            </Fragment>
         );
     }
 }
