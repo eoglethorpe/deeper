@@ -5,10 +5,21 @@ $width-entry-select-input: 400px;
 $width-left-panel-min: 460px;
 $width-right-panel-min: 640px;
 
-.ary {
+%basic-container {
     display: flex;
     border: $width-separator-thin solid $color-separator;
     height: 100%;
+}
+
+.no-ary-template {
+    @extend %basic-container;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.ary {
+    @extend %basic-container;
 
     .left {
         width: 24%;

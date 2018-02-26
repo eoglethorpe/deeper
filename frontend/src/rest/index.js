@@ -11,6 +11,7 @@ export * from './token';
 export * from './userGroups';
 export * from './users';
 export * from './analysisFramework';
+export * from './assessmentRegistry';
 export * from './categoryEditor';
 export * from './export';
 
