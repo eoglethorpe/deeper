@@ -16,7 +16,7 @@ import {
     leadAccessor,
 } from '../../../entities/lead';
 
-export default class FormSaveBuilder {
+export default class FormSaveRequest {
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
@@ -34,7 +34,7 @@ export default class FormSaveBuilder {
         this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
 
-    createRequest = (lead, newValues) => {
+    create = (lead, newValues) => {
         const serverId = leadAccessor.getServerId(lead);
         const leadId = leadAccessor.getKey(lead);
 

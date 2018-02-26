@@ -3,11 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    FgRestBuilder,
-} from '../../vendor/react-store/utils/rest';
+import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import ResizableH from '../../vendor/react-store/components/View/Resizable/ResizableH';
 import { isFalsy } from '../../vendor/react-store/utils/common';
-import schema from '../../schema';
+
 import {
     entryStringsSelector,
     afStringsSelector,
@@ -15,18 +14,11 @@ import {
     projectDetailsSelector,
     setProjectAction,
 } from '../../redux';
-import {
-    createUrlForAryTemplate,
-    commonParamsForGET,
-    createUrlForProject,
-    createParamsForUser,
-} from '../../rest';
-import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
-import ResizableH from '../../vendor/react-store/components/View/Resizable/ResizableH';
 
+import ProjectRequest from './requests/ProjectRequest';
+import AryRequest from './requests/AryRequest';
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
-
 import styles from './styles.scss';
 
 const propTypes = {
@@ -84,21 +76,36 @@ export default class Ary extends React.PureComponent {
     }
 
     updateProject = (id) => {
-        if (id) {
-            // stop all the request [both project update and aryTemplate]
-            this.stopRequests();
-            this.projectRequest = this.createRequestForProject(id);
-            this.projectRequest.start();
+        if (isFalsy(id)) {
+            return;
         }
+        // stop all the request [both project update and aryTemplate]
+        this.stopRequests();
+
+        const projectRequest = new ProjectRequest(
+            this,
+            {
+                updateAryTemplate: this.updateAryTemplate,
+                setProject: this.props.setProject,
+            },
+        );
+        this.projectRequest = projectRequest.create(id);
+        this.projectRequest.start();
     }
 
     updateAryTemplate = (id) => {
-        if (id) {
-            // only stop previous ary template request
-            this.stopRequests({ project: false });
-            this.aryTemplateRequest = this.createRequestForAryTemplate(id);
-            this.aryTemplateRequest.start();
+        if (isFalsy(id)) {
+            return;
         }
+        // only stop previous ary template request
+        this.stopRequests({ project: false });
+
+        const aryRequest = new AryRequest(
+            this,
+            { setAryTemplate: this.props.setAryTemplate },
+        );
+        this.aryTemplateRequest = aryRequest.create(id);
+        this.aryTemplateRequest.start();
     }
 
     stopRequests = ({ project = true, aryTemplate = true } = {}) => {
@@ -108,62 +115,6 @@ export default class Ary extends React.PureComponent {
         if (aryTemplate && this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
         }
-    }
-
-    createRequestForProject = (projectId) => {
-        const projectRequest = new FgRestBuilder()
-            .url(createUrlForProject(projectId))
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ pending: true, noTemplate: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectGetResponse');
-                    this.props.setProject({ project: response });
-                    if (isFalsy(response.assessmentTemplate)) {
-                        console.warn('There is no assessment template');
-                        this.setState({ noTemplate: true, pending: false });
-                    } else {
-                        this.updateAryTemplate(response.assessmentTemplate);
-                    }
-                } catch (er) {
-                    console.error(er);
-                    this.setState({ pending: false });
-                }
-            })
-            .failure((response) => {
-                console.warn('Failure', response);
-                this.setState({ pending: false });
-            })
-            .fatal((response) => {
-                console.warn('Fatal', response);
-                this.setState({ pending: false });
-            })
-            .build();
-        return projectRequest;
-    }
-
-    createRequestForAryTemplate = (id) => {
-        const aryTemplateRequest = new FgRestBuilder()
-            .url(createUrlForAryTemplate(id))
-            .params(commonParamsForGET())
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'aryTemplateGetResponse');
-                    this.props.setAryTemplate({ template: response });
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return aryTemplateRequest;
     }
 
     render() {

@@ -3,36 +3,38 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
 
 import {
-    urlForDropboxFileUpload,
-    createHeaderForDropboxUpload,
+    urlForGoogleDriveFileUpload,
+    createHeaderForGoogleDriveFileUpload,
 } from '../../../rest';
 
-export default class DropboxBuilder {
+export default class GoogleDriveUploadRequest {
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
         };
 
         const {
-            dropboxUploadCoordinator,
+            driveUploadCoordinator,
             addLeadViewLeadChange,
         } = params;
-        this.dropboxUploadCoordinator = dropboxUploadCoordinator;
+        this.driveUploadCoordinator = driveUploadCoordinator;
+
         this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
 
-
-    createRequest = ({ leadId, title, fileUrl }) => {
-        const dropboxUploadRequest = new FgRestBuilder()
-            .url(urlForDropboxFileUpload)
-            .params(createHeaderForDropboxUpload({ title, fileUrl }))
+    create = ({ leadId, title, accessToken, fileId, mimeType }) => {
+        const googleDriveUploadRequest = new FgRestBuilder()
+            .url(urlForGoogleDriveFileUpload)
+            .params(createHeaderForGoogleDriveFileUpload({
+                title, accessToken, fileId, mimeType,
+            }))
             .delay(0)
-            .success(this.handleLeadDropboxUploadSuccess(leadId))
+            .success(this.handleLeadGoogleDriveUploadSuccess(leadId))
             .build();
-        return dropboxUploadRequest;
+        return googleDriveUploadRequest;
     }
 
-    handleLeadDropboxUploadSuccess = leadId => (response) => {
+    handleLeadGoogleDriveUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
         try {
             schema.validate(response, 'galleryFile');
@@ -54,11 +56,11 @@ export default class DropboxBuilder {
                         pending: { $set: undefined },
                     } },
                 };
-                const leadDropboxRests = update(state.leadDropboxRests, uploadSettings);
-                return { leadDropboxRests };
+                const leadDriveRests = update(state.leadDriveRests, uploadSettings);
+                return { leadDriveRests };
             });
 
-            this.dropboxUploadCoordinator.notifyComplete(leadId);
+            this.driveUploadCoordinator.notifyComplete(leadId);
         } catch (err) {
             console.error(err);
         }

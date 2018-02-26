@@ -42,10 +42,10 @@ import {
 } from '../../entities/lead';
 import notify from '../../notify';
 
-import DropboxBuilder from './requests/DropboxBuilder';
-import FileUploadBuilder from './requests/FileUploadBuilder';
-import FormSaveBuilder from './requests/FormSaveBuilder';
-import GoogleDriveBuilder from './requests/GoogleDriveBuilder';
+import DropboxRequest from './requests/DropboxRequest';
+import FileUploadRequest from './requests/FileUploadRequest';
+import FormSaveRequest from './requests/FormSaveRequest';
+import GoogleDriveRequest from './requests/GoogleDriveRequest';
 
 import LeadActions from './LeadActions';
 import LeadFilter from './LeadFilter';
@@ -357,7 +357,7 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE SELECTION
 
     handleGoogleDriveSelect = (uploads) => {
-        const googleDriveBuilder = new GoogleDriveBuilder(
+        const googleDriveRequest = new GoogleDriveRequest(
             this,
             {
                 driveUploadCoordinator: this.driveUploadCoordinator,
@@ -366,7 +366,7 @@ export default class LeadAdd extends React.PureComponent {
         );
 
         uploads.forEach((upload) => {
-            const request = googleDriveBuilder.createRequest(upload);
+            const request = googleDriveRequest.create(upload);
             this.driveUploadCoordinator.add(upload.leadId, request);
         });
         this.driveUploadCoordinator.start();
@@ -389,7 +389,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleDropboxSelect = (uploads) => {
-        const dropboxBuilder = new DropboxBuilder(
+        const dropboxRequest = new DropboxRequest(
             this,
             {
                 dropboxUploadCoordinator: this.dropboxUploadCoordinator,
@@ -397,9 +397,8 @@ export default class LeadAdd extends React.PureComponent {
             },
         );
 
-
         uploads.forEach((upload) => {
-            const request = dropboxBuilder.createRequest(upload);
+            const request = dropboxRequest.create(upload);
             this.dropboxUploadCoordinator.add(upload.leadId, request);
         });
         this.dropboxUploadCoordinator.start();
@@ -421,7 +420,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleFileSelect = (uploads) => {
-        const fileUploadBuilder = new FileUploadBuilder(
+        const fileUploadRequest = new FileUploadRequest(
             this,
             {
                 uploadCoordinator: this.uploadCoordinator,
@@ -431,7 +430,7 @@ export default class LeadAdd extends React.PureComponent {
         );
 
         uploads.forEach((upload) => {
-            const request = fileUploadBuilder.createRequest(upload);
+            const request = fileUploadRequest.create(upload);
             this.uploadCoordinator.add(upload.leadId, request);
         });
         this.uploadCoordinator.start();
@@ -455,7 +454,7 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE FORM
 
     handleFormSubmitSuccess = (lead, newValues) => {
-        const formSaveBuilder = new FormSaveBuilder(
+        const formSaveRequest = new FormSaveRequest(
             this,
             {
                 formCoordinator: this.formCoordinator,
@@ -464,7 +463,7 @@ export default class LeadAdd extends React.PureComponent {
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             },
         );
-        const request = formSaveBuilder.createRequest(lead, newValues);
+        const request = formSaveRequest.create(lead, newValues);
         return request;
     }
 
