@@ -349,7 +349,7 @@ export default class AssistedTagging extends React.PureComponent {
             length: excerpt.end_pos - excerpt.start_pos,
             sectors: [{
                 label: excerpt.classification[0][0],
-                confidence: `${Math.round(excerpt.classification[0][1] * 100)}%`,
+                confidence: `${Math.round(excerpt.classification_confidence * 100)}%`,
             }],
             /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
                 label: c[0],
