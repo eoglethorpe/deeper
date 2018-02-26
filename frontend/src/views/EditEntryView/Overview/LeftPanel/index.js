@@ -111,20 +111,17 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
-        const {
-            api,
-            lead,
-            entries,
-        } = this.props;
+    }
 
+    componentWillMount() {
         const LeadPreview = this.renderLeadPreview;
         this.views = {
             'simplified-preview': {
                 component: () => (
                     <SimplifiedLeadPreview
                         className={styles['simplified-preview']}
-                        leadId={lead.id}
-                        highlights={api.getEntryHighlights()}
+                        leadId={this.props.lead.id}
+                        highlights={this.props.api.getEntryHighlights()}
                         highlightModifier={LeftPanel.highlightModifier}
                         onLoad={this.handleLoadImages}
                     />
@@ -134,8 +131,8 @@ export default class LeftPanel extends React.PureComponent {
                 component: () => (
                     <AssistedTagging
                         className={styles['assisted-tagging']}
-                        lead={lead}
-                        project={api.getProject()}
+                        lead={this.props.lead}
+                        project={this.props.api.getProject()}
                         onEntryAdd={this.handleEntryAdd}
                     />
                 ),
@@ -143,7 +140,7 @@ export default class LeftPanel extends React.PureComponent {
             'original-preview': {
                 component: () => (
                     <div className={styles['original-preview']}>
-                        <LeadPreview lead={lead} />
+                        <LeadPreview lead={this.props.lead} />
                     </div>
                 ),
             },
@@ -161,7 +158,7 @@ export default class LeftPanel extends React.PureComponent {
                         <ListView
                             className={styles['entries-list']}
                             modifier={this.renderEntriesList}
-                            data={entries}
+                            data={this.props.entries}
                             keyExtractor={LeftPanel.calcEntryKey}
                         />
                     </div>
