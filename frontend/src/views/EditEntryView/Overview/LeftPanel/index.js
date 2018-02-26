@@ -111,6 +111,8 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
+
+        this.highlights = props.api.getEntryHighlights();
     }
 
     componentWillMount() {
@@ -169,8 +171,9 @@ export default class LeftPanel extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         const { currentTab, oldTab } = this.state;
-        const { saveAllPending: oldSaveAllPending } = this.props;
-        const { saveAllPending: newSaveAllPending } = nextProps;
+        const { saveAllPending: oldSaveAllPending, entries: oldEntries } = this.props;
+        const { saveAllPending: newSaveAllPending, entries: newEntries } = nextProps;
+
         if (oldSaveAllPending !== newSaveAllPending) {
             if (newSaveAllPending && currentTab !== 'entries-listing') {
                 this.setState({
@@ -183,6 +186,10 @@ export default class LeftPanel extends React.PureComponent {
                     oldTab: undefined,
                 });
             }
+        }
+
+        if (oldEntries !== newEntries) {
+            this.highlights = nextProps.api.getEntryHighlights();
         }
     }
 

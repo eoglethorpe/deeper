@@ -345,8 +345,8 @@ export default class AssistedTagging extends React.PureComponent {
             [nlpSectorOptions[0].key] : emptyList;
 
         this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
-            startPos: excerpt.start_pos,
-            length: excerpt.end_pos - excerpt.start_pos,
+            start: excerpt.start_pos,
+            end: excerpt.end_pos,
             sectors: [{
                 label: excerpt.classification[0][0],
                 confidence: `${Math.round(excerpt.classification_confidence * 100)}%`,
@@ -455,8 +455,8 @@ export default class AssistedTagging extends React.PureComponent {
         )).reduce((acc, c) => acc.concat(c), []);
 
         const highlights = keywords.map(keyword => ({
-            startPos: keyword.start,
-            length: keyword.length,
+            start: keyword.start,
+            end: keyword.length + keyword.start,
             color: getHexFromString(keyword.entity),
             source: this.props.entryStrings('sourceNER'),
             details: keyword.entity,
@@ -478,8 +478,8 @@ export default class AssistedTagging extends React.PureComponent {
         )).reduce((acc, c) => acc.concat(c.keywords), []);
 
         const highlights = keywords.map(keyword => ({
-            startPos: keyword.start,
-            length: keyword.length,
+            start: keyword.start,
+            end: keyword.start + keyword.length,
             color: getHexFromString(keyword.subcategory),
             source: this.props.entryStrings('sourceCE'),
             details: keyword.subcategory,

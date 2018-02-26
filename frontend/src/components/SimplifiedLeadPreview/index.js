@@ -51,16 +51,22 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             error: undefined,
             extractedText: null,
             extractedImages: [],
+            highlights: [],
         };
     }
 
     componentDidMount() {
+        this.calculateHighlights(this.props);
         this.create(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.leadId !== nextProps.leadId) {
             this.create(nextProps);
+        }
+
+        if (this.props.highlights !== nextProps.highlights) {
+            this.calculateHighlights(nextProps);
         }
     }
 
@@ -138,6 +144,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         error: undefined,
                         extractedText: response.text,
                         extractedImages: response.images,
+                    }, () => {
+                        this.calculateHighlights(this.props);
                     });
                     if (onLoad) {
                         onLoad(response);
@@ -159,16 +167,20 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .build()
     )
 
-    // TODO: only call this on component will receive props
-    calculateHighlights() {
-        const { highlights } = this.props;
+    calculateHighlights({ highlights }) {
         const { extractedText } = this.state;
+        if (!extractedText || !highlights) {
+            this.setState({ highlights: [] });
+            return;
+        }
 
-        return highlights.map(h => ({
-            start: h.text ? extractedText.indexOf(h.text) : h.startPos,
-            length: h.text ? h.text.length : h.length,
-            item: h,
-        }));
+        this.setState({
+            highlights: highlights.map((item) => {
+                const start = item.text ? extractedText.indexOf(item.text) : item.start;
+                const end = item.text ? item.text.length + start : item.end;
+                return { start, end, item };
+            }),
+        });
     }
 
     renderContent = () => {
@@ -177,6 +189,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const {
             error,
             extractedText,
+            highlights,
         } = this.state;
 
         if (error) {
@@ -190,7 +203,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                 <HighlightedText
                     className={styles['highlighted-text']}
                     text={extractedText}
-                    highlights={this.calculateHighlights()}
+                    highlights={highlights}
                     modifier={highlightModifier}
                 />
             );
