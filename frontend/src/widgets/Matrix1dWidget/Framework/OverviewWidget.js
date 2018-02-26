@@ -533,8 +533,8 @@ export default class Matrix1dOverview extends React.PureComponent {
                         </div>
                         <div className={styles['right-container']}>
                             {rowIndex !== -1 ? ([
-                                <RowDetail />,
-                                <RowCells />,
+                                <RowDetail key="row-detail" />,
+                                <RowCells key="row-cells" />,
                             ]) : (
                                 <span className={styles['empty-container']}>
                                     {this.props.afStrings('noRowSelected')}
