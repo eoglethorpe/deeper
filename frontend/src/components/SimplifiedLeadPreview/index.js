@@ -70,6 +70,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                     border: `1px solid ${colors.border}`,
                 }}
                 onClick={onClick}
+                onDragStart={(event) => { event.dataTransfer.setData('text/plain', text); }}
+                draggable
             >
                 <span className={styles.text}>
                     {text}

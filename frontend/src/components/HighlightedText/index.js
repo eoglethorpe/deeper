@@ -105,12 +105,12 @@ export default class HighlightedText extends React.PureComponent {
             .sort((h1, h2) => h1.start - h2.start);
 
         return (
-            <pre className={className}>
+            <p className={className}>
                 {this.renderSplits(
                     text,
                     this.createNestedSplits(highlightsCopy),
                 )}
-            </pre>
+            </p>
         );
     }
 }

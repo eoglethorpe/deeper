@@ -125,7 +125,6 @@ export default class AssistedTagging extends React.PureComponent {
             highlight,
             text,
             e => this.handleOnHighlightClick(e, { ...highlight, text }),
-            styles['highlighted-excerpt'],
         )
     );
 
@@ -579,7 +578,6 @@ export default class AssistedTagging extends React.PureComponent {
             >
                 <SimplifiedLeadPreview
                     className="preview"
-                    styleName="preview"
                     leadId={lead.id}
                     highlights={highlights}
                     highlightModifier={this.highlightSimplifiedExcerpt}
