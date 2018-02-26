@@ -2,6 +2,8 @@ $width-entry-select-input: 400px;
 $width-left-panel-min: 436px;
 $width-right-panel-min: 654px;
 
+$height-tabs: 48px;
+
 .overview {
     display: flex;
     height: 100%;
@@ -12,16 +14,22 @@ $width-right-panel-min: 654px;
         min-width: $width-left-panel-min;
         height: 100%;
 
-        .simplified-preview {
+        .tabs {
+            height: $height-tabs;
+        }
+
+        %container {
             background-color: $color-foreground-alt;
-            height: 100%;
+            height: calc(100% - #{$height-tabs});
             overflow-y: auto;
         }
 
+        .simplified-preview {
+            @extend %container;
+        }
+
         .assisted-tagging {
-            background-color: $color-foreground-alt;
-            height: 100%;
-            overflow-y: hidden;
+            @extend %container;
 
             :global {
                 .preview {
@@ -36,9 +44,7 @@ $width-right-panel-min: 654px;
         }
 
         .original-preview {
-            background-color: $color-foreground-alt;
-            height: 100%;
-            overflow-y: auto;
+            @extend %container;
 
             .preview {
                 height: 100%;
@@ -53,116 +59,12 @@ $width-right-panel-min: 654px;
         }
 
         .images-preview {
-            background-color: $color-background-alt;
-            height: 100%;
-            overflow-y: auto;
+            @extend %container;
         }
 
         .entries-list-container {
-            background-color: $color-foreground-alt;
-            height: 100%;
-            overflow-y: auto;
-
-            .entries-list {
-                height: 100%;
-
-                :global {
-                    .entries-list-item {
-                        position: relative;
-                        border-bottom: $width-separator-thin solid $color-separator;
-                        border-left: $width-separator-thick solid transparent;
-                        padding: $spacing-small;
-
-                        &.active {
-                            border-left: $width-separator-thick solid $color-accent;
-                            background-color: $color-hover;
-                        }
-
-                        .add-entry-list-item {
-                            display: flex;
-                            justify-content: space-between;
-                            outline: 0;
-                            border: 0;
-                            background-color: transparent;
-                            cursor: pointer;
-                            padding: $spacing-small;
-                            width: 100%;
-                            text-align: left;
-                            font-family: inherit;
-                            font-size: inherit;
-
-                            .entry-excerpt {
-                                flex-grow: 1;
-                                padding-right: $spacing-large;
-                                text-align: justify;
-                            }
-
-                            .image {
-                                max-width: 100%;
-                                max-height: 128px;
-                                object-fit: contain;
-                            }
-
-                            .status-icons {
-                                display: flex;
-
-                                .pending,
-                                .error,
-                                .complete,
-                                .pristine,
-                                .stale {
-                                    flex-shrink: 0;
-                                    margin-left: $spacing-small;
-                                    padding: 0;
-                                    color: $color-label;
-                                    font-size: $font-size-medium-alt;
-                                }
-
-                                .pending {
-                                    animation: spin 1s linear infinite;
-                                }
-
-                                .error {
-                                    animation: spin 1s linear infinite;
-                                    margin-left: 0;
-                                    color: $color-danger;
-                                }
-
-                                .complete {
-                                    color: $color-success;
-                                }
-                            }
-
-                            &:disabled {
-                                .image {
-                                    opacity: .5;
-                                }
-                            }
-                        }
-
-                        .remove-button {
-                            display: none;
-                            position: absolute;
-                            top: $spacing-small;
-                            right: $spacing-small;
-                        }
-
-                        &:hover {
-                            .add-entry-list-item {
-                                .status-icons {
-                                    opacity: 0;
-                                }
-                            }
-
-                            .remove-button {
-                                display: initial;
-                                animation: fade .5s linear;
-                                opacity: 1;
-                            }
-                        }
-                    }
-                }
-            }
+            @extend %container;
+            @import 'entry-container';
         }
     }
 
