@@ -26,5 +26,26 @@
         white-space: pre-wrap;
         color: $color-text;
         font-family: inherit;
+        line-height: 2;
+
+        .highlight {
+            border-radius: 3px;
+            padding: $spacing-extra-small-alt 0;
+
+            .text {
+                padding: 0 $spacing-small;
+            }
+
+            .label {
+                display: inline-block;
+                transform: translateY(-1px);
+                border-radius: 3px;
+                padding: 0 $spacing-small;
+                text-transform: uppercase;
+                color: $color-label;
+                font-size: $font-size-extra-small;
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 }

@@ -43,6 +43,51 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static getHighlightColors = (color) => {
+        const r = parseInt(color.substr(1, 2), 16);
+        const g = parseInt(color.substr(3, 2), 16);
+        const b = parseInt(color.substr(5, 2), 16);
+
+        const backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
+        const borderColor = color;
+        const labelColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+        return {
+            background: backgroundColor,
+            border: borderColor,
+            label: labelColor,
+        };
+    };
+
+    static highlightModifier = (highlight, text, onClick, className = '') => {
+        const colors = SimplifiedLeadPreview.getHighlightColors(highlight.color);
+        return (
+            <span
+                role="presentation"
+                className={`${styles.highlight} ${className}`}
+                style={{
+                    backgroundColor: colors.background,
+                    border: `1px solid ${colors.border}`,
+                }}
+                onClick={onClick}
+            >
+                <span className={styles.text}>
+                    {text}
+                </span>
+                {highlight.label && (
+                    <span
+                        className={styles.label}
+                        style={{
+                            backgroundColor: colors.label,
+                        }}
+                    >
+                        { highlight.label }
+                    </span>
+                )}
+            </span>
+        );
+    };
+
     constructor(props) {
         super(props);
 

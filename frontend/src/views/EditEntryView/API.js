@@ -1,7 +1,7 @@
 import update from '../../vendor/react-store/utils/immutable-update';
 import { entryAccessor } from '../../entities/entry';
 
-const DEFAULT_HIGHLIGHT_COLOR = '#e0e0e0';
+const DEFAULT_HIGHLIGHT_COLOR = '#a0a0a0';
 
 // FIXME: use entry constants
 class EntryModifier {
@@ -310,7 +310,11 @@ export default class API {
 
     getEntryHighlights() {
         return this.entries
-            .filter(entry => entryAccessor.getValues(entry).entryType === 'excerpt')
+            .filter((entry) => {
+                const values = entryAccessor.getValues(entry);
+                const toDelete = entryAccessor.isMarkedForDelete(entry);
+                return !toDelete && values.entryType === 'excerpt';
+            })
             .map(entry => ({
                 text: entryAccessor.getValues(entry).excerpt,
                 color: this.getHighlightColor(entryAccessor.getColors(entry)),

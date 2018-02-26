@@ -9,7 +9,6 @@ import Button from '../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
-import { getColorOnBgColor } from '../../../../vendor/react-store/utils/common';
 
 import {
     LEAD_TYPE,
@@ -91,17 +90,6 @@ export default class LeftPanel extends React.PureComponent {
 
     static isTypeWithAttachment = t => (
         [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive].indexOf(t) !== 1
-    );
-
-    static highlightModifier = (highlight, text) => (
-        <span
-            style={{
-                backgroundColor: highlight.color,
-                color: getColorOnBgColor(highlight.color),
-            }}
-        >
-            {text}
-        </span>
     );
 
     constructor(props) {

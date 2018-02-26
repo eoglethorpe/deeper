@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    getColorOnBgColor,
     getHexFromString,
 } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
@@ -34,8 +33,6 @@ import SimplifiedLeadPreview from '../SimplifiedLeadPreview';
 
 import styles from './styles.scss';
 
-// const NLP_THRESHOLD = 0;
-
 const propTypes = {
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -50,6 +47,9 @@ const defaultProps = {
 
 const emptyList = [];
 const emptyObject = {};
+
+// Cut off threshold for NLP classification's confidence
+const NLP_THRESHOLD = 0.33;
 
 const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
@@ -121,17 +121,12 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     highlightSimplifiedExcerpt = (highlight, text) => (
-        <span
-            role="presentation"
-            className={styles['highlighted-excerpt']}
-            style={{
-                backgroundColor: highlight.color,
-                color: getColorOnBgColor(highlight.color),
-            }}
-            onClick={e => this.handleOnHighlightClick(e, { ...highlight, text })}
-        >
-            {text}
-        </span>
+        SimplifiedLeadPreview.highlightModifier(
+            highlight,
+            text,
+            e => this.handleOnHighlightClick(e, { ...highlight, text }),
+            styles['highlighted-excerpt'],
+        )
     );
 
     handleAssitedBoxInvalidate = (popupContainer) => {
@@ -347,15 +342,13 @@ export default class AssistedTagging extends React.PureComponent {
         this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
             start: excerpt.start_pos,
             end: excerpt.end_pos,
+            label: excerpt.classification[0][0],
             sectors: [{
                 label: excerpt.classification[0][0],
                 confidence: `${Math.round(excerpt.classification_confidence * 100)}%`,
+                confidence_value: excerpt.classification[0][1],
             }],
-            /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
-                label: c[0],
-                confidence: `${Math.round(c[1] * 100)}%`,
-            })) */
-        })).filter(c => c.sectors.length > 0);
+        })).filter(c => c.sectors.length > 0 && c.sectors[0].confidence_value > NLP_THRESHOLD);
 
 
         this.setState({
@@ -457,6 +450,7 @@ export default class AssistedTagging extends React.PureComponent {
         const highlights = keywords.map(keyword => ({
             start: keyword.start,
             end: keyword.length + keyword.start,
+            label: keyword.entity,
             color: getHexFromString(keyword.entity),
             source: this.props.entryStrings('sourceNER'),
             details: keyword.entity,
@@ -480,6 +474,7 @@ export default class AssistedTagging extends React.PureComponent {
         const highlights = keywords.map(keyword => ({
             start: keyword.start,
             end: keyword.start + keyword.length,
+            label: keyword.subcategory,
             color: getHexFromString(keyword.subcategory),
             source: this.props.entryStrings('sourceCE'),
             details: keyword.subcategory,
