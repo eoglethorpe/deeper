@@ -18,6 +18,8 @@ import {
 } from '../../../../entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
+
+import AssistedTagging from '../../../../components/AssistedTagging';
 import ImagesGrid from '../../../../components/ImagesGrid';
 import {
     InternalGallery,
@@ -27,8 +29,6 @@ import {
     entryStringsSelector,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
-
-import AssistedTagging from '../AssistedTagging';
 
 import styles from '../../styles.scss';
 
@@ -111,20 +111,17 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
-        const {
-            api,
-            lead,
-            entries,
-        } = this.props;
+    }
 
+    componentWillMount() {
         const LeadPreview = this.renderLeadPreview;
         this.views = {
             'simplified-preview': {
                 component: () => (
                     <SimplifiedLeadPreview
                         className={styles['simplified-preview']}
-                        leadId={lead.id}
-                        highlights={api.getEntryHighlights()}
+                        leadId={this.props.lead.id}
+                        highlights={this.props.api.getEntryHighlights()}
                         highlightModifier={LeftPanel.highlightModifier}
                         onLoad={this.handleLoadImages}
                     />
@@ -134,15 +131,16 @@ export default class LeftPanel extends React.PureComponent {
                 component: () => (
                     <AssistedTagging
                         className={styles['assisted-tagging']}
-                        lead={lead}
-                        api={api}
+                        lead={this.props.lead}
+                        project={this.props.api.getProject()}
+                        onEntryAdd={this.handleEntryAdd}
                     />
                 ),
             },
             'original-preview': {
                 component: () => (
                     <div className={styles['original-preview']}>
-                        <LeadPreview lead={lead} />
+                        <LeadPreview lead={this.props.lead} />
                     </div>
                 ),
             },
@@ -160,7 +158,7 @@ export default class LeftPanel extends React.PureComponent {
                         <ListView
                             className={styles['entries-list']}
                             modifier={this.renderEntriesList}
-                            data={entries}
+                            data={this.props.entries}
                             keyExtractor={LeftPanel.calcEntryKey}
                         />
                     </div>
@@ -280,6 +278,19 @@ export default class LeftPanel extends React.PureComponent {
         });
         // NOTE: change to last selected on click
         // this.setState({ currentTab: this.state.oldTab });
+    }
+
+    handleEntryAdd = (text) => {
+        const { api } = this.props;
+
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntry(existing.data.id);
+        } else {
+            api.getEntryBuilder()
+                .setExcerpt(text)
+                .apply();
+        }
     }
 
     handleScreenshot = (image) => {

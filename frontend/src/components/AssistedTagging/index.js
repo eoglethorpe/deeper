@@ -6,15 +6,15 @@ import { connect } from 'react-redux';
 import {
     getColorOnBgColor,
     getHexFromString,
-} from '../../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
-import WarningButton from '../../../../vendor/react-store/components/Action/Button/WarningButton';
-import SegmentButton from '../../../../vendor/react-store/components/Action/SegmentButton';
-import FloatingContainer from '../../../../vendor/react-store/components/View/FloatingContainer';
-import ListView from '../../../../vendor/react-store/components/View/List/ListView';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+} from '../../vendor/react-store/utils/common';
+import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
+import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
+import SegmentButton from '../../vendor/react-store/components/Action/SegmentButton';
+import FloatingContainer from '../../vendor/react-store/components/View/FloatingContainer';
+import ListView from '../../vendor/react-store/components/View/List/ListView';
+import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
 
 import {
     urlForLeadClassify,
@@ -25,12 +25,12 @@ import {
     createParamsForCeClassify,
     createParamsForNer,
     createParamsForFeedback,
-} from '../../../../rest';
-import { entryStringsSelector } from '../../../../redux';
-import { iconNames } from '../../../../constants';
-import notify from '../../../../notify';
-import schema from '../../../../schema';
-import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
+} from '../../rest';
+import { entryStringsSelector } from '../../redux';
+import { iconNames } from '../../constants';
+import notify from '../../notify';
+import schema from '../../schema';
+import SimplifiedLeadPreview from '../SimplifiedLeadPreview';
 
 import styles from './styles.scss';
 
@@ -38,7 +38,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    onEntryAdd: PropTypes.func.isRequired,
     className: PropTypes.string,
     entryStrings: PropTypes.func.isRequired,
 };
@@ -174,15 +175,8 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     handleEntryAdd = (text) => {
-        const { api } = this.props;
-
-        const existing = api.getEntryForExcerpt(text);
-        if (existing) {
-            api.selectEntry(existing.data.id);
-        } else {
-            api.getEntryBuilder()
-                .setExcerpt(text)
-                .apply();
+        if (this.props.onEntryAdd) {
+            this.props.onEntryAdd(text);
         }
         this.handleOnCloseAssistedActions();
     }
@@ -274,7 +268,7 @@ export default class AssistedTagging extends React.PureComponent {
 
     createCeClassifyRequest = (previewId) => {
         const request = new FgRestBuilder()
-            .url(createUrlForCeClassify(this.props.api.getProject().id))
+            .url(createUrlForCeClassify(this.props.project.id))
             .params(createParamsForCeClassify({
                 category: 'Sector',
                 previewId,
@@ -355,7 +349,7 @@ export default class AssistedTagging extends React.PureComponent {
             length: excerpt.end_pos - excerpt.start_pos,
             sectors: [{
                 label: excerpt.classification[0][0],
-                confidence: `${Math.round(excerpt.classification[0][1] * 100)}%`,
+                confidence: `${Math.round(excerpt.classification_confidence * 100)}%`,
             }],
             /* excerpt.classification.filter(c => c[1] > NLP_THRESHOLD).map(c => ({
                 label: c[0],
