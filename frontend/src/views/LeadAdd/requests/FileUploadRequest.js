@@ -6,7 +6,7 @@ import {
     createParamsForFileUpload,
 } from '../../../rest';
 
-export default class FileUploadBuilder {
+export default class FileUploadRequest {
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
@@ -23,8 +23,7 @@ export default class FileUploadBuilder {
         this.leadsStrings = leadsStrings;
     }
 
-
-    createRequest = ({ file, leadId }) => {
+    create = ({ file, leadId }) => {
         const uploader = new UploadBuilder()
             .file(file)
             .url(urlForUpload)

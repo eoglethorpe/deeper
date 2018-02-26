@@ -34,7 +34,7 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabRight: 'methodology',
+            currentTabRight: 'metadata',
         };
     }
 
