@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -31,7 +30,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 @connect(mapStateToProps, null)
-@CSSModules(styles, { allowMultiple: true })
 export default class RegionDetailView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -81,11 +79,10 @@ export default class RegionDetailView extends React.PureComponent {
 
         return (
             <div
-                styleName="region-detail-view"
-                className={className}
+                className={`${className} ${styles['region-detail-view']}`}
             >
                 <h3
-                    styleName="heading"
+                    className={styles.heading}
                 >
                     {this.props.countriesStrings('regionGeneralInfoLabel')}
                 </h3>
@@ -93,13 +90,13 @@ export default class RegionDetailView extends React.PureComponent {
                     keyValues.map(data => (
                         data.value !== '' &&
                         <div
-                            styleName="row"
+                            className={styles.row}
                             key={data.key}
                         >
-                            <div styleName="key">
+                            <div className={styles.key}>
                                 {data.key}
                             </div>
-                            <div styleName="value">
+                            <div className={styles.value}>
                                 {data.value}
                             </div>
                         </div>

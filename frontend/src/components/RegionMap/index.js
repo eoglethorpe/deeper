@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -43,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class RegionMap extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -316,7 +314,7 @@ export default class RegionMap extends React.PureComponent {
 
         if (error) {
             return (
-                <div styleName="message">
+                <div className={styles.message}>
                     { error }
                 </div>
             );
@@ -330,23 +328,23 @@ export default class RegionMap extends React.PureComponent {
             }));
 
             return (
-                <div styleName="map-container">
+                <div className={styles['map-container']}>
                     <Button
-                        styleName="refresh-button"
+                        className={styles['refresh-button']}
                         onClick={this.handleRefresh}
                     >
                         <span className={iconNames.refresh} />
                     </Button>
                     <GeoJsonMap
                         selections={this.props.selections}
-                        styleName="geo-json-map"
+                        className={styles['geo-json-map']}
                         geoJson={geoJsons[selectedAdminLevelId]}
                         geoJsonBounds={geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
                         thickness={adminLevels.length - adminLevel.level}
                         pending={adminLevelPending[selectedAdminLevelId]}
                     />
-                    <div styleName="bottom-bar">
+                    <div className={styles['bottom-bar']}>
                         <SegmentButton
                             data={segmentButtonData}
                             selected={selectedAdminLevelId}
@@ -359,7 +357,7 @@ export default class RegionMap extends React.PureComponent {
         }
 
         return (
-            <div styleName="message">
+            <div className={styles.message}>
                 {this.props.commonStrings('mapNotAvailable')}
             </div>
         );
@@ -371,8 +369,7 @@ export default class RegionMap extends React.PureComponent {
 
         return (
             <div
-                className={className}
-                styleName="region-map"
+                className={`${className} ${styles['region-map']}`}
             >
                 { pending ? <LoadingAnimation /> : this.renderContent() }
             </div>
