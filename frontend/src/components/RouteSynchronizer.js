@@ -76,10 +76,6 @@ class RouteSynchronizer extends React.PureComponent {
         this.props.setRouteParams(props.match);
     }
 
-    componentWillMount() {
-        console.log('Mounting ProjectRouteSynchronizer');
-    }
-
     componentWillReceiveProps(nextProps) {
         if (this.props.match !== nextProps.match) {
             this.props.setRouteParams(nextProps.match);
@@ -91,10 +87,6 @@ class RouteSynchronizer extends React.PureComponent {
         } else {
             this.syncState(nextProps);
         }
-    }
-
-    componentWillUnmount() {
-        console.log('Unmounting ProjectRouteSynchronizer');
     }
 
     getNewUrlParams = (nextProps) => {
