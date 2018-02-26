@@ -18,6 +18,7 @@ import {
 } from '../../../../entities/lead';
 import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
+
 import ImagesGrid from '../../../../components/ImagesGrid';
 import {
     InternalGallery,
@@ -135,7 +136,8 @@ export default class LeftPanel extends React.PureComponent {
                     <AssistedTagging
                         className={styles['assisted-tagging']}
                         lead={lead}
-                        api={api}
+                        project={api.getProject()}
+                        onEntryAdd={this.handleEntryAdd}
                     />
                 ),
             },
@@ -282,6 +284,19 @@ export default class LeftPanel extends React.PureComponent {
         // this.setState({ currentTab: this.state.oldTab });
     }
 
+    handleEntryAdd = (text) => {
+        const { api } = this.props;
+
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntry(existing.data.id);
+        } else {
+            api.getEntryBuilder()
+                .setExcerpt(text)
+                .apply();
+        }
+    }
+
     handleScreenshot = (image) => {
         this.props.api.getEntryBuilder()
             .setImage(image)
@@ -405,6 +420,7 @@ export default class LeftPanel extends React.PureComponent {
         );
     }
 
+<<<<<<< HEAD
     render() {
         const { lead } = this.props;
         const { images } = this.state;

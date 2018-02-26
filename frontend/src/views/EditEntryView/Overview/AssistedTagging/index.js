@@ -38,7 +38,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    onEntryAdd: PropTypes.func.isRequired,
     className: PropTypes.string,
     entryStrings: PropTypes.func.isRequired,
 };
@@ -174,15 +175,8 @@ export default class AssistedTagging extends React.PureComponent {
     }
 
     handleEntryAdd = (text) => {
-        const { api } = this.props;
-
-        const existing = api.getEntryForExcerpt(text);
-        if (existing) {
-            api.selectEntry(existing.data.id);
-        } else {
-            api.getEntryBuilder()
-                .setExcerpt(text)
-                .apply();
+        if (this.props.onEntryAdd) {
+            this.props.onEntryAdd(text);
         }
         this.handleOnCloseAssistedActions();
     }
@@ -274,7 +268,7 @@ export default class AssistedTagging extends React.PureComponent {
 
     createCeClassifyRequest = (previewId) => {
         const request = new FgRestBuilder()
-            .url(createUrlForCeClassify(this.props.api.getProject().id))
+            .url(createUrlForCeClassify(this.props.project.id))
             .params(createParamsForCeClassify({
                 category: 'Sector',
                 previewId,
