@@ -6,15 +6,15 @@ import { connect } from 'react-redux';
 import {
     getColorOnBgColor,
     getHexFromString,
-} from '../../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
-import WarningButton from '../../../../vendor/react-store/components/Action/Button/WarningButton';
-import SegmentButton from '../../../../vendor/react-store/components/Action/SegmentButton';
-import FloatingContainer from '../../../../vendor/react-store/components/View/FloatingContainer';
-import ListView from '../../../../vendor/react-store/components/View/List/ListView';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+} from '../../vendor/react-store/utils/common';
+import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
+import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
+import SegmentButton from '../../vendor/react-store/components/Action/SegmentButton';
+import FloatingContainer from '../../vendor/react-store/components/View/FloatingContainer';
+import ListView from '../../vendor/react-store/components/View/List/ListView';
+import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
 
 import {
     urlForLeadClassify,
@@ -25,12 +25,12 @@ import {
     createParamsForCeClassify,
     createParamsForNer,
     createParamsForFeedback,
-} from '../../../../rest';
-import { entryStringsSelector } from '../../../../redux';
-import { iconNames } from '../../../../constants';
-import notify from '../../../../notify';
-import schema from '../../../../schema';
-import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
+} from '../../rest';
+import { entryStringsSelector } from '../../redux';
+import { iconNames } from '../../constants';
+import notify from '../../notify';
+import schema from '../../schema';
+import SimplifiedLeadPreview from '../SimplifiedLeadPreview';
 
 import styles from './styles.scss';
 

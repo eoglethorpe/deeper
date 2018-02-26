@@ -19,6 +19,7 @@ import {
 import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
 
+import AssistedTagging from '../../../../components/AssistedTagging';
 import ImagesGrid from '../../../../components/ImagesGrid';
 import {
     InternalGallery,
@@ -28,8 +29,6 @@ import {
     entryStringsSelector,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
-
-import AssistedTagging from '../AssistedTagging';
 
 import styles from '../../styles.scss';
 
@@ -420,7 +419,6 @@ export default class LeftPanel extends React.PureComponent {
         );
     }
 
-<<<<<<< HEAD
     render() {
         const { lead } = this.props;
         const { images } = this.state;
