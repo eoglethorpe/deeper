@@ -5,7 +5,7 @@ import {
 } from '../../../rest';
 import schema from '../../../schema';
 
-export default class AryRequest {
+export default class AryTemplateRequest {
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);

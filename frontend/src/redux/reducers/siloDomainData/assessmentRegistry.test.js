@@ -1,26 +1,28 @@
 import reducers, {
-    ARY__UPDATE_METADATA,
-    updateAryMetadataAction,
+    ARY__UPDATE,
+    setAryAction,
 } from './assessmentRegistry';
 
 
 test('should update Assessment Registry metadata', () => {
     const state = {
-        assessmentRegistryView: { },
+        aryView: { },
     };
 
-    const action = updateAryMetadataAction({
-        metadata: {},
-        aryId: 1,
+    const action = setAryAction({
+        metaData: {},
+        methodologyData: {},
+        id: 1,
     });
 
     const after = {
-        assessmentRegistryView: {
+        aryView: {
             1: {
-                metadata: {},
+                metaData: {},
+                methodologyData: {},
             },
         },
     };
 
-    expect(reducers[ARY__UPDATE_METADATA](state, action)).toEqual(after);
+    expect(reducers[ARY__UPDATE](state, action)).toEqual(after);
 });
