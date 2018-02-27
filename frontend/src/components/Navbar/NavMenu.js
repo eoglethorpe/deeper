@@ -91,8 +91,6 @@ export default class NavMenu extends React.PureComponent {
         const params = {
             projectId,
             countryId,
-            analysisFrameworkId: 1,
-            aryId: 1,
         };
 
         return (

@@ -57,6 +57,8 @@ const routesOrder = [
     'editEntries',
     // pageTitleStrings('ary');
     'ary',
+    // pageTitleStrings('editAry');
+    'editAry',
     // pageTitleStrings('export');
     'export',
     // pageTitleStrings('userExports');
@@ -105,7 +107,7 @@ const routes = {
     entries: { type: ROUTE.private },
     editEntries: { type: ROUTE.private },
     ary: { type: ROUTE.private },
-    // editAry: { type: ROUTE.private },
+    editAry: { type: ROUTE.private },
     userProfile: { type: ROUTE.private },
     userGroup: { type: ROUTE.private },
     weeklySnapshot: { type: ROUTE.private },

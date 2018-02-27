@@ -52,6 +52,7 @@ const iconNames = {
     edit: 'ion-edit',
     error: 'ion-android-alert',
     forward: 'ion-forward',
+    copy: 'ion-ios-copy',
     globe: 'ion-android-globe',
     world: 'ion-ios-world',
     map: 'ion-android-map',

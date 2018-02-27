@@ -270,6 +270,14 @@ export default class Leads extends React.PureComponent {
                         },
                     );
 
+                    const addAssessmentLink = reverseRoute(
+                        pathNames.editAry,
+                        {
+                            projectId: this.props.activeProject,
+                            leadId: row.id,
+                        },
+                    );
+
                     const editLeadLink = {
                         pathname: reverseRoute(
                             pathNames.addLeads,
@@ -305,22 +313,6 @@ export default class Leads extends React.PureComponent {
                             >
                                 <i className={iconNames.search} />
                             </Button>
-                            {/*
-                            <Button
-                                title={this.props.leadsStrings('editLeadButtonTitle')}
-                                onClick={() => this.handleEditLeadClick(row)}
-                                smallVerticalPadding
-                                transparent
-                            >
-                                <i className={iconNames.edit} />
-                            </Button>
-                            */}
-                            <Link
-                                title={this.props.leadsStrings('editLeadButtonTitle')}
-                                to={editLeadLink}
-                            >
-                                <i className={iconNames.edit} />
-                            </Link>
                             <DangerButton
                                 title={this.props.leadsStrings('removeLeadLeadButtonTitle')}
                                 onClick={() => this.handleRemoveLead(row)}
@@ -330,10 +322,22 @@ export default class Leads extends React.PureComponent {
                                 <i className={iconNames.delete} />
                             </DangerButton>
                             <Link
+                                title={this.props.leadsStrings('editLeadButtonTitle')}
+                                to={editLeadLink}
+                            >
+                                <i className={iconNames.edit} />
+                            </Link>
+                            <Link
                                 title={this.props.leadsStrings('addEntryFromLeadButtonTitle')}
                                 to={editEntriesLink}
                             >
                                 <i className={iconNames.forward} />
+                            </Link>
+                            <Link
+                                title={this.props.leadsStrings('addAssessmentFromLeadButtonTitle')}
+                                to={addAssessmentLink}
+                            >
+                                <i className={iconNames.copy} />
                             </Link>
                         </div>
                     );
