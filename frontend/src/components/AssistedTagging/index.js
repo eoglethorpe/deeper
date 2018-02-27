@@ -544,6 +544,7 @@ export default class AssistedTagging extends React.PureComponent {
         const {
             lead,
             className,
+            onEntryAdd,
         } = this.props;
 
         const {
@@ -664,15 +665,17 @@ export default class AssistedTagging extends React.PureComponent {
                                     keyExtractor={this.calcSectorKey}
                                 />
                             )}
-                            <PrimaryButton
-                                iconName={iconNames.add}
-                                className={styles['add-button']}
-                                onClick={() => this.handleEntryAdd(
-                                    activeHighlightDetails.text,
-                                )}
-                            >
-                                {this.props.entryStrings('addEntryButtonLabel')}
-                            </PrimaryButton>
+                            {onEntryAdd && (
+                                <PrimaryButton
+                                    iconName={iconNames.add}
+                                    className={styles['add-button']}
+                                    onClick={() => this.handleEntryAdd(
+                                        activeHighlightDetails.text,
+                                    )}
+                                >
+                                    {this.props.entryStrings('addEntryButtonLabel')}
+                                </PrimaryButton>
+                            )}
                         </div>
                     </FloatingContainer>
                 }

@@ -89,6 +89,10 @@
         flex-wrap: wrap;
         padding: 0 $spacing-medium-alt;
 
+        &:last-child {
+            margin-bottom: $spacing-medium;
+        }
+
         .sector {
             display: flex;
             align-items: center;
