@@ -16,7 +16,7 @@ import {
 } from '../../redux';
 
 import ProjectRequest from './requests/ProjectRequest';
-import AryRequest from './requests/AryRequest';
+import AryTemplateRequest from './requests/AryTemplateRequest';
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
 import styles from './styles.scss';
@@ -100,11 +100,11 @@ export default class Ary extends React.PureComponent {
         // only stop previous ary template request
         this.stopRequests({ project: false });
 
-        const aryRequest = new AryRequest(
+        const aryTemplateRequest = new AryTemplateRequest(
             this,
             { setAryTemplate: this.props.setAryTemplate },
         );
-        this.aryTemplateRequest = aryRequest.create(id);
+        this.aryTemplateRequest = aryTemplateRequest.create(id);
         this.aryTemplateRequest.start();
     }
 

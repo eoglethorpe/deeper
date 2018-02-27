@@ -144,7 +144,7 @@ const initialSiloDomainData = {
         },
     },
 
-    assessmentRegistryView: {
+    aryView: {
         /*
         // index is assesment registry id
         1: {

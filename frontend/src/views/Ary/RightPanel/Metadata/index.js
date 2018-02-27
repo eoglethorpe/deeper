@@ -7,7 +7,7 @@ import {
     aryStringsSelector,
     aryViewMetadataSelector,
     aryTemplateMetadataSelector,
-    updateAryMetadataAction,
+    setAryAction,
 } from '../../../../redux';
 
 
@@ -20,25 +20,25 @@ import styles from './styles.scss';
 
 const propTypes = {
     aryStrings: PropTypes.func.isRequired,
-    metadata: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    metaData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    updateMetadata: PropTypes.func.isRequired,
+    setAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    metadata: {},
+    metaData: {},
     aryTemplateMetadata: {},
 };
 
 const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
-    metadata: aryViewMetadataSelector(state),
+    metaData: aryViewMetadataSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateMetadata: params => dispatch(updateAryMetadataAction(params)),
+    setAry: params => dispatch(setAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -48,16 +48,16 @@ export default class Metadata extends React.PureComponent {
     static defaultProps = defaultProps;
 
     componentWillMount() {
-        this.props.updateMetadata({
-            metadata: {},
-            aryId: 1,
+        this.props.setAry({
+            metaData: { data: 'hello' },
+            id: 1,
         });
     }
 
     render() {
-        const { metadata, aryTemplateMetadata } = this.props;
+        const { metaData, aryTemplateMetadata } = this.props;
 
-        console.warn(metadata, aryTemplateMetadata);
+        console.warn(metaData, aryTemplateMetadata);
 
         return (
             <div className={styles['meta-data']}>

@@ -3,12 +3,12 @@ import { aryIdFromRoute } from '../domainData';
 
 const emptyObject = {};
 
-const assessmentRegistryViewSelector = ({ siloDomainData }) => (
-    siloDomainData.assessmentRegistryView || emptyObject
+const aryViewSelector = ({ siloDomainData }) => (
+    siloDomainData.aryView || emptyObject
 );
 
 const aryViewFromRouteSelector = createSelector(
-    assessmentRegistryViewSelector,
+    aryViewSelector,
     aryIdFromRoute,
     (view, id) => view[id] || emptyObject,
 );
@@ -16,5 +16,5 @@ const aryViewFromRouteSelector = createSelector(
 // eslint-disable-next-line import/prefer-default-export
 export const aryViewMetadataSelector = createSelector(
     aryViewFromRouteSelector,
-    view => view.metadata || emptyObject,
+    view => view.metaData || emptyObject,
 );
