@@ -73,12 +73,16 @@ class RouteSynchronizer extends React.PureComponent {
 
         this.syncState(props);
 
-        this.props.setRouteParams(props.match);
+        const { match, location } = this.props;
+        this.props.setRouteParams({ match, location });
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.match !== nextProps.match) {
-            this.props.setRouteParams(nextProps.match);
+        if (this.props.match !== nextProps.match || this.props.location !== nextProps.location) {
+            this.props.setRouteParams({
+                match: nextProps.match,
+                location: nextProps.location,
+            });
         }
 
         const newUrlParams = this.getNewUrlParams(nextProps);

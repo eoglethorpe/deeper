@@ -10,6 +10,10 @@ export const routeParamsSelector = ({ route }) => (
     route.params || emptyObject
 );
 
+export const routeStateSelector = ({ route }) => (
+    route.routeState || emptyObject
+);
+
 export const afIdFromRouteSelector = createSelector(
     routeParamsSelector,
     routeParams => routeParams.analysisFrameworkId,

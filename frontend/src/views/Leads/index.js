@@ -9,7 +9,6 @@ import {
 
 import {
     reverseRoute,
-    randomString,
 } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
@@ -47,7 +46,6 @@ import {
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
 
-    addLeadViewAddLeadsAction,
     leadsStringsSelector,
 } from '../../redux';
 import {
@@ -73,7 +71,6 @@ const propTypes = {
     setLeadPageFilter: PropTypes.func.isRequired,
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
-    addLeads: PropTypes.func.isRequired,
 
     leadsStrings: PropTypes.func.isRequired,
 };
@@ -100,8 +97,6 @@ const mapDispatchToProps = dispatch => ({
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
-
-    addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
@@ -266,42 +261,83 @@ export default class Leads extends React.PureComponent {
                 label: this.props.leadsStrings('tableHeaderActions'),
                 order: 10,
                 sortable: false,
-                modifier: row => (
-                    <div>
-                        <Button
-                            title={this.props.leadsStrings('searchSimilarLeadButtonTitle')}
-                            onClick={() => this.handleSearchSimilarLead(row)}
-                            smallVerticalPadding
-                            transparent
-                        >
-                            <i className={iconNames.search} />
-                        </Button>
-                        <Button
-                            title={this.props.leadsStrings('editLeadButtonTitle')}
-                            onClick={() => this.handleEditLeadClick(row)}
-                            smallVerticalPadding
-                            transparent
-                        >
-                            <i className={iconNames.edit} />
-                        </Button>
-                        <DangerButton
-                            title={this.props.leadsStrings('removeLeadLeadButtonTitle')}
-                            onClick={() => this.handleRemoveLead(row)}
-                            smallVerticalPadding
-                            transparent
-                        >
-                            <i className={iconNames.delete} />
-                        </DangerButton>
-                        <AccentButton
-                            title={this.props.leadsStrings('addEntryFromLeadButtonTitle')}
-                            onClick={() => this.handleAddEntryClick(row)}
-                            smallVerticalPadding
-                            transparent
-                        >
-                            <i className={iconNames.forward} />
-                        </AccentButton>
-                    </div>
-                ),
+                modifier: (row) => {
+                    const editEntriesLink = reverseRoute(
+                        pathNames.editEntries,
+                        {
+                            projectId: this.props.activeProject,
+                            leadId: row.id,
+                        },
+                    );
+
+                    const editLeadLink = {
+                        pathname: reverseRoute(
+                            pathNames.addLeads,
+                            {
+                                projectId: this.props.activeProject,
+                            },
+                        ),
+                        state: {
+                            serverId: row.id,
+                            values: {
+                                title: row.title,
+                                sourceType: row.sourceType,
+                                project: row.project,
+                                source: row.source,
+                                confidentiality: row.confidentiality,
+                                assignee: row.assignee,
+                                publishedOn: row.publishedOn,
+                                attachment: row.attachment,
+                                website: row.website,
+                                url: row.url,
+                                text: row.text,
+                            },
+                        },
+                    };
+
+                    return (
+                        <div>
+                            <Button
+                                title={this.props.leadsStrings('searchSimilarLeadButtonTitle')}
+                                onClick={() => this.handleSearchSimilarLead(row)}
+                                smallVerticalPadding
+                                transparent
+                            >
+                                <i className={iconNames.search} />
+                            </Button>
+                            {/*
+                            <Button
+                                title={this.props.leadsStrings('editLeadButtonTitle')}
+                                onClick={() => this.handleEditLeadClick(row)}
+                                smallVerticalPadding
+                                transparent
+                            >
+                                <i className={iconNames.edit} />
+                            </Button>
+                            */}
+                            <Link
+                                title={this.props.leadsStrings('editLeadButtonTitle')}
+                                to={editLeadLink}
+                            >
+                                <i className={iconNames.edit} />
+                            </Link>
+                            <DangerButton
+                                title={this.props.leadsStrings('removeLeadLeadButtonTitle')}
+                                onClick={() => this.handleRemoveLead(row)}
+                                smallVerticalPadding
+                                transparent
+                            >
+                                <i className={iconNames.delete} />
+                            </DangerButton>
+                            <Link
+                                title={this.props.leadsStrings('addEntryFromLeadButtonTitle')}
+                                to={editEntriesLink}
+                            >
+                                <i className={iconNames.forward} />
+                            </Link>
+                        </div>
+                    );
+                },
             },
         ];
 
@@ -473,56 +509,6 @@ export default class Leads extends React.PureComponent {
 
     // UI
 
-    handleAddLeadClick = () => {
-        const params = {
-            projectId: this.props.activeProject,
-        };
-
-        this.setState({ redirectTo: reverseRoute(pathNames.addLeads, params) });
-    }
-
-    handleAddEntryClick = (row) => {
-        const params = {
-            projectId: this.props.activeProject,
-            leadId: row.id,
-        };
-
-        this.setState({ redirectTo: reverseRoute(pathNames.editEntries, params) });
-    }
-
-    handleEditLeadClick = (row) => {
-        const newLeads = [];
-
-        const values = {
-            title: row.title,
-            sourceType: row.sourceType,
-            project: row.project,
-            source: row.source,
-            confidentiality: row.confidentiality,
-            assignee: row.assignee,
-            publishedOn: row.publishedOn,
-            attachment: row.attachment,
-            website: row.website,
-            url: row.url,
-            text: row.text,
-        };
-        const serverId = row.id;
-
-        const uid = randomString();
-        const newLeadId = `lead-${uid}`;
-        newLeads.push({
-            id: newLeadId,
-
-            serverId,
-            values,
-
-            pristine: true,
-        });
-        this.props.addLeads(newLeads);
-
-        this.handleAddLeadClick();
-    }
-
     handleSearchSimilarLead = (row) => {
         this.props.setLeadPageFilter({
             filters: { similar: row.id },
@@ -624,17 +610,26 @@ export default class Leads extends React.PureComponent {
             );
         }
 
+        const addLeadLink = reverseRoute(
+            pathNames.addLeads,
+            { projectId: this.props.activeProject },
+        );
+        const showVisualizationLink = reverseRoute(
+            pathNames.leadsViz,
+            { projectId: activeProject },
+        );
+
         return (
             <div styleName="leads">
                 <header styleName="header">
                     <FilterLeadsForm styleName="filters" />
-                    <PrimaryButton
-                        styleName="add-lead-button"
-                        onClick={this.handleAddLeadClick}
-                        iconName={iconNames.add}
+                    <Link
+                        to={addLeadLink}
+                        styleName="add-lead-link"
                     >
+                        {/* add icon aswell */}
                         {this.props.leadsStrings('addSourcesButtonLabel')}
-                    </PrimaryButton>
+                    </Link>
                 </header>
                 <div styleName="table-container">
                     <RawTable
@@ -661,7 +656,7 @@ export default class Leads extends React.PureComponent {
                     <div styleName="link-container">
                         <Link
                             styleName="link"
-                            to={reverseRoute(pathNames.leadsViz, { projectId: activeProject })}
+                            to={showVisualizationLink}
                             replace
                         >
                             Show Visualization

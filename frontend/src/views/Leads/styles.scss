@@ -13,7 +13,10 @@
         background-color: $color-foreground;
         padding: $spacing-small;
 
-        .add-lead-button {
+        .add-lead-link {
+            @extend %button-like-link;
+            background-color: $color-primary;
+            color: $color-foreground-alt;
             flex-shrink: 0;
             align-self: flex-end;
             margin: $spacing-small;
