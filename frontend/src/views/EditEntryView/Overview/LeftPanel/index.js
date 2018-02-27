@@ -110,7 +110,7 @@ export default class LeftPanel extends React.PureComponent {
                         className={styles['simplified-preview']}
                         leadId={this.props.lead.id}
                         highlights={this.props.api.getEntryHighlights()}
-                        highlightModifier={SimplifiedLeadPreview.highlightModifier}
+                        highlightModifier={this.highlightSimplifiedExcerpt}
                         onLoad={this.handleLoadImages}
                     />
                 ),
@@ -179,6 +179,15 @@ export default class LeftPanel extends React.PureComponent {
         }
     }
 
+    highlightSimplifiedExcerpt = (highlight, text, actualStr) => (
+        SimplifiedLeadPreview.highlightModifier(
+            highlight,
+            text,
+            actualStr,
+            this.handleHighlightClick,
+        )
+    );
+
     calcEntryLabel = (entry) => {
         const values = entryAccessor.getValues(entry);
 
@@ -241,6 +250,14 @@ export default class LeftPanel extends React.PureComponent {
         }
         tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
         return tabs;
+    }
+
+    handleHighlightClick = (e, { text }) => {
+        const { api } = this.props;
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntry(existing.data.id);
+        }
     }
 
     handleLoadImages = (response) => {

@@ -120,11 +120,12 @@ export default class AssistedTagging extends React.PureComponent {
         }
     }
 
-    highlightSimplifiedExcerpt = (highlight, text) => (
+    highlightSimplifiedExcerpt = (highlight, text, actualStr) => (
         SimplifiedLeadPreview.highlightModifier(
             highlight,
             text,
-            e => this.handleOnHighlightClick(e, { ...highlight, text }),
+            actualStr,
+            this.handleHighlightClick,
         )
     );
 
@@ -152,7 +153,7 @@ export default class AssistedTagging extends React.PureComponent {
         }, () => this.refreshSelections());
     }
 
-    handleOnHighlightClick = (e, activeHighlightDetails) => {
+    handleHighlightClick = (e, activeHighlightDetails) => {
         if (this.primaryContainer) {
             this.primaryContainerRect = this.primaryContainer.getBoundingClientRect();
         }

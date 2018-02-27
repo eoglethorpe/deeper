@@ -59,24 +59,31 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         };
     };
 
-    static handleHighlightDrag = (event) => {
-        const element = event.target;
-        const text = element.innerText || element.textContent;
-        event.dataTransfer.setData('text/plain', text);
-    }
-
-    static highlightModifier = (highlight, text, onClick, className = '') => {
+    static highlightModifier = (highlight, text, actualStr, onClick, className = '') => {
         const colors = SimplifiedLeadPreview.getHighlightColors(highlight.color);
+        const clickHandler = onClick && ((e) => {
+            onClick(e, {
+                ...highlight,
+                text: actualStr,
+            });
+            e.stopPropagation();
+        });
+        const dragHandler = (e) => {
+            e.dataTransfer.setData('text/plain', actualStr);
+            e.stopPropagation();
+        };
+        const style = {
+            backgroundColor: colors.background,
+            border: `1px solid ${colors.border}`,
+        };
+
         return (
             <span
                 role="presentation"
                 className={`${styles.highlight} ${className}`}
-                style={{
-                    backgroundColor: colors.background,
-                    border: `1px solid ${colors.border}`,
-                }}
-                onClick={onClick}
-                onDragStart={SimplifiedLeadPreview.handleHighlightDrag}
+                style={style}
+                onClick={clickHandler}
+                onDragStart={dragHandler}
                 draggable
             >
                 <span className={styles.text}>

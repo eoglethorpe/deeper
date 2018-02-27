@@ -64,20 +64,23 @@ export default class HighlightedText extends React.PureComponent {
                 );
             }
 
+            const actualStr = text.substr(split.start, split.end - split.start);
             const splitStr = text.substr(splitIndex, split.end - splitIndex);
             const key = `split-${level}-${split.start}-1`;
+
             if (split.children.length > 0) {
                 result.push(
                     <span key={key}>
                         { this.props.modifier(
                             split.item,
                             this.renderSplits(splitStr, split.children, level + 1),
+                            actualStr,
                         ) }
                     </span>,
                 );
             } else {
                 result.push(
-                    <span key={key}>{ this.props.modifier(split.item, splitStr) }</span>,
+                    <span key={key}>{ this.props.modifier(split.item, splitStr, actualStr) }</span>,
                 );
             }
 
