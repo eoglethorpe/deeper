@@ -11,7 +11,7 @@ import GridLayout from '../../vendor/react-store/components/View/GridLayout';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Pager from '../../vendor/react-store/components/View/Pager';
-import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
 import BoundError from '../../components/BoundError';
 
 import {
@@ -431,91 +431,130 @@ export default class Entries extends React.PureComponent {
         );
     }
 
-    renderLeadGroupedEntriesItem = (key, data) => {
+    renderLeadGroupedEntriesHeader = ({
+        leadId,
+        createdAt,
+        title,
+    }) => {
         const { projectId } = this.props;
-
         const route = reverseRoute(pathNames.editEntries, {
             projectId,
-            leadId: key,
+            leadId,
         });
+
+        return (
+            <header className={styles.header}>
+                <div className={styles['info-container']}>
+                    <h2 className={styles.heading}>
+                        {title}
+                    </h2>
+                    <div className={styles.detail}>
+                        <span className={iconNames.calendar} />
+                        <FormattedDate
+                            date={createdAt}
+                            mode="dd-MM-yyyy"
+                        />
+                    </div>
+                </div>
+                <div className={styles['action-buttons']}>
+                    <Link
+                        title={this.props.entryStrings('editEntryLinkTitle')}
+                        to={route}
+                    >
+                        <AccentButton transparent>
+                            {this.props.entryStrings('editEntryButtonLabel')}
+                        </AccentButton>
+                    </Link>
+                </div>
+            </header>
+        );
+    }
+
+    renderLeadGroupedEntriesItem = (key, data) => {
+        const {
+            entries = emptyList,
+            id,
+            title,
+            createdAt,
+        } = data;
+
+        const LeadGroupedEntriesHeader = this.renderLeadGroupedEntriesHeader;
 
         return (
             <div
                 key={data.id}
-                className={styles['lead-entries']}
+                className={styles['lead-grouped-entries']}
             >
-                <header className={styles.header}>
-                    <div className={styles['info-container']}>
-                        <h2 className={styles.heading}>
-                            {data.title}
-                        </h2>
-                        <div className={styles.detail}>
-                            <span className={iconNames.calendar} />
-                            <FormattedDate
-                                date={data.createdAt}
-                                mode="dd-MM-yyyy"
-                            />
-                        </div>
-                    </div>
-                    <div className={styles['action-buttons']}>
-                        <Link
-                            title={this.props.entryStrings('editEntryLinkTitle')}
-                            to={route}
-                        >
-                            <PrimaryButton iconName={iconNames.edit} >
-                                {this.props.entryStrings('editEntryButtonLabel')}
-                            </PrimaryButton>
-                        </Link>
-                    </div>
-                </header>
+                <LeadGroupedEntriesHeader
+                    leadId={id}
+                    title={title}
+                    createdAt={createdAt}
+                />
                 <ListView
-                    data={data.entries || emptyList}
-                    keyExtractor={Entries.leadKeyExtractor}
+                    className={styles.entries}
+                    data={entries}
                     modifier={this.renderEntries}
                 />
             </div>
         );
     }
 
-    render() {
+    renderFooter = () => {
         const {
-            entries = [],
-            activePage,
             totalEntriesCount,
+            activePage,
         } = this.props;
 
+        if (totalEntriesCount <= 0) {
+            return null;
+        }
+
+        return (
+            <footer className={styles.footer}>
+                <Pager
+                    activePage={activePage}
+                    itemsCount={totalEntriesCount}
+                    maxItemsPerPage={MAX_ENTRIES_PER_REQUEST}
+                    onPageClick={this.handlePageClick}
+                />
+            </footer>
+        );
+    }
+
+    renderLeadEntries = () => {
+        const { entries = [] } = this.props;
         const {
             pendingEntries,
             pendingAf,
         } = this.state;
-
         const pending = pendingEntries || pendingAf;
+        if (pending) {
+            return (
+                <LoadingAnimation
+                    className={styles['loading-animation']}
+                />
+            );
+        }
 
         return (
-            <div styleName="entries">
+            <ListView
+                className={styles['lead-entries']}
+                data={entries}
+                modifier={this.renderLeadGroupedEntriesItem}
+            />
+        );
+    }
+
+    render() {
+        const { pendingAf } = this.state;
+        const Footer = this.renderFooter;
+        const LeadEntries = this.renderLeadEntries;
+
+        return (
+            <div className={styles['entries-view']}>
                 <FilterEntriesForm pending={pendingAf} />
-                <div styleName="lead-entries-container">
-                    { pending && <LoadingAnimation /> }
-                    { !pending &&
-                        <ListView
-                            key="lead-entries-list"
-                            styleName="lead-entries-list"
-                            data={entries}
-                            keyExtractor={Entries.leadKeyExtractor}
-                            modifier={this.renderLeadGroupedEntriesItem}
-                        />
-                    }
-                </div>
-                { totalEntriesCount > 0 &&
-                    <footer styleName="footer">
-                        <Pager
-                            activePage={activePage}
-                            itemsCount={totalEntriesCount}
-                            maxItemsPerPage={MAX_ENTRIES_PER_REQUEST}
-                            onPageClick={this.handlePageClick}
-                        />
-                    </footer>
-                }
+                <LeadEntries />
+                <Footer />
             </div>
         );
     }

@@ -9,8 +9,10 @@
     color: $color-text-disabled;
 }
 
-.number-matrix-widget {
-    display: flex;
+.overview {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 
     .table-header {
         background-color: $color-foreground-alt;
@@ -27,22 +29,17 @@
     }
 }
 
-
-.edit-matrix-modal {
-    .modal-body {
+.edit-modal {
+    .body {
         display: flex;
         flex-direction: column;
         padding: 0;
         height: 512px;
 
-        .general-info-container {
+        .title-input-container {
             flex-shrink: 0;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-small $spacing-medium-alt;
-
-            .title-input {
-                width: auto;
-            }
         }
 
         .modal-unit-container {

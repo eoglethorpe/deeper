@@ -321,7 +321,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
         );
     }
 
-    render() {
+    renderEditModal = () => {
         const {
             showEditModal,
             rowHeaders,
@@ -329,87 +329,97 @@ export default class NumberMatrixOverview extends React.PureComponent {
             title,
         } = this.state;
 
+        if (!showEditModal) {
+            return null;
+        }
+
         return (
-            <div className={styles['number-matrix-widget']}>
-                {this.renderMatrix(rowHeaders, columnHeaders)}
-                { showEditModal &&
-                    <Modal
-                        className={styles['edit-matrix-modal']}
-                        onClose={this.handleEditModalClose}
-                    >
-                        <ModalHeader title={this.props.afStrings('editNumberMatrixModalTitle')} />
-                        <ModalBody className={styles['modal-body']}>
-                            <div className={styles['general-info-container']}>
-                                <TextInput
-                                    className={styles['title-input']}
-                                    label={this.props.afStrings('titleLabel')}
-                                    placeholder={this.props.afStrings('titlePlaceholderScale')}
-                                    onChange={this.handleWidgetTitleChange}
-                                    value={title}
-                                    showHintAndError={false}
-                                    autoFocus
-                                    selectOnFocus
-                                />
-                            </div>
-                            <div className={styles['modal-unit-container']}>
-                                <header className={styles.header}>
-                                    <h3 className={styles.heading}>
-                                        {this.props.afStrings('rowsLabel')}
-                                    </h3>
-                                    <PrimaryButton
-                                        iconName={iconNames.add}
-                                        onClick={() => this.handleAddButtonClick('row')}
-                                        title={this.props.afStrings('addRowUnitButtonLabel')}
-                                        transparent
-                                    />
-                                </header>
-                                <SortableList
-                                    className={styles['edit-list']}
-                                    data={rowHeaders}
-                                    modifier={this.renderRowUnit}
-                                    onChange={this.handleRowListSortChange}
-                                    sortableItemClass={styles['sortable-unit']}
-                                    keyExtractor={NumberMatrixOverview.rowKeyExtractor}
-                                    dragHandleModifier={this.renderDragHandle}
-                                />
-                            </div>
-                            <div className={styles['modal-unit-container']}>
-                                <header className={styles.header}>
-                                    <h3 className={styles.heading}>
-                                        {this.props.afStrings('columnsLabel')}
-                                    </h3>
-                                    <PrimaryButton
-                                        iconName={iconNames.add}
-                                        onClick={() => this.handleAddButtonClick('column')}
-                                        title={this.props.afStrings('addColumnUnitButtonLabel')}
-                                        transparent
-                                    />
-                                </header>
-                                <SortableList
-                                    className={styles['edit-list']}
-                                    data={columnHeaders}
-                                    modifier={this.renderColumnUnit}
-                                    onChange={this.handleColumnListSortChange}
-                                    sortableItemClass={styles['sortable-unit']}
-                                    keyExtractor={NumberMatrixOverview.rowKeyExtractor}
-                                    dragHandleModifier={this.renderDragHandle}
-                                />
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
-                                {this.props.afStrings('cancelButtonLabel')}
-                            </Button>
+            <Modal
+                className={styles['edit-modal']}
+                onClose={this.handleEditModalClose}
+            >
+                <ModalHeader title={this.props.afStrings('editNumberMatrixModalTitle')} />
+                <ModalBody className={styles.body}>
+                    <div className={styles['title-input-container']}>
+                        <TextInput
+                            label={this.props.afStrings('titleLabel')}
+                            placeholder={this.props.afStrings('titlePlaceholderScale')}
+                            onChange={this.handleWidgetTitleChange}
+                            value={title}
+                            showHintAndError={false}
+                            autoFocus
+                            selectOnFocus
+                        />
+                    </div>
+                    <div className={styles['modal-unit-container']}>
+                        <header className={styles.header}>
+                            <h3 className={styles.heading}>
+                                {this.props.afStrings('rowsLabel')}
+                            </h3>
                             <PrimaryButton
-                                onClick={this.handleModalSaveButtonClick}
-                            >
-                                {this.props.afStrings('saveButtonLabel')}
-                            </PrimaryButton>
-                        </ModalFooter>
-                    </Modal>
-                }
+                                iconName={iconNames.add}
+                                onClick={() => this.handleAddButtonClick('row')}
+                                title={this.props.afStrings('addRowUnitButtonLabel')}
+                                transparent
+                            />
+                        </header>
+                        <SortableList
+                            className={styles['edit-list']}
+                            data={rowHeaders}
+                            modifier={this.renderRowUnit}
+                            onChange={this.handleRowListSortChange}
+                            sortableItemClass={styles['sortable-unit']}
+                            keyExtractor={NumberMatrixOverview.rowKeyExtractor}
+                            dragHandleModifier={this.renderDragHandle}
+                        />
+                    </div>
+                    <div className={styles['modal-unit-container']}>
+                        <header className={styles.header}>
+                            <h3 className={styles.heading}>
+                                {this.props.afStrings('columnsLabel')}
+                            </h3>
+                            <PrimaryButton
+                                iconName={iconNames.add}
+                                onClick={() => this.handleAddButtonClick('column')}
+                                title={this.props.afStrings('addColumnUnitButtonLabel')}
+                                transparent
+                            />
+                        </header>
+                        <SortableList
+                            className={styles['edit-list']}
+                            data={columnHeaders}
+                            modifier={this.renderColumnUnit}
+                            onChange={this.handleColumnListSortChange}
+                            sortableItemClass={styles['sortable-unit']}
+                            keyExtractor={NumberMatrixOverview.rowKeyExtractor}
+                            dragHandleModifier={this.renderDragHandle}
+                        />
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        onClick={this.handleModalCancelButtonClick}
+                    >
+                        {this.props.afStrings('cancelButtonLabel')}
+                    </Button>
+                    <PrimaryButton
+                        onClick={this.handleModalSaveButtonClick}
+                    >
+                        {this.props.afStrings('saveButtonLabel')}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    render() {
+        const Matrix = this.renderMatrix;
+        const EditModal = this.renderEditModal;
+
+        return (
+            <div className={styles.overview}>
+                <Matrix />
+                <EditModal />
             </div>
         );
     }

@@ -302,21 +302,22 @@ export default class Overview extends React.PureComponent {
                                             onClick={
                                                 () => this.handleAddWidgetButtonClick(widget.id)
                                             }
-                                        >
-                                            <span className={iconNames.add} />
-                                        </Button>
+                                            iconName={iconNames.add}
+                                        />
                                     </div>
                                 </div>
                             ))
                         }
                     </div>
-                    <div styleName="grid-layout-wrapper">
-                        <GridLayout
-                            styleName="grid-layout"
-                            modifier={this.getItemView}
-                            items={this.gridItems}
-                            onLayoutChange={this.handleLayoutChange}
-                        />
+                    <div styleName="grid-layout-container">
+                        <div styleName="scroll-wrapper">
+                            <GridLayout
+                                styleName="grid-layout"
+                                modifier={this.getItemView}
+                                items={this.gridItems}
+                                onLayoutChange={this.handleLayoutChange}
+                            />
+                        </div>
                         <Confirm
                             title="Remove widget" // FIXME: strings
                             onClose={this.handleWidgetClose}

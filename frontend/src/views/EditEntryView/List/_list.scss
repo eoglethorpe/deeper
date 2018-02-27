@@ -1,7 +1,7 @@
 .list {
     display: flex;
     flex-direction: column;
-    background-color: $color-foreground-alt;
+    background-color: $color-background-alt;
     height: 100%;
 
     .header {
@@ -36,13 +36,11 @@
 
     .entry-list {
         flex-grow: 1;
-        background-color: $color-background;
-        overflow-y: auto;
+        overflow: auto;
 
         .entry {
+            display: inline-block;
             background-color: $color-background-row;
-            padding: $spacing-small;
-            overflow-x: auto;
 
             .apply-buttons {
                 display: flex;
