@@ -59,6 +59,12 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         };
     };
 
+    static handleHighlightDrag = (event) => {
+        const element = event.target;
+        const text = element.innerText || element.textContent;
+        event.dataTransfer.setData('text/plain', text);
+    }
+
     static highlightModifier = (highlight, text, onClick, className = '') => {
         const colors = SimplifiedLeadPreview.getHighlightColors(highlight.color);
         return (
@@ -70,7 +76,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                     border: `1px solid ${colors.border}`,
                 }}
                 onClick={onClick}
-                onDragStart={(event) => { event.dataTransfer.setData('text/plain', text); }}
+                onDragStart={SimplifiedLeadPreview.handleHighlightDrag}
                 draggable
             >
                 <span className={styles.text}>
