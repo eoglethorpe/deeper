@@ -1,12 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    SortableContainer,
-    SortableElement,
-    SortableHandle,
-    arrayMove,
-} from 'react-sortable-hoc';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 
@@ -21,6 +15,7 @@ import ModalHeader from '../../../vendor/react-store/components/View/Modal/Heade
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { randomString } from '../../../vendor/react-store/utils/common';
 
@@ -41,10 +36,6 @@ const propTypes = {
 const defaultProps = {
     data: {},
 };
-
-const DragHandle = SortableHandle(() => (
-    <span className={`${iconNames.hamburger} drag-handle`} />
-));
 
 const emptyList = [];
 const emptyObject = {};
@@ -77,12 +68,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
         this.props.editAction(this.handleEdit);
     }
 
-    onSortEnd = ({ oldIndex, newIndex }) => {
-        this.setState({
-            scaleUnits: arrayMove(this.state.scaleUnits, oldIndex, newIndex),
-        });
-    };
-
     getSelectedScaleStyle = (key) => {
         const { defaultScaleUnit } = this.state;
         const scaleUnitStyle = ['scale-unit'];
@@ -93,92 +78,9 @@ export default class ScaleFrameworkList extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    // TODO: fix this, don't make new objet
-    getEditScaleUnits = (key, data, index) => (
-        <this.SortableScaleUnit
-            key={key}
-            index={index}
-            value={{ key, data }}
-        />
-    )
-
-    SortableScaleUnit = SortableElement(({ value: { data, key } }) => {
-        const { defaultScaleUnit } = this.state;
-        let defaultIconName = iconNames.checkboxOutlineBlank;
-        if (defaultScaleUnit === key) {
-            defaultIconName = iconNames.checkbox;
-        }
-
-        const { afStrings } = this.props;
-        const colorInputLabel = afStrings('colorLabel');
-        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
-        const titleInputLabel = afStrings('titleLabel');
-        const defaultButtonLabel = afStrings('defaultButtonLabel');
-
-        return (
-            <div
-                className={`${styles['edit-scale-unit']} ${styles['draggable-item']}`}
-                key={key}
-            >
-                <DragHandle />
-                <ColorInput
-                    label={colorInputLabel}
-                    onChange={newColor => this.handleColorChange(newColor, key)}
-                    value={data.color}
-                    showHintAndError={false}
-                />
-                <TextInput
-                    className={styles['title-input']}
-                    label={titleInputLabel}
-                    placeholder={titleInputPlaceholder}
-                    onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
-                    value={data.title}
-                    showHintAndError={false}
-                    autoFocus
-                />
-                <AccentButton
-                    className={styles['check-button']}
-                    onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
-                    id={`${key}-check-button`}
-                    transparent
-                >
-                    <label
-                        className={styles.label}
-                        htmlFor={`${key}-check-button`}
-                    >
-                        { defaultButtonLabel }
-                    </label>
-                    <span className={defaultIconName} />
-                </AccentButton>
-                <DangerButton
-                    className={styles['delete-button']}
-                    onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
-                    transparent
-                >
-                    <span className={iconNames.delete} />
-                </DangerButton>
-            </div>
-        );
-    })
-
-    SortableList = SortableContainer(({ items: scaleUnits }) => {
-        const classNames = [
-            styles['sortable-list'],
-        ];
-
-        if (scaleUnits.length === 0) {
-            classNames.push(styles['no-items']);
-        }
-
-        return (
-            <ListView
-                className={classNames.join(' ')}
-                data={scaleUnits}
-                keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-                modifier={this.getEditScaleUnits}
-            />
-        );
-    })
+    handleScaleUnitSortChange = (scaleUnits) => {
+        this.setState({ scaleUnits });
+    }
 
     handleScaleSetDefaultButtonClick = (key) => {
         this.setState({ defaultScaleUnit: key });
@@ -309,6 +211,72 @@ export default class ScaleFrameworkList extends React.PureComponent {
         />
     )
 
+    renderDragHandle = () => {
+        const dragStyle = [styles['drag-handle']];
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
+    renderScaleUnit = (key, data) => {
+        const { defaultScaleUnit } = this.state;
+        let defaultIconName = iconNames.checkboxOutlineBlank;
+        if (defaultScaleUnit === key) {
+            defaultIconName = iconNames.checkbox;
+        }
+
+        const { afStrings } = this.props;
+        const colorInputLabel = afStrings('colorLabel');
+        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
+        const titleInputLabel = afStrings('titleLabel');
+        const defaultButtonLabel = afStrings('defaultButtonLabel');
+
+        return (
+            <div
+                className={`${styles['edit-scale-unit']} ${styles['draggable-item']}`}
+                key={key}
+            >
+                <ColorInput
+                    label={colorInputLabel}
+                    onChange={newColor => this.handleColorChange(newColor, key)}
+                    value={data.color}
+                    showHintAndError={false}
+                />
+                <TextInput
+                    className={styles['title-input']}
+                    label={titleInputLabel}
+                    placeholder={titleInputPlaceholder}
+                    onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
+                    value={data.title}
+                    showHintAndError={false}
+                    autoFocus
+                />
+                <AccentButton
+                    className={styles['check-button']}
+                    onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
+                    id={`${key}-check-button`}
+                    transparent
+                >
+                    <label
+                        className={styles.label}
+                        htmlFor={`${key}-check-button`}
+                    >
+                        { defaultButtonLabel }
+                    </label>
+                    <span className={defaultIconName} />
+                </AccentButton>
+                <DangerButton
+                    className={styles['delete-button']}
+                    onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
+                    transparent
+                >
+                    <span className={iconNames.delete} />
+                </DangerButton>
+            </div>
+        );
+    }
+
+
     renderEditModal = () => {
         const {
             scaleUnits,
@@ -355,12 +323,14 @@ export default class ScaleFrameworkList extends React.PureComponent {
                         />
                     </div>
                     <div className={styles['scale-units']}>
-                        <this.SortableList
-                            items={scaleUnits}
-                            onSortEnd={this.onSortEnd}
-                            lockAxis="y"
-                            lockToContainerEdges
-                            useDragHandle
+                        <SortableList
+                            className={styles['scale-unit']}
+                            data={scaleUnits}
+                            modifier={this.renderScaleUnit}
+                            onChange={this.handleScaleUnitSortChange}
+                            sortableItemClass={styles['sortable-unit']}
+                            keyExtractor={ScaleFrameworkList.rowKeyExtractor}
+                            dragHandleModifier={this.renderDragHandle}
                         />
                     </div>
                 </ModalBody>
