@@ -46,20 +46,49 @@ $height-edit-modal: 512px;
                 flex-grow: 1;
                 overflow-y: auto;
 
-                .edit-option {
-                    display: flex;
-                    padding: $spacing-small $spacing-medium;
-
-                    .title-input {
-                        flex-grow: 1;
-                    }
-
-                    .delete-button {
-                        flex-shrink: 0;
-                        align-self: flex-end;
-                    }
+                .sortable-unit {
+                    border-top: 0;
                 }
             }
         }
     }
+}
+
+.sortable-unit {
+    display: flex;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-foreground;
+    padding: $spacing-small 0;
+
+    .drag-handle {
+        display: flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        align-items: center;
+        align-self: stretch;
+        cursor: move;
+        padding: 0 $spacing-medium;
+    }
+
+    .edit-option {
+        display: flex;
+        flex-grow: 1;
+        align-items: flex-end;
+        background-color: $color-foreground;
+        padding: $spacing-medium 0;
+
+        .title-input {
+            flex-grow: 1;
+        }
+
+        .delete-button {
+            flex-shrink: 0;
+            align-self: flex-end;
+        }
+    }
+}
+
+.draggable-item {
+    z-index: 11111;
 }

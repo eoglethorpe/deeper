@@ -12,9 +12,9 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
-import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { iconNames } from '../../../constants';
 import { afStringsSelector } from '../../../redux';
@@ -77,6 +77,10 @@ export default class Multiselect extends React.PureComponent {
 
     handleEdit = () => {
         this.setState({ showEditModal: true });
+    }
+
+    handleOptionOrderChange = (newOptions) => {
+        this.setState({ options: newOptions });
     }
 
     handleWidgetTitleChange = (value) => {
@@ -162,6 +166,13 @@ export default class Multiselect extends React.PureComponent {
         </div>
     )
 
+    renderDragHandle = () => {
+        const dragStyle = [styles['drag-handle']];
+        return (
+            <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
+        );
+    };
+
     renderEditModal = () => {
         const {
             showEditModal,
@@ -210,11 +221,14 @@ export default class Multiselect extends React.PureComponent {
                                 { addOptionButtonLabel }
                             </AccentButton>
                         </header>
-                        <ListView
-                            data={options}
+                        <SortableList
                             className={styles['edit-option-list']}
-                            keyExtractor={Multiselect.valueKeyExtractor}
+                            data={options}
                             modifier={this.renderEditOption}
+                            onChange={this.handleOptionOrderChange}
+                            sortableItemClass={styles['sortable-unit']}
+                            keyExtractor={Multiselect.valueKeyExtractor}
+                            dragHandleModifier={this.renderDragHandle}
                         />
                     </div>
                 </ModalBody>
