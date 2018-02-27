@@ -335,9 +335,7 @@ export default class AssistedTagging extends React.PureComponent {
             key: c[0],
             label: c[0],
         }));
-        const nlpSelectedSectors = nlpSectorOptions.length > 0 ?
-            [nlpSectorOptions[0].key] : emptyList;
-
+        const nlpSelectedSectors = nlpSectorOptions.map(o => o.key);
         this.nlpClassifications = data.excerpts_classification.map(excerpt => ({
             start: excerpt.start_pos,
             end: excerpt.end_pos,
@@ -376,7 +374,7 @@ export default class AssistedTagging extends React.PureComponent {
 
         this.setState({
             nerSectorOptions,
-            nerSelectedSectors: [nerSectorOptions[0].key],
+            nerSelectedSectors: nerSectorOptions.map(e => e.key),
         }, () => this.refreshSelections());
     }
 
@@ -387,8 +385,7 @@ export default class AssistedTagging extends React.PureComponent {
             label: c.title,
         }));
 
-        const ceSelectedSectors = ceSectorOptions.length > 0 ?
-            [ceSectorOptions[0].key] : emptyList;
+        const ceSelectedSectors = ceSectorOptions.map(c => c.key);
         this.ceClassifications = classifications;
 
         this.setState({

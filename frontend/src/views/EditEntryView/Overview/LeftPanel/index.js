@@ -99,8 +99,6 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
-
-        this.highlights = props.api.getEntryHighlights();
     }
 
     componentWillMount() {
@@ -112,7 +110,7 @@ export default class LeftPanel extends React.PureComponent {
                         className={styles['simplified-preview']}
                         leadId={this.props.lead.id}
                         highlights={this.props.api.getEntryHighlights()}
-                        highlightModifier={LeftPanel.highlightModifier}
+                        highlightModifier={SimplifiedLeadPreview.highlightModifier}
                         onLoad={this.handleLoadImages}
                     />
                 ),
