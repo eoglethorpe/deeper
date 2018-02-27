@@ -8,12 +8,6 @@
         pointer-events: none;
     }
 
-    .preview {
-        .highlighted-excerpt {
-            cursor: pointer;
-        }
-    }
-
     .assistant-options {
         display: flex;
         align-items: flex-end;
@@ -94,6 +88,10 @@
         display: flex;
         flex-wrap: wrap;
         padding: 0 $spacing-medium-alt;
+
+        &:last-child {
+            margin-bottom: $spacing-medium;
+        }
 
         .sector {
             display: flex;

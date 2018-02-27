@@ -23,8 +23,30 @@
         width: 100%;
         height: 100%;
         text-align: justify;
+        line-height: 2;
         white-space: pre-wrap;
         color: $color-text;
         font-family: inherit;
+
+        .highlight {
+            border-radius: 4px;
+            cursor: pointer;
+            padding: $spacing-extra-small-alt 0;
+
+            .text {
+                padding: 0 $spacing-small;
+            }
+
+            .label {
+                display: inline-block;
+                transform: translateY(-1px);
+                border-radius: 3px;
+                padding: 0 $spacing-small;
+                text-transform: uppercase;
+                color: $color-label;
+                font-size: $font-size-extra-small;
+                font-weight: $font-weight-bold;
+            }
+        }
     }
 }

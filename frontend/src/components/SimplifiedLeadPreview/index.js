@@ -43,6 +43,66 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static getHighlightColors = (color) => {
+        const r = parseInt(color.substr(1, 2), 16);
+        const g = parseInt(color.substr(3, 2), 16);
+        const b = parseInt(color.substr(5, 2), 16);
+
+        const backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
+        const borderColor = color;
+        const labelColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+        return {
+            background: backgroundColor,
+            border: borderColor,
+            label: labelColor,
+        };
+    };
+
+    static highlightModifier = (highlight, text, actualStr, onClick, className = '') => {
+        const colors = SimplifiedLeadPreview.getHighlightColors(highlight.color);
+        const clickHandler = onClick && ((e) => {
+            onClick(e, {
+                ...highlight,
+                text: actualStr,
+            });
+            e.stopPropagation();
+        });
+        const dragHandler = (e) => {
+            e.dataTransfer.setData('text/plain', actualStr);
+            e.stopPropagation();
+        };
+        const style = {
+            backgroundColor: colors.background,
+            border: `1px solid ${colors.border}`,
+        };
+
+        return (
+            <span
+                role="presentation"
+                className={`${styles.highlight} ${className}`}
+                style={style}
+                onClick={clickHandler}
+                onDragStart={dragHandler}
+                draggable
+            >
+                <span className={styles.text}>
+                    {text}
+                </span>
+                {highlight.label && (
+                    <span
+                        className={styles.label}
+                        style={{
+                            backgroundColor: colors.label,
+                        }}
+                    >
+                        { highlight.label }
+                    </span>
+                )}
+            </span>
+        );
+    };
+
     constructor(props) {
         super(props);
 
@@ -51,16 +111,22 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             error: undefined,
             extractedText: null,
             extractedImages: [],
+            highlights: [],
         };
     }
 
     componentDidMount() {
+        this.calculateHighlights(this.props);
         this.create(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.props.leadId !== nextProps.leadId) {
             this.create(nextProps);
+        }
+
+        if (this.props.highlights !== nextProps.highlights) {
+            this.calculateHighlights(nextProps);
         }
     }
 
@@ -138,6 +204,8 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                         error: undefined,
                         extractedText: response.text,
                         extractedImages: response.images,
+                    }, () => {
+                        this.calculateHighlights(this.props);
                     });
                     if (onLoad) {
                         onLoad(response);
@@ -159,16 +227,20 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             .build()
     )
 
-    // TODO: only call this on component will receive props
-    calculateHighlights() {
-        const { highlights } = this.props;
+    calculateHighlights({ highlights }) {
         const { extractedText } = this.state;
+        if (!extractedText || !highlights) {
+            this.setState({ highlights: [] });
+            return;
+        }
 
-        return highlights.map(h => ({
-            start: h.text ? extractedText.indexOf(h.text) : h.startPos,
-            length: h.text ? h.text.length : h.length,
-            item: h,
-        }));
+        this.setState({
+            highlights: highlights.map((item) => {
+                const start = item.text ? extractedText.indexOf(item.text) : item.start;
+                const end = item.text ? item.text.length + start : item.end;
+                return { start, end, item };
+            }),
+        });
     }
 
     renderContent = () => {
@@ -177,6 +249,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const {
             error,
             extractedText,
+            highlights,
         } = this.state;
 
         if (error) {
@@ -190,7 +263,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                 <HighlightedText
                     className={styles['highlighted-text']}
                     text={extractedText}
-                    highlights={this.calculateHighlights()}
+                    highlights={highlights}
                     modifier={highlightModifier}
                 />
             );

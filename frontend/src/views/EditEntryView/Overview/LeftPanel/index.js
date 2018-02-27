@@ -9,7 +9,6 @@ import Button from '../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
-import { getColorOnBgColor } from '../../../../vendor/react-store/utils/common';
 
 import {
     LEAD_TYPE,
@@ -93,17 +92,6 @@ export default class LeftPanel extends React.PureComponent {
         [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive].indexOf(t) !== 1
     );
 
-    static highlightModifier = (highlight, text) => (
-        <span
-            style={{
-                backgroundColor: highlight.color,
-                color: getColorOnBgColor(highlight.color),
-            }}
-        >
-            {text}
-        </span>
-    );
-
     constructor(props) {
         super(props);
 
@@ -122,7 +110,7 @@ export default class LeftPanel extends React.PureComponent {
                         className={styles['simplified-preview']}
                         leadId={this.props.lead.id}
                         highlights={this.props.api.getEntryHighlights()}
-                        highlightModifier={LeftPanel.highlightModifier}
+                        highlightModifier={this.highlightSimplifiedExcerpt}
                         onLoad={this.handleLoadImages}
                     />
                 ),
@@ -169,8 +157,9 @@ export default class LeftPanel extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         const { currentTab, oldTab } = this.state;
-        const { saveAllPending: oldSaveAllPending } = this.props;
-        const { saveAllPending: newSaveAllPending } = nextProps;
+        const { saveAllPending: oldSaveAllPending, entries: oldEntries } = this.props;
+        const { saveAllPending: newSaveAllPending, entries: newEntries } = nextProps;
+
         if (oldSaveAllPending !== newSaveAllPending) {
             if (newSaveAllPending && currentTab !== 'entries-listing') {
                 this.setState({
@@ -184,7 +173,20 @@ export default class LeftPanel extends React.PureComponent {
                 });
             }
         }
+
+        if (oldEntries !== newEntries) {
+            this.highlights = nextProps.api.getEntryHighlights();
+        }
     }
+
+    highlightSimplifiedExcerpt = (highlight, text, actualStr) => (
+        SimplifiedLeadPreview.highlightModifier(
+            highlight,
+            text,
+            actualStr,
+            this.handleHighlightClick,
+        )
+    );
 
     calcEntryLabel = (entry) => {
         const values = entryAccessor.getValues(entry);
@@ -248,6 +250,14 @@ export default class LeftPanel extends React.PureComponent {
         }
         tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
         return tabs;
+    }
+
+    handleHighlightClick = (e, { text }) => {
+        const { api } = this.props;
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntry(existing.data.id);
+        }
     }
 
     handleLoadImages = (response) => {
