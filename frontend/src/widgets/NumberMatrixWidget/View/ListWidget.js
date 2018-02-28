@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,17 +20,20 @@ const emptyList = [];
 const emptyObject = {};
 
 @BoundError
-@CSSModules(styles)
 export default class NumberMatrixList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     getRowsData = (data, attribute) => {
+        const { rowHeaders = emptyList } = data;
         const dataRows = [];
-        (data.rowHeaders || emptyList).forEach((row) => {
+
+        rowHeaders.forEach((row) => {
+            const { columnHeaders = emptyList } = data;
             const columnList = [];
-            (data.columnHeaders || emptyList).forEach((col) => {
+
+            columnHeaders.forEach((col) => {
                 const value = (attribute[row.key] || emptyObject)[col.key];
                 const obj = {
                     title: col.title,
@@ -89,7 +91,7 @@ export default class NumberMatrixList extends React.PureComponent {
 
         return (
             <ListView
-                styleName="number-matrix-list"
+                className={styles.list}
                 data={dataRows}
                 modifier={this.renderDataRow}
                 keyExtractor={NumberMatrixList.rowKeyExtractor}
