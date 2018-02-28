@@ -154,7 +154,7 @@ printf "\n\n::::::::: Deploying React to S3 [Frontend] :::::::::::\n"
     docker-compose exec react bash -c "cd frontend && rm -rf frontend/build"
     echo "::::::  >> Generating New Reacts Builds [Locally]"
     set -e;
-    docker-compose exec react bash -c "cd frontend && yarn install && yarn build"
+    docker-compose exec react bash -c "cd frontend && yarn install && CI=false yarn build"
     set +e;
     rm frontend/.env
 
