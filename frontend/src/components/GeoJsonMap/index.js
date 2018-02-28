@@ -25,6 +25,48 @@ const defaultProps = {
 };
 
 
+const createPolygonFilter = (selections, operator = 'in') => {
+    if (!selections || selections.length === 0) {
+        return [
+            'all',
+            ['==', '$type', 'Polygon'],
+            ['in', 'pk', ''],
+        ];
+    }
+
+    return [
+        'all',
+        ['==', '$type', 'Polygon'],
+        [
+            operator,
+            'pk',
+            ...selections,
+        ],
+    ];
+};
+
+
+const createPointFilter = (selections, operator = 'in') => {
+    if (!selections || selections.length === 0) {
+        return [
+            'all',
+            ['==', '$type', 'Point'],
+            ['in', 'pk', ''],
+        ];
+    }
+
+    return [
+        'all',
+        ['==', '$type', 'Point'],
+        [
+            operator,
+            'pk',
+            ...selections,
+        ],
+    ];
+};
+
+
 export default class GeoJsonMap extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -77,7 +119,7 @@ export default class GeoJsonMap extends React.PureComponent {
 
         map.on('mousemove', 'geojson', (e) => {
             const feature = e.features[0];
-            map.setFilter('geojson-hover', ['==', 'pk', feature.properties.pk]);
+            map.setFilter('geojson-hover', createPolygonFilter([feature.properties.pk], '=='));
             map.getCanvas().style.cursor = 'pointer';
 
             popup.setLngLat(map.unproject([
@@ -93,13 +135,46 @@ export default class GeoJsonMap extends React.PureComponent {
         });
 
         map.on('mouseleave', 'geojson', () => {
-            map.setFilter('geojson-hover', ['==', 'pk', '']);
+            map.setFilter('geojson-hover', createPolygonFilter(undefined, '=='));
             map.getCanvas().style.cursor = '';
 
             popup.remove();
         });
 
         map.on('click', 'geojson', (e) => {
+            if (this.props.onAreaClick) {
+                const feature = e.features[0];
+                this.props.onAreaClick(
+                    feature.properties.pk,
+                );
+            }
+        });
+
+        map.on('mousemove', 'point', (e) => {
+            const feature = e.features[0];
+            map.setFilter('point-hover', createPointFilter([feature.properties.pk], '=='));
+            map.getCanvas().style.cursor = 'pointer';
+
+            popup.setLngLat(map.unproject([
+                e.point.x,
+                e.point.y - 8,
+            ])).setHTML(feature.properties.title);
+        });
+
+        map.on('mouseenter', 'point', (e) => {
+            const feature = e.features[0];
+            popup.setHTML(feature.properties.title)
+                .addTo(map);
+        });
+
+        map.on('mouseleave', 'point', () => {
+            map.setFilter('point-hover', createPointFilter(undefined, '=='));
+            map.getCanvas().style.cursor = '';
+
+            popup.remove();
+        });
+
+        map.on('click', 'point', (e) => {
             if (this.props.onAreaClick) {
                 const feature = e.features[0];
                 this.props.onAreaClick(
@@ -131,6 +206,9 @@ export default class GeoJsonMap extends React.PureComponent {
                 map.removeLayer('outline');
                 map.removeLayer('geojson-selected');
                 map.removeLayer('geojson-hover');
+                map.removeLayer('point');
+                map.removeLayer('point-selected');
+                map.removeLayer('point-hover');
                 map.removeSource('geojson');
                 this.layerAdded = false;
             }
@@ -148,15 +226,8 @@ export default class GeoJsonMap extends React.PureComponent {
         }
 
         if (this.layerAdded) {
-            if (selections.length === 0) {
-                map.setFilter('geojson-selected', ['in', 'pk', '']);
-            } else {
-                map.setFilter('geojson-selected', [
-                    'in',
-                    'pk',
-                    ...selections,
-                ]);
-            }
+            map.setFilter('geojson-selected', createPolygonFilter(selections));
+            map.setFilter('point-selected', createPointFilter(selections));
         }
     }
 
@@ -176,7 +247,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 features: [],
             });
             map.getSource('geojson').setData(geoJson);
-            map.setPaintProperty('outline', 'line-width', thickness);
+            map.setPaintProperty('outline', 'line-width', Math.max(thickness, 1));
             return;
         }
 
@@ -203,6 +274,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 'line-color': '#fff',
                 'line-width': thickness,
             },
+            filter: ['==', '$type', 'Polygon'],
         });
         map.addLayer({
             id: 'geojson-selected',
@@ -212,7 +284,7 @@ export default class GeoJsonMap extends React.PureComponent {
                 ...basePaint,
                 'fill-color': '#6e599f',
             },
-            filter: ['in', 'pk', ''],
+            filter: createPolygonFilter(undefined),
         });
         map.addLayer({
             id: 'geojson-hover',
@@ -223,7 +295,40 @@ export default class GeoJsonMap extends React.PureComponent {
                 'fill-color': '#fff',
                 'fill-opacity': 0.2,
             },
-            filter: ['==', 'pk', ''],
+            filter: createPolygonFilter(undefined, '=='),
+        });
+
+        const baseCirclePaint = {
+            'circle-radius': 8,
+            'circle-color': '#088',
+        };
+        map.addLayer({
+            id: 'point',
+            type: 'circle',
+            source: 'geojson',
+            paint: baseCirclePaint,
+            filter: ['==', '$type', 'Point'],
+        });
+        map.addLayer({
+            id: 'point-selected',
+            type: 'circle',
+            source: 'geojson',
+            paint: {
+                ...baseCirclePaint,
+                'circle-color': '#6e599f',
+            },
+            filter: createPointFilter(undefined),
+        });
+        map.addLayer({
+            id: 'point-hover',
+            type: 'circle',
+            source: 'geojson',
+            paint: {
+                ...baseCirclePaint,
+                'circle-color': '#fff',
+                'circle-opacity': 0.2,
+            },
+            filter: createPointFilter(undefined, '=='),
         });
         this.layerAdded = true;
     }
