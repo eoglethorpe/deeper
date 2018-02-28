@@ -36,8 +36,9 @@
 
     .login-form-container {
         display: flex;
+        position: relative;
         flex-direction: column;
-        padding: $spacing-extra-large;
+        margin: $spacing-extra-large;
         width: $width-login-form;
 
         .hid-link-container {
@@ -92,7 +93,6 @@
         }
 
         .login-form {
-            position: relative;
             background-color: $color-foreground;
             padding: $spacing-small $spacing-large $spacing-large;
             width: 100%;

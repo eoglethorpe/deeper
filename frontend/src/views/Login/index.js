@@ -297,6 +297,7 @@ export default class Login extends React.PureComponent {
                             <hr /><span styleName="or">{this.props.loginStrings('orText')}</span>
                         </div>
                     </div>
+                    { pending && <LoadingAnimation /> }
                     <Form
                         styleName="login-form"
                         changeCallback={this.changeCallback}
@@ -307,7 +308,6 @@ export default class Login extends React.PureComponent {
                         value={formValues}
                         error={formFieldErrors}
                     >
-                        { pending && <LoadingAnimation /> }
                         <NonFieldErrors errors={formErrors} />
                         <TextInput
                             disabled={pending}
