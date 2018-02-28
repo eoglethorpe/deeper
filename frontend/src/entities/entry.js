@@ -300,6 +300,6 @@ export const calcNewEntries = (localEntries = [], diffs = []) => (
             const bOrder = bValue.order;
             const bCreatedAt = bValue.createdAt;
 
-            return compareNumber(aOrder, bOrder, -1) || compareDate(aCreatedAt, bCreatedAt, -1);
+            return compareNumber(aOrder, bOrder) || compareDate(aCreatedAt, bCreatedAt);
         })
 );

@@ -164,7 +164,23 @@ export default class EditEntryView extends React.PureComponent {
             .preSession(() => {
                 this.setState({ pendingSaveAll: true });
             })
-            .postSession(() => {
+            .postSession((totalErrors) => {
+                // console.warn(totalErrors);
+                if (totalErrors > 0) {
+                    notify.send({
+                        type: notify.type.ERROR,
+                        title: this.props.notificationStrings('entrySave'),
+                        message: this.props.notificationStrings('entrySaveFatal'),
+                        duration: notify.duration.SLOW,
+                    });
+                } else {
+                    notify.send({
+                        type: notify.type.SUCCESS,
+                        title: this.props.notificationStrings('entrySave'),
+                        message: this.props.notificationStrings('entrySaveSuccess'),
+                        duration: notify.duration.MEDIUM,
+                    });
+                }
                 this.setState({ pendingSaveAll: false });
             })
             .build();
@@ -411,43 +427,25 @@ export default class EditEntryView extends React.PureComponent {
                         serverId: response.id,
                     };
                     this.props.saveEntry({ leadId, entryId, data });
-                    notify.send({
-                        type: notify.type.SUCCESS,
-                        title: this.props.notificationStrings('entrySave'),
-                        message: this.props.notificationStrings('entrySaveSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
+                    this.saveRequestCoordinator.notifyComplete(entryId);
                 } catch (er) {
                     console.error(er);
                     const uiState = { error: true };
                     this.props.changeEntry({ leadId, entryId, uiState });
+                    this.saveRequestCoordinator.notifyComplete(entryId, true);
                 }
-
-                this.saveRequestCoordinator.notifyComplete(entryId);
             })
             .failure((response) => {
                 console.warn('FAILURE:', response);
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveRequestCoordinator.notifyComplete(entryId);
-                notify.send({
-                    type: notify.type.ERROR,
-                    title: this.props.notificationStrings('entrySave'),
-                    message: this.props.notificationStrings('entrySaveFailure'),
-                    duration: notify.duration.SLOW,
-                });
+                this.saveRequestCoordinator.notifyComplete(entryId, true);
             })
             .fatal((response) => {
                 console.warn('FATAL:', response);
                 const uiState = { error: true };
                 this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveRequestCoordinator.notifyComplete(entryId);
-                notify.send({
-                    type: notify.type.ERROR,
-                    title: this.props.notificationStrings('entrySave'),
-                    message: this.props.notificationStrings('entrySaveFatal'),
-                    duration: notify.duration.SLOW,
-                });
+                this.saveRequestCoordinator.notifyComplete(entryId, true);
             })
             .build();
 
@@ -495,20 +493,20 @@ export default class EditEntryView extends React.PureComponent {
                     return { entryDeleteRests };
                 });
             })
-            .failure((response) => {
-                console.warn('FAILURE:', response);
-                this.saveRequestCoordinator.notifyComplete(id);
-            })
-            .fatal((response) => {
-                console.warn('FATAL:', response);
-                this.saveRequestCoordinator.notifyComplete(id);
-            })
             .success(() => {
                 this.props.removeEntry({
                     leadId,
                     entryId: id,
                 });
                 this.saveRequestCoordinator.notifyComplete(id);
+            })
+            .failure((response) => {
+                console.warn('FAILURE:', response);
+                this.saveRequestCoordinator.notifyComplete(id, true);
+            })
+            .fatal((response) => {
+                console.warn('FATAL:', response);
+                this.saveRequestCoordinator.notifyComplete(id, true);
             })
             .build();
         return entriesRequest;
@@ -603,13 +601,14 @@ export default class EditEntryView extends React.PureComponent {
                     request = this.createRequestForEntryDelete(leadId, entry);
                 } else {
                     // If there is no serverId, just remove from list
-                    request = {
+                    const proxyRequest = {
                         start: () => {
                             this.props.removeEntry({ leadId, entryId: id });
                             this.saveRequestCoordinator.notifyComplete(id);
                         },
                         stop: () => {},
                     };
+                    request = proxyRequest;
                 }
             } else {
                 request = this.createRequestForEntrySave(id);

@@ -143,7 +143,7 @@ const editEntryViewAddEntry = (state, action) => {
             [leadId]: { $auto: {
                 selectedEntryId: { $set: newEntryId },
                 entries: { $autoArray: {
-                    $unshift: [newEntry],
+                    $push: [newEntry],
                 } },
             } },
         },
