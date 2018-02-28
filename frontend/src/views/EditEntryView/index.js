@@ -8,9 +8,7 @@ import {
     Prompt,
 } from 'react-router-dom';
 
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
-import update from '../../vendor/react-store/utils/immutable-update';
 import { randomString } from '../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
@@ -40,33 +38,18 @@ import {
     commonStringsSelector,
 } from '../../redux';
 import {
-    createParamsForUser,
-    createUrlForAnalysisFramework,
-    createUrlForLead,
-    createUrlForProject,
-
-    createParamsForEntryCreate,
-    createParamsForEntryEdit,
-
-    createUrlForEntryEdit,
-    urlForEntryCreate,
-
-    createUrlForEntriesOfLead,
-    createParamsForEntriesOfLead,
-
-    createUrlForDeleteEntry,
-    createParamsForDeleteEntry,
-} from '../../rest';
-import {
     ENTRY_STATUS,
     entryAccessor,
     calcEntryState,
-    calcEntriesDiff,
-    getApplicableDiffCount,
-    getApplicableAndModifyingDiffCount,
 } from '../../entities/entry';
 import notify from '../../notify';
-import schema from '../../schema';
+
+import LeadRequest from './requests/LeadRequest';
+import ProjectRequest from './requests/ProjectRequest';
+import AfRequest from './requests/AfRequest';
+import EntriesRequest from './requests/EntriesRequest';
+import SaveEntryRequest from './requests/SaveEntryRequest';
+import DeleteEntryRequest from './requests/DeleteEntryRequest';
 
 import API from './API';
 import Overview from './Overview';
@@ -170,7 +153,7 @@ export default class EditEntryView extends React.PureComponent {
                     notify.send({
                         type: notify.type.ERROR,
                         title: this.props.notificationStrings('entrySave'),
-                        message: this.props.notificationStrings('entrySaveFatal'),
+                        message: this.props.notificationStrings('entrySaveFailure'),
                         duration: notify.duration.SLOW,
                     });
                 } else {
@@ -193,7 +176,15 @@ export default class EditEntryView extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.leadRequest = this.createRequestForLead(this.props.leadId);
+        const request = new LeadRequest(
+            this,
+            {
+                api: this.api,
+                setLead: this.props.setLead,
+                startProjectRequest: this.startProjectRequest,
+            },
+        );
+        this.leadRequest = request.create(this.props.leadId);
         this.leadRequest.start();
     }
 
@@ -215,301 +206,46 @@ export default class EditEntryView extends React.PureComponent {
         this.saveRequestCoordinator.stop();
     }
 
-    createRequestForLead = (leadId) => {
-        const leadRequest = new FgRestBuilder()
-            .url(createUrlForLead(leadId))
-            .params(() => createParamsForUser())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'lead');
-                    this.props.setLead({ lead: response });
-                    this.api.setLeadDate(response.publishedOn);
-
-                    const { project } = response;
-
-                    // Load project
-                    this.projectRequest = this.createRequestForProject(project, leadId);
-                    this.projectRequest.start();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error(response);
-            })
-            .fatal(() => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error('Failed loading leads');
-            })
-            .build();
-        return leadRequest;
-    }
-
-    createRequestForProject = (projectId, leadId) => {
-        const projectRequest = new FgRestBuilder()
-            .url(createUrlForProject(projectId))
-            .params(() => createParamsForUser())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectGetResponse');
-
-                    this.api.setProject(response);
-                    this.props.setProject({
-                        project: response,
-                    });
-
-                    // Load analysisFramework
-                    this.analysisFramework = this.createRequestForAnalysisFramework(
-                        response.analysisFramework,
-                        leadId,
-                    );
-                    this.analysisFramework.start();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error(response);
-            })
-            .fatal(() => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error('Failed loading project of lead');
-            })
-            .build();
-        return projectRequest;
-    };
-
-    createRequestForAnalysisFramework = (analysisFrameworkId, leadId) => {
-        const analysisFrameworkRequest = new FgRestBuilder()
-            .url(createUrlForAnalysisFramework(analysisFrameworkId))
-            .params(() => createParamsForUser())
-            .delay(0)
-            .preLoad(() => {
-                this.setState({ pendingAf: true });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'analysisFramework');
-
-                    // TODO: notify that analysis frameowrk changed and history was removed
-                    if (this.props.analysisFramework.versionId < response.versionId) {
-                        this.props.removeAllEntries({ leadId });
-                    }
-                    this.props.setAnalysisFramework({
-                        analysisFramework: response,
-                    });
-
-                    // Load entries
-                    this.entriesRequest = this.createRequestForEntriesOfLead(leadId);
-                    this.entriesRequest.start();
-
-                    this.setState({ pendingAf: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error(response);
-            })
-            .fatal(() => {
-                this.setState({ pendingAf: false, pendingEntries: false });
-                // TODO: notify
-                console.error('Failed loading af of lead');
-            })
-            .build();
-        return analysisFrameworkRequest;
-    }
-
-    createRequestForEntriesOfLead = (leadId) => {
-        const entriesRequest = new FgRestBuilder()
-            .url(createUrlForEntriesOfLead(leadId))
-            .params(() => createParamsForEntriesOfLead())
-            .preLoad(() => {
-                this.setState({ pendingEntries: true });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'entriesGetResponse');
-                    this.setState({ pendingEntries: false });
-
-                    const entries = response.results.entries;
-                    const diffs = calcEntriesDiff(this.props.entries, entries);
-                    if (getApplicableDiffCount(diffs) <= 0) {
-                        return;
-                    }
-                    this.props.diffEntries({ leadId, diffs });
-
-                    if (getApplicableAndModifyingDiffCount(diffs) <= 0) {
-                        return;
-                    }
-                    notify.send({
-                        type: notify.type.WARNING,
-                        title: this.props.notificationStrings('entryUpdate'),
-                        message: this.props.notificationStrings('entryUpdateOverridden'),
-                        duration: notify.duration.SLOW,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.setState({ pendingEntries: false });
-                // TODO: notify
-                console.error(response);
-            })
-            .fatal(() => {
-                this.setState({ pendingEntries: false });
-                // TODO: notify
-                console.error('Failed loading entries of lead');
-            })
-            .build();
-        return entriesRequest;
-    };
-
-    createRequestForEntrySave = (entryId) => {
-        const { leadId } = this.props;
-        const entry = this.props.entries.find(
-            e => entryAccessor.getKey(e) === entryId,
-        );
-
-        let urlForEntry;
-        let paramsForEntry;
-        const serverId = entryAccessor.getServerId(entry);
-        const values = entryAccessor.getValues(entry);
-        if (serverId) {
-            urlForEntry = createUrlForEntryEdit(serverId);
-            paramsForEntry = createParamsForEntryEdit(values);
-        } else {
-            urlForEntry = urlForEntryCreate;
-            paramsForEntry = createParamsForEntryCreate(values);
-        }
-
-        const entrySaveRequest = new FgRestBuilder()
-            .url(urlForEntry)
-            .params(paramsForEntry)
-            .delay(0)
-            .preLoad(() => {
-                this.setState((state) => {
-                    const requestSettings = {
-                        [entryId]: { $auto: {
-                            pending: { $set: true },
-                        } },
-                    };
-                    const entryRests = update(state.entryRests, requestSettings);
-                    return { entryRests };
-                });
-            })
-            .postLoad(() => {
-                this.setState((state) => {
-                    const requestSettings = {
-                        [entryId]: { $auto: {
-                            pending: { $set: undefined },
-                        } },
-                    };
-                    const entryRests = update(state.entryRests, requestSettings);
-                    return { entryRests };
-                });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'entry');
-
-                    const data = {
-                        versionId: response.versionId,
-                        serverId: response.id,
-                    };
-                    this.props.saveEntry({ leadId, entryId, data });
-                    this.saveRequestCoordinator.notifyComplete(entryId);
-                } catch (er) {
-                    console.error(er);
-                    const uiState = { error: true };
-                    this.props.changeEntry({ leadId, entryId, uiState });
-                    this.saveRequestCoordinator.notifyComplete(entryId, true);
-                }
-            })
-            .failure((response) => {
-                console.warn('FAILURE:', response);
-                const uiState = { error: true };
-                this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveRequestCoordinator.notifyComplete(entryId, true);
-            })
-            .fatal((response) => {
-                console.warn('FATAL:', response);
-                const uiState = { error: true };
-                this.props.changeEntry({ leadId, entryId, uiState });
-                this.saveRequestCoordinator.notifyComplete(entryId, true);
-            })
-            .build();
-
-        // Wrap into an actor type for co-ordinator
-        const adapter = {
-            start: () => {
-                if (this.choices[entryId].isSaveDisabled) {
-                    this.saveRequestCoordinator.notifyComplete(entryId);
-                } else {
-                    entrySaveRequest.start();
-                }
+    startProjectRequest = (project, leadId) => {
+        const request = new ProjectRequest(
+            this,
+            {
+                api: this.api,
+                setProject: this.props.setProject,
+                startAfRequest: this.startAfRequest,
             },
-            stop: entrySaveRequest.stop,
-        };
+        );
+        this.projectRequest = request.create(project, leadId);
+        this.projectRequest.start();
+    }
 
-        return adapter;
-    };
+    startAfRequest = (analysisFramework, leadId) => {
+        const request = new AfRequest(
+            this,
+            {
+                api: this.api,
+                getAf: () => this.props.analysisFramework,
+                removeAllEntries: this.props.removeAllEntries,
+                setAnalysisFramework: this.props.setAnalysisFramework,
+                startEntriesRequest: this.startEntriesRequest,
+            },
+        );
+        this.analysisFrameworkRequest = request.create(analysisFramework, leadId);
+        this.analysisFrameworkRequest.start();
+    }
 
-    createRequestForEntryDelete = (leadId, entry) => {
-        const serverId = entryAccessor.getServerId(entry);
-        const id = entryAccessor.getKey(entry);
-        const entriesRequest = new FgRestBuilder()
-            .url(createUrlForDeleteEntry(serverId))
-            .params(() => createParamsForDeleteEntry())
-            .delay(0)
-            .preLoad(() => {
-                this.setState((state) => {
-                    const requestSettings = {
-                        [id]: { $auto: {
-                            pending: { $set: true },
-                        } },
-                    };
-                    const entryDeleteRests = update(state.entryDeleteRests, requestSettings);
-                    return { entryDeleteRests };
-                });
-            })
-            .postLoad(() => {
-                this.setState((state) => {
-                    const requestSettings = {
-                        [id]: { $auto: {
-                            pending: { $set: false },
-                        } },
-                    };
-                    const entryDeleteRests = update(state.entryDeleteRests, requestSettings);
-                    return { entryDeleteRests };
-                });
-            })
-            .success(() => {
-                this.props.removeEntry({
-                    leadId,
-                    entryId: id,
-                });
-                this.saveRequestCoordinator.notifyComplete(id);
-            })
-            .failure((response) => {
-                console.warn('FAILURE:', response);
-                this.saveRequestCoordinator.notifyComplete(id, true);
-            })
-            .fatal((response) => {
-                console.warn('FATAL:', response);
-                this.saveRequestCoordinator.notifyComplete(id, true);
-            })
-            .build();
-        return entriesRequest;
+    startEntriesRequest = (leadId) => {
+        const request = new EntriesRequest(
+            this,
+            {
+                api: this.api,
+                getEntries: () => this.props.entries,
+                diffEntries: this.props.diffEntries,
+                notificationStrings: this.props.notificationStrings,
+            },
+        );
+        this.entriesRequest = request.create(leadId);
+        this.entriesRequest.start();
     }
 
     handleAddEntryWithValues = (values) => {
@@ -592,26 +328,45 @@ export default class EditEntryView extends React.PureComponent {
         const entryKeys = entries.map(entryAccessor.getKey);
 
         entryKeys.forEach((id, i) => {
-            let request;
             const entry = entries[i];
-            if (entryAccessor.isMarkedForDelete(entry)) {
-                // If maked for delete, send delete request
-                const serverId = entryAccessor.getServerId(entry);
-                if (serverId) {
-                    request = this.createRequestForEntryDelete(leadId, entry);
-                } else {
-                    // If there is no serverId, just remove from list
-                    const proxyRequest = {
-                        start: () => {
-                            this.props.removeEntry({ leadId, entryId: id });
-                            this.saveRequestCoordinator.notifyComplete(id);
-                        },
-                        stop: () => {},
-                    };
-                    request = proxyRequest;
-                }
+            const serverId = entryAccessor.getServerId(entry);
+            const isMarkedForDelete = entryAccessor.isMarkedForDelete(entry);
+
+            let request;
+            if (isMarkedForDelete && !serverId) {
+                const proxyRequest = {
+                    start: () => {
+                        this.props.removeEntry({ leadId, entryId: id });
+                        this.saveRequestCoordinator.notifyComplete(id);
+                    },
+                    stop: () => {}, // no-op
+                };
+                request = proxyRequest;
+            } else if (isMarkedForDelete && serverId) {
+                const deleteEntryRequest = new DeleteEntryRequest(
+                    this,
+                    {
+                        api: this.api,
+                        removeEntry: this.props.removeEntry,
+                        getCoordinator: () => this.saveRequestCoordinator,
+                        getChoices: () => this.choices,
+                    },
+                );
+                request = deleteEntryRequest.create(leadId, entry);
             } else {
-                request = this.createRequestForEntrySave(id);
+                const saveEntryRequest = new SaveEntryRequest(
+                    this,
+                    {
+                        api: this.api,
+                        changeEntry: this.props.changeEntry,
+                        saveEntry: this.props.saveEntry,
+                        getChoices: () => this.choices,
+                        getCoordinator: () => this.saveRequestCoordinator,
+                        getLeadId: () => this.props.leadId,
+                        getEntries: () => this.props.entries,
+                    },
+                );
+                request = saveEntryRequest.create(id);
             }
             this.saveRequestCoordinator.add(id, request);
         });
@@ -678,7 +433,6 @@ export default class EditEntryView extends React.PureComponent {
             key => !(this.choices[key].isSaveDisabled),
         );
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
-
 
         return ([
             <Prompt
