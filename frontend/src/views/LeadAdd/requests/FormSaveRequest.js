@@ -10,11 +10,8 @@ import {
     createParamsForLeadEdit,
     createParamsForLeadCreate,
 } from '../../../rest';
-import notify from '../../../notify';
 
-import {
-    leadAccessor,
-} from '../../../entities/lead';
+import { leadAccessor } from '../../../entities/lead';
 
 export default class FormSaveRequest {
     constructor(parent, params) {
@@ -24,12 +21,10 @@ export default class FormSaveRequest {
 
         const {
             formCoordinator,
-            notificationStrings,
             addLeadViewLeadChange,
             addLeadViewLeadSave,
         } = params;
         this.formCoordinator = formCoordinator;
-        this.notificationStrings = notificationStrings;
         this.addLeadViewLeadSave = addLeadViewLeadSave;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
     }
@@ -88,13 +83,6 @@ export default class FormSaveRequest {
     handleLeadSaveSuccess = leadId => (response) => {
         try {
             schema.validate(response, 'lead');
-
-            notify.send({
-                title: this.notificationStrings('leadSave'),
-                type: notify.type.SUCCESS,
-                message: this.notificationStrings('leadSaveSuccess'),
-                duration: notify.duration.MEDIUM,
-            });
             this.addLeadViewLeadSave({
                 leadId,
                 serverId: response.id,
@@ -102,16 +90,10 @@ export default class FormSaveRequest {
             this.formCoordinator.notifyComplete(leadId);
         } catch (err) {
             console.warn(err);
+            this.formCoordinator.notifyComplete(leadId, true);
         }
     }
     handleLeadSaveFailure = leadId => (response) => {
-        // console.error('Failed lead request:', response);
-        notify.send({
-            title: this.notificationStrings('leadSave'),
-            type: notify.type.ERROR,
-            message: this.notificationStrings('leadSaveFailure'),
-            duration: notify.duration.SLOW,
-        });
         const {
             formFieldErrors,
             formErrors,
@@ -123,22 +105,15 @@ export default class FormSaveRequest {
             formFieldErrors,
             uiState: { pristine: true, serverError: true },
         });
-        this.formCoordinator.notifyComplete(leadId);
+        this.formCoordinator.notifyComplete(leadId, true);
     }
     handleLeadSaveFatal = leadId => () => {
-        notify.send({
-            title: this.notificationStrings('leadSave'),
-            type: notify.type.ERROR,
-            message: this.notificationStrings('leadSaveFatal'),
-            duration: notify.duration.SLOW,
-        });
-
         this.addLeadViewLeadChange({
             leadId,
             // FIXME: use strings
             formErrors: ['Error while trying to save lead.'],
             uiState: { pristine: true, serverError: true },
         });
-        this.formCoordinator.notifyComplete(leadId);
+        this.formCoordinator.notifyComplete(leadId, true);
     }
 }

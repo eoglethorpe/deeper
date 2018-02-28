@@ -242,7 +242,22 @@ export default class LeadAdd extends React.PureComponent {
             .preSession(() => {
                 this.setState({ pendingSubmitAll: true });
             })
-            .postSession(() => {
+            .postSession((totalErrors) => {
+                if (totalErrors > 0) {
+                    notify.send({
+                        title: this.notificationStrings('leadSave'),
+                        type: notify.type.SUCCESS,
+                        message: this.notificationStrings('leadSaveSuccess'),
+                        duration: notify.duration.MEDIUM,
+                    });
+                } else {
+                    notify.send({
+                        title: this.notificationStrings('leadSave'),
+                        type: notify.type.ERROR,
+                        message: this.notificationStrings('leadSaveFailure'),
+                        duration: notify.duration.SLOW,
+                    });
+                }
                 this.setState({ pendingSubmitAll: false });
             })
             .build();
@@ -484,7 +499,6 @@ export default class LeadAdd extends React.PureComponent {
             this,
             {
                 formCoordinator: this.formCoordinator,
-                notificationStrings: this.props.notificationStrings,
                 addLeadViewLeadSave: this.props.addLeadViewLeadSave,
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             },
@@ -494,7 +508,7 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleFormSubmitFailure = (id) => {
-        this.formCoordinator.notifyComplete(id);
+        this.formCoordinator.notifyComplete(id, true);
     }
 
     // UI BUTTONS
