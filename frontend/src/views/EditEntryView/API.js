@@ -10,7 +10,7 @@ class EntryModifier {
         changeEntryValues,
     ) {
         this.entry = entry;
-        this.pristine = entry && entryAccessor.getUiState(entry).pristine;
+        this.modified = false;
         this.values = entry && entryAccessor.getValues(entry);
         this.colors = entry && entryAccessor.getColors(entry);
         this.changeEntryValues = changeEntryValues;
@@ -26,7 +26,6 @@ class EntryModifier {
             entryType: { $set: 'excerpt' },
         };
 
-        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -41,7 +40,6 @@ class EntryModifier {
             entryType: { $set: 'image' },
         };
 
-        this.pristine = false;
         this.values = update(this.values, settings);
         return this;
     }
@@ -54,7 +52,7 @@ class EntryModifier {
         const settings = {
             informationDate: { $set: date },
         };
-        this.pristine = false;
+        this.modified = true;
         this.values = update(this.values, settings);
         return this;
     }
@@ -68,7 +66,7 @@ class EntryModifier {
             entryType: { $set: type },
         };
 
-        this.pristine = false;
+        this.modified = true;
         this.values = update(this.values, settings);
         return this;
     }
@@ -119,7 +117,7 @@ class EntryModifier {
             };
         }
 
-        this.pristine = false;
+        this.modified = true;
         this.values = update(this.values, settings);
         return this;
     }
@@ -130,7 +128,7 @@ class EntryModifier {
                 entryAccessor.getKey(this.entry),
                 this.values,
                 this.colors,
-                this.pristine,
+                this.modified,
             );
         }
     }
