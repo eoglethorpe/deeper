@@ -573,16 +573,19 @@ export default class EditEntryView extends React.PureComponent {
         });
     }
 
-    handleChangeEntryValues = (entryId, values, colors, pristine) => {
+    handleChangeEntryValues = (entryId, values, colors, modified = true) => {
+        const uiState = {};
+        if (modified) {
+            uiState.error = false;
+            uiState.pristine = false;
+        }
+
         this.props.changeEntry({
             leadId: this.props.leadId,
             entryId,
             values,
             colors,
-            uiState: {
-                pristine,
-                error: false,
-            },
+            uiState,
         });
     }
 
