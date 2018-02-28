@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -17,11 +16,8 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
-import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
-import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
-import Button from '../../vendor/react-store/components/Action/Button';
-import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import BoundError from '../../components/BoundError';
+import ActionButtons from './ActionButtons';
 
 import {
     createParamsForUser,
@@ -103,7 +99,6 @@ const MAX_LEADS_PER_REQUEST = 24;
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Leads extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -145,37 +140,15 @@ export default class Leads extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const MimeType = this.renderMimeType;
+
         this.headers = [
             {
                 key: 'attachmentMimeType',
                 label: this.props.leadsStrings('filterSourceType'),
                 order: 1,
                 sortable: false,
-                modifier: (row) => {
-                    let icon = iconNames.documentText;
-                    let url;
-                    if (row.attachment) {
-                        icon = leadTypeIconMap[row.attachment.mimeType];
-                        url = row.attachment.file;
-                    } else if (row.url) {
-                        icon = iconNames.globe;
-                        url = row.url;
-                    }
-                    if (!url) {
-                        return (
-                            <div className="icon-wrapper">
-                                <i className={icon} />
-                            </div>
-                        );
-                    }
-                    return (
-                        <div className="icon-wrapper">
-                            <a href={url} target="_blank">
-                                <i className={icon} />
-                            </a>
-                        </div>
-                    );
-                },
+                modifier: row => <MimeType row={row} />,
             },
             {
                 key: 'title',
@@ -261,87 +234,15 @@ export default class Leads extends React.PureComponent {
                 label: this.props.leadsStrings('tableHeaderActions'),
                 order: 10,
                 sortable: false,
-                modifier: (row) => {
-                    const editEntriesLink = reverseRoute(
-                        pathNames.editEntries,
-                        {
-                            projectId: this.props.activeProject,
-                            leadId: row.id,
-                        },
-                    );
-
-                    const addAssessmentLink = reverseRoute(
-                        pathNames.editAry,
-                        {
-                            projectId: this.props.activeProject,
-                            leadId: row.id,
-                        },
-                    );
-
-                    const editLeadLink = {
-                        pathname: reverseRoute(
-                            pathNames.addLeads,
-                            {
-                                projectId: this.props.activeProject,
-                            },
-                        ),
-                        state: {
-                            serverId: row.id,
-                            values: {
-                                title: row.title,
-                                sourceType: row.sourceType,
-                                project: row.project,
-                                source: row.source,
-                                confidentiality: row.confidentiality,
-                                assignee: row.assignee,
-                                publishedOn: row.publishedOn,
-                                attachment: row.attachment,
-                                website: row.website,
-                                url: row.url,
-                                text: row.text,
-                            },
-                        },
-                    };
-
-                    return (
-                        <div>
-                            <Button
-                                title={this.props.leadsStrings('searchSimilarLeadButtonTitle')}
-                                onClick={() => this.handleSearchSimilarLead(row)}
-                                smallVerticalPadding
-                                transparent
-                            >
-                                <i className={iconNames.search} />
-                            </Button>
-                            <DangerButton
-                                title={this.props.leadsStrings('removeLeadLeadButtonTitle')}
-                                onClick={() => this.handleRemoveLead(row)}
-                                smallVerticalPadding
-                                transparent
-                            >
-                                <i className={iconNames.delete} />
-                            </DangerButton>
-                            <Link
-                                title={this.props.leadsStrings('editLeadButtonTitle')}
-                                to={editLeadLink}
-                            >
-                                <i className={iconNames.edit} />
-                            </Link>
-                            <Link
-                                title={this.props.leadsStrings('addEntryFromLeadButtonTitle')}
-                                to={editEntriesLink}
-                            >
-                                <i className={iconNames.forward} />
-                            </Link>
-                            <Link
-                                title={this.props.leadsStrings('addAssessmentFromLeadButtonTitle')}
-                                to={addAssessmentLink}
-                            >
-                                <i className={iconNames.copy} />
-                            </Link>
-                        </div>
-                    );
-                },
+                modifier: row => (
+                    <ActionButtons
+                        row={row}
+                        leadsStrings={this.props.leadsStrings}
+                        onSearchSimilarLead={this.handleSearchSimilarLead}
+                        onRemoveLead={this.handleRemoveLead}
+                        activeProject={this.props.activeProject}
+                    />
+                ),
             },
         ];
 
@@ -592,13 +493,87 @@ export default class Leads extends React.PureComponent {
         this.props.setLeadPageActiveSort({ activeSort });
     }
 
-    render() {
+    renderMimeType = ({ row }) => {
+        let icon = iconNames.documentText;
+        let url;
+        if (row.attachment) {
+            icon = leadTypeIconMap[row.attachment.mimeType];
+            url = row.attachment.file;
+        } else if (row.url) {
+            icon = iconNames.globe;
+            url = row.url;
+        }
+        if (!url) {
+            return (
+                <div className="icon-wrapper">
+                    <i className={icon} />
+                </div>
+            );
+        }
+        return (
+            <div className="icon-wrapper">
+                <a href={url} target="_blank">
+                    <i className={icon} />
+                </a>
+            </div>
+        );
+    }
+
+    renderHeader = () => {
+        const addLeadLink = reverseRoute(
+            pathNames.addLeads,
+            { projectId: this.props.activeProject },
+        );
+
+        return (
+            <header className={styles.header}>
+                <FilterLeadsForm className={styles.filters} />
+                <Link
+                    to={addLeadLink}
+                    className={styles.addLeadLink}
+                >
+                    {/* add icon aswell */}
+                    {this.props.leadsStrings('addSourcesButtonLabel')}
+                </Link>
+            </header>
+        );
+    }
+    renderFooter = () => {
         const {
+            activeProject,
             totalLeadsCount,
             activePage,
-            activeProject,
         } = this.props;
 
+        const showVisualizationLink = reverseRoute(
+            pathNames.leadsViz,
+            { projectId: activeProject },
+        );
+
+        // FIXME: use strings
+        return (
+            <footer className={styles.footer}>
+                <div className={styles.linkContainer}>
+                    <Link
+                        className={styles.link}
+                        to={showVisualizationLink}
+                        replace
+                    >
+                        Show Visualization
+                    </Link>
+                </div>
+                <Pager
+                    activePage={activePage}
+                    className={styles.pager}
+                    itemsCount={totalLeadsCount}
+                    maxItemsPerPage={MAX_LEADS_PER_REQUEST}
+                    onPageClick={this.handlePageClick}
+                />
+            </footer>
+        );
+    }
+
+    render() {
         const {
             loadingLeads,
             showDeleteModal,
@@ -614,28 +589,13 @@ export default class Leads extends React.PureComponent {
             );
         }
 
-        const addLeadLink = reverseRoute(
-            pathNames.addLeads,
-            { projectId: this.props.activeProject },
-        );
-        const showVisualizationLink = reverseRoute(
-            pathNames.leadsViz,
-            { projectId: activeProject },
-        );
+        const Header = this.renderHeader;
+        const Footer = this.renderFooter;
 
         return (
-            <div styleName="leads">
-                <header styleName="header">
-                    <FilterLeadsForm styleName="filters" />
-                    <Link
-                        to={addLeadLink}
-                        styleName="add-lead-link"
-                    >
-                        {/* add icon aswell */}
-                        {this.props.leadsStrings('addSourcesButtonLabel')}
-                    </Link>
-                </header>
-                <div styleName="table-container">
+            <div className={styles.leads}>
+                <Header />
+                <div className={styles.tableContainer}>
                     <RawTable
                         data={this.props.leads}
                         dataModifier={this.leadModifier}
@@ -643,10 +603,11 @@ export default class Leads extends React.PureComponent {
                         headers={this.headers}
                         onHeaderClick={this.handleTableHeaderClick}
                         keyExtractor={this.leadKeyExtractor}
-                        styleName="leads-table"
+                        className={styles.leadsTable}
                     />
                     { loadingLeads && <LoadingAnimation /> }
                 </div>
+                <Footer />
                 <Confirm
                     show={showDeleteModal}
                     closeOnEscape
@@ -656,24 +617,6 @@ export default class Leads extends React.PureComponent {
                         {this.props.leadsStrings('leadDeleteConfirmText')}
                     </p>
                 </Confirm>
-                <footer styleName="footer">
-                    <div styleName="link-container">
-                        <Link
-                            styleName="link"
-                            to={showVisualizationLink}
-                            replace
-                        >
-                            Show Visualization
-                        </Link>
-                    </div>
-                    <Pager
-                        activePage={activePage}
-                        styleName="pager"
-                        itemsCount={totalLeadsCount}
-                        maxItemsPerPage={MAX_LEADS_PER_REQUEST}
-                        onPageClick={this.handlePageClick}
-                    />
-                </footer>
             </div>
         );
     }

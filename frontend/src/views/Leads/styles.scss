@@ -15,12 +15,12 @@
 
         .add-lead-link {
             @extend %button-like-link;
-            background-color: $color-primary;
-            color: $color-foreground-alt;
             flex-shrink: 0;
             align-self: flex-end;
             margin: $spacing-small;
+            background-color: $color-primary;
             padding: $spacing-small $spacing-medium-alt;
+            color: $color-foreground-alt;
             font-size: $font-size-large;
         }
 
