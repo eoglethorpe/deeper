@@ -179,6 +179,7 @@ module.exports = {
                         minimize: true,
                         sourceMap: shouldUseSourceMap,
                         modules: true,
+                        camelCase: true,
                       },
                     },
                     require.resolve('sass-loader'),
