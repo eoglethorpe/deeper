@@ -84,10 +84,11 @@ body {
 
 %main-content {
     // @frozenhelium
-    animation: slide-in $duration-slow ease forwards;
-    border: $width-separator-thin solid $color-separator;
-    height: 100%;
     transform-origin: bottom;
+    animation: slide-in $duration-slow ease forwards;
+    border: $width-separator-thin solid $color-separator-alt;
+    background-color: $color-background-alt;
+    height: 100%;
 }
 
 %empty-text {

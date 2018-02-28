@@ -3,6 +3,7 @@ $width-dimension-column: 96px;
 %matrix-2d-overview-table {
     width: 100%;
     border-collapse: separate;
+    border-spacing: 0;
     text-align: center;
 
     thead {
@@ -18,8 +19,8 @@ $width-dimension-column: 96px;
 
     tbody {
         td {
-            margin: $spacing-extra-small;
-            padding: $spacing-extra-small-alt $spacing-small;
+            border: $width-separator-thin solid $color-foreground;
+            padding: $spacing-extra-small;
         }
 
         .dimension-td {

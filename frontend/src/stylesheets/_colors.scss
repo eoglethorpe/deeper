@@ -1,18 +1,18 @@
-$color-background: #d9d9d9;
-$color-background-alt: #efefef;
+$color-background: #e0e0e0;
+$color-background-alt: #eee;
 
 $color-foreground: #fff;
-$color-foreground-alt: #f7f7f7;
+$color-foreground-alt: #fafafa;
 
 $color-background-hover: #cfcfcf;
 $color-background-selected: #ddd;
 
-$color-background-header: $color-foreground-alt;
-$color-background-header-alt: $color-background-alt;
-$color-background-header-hover: $color-background-hover;
+$color-background-header: #eceff3;
+$color-background-header-alt: #cfd8dc;
+$color-background-header-hover: #b0bec5;
 
-$color-background-row: #e7e7e7;
-$color-background-row-alt: #f0f0f0;
+$color-background-row: #f0f0f0;
+$color-background-row-alt: #e0e0e0;
 
 $color-background-disabled: rgba(0, 0, 0, .06);
 
@@ -25,7 +25,7 @@ $color-empty-text: rgba(0, 0, 0, .3);
 
 $color-hover: rgba(0, 0, 0, .02);
 
-$color-primary: #234;
+$color-primary: #37474f;
 $color-text-on-primary: rgba(255, 255, 255, .8);
 
 $color-accent: #3a8;

@@ -114,6 +114,8 @@ export default class LeftPanel extends React.PureComponent {
                         onLoad={this.handleLoadImages}
                     />
                 ),
+                mount: true,
+                wrapContainer: true,
             },
             'assisted-tagging': {
                 component: () => (
@@ -124,6 +126,8 @@ export default class LeftPanel extends React.PureComponent {
                         onEntryAdd={this.handleEntryAdd}
                     />
                 ),
+                mount: true,
+                wrapContainer: true,
             },
             'original-preview': {
                 component: () => (
@@ -131,6 +135,8 @@ export default class LeftPanel extends React.PureComponent {
                         <LeadPreview lead={this.props.lead} />
                     </div>
                 ),
+                mount: true,
+                wrapContainer: true,
             },
             'images-preview': {
                 component: () => (
@@ -139,6 +145,8 @@ export default class LeftPanel extends React.PureComponent {
                         images={this.state.images}
                     />
                 ),
+                mount: true,
+                wrapContainer: true,
             },
             'entries-listing': {
                 component: () => (
@@ -151,6 +159,8 @@ export default class LeftPanel extends React.PureComponent {
                         />
                     </div>
                 ),
+                mount: true,
+                wrapContainer: true,
             },
         };
     }

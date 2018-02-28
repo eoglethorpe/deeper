@@ -317,45 +317,55 @@ export default class List extends React.PureComponent {
         </div>
     )
 
+    renderHeader = () => {
+        const {
+            leadDetails,
+            onSaveAll,
+            saveAllDisabled,
+        } = this.props;
+
+        return (
+            <header className={styles.header}>
+                <h3>
+                    {leadDetails.title}
+                </h3>
+                <div className={styles['action-buttons']}>
+                    <Link
+                        className={styles['primary-link-button']}
+                        to="/overview"
+                        replace
+                    >
+                        {this.props.entryStrings('gotoOverviewButtonLabel')}
+                    </Link>
+                    <SuccessButton
+                        onClick={onSaveAll}
+                        disabled={saveAllDisabled}
+                        className={styles['save-button']}
+                    >
+                        {this.props.entryStrings('saveButtonLabel')}
+                    </SuccessButton>
+                </div>
+            </header>
+        );
+    }
+
     render() {
         const {
             entries,
-            onSaveAll,
-            saveAllDisabled,
             widgetDisabled,
-            leadDetails,
         } = this.props;
         const {
             showApplyModal,
             applyMode,
         } = this.state;
 
-        const entryStyle = { height: this.getMaxHeight() + 16 };
+        const entryStyle = { height: this.getMaxHeight() };
+        const Header = this.renderHeader;
 
         return (
             <div styleName="list">
                 { widgetDisabled && <LoadingAnimation /> }
-                <header styleName="header">
-                    <h3>
-                        {leadDetails.title}
-                    </h3>
-                    <div styleName="action-buttons">
-                        <Link
-                            styleName="primary-link-button"
-                            to="/overview"
-                            replace
-                        >
-                            {this.props.entryStrings('gotoOverviewButtonLabel')}
-                        </Link>
-                        <SuccessButton
-                            onClick={onSaveAll}
-                            disabled={saveAllDisabled}
-                            styleName="save-button"
-                        >
-                            {this.props.entryStrings('saveButtonLabel')}
-                        </SuccessButton>
-                    </div>
-                </header>
+                <Header />
                 {
                     (!entries || entries.length <= 0) ? (
                         <div styleName="no-entry-wrapper">

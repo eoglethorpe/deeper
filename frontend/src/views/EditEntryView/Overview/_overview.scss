@@ -69,16 +69,17 @@ $height-tabs: 48px;
     }
 
     .right {
-        display: flex;
-        flex-direction: column;
         width: 70%;
         min-width: $width-right-panel-min;
 
         >.header {
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            border-bottom: $width-separator-medium solid $color-separator;
             background-color: $color-foreground;
             padding: $spacing-small $spacing-medium;
+            height: $height-tabs;
 
             .entry-actions {
                 display: flex;
@@ -107,17 +108,15 @@ $height-tabs: 48px;
         }
 
         .container {
-            display: flex;
             position: relative;
-            flex-direction: column;
-            flex-grow: 1;
             background-color: $color-background-alt;
-            padding: $spacing-small;
+            width: 100%;
+            height: calc(100% - #{$height-tabs});
+            overflow: auto;
 
             .grid-layout {
-                flex-grow: 1;
-                overflow-y: auto;
-                overflow-x: auto;
+                min-width: 100%;
+                min-height: 100%;
 
                 :global {
                     .grid-item {

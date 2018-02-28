@@ -1,16 +1,18 @@
 @import '../../../stylesheets/base';
 
-.number-matrix-list {
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
+.list {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 
     .row {
-        display: flex;
-        flex-direction: column;
-        flex-shrink: 0;
+        border-bottom: $width-separator-thin solid $color-separator-alt;
+        padding: $spacing-small 0;
 
         .row-title {
+            padding: $spacing-extra-small $spacing-small;
+            color: $color-accent;
+            font-size: $font-size-small;
             font-weight: $font-weight-bold;
         }
 
@@ -18,9 +20,15 @@
             .col {
                 display: flex;
                 justify-content: space-between;
+                background-color: $color-background-row;
+                padding: $spacing-extra-small $spacing-small;
+
+                &:nth-child(odd) {
+                    background-color: $color-background-row-alt;
+                }
 
                 .col-title {
-                    color: $color-label;
+                    color: $color-text;
                 }
 
                 .col-value {

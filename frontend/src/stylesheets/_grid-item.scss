@@ -17,8 +17,10 @@ $color-grid-item-border: $color-separator;
 
         .heading {
             flex-grow: 1;
+            cursor: grab;
             padding: 0 $spacing-small;
             color: $color-label;
+            font-size: $font-size-small;
             font-weight: $font-weight-bold;
         }
 
