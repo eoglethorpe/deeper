@@ -9,7 +9,7 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     entryStringsSelector,
-    afStringsSelector,
+    aryStringsSelector,
     setAryTemplateAction,
     projectDetailsSelector,
     setProjectAction,
@@ -25,7 +25,7 @@ const propTypes = {
     setAryTemplate: PropTypes.func.isRequired,
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     setProject: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -34,7 +34,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
-    afStrings: afStringsSelector(state),
+    aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
 });
 
@@ -118,7 +118,7 @@ export default class Ary extends React.PureComponent {
     }
 
     render() {
-        const { afStrings } = this.props;
+        const { aryStrings } = this.props;
         const {
             pending,
             noTemplate,
@@ -131,7 +131,7 @@ export default class Ary extends React.PureComponent {
         if (noTemplate) {
             return (
                 <div styleName="no-ary-template">
-                    <p>{afStrings('noAryTemplateForProject')}</p>
+                    <p>{aryStrings('noAryTemplateForProject')}</p>
                 </div>
             );
         }

@@ -143,6 +143,34 @@ export const problemsWithRawStringsSelector = createSelector(
     (strings, views, usedMaps) => {
         const problems = [];
 
+        const stringIdReferenced = Object.keys(strings).reduce(
+            (acc, val) => {
+                acc[val] = false;
+                return acc;
+            },
+            {},
+        );
+        Object.keys(views).forEach((viewName) => {
+            const view = getViewFromViews(views, viewName);
+            Object.keys(view).forEach((stringName) => {
+                // Identify bad references in view (not available in strings)
+                const stringId = getStringIdFromView(view, stringName);
+                if (stringId) {
+                    stringIdReferenced[stringId] = true;
+                }
+            });
+        });
+        Object.keys(stringIdReferenced).forEach((key) => {
+            if (!stringIdReferenced[key]) {
+                problems.push({
+                    key: problems.length,
+                    type: 'warning',
+                    title: 'Unused string',
+                    description: `${key}: ${strings[key]}`,
+                });
+            }
+        });
+
         Object.keys(views).forEach((viewName) => {
             const view = getViewFromViews(views, viewName);
             Object.keys(view).forEach((stringName) => {

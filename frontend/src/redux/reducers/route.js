@@ -8,9 +8,11 @@ export const ROUTE__SET_PARAMS = 'route/SET_PARAMS';
 
 // ACTION-CREATOR
 
-export const setRouteParamsAction = params => ({
+export const setRouteParamsAction = ({ match, location }) => ({
     type: ROUTE__SET_PARAMS,
-    params,
+    match,
+    location,
+    // params,
 });
 
 // REDUCER
@@ -37,12 +39,15 @@ const transform = (params) => {
 };
 
 const setRouteParams = (state, action) => {
-    const { path, url, isExact, params } = action.params;
+    const { path, url, isExact, params } = action.match;
+    const { state: routeState } = action.location;
+
     const newState = {
         path,
         url,
         isExact,
         params: transform(params),
+        routeState,
     };
     return newState;
 };

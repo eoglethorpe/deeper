@@ -9,8 +9,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import {
+    caseInsensitiveSubmatch,
+    isTruthy,
+    randomString,
+} from '../../vendor/react-store/utils/common';
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
-import { caseInsensitiveSubmatch } from '../../vendor/react-store/utils/common';
 import update from '../../vendor/react-store/utils/immutable-update';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import List from '../../vendor/react-store/components/View/List';
@@ -28,11 +32,12 @@ import {
     addLeadViewLeadSaveAction,
     addLeadViewLeadRemoveAction,
 
-
+    addLeadViewAddLeadsAction,
     leadsStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
     addLeadViewIsFilterEmptySelector,
+    routeStateSelector,
 } from '../../redux';
 import {
     LEAD_FILTER_STATUS,
@@ -61,6 +66,7 @@ const mapStateToProps = state => ({
     addLeadViewLeads: addLeadViewLeadsSelector(state),
     leadFilterOptions: leadFilterOptionsSelector(state),
     filters: addLeadViewFiltersSelector(state),
+    routeState: routeStateSelector(state),
 
     leadsStrings: leadsStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
@@ -72,6 +78,8 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
+
+    addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
 
 const propTypes = {
@@ -90,6 +98,9 @@ const propTypes = {
     notificationStrings: PropTypes.func.isRequired,
     commonStrings: PropTypes.func.isRequired,
     isFilterEmpty: PropTypes.bool.isRequired,
+
+    routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    addLeads: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -212,6 +223,7 @@ export default class LeadAdd extends React.PureComponent {
 
             showRemoveLeadModal: false,
         };
+
         // Store references to lead forms
         this.leadFormRefs = { };
 
@@ -237,6 +249,20 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     componentWillMount() {
+        const { routeState } = this.props;
+        const { serverId, values } = routeState;
+        if (isTruthy(serverId)) {
+            const uid = randomString();
+            const newLeadId = `lead-${uid}`;
+            const newLead = {
+                id: newLeadId,
+                serverId,
+                values,
+                pristine: true,
+            };
+            this.props.addLeads([newLead]);
+        }
+
         this.setAllLeadKeys(this.props.addLeadViewLeads);
         this.setGlobalUiState(this.state, this.props);
         this.setFilteredLeadKeys(this.props.addLeadViewLeads, this.props.filters);
