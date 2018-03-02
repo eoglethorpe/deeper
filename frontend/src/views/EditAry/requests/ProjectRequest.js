@@ -14,10 +14,10 @@ export default class ProjectRequest {
 
         const {
             setProject,
-            updateAryTemplate,
+            startAryTemplateRequest,
         } = params;
         this.setProject = setProject;
-        this.updateAryTemplate = updateAryTemplate;
+        this.startAryTemplateRequest = startAryTemplateRequest;
     }
 
     create = (projectId) => {
@@ -33,7 +33,7 @@ export default class ProjectRequest {
                         console.warn('There is no assessment template');
                         this.setState({ noTemplate: true, pending: false });
                     } else {
-                        this.updateAryTemplate(response.assessmentTemplate);
+                        this.startAryTemplateRequest(response.assessmentTemplate);
                     }
                 } catch (er) {
                     console.error(er);

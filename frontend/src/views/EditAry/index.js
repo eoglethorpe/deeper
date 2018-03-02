@@ -45,7 +45,7 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
-export default class Ary extends React.PureComponent {
+export default class EditAry extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -60,32 +60,42 @@ export default class Ary extends React.PureComponent {
 
     componentWillMount() {
         const { activeProject: { id } } = this.props;
-        this.updateProject(id);
+        this.startProjectRequest(id);
     }
 
     componentWillReceiveProps(nextProps) {
         const { activeProject: { id: oldProjectId } } = this.props;
         const { activeProject: { id: projectId } } = nextProps;
         if (oldProjectId !== projectId) {
-            this.updateProject(projectId);
+            this.startProjectRequest(projectId);
         }
     }
 
     componentWillUnmount() {
-        this.stopRequests();
+        if (this.aryTemplateRequest) {
+            this.aryTemplateRequest.stop();
+        }
+        if (this.projectRequest) {
+            this.projectRequest.stop();
+        }
     }
 
-    updateProject = (id) => {
+    startProjectRequest = (id) => {
         if (isFalsy(id)) {
             return;
         }
         // stop all the request [both project update and aryTemplate]
-        this.stopRequests();
+        if (this.aryTemplateRequest) {
+            this.aryTemplateRequest.stop();
+        }
+        if (this.projectRequest) {
+            this.projectRequest.stop();
+        }
 
         const projectRequest = new ProjectRequest(
             this,
             {
-                updateAryTemplate: this.updateAryTemplate,
+                startAryTemplateRequest: this.startAryTemplateRequest,
                 setProject: this.props.setProject,
             },
         );
@@ -93,12 +103,14 @@ export default class Ary extends React.PureComponent {
         this.projectRequest.start();
     }
 
-    updateAryTemplate = (id) => {
+    startAryTemplateRequest = (id) => {
         if (isFalsy(id)) {
             return;
         }
         // only stop previous ary template request
-        this.stopRequests({ project: false });
+        if (this.aryTemplateRequest) {
+            this.aryTemplateRequest.stop();
+        }
 
         const aryTemplateRequest = new AryTemplateRequest(
             this,
@@ -106,15 +118,6 @@ export default class Ary extends React.PureComponent {
         );
         this.aryTemplateRequest = aryTemplateRequest.create(id);
         this.aryTemplateRequest.start();
-    }
-
-    stopRequests = ({ project = true, aryTemplate = true } = {}) => {
-        if (project && this.projectRequest) {
-            this.projectRequest.stop();
-        }
-        if (aryTemplate && this.aryTemplateRequest) {
-            this.aryTemplateRequest.stop();
-        }
     }
 
     render() {
