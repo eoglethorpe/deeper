@@ -206,6 +206,7 @@ export default class AddExistingRegion extends React.PureComponent {
         const regionsFromValues = values.regions.map(region => ({ id: region }));
 
         const regions = [...new Set([...projectDetails.regions, ...regionsFromValues])];
+        const regionsKeys = values.regions.map(r => r.key);
 
         const newProjectDetails = {
             ...values,
@@ -219,7 +220,7 @@ export default class AddExistingRegion extends React.PureComponent {
         this.projectPatchRequest = this.createProjectPatchRequest(
             newProjectDetails,
             projectId,
-            values.regions,
+            regionsKeys,
         );
         this.projectPatchRequest.start();
 

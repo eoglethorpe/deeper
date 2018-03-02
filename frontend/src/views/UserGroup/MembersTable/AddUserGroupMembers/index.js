@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { compareString } from '../../../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import Form, { requiredCondition } from '../../../../vendor/react-store/components/Input/Form';
+import update from '../../../../vendor/react-store/utils/immutable-update';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -125,16 +126,12 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     ) : (
                         this.props.userStrings('grantAdminLinkTitle')
                     );
-                    const handleClick = () => this.handleRoleChangeForNewMember({
-                        memberId: row.id,
-                        newRole: isAdmin ? 'normal' : 'admin',
-                    });
                     return (
                         <div className="actions">
                             <PrimaryButton
                                 title={title}
                                 type="button"
-                                onClick={handleClick}
+                                onClick={() => this.handleRoleChangeForNewMember(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 smallVerticalPadding
                                 transparent
@@ -179,13 +176,25 @@ export default class AddUserGroupMembers extends React.PureComponent {
         }
     }
 
-    handleRoleChangeForNewMember = ({ memberId, newRole }) => {
-        const newUserList = [...this.state.usersWithRole];
-        const index = newUserList.findIndex(user => user.id === memberId);
-
+    handleRoleChangeForNewMember = (member) => {
+        const { formValues } = this.state;
+        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
         if (index !== -1) {
-            newUserList[index].role = newRole;
-            this.setState({ usersWithRole: newUserList });
+            const settings = {
+                memberships: {
+                    [index]: {
+                        role: {
+                            $set: member.role === 'admin' ? 'normal' : 'admin',
+                        },
+                    },
+                },
+            };
+
+            const newFormValues = update(formValues, settings);
+            this.setState({
+                formValues: newFormValues,
+                pristine: true,
+            });
         }
     }
 
@@ -285,11 +294,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        const { usersWithRole } = this.state;
         const { userGroupId } = this.props;
-        let newMembersList = usersWithRole.filter(user => (
-            values.memberships.findIndex(d => (d === user.id)) !== -1
-        ));
+
+        let newMembersList = [...values.memberships];
 
         newMembersList = newMembersList.map(member => ({
             member: member.id,

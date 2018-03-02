@@ -1,35 +1,83 @@
 @import '../../../../../stylesheets/base';
 
 .project-general-form {
+    display: flex;
     position: relative;
-    width: 100%;
-    max-width: 540px;
+    flex-direction: column;
+    flex-grow: 1;
+    align-content: stretch;
+
+    >* {
+        padding: $spacing-small $spacing-medium-alt;
+    }
 
     .action-buttons {
         display: flex;
+        flex-shrink: 0;
         justify-content: flex-end;
         padding: $spacing-small $spacing-medium-alt;
+        grid-area: action-buttons;
 
         button {
             margin-left: $spacing-medium;
         }
     }
 
-    .name,
-    .description,
-    .start-date,
-    .end-date,
-    .other-members,
-    .admins,
-    .regions,
-    .user-groups {
-        flex-basis: 100%;
-        margin: 0 $spacing-large;
+    .non-field-errors {
+        flex-shrink: 0;
+        padding: 0;
+        grid-area: non-field-errors;
+    }
+
+    .inputs-container {
+        display: flex;
+        flex-shrink: 0;
+
+        .start-date,
+        .end-date,
+        .name {
+            flex-grow: 1;
+
+            &:not(:last-child) {
+                padding-right: $spacing-small;
+            }
+        }
     }
 
     .description {
+        flex-shrink: 0;
+        grid-area: description;
+
         :global .input {
             resize: none;
+        }
+    }
+
+    .selects-container {
+        display: flex;
+        flex-grow: 1;
+
+        .regions-usergroup-container {
+            display: flex;
+            flex-basis: 35%;
+            flex-direction: column;
+            flex-shrink: 0;
+            margin-right: $spacing-medium-alt;
+
+            .regions,
+            .user-groups {
+                flex-basis: 50%;
+                overflow-y: auto;
+            }
+
+            .regions {
+                margin-bottom: $spacing-small;
+            }
+        }
+
+        .members {
+            flex-grow: 1;
+            grid-area: members;
         }
     }
 }

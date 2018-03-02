@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -9,27 +8,20 @@ import {
     compareString,
     compareDate,
 } from '../../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
-import Table from '../../../../vendor/react-store/components/View/Table';
-import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
-import Modal from '../../../../vendor/react-store/components/View/Modal';
-import ModalBody from '../../../../vendor/react-store/components/View/Modal/Body';
-import ModalHeader from '../../../../vendor/react-store/components/View/Modal/Header';
-import Confirm from '../../../../vendor/react-store/components/View/Modal/Confirm';
-import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import Button from '../../../../vendor/react-store/components/Action/Button';
+import update from '../../../../vendor/react-store/utils/immutable-update';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
+import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
     transformResponseErrorToFormError,
-    createUrlForUserProjectMembership,
-    createParamsForUserProjectMembershipDelete,
-    createParamsForUserProjectMembershipPatch,
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../../rest';
 import {
+    usersInformationListSelector,
     activeUserSelector,
 
     projectDetailsSelector,
@@ -43,14 +35,13 @@ import {
     projectStringsSelector,
 } from '../../../../redux';
 import schema from '../../../../schema';
+import notify from '../../../../notify';
 import {
     pathNames,
     iconNames,
 } from '../../../../constants';
-import notify from '../../../../notify';
 
 import ProjectGeneralForm from './ProjectGeneralForm';
-import AddProjectMembers from './AddProjectMembers';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -58,8 +49,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProject: PropTypes.func.isRequired,
-    unsetUserProjectMembership: PropTypes.func.isRequired,
-    setUserProjectMembership: PropTypes.func.isRequired,
+    users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
     notificationStrings: PropTypes.func.isRequired,
@@ -71,11 +61,12 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
+    users: usersInformationListSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
-    activeUser: activeUserSelector(state),
     notificationStrings: notificationStringsSelector(state),
     projectStrings: projectStringsSelector(state),
+    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -87,7 +78,6 @@ const mapDispatchToProps = dispatch => ({
 const emptyList = [];
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectGeneral extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -98,18 +88,29 @@ export default class ProjectGeneral extends React.PureComponent {
         const {
             projectDetails,
             projectOptions,
+            users,
         } = props;
 
         const formValues = {
             ...projectDetails,
+            memberships: (projectDetails.memberships || emptyList).map(m => ({
+                ...m,
+                memberId: m.id,
+                name: m.memberName,
+                email: m.memberEmail,
+                id: m.member,
+            })),
             regions: (projectDetails.regions || emptyList).map(region => region.id),
             userGroups: (projectDetails.userGroups || emptyList).map(userGroups => userGroups.id),
         };
+
+        const memberOptions = this.getMemberOptions(users, projectDetails.memberships);
 
         this.state = {
             formErrors: {},
             formFieldErrors: {},
             formValues,
+            memberOptions,
 
             regionOptions: projectOptions.regions || emptyList,
             userGroupsOptions: projectOptions.userGroups || emptyList,
@@ -126,17 +127,16 @@ export default class ProjectGeneral extends React.PureComponent {
             confirmText: '',
         };
 
-
         this.memberHeaders = [
             {
-                key: 'memberName',
+                key: 'name',
                 label: this.props.projectStrings('tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.memberName, b.memberName),
             },
             {
-                key: 'memberEmail',
+                key: 'email',
                 label: this.props.projectStrings('tableHeaderEmail'),
                 order: 2,
                 sortable: true,
@@ -184,6 +184,7 @@ export default class ProjectGeneral extends React.PureComponent {
                         <div>
                             <PrimaryButton
                                 smallVerticalPadding
+                                type="button"
                                 title={
                                     isAdmin
                                         ? this.props.projectStrings('revokeAdminRightsTitle')
@@ -195,6 +196,7 @@ export default class ProjectGeneral extends React.PureComponent {
                             />
                             <DangerButton
                                 smallVerticalPadding
+                                type="button"
                                 title={this.props.projectStrings('deleteMemberLinkTitle')}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                                 iconName={iconNames.delete}
@@ -211,15 +213,25 @@ export default class ProjectGeneral extends React.PureComponent {
         const {
             projectDetails,
             projectOptions,
+            users,
         } = nextProps;
 
         if (nextProps !== this.props) {
             const formValues = {
                 ...projectDetails,
-                regions: (projectDetails.regions || []).map(region => region.id),
-                userGroups: (projectDetails.userGroups || []).map(userGroups => userGroups.id),
+                regions: (projectDetails.regions || emptyList).map(region => region.id),
+                memberships: (projectDetails.memberships || emptyList).map(m => ({
+                    ...m,
+                    name: m.memberName,
+                    email: m.memberEmail,
+                    memberId: m.id,
+                    id: m.member,
+                })),
+                userGroups: (projectDetails.userGroups || emptyList).map(u => u.id),
             };
+            const memberOptions = this.getMemberOptions(users, projectDetails.memberships);
             this.setState({
+                memberOptions,
                 formValues,
                 regionOptions: projectOptions.regions || emptyList,
                 userGroupsOptions: projectOptions.userGroups || emptyList,
@@ -241,6 +253,41 @@ export default class ProjectGeneral extends React.PureComponent {
         }
     }
 
+    getMemberOptions = (users, members) => {
+        if (!members) return emptyList;
+        if (!users) {
+            return members.map(m => ({
+                ...m,
+                name: m.memberName,
+                email: m.memberEmail,
+                role: m.role,
+                memberId: m.id,
+                id: m.member,
+            }));
+        }
+        const memberOptions = members.map(m => ({
+            ...m,
+            name: m.memberName,
+            email: m.memberEmail,
+            id: m.member,
+            memberId: m.id,
+        }));
+        const finalOptions = [...memberOptions];
+
+        users.forEach((u) => {
+            const memberIndex = memberOptions.findIndex(m => m.member === u.id);
+            if (memberIndex === -1) {
+                finalOptions.push({
+                    name: u.displayName,
+                    email: u.email,
+                    role: 'normal',
+                    id: u.id,
+                });
+            }
+        });
+
+        return finalOptions;
+    }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
         const projectPatchRequest = new FgRestBuilder()
@@ -319,6 +366,13 @@ export default class ProjectGeneral extends React.PureComponent {
         const formValues = {
             ...projectDetails,
             regions: (projectDetails.regions || emptyList).map(region => region.id),
+            memberships: (projectDetails.memberships || emptyList).map(m => ({
+                ...m,
+                name: m.memberName,
+                email: m.memberEmail,
+                memberId: m.id,
+                id: m.member,
+            })),
             userGroups: (projectDetails.userGroups || emptyList).map(userGroups => userGroups.id),
         };
 
@@ -336,6 +390,7 @@ export default class ProjectGeneral extends React.PureComponent {
 
         const regions = values.regions.map(region => ({ id: region }));
         const userGroups = values.userGroups.map(userGroup => ({ id: userGroup }));
+
         const newProjectDetails = {
             ...values,
             regions,
@@ -352,276 +407,84 @@ export default class ProjectGeneral extends React.PureComponent {
         this.setState({ pristine: false });
     };
 
-    createRequestForMembershipDelete = (memberId) => {
-        const { projectId } = this.props;
-        const urlForMembership = createUrlForUserProjectMembership(memberId);
-
-        const membershipDeleteRequest = new FgRestBuilder()
-            .url(urlForMembership)
-            .params(() => createParamsForUserProjectMembershipDelete())
-            .preLoad(() => {
-                this.setState({ actionPending: true });
-            })
-            .postLoad(() => {
-                this.setState({ actionPending: false });
-            })
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unsetUserProjectMembership({
-                        memberId,
-                        projectId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userMembershipDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userMembershipDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipDeleteFailure'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipDeleteFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return membershipDeleteRequest;
-    }
-
-    createRequestForMembershipPatch = ({ memberId, newRole }) => {
-        const { projectId } = this.props;
-        const urlForUserMembershipPatch = createUrlForUserProjectMembership(memberId);
-
-        const membershipPatchRequest = new FgRestBuilder()
-            .url(urlForUserMembershipPatch)
-            .params(() => createParamsForUserProjectMembershipPatch({ role: newRole }))
-            .preLoad(() => {
-                this.setState({ actionPending: true });
-            })
-            .postLoad(() => {
-                this.setState({ actionPending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectMembership');
-                    this.props.setUserProjectMembership({
-                        memberDetails: response,
-                        projectId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userMembershipRole'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userMembershipRoleSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipRole'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipRoleFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipRole'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipRoleFatal'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return membershipPatchRequest;
-    }
-
-    handleToggleMemberRole = (confirm) => {
-        const { selectedMember } = this.state;
-        const memberId = selectedMember.id;
-        const isAdmin = selectedMember.role === 'admin';
-        const newRole = isAdmin ? 'normal' : 'admin';
-
-        if (confirm) {
-            if (this.membershipPatchRequest) {
-                this.membershipPatchRequest.stop();
-            }
-
-            this.membershipPatchRequest = this.createRequestForMembershipPatch({
-                memberId,
-                newRole,
-            });
-            this.membershipPatchRequest.start();
-        }
-        this.setState({ toggleRoleConfirmShow: false });
-    }
-
     handleToggleMemberRoleClick = (member) => {
-        const accessRight = member.role === 'admin'
-            ? this.props.projectStrings('confirmTextRevokeAdmin')
-            : this.props.projectStrings('confirmTextGrantAdmin');
+        const { formValues } = this.state;
+        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
+        if (index !== -1) {
+            const settings = {
+                memberships: {
+                    [index]: {
+                        role: {
+                            $set: member.role === 'admin' ? 'normal' : 'admin',
+                        },
+                    },
+                },
+            };
 
-        const confirmText = `${this.props.projectStrings('confirmText')} ${accessRight} ${member.memberName}?`;
-        this.setState({
-            toggleRoleConfirmShow: true,
-            confirmText,
-            selectedMember: member,
-        });
-    };
-
-    handleDeleteMember = (confirm) => {
-        const { selectedMember } = this.state;
-        if (confirm) {
-            if (this.membershipDeleteRequest) {
-                this.membershipDeleteRequest.stop();
-            }
-
-            this.membershipDeleteRequest = this.createRequestForMembershipDelete(
-                selectedMember.id,
-            );
-            this.membershipDeleteRequest.start();
+            const newFormValues = update(formValues, settings);
+            this.setState({
+                formValues: newFormValues,
+                pristine: true,
+            });
         }
-        this.setState({ deleteMemberConfirmShow: false });
-    }
+    };
 
     handleDeleteMemberClick = (member) => {
-        const confirmText = `${this.props.projectStrings('confirmTextRemove')} ${member.memberName} from this project?`;
-        this.setState({
-            deleteMemberConfirmShow: true,
-            confirmText,
-            selectedMember: member,
-        });
+        const { formValues } = this.state;
+        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
+        if (index !== -1) {
+            const settings = {
+                memberships: {
+                    $splice: [[index, 1]],
+                },
+            };
+
+            const newFormValues = update(formValues, settings);
+            this.setState({
+                formValues: newFormValues,
+                pristine: true,
+            });
+        }
     };
-
-    handleAddMemberClick = () => {
-        this.setState({ showAddMemberModal: true });
-    }
-
-    handleModalClose = () => {
-        this.setState({ showAddMemberModal: false });
-    }
-
-    memberKeyExtractor = member => member.id;
 
     render() {
         const {
-            showAddMemberModal,
-            toggleRoleConfirmShow,
-            deleteMemberConfirmShow,
-            confirmText,
-
             formErrors,
             formFieldErrors,
             formValues,
             pristine,
             pending,
             actionPending,
+            memberOptions,
             regionOptions,
             userGroupsOptions,
         } = this.state;
 
         const {
             className,
-            projectDetails,
-            projectId,
         } = this.props;
 
         return (
             <div
-                className={className}
-                styleName="project-general"
+                className={`${className} ${styles['project-general']}`}
             >
                 {actionPending && <LoadingAnimation />}
                 <ProjectGeneralForm
                     formValues={formValues}
                     regionOptions={regionOptions}
                     userGroupsOptions={userGroupsOptions}
+                    memberOptions={memberOptions}
                     formErrors={formErrors}
                     formFieldErrors={formFieldErrors}
                     changeCallback={this.changeCallback}
                     failureCallback={this.failureCallback}
                     handleFormCancel={this.handleFormCancel}
                     successCallback={this.successCallback}
-                    styleName="project-general-form"
+                    memberHeaders={this.memberHeaders}
+                    className={styles['project-general-form']}
                     pristine={pristine}
                     pending={pending}
                 />
-                <div styleName="members">
-                    <header styleName="header">
-                        <h2>
-                            {this.props.projectStrings('headerMembers')}
-                        </h2>
-                        <div styleName="action-buttons">
-                            <PrimaryButton
-                                iconName={iconNames.add}
-                                onClick={this.handleAddMemberClick}
-                            >
-                                {this.props.projectStrings('addMemberButtonLabel')}
-                            </PrimaryButton>
-                        </div>
-                    </header>
-                    { showAddMemberModal &&
-                        <Modal
-                            styleName="add-member-modal"
-                            onClose={this.handleModalClose}
-                            closeOnEscape
-                        >
-                            <ModalHeader
-                                title={this.props.projectStrings('addMemberButtonLabel')}
-                                rightComponent={
-                                    <Button
-                                        onClick={this.handleModalClose}
-                                        transparent
-                                    >
-                                        <span className={iconNames.close} />
-                                    </Button>
-                                }
-                            />
-                            <ModalBody styleName="modal-body">
-                                <AddProjectMembers
-                                    styleName="add-member"
-                                    projectId={projectId}
-                                    onModalClose={this.handleModalClose}
-                                />
-                            </ModalBody>
-                        </Modal>
-                    }
-                    <div styleName="table-container">
-                        <Table
-                            data={projectDetails.memberships || emptyList}
-                            headers={this.memberHeaders}
-                            keyExtractor={member => member.id}
-                        />
-                        <Confirm
-                            show={toggleRoleConfirmShow}
-                            onClose={this.handleToggleMemberRole}
-                        >
-                            <p>{confirmText}</p>
-                        </Confirm>
-                        <Confirm
-                            show={deleteMemberConfirmShow}
-                            onClose={this.handleDeleteMember}
-                        >
-                            <p>{confirmText}</p>
-                        </Confirm>
-                    </div>
-                </div>
             </div>
         );
     }

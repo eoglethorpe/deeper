@@ -164,6 +164,7 @@ export default class ProjectDetails extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
+                    console.warn(response);
                     this.props.setProject({
                         project: response,
                     });

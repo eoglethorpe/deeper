@@ -579,6 +579,7 @@ const initialLangState = {
                 7041: 'No row selected',
                 8101: 'Delete this Assessment',
                 8102: 'Edit this Assessment',
+                7042: 'Project members',
             },
             views: {
                 af: {
@@ -1268,6 +1269,7 @@ const initialLangState = {
                     projectRegionPlaceholder: 337,
                     projectUserGroupLabel: 338,
                     projectUserGroupPlaceholder: 339,
+                    projectMembersLabel: 7042,
                     addRegionButtonLabel: 301,
                     searchRegionPlaceholder: 341,
                     addRegionModalTitle: 342,

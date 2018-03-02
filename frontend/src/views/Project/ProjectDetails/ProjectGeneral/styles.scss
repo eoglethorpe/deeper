@@ -3,10 +3,11 @@
 
 .project-general {
     display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 
     .project-general-form {
         flex-shrink: 0;
-        min-width: 480px;
     }
 
     .members {
