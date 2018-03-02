@@ -50,6 +50,7 @@ export const exportStringsSelector = createSelectorForView('export');
 export const fourHundredFourStringsSelector = createSelectorForView('fourHundredFour');
 export const homescreenStringsSelector = createSelectorForView('homescreen');
 export const leadsStringsSelector = createSelectorForView('leads');
+export const arysStringsSelector = createSelectorForView('arys');
 export const loginStringsSelector = createSelectorForView('login');
 export const notificationStringsSelector = createSelectorForView('notification');
 export const projectStringsSelector = createSelectorForView('project');

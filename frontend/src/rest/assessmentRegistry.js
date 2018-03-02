@@ -1,8 +1,10 @@
 import {
+    DELETE,
     GET,
     POST,
     PUT,
     commonHeaderForPost,
+    p,
     wsEndpoint,
 } from '../config/rest';
 
@@ -11,6 +13,15 @@ export const urlForArys = `${wsEndpoint}/assessments/`;
 
 export const createUrlForAryTemplate = id => `${wsEndpoint}/assessment-templates/${id}/`;
 export const createUrlForAry = id => `${wsEndpoint}/assessments/${id}/`;
+export const createUrlForAryDelete = createUrlForAry;
+
+export const createUrlForArysOfProject = params => (
+    `${urlForArys}?${p(params)}`
+);
+
+export const createUrlForAryFilterOptions = projectId => (
+    `${wsEndpoint}/ary-options/?${p({ project: projectId })}`
+);
 
 export const commonParamsForGET = () => ({
     method: GET,
@@ -28,4 +39,9 @@ export const createParamsForAryEdit = data => ({
     method: PUT,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
+});
+
+export const createParamsForAryDelete = () => ({
+    method: DELETE,
+    headers: commonHeaderForPost,
 });

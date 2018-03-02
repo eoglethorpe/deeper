@@ -12,6 +12,7 @@ import {
 import {
     leadFilterOptionsSelector,
     entryFilterOptionsSelector,
+    aryFilterOptionsSelector,
     regionsSelector,
     projectsSelector,
     geoOptionsSelector,
@@ -187,6 +188,13 @@ export const entryFilterOptionsForProjectSelector = createSelector(
     projectIdFromRoute,
     entryFilterOptionsSelector,
     (activeProject, entryFilterOptions) => (entryFilterOptions[activeProject] || emptyObject),
+);
+
+// projectIdFromRoute
+export const aryFilterOptionsForProjectSelector = createSelector(
+    projectIdFromRoute,
+    aryFilterOptionsSelector,
+    (activeProject, aryFilterOptions) => (aryFilterOptions[activeProject] || emptyObject),
 );
 
 // projectIdFromRoute

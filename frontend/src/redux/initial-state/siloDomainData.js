@@ -53,6 +53,19 @@ const initialSiloDomainData = {
         */
     },
 
+    // i specifies project
+    aryPage: {
+        /*
+        1: {
+            activeSort: '-created_at',
+            activePage: 1,
+            filters: {},
+            arys: [],
+            totalArysCount: 123,
+        },
+        */
+    },
+
     entriesView: {
         /*
         1: {

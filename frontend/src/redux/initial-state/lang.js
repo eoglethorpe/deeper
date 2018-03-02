@@ -120,6 +120,7 @@ const initialLangState = {
                 131: 'Apply this value to all below',
                 132: 'Preview Not Available',
                 133: 'Are you sure you want to discard this lead?',
+                134: 'Are you sure you want to delete this Assessment?',
                 135: 'Search Similar Lead',
                 136: 'Edit lead',
                 137: 'Remove lead',
@@ -575,6 +576,8 @@ const initialLangState = {
                 7039: 'Subsectors',
                 7040: 'Untitled Row',
                 7041: 'No row selected',
+                8101: 'Delete this Assessment',
+                8102: 'Edit this Assessment',
             },
             views: {
                 af: {
@@ -973,6 +976,21 @@ const initialLangState = {
                     message2: 878,
                     goToProfile: 879,
                 },
+                arys: {
+                    titleLabel: 13,
+                    createdAt: 163,
+                    tableHeaderActions: 16,
+                    aryDeleteConfirmText: 134,
+                    placeholderAnybody: 17,
+                    placeholderAnytime: 18,
+                    placeholderSearch: 9,
+                    filterDateCreated: 2,
+                    createdByFilterLabel: 538,
+                    filterApplyFilter: 10,
+                    filterClearFilter: 11,
+                    removeAryButtonTitle: 8101,
+                    editAryButtonTitle: 8102,
+                },
                 leads: {
                     filterDateCreated: 2,
                     filterDatePublished: 3,
@@ -1184,7 +1202,7 @@ const initialLangState = {
                     leadsViz: 5561,
                     addLeads: 12,
                     entries: 15,
-                    ary: 5562,
+                    arys: 5562,
                     editAry: 5563,
                     export: 600,
 
