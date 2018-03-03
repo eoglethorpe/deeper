@@ -31,6 +31,7 @@ import {
     addLeadViewLeadChangeAction,
     addLeadViewLeadSaveAction,
     addLeadViewLeadRemoveAction,
+    addLeadViewRemoveSavedLeadsAction,
 
     addLeadViewAddLeadsAction,
     leadsStringsSelector,
@@ -78,6 +79,7 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
+    addLeadViewRemoveSavedLeads: params => dispatch(addLeadViewRemoveSavedLeadsAction(params)),
 
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
 });
@@ -101,6 +103,7 @@ const propTypes = {
 
     routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addLeads: PropTypes.func.isRequired,
+    addLeadViewRemoveSavedLeads: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -264,6 +267,8 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     componentWillMount() {
+        this.props.addLeadViewRemoveSavedLeads();
+
         const { routeState } = this.props;
         const { serverId, values } = routeState;
         if (isTruthy(serverId)) {

@@ -7,21 +7,24 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 import {
     createLead,
     leadAccessor,
+    calcLeadState,
+    LEAD_STATUS,
 } from '../../../entities/lead';
 
 // ACTION-TYPE
 
-export const LA__SET_FILTERS = 'domain-data/LA__SET_FILTERS ';
-export const LA__UNSET_FILTERS = 'domain-data/LA__UNSET_FILTERS ';
-export const LA__SET_ACTIVE_LEAD_ID = 'domain-data/LA__SET_ACTIVE_LEAD_ID';
-export const LA__ADD_LEADS = 'domain-data/LA__ADD_LEADS';
-export const LA__LEAD_CHANGE = 'domain-data/LA__LEAD_CHANGE';
-export const LA__LEAD_SAVE = 'domain-data/LA__LEAD_SAVE';
-export const LA__LEAD_REMOVE = 'domain-data/LA__LEAD_REMOVE';
-export const LA__LEAD_NEXT = 'domain-data/LA__LEAD_NEXT';
-export const LA__LEAD_PREV = 'domain-data/LA__LEAD_PREV';
-export const LA__COPY_ALL_BELOW = 'domain-data/LA__COPY_ALL_BELOW';
-export const LA__COPY_ALL = 'domain-data/LA__COPY_ALL';
+export const LA__SET_FILTERS = 'silo-domain-data/LA__SET_FILTERS ';
+export const LA__UNSET_FILTERS = 'silo-domain-data/LA__UNSET_FILTERS ';
+export const LA__SET_ACTIVE_LEAD_ID = 'silo-domain-data/LA__SET_ACTIVE_LEAD_ID';
+export const LA__ADD_LEADS = 'silo-domain-data/LA__ADD_LEADS';
+export const LA__LEAD_CHANGE = 'silo-domain-data/LA__LEAD_CHANGE';
+export const LA__LEAD_SAVE = 'silo-domain-data/LA__LEAD_SAVE';
+export const LA__LEAD_REMOVE = 'silo-domain-data/LA__LEAD_REMOVE';
+export const LA__LEAD_NEXT = 'silo-domain-data/LA__LEAD_NEXT';
+export const LA__LEAD_PREV = 'silo-domain-data/LA__LEAD_PREV';
+export const LA__COPY_ALL_BELOW = 'silo-domain-data/LA__COPY_ALL_BELOW';
+export const LA__COPY_ALL = 'silo-domain-data/LA__COPY_ALL';
+export const LA__LEAD_REMOVE_SAVED = 'silo-domain-data/LA__LEAD_REMOVE_SAVED';
 
 // ACTION-CREATOR
 
@@ -66,6 +69,11 @@ export const addLeadViewLeadRemoveAction = leadId => ({
     type: LA__LEAD_REMOVE,
     leadId,
 });
+
+export const addLeadViewRemoveSavedLeadsAction = () => ({
+    type: LA__LEAD_REMOVE_SAVED,
+});
+
 
 export const addLeadViewLeadNextAction = () => ({
     type: LA__LEAD_NEXT,
@@ -223,6 +231,38 @@ const addLeadViewRemoveLead = (state, action) => {
         },
     };
     return update(state, settings);
+};
+
+const addLeadViewRemoveSavedLeads = (state) => {
+    const { addLeadView: { activeLeadId } } = state;
+
+    // Remove all saved
+    const removalSettings = {
+        addLeadView: {
+            leads: {
+                $filter: (lead) => {
+                    const leadState = calcLeadState({ lead });
+                    return leadState !== LEAD_STATUS.complete;
+                },
+            },
+        },
+    };
+    const newState = update(state, removalSettings);
+
+    // Set new active id
+    const { addLeadView: { leads } } = newState;
+    let newActiveLead = leads.find(lead => leadAccessor.getKey(lead) === activeLeadId);
+    if (!newActiveLead && leads.length > 0) {
+        newActiveLead = leads[0];
+    }
+    const newActiveLeadId = newActiveLead ? leadAccessor.getKey(newActiveLead) : undefined;
+
+    const activeIdSettings = {
+        addLeadView: {
+            activeLeadId: { $set: newActiveLeadId },
+        },
+    };
+    return update(newState, activeIdSettings);
 };
 
 const addLeadViewAddNewLeads = (state, action) => {
@@ -401,5 +441,6 @@ const reducers = {
     [LA__SET_ACTIVE_LEAD_ID]: addLeadViewSetActiveLead,
     [LA__COPY_ALL]: addLeadViewCopyAll('all'),
     [LA__COPY_ALL_BELOW]: addLeadViewCopyAll('below'),
+    [LA__LEAD_REMOVE_SAVED]: addLeadViewRemoveSavedLeads,
 };
 export default reducers;
