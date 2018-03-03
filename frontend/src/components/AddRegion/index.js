@@ -247,6 +247,7 @@ export default class AddRegion extends React.PureComponent {
                 onSubmit={this.handleSubmit}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -265,7 +266,6 @@ export default class AddRegion extends React.PureComponent {
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"
-                        disabled={pending}
                     >
                         {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>

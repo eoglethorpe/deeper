@@ -348,6 +348,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
@@ -369,7 +370,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"
-                        disabled={pending}
                     >
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>

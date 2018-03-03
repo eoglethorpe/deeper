@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const emptyObject = {};
 const emptyList = [];
 
 @BoundError
-@CSSModules(styles)
 export default class ScaleViewWidget extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;

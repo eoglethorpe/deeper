@@ -16,6 +16,7 @@ import Form, {
 
 // import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
@@ -69,6 +70,16 @@ export default class Metadata extends React.PureComponent {
             case 'number':
                 return (
                     <NumberInput
+                        key={id}
+                        formname={id}
+                        label={title}
+                        separator=" "
+                        placeholder={placeholder}
+                    />
+                );
+            case 'date':
+                return (
+                    <DateInput
                         key={id}
                         formname={id}
                         label={title}
@@ -177,6 +188,7 @@ export default class Metadata extends React.PureComponent {
     render() {
         const { aryTemplateMetadata: metadataGroups } = this.props;
 
+        const pending = false;
         return (
             <div className={styles['meta-data']}>
                 <Form
@@ -188,6 +200,7 @@ export default class Metadata extends React.PureComponent {
                     changeCallback={this.changeCallback}
                     successCallback={this.successCallback}
                     failureCallback={this.failureCallback}
+                    disabled={pending}
                 >
                     {
                         Object.keys(metadataGroups).map((key) => {

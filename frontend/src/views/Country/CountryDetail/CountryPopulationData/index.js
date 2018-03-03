@@ -86,13 +86,13 @@ export default class CountryPopulationData extends React.PureComponent {
                 elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <div styleName="action-buttons">
                     <DangerButton
                         type="button"
                         onClick={this.handleFormCancel}
-                        disabled={pending}
                     >
                         {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>

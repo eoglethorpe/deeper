@@ -104,6 +104,9 @@ export default class OrganigramTaggingList extends React.PureComponent {
             <Modal className={styles['org-chart-modal']}>
                 <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
                 <ModalBody className={styles.body}>
+                    <div>
+                        {this.props.api.getEntryExcerpt(this.props.entryId)}
+                    </div>
                     <OrgChart
                         data={data}
                         labelAccessor={this.labelAccessor}

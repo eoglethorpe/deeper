@@ -361,6 +361,7 @@ export default class EditAdminLevel extends React.PureComponent {
                     validations={this.validations}
                     value={formValues}
                     error={formFieldErrors}
+                    disabled={pending}
                 >
                     {
                         pending && <LoadingAnimation />
@@ -373,7 +374,6 @@ export default class EditAdminLevel extends React.PureComponent {
                             placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
                             styleName="text-input"
                             type="number"
-                            disabled={pending}
                             min={0}
                             autoFocus
                         />
@@ -382,35 +382,30 @@ export default class EditAdminLevel extends React.PureComponent {
                             label={this.props.countriesStrings('adminLevelNameLabel')}
                             placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <TextInput
                             formname="nameProp"
                             label={this.props.countriesStrings('namePropertyLabel')}
                             placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <TextInput
                             formname="codeProp"
                             label={this.props.countriesStrings('pcodePropertyLabel')}
                             placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <TextInput
                             formname="parentNameProp"
                             label={this.props.countriesStrings('parentNamePropLabel')}
                             placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <TextInput
                             formname="parentCodeProp"
                             label={this.props.countriesStrings('parentCodePropLabel')}
                             placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <SelectInput
                             keySelector={this.keySelector}
@@ -422,13 +417,11 @@ export default class EditAdminLevel extends React.PureComponent {
                             label={this.props.countriesStrings('parentAdminLevelLabel')}
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             styleName="text-input"
-                            disabled={pending}
                         />
                         <FileInput
                             styleName="geo-file"
                             onChange={this.handleGeoFileInputChange}
                             error={formFieldErrors.geoShapeFile}
-                            disabled={pending}
                             accept=".zip, .json, .geojson"
                         >
                             {
@@ -453,7 +446,6 @@ export default class EditAdminLevel extends React.PureComponent {
                     </div>
                     <div styleName="action-buttons">
                         <DangerButton
-                            disabled={pending}
                             onClick={onClose}
                             type="button"
                         >

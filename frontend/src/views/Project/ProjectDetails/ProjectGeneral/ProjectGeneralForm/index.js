@@ -83,6 +83,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
             pending,
             pristine,
             successCallback,
+            projectStrings,
         } = this.props;
 
         return (
@@ -96,6 +97,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <div styleName="action-buttons">
@@ -104,53 +106,53 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         type="button"
                         disabled={pending || !pristine}
                     >
-                        {this.props.projectStrings('modalRevert')}
+                        {projectStrings('modalRevert')}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                     >
-                        {this.props.projectStrings('modalSave')}
+                        {projectStrings('modalSave')}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors errors={formErrors} />
                 <TextInput
-                    label={this.props.projectStrings('projectNameLabel')}
+                    label={projectStrings('projectNameLabel')}
                     formname="title"
-                    placeholder={this.props.projectStrings('projectNamePlaceholder')}
+                    placeholder={projectStrings('projectNamePlaceholder')}
                     styleName="name"
                 />
                 <TextArea
-                    label={this.props.projectStrings('projectDescriptionLabel')}
+                    label={projectStrings('projectDescriptionLabel')}
                     formname="description"
-                    placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
+                    placeholder={projectStrings('projectDescriptionPlaceholder')}
                     styleName="description"
                     rows={3}
                 />
                 <DateInput
-                    label={this.props.projectStrings('projectStartDateLabel')}
+                    label={projectStrings('projectStartDateLabel')}
                     formname="startDate"
-                    placeholder={this.props.projectStrings('projectStartDatePlaceholder')}
+                    placeholder={projectStrings('projectStartDatePlaceholder')}
                     styleName="start-date"
                 />
                 <DateInput
-                    label={this.props.projectStrings('projectEndDateLabel')}
+                    label={projectStrings('projectEndDateLabel')}
                     formname="endDate"
-                    placeholder={this.props.projectStrings('projectEndDatePlaceholder')}
+                    placeholder={projectStrings('projectEndDatePlaceholder')}
                     styleName="end-date"
                 />
                 <MultiSelectInput
-                    label={this.props.projectStrings('projectRegionLabel')}
+                    label={projectStrings('projectRegionLabel')}
                     formname="regions"
-                    placeholder={this.props.projectStrings('projectRegionPlaceholder')}
+                    placeholder={projectStrings('projectRegionPlaceholder')}
                     styleName="regions"
                     options={regionOptions}
                     labelSelector={ProjectGeneralForm.optionLabelSelector}
                     keySelector={ProjectGeneralForm.optionKeySelector}
                 />
                 <MultiSelectInput
-                    label={this.props.projectStrings('projectUserGroupLabel')}
+                    label={projectStrings('projectUserGroupLabel')}
                     formname="userGroups"
-                    placeholder={this.props.projectStrings('projectUserGroupPlaceholder')}
+                    placeholder={projectStrings('projectUserGroupPlaceholder')}
                     styleName="user-groups"
                     options={userGroupsOptions}
                     labelSelector={ProjectGeneralForm.optionLabelSelector}

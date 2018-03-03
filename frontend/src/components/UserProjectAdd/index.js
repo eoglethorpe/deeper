@@ -205,6 +205,7 @@ export default class UserProjectAdd extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -212,14 +213,12 @@ export default class UserProjectAdd extends React.PureComponent {
                     label={this.props.userStrings('addProjectModalLabel')}
                     formname="title"
                     placeholder={this.props.userStrings('addProjectModalPlaceholder')}
-                    disabled={pending}
                     autoFocus
                 />
                 <div styleName="action-buttons">
                     <DangerButton
                         type="button"
                         onClick={this.handleFormClose}
-                        disabled={pending}
                     >
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>

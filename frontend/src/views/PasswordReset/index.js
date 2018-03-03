@@ -182,11 +182,11 @@ export default class PasswordReset extends React.PureComponent {
                                 validations={this.validations}
                                 value={formValues}
                                 error={formFieldErrors}
+                                disabled={pending}
                             >
                                 { pending && <LoadingAnimation /> }
                                 <NonFieldErrors errors={formErrors} />
                                 <TextInput
-                                    disabled={pending}
                                     formname="email"
                                     label={this.props.loginStrings('emailLabel')}
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
@@ -197,7 +197,7 @@ export default class PasswordReset extends React.PureComponent {
                                     siteKey={reCaptchaSiteKey}
                                 />
                                 <div styleName="action-buttons">
-                                    <PrimaryButton disabled={pending}>
+                                    <PrimaryButton>
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
