@@ -15,9 +15,14 @@ before_install:
 
     - ./deploy/scripts/travis_decrypt.sh
 
-    - git clone https://github.com/toggle-corp/react-store.git frontend/src/vendor/react-store
     - mkdir -p frontend/src/vendor
+
+    - git clone https://github.com/toggle-corp/react-store.git frontend/src/vendor/react-store
+    - git --git-dir=frontend/src/vendor/react-store/.git --no-pager show --pretty=fuller --quiet
+
     - git clone https://github.com/toggle-corp/ravl.git frontend/src/vendor/ravl
+    - git --git-dir=frontend/src/vendor/ravl/.git --no-pager show --pretty=fuller --quiet
+
     - env > .env
     - docker-compose build
 
