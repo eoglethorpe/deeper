@@ -2,14 +2,15 @@ $color-background: #e0e0e0;
 $color-background-alt: #eee;
 
 $color-foreground: #fff;
-$color-foreground-alt: #fafafa;
+$color-foreground-alt: #f5f5f5;
 
 $color-background-hover: #cfcfcf;
 $color-background-selected: #ddd;
 
-$color-background-header: #eceff3;
-$color-background-header-alt: #cfd8dc;
-$color-background-header-hover: #b0bec5;
+$color-background-header: #cfd8dc;
+$color-text-on-header: rgba(0, 0, 0, .8);
+$color-background-header-alt: #b0bec5;
+$color-background-header-hover: #eccff1;
 
 $color-background-row: #f0f0f0;
 $color-background-row-alt: #e0e0e0;
@@ -25,10 +26,10 @@ $color-empty-text: rgba(0, 0, 0, .3);
 
 $color-hover: rgba(0, 0, 0, .02);
 
-$color-primary: #37474f;
+$color-primary: #2956c3;
 $color-text-on-primary: rgba(255, 255, 255, .8);
 
-$color-accent: #3a8;
+$color-accent: #12b776;
 $color-text-on-accent: rgba(255, 255, 255, .9);
 
 $color-text-active-tab: $color-primary;

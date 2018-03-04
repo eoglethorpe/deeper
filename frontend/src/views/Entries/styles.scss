@@ -62,7 +62,8 @@
                 justify-content: space-between;
                 z-index: 11;
                 border-bottom: $width-separator-thin solid $color-separator-alt;
-                background-color: $color-background-header;
+                // background-color: $color-background-header;
+                background-color: $color-foreground-alt;
                 padding: $spacing-small $spacing-medium-alt;
 
                 .heading {
@@ -92,12 +93,12 @@
 
                             .header {
                                 border: 0;
-                                background-color: transparent;
+                                // background-color: transparent;
                             }
 
                             .content {
                                 border: 0;
-                                background-color: transparent;
+                                // background-color: transparent;
                             }
                         }
                     }
