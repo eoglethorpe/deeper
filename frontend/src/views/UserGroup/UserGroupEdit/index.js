@@ -205,6 +205,7 @@ export default class UserGroupEdit extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -212,7 +213,6 @@ export default class UserGroupEdit extends React.PureComponent {
                     label={this.props.userStrings('addUserGroupModalLabel')}
                     formname="title"
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
-                    disabled={pending}
                     autoFocus
                 />
                 <TextArea
@@ -226,7 +226,6 @@ export default class UserGroupEdit extends React.PureComponent {
                     <DangerButton
                         type="button"
                         onClick={this.handleFormClose}
-                        disabled={pending}
                     >
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>

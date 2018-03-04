@@ -307,10 +307,10 @@ export default class Login extends React.PureComponent {
                         validations={Login.validations}
                         value={formValues}
                         error={formFieldErrors}
+                        disabled={pending}
                     >
                         <NonFieldErrors errors={formErrors} />
                         <TextInput
-                            disabled={pending}
                             formname="email"
                             label={this.props.loginStrings('emailLabel')}
                             // FIXME: use strings
@@ -318,7 +318,6 @@ export default class Login extends React.PureComponent {
                             autoFocus
                         />
                         <TextInput
-                            disabled={pending}
                             formname="password"
                             label={this.props.loginStrings('passwordLabel')}
                             // FIXME: use strings
@@ -340,7 +339,7 @@ export default class Login extends React.PureComponent {
                             >
                                 {this.props.loginStrings('forgotPasswordText')}
                             </Link>
-                            <PrimaryButton disabled={pending}>
+                            <PrimaryButton>
                                 {this.props.loginStrings('loginLabel')}
                             </PrimaryButton>
                         </div>

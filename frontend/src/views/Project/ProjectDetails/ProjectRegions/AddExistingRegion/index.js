@@ -253,6 +253,7 @@ export default class AddExistingRegion extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
@@ -274,13 +275,10 @@ export default class AddExistingRegion extends React.PureComponent {
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"
-                        disabled={pending}
                     >
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton
-                        disabled={pending || !pristine}
-                    >
+                    <PrimaryButton disabled={pending || !pristine}>
                         {this.props.projectStrings('modalUpdate')}
                     </PrimaryButton>
                 </div>

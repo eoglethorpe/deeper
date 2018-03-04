@@ -268,6 +268,7 @@ export default class RegionDetail extends React.PureComponent {
                 styleName="region-detail-form"
                 error={formFieldErrors}
                 value={formValues}
+                disabled={pending}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">

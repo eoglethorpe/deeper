@@ -265,6 +265,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">

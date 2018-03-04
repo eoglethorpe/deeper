@@ -197,6 +197,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 onSubmit={this.handleSubmit}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -210,7 +211,6 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"
-                        disabled={pending}
                     >
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>

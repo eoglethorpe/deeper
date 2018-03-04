@@ -235,6 +235,7 @@ export default class LeadForm extends React.PureComponent {
                 validations={this.validations}
                 error={fieldErrors}
                 value={values}
+                disabled={isFormDisabled}
             >
                 {
                     (isFormLoading || isExtractionLoading) && <LoadingAnimation />
@@ -257,7 +258,6 @@ export default class LeadForm extends React.PureComponent {
                                 formname="url"
                                 label={this.props.leadsStrings('urlLabel')}
                                 placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
-                                disabled={isFormDisabled}
                                 autoFocus
                             />
                         </ExtractThis>,
@@ -267,7 +267,6 @@ export default class LeadForm extends React.PureComponent {
                             label={this.props.leadsStrings('websiteLabel')}
                             placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
                             styleName="website"
-                            disabled={isFormDisabled}
                         />,
                     ]
                 }
@@ -279,10 +278,10 @@ export default class LeadForm extends React.PureComponent {
                             placeholder={this.props.leadsStrings('textareaPlaceholderLabel')}
                             rows="3"
                             styleName="text"
-                            disabled={isFormDisabled}
                             autoFocus
                         />
                 }
+                {/* TODO: change from disabled to readonly */}
                 <SelectInput
                     disabled
                     formname="project"
@@ -303,7 +302,6 @@ export default class LeadForm extends React.PureComponent {
                     formname="title"
                     label={this.props.leadsStrings('titleLabel')}
                     placeholder={this.props.leadsStrings('titlePlaceHolderLabel')}
-                    disabled={isFormDisabled}
                 />
 
                 <ApplyAll
@@ -317,7 +315,6 @@ export default class LeadForm extends React.PureComponent {
                         formname="source"
                         label={this.props.leadsStrings('publisherLabel')}
                         placeholder={this.props.leadsStrings('publisherPlaceHolderLabel')}
-                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
                 <ApplyAll
@@ -336,7 +333,6 @@ export default class LeadForm extends React.PureComponent {
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
-                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
 
@@ -356,7 +352,6 @@ export default class LeadForm extends React.PureComponent {
                         placeholder={this.props.leadsStrings('selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
-                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
 
@@ -371,7 +366,6 @@ export default class LeadForm extends React.PureComponent {
                         formname="publishedOn"
                         label={this.props.leadsStrings('datePublishedLabel')}
                         placeholder={this.props.leadsStrings('datePublishedPlaceholderLabel')}
-                        disabled={isFormDisabled}
                     />
                 </ApplyAll>
                 {

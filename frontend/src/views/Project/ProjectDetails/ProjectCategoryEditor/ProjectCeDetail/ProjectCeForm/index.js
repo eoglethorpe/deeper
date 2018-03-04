@@ -83,6 +83,7 @@ export default class ProjectCeForm extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { !readOnly &&
                     <div styleName="action-buttons">
@@ -106,7 +107,6 @@ export default class ProjectCeForm extends React.PureComponent {
                     formname="title"
                     placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
                     styleName="name"
-                    disabled={pending}
                     readOnly={readOnly}
                 />
             </Form>

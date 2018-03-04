@@ -196,6 +196,7 @@ export default class Register extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -227,9 +228,7 @@ export default class Register extends React.PureComponent {
                     reset={pending}
                 />
                 <div styleName="action-buttons">
-                    <PrimaryButton
-                        disabled={pending}
-                    >
+                    <PrimaryButton>
                         { this.props.loginStrings('registerLabel')}
                     </PrimaryButton>
                 </div>

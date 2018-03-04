@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -34,7 +33,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles)
 export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -130,10 +128,10 @@ export default class NumberMatrixOverview extends React.PureComponent {
     render() {
         const { data } = this.props;
         return (
-            <table styleName="number-matrix-overview">
+            <table className={styles['number-matrix-overview']}>
                 <tbody>
                     <tr>
-                        <td styleName="table-header" />
+                        <td className={styles['table-header']} />
                         <List
                             data={data.columnHeaders || emptyList}
                             modifier={this.renderColHeader}

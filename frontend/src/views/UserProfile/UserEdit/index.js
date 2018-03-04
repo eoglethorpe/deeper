@@ -289,6 +289,7 @@ export default class UserEdit extends React.PureComponent {
                 validations={this.validations}
                 value={formValues}
                 error={formFieldErrors}
+                disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors errors={formErrors} />
@@ -306,33 +307,28 @@ export default class UserEdit extends React.PureComponent {
                     showStatus={false}
                     styleName="display-picture"
                     onChange={this.handleImageInputChange}
-                    disabled={pending}
                     accept="image/png, image/jpeg, image/fig, image/gif"
                 />
                 <TextInput
                     label={this.props.userStrings('firstNameLabel')}
                     formname="firstName"
                     placeholder={this.props.userStrings('firstNamePlaceholder')}
-                    disabled={pending}
                     autoFocus
                 />
                 <TextInput
                     label={this.props.userStrings('lastNameLabel')}
                     formname="lastName"
                     placeholder={this.props.userStrings('lastNamePlaceholder')}
-                    disabled={pending}
                 />
                 <TextInput
                     label={this.props.userStrings('organizationLabel')}
                     formname="organization"
                     placeholder={this.props.userStrings('organizationPlaceholder')}
-                    disabled={pending}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.handleFormClose}
                         type="button"
-                        disabled={pending}
                     >
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
