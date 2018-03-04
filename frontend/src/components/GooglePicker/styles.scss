@@ -3,7 +3,6 @@
 
 .google-picker-btn {
     flex-basis: 20%;
-    color: $color-text;
     font-family: inherit;
     font-size: inherit;
 
@@ -14,10 +13,5 @@
     p {
         margin: $spacing-medium 0 0;
         font-size: $font-size-extra-small;
-    }
-
-    &:hover {
-        cursor: pointer;
-        color: $color-accent;
     }
 }

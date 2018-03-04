@@ -131,7 +131,7 @@
 
                 .add-lead-btn {
                     flex-basis: 20%;
-                    color: $color-text;
+                    color: inherit;
                     font-family: inherit;
                     font-size: inherit;
 
@@ -147,6 +147,11 @@
                     &:hover {
                         cursor: pointer;
                         color: $color-accent;
+                    }
+
+                    &:disabled {
+                        cursor: pointer;
+                        color: $color-text-disabled;
                     }
                 }
             }
