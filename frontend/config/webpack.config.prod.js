@@ -175,7 +175,7 @@ module.exports = {
                     {
                       loader: require.resolve('css-loader'),
                       options: {
-                        importLoaders: 1,
+                        importLoaders: 2,
                         minimize: true,
                         sourceMap: shouldUseSourceMap,
                         modules: true,
