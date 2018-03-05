@@ -12,9 +12,8 @@ const propTypes = {
     children: PropTypes.node,
     clientId: PropTypes.string.isRequired,
     developerKey: PropTypes.string.isRequired,
-    scope: PropTypes.arrayOf(PropTypes.string),
+    scope: PropTypes.string,
     viewId: PropTypes.string,
-    authImmediate: PropTypes.bool,
     origin: PropTypes.string,
     onChange: PropTypes.func,
     onAuthenticate: PropTypes.func,
@@ -30,13 +29,12 @@ const propTypes = {
 };
 
 const defaultProps = {
-    className: 'google-picker-btn',
+    className: '',
     children: undefined,
     onChange: () => {},
     onAuthenticate: () => {},
-    scope: ['https://www.googleapis.com/auth/drive.readonly'],
+    scope: 'https://www.googleapis.com/auth/drive.readonly',
     viewId: 'DOCS',
-    authImmediate: false,
     multiselect: false,
     navHidden: false,
     disabled: false,
@@ -57,8 +55,12 @@ export default class GooglePicker extends React.Component {
     static defaultProps = defaultProps;
 
     static isGoogleReady = () => (!!window.gapi)
-    static isGoogleAuthReady = () => !!(window.gapi && window.gapi.auth)
+    static isGoogleAuthReady = () => !!(window.gapi && window.gapi.auth2)
     static isGooglePickerReady = () => !!(window.google && window.google.picker)
+    static isReady = () => (
+        GooglePicker.isGoogleReady() &&
+        GooglePicker.isGoogleAuthReady() && GooglePicker.isGooglePickerReady()
+    )
 
     constructor(props) {
         super(props);
@@ -87,29 +89,26 @@ export default class GooglePicker extends React.Component {
 
     onApiLoad = () => {
         // only call when api is loaded,
-        // call func when google drive is ready to be used
         if (this.props.onApiLoad) {
             this.props.onApiLoad();
         }
-
-        window.gapi.load('auth', this.onAuthApiLoad);
+        window.gapi.load('auth2', this.onAuthApiLoad);
         window.gapi.load('picker', this.onPickerApiLoad);
     }
 
     onChoose = () => {
-        if (!GooglePicker.isGoogleReady() || !GooglePicker.isGoogleAuthReady() ||
-            !GooglePicker.isGooglePickerReady() || this.props.disabled) {
+        if (!GooglePicker.isReady() || this.props.disabled) {
+            console.warn('GooglePicker api is not loaded');
             return;
         }
-
-        const token = window.gapi.auth.getToken();
-        const oauthToken = token && token.access_token;
-
-        if (oauthToken) {
-            this.createPicker(oauthToken);
-        } else {
-            this.doAuth(({ access_token }) => this.createPicker(access_token));
-        }
+        this.doAuth(({ access_token: accessToken, error }) => {
+            if (accessToken) {
+                this.createPicker(accessToken);
+            } else {
+                console.warn('Google Auth Response:', error);
+            }
+        },
+        );
     }
 
     pollForReadyState = () => {
@@ -121,17 +120,14 @@ export default class GooglePicker extends React.Component {
     };
 
     doAuth(callback) {
-        window.gapi.auth.authorize({
+        window.gapi.auth2.authorize({
             client_id: this.props.clientId,
             scope: this.props.scope,
-            immediate: this.props.authImmediate,
-        }, callback,
-        );
+        }, callback);
     }
 
     createPicker(oauthToken) {
         this.props.onAuthenticate(oauthToken);
-
         if (this.props.createPicker) {
             return this.props.createPicker(window.google, oauthToken);
         }
@@ -157,18 +153,15 @@ export default class GooglePicker extends React.Component {
         if (this.props.origin) {
             picker.setOrigin(this.props.origin);
         }
-
         if (this.props.navHidden) {
             picker.enableFeature(window.google.picker.Feature.NAV_HIDDEN);
         }
-
         if (this.props.multiselect) {
             picker.enableFeature(window.google.picker.Feature.MULTISELECT_ENABLED);
         }
 
         picker.build()
             .setVisible(true);
-
         return picker;
     }
 
