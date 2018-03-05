@@ -9,31 +9,27 @@
 
     .details-edit {
         display: flex;
-        flex-direction: column;
         flex-grow: 1;
 
-        .detail-map-container {
+        .detail-container {
             display: flex;
-            flex-shrink: 0;
-            height: 480px;
+            flex-direction: column;
 
             .region-detail-form {
-                flex-basis: 30%;
-                border-right: $width-separator-thin solid $color-hover;
                 min-width: 240px;
             }
 
-            .map-container {
-                display: flex;
+            .admin-levels {
                 flex-grow: 1;
-                align-items: center;
-                justify-content: center;
+                padding: $spacing-medium;
             }
         }
 
-        .admin-levels {
+        .map-container {
+            display: flex;
             flex-grow: 1;
-            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
         }
     }
 }
