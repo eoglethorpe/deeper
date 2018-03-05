@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'autofixture',
     'channels',
     'corsheaders',
     'crispy_forms',
@@ -56,7 +57,6 @@ INSTALLED_APPS = [
     'category_editor',
     'deep_migration',
     'docs',
-    'dummy_data',
     'entry',
     'export',
     'gallery',
