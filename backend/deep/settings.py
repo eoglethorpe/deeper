@@ -55,8 +55,6 @@ INSTALLED_APPS = [
     'analysis_framework',
     'ary',
     'category_editor',
-    'deep_migration',
-    'docs',
     'entry',
     'export',
     'gallery',
@@ -67,6 +65,10 @@ INSTALLED_APPS = [
     'user',
     'user_group',
     'user_resource',
+
+    'deep_migration',
+    'docs',
+    'profiling',
 ]
 
 MIDDLEWARE = [
