@@ -14,6 +14,7 @@
         .detail-container {
             display: flex;
             flex-direction: column;
+            border-left: $width-separator-thin solid $color-separator;
 
             .region-detail-form {
                 min-width: 240px;
@@ -21,7 +22,6 @@
 
             .admin-levels {
                 flex-grow: 1;
-                padding: $spacing-medium;
             }
         }
 
