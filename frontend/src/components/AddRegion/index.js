@@ -68,7 +68,7 @@ export default class AddRegion extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
@@ -77,13 +77,11 @@ export default class AddRegion extends React.PureComponent {
             redirectTo: undefined,
         };
 
-        this.elements = [
-            'title',
-            'code',
-        ];
-        this.validations = {
-            name: [requiredCondition],
-            code: [requiredCondition],
+        this.schema = {
+            fields: {
+                name: [requiredCondition],
+                code: [requiredCondition],
+            },
         };
     }
 
@@ -177,7 +175,7 @@ export default class AddRegion extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save region.'],
+                    formErrors: { errors: ['Error while trying to save region.'] },
                 });
             })
             .build();
@@ -185,18 +183,18 @@ export default class AddRegion extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -214,7 +212,7 @@ export default class AddRegion extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
@@ -242,15 +240,15 @@ export default class AddRegion extends React.PureComponent {
                 elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 onSubmit={this.handleSubmit}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={this.props.projectStrings('addRegionTitleLabel')}
                     formname="title"

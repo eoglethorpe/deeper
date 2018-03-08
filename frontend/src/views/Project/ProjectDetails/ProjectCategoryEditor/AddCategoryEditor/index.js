@@ -155,34 +155,30 @@ export default class AddCategoryEditor extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
             pristine,
         } = this.state;
 
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         return (
             <Form
                 className={className}
                 styleName="add-category-editor-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
-                onSubmit={this.handleSubmit}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"

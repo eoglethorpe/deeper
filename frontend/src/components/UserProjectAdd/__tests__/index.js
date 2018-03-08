@@ -19,8 +19,7 @@ describe('<UserProjectAdd />', () => {
     };
     const successCallback = () => {
     };
-    const validations = {};
-    const elements = [];
+    const schema = {};
     const wrapper = shallow(
         <Provider
             store={store}
@@ -28,10 +27,9 @@ describe('<UserProjectAdd />', () => {
             <UserProjectAdd>
                 <Form
                     changeCallback={changeCallback}
-                    elements={elements}
+                    schema={schema}
                     failureCallback={failureCallback}
                     successCallback={successCallback}
-                    validations={validations}
                 >
                     <TextInput />
                 </Form>

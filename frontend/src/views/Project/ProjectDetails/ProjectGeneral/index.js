@@ -107,21 +107,23 @@ export default class ProjectGeneral extends React.PureComponent {
         };
 
         this.state = {
-            showAddMemberModal: false,
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
+            formValues,
+
+            regionOptions: projectOptions.regions || emptyList,
+            userGroupsOptions: projectOptions.userGroups || emptyList,
+            selectedMember: {},
+
             pristine: false,
             pending: false,
             actionPending: false,
-            formValues,
-            regionOptions: projectOptions.regions || emptyList,
-            userGroupsOptions: projectOptions.userGroups || emptyList,
 
+            showAddMemberModal: false,
             deleteMemberConfirmShow: false,
             toggleRoleConfirmShow: false,
 
             confirmText: '',
-            selectedMember: {},
         };
 
 
@@ -294,27 +296,25 @@ export default class ProjectGeneral extends React.PureComponent {
     };
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
             pristine: false,
         });
     };
 
     handleFormCancel = () => {
-        const {
-            projectDetails,
-        } = this.props;
+        const { projectDetails } = this.props;
 
         const formValues = {
             ...projectDetails,
@@ -326,7 +326,7 @@ export default class ProjectGeneral extends React.PureComponent {
             formValues,
             pristine: false,
             pending: false,
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
         });
     };
@@ -334,12 +334,8 @@ export default class ProjectGeneral extends React.PureComponent {
     successCallback = (values) => {
         const { projectId } = this.props;
 
-        const regions = values.regions.map(region => ({
-            id: region,
-        }));
-        const userGroups = values.userGroups.map(userGroup => ({
-            id: userGroup,
-        }));
+        const regions = values.regions.map(region => ({ id: region }));
+        const userGroups = values.userGroups.map(userGroup => ({ id: userGroup }));
         const newProjectDetails = {
             ...values,
             regions,
@@ -532,10 +528,10 @@ export default class ProjectGeneral extends React.PureComponent {
 
             formErrors,
             formFieldErrors,
+            formValues,
             pristine,
             pending,
             actionPending,
-            formValues,
             regionOptions,
             userGroupsOptions,
         } = this.state;

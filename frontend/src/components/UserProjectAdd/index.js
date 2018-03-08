@@ -68,19 +68,17 @@ export default class UserProjectAdd extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
             pristine: false,
         };
 
-        this.elements = [
-            'title',
-        ];
-
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -147,7 +145,7 @@ export default class UserProjectAdd extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save project.'],
+                    formErrors: { errors: ['Error while trying to save project.'] },
                 });
             })
             .build();
@@ -156,18 +154,18 @@ export default class UserProjectAdd extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -189,7 +187,7 @@ export default class UserProjectAdd extends React.PureComponent {
     render() {
         const {
             formValues,
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             pending,
             pristine,
@@ -199,16 +197,16 @@ export default class UserProjectAdd extends React.PureComponent {
             <Form
                 styleName="user-project-add-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
                 disabled={pending}
+                fieldErrors={formFieldErrors}
+                formErrors={formErrors}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={this.props.userStrings('addProjectModalLabel')}
                     formname="title"

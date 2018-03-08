@@ -7,6 +7,7 @@ import DangerButton from '../../../../vendor/react-store/components/Action/Butto
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import Form from '../../../../vendor/react-store/components/Input/Form';
+import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 
 import { countriesStringsSelector } from '../../../../redux';
@@ -35,31 +36,30 @@ export default class CountryPopulationData extends React.PureComponent {
         this.state = {
             pristine: false,
             pending: false,
+            formValues: {},
         };
-        this.elements = [
-            'population',
-            'population-source',
 
-        ];
+        this.schema = {
+            fields: {
+                population: [],
+                'population-source': [],
+            },
+        };
     }
     // FORM RELATED
 
-    onSubmit = () => {
-        this.form.onSubmit();
-    }
-
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -70,7 +70,6 @@ export default class CountryPopulationData extends React.PureComponent {
     };
 
     handleFormCancel = () => {
-        // TODO: do something later
         console.log('Form cancel');
     };
 
@@ -78,17 +77,23 @@ export default class CountryPopulationData extends React.PureComponent {
         const {
             pristine,
             pending,
+            formErrors,
+            formFieldErrors,
         } = this.state;
+
         return (
             <Form
                 styleName="country-population"
+                schema={this.schema}
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
+                <NonFieldErrors formerror="" />
                 <div styleName="action-buttons">
                     <DangerButton
                         type="button"

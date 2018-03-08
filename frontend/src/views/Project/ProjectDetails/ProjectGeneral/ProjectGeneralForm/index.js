@@ -56,17 +56,15 @@ export default class ProjectGeneralForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.elements = [
-            'title',
-            'startDate',
-            'endDate',
-            'description',
-            'regions',
-            'userGroups',
-        ];
-
-        this.validations = {
-            name: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+                startDate: [],
+                endDate: [],
+                description: [],
+                regions: [],
+                userGroups: [],
+            },
         };
     }
 
@@ -88,15 +86,14 @@ export default class ProjectGeneralForm extends React.PureComponent {
 
         return (
             <Form
-                changeCallback={changeCallback}
-                elements={this.elements}
-                failureCallback={failureCallback}
                 styleName="project-general-form"
+                changeCallback={changeCallback}
+                failureCallback={failureCallback}
                 successCallback={successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
@@ -108,13 +105,11 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     >
                         {projectStrings('modalRevert')}
                     </DangerButton>
-                    <SuccessButton
-                        disabled={pending || !pristine}
-                    >
+                    <SuccessButton disabled={pending || !pristine} >
                         {projectStrings('modalSave')}
                     </SuccessButton>
                 </div>
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={projectStrings('projectNameLabel')}
                     formname="title"

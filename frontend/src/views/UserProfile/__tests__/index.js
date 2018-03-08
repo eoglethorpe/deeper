@@ -36,11 +36,12 @@ describe('<User Profile Edit Form />', () => {
         'organization',
     ];
 
-    const validation = {};
-    const validations = {
-        firstName: [requiredCondition],
-        lastName: [requiredCondition],
-        organization: [requiredCondition],
+    const schema = {
+        fields: {
+            firstName: [requiredCondition],
+            lastName: [requiredCondition],
+            organization: [requiredCondition],
+        },
     };
 
     const wrapper = shallow(
@@ -48,12 +49,11 @@ describe('<User Profile Edit Form />', () => {
             store={store}
         >
             <Form
-                changeCallback={() => {}}
                 elements={elements}
+                schema={schema}
+                changeCallback={() => {}}
                 failureCallback={() => {}}
                 successCallback={() => {}}
-                validation={validation}
-                validations={validations}
             >
                 <TextInput />
             </Form>

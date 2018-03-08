@@ -50,13 +50,11 @@ export default class ProjectAfForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.elements = [
-            'title',
-            'description',
-        ];
-
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+                description: [],
+            },
         };
     }
 
@@ -76,15 +74,14 @@ export default class ProjectAfForm extends React.PureComponent {
 
         return (
             <Form
-                changeCallback={changeCallback}
-                elements={this.elements}
-                failureCallback={failureCallback}
                 styleName="af-detail-form"
+                changeCallback={changeCallback}
+                failureCallback={failureCallback}
                 successCallback={successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { !readOnly &&
@@ -103,7 +100,7 @@ export default class ProjectAfForm extends React.PureComponent {
                         </SuccessButton>
                     </div>
                 }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors errorname="" />
                 <TextInput
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"

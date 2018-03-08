@@ -85,23 +85,86 @@ export default class LeadForm extends React.PureComponent {
         const { leadOptions, lead, activeUser } = props;
         const values = leadAccessor.getValues(lead);
         const activeUserId = activeUser.userId;
+
+        const newValues = { ...values };
+        let valuesChanged = false;
+
         if (
             !values.confidentiality &&
             leadOptions && leadOptions.confidentiality && leadOptions.confidentiality.length > 0
         ) {
-            const confidentiality = LeadForm.keySelector(leadOptions.confidentiality[0]);
-            props.onChange({ confidentiality });
+            newValues.confidentiality = LeadForm.keySelector(leadOptions.confidentiality[0]);
+            valuesChanged = true;
         }
+
         if (
             (!values.assignee || values.assignee.length === 0) &&
             leadOptions && leadOptions.assignee && leadOptions.assignee.length > 0 &&
             leadOptions.assignee.find(user => LeadForm.keySelector(user) === activeUserId)
         ) {
-            props.onChange({ assignee: [activeUserId] });
+            newValues.assignee = [activeUserId];
+            valuesChanged = true;
         }
+
         if (!values.publishedOn) {
             const now = new Date();
-            props.onChange({ publishedOn: FormattedDate.format(now, 'yyyy-MM-dd') });
+            newValues.publishedOn = FormattedDate.format(now, 'yyyy-MM-dd');
+            valuesChanged = true;
+        }
+
+        if (valuesChanged) {
+            props.onChange(newValues);
+        }
+    }
+
+    static getSchemaForLead = (type) => {
+        switch (type) {
+            case LEAD_TYPE.file:
+            case LEAD_TYPE.dropbox:
+            case LEAD_TYPE.drive:
+                return {
+                    fields: {
+                        title: [requiredCondition],
+                        source: [requiredCondition],
+                        confidentiality: [requiredCondition],
+                        assignee: [requiredCondition],
+                        publishedOn: [requiredCondition],
+                        sourceType: [requiredCondition],
+
+                        attachment: [requiredCondition],
+                    },
+                };
+            case LEAD_TYPE.website:
+                return {
+                    fields: {
+                        title: [requiredCondition],
+                        source: [requiredCondition],
+                        confidentiality: [requiredCondition],
+                        assignee: [requiredCondition],
+                        publishedOn: [requiredCondition],
+                        sourceType: [requiredCondition],
+
+                        url: [requiredCondition, urlCondition],
+                        website: [requiredCondition],
+                    },
+                };
+            case LEAD_TYPE.text:
+                return {
+                    fields: {
+                        title: [requiredCondition],
+                        source: [requiredCondition],
+                        confidentiality: [requiredCondition],
+                        assignee: [requiredCondition],
+                        publishedOn: [requiredCondition],
+                        sourceType: [requiredCondition],
+
+                        text: [requiredCondition],
+                    },
+                };
+            default:
+                return {
+                    fields: {},
+                };
         }
     }
 
@@ -109,70 +172,8 @@ export default class LeadForm extends React.PureComponent {
         super(props);
 
         const { lead } = props;
-
-        const commonElements = [
-            'project',
-            'title',
-            'source',
-            'confidentiality',
-            'assignee',
-            'publishedOn',
-            'sourceType',
-        ];
-
-        const commonValidations = {
-            title: [requiredCondition],
-            source: [requiredCondition],
-            confidentiality: [requiredCondition],
-            assignee: [requiredCondition],
-            publishedOn: [requiredCondition],
-            sourceType: [requiredCondition],
-        };
-
         const leadType = leadAccessor.getType(lead);
-        switch (leadType) {
-            case LEAD_TYPE.file:
-            case LEAD_TYPE.dropbox:
-            case LEAD_TYPE.drive:
-                this.elements = [
-                    ...commonElements,
-                    'attachment',
-                ];
-                this.validations = {
-                    ...commonValidations,
-                    attachment: [requiredCondition],
-                };
-                break;
-            case LEAD_TYPE.website:
-                this.elements = [
-                    ...commonElements,
-                    'website',
-                    'url',
-                ];
-                this.validations = {
-                    ...commonValidations,
-                    url: [
-                        requiredCondition,
-                        urlCondition,
-                    ],
-                    website: [requiredCondition],
-                };
-                break;
-            case LEAD_TYPE.text:
-                this.elements = [
-                    ...commonElements,
-                    'text',
-                ];
-                this.validations = {
-                    ...commonValidations,
-                    text: [requiredCondition],
-                };
-                break;
-            default:
-                console.warn(`Unknown lead type ${leadType}`);
-                this.elements = commonElements;
-                this.validations = commonValidations;
-        }
+        this.schema = LeadForm.getSchemaForLead(leadType);
     }
 
     componentWillMount() {
@@ -203,7 +204,7 @@ export default class LeadForm extends React.PureComponent {
             className,
             lead,
 
-            leadOptions,
+            leadOptions = {},
             onChange,
             onFailure,
             onSuccess,
@@ -226,24 +227,22 @@ export default class LeadForm extends React.PureComponent {
         return (
             <Form
                 ref={(ref) => { this.formRef = ref; }}
-                changeCallback={onChange}
-                className={className}
-                elements={this.elements}
-                failureCallback={onFailure}
                 styleName="add-lead-form"
+                className={className}
+                schema={this.schema}
+                changeCallback={onChange}
+                failureCallback={onFailure}
                 successCallback={onSuccess}
-                validations={this.validations}
-                error={fieldErrors}
+                formErrors={errors}
+                fieldErrors={fieldErrors}
                 value={values}
                 disabled={isFormDisabled}
             >
                 {
                     (isFormLoading || isExtractionLoading) && <LoadingAnimation />
                 }
-                <header
-                    styleName="header"
-                >
-                    <NonFieldErrors errors={errors} />
+                <header styleName="header">
+                    <NonFieldErrors formerror="" />
                 </header>
                 <HiddenInput formname="sourceType" />
                 {
@@ -284,6 +283,7 @@ export default class LeadForm extends React.PureComponent {
                 {/* TODO: change from disabled to readonly */}
                 <SelectInput
                     disabled
+                    formoverrides={['disabled']}
                     formname="project"
                     keySelector={LeadForm.keySelector}
                     label={this.props.leadsStrings('projectLabel')}

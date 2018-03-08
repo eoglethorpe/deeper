@@ -83,7 +83,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             useConfirmModalShow: false,
 
             formValues: { ...afDetails },
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             pristine: false,
             pending: false,
@@ -220,33 +220,34 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({ useConfirmModalShow: true });
     }
 
-    // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
-        this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-            pristine: true,
-        });
-    };
-
-    failureCallback = ({ formErrors, formFieldErrors }) => {
-        this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-            pristine: false,
-        });
-    };
-
     handleFormCancel = () => {
         const { afDetails } = this.props;
 
         this.setState({
             formValues: { ...afDetails },
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
+
             pristine: false,
             pending: false,
+        });
+    };
+
+    // FORM RELATED
+    changeCallback = (values, formFieldErrors, formErrors) => {
+        this.setState({
+            formValues: values,
+            formFieldErrors,
+            formErrors,
+            pristine: true,
+        });
+    };
+
+    failureCallback = (formFieldErrors, formErrors) => {
+        this.setState({
+            formFieldErrors,
+            formErrors,
+            pristine: false,
         });
     };
 

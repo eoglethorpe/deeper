@@ -85,24 +85,18 @@ export default class AddUserGroupMembers extends React.PureComponent {
             users,
         } = props;
 
-        const formValues = {
-            ...userGroupDetails,
-            memberships: [],
-            membersBlackList: (userGroupDetails.memberships || emptyList).map(d => d.member),
-        };
-
-        const usersWithRole = users.map(user => ({
-            ...user,
-            role: 'normal',
-        }));
+        const usersWithRole = users.map(user => ({ ...user, role: 'normal' }));
+        const membersBlackList = (userGroupDetails.memberships || emptyList).map(d => d.member);
 
         this.state = {
             formErrors: [],
             formFieldErrors: {},
-            formValues,
+            formValues: {},
+
             pending: false,
             pristine: false,
             usersWithRole,
+            membersBlackList,
         };
 
         this.memberHeaders = [
@@ -151,14 +145,11 @@ export default class AddUserGroupMembers extends React.PureComponent {
             },
         ];
 
-        this.elements = [
-            'memberships',
-        ];
-        this.validations = {
-            memberships: [requiredCondition],
+        this.schema = {
+            fields: {
+                memberships: [requiredCondition],
+            },
         };
-
-        this.usersFields = ['display_name', 'email', 'id'];
     }
 
     componentWillMount() {
@@ -174,10 +165,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
         const { users } = this.props;
 
         if (nextProps.users !== users) {
-            const usersWithRole = users.map(user => ({
-                ...user,
-                role: 'normal',
-            }));
+            const usersWithRole = users.map(user => ({ ...user, role: 'normal' }));
             this.setState({ usersWithRole });
         }
     }
@@ -202,8 +190,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
     }
 
     createRequestForUsers = () => {
+        const usersFields = ['display_name', 'email', 'id'];
         const usersRequest = new FgRestBuilder()
-            .url(createUrlForUsers([this.usersFields]))
+            .url(createUrlForUsers(usersFields))
             .params(() => createParamsForUser())
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
@@ -216,12 +205,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
             })
             .build();
         return usersRequest;
@@ -277,7 +260,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to add members.'],
+                    formErrors: { errors: ['Error while trying to add members.'] },
                 });
             })
             .build();
@@ -285,18 +268,18 @@ export default class AddUserGroupMembers extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -324,12 +307,13 @@ export default class AddUserGroupMembers extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
             pristine,
             usersWithRole,
+            membersBlackList,
         } = this.state;
 
         const {
@@ -340,25 +324,24 @@ export default class AddUserGroupMembers extends React.PureComponent {
             <Form
                 className={className}
                 styleName="add-member-form"
+                schema={this.schema}
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
                     styleName="non-field-errors"
-                    errors={formErrors}
+                    formerror=""
                 />
                 <TabularSelectInput
                     formname="memberships"
                     styleName="tabular-select"
-                    blackList={formValues.membersBlackList}
+                    blackList={membersBlackList}
                     options={usersWithRole}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddUserGroupMembers.optionLabelSelector}

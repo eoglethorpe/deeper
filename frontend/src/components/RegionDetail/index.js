@@ -74,7 +74,7 @@ export default class RegionDetail extends React.PureComponent {
         const { regionDetail } = this.props;
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {
                 ...regionDetail.regionalGroups,
@@ -85,26 +85,17 @@ export default class RegionDetail extends React.PureComponent {
             pristine: false,
         };
 
-        this.elements = [
-            'countryCode',
-            'countryName',
-            'wbRegion',
-            'wbIncomeRegion',
-            'ochaRegion',
-            'echoRegion',
-            'unGeoRegion',
-            'unGeoSubregion',
-        ];
-
-        this.validations = {
-            countryCode: [requiredCondition],
-            countryName: [requiredCondition],
-            wbRegion: [],
-            wbIncomeRegion: [],
-            ochaRegion: [],
-            echoRegion: [],
-            unGeoRegion: [],
-            unGeoSubregion: [],
+        this.schema = {
+            fields: {
+                countryCode: [requiredCondition],
+                countryName: [requiredCondition],
+                wbRegion: [],
+                wbIncomeRegion: [],
+                ochaRegion: [],
+                echoRegion: [],
+                unGeoRegion: [],
+                unGeoSubregion: [],
+            },
         };
     }
 
@@ -116,7 +107,7 @@ export default class RegionDetail extends React.PureComponent {
         const { regionDetail } = props;
 
         this.setState({
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {
                 ...regionDetail.regionalGroups,
@@ -183,7 +174,7 @@ export default class RegionDetail extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save region detail.'],
+                    formErrors: { errors: ['Error while trying to save region detail.'] },
                 });
             })
             .build();
@@ -192,25 +183,24 @@ export default class RegionDetail extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
             pristine: false,
         });
     };
 
     successCallback = (values) => {
-        console.log(values);
         // Stop old patch request
         if (this.regionDetailPatchRequest) {
             this.regionDetailPatchRequest.stop();
@@ -257,22 +247,21 @@ export default class RegionDetail extends React.PureComponent {
 
         return (
             <Form
+                className={className}
+                styleName="region-detail-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 onSubmit={this.handleSubmit}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
-                className={className}
-                styleName="region-detail-form"
-                error={formFieldErrors}
+                schema={this.schema}
+                fieldErrors={formFieldErrors}
+                formErrors={formErrors}
                 value={formValues}
                 disabled={pending}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
-                    <NonFieldErrors errors={formErrors} />
+                    <NonFieldErrors formerror="" />
                     <div styleName="action-buttons">
                         <DangerButton
                             type="button"

@@ -82,31 +82,44 @@ export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static commonElements = ['email', 'password'];
-    static validations = {
-        email: [
-            requiredCondition,
-            emailCondition,
-        ],
-        password: [
-            requiredCondition,
-            lengthGreaterThanCondition(4),
-        ],
-        recaptchaResponse: [requiredCondition],
+    static schema = {
+        fields: {
+            email: [
+                requiredCondition,
+                emailCondition,
+            ],
+            password: [
+                requiredCondition,
+                lengthGreaterThanCondition(4),
+            ],
+        },
+    };
+
+    static schemaWithRecaptcha = {
+        fields: {
+            email: [
+                requiredCondition,
+                emailCondition,
+            ],
+            password: [
+                requiredCondition,
+                lengthGreaterThanCondition(4),
+            ],
+            recaptchaResponse: [requiredCondition],
+        },
     };
 
     constructor(props) {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
             pristine: false,
             showReCaptcha: false,
-
-            elements: Login.commonElements,
+            schema: Login.schema,
         };
     }
 
@@ -143,18 +156,23 @@ export default class Login extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    // changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
+            formValues: values,
+            formErrors,
+            formFieldErrors: fieldErrors,
+            /*
             formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
             formErrors,
+            */
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -184,7 +202,7 @@ export default class Login extends React.PureComponent {
     showReCaptcha = () => {
         this.setState({
             showReCaptcha: true,
-            elements: [...Login.commonElements, 'recaptchaResponse'],
+            schema: Login.schemaWithRecaptcha,
         });
     }
 
@@ -259,12 +277,11 @@ export default class Login extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
             showReCaptcha,
-            elements,
         } = this.state;
 
         return (
@@ -301,15 +318,15 @@ export default class Login extends React.PureComponent {
                     <Form
                         styleName="login-form"
                         changeCallback={this.changeCallback}
-                        elements={elements}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
-                        validations={Login.validations}
+                        schema={this.state.schema}
                         value={formValues}
-                        error={formFieldErrors}
+                        formErrors={formErrors}
+                        fieldErrors={formFieldErrors}
                         disabled={pending}
                     >
-                        <NonFieldErrors errors={formErrors} />
+                        <NonFieldErrors formerror="" />
                         <TextInput
                             formname="email"
                             label={this.props.loginStrings('emailLabel')}

@@ -226,6 +226,13 @@ export const aryTemplateMetadataSelector = createSelector(
     ),
 );
 
+export const aryTemplateMethodologySelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.methodologyGroups || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,

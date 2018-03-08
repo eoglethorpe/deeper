@@ -142,7 +142,7 @@ const leadReference = {
             title: 'Lead #0',
             project: 0,
         },
-        errors: [],
+        errors: {},
         fieldErrors: {},
     },
     uiState: {

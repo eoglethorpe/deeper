@@ -4,7 +4,7 @@
 
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
@@ -76,7 +76,7 @@ export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static isUrlValid = url => (requiredCondition.truth(url) && urlCondition.truth(url))
+    static isUrlValid = url => (requiredCondition(url).ok && urlCondition(url).ok)
 
     constructor(props) {
         super(props);
@@ -122,7 +122,7 @@ export default class LeadFormItem extends React.PureComponent {
                 this.setState({ pendingExtraction: false });
             })
             .success((response) => {
-                // FIXME: ravl?
+                // FIXME: use ravl
                 const webInfo = response;
                 const values = {};
                 const formFieldErrors = {};
@@ -155,7 +155,7 @@ export default class LeadFormItem extends React.PureComponent {
                 this.props.addLeadViewLeadChange({
                     leadId: this.props.leadKey,
                     values,
-                    formErrors: [],
+                    formErrors: {},
                     formFieldErrors,
                     uiState: { pristine: false, serverError: false },
                 });
@@ -185,7 +185,7 @@ export default class LeadFormItem extends React.PureComponent {
         this.leadSaveRequest.start();
     }
 
-    handleFormChange = (values, { formErrors, formFieldErrors } = {}) => {
+    handleFormChange = (values, formFieldErrors, formErrors) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,
@@ -200,7 +200,7 @@ export default class LeadFormItem extends React.PureComponent {
         });
     }
 
-    handleFormFailure = ({ formErrors, formFieldErrors } = {}) => {
+    handleFormFailure = (formFieldErrors, formErrors) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,
@@ -213,6 +213,7 @@ export default class LeadFormItem extends React.PureComponent {
             formFieldErrors,
             uiState: { pristine: true, serverError: false },
         });
+
         onFormSubmitFailure(leadId);
     }
 
@@ -271,7 +272,7 @@ export default class LeadFormItem extends React.PureComponent {
 
     stop = () => {
         // Cleanup not required
-        // no op
+        // noop
     }
 
     // RENDER
@@ -343,6 +344,7 @@ export default class LeadFormItem extends React.PureComponent {
             addLeadViewLeadChange, // eslint-disable-line no-unused-vars
             addLeadViewCopyAllBelow, // eslint-disable-line no-unused-vars
             addLeadViewCopyAll, // eslint-disable-line no-unused-vars
+            leadsStrings,
             ...otherProps
         } = this.props;
 
@@ -358,41 +360,41 @@ export default class LeadFormItem extends React.PureComponent {
                 className={`${styles.right} ${!active ? styles.hidden : ''}`}
                 topContainerClassName={styles.top}
                 bottomContainerClassName={styles.bottom}
-                topChild={[
-                    <LeadForm
-                        key="form"
-                        ref={this.referenceForLeadDetail}
-                        className={styles['add-lead-form']}
-                        lead={lead}
-                        onChange={this.handleFormChange}
-                        onFailure={this.handleFormFailure}
-                        onSuccess={this.handleFormSuccess}
-                        onApplyAllClick={this.handleApplyAllClick}
-                        onApplyAllBelowClick={this.handleApplyAllBelowClick}
-                        isExtractionLoading={this.state.pendingExtraction}
-                        isExtractionDisabled={!this.state.isUrlValid}
-                        onExtractClick={this.handleExtractClick}
-                        {...otherProps}
-                    />,
-                    <Confirm
-                        key="confirm"
-                        show={showApplyModal}
-                        closeOnEscape
-                        onClose={this.handleApplyModal}
-                    >
-                        <p>
-                            {
-                                applyMode === APPLY_MODE.all ? (
-                                    this.props.leadsStrings('applyToAll')
-                                ) : (
-                                    this.props.leadsStrings('applyToAllBelow')
-                                )
-                            }
-                        </p>
-                    </Confirm>,
-                ]}
+                topChild={
+                    <Fragment>
+                        <LeadForm
+                            ref={this.referenceForLeadDetail}
+                            className={styles['add-lead-form']}
+                            lead={lead}
+                            onChange={this.handleFormChange}
+                            onFailure={this.handleFormFailure}
+                            onSuccess={this.handleFormSuccess}
+                            onApplyAllClick={this.handleApplyAllClick}
+                            onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                            isExtractionLoading={this.state.pendingExtraction}
+                            isExtractionDisabled={!this.state.isUrlValid}
+                            onExtractClick={this.handleExtractClick}
+                            {...otherProps}
+                        />
+                        <Confirm
+                            show={showApplyModal}
+                            closeOnEscape
+                            onClose={this.handleApplyModal}
+                        >
+                            <p>
+                                {
+                                    applyMode === APPLY_MODE.all
+                                        ? leadsStrings('applyToAll')
+                                        : leadsStrings('applyToAllBelow')
+                                }
+                            </p>
+                        </Confirm>
+                    </Fragment>
+                }
                 bottomChild={
-                    active ? <LeadPreview lead={lead} /> : <div />
+                    active
+                        ? <LeadPreview lead={lead} />
+                        : <div />
                 }
             />
         );

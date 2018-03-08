@@ -61,18 +61,17 @@ export default class AddAnalysisFramework extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
             pristine: false,
         };
 
-        this.elements = [
-            'title',
-        ];
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -136,7 +135,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save region.'],
+                    formErrors: { errors: ['Error while trying to save region.'] },
                 });
             })
             .build();
@@ -144,18 +143,18 @@ export default class AddAnalysisFramework extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -173,7 +172,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
@@ -188,19 +187,18 @@ export default class AddAnalysisFramework extends React.PureComponent {
             <Form
                 className={className}
                 styleName="add-analysis-framework-form"
+                schema={this.schema}
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
                 onSubmit={this.handleSubmit}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 value={formValues}
-                error={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"

@@ -51,6 +51,7 @@ export default class Register extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
         this.state = {
             formErrors: [],
             formFieldErrors: {},
@@ -60,24 +61,17 @@ export default class Register extends React.PureComponent {
             success: false,
         };
 
-        this.elements = ['firstname', 'lastname', 'organization', 'email', 'recaptchaResponse'];
-        this.validations = {
-            firstname: [
-                requiredCondition,
-            ],
-            lastname: [
-                requiredCondition,
-            ],
-            organization: [
-                requiredCondition,
-            ],
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-            recaptchaResponse: [
-                requiredCondition,
-            ],
+        this.schema = {
+            fields: {
+                firstname: [requiredCondition],
+                lastname: [requiredCondition],
+                organization: [requiredCondition],
+                email: [
+                    requiredCondition,
+                    emailCondition,
+                ],
+                recaptchaResponse: [requiredCondition],
+            },
         };
     }
 
@@ -90,24 +84,24 @@ export default class Register extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
             formErrors,
+            formFieldErrors: fieldErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
 
-    successCallback = (data) => {
-        this.register(data);
+    successCallback = (values) => {
+        this.register(values);
     };
 
     // REGISTER ACTION
@@ -123,8 +117,9 @@ export default class Register extends React.PureComponent {
 
     // REGISTER REST API
 
-    createRequestRegister = (
-        { firstname, lastname, organization, country, email, recaptchaResponse }) => {
+    createRequestRegister = ({
+        firstname, lastname, organization, country, email, recaptchaResponse,
+    }) => {
         const userCreateRequest = new FgRestBuilder()
             .url(urlForUserCreate)
             .params(() => createParamsForUserCreate({
@@ -190,16 +185,16 @@ export default class Register extends React.PureComponent {
             <Form
                 styleName="register-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     formname="firstname"
                     label={this.props.loginStrings('firstNameLabel')}

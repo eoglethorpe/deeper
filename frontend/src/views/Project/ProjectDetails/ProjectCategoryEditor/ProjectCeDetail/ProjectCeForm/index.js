@@ -40,6 +40,7 @@ const mapStateToProps = state => ({
     projectStrings: projectStringsSelector(state),
 });
 
+// FIMXE: Unnecessary component, not reused
 @connect(mapStateToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class ProjectCeForm extends React.PureComponent {
@@ -49,12 +50,10 @@ export default class ProjectCeForm extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.elements = [
-            'title',
-        ];
-
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -74,15 +73,14 @@ export default class ProjectCeForm extends React.PureComponent {
 
         return (
             <Form
-                changeCallback={changeCallback}
-                elements={this.elements}
-                failureCallback={failureCallback}
                 styleName="ce-detail-form"
+                changeCallback={changeCallback}
+                failureCallback={failureCallback}
                 successCallback={successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { !readOnly &&
@@ -101,7 +99,7 @@ export default class ProjectCeForm extends React.PureComponent {
                         </SuccessButton>
                     </div>
                 }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors errorname="" />
                 <TextInput
                     label={this.props.projectStrings('addCeTitleLabel')}
                     formname="title"

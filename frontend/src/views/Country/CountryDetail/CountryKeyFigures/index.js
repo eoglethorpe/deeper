@@ -64,48 +64,31 @@ export default class CountryKeyFigures extends React.PureComponent {
         this.state = {
             pristine: false,
             pending: false,
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: props.regionDetail.keyFigures || {},
             dataLoading: true,
         };
 
-        this.elements = [
-            'index',
-            'geoRank',
-            'geoScore',
-            'geoScoreU5m',
-            'rank',
-            'u5m',
-            'numberOfRefugees',
-            'percentageUprootedPeople',
-            'geoScoreUprooted',
-            'numberIdp',
-            'numberReturnedRefugees',
-            'riskClass',
-            'hazardAndExposure',
-            'vulnerability',
-            'informRiskIndex',
-            'lackOfCopingCapacity',
-        ];
-
-        this.validations = {
-            index: [],
-            geoRank: [],
-            geoScore: [],
-            geoScoreU5m: [],
-            rank: [],
-            u5m: [],
-            numberOfRefugees: [],
-            percentageUprootedPeople: [],
-            geoScoreUprooted: [],
-            numberIdp: [],
-            numberReturnedRefugees: [],
-            riskClass: [],
-            hazardAndExposure: [],
-            vulnerability: [],
-            informRiskIndex: [],
-            lackOfCopingCapacity: [],
+        this.schema = {
+            fields: {
+                index: [],
+                geoRank: [],
+                geoScore: [],
+                geoScoreU5m: [],
+                rank: [],
+                u5m: [],
+                numberOfRefugees: [],
+                percentageUprootedPeople: [],
+                geoScoreUprooted: [],
+                numberIdp: [],
+                numberReturnedRefugees: [],
+                riskClass: [],
+                hazardAndExposure: [],
+                vulnerability: [],
+                informRiskIndex: [],
+                lackOfCopingCapacity: [],
+            },
         };
 
         this.regionKeyFiguresRequest = this.createRegionKeyFiguresRequest(props.regionDetail.id);
@@ -127,21 +110,36 @@ export default class CountryKeyFigures extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
+    };
+
+    successCallback = (values) => {
+        // Stop old patch request
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+
+        // Create new patch request
+        const data = {
+            keyFigures: values,
+        };
+
+        this.regionDetailPatchRequest =
+            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+        this.regionDetailPatchRequest.start();
     };
 
     createRegionKeyFiguresRequest = (regionId) => {
@@ -213,23 +211,6 @@ export default class CountryKeyFigures extends React.PureComponent {
         return regionDetailPatchRequest;
     }
 
-    successCallback = (values) => {
-        console.log(values);
-        // Stop old patch request
-        if (this.regionDetailPatchRequest) {
-            this.regionDetailPatchRequest.stop();
-        }
-
-        // Create new patch request
-        const data = {
-            keyFigures: values,
-        };
-
-        this.regionDetailPatchRequest =
-            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
-        this.regionDetailPatchRequest.start();
-    };
-
     handleFormCancel = () => {
         // TODO: use prompt
         this.resetForm(this.props);
@@ -237,7 +218,7 @@ export default class CountryKeyFigures extends React.PureComponent {
 
     resetForm = (props) => {
         this.setState({
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: props.regionDetail.keyFigures || {},
             pending: false,
@@ -259,17 +240,17 @@ export default class CountryKeyFigures extends React.PureComponent {
             <Form
                 styleName="key-figures"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
-                    <NonFieldErrors errors={formErrors} />
+                    <NonFieldErrors formerror="" />
                     <div styleName="action-buttons">
                         <DangerButton
                             type="button"

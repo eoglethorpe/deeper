@@ -73,7 +73,7 @@ export default class UserEdit extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: this.props.userInformation,
             pending: false,
@@ -81,18 +81,13 @@ export default class UserEdit extends React.PureComponent {
             showGalleryImage: true,
         };
 
-        this.elements = [
-            'firstName',
-            'lastName',
-            'organization',
-            'displayPicture',
-        ];
-
-        this.validations = {
-            firstName: [requiredCondition],
-            lastName: [requiredCondition],
-            organization: [requiredCondition],
-            displayPicture: [],
+        this.schema = {
+            fields: {
+                firstName: [requiredCondition],
+                lastName: [requiredCondition],
+                organization: [requiredCondition],
+                displayPicture: [],
+            },
         };
     }
 
@@ -162,8 +157,7 @@ export default class UserEdit extends React.PureComponent {
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
-                    // FIXME: use strings
-                    formErrors: ['Error while trying to save user.'],
+                    formErrors: { errors: ['Error while trying to save user.'] },
                 });
             })
             .build();
@@ -172,18 +166,18 @@ export default class UserEdit extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -272,7 +266,7 @@ export default class UserEdit extends React.PureComponent {
     render() {
         const {
             formValues,
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             pending,
             pristine,
@@ -283,16 +277,16 @@ export default class UserEdit extends React.PureComponent {
             <Form
                 styleName="user-profile-edit-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                fieldErrors={formFieldErrors}
+                formErrors={formErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <HiddenInput formname="displayPicture" />
                 {
                     showGalleryImage && (

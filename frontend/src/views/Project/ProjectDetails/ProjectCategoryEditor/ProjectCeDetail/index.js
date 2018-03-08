@@ -78,7 +78,7 @@ export default class ProjectCeDetail extends React.PureComponent {
             useConfirmModalShow: false,
 
             formValues: { ...ceDetails },
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             pristine: false,
             pending: false,
@@ -194,18 +194,18 @@ export default class ProjectCeDetail extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
             pristine: false,
         });
@@ -216,7 +216,7 @@ export default class ProjectCeDetail extends React.PureComponent {
 
         this.setState({
             formValues: { ...ceDetails },
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             pristine: false,
             pending: false,

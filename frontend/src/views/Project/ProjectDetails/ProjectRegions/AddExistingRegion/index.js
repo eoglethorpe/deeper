@@ -82,16 +82,17 @@ export default class AddExistingRegion extends React.PureComponent {
 
         const formValues = {
             regions: '',
-            regionsBlackList: (projectDetails.regions || []).map(region => region.id),
         };
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues,
+
             pending: false,
             pristine: false,
             regionOptions: projectOptions.regions || emptyList,
+            regionsBlackList: (projectDetails.regions || []).map(region => region.id),
         };
 
         this.regionsHeader = [
@@ -111,11 +112,10 @@ export default class AddExistingRegion extends React.PureComponent {
             },
         ];
 
-        this.elements = [
-            'regions',
-        ];
-        this.validations = {
-            regions: [requiredCondition],
+        this.schema = {
+            fields: {
+                regions: [requiredCondition],
+            },
         };
     }
 
@@ -173,7 +173,7 @@ export default class AddExistingRegion extends React.PureComponent {
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to :ave project.'],
+                    formErrors: { errors: ['Error while trying to save project.'] },
                 });
             })
             .build();
@@ -181,30 +181,29 @@ export default class AddExistingRegion extends React.PureComponent {
     };
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
 
     successCallback = (values) => {
-        const { projectId,
+        const {
+            projectId,
             projectDetails,
         } = this.props;
 
-        const regionsFromValues = values.regions.map(region => ({
-            id: region,
-        }));
+        const regionsFromValues = values.regions.map(region => ({ id: region }));
 
         const regions = [...new Set([...projectDetails.regions, ...regionsFromValues])];
 
@@ -224,52 +223,51 @@ export default class AddExistingRegion extends React.PureComponent {
         );
         this.projectPatchRequest.start();
 
+        // FIXME: probably move this to callback of request
         this.setState({ pristine: false });
     };
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
+
             pending,
             pristine,
             regionOptions,
+            regionsBlackList,
         } = this.state;
 
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         return (
             <Form
                 className={className}
                 styleName="add-region-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
                     styleName="non-field-errors"
-                    errors={formErrors}
+                    formerror=""
                 />
                 <TabularSelectInput
                     formname="regions"
                     styleName="tabular-select"
-                    blackList={formValues.regionsBlackList}
+                    blackList={regionsBlackList}
                     options={regionOptions}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddExistingRegion.optionLabelSelector}
                     keySelector={AddExistingRegion.optionKeySelector}
                     tableHeaders={this.regionsHeader}
-                    error={formFieldErrors.regions}
                 />
                 <div styleName="action-buttons">
                     <DangerButton

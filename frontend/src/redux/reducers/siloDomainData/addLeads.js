@@ -3,7 +3,12 @@ import {
     getElementAround,
     getNumbers,
 } from '../../../vendor/react-store/utils/common';
+import {
+    analyzeFieldErrors,
+    analyzeFormErrors,
+} from '../../../vendor/react-store/components/Input/Form/validator';
 import update from '../../../vendor/react-store/utils/immutable-update';
+
 import {
     createLead,
     leadAccessor,
@@ -96,18 +101,6 @@ export const addLeadViewCopyAllAction = ({ leadId, attrName }) => ({
 });
 
 
-// HELPER
-
-const hasError = (lead) => {
-    const errors = leadAccessor.getErrors(lead);
-    const fieldErrors = leadAccessor.getFieldErrors(lead);
-
-    if (errors && errors.length > 0) {
-        return true;
-    }
-    return Object.keys(fieldErrors).some(key => !!fieldErrors[key]);
-};
-
 // NOTE: if leadIndices is not defined, iterates over all leads
 const setErrorForLeads = (state, leadIndices) => {
     const { addLeadView: { leads } } = state;
@@ -119,13 +112,15 @@ const setErrorForLeads = (state, leadIndices) => {
     const leadSettings = newLeadIndices.reduce(
         (acc, leadIndex) => {
             const lead = leads[leadIndex];
-            const error = hasError(lead);
+            const errors = leadAccessor.getErrors(lead);
+            const fieldErrors = leadAccessor.getFieldErrors(lead);
+            const hasError = analyzeFieldErrors(fieldErrors) && analyzeFormErrors(errors);
             const serverError = leadAccessor.hasServerError(lead);
             acc[leadIndex] = {
                 uiState: {
-                    error: { $set: error },
+                    error: { $set: hasError },
                     // clear serverError if there is no error
-                    serverError: { $set: serverError && error },
+                    serverError: { $set: serverError && hasError },
                 },
             };
             return acc;
@@ -330,14 +325,9 @@ const addLeadViewChangeLead = (state, action) => {
             leads: {
                 [leadIndex]: {
                     form: {
-                        values: { $merge: values },
-                        fieldErrors: { $merge: formFieldErrors },
-                        errors: {
-                            $if: [
-                                !!formErrors,
-                                { $set: formErrors },
-                            ],
-                        },
+                        values: { $set: values },
+                        fieldErrors: { $set: formFieldErrors },
+                        errors: { $set: formErrors },
                     },
                     uiState: {
                         $if: [
