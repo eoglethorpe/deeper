@@ -2,8 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import update from '../../../../vendor/react-store/utils/immutable-update';
-import { isTruthy } from '../../../../vendor/react-store/utils/common';
 import {
     // aryStringsSelector,
     // aryViewMethodologySelector,
@@ -87,15 +85,12 @@ export default class Methodology extends React.PureComponent {
 
     static getSchema = (methodologyGroups) => {
         const schema = {
-            fields: {},
-        };
-
-        Object.keys(methodologyGroups).forEach((key) => {
-            const methodologyGroup = methodologyGroups[key];
-
-            methodologyGroup.fields.forEach((field) => {
-                schema.fields[field.id] = {
-                    member: [requiredCondition],
+            fields: {
+                attributes: {
+                    member: {
+                        fields: {},
+                        // dynamically injected fields here
+                    },
                     validation: (value) => {
                         const errors = [];
                         if (!value || value.length <= 4) {
@@ -103,7 +98,14 @@ export default class Methodology extends React.PureComponent {
                         }
                         return errors;
                     },
-                };
+                },
+            },
+        };
+
+        Object.keys(methodologyGroups).forEach((key) => {
+            const methodologyGroup = methodologyGroups[key];
+            methodologyGroup.fields.forEach((field) => {
+                schema.fields.attributes.member.fields[field.id] = [requiredCondition];
             });
         });
 
@@ -119,19 +121,13 @@ export default class Methodology extends React.PureComponent {
         const schema = Methodology.getSchema(methodologyGroups);
 
         const methodology = {
-            // 1: [undefined],
-            // 2: [undefined],
-            1: [],
-            2: [],
+            attributes: [
+                {},
+            ],
         };
         this.state = {
             formValues: methodology,
-            formErrors: {
-                fields: {
-                    1: ['what'],
-                    2: ['when'],
-                },
-            },
+            formErrors: {},
             formFieldErrors: {},
             schema,
         };
@@ -149,23 +145,6 @@ export default class Methodology extends React.PureComponent {
         }
     }
 
-    /*
-    handleRemove = (id) => {
-        const newFormValues = { ...this.state.formValues };
-        delete newFormValues[id];
-        this.setState({
-            formValues: newFormValues,
-        });
-    }
-
-    handleAdd = (id) => {
-        const newFormValues = { ...this.state.formValues, [id]: undefined };
-        this.setState({
-            formValues: newFormValues,
-        });
-    }
-    */
-
     // FORM RELATED
     changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
@@ -177,7 +156,7 @@ export default class Methodology extends React.PureComponent {
     };
 
     failureCallback = (formFieldErrors, formErrors) => {
-        // console.warn(formFieldErrors, formErrors);
+        console.warn(formFieldErrors, formErrors);
         this.setState({
             formFieldErrors,
             formErrors,
@@ -192,65 +171,45 @@ export default class Methodology extends React.PureComponent {
         const { aryTemplateMethodology: methodologyGroups } = this.props;
         const pending = false;
 
-        const renderMethodologyField = (field) => {
-            const { id } = field;
-            const { formValues } = this.state;
-            const formValue = formValues[id] || [];
-            const stringId = String(id);
-
-            return (
-                <div key={id}>
-                    <NonFieldErrors formerror={stringId} />
-                    <div>
-                        {
-                            formValue.map((value, index) => {
-                                const formname = `${stringId}:${index}`;
-                                const newField = {
-                                    ...field,
-                                    id: formname,
-                                };
-                                return (
-                                    <Fragment
-                                        key={formname}
-                                    >
-                                        { Methodology.renderWidget(newField) }
-                                        <Button
-                                            type="button"
-                                            formname={formname}
-                                            formpop
-                                        >
-                                            Remove
-                                        </Button>
-                                    </Fragment>
-                                );
-                            })
-                        }
-                    </div>
-                    <Button
-                        type="button"
-                        formname={stringId}
-                        formpush="start"
-                    >
-                        Add field
-                    </Button>
-                </div>
-            );
-        };
-
-        const renderMethodologyGroup = (key) => {
+        const renderMethodologyGroupHeaders = (key) => {
             const methodologyGroup = methodologyGroups[key];
             return (
-                <div
-                    key={methodologyGroup.id}
-                    className={styles.technique}
-                >
-                    <h3 className={styles.heading}>
-                        {methodologyGroup.title}
-                    </h3>
-                    { methodologyGroup.fields.map(renderMethodologyField) }
-                </div>
+                <h3 key={methodologyGroup.id}>
+                    {methodologyGroup.title}
+                </h3>
             );
         };
+
+        const renderMethodologyField = (context, field) => {
+            const formname = `attributes:${context}:${field.id}`;
+            const newField = {
+                ...field,
+                id: formname,
+            };
+            return Methodology.renderWidget(newField);
+        };
+
+        const renderMethodologyGroup = (context, key) => {
+            const methodologyGroup = methodologyGroups[key];
+            return methodologyGroup.fields
+                .map(field => renderMethodologyField(context, field));
+        };
+
+        const renderMethodologyRow = (attribute, index) => (
+            <div key={index}>
+                {
+                    Object.keys(methodologyGroups)
+                        .map(key => renderMethodologyGroup(index, key))
+                }
+                <Button
+                    type="button"
+                    formname={`attributes:${index}`}
+                    formpop
+                >
+                    Remove Row
+                </Button>
+            </div>
+        );
 
         return (
             <div className={styles.methodology}>
@@ -265,7 +224,16 @@ export default class Methodology extends React.PureComponent {
                     failureCallback={this.failureCallback}
                     disabled={pending}
                 >
-                    { Object.keys(methodologyGroups).map(renderMethodologyGroup) }
+                    { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
+                    <NonFieldErrors formerror="attributes" />
+                    { (this.state.formValues.attributes || []).map(renderMethodologyRow) }
+                    <Button
+                        type="button"
+                        formname="attributes"
+                        formpush="start"
+                    >
+                        Add row
+                    </Button>
                     <Button>
                         Submit
                     </Button>
