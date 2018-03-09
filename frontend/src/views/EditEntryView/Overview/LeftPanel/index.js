@@ -5,30 +5,20 @@ import { connect } from 'react-redux';
 
 import MultiViewContainer from '../../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../../vendor/react-store/components/View/FixedTabs';
-import Button from '../../../../vendor/react-store/components/Action/Button';
-import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
-import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
 import {
     LEAD_TYPE,
     LEAD_PANE_TYPE,
     leadPaneTypeMap,
 } from '../../../../entities/lead';
-import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
 
 import AssistedTagging from '../../../../components/AssistedTagging';
 import ImagesGrid from '../../../../components/ImagesGrid';
-import {
-    InternalGallery,
-    ExternalGallery,
-} from '../../../../components/DeepGallery';
-import {
-    entryStringsSelector,
-} from '../../../../redux';
-import { iconNames } from '../../../../constants';
+import { entryStringsSelector } from '../../../../redux';
 
+import LeadPreview from './LeadPreview';
+import EntriesListing from './EntriesListing';
 import styles from '../../styles.scss';
 
 const propTypes = {
@@ -84,14 +74,6 @@ export default class LeftPanel extends React.PureComponent {
         return leadPaneTypeMap[mimeType];
     }
 
-    static calcEntryKey = entry => entryAccessor.getKey(entry);
-
-    static isTypeWithUrl = t => t === LEAD_TYPE.website;
-
-    static isTypeWithAttachment = t => (
-        [LEAD_TYPE.file, LEAD_TYPE.dropbox, LEAD_TYPE.drive].indexOf(t) !== 1
-    );
-
     constructor(props) {
         super(props);
 
@@ -99,70 +81,8 @@ export default class LeftPanel extends React.PureComponent {
             images: [],
             currentTab: undefined,
         };
-    }
 
-    componentWillMount() {
-        const LeadPreview = this.renderLeadPreview;
-        this.views = {
-            'simplified-preview': {
-                component: () => (
-                    <SimplifiedLeadPreview
-                        className={styles['simplified-preview']}
-                        leadId={this.props.lead.id}
-                        highlights={this.props.api.getEntryHighlights()}
-                        highlightModifier={this.highlightSimplifiedExcerpt}
-                        onLoad={this.handleLoadImages}
-                    />
-                ),
-                mount: true,
-                wrapContainer: true,
-            },
-            'assisted-tagging': {
-                component: () => (
-                    <AssistedTagging
-                        className={styles['assisted-tagging']}
-                        lead={this.props.lead}
-                        project={this.props.api.getProject()}
-                        onEntryAdd={this.handleEntryAdd}
-                    />
-                ),
-                mount: true,
-                wrapContainer: true,
-            },
-            'original-preview': {
-                component: () => (
-                    <div className={styles['original-preview']}>
-                        <LeadPreview lead={this.props.lead} />
-                    </div>
-                ),
-                mount: true,
-                wrapContainer: true,
-            },
-            'images-preview': {
-                component: () => (
-                    <ImagesGrid
-                        className={styles['images-preview']}
-                        images={this.state.images}
-                    />
-                ),
-                mount: true,
-                wrapContainer: true,
-            },
-            'entries-listing': {
-                component: () => (
-                    <div className={styles['entries-list-container']}>
-                        <ListView
-                            className={styles['entries-list']}
-                            modifier={this.renderEntriesList}
-                            data={this.props.entries}
-                            keyExtractor={LeftPanel.calcEntryKey}
-                        />
-                    </div>
-                ),
-                mount: true,
-                wrapContainer: true,
-            },
-        };
+        this.views = this.calculateTabComponents();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -189,33 +109,70 @@ export default class LeftPanel extends React.PureComponent {
         }
     }
 
-    highlightSimplifiedExcerpt = (highlight, text, actualStr) => (
-        SimplifiedLeadPreview.highlightModifier(
-            highlight,
-            text,
-            actualStr,
-            this.handleHighlightClick,
-        )
-    );
-
-    calcEntryLabel = (entry) => {
-        const values = entryAccessor.getValues(entry);
-
-        if (values.entryType === 'image') {
-            return (
-                <img
-                    className="image"
-                    src={values.image}
-                    alt={this.props.entryStrings('altLabel')}
+    calculateTabComponents = () => ({
+        'simplified-preview': {
+            component: () => (
+                <SimplifiedLeadPreview
+                    className={styles['simplified-preview']}
+                    leadId={this.props.lead.id}
+                    highlights={this.props.api.getEntryHighlights()}
+                    highlightModifier={this.highlightSimplifiedExcerpt}
+                    onLoad={this.handleLoadImages}
                 />
-            );
-        }
-        return (
-            <div className="entry-excerpt">
-                {values.excerpt || `Excerpt ${values.order}`}
-            </div>
-        );
-    }
+            ),
+            mount: true,
+            wrapContainer: true,
+        },
+        'assisted-tagging': {
+            component: () => (
+                <AssistedTagging
+                    className={styles['assisted-tagging']}
+                    lead={this.props.lead}
+                    project={this.props.api.getProject()}
+                    onEntryAdd={this.handleEntryAdd}
+                />
+            ),
+            mount: true,
+            wrapContainer: true,
+        },
+        'original-preview': {
+            component: () => (
+                <div className={styles['original-preview']}>
+                    <LeadPreview
+                        lead={this.props.lead}
+                        handleScreenshot={this.handleScreenshot}
+                    />
+                </div>
+            ),
+            mount: true,
+            wrapContainer: true,
+        },
+        'images-preview': {
+            component: () => (
+                <ImagesGrid
+                    className={styles['images-preview']}
+                    images={this.state.images}
+                />
+            ),
+            mount: true,
+            wrapContainer: true,
+        },
+        'entries-listing': {
+            component: () => (
+                <div className={styles['entries-list-container']}>
+                    <EntriesListing
+                        selectedEntryId={this.props.selectedEntryId}
+                        entries={this.props.entries}
+                        choices={this.props.choices}
+                        onEntryDelete={this.props.onEntryDelete}
+                        handleEntryItemClick={this.handleEntryItemClick}
+                    />
+                </div>
+            ),
+            mount: true,
+            wrapContainer: true,
+        },
+    })
 
     calculateTabsForLead = (lead, images) => {
         const leadPaneType = LeftPanel.getPaneType(lead);
@@ -262,20 +219,6 @@ export default class LeftPanel extends React.PureComponent {
         return tabs;
     }
 
-    handleHighlightClick = (e, { text }) => {
-        const { api } = this.props;
-        const existing = api.getEntryForExcerpt(text);
-        if (existing) {
-            api.selectEntry(existing.data.id);
-        }
-    }
-
-    handleLoadImages = (response) => {
-        if (response.images) {
-            this.setState({ images: response.images });
-        }
-    }
-
     handleTabClick = (key) => {
         if (key === this.state.currentTab) {
             return;
@@ -291,14 +234,32 @@ export default class LeftPanel extends React.PureComponent {
         });
     }
 
-    handleEntryItemClick = (value) => {
-        this.props.setActiveEntry({
-            leadId: this.props.leadId,
-            entryId: value,
-        });
-        // NOTE: change to last selected on click
-        // this.setState({ currentTab: this.state.oldTab });
+    // Simplified Lead Preview
+
+    highlightSimplifiedExcerpt = (highlight, text, actualStr) => (
+        SimplifiedLeadPreview.highlightModifier(
+            highlight,
+            text,
+            actualStr,
+            this.handleHighlightClick,
+        )
+    );
+
+    handleHighlightClick = (e, { text }) => {
+        const { api } = this.props;
+        const existing = api.getEntryForExcerpt(text);
+        if (existing) {
+            api.selectEntry(existing.data.id);
+        }
     }
+
+    handleLoadImages = (response) => {
+        if (response.images) {
+            this.setState({ images: response.images });
+        }
+    }
+
+    // Assisted Tagging
 
     handleEntryAdd = (text) => {
         const { api } = this.props;
@@ -313,127 +274,23 @@ export default class LeftPanel extends React.PureComponent {
         }
     }
 
+    // Lead Preview
+
     handleScreenshot = (image) => {
         this.props.api.getEntryBuilder()
             .setImage(image)
             .apply();
     }
 
-    renderLeadPreview = ({ lead }) => {
-        const { sourceType: type } = lead;
+    // Entries
 
-        if (LeftPanel.isTypeWithUrl(type) && lead.url) {
-            return (
-                <ExternalGallery
-                    className={styles.preview}
-                    url={lead.url}
-                    onScreenshotCapture={this.handleScreenshot}
-                    showScreenshot
-                    showUrl
-                />
-            );
-        } else if (LeftPanel.isTypeWithAttachment(type) && lead.attachment) {
-            return (
-                <InternalGallery
-                    classname={styles.preview}
-                    galleryId={lead.attachment.id}
-                    onScreenshotCapture={this.handleScreenshot}
-                    showScreenshot
-                    showUrl
-                />
-            );
-        }
-        return (
-            <div className={styles['empty-text']}>
-                <h1>
-                    {this.props.entryStrings('previewNotAvailableText')}
-                </h1>
-            </div>
-        );
-    }
-
-    renderIcon = (status) => {
-        switch (status) {
-            case ENTRY_STATUS.requesting:
-                return (
-                    <span className={`${iconNames.loading} pending`} />
-                );
-            case ENTRY_STATUS.invalid:
-                return (
-                    <span className={`${iconNames.error} error`} />
-                );
-            case ENTRY_STATUS.nonPristine:
-                return (
-                    <span className={`${iconNames.codeWorking} pristine`} />
-                );
-            case ENTRY_STATUS.complete:
-                return (
-                    <span className={`${iconNames.checkCircle} complete`} />
-                );
-            default:
-                return null;
-        }
-    }
-
-    renderEntriesList = (key, entry) => {
-        const {
-            selectedEntryId,
-            entries,
-            onEntryDelete,
-        } = this.props;
-
-        const currentEntryId = LeftPanel.calcEntryKey(entry);
-        const isActive = currentEntryId === selectedEntryId;
-        const status = this.props.choices[key].choice;
-        const selectedEntry = entries.find(
-            e => entryAccessor.getKey(e) === currentEntryId,
-        );
-
-        const isMarkedForDelete = entryAccessor.isMarkedForDelete(selectedEntry);
-        return (
-            <ListItem
-                className="entries-list-item"
-                key={key}
-                active={isActive}
-                scrollIntoView={isActive}
-            >
-                <button
-                    className="add-entry-list-item"
-                    onClick={() => this.handleEntryItemClick(currentEntryId)}
-                    disabled={isMarkedForDelete}
-                >
-                    {this.calcEntryLabel(entry)}
-                    <div className="status-icons">
-                        {
-                            entryAccessor.isMarkedForDelete(entry) &&
-                            <span className={`${iconNames.removeCircle} error`} />
-                        }
-                        {
-                            this.renderIcon(status)
-                        }
-                    </div>
-                </button>
-                {
-                    isMarkedForDelete ? (
-                        <Button
-                            key="undo-button"
-                            className="remove-button"
-                            onClick={() => onEntryDelete(false, key)}
-                            iconName={iconNames.undo}
-                            title={this.props.entryStrings('removeEntryButtonTitle')}
-                        />
-                    ) : (
-                        <DangerButton
-                            key="remove-button"
-                            className="remove-button"
-                            onClick={() => onEntryDelete(true, key)}
-                            iconName={iconNames.delete}
-                            title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
-                        />
-                    )
-                }
-            </ListItem>
-        );
+    handleEntryItemClick = (value) => {
+        this.props.setActiveEntry({
+            leadId: this.props.leadId,
+            entryId: value,
+        });
+        // NOTE: change to last selected on click
+        // this.setState({ currentTab: this.state.oldTab });
     }
 
     render() {
@@ -441,8 +298,10 @@ export default class LeftPanel extends React.PureComponent {
         const { images } = this.state;
         let { currentTab } = this.state;
 
+        // FIXME: move this to componentWillUpdate
         const tabs = this.calculateTabsForLead(lead, images);
 
+        // If there is no tabs, the lead must have unrecognized type
         if (!tabs) {
             return (
                 <p>
@@ -451,6 +310,7 @@ export default class LeftPanel extends React.PureComponent {
             );
         }
 
+        // If there is no currentTab, get first visible tab
         if (!currentTab) {
             const tabKeys = Object.keys(tabs).filter(a => !!tabs[a]);
             currentTab = tabKeys.length > 0 ? Object.keys(tabs)[0] : undefined;
