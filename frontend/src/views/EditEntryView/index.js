@@ -388,7 +388,11 @@ export default class EditEntryView extends React.PureComponent {
                     rest: entryRests[entryId],
                     deleteRest: entryDeleteRests[entryId],
                 });
-                const isSaveDisabled = (choice !== ENTRY_STATUS.nonPristine);
+                // NOTE: let user try again in invalid state as well
+                const isSaveDisabled = !(
+                    choice === ENTRY_STATUS.nonPristine ||
+                    choice === ENTRY_STATUS.invalid
+                );
                 const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
                 acc[entryId] = {
                     choice,
