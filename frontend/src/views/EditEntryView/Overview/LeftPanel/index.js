@@ -212,7 +212,7 @@ export default class LeftPanel extends React.PureComponent {
         }
         return (
             <div className="entry-excerpt">
-                {values.excerpt}
+                {values.excerpt || `Excerpt ${values.order}`}
             </div>
         );
     }
