@@ -66,3 +66,4 @@ exclude_patterns:
 - "**/test/"
 - "**/tests/"
 - "**/vendor/"
+- "**/*.test.js"
