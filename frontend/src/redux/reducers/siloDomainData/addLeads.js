@@ -147,6 +147,7 @@ const addLeadViewSetFilters = (state, action) => {
     return update(state, settings);
 };
 
+// FIXME: Should probably be addLeadViewResetFilters
 const removeLeadViewSetFilters = (state) => {
     // remove filters
     const settings = {
@@ -309,8 +310,8 @@ const addLeadViewChangeLead = (state, action) => {
     const { addLeadView: { leads } } = state;
     const {
         leadId,
-        values = {},
-        formFieldErrors = {},
+        values,
+        formFieldErrors,
 
         formErrors,
         uiState,
@@ -325,9 +326,24 @@ const addLeadViewChangeLead = (state, action) => {
             leads: {
                 [leadIndex]: {
                     form: {
-                        values: { $set: values },
-                        fieldErrors: { $set: formFieldErrors },
-                        errors: { $set: formErrors },
+                        values: {
+                            $if: [
+                                !!values,
+                                { $set: values },
+                            ],
+                        },
+                        fieldErrors: {
+                            $if: [
+                                !!formFieldErrors,
+                                { $set: formFieldErrors },
+                            ],
+                        },
+                        errors: {
+                            $if: [
+                                !!values,
+                                { $set: formErrors },
+                            ],
+                        },
                     },
                     uiState: {
                         $if: [
@@ -405,6 +421,7 @@ const addLeadViewCopyAll = behavior => (state, action) => {
             form: {
                 values: { [attrName]: { $set: valueToCopy } },
                 fieldErrors: { [attrName]: { $set: undefined } },
+                errors: {},
             },
             uiState: { pristine: { $set: false } },
         };

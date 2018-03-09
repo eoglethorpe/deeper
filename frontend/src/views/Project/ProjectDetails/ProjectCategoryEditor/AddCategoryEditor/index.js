@@ -64,11 +64,10 @@ export default class AddCategoryEditor extends React.PureComponent {
             pristine: false,
         };
 
-        this.elements = [
-            'title',
-        ];
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -117,7 +116,7 @@ export default class AddCategoryEditor extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to create new category editor.'],
+                    formErrors: { errors: ['Error while trying to create new category editor.'] },
                     pending: true,
                 });
             })
@@ -126,18 +125,18 @@ export default class AddCategoryEditor extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };

@@ -124,8 +124,12 @@ export default class LeadFormItem extends React.PureComponent {
             .success((response) => {
                 // FIXME: use ravl
                 const webInfo = response;
-                const values = {};
-                const formFieldErrors = {};
+
+                const leadValues = leadAccessor.getValues(this.props.lead);
+                const leadFieldErrors = leadAccessor.getFieldErrors(this.props.lead);
+
+                const values = { ...leadValues };
+                const formFieldErrors = { ...leadFieldErrors };
 
                 // if (webInfo.project) {
                 //     values.project = [webInfo.project];

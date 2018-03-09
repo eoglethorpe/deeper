@@ -104,6 +104,16 @@ const propTypes = {
     routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addLeads: PropTypes.func.isRequired,
     addLeadViewRemoveSavedLeads: PropTypes.func.isRequired,
+
+
+    history: PropTypes.shape({
+        replace: PropTypes.func,
+    }).isRequired,
+
+    location: PropTypes.shape({
+        path: PropTypes.string,
+    }).isRequired,
+
 };
 
 const defaultProps = {
@@ -281,6 +291,13 @@ export default class LeadAdd extends React.PureComponent {
                 pristine: true,
             };
             this.props.addLeads([newLead]);
+
+            // NOTE:
+            // location.state is not cleared on replace so you lose your
+            // progress for the lead that was added as edit
+            // So clear location.state
+            const { path } = this.props.location;
+            this.props.history.replace(path, {});
         }
 
         this.setAllLeadKeys(this.props.addLeadViewLeads);
@@ -337,6 +354,10 @@ export default class LeadAdd extends React.PureComponent {
         this.dropboxUploadCoordinator.stop();
         this.formCoordinator.stop();
     }
+
+    getLeadFromId = id => (
+        this.props.addLeadViewLeads.find(l => id === leadAccessor.getKey(l))
+    )
 
     setAllLeadKeys = (addLeadViewLeads) => {
         this.allLeadsKeys = addLeadViewLeads.map(leadAccessor.getKey);
@@ -408,6 +429,7 @@ export default class LeadAdd extends React.PureComponent {
             {
                 driveUploadCoordinator: this.driveUploadCoordinator,
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+                getLeadFromId: this.getLeadFromId,
             },
         );
 
@@ -440,6 +462,7 @@ export default class LeadAdd extends React.PureComponent {
             {
                 dropboxUploadCoordinator: this.dropboxUploadCoordinator,
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+                getLeadFromId: this.getLeadFromId,
             },
         );
 
@@ -472,6 +495,7 @@ export default class LeadAdd extends React.PureComponent {
                 uploadCoordinator: this.uploadCoordinator,
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
                 leadsStrings: this.props.leadsStrings,
+                getLeadFromId: this.getLeadFromId,
             },
         );
 
@@ -500,12 +524,14 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE FORM
 
     handleFormSubmitSuccess = (lead, newValues) => {
+        // FIXME: show notifiy if individual save
         const formSaveRequest = new FormSaveRequest(
             this,
             {
                 formCoordinator: this.formCoordinator,
                 addLeadViewLeadSave: this.props.addLeadViewLeadSave,
                 addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+                getLeadFromId: this.getLeadFromId,
             },
         );
         const request = formSaveRequest.create(lead, newValues);

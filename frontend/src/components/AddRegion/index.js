@@ -79,7 +79,7 @@ export default class AddRegion extends React.PureComponent {
 
         this.schema = {
             fields: {
-                name: [requiredCondition],
+                title: [requiredCondition],
                 code: [requiredCondition],
             },
         };

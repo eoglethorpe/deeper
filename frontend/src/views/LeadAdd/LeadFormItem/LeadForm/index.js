@@ -106,6 +106,7 @@ export default class LeadForm extends React.PureComponent {
             valuesChanged = true;
         }
 
+        // FIXME: don't use this, use utils by dahal
         if (!values.publishedOn) {
             const now = new Date();
             newValues.publishedOn = FormattedDate.format(now, 'yyyy-MM-dd');
@@ -130,6 +131,7 @@ export default class LeadForm extends React.PureComponent {
                         assignee: [requiredCondition],
                         publishedOn: [requiredCondition],
                         sourceType: [requiredCondition],
+                        project: [requiredCondition],
 
                         attachment: [requiredCondition],
                     },
@@ -143,6 +145,7 @@ export default class LeadForm extends React.PureComponent {
                         assignee: [requiredCondition],
                         publishedOn: [requiredCondition],
                         sourceType: [requiredCondition],
+                        project: [requiredCondition],
 
                         url: [requiredCondition, urlCondition],
                         website: [requiredCondition],
@@ -157,6 +160,7 @@ export default class LeadForm extends React.PureComponent {
                         assignee: [requiredCondition],
                         publishedOn: [requiredCondition],
                         sourceType: [requiredCondition],
+                        project: [requiredCondition],
 
                         text: [requiredCondition],
                     },

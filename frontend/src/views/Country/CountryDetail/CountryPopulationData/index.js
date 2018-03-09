@@ -42,7 +42,7 @@ export default class CountryPopulationData extends React.PureComponent {
         this.schema = {
             fields: {
                 population: [],
-                'population-source': [],
+                source: [],
             },
         };
     }

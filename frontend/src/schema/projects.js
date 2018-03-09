@@ -21,7 +21,7 @@ const projectSchema = [];
             startDate: { type: 'string' }, // date
             endDate: { type: 'string' }, // date
             role: { type: 'string', required: true },
-            extra: { type: 'projectsExtra', required: true },
+            extra: { type: 'projectsExtra', required: false },
         },
     };
     projectSchema.push({ name, schema });
