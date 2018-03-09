@@ -106,6 +106,7 @@ export default class GooglePicker extends React.Component {
                 this.createPicker(accessToken);
             } else {
                 console.warn('Google Auth Response:', error);
+                this.props.onAuthenticate(undefined);
             }
         },
         );
