@@ -1,54 +1,276 @@
-import CSSModules from 'react-css-modules';
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import update from '../../../../vendor/react-store/utils/immutable-update';
+import { isTruthy } from '../../../../vendor/react-store/utils/common';
 import {
-    aryStringsSelector,
+    // aryStringsSelector,
+    // aryViewMethodologySelector,
+    aryTemplateMethodologySelector,
 } from '../../../../redux';
 
+import Form, {
+    requiredCondition,
+} from '../../../../vendor/react-store/components/Input/Form';
+import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
+import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
+import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button';
+import Button from '../../../../vendor/react-store/components/Action/Button';
 
-import RegionMap from '../../../../components/RegionMap';
 
-import { iconNames } from '../../../../constants';
+// import RegionMap from '../../../../components/RegionMap';
+// import { iconNames } from '../../../../constants';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    aryStrings: PropTypes.func.isRequired,
+    // aryStrings: PropTypes.func.isRequired,
+    // methodology: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     className: '',
+    // methodology: {},
+    aryTemplateMethodology: {},
 };
 
 const mapStateToProps = state => ({
-    aryStrings: aryStringsSelector(state),
+    // aryStrings: aryStringsSelector(state),
+    // methodology: aryViewMethodologySelector(state),
+    aryTemplateMethodology: aryTemplateMethodologySelector(state),
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static renderWidget = ({ id: key, fieldType, title, options, placeholder }) => {
+        const id = String(key);
+        const commonProps = {
+            key: id,
+            formname: id,
+            label: title,
+            placeholder,
+            options,
+        };
+        const typeSpecificProps = {
+            number: {
+                separator: ' ',
+            },
+        };
+        const components = {
+            string: TextInput,
+            number: NumberInput,
+            date: DateInput,
+            multiselect: MultiSelectInput,
+            select: SelectInput,
+        };
+
+        const Component = components[fieldType];
+        if (!Component) {
+            console.error('Unidentified fieldType', fieldType);
+            return null;
+        }
+        return (
+            <Component
+                {...commonProps}
+                {...typeSpecificProps[fieldType]}
+            />
+        );
+    }
+
+    static getSchema = (methodologyGroups) => {
+        const schema = {
+            fields: {},
+        };
+
+        Object.keys(methodologyGroups).forEach((key) => {
+            const methodologyGroup = methodologyGroups[key];
+
+            methodologyGroup.fields.forEach((field) => {
+                schema.fields[field.id] = {
+                    member: [requiredCondition],
+                    validation: (value) => {
+                        const errors = [];
+                        if (!value || value.length <= 4) {
+                            errors.push('There should be at least five value');
+                        }
+                        return errors;
+                    },
+                };
+            });
+        });
+
+        return schema;
+    }
+
     constructor(props) {
         super(props);
 
+        const {
+            aryTemplateMethodology: methodologyGroups,
+        } = this.props;
+        const schema = Methodology.getSchema(methodologyGroups);
+
+        const methodology = {
+            // 1: [undefined],
+            // 2: [undefined],
+            1: [],
+            2: [],
+        };
         this.state = {
-            defaultScaleUnit: [],
+            formValues: methodology,
+            formErrors: {
+                fields: {
+                    1: ['what'],
+                    2: ['when'],
+                },
+            },
+            formFieldErrors: {},
+            schema,
         };
     }
 
-    handleAddQuestionButtonClick = () => {
-        // this.addQuestion();
+    componentWillReceiveProps(nextProps) {
+        if (this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology) {
+            const { aryTemplateMethodology: methodologyGroups } = nextProps;
+            const schema = Methodology.getSchema(methodologyGroups);
+            this.setState({
+                schema,
+                formFieldErrors: {},
+                formErrors: {},
+            });
+        }
     }
+
+    /*
+    handleRemove = (id) => {
+        const newFormValues = { ...this.state.formValues };
+        delete newFormValues[id];
+        this.setState({
+            formValues: newFormValues,
+        });
+    }
+
+    handleAdd = (id) => {
+        const newFormValues = { ...this.state.formValues, [id]: undefined };
+        this.setState({
+            formValues: newFormValues,
+        });
+    }
+    */
+
+    // FORM RELATED
+    changeCallback = (values, formFieldErrors, formErrors) => {
+        this.setState({
+            formValues: values,
+            formFieldErrors,
+            formErrors,
+            pristine: true,
+        });
+    };
+
+    failureCallback = (formFieldErrors, formErrors) => {
+        // console.warn(formFieldErrors, formErrors);
+        this.setState({
+            formFieldErrors,
+            formErrors,
+        });
+    };
+
+    successCallback = (value) => {
+        console.warn('Submit', value);
+    };
+
     render() {
+        const { aryTemplateMethodology: methodologyGroups } = this.props;
+        const pending = false;
+
+        const renderMethodologyField = (field) => {
+            const { id } = field;
+            const { formValues } = this.state;
+            const formValue = formValues[id] || [];
+            const stringId = String(id);
+
+            return (
+                <div key={id}>
+                    <NonFieldErrors formerror={stringId} />
+                    <div>
+                        {
+                            formValue.map((value, index) => {
+                                const formname = `${stringId}:${index}`;
+                                const newField = {
+                                    ...field,
+                                    id: formname,
+                                };
+                                return (
+                                    <Fragment
+                                        key={formname}
+                                    >
+                                        { Methodology.renderWidget(newField) }
+                                        <Button
+                                            type="button"
+                                            formname={formname}
+                                            formpop
+                                        >
+                                            Remove
+                                        </Button>
+                                    </Fragment>
+                                );
+                            })
+                        }
+                    </div>
+                    <Button
+                        type="button"
+                        formname={stringId}
+                        formpush="start"
+                    >
+                        Add field
+                    </Button>
+                </div>
+            );
+        };
+
+        const renderMethodologyGroup = (key) => {
+            const methodologyGroup = methodologyGroups[key];
+            return (
+                <div
+                    key={methodologyGroup.id}
+                    className={styles.technique}
+                >
+                    <h3 className={styles.heading}>
+                        {methodologyGroup.title}
+                    </h3>
+                    { methodologyGroup.fields.map(renderMethodologyField) }
+                </div>
+            );
+        };
+
         return (
             <div className={styles.methodology}>
+                <Form
+                    className={styles.overview}
+                    schema={this.state.schema}
+                    value={this.state.formValues}
+                    formErrors={this.state.formErrors}
+                    fieldErrors={this.state.formFieldErrors}
+                    changeCallback={this.changeCallback}
+                    successCallback={this.successCallback}
+                    failureCallback={this.failureCallback}
+                    disabled={pending}
+                >
+                    { Object.keys(methodologyGroups).map(renderMethodologyGroup) }
+                    <Button>
+                        Submit
+                    </Button>
+                </Form>
+                {/*
                 <div className={styles.overview}>
                     <div className={styles.technique}>
                         <h3 className={styles.heading}>
@@ -178,6 +400,7 @@ export default class Methodology extends React.PureComponent {
                         {this.props.aryStrings('dragLimitationsLabel')}
                     </div>
                 </div>
+                */}
             </div>
         );
     }
