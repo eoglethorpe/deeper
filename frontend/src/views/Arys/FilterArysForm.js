@@ -121,9 +121,9 @@ export default class FilterArysForm extends React.PureComponent {
             this.aryFilterOptionsRequest.stop();
         }
 
-        const aryFilterOptionsGetRequest = new AryFilterOptionsGetRequest(
-            this, { setAryFilterOptions: this.props.setAryFilterOptions },
-        );
+        const aryFilterOptionsGetRequest = new AryFilterOptionsGetRequest(this, {
+            setAryFilterOptions: this.props.setAryFilterOptions,
+        });
 
         this.aryFilterOptionsRequest = aryFilterOptionsGetRequest.create(activeProject);
         this.aryFilterOptionsRequest.start();

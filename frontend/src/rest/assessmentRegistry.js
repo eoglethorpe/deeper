@@ -20,7 +20,7 @@ export const createUrlForArysOfProject = params => (
 );
 
 export const createUrlForAryFilterOptions = projectId => (
-    `${wsEndpoint}/ary-options/?${p({ project: projectId })}`
+    `${wsEndpoint}/assessment-options/?${p({ project: projectId })}`
 );
 
 export const commonParamsForGET = () => ({

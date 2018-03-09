@@ -3,8 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
     Redirect,
+    Link,
 } from 'react-router-dom';
 
+import { reverseRoute } from '../../vendor/react-store/utils/common';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import FormattedDate from '../../vendor/react-store/components/View/FormattedDate';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
@@ -29,6 +31,7 @@ import {
     setAryPageActiveSortAction,
 } from '../../redux';
 
+import { pathNames } from '../../constants/';
 import FilterArysForm from './FilterArysForm';
 import ArysGetRequest from './requests/ArysGetRequest';
 import AryDeleteRequest from './requests/AryDeleteRequest';
@@ -87,9 +90,16 @@ export default class Arys extends React.PureComponent {
 
         this.headers = [
             {
-                key: 'createdAt',
-                label: this.props.arysStrings('createdAt'),
+                key: 'lead__title',
+                label: this.props.arysStrings('titleLabel'),
                 order: 1,
+                sortable: true,
+                modifier: row => row.leadTitle,
+            },
+            {
+                key: 'created_at',
+                label: this.props.arysStrings('createdAt'),
+                order: 2,
                 sortable: true,
                 modifier: row => (
                     <FormattedDate
@@ -99,17 +109,23 @@ export default class Arys extends React.PureComponent {
                 ),
             },
             {
-                key: 'title',
-                label: this.props.arysStrings('titleLabel'),
-                order: 2,
+                key: 'created_by',
+                label: this.props.arysStrings('createdByFilterLabel'),
+                order: 3,
                 sortable: true,
-                // FIXME: Remove modifier
-                modifier: row => row.lead,
+                modifier: row => (
+                    <Link
+                        key={row.createdBy}
+                        to={reverseRoute(pathNames.userProfile, { userId: row.createdBy })}
+                    >
+                        {row.createdByName}
+                    </Link>
+                ),
             },
             {
                 key: 'actions',
                 label: this.props.arysStrings('tableHeaderActions'),
-                order: 3,
+                order: 4,
                 sortable: false,
                 modifier: row => (
                     <ActionButtons
@@ -167,16 +183,15 @@ export default class Arys extends React.PureComponent {
             activeProject,
             activeSort,
             filters,
-            setArys,
         } = props;
 
         if (this.arysRequest) {
             this.arysRequest.stop();
         }
 
-        const arysRequest = new ArysGetRequest(
-            this, { setArys },
-        );
+        const arysRequest = new ArysGetRequest(this, {
+            setArys: this.props.setArys,
+        });
 
         this.arysRequest = arysRequest.create({
             activeProject,

@@ -47,11 +47,11 @@ export default class ActionButtons extends React.PureComponent {
         );
 
         const addAssessment = reverseRoute(
-            row.aryId ? pathNames.editAry : pathNames.newAry,
+            row.assessment ? pathNames.editAry : pathNames.newAry,
             {
                 projectId: activeProject,
                 leadId: row.id,
-                aryId: row.aryId,
+                aryId: row.assessment,
             },
         );
 

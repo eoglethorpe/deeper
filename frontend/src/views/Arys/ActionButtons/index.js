@@ -7,9 +7,7 @@ import {
     pathNames,
 } from '../../../constants/';
 
-import {
-    reverseRoute,
-} from '../../../vendor/react-store/utils/common';
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
 
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 

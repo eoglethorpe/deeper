@@ -162,8 +162,8 @@ export default class NewAry extends React.PureComponent {
                 closeOnEscape
                 onClose={this.handleCreateNewModalClose}
             >
+                { aryCreatePending && <LoadingAnimation />}
                 <p>
-                    { aryCreatePending && <LoadingAnimation />}
                     {arysStrings('createNewAryMessage')}
                 </p>
             </Confirm>

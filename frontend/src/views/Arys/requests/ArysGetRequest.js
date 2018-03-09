@@ -18,7 +18,9 @@ export default class ArysGetRequest {
         this.setArys = setArys;
     }
 
-    create = ({ activeProject, activePage, activeSort, filters, MAX_ARYS_PER_REQUEST }) => {
+    create = ({
+        activeProject, activePage, activeSort, filters, MAX_ARYS_PER_REQUEST,
+    }) => {
         const sanitizedFilters = Leads.getFiltersForRequest(filters);
         const aryRequestOffset = (activePage - 1) * MAX_ARYS_PER_REQUEST;
         const aryRequestLimit = MAX_ARYS_PER_REQUEST;
