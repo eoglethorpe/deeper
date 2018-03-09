@@ -251,6 +251,14 @@ export default class LeadButtons extends React.PureComponent {
         if (accessToken) {
             // NOTE: use this token later during upload
             this.googleDriveAccessToken = accessToken;
+        } else {
+            // FIXME: use strings
+            notify.send({
+                title: 'Google Drive',
+                type: notify.type.ERROR,
+                message: 'Authentication with google drive failed. Try again.',
+                duration: notify.duration.SLOW,
+            });
         }
     }
 

@@ -1,26 +1,19 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
-import loadScript from 'load-script';
 import { connect } from 'react-redux';
 
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
-
 import { commonStringsSelector } from '../../redux';
-import { GOOGLE_SDK_URL } from '../../config/google-drive';
-
 import styles from './styles.scss';
-
-let scriptLoadingStarted = false;
 
 const propTypes = {
     className: PropTypes.string,
     children: PropTypes.node,
     clientId: PropTypes.string.isRequired,
     developerKey: PropTypes.string.isRequired,
-    scope: PropTypes.arrayOf(PropTypes.string),
+    scope: PropTypes.string,
     viewId: PropTypes.string,
-    authImmediate: PropTypes.bool,
     origin: PropTypes.string,
     onChange: PropTypes.func,
     onAuthenticate: PropTypes.func,
@@ -32,28 +25,23 @@ const propTypes = {
     // Callback when api is loaded successfully and ready to use
     onApiLoad: PropTypes.func,
     // Api load delay and limit
-    retryDelay: PropTypes.number, // in miliseconds
-    retryLimit: PropTypes.number,
     commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    className: 'google-picker-btn',
+    className: '',
     children: undefined,
     onChange: () => {},
     onAuthenticate: () => {},
-    scope: ['https://www.googleapis.com/auth/drive.readonly'],
+    scope: 'https://www.googleapis.com/auth/drive.readonly',
     viewId: 'DOCS',
-    authImmediate: false,
     multiselect: false,
     navHidden: false,
     disabled: false,
     createPicker: undefined,
     mimeTypes: undefined,
-    origin: undefined,
+    origin: window.location.origin,
     onApiLoad: undefined,
-    retryDelay: 3000,
-    retryLimit: 10,
 };
 
 const mapStateToProps = state => ({
@@ -66,93 +54,81 @@ export default class GooglePicker extends React.Component {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static isGoogleReady = () => (!!window.gapi)
+    static isGoogleAuthReady = () => !!(window.gapi && window.gapi.auth2)
+    static isGooglePickerReady = () => !!(window.google && window.google.picker)
+    static isReady = () => (
+        GooglePicker.isGoogleReady() &&
+        GooglePicker.isGoogleAuthReady() && GooglePicker.isGooglePickerReady()
+    )
+
     constructor(props) {
         super(props);
 
-        this.retry = 0;
-        this.onApiLoad = this.onApiLoad.bind(this);
-        this.onChoose = this.onChoose.bind(this);
+        this.state = {
+            authApiReady: false,
+            pickerApiReady: false,
+        };
     }
 
-    componentDidMount() {
-        this.loadGoogleApi();
+    componentWillMount() {
+        this.pollForReadyState();
     }
 
     componentWillUnmount() {
-        if (this.apiLoadTimeOut) {
-            clearTimeout(this.apiLoadTimeOut);
-            scriptLoadingStarted = false;
-        }
+        clearTimeout(this.readyCheck);
+    }
+
+    onAuthApiLoad = () => {
+        this.setState({ authApiReady: true });
+    }
+
+    onPickerApiLoad = () => {
+        this.setState({ pickerApiReady: true });
     }
 
     onApiLoad = () => {
-        // make sure api is loaded,
-        // called by loadScript after loading is success or failure
-        // if the api is not loaded, try to load in retry delay
-        if (!this.isGoogleReady()) {
-            if (this.retry <= this.props.retryLimit) {
-                this.apiLoadTimeOut = setTimeout(() => {
-                    this.retry += 1;
-                    scriptLoadingStarted = false;
-                    this.loadGoogleApi();
-                }, this.props.retryDelay);
-            } else {
-                scriptLoadingStarted = false;
-            }
-        } else if (this.isGoogleReady()) {
-            // call func when google drive is ready to be used
-            if (this.props.onApiLoad) {
-                this.props.onApiLoad();
-            }
-
-            window.gapi.load('auth');
-            window.gapi.load('picker');
+        // only call when api is loaded,
+        if (this.props.onApiLoad) {
+            this.props.onApiLoad();
         }
+        window.gapi.load('auth2', this.onAuthApiLoad);
+        window.gapi.load('picker', this.onPickerApiLoad);
     }
 
-    onChoose() {
-        if (!this.isGoogleReady() || !this.isGoogleAuthReady() ||
-            !this.isGooglePickerReady() || this.props.disabled) {
+    onChoose = () => {
+        if (!GooglePicker.isReady() || this.props.disabled) {
+            console.warn('GooglePicker api is not loaded');
             return;
         }
-
-        const token = window.gapi.auth.getToken();
-        const oauthToken = token && token.access_token;
-
-        if (oauthToken) {
-            this.createPicker(oauthToken);
-        } else {
-            this.doAuth(({ access_token }) => this.createPicker(access_token));
-        }
+        this.doAuth(({ access_token: accessToken, error }) => {
+            if (accessToken) {
+                this.createPicker(accessToken);
+            } else {
+                console.warn('Google Auth Response:', error);
+                this.props.onAuthenticate(undefined);
+            }
+        },
+        );
     }
 
-    loadGoogleApi = () => {
-        if (this.isGoogleReady()) {
-            // google api is already exists
-            // init immediately
+    pollForReadyState = () => {
+        if (GooglePicker.isGoogleReady()) {
             this.onApiLoad();
-        } else if (!scriptLoadingStarted) {
-            // load google api and the init
-            scriptLoadingStarted = true;
-            loadScript(GOOGLE_SDK_URL, this.onApiLoad);
         } else {
-            // is loading
+            this.readyCheck = setTimeout(this.pollForReadyState, 3000);
         }
-    }
-
+    };
 
     doAuth(callback) {
-        window.gapi.auth.authorize({
+        window.gapi.auth2.authorize({
             client_id: this.props.clientId,
             scope: this.props.scope,
-            immediate: this.props.authImmediate,
-        }, callback,
-        );
+        }, callback);
     }
 
     createPicker(oauthToken) {
         this.props.onAuthenticate(oauthToken);
-
         if (this.props.createPicker) {
             return this.props.createPicker(window.google, oauthToken);
         }
@@ -165,7 +141,8 @@ export default class GooglePicker extends React.Component {
         }
 
         if (!view) {
-            throw new Error('Can\'t find view by viewId');
+            console.warn('Can\'t find view by viewId');
+            return undefined;
         }
 
         const picker = new window.google.picker.PickerBuilder()
@@ -177,44 +154,41 @@ export default class GooglePicker extends React.Component {
         if (this.props.origin) {
             picker.setOrigin(this.props.origin);
         }
-
         if (this.props.navHidden) {
             picker.enableFeature(window.google.picker.Feature.NAV_HIDDEN);
         }
-
         if (this.props.multiselect) {
             picker.enableFeature(window.google.picker.Feature.MULTISELECT_ENABLED);
         }
 
         picker.build()
             .setVisible(true);
-
         return picker;
     }
 
-    isGoogleReady = () => (!!window.gapi)
-
-    isGoogleAuthReady = () => (!!window.gapi.auth)
-
-    isGooglePickerReady = () => (!!window.google.picker)
-
     render() {
+        const {
+            className,
+            disabled,
+            children,
+        } = this.props;
+
+        const {
+            authApiReady,
+            pickerApiReady,
+        } = this.state;
+
+        const ready = authApiReady && pickerApiReady;
+
         return (
             <PrimaryButton
-                className={this.props.className}
-                styleName="google-picker-btn"
+                className={className}
                 onClick={this.onChoose}
-                disabled={this.props.disabled}
+                disabled={disabled || !ready}
                 transparent
             >
                 {
-                    this.props.children ? (
-                        this.props.children
-                    ) : (
-                        <button>
-                            {this.props.commonStrings('openGoogleChooserText')}
-                        </button>
-                    )
+                    children || this.props.commonStrings('openGoogleChooserText')
                 }
             </PrimaryButton>
         );
