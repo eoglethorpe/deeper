@@ -127,10 +127,10 @@ export default class LeadFormItem extends React.PureComponent {
                 const values = {};
                 const formFieldErrors = {};
 
-                if (webInfo.project) {
-                    values.project = [webInfo.project];
-                    formFieldErrors.project = undefined;
-                }
+                // if (webInfo.project) {
+                //     values.project = [webInfo.project];
+                //     formFieldErrors.project = undefined;
+                // }
                 if (webInfo.date) {
                     values.publishedOn = webInfo.date;
                     formFieldErrors.publishedOn = undefined;
