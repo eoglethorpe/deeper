@@ -191,12 +191,21 @@ export default class Methodology extends React.PureComponent {
 
         const renderMethodologyGroup = (context, key) => {
             const methodologyGroup = methodologyGroups[key];
-            return methodologyGroup.fields
-                .map(field => renderMethodologyField(context, field));
+            return (
+                <div className={styles['field-inputs']}>
+                    {
+                        methodologyGroup.fields
+                            .map(field => renderMethodologyField(context, field))
+                    }
+                </div>
+            );
         };
 
         const renderMethodologyRow = (attribute, index) => (
-            <div key={index}>
+            <div
+                key={index}
+                className={styles.values}
+            >
                 {
                     Object.keys(methodologyGroups)
                         .map(key => renderMethodologyGroup(index, key))
@@ -205,8 +214,9 @@ export default class Methodology extends React.PureComponent {
                     type="button"
                     formname={`attributes:${index}`}
                     formpop
+                    className={styles['remove-button']}
                 >
-                    Remove Row
+                    x
                 </Button>
             </div>
         );
@@ -224,19 +234,28 @@ export default class Methodology extends React.PureComponent {
                     failureCallback={this.failureCallback}
                     disabled={pending}
                 >
-                    { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
-                    <NonFieldErrors formerror="attributes" />
-                    { (this.state.formValues.attributes || []).map(renderMethodologyRow) }
-                    <Button
-                        type="button"
-                        formname="attributes"
-                        formpush="start"
-                    >
-                        Add row
-                    </Button>
-                    <Button>
-                        Submit
-                    </Button>
+                    <div className={styles.fields}>
+                        <div className={styles['field-title']}>
+                            { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
+                            <div className={styles.pusher} />
+                        </div>
+                        <div className={styles['field-values']}>
+                            { (this.state.formValues.attributes || []).map(renderMethodologyRow) }
+                        </div>
+                    </div>
+                    <div className={styles['action-buttons']}>
+                        <NonFieldErrors formerror="attributes" />
+                        <Button
+                            type="button"
+                            formname="attributes"
+                            formpush="start"
+                        >
+                            Add row
+                        </Button>
+                        <Button>
+                            Submit
+                        </Button>
+                    </div>
                 </Form>
                 {/*
                 <div className={styles.overview}>
