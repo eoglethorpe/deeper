@@ -35,6 +35,7 @@ import AryDeleteRequest from './requests/AryDeleteRequest';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     arys: PropTypes.array, // eslint-disable-line react/forbid-prop-types
 
@@ -50,6 +51,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     arys: [],
     totalArysCount: 0,
 };
@@ -298,7 +300,7 @@ export default class Arys extends React.PureComponent {
             showDeleteModal,
             redirectTo,
         } = this.state;
-        const { arys } = this.props;
+        const { className, arys } = this.props;
 
         if (redirectTo) {
             return (
@@ -313,7 +315,7 @@ export default class Arys extends React.PureComponent {
         const Footer = this.renderFooter;
 
         return (
-            <div className={styles.arys}>
+            <div className={`${className} ${styles.arys}`}>
                 <Header />
                 <div className={styles.tableContainer}>
                     <RawTable

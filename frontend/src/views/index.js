@@ -12,6 +12,7 @@ const importers = {
     categoryEditor: () => import('./CategoryEditor'),
     arys: () => import('./Arys/'),
     editAry: () => import('./EditAry'),
+    newAry: () => import('./EditAry'),
     userProfile: () => import('./UserProfile'),
     userGroup: () => import('./UserGroup'),
     weeklySnapshot: () => import('./WeeklySnapshot'),

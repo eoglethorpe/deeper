@@ -39,9 +39,9 @@ export default class ActionButtons extends React.PureComponent {
             pathname: reverseRoute(
                 pathNames.editAry,
                 {
-                    // FIXME: use aryId instaed of leadId
                     projectId: activeProject,
                     leadId: row.lead,
+                    aryId: row.id,
                 },
             ),
         };

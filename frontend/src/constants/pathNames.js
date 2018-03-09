@@ -15,7 +15,8 @@ const pathNames = {
     editEntries: '/projects/:projectId/leads/:leadId/edit-entries/',
 
     arys: '/projects/:projectId/arys/',
-    editAry: '/projects/:projectId/leads/:leadId/edit-ary/',
+    editAry: '/projects/:projectId/leads/:leadId/edit-ary/:aryId/',
+    newAry: '/projects/:projectId/leads/:leadId/edit-ary/new',
 
     export: '/projects/:projectId/export/',
 

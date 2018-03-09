@@ -8,7 +8,7 @@ import {
     transformResponseErrorToFormError,
 } from '../../../rest';
 
-export default class ArysGetRequest {
+export default class LeadArysGetRequest {
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
@@ -18,36 +18,29 @@ export default class ArysGetRequest {
         this.setArys = setArys;
     }
 
-    create = ({ activeProject, activePage, activeSort, filters, MAX_ARYS_PER_REQUEST }) => {
-        const sanitizedFilters = Leads.getFiltersForRequest(filters);
-        const aryRequestOffset = (activePage - 1) * MAX_ARYS_PER_REQUEST;
-        const aryRequestLimit = MAX_ARYS_PER_REQUEST;
+    create = (leadId) => {
+        const sanitizedFilters = Leads.getFiltersForRequest({ lead: leadId });
+        console.warn(sanitizedFilters);
 
         // TODO: VAGUE add required fields only
         const urlForProjectArys = createUrlForArysOfProject({
-            project: activeProject,
-            ordering: activeSort,
             ...sanitizedFilters,
-            offset: aryRequestOffset,
-            limit: aryRequestLimit,
         });
 
         const arysRequest = new FgRestBuilder()
             .url(urlForProjectArys)
             .params(() => commonParamsForGET())
             .preLoad(() => {
-                this.setState({ loadingArys: true });
+                this.setState({ arysPending: true });
             })
             .postLoad(() => {
-                this.setState({ loadingArys: false });
+                this.setState({ arysPending: false });
             })
             .success((response) => {
                 try {
                     schema.validate(response, 'arysGetResponse');
                     this.setArys({
-                        projectId: activeProject,
                         arys: response.results,
-                        totalArysCount: response.count,
                     });
                 } catch (er) {
                     console.error(er);

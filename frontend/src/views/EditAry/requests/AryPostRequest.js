@@ -19,8 +19,8 @@ export default class AryPostRequest {
         const aryPutRequest = new FgRestBuilder()
             .url(urlForArys)
             .params(createParamsForAryCreate(data))
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
+            .preLoad(() => { this.setState({ aryCreatePending: true }); })
+            .postLoad(() => { this.setState({ aryCreatePending: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'aryPostResponse');
