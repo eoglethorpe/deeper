@@ -120,6 +120,8 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 .apply();
         }
         this.setState({ dragOver: false });
+
+        e.preventDefault();
     }
 
     handleDragEnter = () => {
@@ -142,7 +144,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         }
 
         // FIXME: use strings
-        const contentText = 'Drop image here';
+        const contentText = 'Drop text or image here';
         return (
             <div
                 className={styles['drop-container']}

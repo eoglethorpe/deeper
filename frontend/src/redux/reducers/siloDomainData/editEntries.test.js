@@ -61,7 +61,7 @@ test('should add entry', () => {
                         widget: { values: {
                             title: 'Entry #1',
                             order: 1,
-                            excerpt: 'Excerpt 1',
+                            excerpt: '',
                         } },
                         uiState: {
                             error: false,
@@ -100,7 +100,7 @@ test('should add entry', () => {
                         widget: { values: {
                             title: 'Entry #1',
                             order: 1,
-                            excerpt: 'Excerpt 1',
+                            excerpt: '',
                         } },
                         uiState: {
                             error: false,

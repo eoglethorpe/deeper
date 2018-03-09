@@ -159,7 +159,7 @@ export default class Overview extends React.PureComponent {
     calcEntryLabelLimited = (entry) => {
         const values = entryAccessor.getValues(entry);
         const text = values.excerpt;
-        return text;
+        return text || `Excerpt ${values.order}`;
     }
 
     renderItemView = (item) => {
