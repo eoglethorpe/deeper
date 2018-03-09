@@ -5,6 +5,7 @@
 .methodology {
     background-color: $color-foreground-alt;
     padding: $spacing-medium;
+    height: 100%;
 
     .overview {
         display: flex;
@@ -25,7 +26,7 @@
                     border-bottom: $width-separator-thin solid $color-separator;
                 }
 
-                .pusher {
+                .add {
                     flex-basis: 3%;
                 }
             }
@@ -45,6 +46,7 @@
 
         .action-buttons {
             display: flex;
+
         }
     }
 }
@@ -52,6 +54,7 @@
 
 .values {
     display: flex;
+    padding: $spacing-medium;
 
     .field-inputs {
         flex-basis: 16%;
@@ -60,5 +63,9 @@
 
     .remove-button {
         flex-basis: 3%;
+    }
+
+    &:nth-child(odd) {
+        background-color: $color-background-row;
     }
 }

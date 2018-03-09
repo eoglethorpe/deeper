@@ -17,11 +17,13 @@ import DateInput from '../../../../vendor/react-store/components/Input/DateInput
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import Button from '../../../../vendor/react-store/components/Action/Button';
 
 
 // import RegionMap from '../../../../components/RegionMap';
-// import { iconNames } from '../../../../constants';
+import { iconNames } from '../../../../constants';
 
 import styles from './styles.scss';
 
@@ -210,14 +212,14 @@ export default class Methodology extends React.PureComponent {
                     Object.keys(methodologyGroups)
                         .map(key => renderMethodologyGroup(index, key))
                 }
-                <Button
-                    type="button"
-                    formname={`attributes:${index}`}
-                    formpop
-                    className={styles['remove-button']}
-                >
-                    x
-                </Button>
+                <div className={styles['remove-button']}>
+                    <DangerButton
+                        type="button"
+                        formname={`attributes:${index}`}
+                        formpop
+                        iconName={iconNames.delete}
+                    />
+                </div>
             </div>
         );
 
@@ -237,21 +239,21 @@ export default class Methodology extends React.PureComponent {
                     <div className={styles.fields}>
                         <div className={styles['field-title']}>
                             { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
-                            <div className={styles.pusher} />
+                            <div className={styles.add}>
+                                <PrimaryButton
+                                    type="button"
+                                    formname="attributes"
+                                    formpush="start"
+                                    iconName={iconNames.add}
+                                />
+                            </div>
                         </div>
                         <div className={styles['field-values']}>
                             { (this.state.formValues.attributes || []).map(renderMethodologyRow) }
                         </div>
                     </div>
+                    <NonFieldErrors formerror="attributes" />
                     <div className={styles['action-buttons']}>
-                        <NonFieldErrors formerror="attributes" />
-                        <Button
-                            type="button"
-                            formname="attributes"
-                            formpush="start"
-                        >
-                            Add row
-                        </Button>
                         <Button>
                             Submit
                         </Button>
