@@ -1,12 +1,16 @@
 @import '../../stylesheets/base';
 
+$color-text-on-primary: get-text-color($color-primary);
+
+$width-deep-logo: 256px;
+$height-deep-logo: 256px;
+
 .login {
     @extend %main-content;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    background-color: $color-primary;
 
     .deep-container {
         display: flex;
@@ -16,8 +20,8 @@
 
         .logo {
             margin-bottom: $spacing-extra-large;
-            width: 256px;
-            height: 256px;
+            width: $width-deep-logo;
+            height: $height-deep-logo;
 
             path {
                 fill: $color-accent;
@@ -25,8 +29,7 @@
         }
 
         .heading {
-            color: $color-text-on-primary;
-            font-weight: $font-weight-medium;
+            color: inherit;
 
             small {
                 text-transform: none;
@@ -42,11 +45,11 @@
         width: $width-login-form;
 
         .hid-link-container {
+            @include background-color($color-foreground);
             display: flex;
             flex-basis: 100%;
             flex-direction: column;
             align-items: center;
-            background-color: $color-foreground;
             padding: $spacing-large;
 
             .hid-link {
@@ -79,21 +82,20 @@
                 }
 
                 .or {
+                    @include background-color($color-foreground);
                     position: absolute;
                     top: 0;
                     left: 50%;
                     transform: translate(-50%);
-                    background-color: $color-foreground;
                     padding: 0 $spacing-extra-small;
                     text-transform: uppercase;
-                    color: $color-label;
                     font-size: $font-size-small;
                 }
             }
         }
 
         .login-form {
-            background-color: $color-foreground;
+            @include background-color($color-foreground);
             padding: $spacing-small $spacing-large $spacing-large;
             width: 100%;
 
@@ -103,19 +105,19 @@
                 justify-content: space-between;
 
                 .forgot-password-link {
-                    color: $color-label;
+                    color: $color-text-label;
                     font-size: $font-size-extra-small;
                 }
             }
         }
 
         .register-link-container {
+            @include background-color($color-foreground);
             display: flex;
             flex-basis: 100%;
             align-items: center;
             justify-content: center;
             margin-top: $spacing-extra-small;
-            background-color: $color-foreground;
             padding: $spacing-large;
 
             p {

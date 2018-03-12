@@ -1,10 +1,13 @@
 @import '../../stylesheets/base';
 
+$color-text-on-navbar: get-text-color($color-navbar);
+$color-text-on-primary: get-text-color($color-primary);
+
 .navbar {
-    @include shadow-medium;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    box-shadow: 0 $spacing-extra-small $spacing-small (-$spacing-extra-small) $color-shadow-medium;
     background-color: $color-navbar;
     padding: 0 $spacing-medium-alt;
     color: $color-text-on-navbar;
@@ -25,11 +28,11 @@
             margin-right: $spacing-small;
 
             .icon {
-                width: 24px;
-                height: 24px;
+                width: $width-navbar-icon;
+                height: $height-navbar-icon;
 
                 path {
-                    fill: $color-text-on-primary;
+                    fill: $color-text-on-navbar;
                 }
             }
         }
@@ -63,11 +66,11 @@
         :global {
             .input-wrapper {
                 .input {
-                    border-bottom-color: $color-separator-light;
-                    color: $color-text-on-primary;
+                    border-bottom-color: get-text-color($color-navbar, $color-separator-on-light, $color-separator-on-dark);
+                    color: $color-text-on-navbar;
 
                     &::placeholder {
-                        color: $color-text-on-primary;
+                        color: get-text-color($color-navbar, $color-text-placeholder-on-light, $color-text-placeholder-on-dark);
                     }
                 }
             }
@@ -98,7 +101,6 @@
 
     .menu-item {
         @include transition-medium;
-
         display: inline-flex;
         flex-shrink: 0;
         align-items: center;
@@ -106,6 +108,7 @@
         border-top: $width-separator-thick solid transparent;
         border-bottom: $width-separator-thick solid transparent;
         padding: 0 $spacing-medium-alt;
+        font-weight: $font-weight-bold;
 
         &:hover {
             color: $color-accent;
@@ -113,7 +116,8 @@
 
         &.active {
             border-bottom-color: $color-accent;
-            color: $color-text-on-navbar;
+            color: $color-accent;
+            // color: $color-text-on-navbar;
         }
     }
 
@@ -132,12 +136,11 @@
     padding: $spacing-medium $spacing-medium-alt;
 
     &:hover {
-        background-color: $color-hover;
+        background-color: $color-background-hover;
     }
 
     &.active {
-        background-color: $color-accent;
-        color: $color-text-on-accent;
+        @include background-color($color-accent);
     }
 }
 

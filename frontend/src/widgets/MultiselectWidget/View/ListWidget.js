@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import BoundError from '../../../components/BoundError';
 
@@ -55,12 +56,14 @@ export default class MultiselectList extends React.PureComponent {
         } = this.props;
 
         const selectedData = options.filter(d => value.includes(d.key));
+
         return (
             <ListView
                 data={selectedData}
                 className={styles.list}
                 keyExtractor={valueKeyExtractor}
                 modifier={this.renderSelectedOption}
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

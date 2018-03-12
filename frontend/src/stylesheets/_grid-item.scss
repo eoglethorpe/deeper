@@ -2,9 +2,6 @@ $height-grid-item-header: 24px;
 $color-grid-item-border: $color-separator;
 
 %grid-item {
-    // border: $width-separator-thin solid $color-grid-item-border;
-    border: 0;
-    background-color: transparent;
     padding: $spacing-extra-small;
 
     .header {
@@ -12,14 +9,13 @@ $color-grid-item-border: $color-separator;
         align-items: center;
         border: $width-separator-thin solid $color-grid-item-border;
         border-bottom: 0;
-        background-color: $color-background-header-alt;
         height: $height-grid-item-header;
 
         .heading {
             flex-grow: 1;
             cursor: grab;
             padding: 0 $spacing-small;
-            color: $color-label;
+            color: $color-primary;
             font-size: $font-size-small;
             font-weight: $font-weight-bold;
         }
@@ -53,8 +49,6 @@ $color-grid-item-border: $color-separator;
 
     .content {
         border: $width-separator-thin solid $color-grid-item-border;
-        // background-color: $color-foreground;
-        background-color: $color-background-header;
         height: calc(100% - #{$height-grid-item-header});
     }
 }

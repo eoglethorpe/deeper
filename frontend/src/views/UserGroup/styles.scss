@@ -27,14 +27,13 @@ $info-height: 144px;
 
     .usergroup-alt {
         @include shadow-medium;
+        @include background-color($color-foreground);
         display: flex;
         flex-direction: column;
         flex-grow: 1;
         align-items: center;
         justify-content: center;
-        background-color: $color-foreground;
         padding: $spacing-medium-alt;
-        color: $color-label;
         font-size: $font-size-extra-large;
         grid-area: info / info / groups / groups;
     }
@@ -68,7 +67,7 @@ $info-height: 144px;
         margin: 0;
         padding: 0 $spacing-medium-alt;
         text-transform: uppercase;
-        color: $color-label;
+        color: $color-text-label;
         font-size: $font-size-small;
     }
 

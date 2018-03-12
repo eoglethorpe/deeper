@@ -84,7 +84,7 @@
                 display: inline-block;
 
                 .entry {
-                    background-color: $color-background-row;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
                     min-width: 100%;
 
                     :global {
@@ -93,18 +93,12 @@
 
                             .header {
                                 border: 0;
-                                // background-color: transparent;
                             }
 
                             .content {
                                 border: 0;
-                                // background-color: transparent;
                             }
                         }
-                    }
-
-                    &:nth-child(even) {
-                        background-color: $color-background-row-alt;
                     }
                 }
             }

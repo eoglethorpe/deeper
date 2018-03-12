@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import BoundError from '../../../components/BoundError';
@@ -107,6 +108,7 @@ export default class Matrix1dList extends React.PureComponent {
                 data={this.selectedRows}
                 keyExtractor={Matrix1dList.rowKeyExtractor}
                 modifier={this.renderRowData}
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

@@ -81,11 +81,11 @@ $info-height: 144px;
 
             .email {
                 margin: 0;
-                color: $color-label;
+                color: $color-text-label;
             }
 
             .organization {
-                color: $color-label;
+                color: $color-text-label;
             }
         }
     }
@@ -98,17 +98,16 @@ $info-height: 144px;
 
     .projects {
         border-bottom: $width-separator-thin solid $color-separator;
-        grid-area: projects;
         background-color: $color-background-row-alt;
+        grid-area: projects;
     }
 
     .groups {
-        grid-area: groups;
         background-color: $color-background-row-alt;
+        grid-area: groups;
     }
 
     .user-detail-alt {
-        grid-area: info / info / groups / groups;
         @include shadow-medium;
         display: flex;
         flex-direction: column;
@@ -117,8 +116,9 @@ $info-height: 144px;
         justify-content: center;
         background-color: $color-foreground;
         padding: $spacing-medium-alt;
-        color: $color-label;
+        color: $color-text-label;
         font-size: $font-size-extra-large;
+        grid-area: info / info / groups / groups;
     }
 }
 

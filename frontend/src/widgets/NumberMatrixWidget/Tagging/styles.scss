@@ -4,33 +4,33 @@
     display: flex;
 
     .table-header {
-        background-color: $color-foreground;
+        @include background-color($color-foreground);
         padding: $spacing-small $spacing-medium;
     }
 
     .table-header-row {
         padding: $spacing-small $spacing-medium;
-        color: $color-text-on-primary;
 
         &.not-similar {
-            background-color: $color-danger;
+            @include background-color($color-danger);
         }
 
         &.similar {
-            background-color: $color-success;
+            @include background-color($color-success);
         }
 
         &.partial-similar {
-            background-color: $color-label;
+            @include background-color($color-background);
         }
     }
 
     .table-cell {
-        background-color: $color-foreground;
+        @include background-color($color-foreground);
         padding: $spacing-extra-small $spacing-small;
 
         .number-input {
             background-color: transparent;
+            color: $color-text;
         }
     }
 }
@@ -53,21 +53,13 @@
 
         .cols-container {
             .col {
+                @include background-color($color-background-row);
                 display: flex;
                 justify-content: space-between;
-                background-color: $color-background-row;
                 padding: $spacing-extra-small $spacing-small;
 
                 &:nth-child(odd) {
-                    background-color: $color-background-row-alt;
-                }
-
-                .col-title {
-                    color: $color-text;
-                }
-
-                .col-value {
-                    font-family: monospace;
+                    @include background-color($color-background-row-alt);
                 }
             }
         }

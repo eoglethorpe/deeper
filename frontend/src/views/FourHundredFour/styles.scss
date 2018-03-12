@@ -1,5 +1,7 @@
 @import '../../stylesheets/base';
 
+$color-text-on-primary: get-text-color($color-primary);
+
 .four-hundred-four {
     @extend %main-content;
     display: flex;

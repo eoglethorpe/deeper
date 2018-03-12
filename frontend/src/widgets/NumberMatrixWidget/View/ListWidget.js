@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import BoundError from '../../../components/BoundError';
 
@@ -37,7 +38,7 @@ export default class NumberMatrixList extends React.PureComponent {
                 const value = (attribute[row.key] || emptyObject)[col.key];
                 const obj = {
                     title: col.title,
-                    value: value || '-',
+                    value: value || '~',
                     key: col.key,
                 };
                 columnList.push(obj);
@@ -66,7 +67,7 @@ export default class NumberMatrixList extends React.PureComponent {
                 data={data.columns}
                 modifier={this.renderDataColumns}
                 keyExtractor={NumberMatrixList.rowKeyExtractor}
-                emptyComponent="-"
+                emptyComponent={WidgetEmptyComponent}
             />
         </div>
     )
@@ -95,7 +96,7 @@ export default class NumberMatrixList extends React.PureComponent {
                 data={dataRows}
                 modifier={this.renderDataRow}
                 keyExtractor={NumberMatrixList.rowKeyExtractor}
-                emptyComponent="-"
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

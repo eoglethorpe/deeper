@@ -3,19 +3,19 @@
 .list {
     display: flex;
     flex-direction: column;
-    padding: $spacing-small;
     width: 100%;
     height: 100%;
     overflow: auto;
 
     .selected-option {
         display: flex;
+        padding: 0 $spacing-small;
 
         .marker {
             flex-shrink: 0;
             align-self: flex-start;
             padding-right: $spacing-extra-small-alt;
-            color: $color-label;
+            color: $color-text-label;
         }
 
         .label {

@@ -1,5 +1,7 @@
 @import '../../stylesheets/base';
 
+$radius-button-border: 2px;
+
 .add-lead {
     @extend %main-content;
     display: flex;
@@ -26,23 +28,21 @@
                 }
             }
 
-            .save-buttons {
+            %button-basic {
                 @include shadow-medium;
                 flex-shrink: 0;
                 margin-left: $spacing-extra-small-alt;
-                border-radius: 3px;
-                background-color: $color-success;
-                color: $color-text-on-success;
-                font-size: $font-size-medium;
+                border-radius: $radius-button-border;
+            }
+
+            .save-buttons {
+                @extend %button-basic;
+                @include background-color($color-success);
             }
 
             .remove-buttons {
-                @include shadow-medium;
-                flex-shrink: 0;
-                border-radius: 3px;
-                background-color: $color-warning;
-                color: $color-text-on-warning;
-                font-size: $font-size-medium;
+                @extend %button-basic;
+                @include background-color($color-warning);
             }
         }
 
@@ -90,7 +90,7 @@
 
                     &.active {
                         border-left: $width-separator-thick solid $color-accent;
-                        background-color: $color-hover;
+                        background-color: $color-background-selected;
                     }
 
                     .icon {
@@ -112,19 +112,18 @@
             }
 
             .add-lead-buttons {
+                @include background-color($color-foreground);
                 display: flex;
                 flex-shrink: 0;
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: space-around;
-                background-color: $color-foreground;
 
                 .heading {
                     flex-basis: 100%;
                     margin: 0;
                     border-top: $width-separator-thin solid $color-separator;
                     padding: $spacing-medium $spacing-large;
-                    color: $color-label;
                     font-size: $font-size-small;
                     font-weight: $font-weight-medium;
                 }

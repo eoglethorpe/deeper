@@ -13,7 +13,7 @@
         padding: $spacing-small $spacing-medium;
 
         .title {
-            color: $color-text;
+            color: inherit;
         }
 
         &:nth-child(odd) {

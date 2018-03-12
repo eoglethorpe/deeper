@@ -48,8 +48,7 @@
                 font-family: inherit;
 
                 &.active {
-                    background-color: $color-accent;
-                    color: $color-text-on-accent;
+                    @include background-color($color-accent);
                 }
             }
         }
@@ -317,11 +316,10 @@
                             }
 
                             &.active {
-                                background-color: $color-accent;
-                                color: $color-text-on-accent;
+                                @include background-color($color-accent);
 
                                 .title {
-                                    color: $color-text-on-accent;
+                                    color: inherit;
                                 }
                             }
 
@@ -332,7 +330,7 @@
 
                                 &.active {
                                     .title {
-                                        border: $width-separator-medium dashed $color-text-on-accent;
+                                        border: $width-separator-medium dashed get-text-color($color-accent);
                                     }
                                 }
                             }
@@ -419,7 +417,7 @@
             flex-grow: 1;
             align-items: center;
             justify-content: center;
-            color: $color-label;
+            color: $color-text-disabled;
         }
     }
 }

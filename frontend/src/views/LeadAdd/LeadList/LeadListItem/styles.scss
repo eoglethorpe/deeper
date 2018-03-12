@@ -23,7 +23,7 @@
 
         &.active {
             border-left: $width-separator-thick solid $color-accent;
-            background-color: $color-hover;
+            background-color: $color-background-hover;
         }
 
 
@@ -43,12 +43,12 @@
             word-break: break-all;
         }
 
-        .status-icon{
+        .status-icon {
             flex-shrink: 0;
             margin: 0 $spacing-small;
             padding: 0;
             width: $width-icon-large;
-            color: $color-label;
+            color: $color-text-label;
             font-size: $font-size-medium-alt;
         }
 

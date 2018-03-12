@@ -28,7 +28,7 @@
                 flex-shrink: 0;
                 align-self: flex-start;
                 padding-right: $spacing-small;
-                color: $color-label;
+                color: $color-text-label;
             }
 
             .label {
@@ -51,8 +51,7 @@
                 font-size: inherit;
 
                 &.active {
-                    background-color: $color-accent;
-                    color: $color-text-on-accent;
+                    @include background-color($color-accent);
                 }
             }
         }

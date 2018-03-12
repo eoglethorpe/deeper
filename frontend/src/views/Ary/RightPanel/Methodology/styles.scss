@@ -1,0 +1,127 @@
+@import '../../../../stylesheets/base';
+@import '../../../../stylesheets/tabs';
+
+.methodology {
+    display: flex;
+    flex-direction: column;
+    background-color: $color-foreground-alt;
+    padding: $spacing-medium;
+    height: 100%;
+
+    .overview {
+        display: flex;
+        border-bottom: $width-separator-thin solid $color-separator;
+        height: 25%;
+
+        .technique,
+        .sampling,
+        .proximity,
+        .unit,
+        .disaggregation {
+            display: flex;
+            flex-basis: 15%;
+            flex-direction: column;
+            margin-right: $spacing-large;
+            padding: $spacing-small;
+
+            .heading {
+                margin-bottom: $spacing-large;
+                border-bottom: $width-separator-thin solid $color-separator;
+                color: $color-text-label;
+            }
+
+            .technique-child,
+            .sampling-child,
+            .proximity-child,
+            .unit-child,
+            .disaggregation-child {
+                margin-bottom: $spacing-medium;
+            }
+        }
+
+        .questions {
+            display: flex;
+            flex-basis: 25%;
+            flex-direction: column;
+            padding: $spacing-small;
+
+            .heading {
+                display: flex;
+                position: sticky;
+                justify-content: space-between;
+                margin-bottom: $spacing-small;
+                color: $color-text-label;
+            }
+
+            .questions-list {
+                overflow-y: auto;
+
+                .questions-child {
+                    margin: $spacing-medium 0;
+                }
+            }
+        }
+    }
+
+
+    .middle {
+        display: flex;
+        align-items: flex-start;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small;
+        height: 50%;
+
+        .topics-assessed,
+        .affected-groups,
+        .location {
+            flex-basis: 24%;
+            margin-right: $spacing-medium;
+            color: $color-text-disabled;
+
+            .heading {
+                margin: $spacing-large 0;
+                color: $color-text-label;
+            }
+
+            .map-container {
+                border: $width-separator-thin solid $color-separator;
+                height: 350px;
+            }
+        }
+
+        .location {
+            flex-basis: 50%;
+        }
+    }
+
+    .structure {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        margin-right: $spacing-large;
+        padding: $spacing-small;
+
+        .heading {
+            flex-basis: 100%;
+            margin: $spacing-large 0;
+            color: $color-text-label;
+        }
+
+        .collection-technique,
+        .sampling-data,
+        .limitations {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: $spacing-medium;
+            border: $width-separator-thin solid $color-separator;
+            border-style: dashed;
+            width: 32%;
+            height: 150px;
+            color: $color-text-disabled;
+        }
+
+
+    }
+}

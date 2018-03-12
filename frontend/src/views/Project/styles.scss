@@ -53,24 +53,23 @@
 
             .active {
                 border-left: $width-separator-thick solid $color-accent;
-                background-color: $color-hover;
+                background-color: $color-background-hover;
             }
         }
     }
 
     .project-details {
+        @include background-color($color-foreground-alt);
         flex-basis: 84%;
-        background-color: $color-foreground-alt;
     }
 
     .no-project-text {
+        @include background-color-with-disabled-text($color-foreground-alt);
         display: flex;
         flex-basis: 84%;
         align-items: center;
         justify-content: center;
         margin: 0;
-        background-color: $color-foreground-alt;
-        color: $color-label;
         font-size: $font-size-extra-large;
     }
 }

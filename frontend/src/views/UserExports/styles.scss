@@ -1,5 +1,7 @@
 @import '../../stylesheets/base';
 
+$color-text-on-primary: get-text-color($color-primary);
+
 .user-exports {
     @extend %main-content;
     display: flex;
@@ -22,8 +24,8 @@
     }
 
     .main-container {
-        position: relative;
         display: flex;
+        position: relative;
         flex-grow: 1;
 
         .table-container {
@@ -51,10 +53,10 @@
 
                         .row {
                             &.highlighted {
-                                background-color: $color-accent;
+                                @include background-color($color-accent);
 
                                 .file-download {
-                                    color: $color-text-on-accent;
+                                    color: inherit;
                                 }
                             }
                         }
@@ -64,9 +66,9 @@
 
                             .loading {
                                 span {
-                                    width: $font-size-medium-alt;
-                                    height: $font-size-medium-alt;
-                                    font-size: $font-size-medium-alt;
+                                    width: $font-size-medium;
+                                    height: $font-size-medium;
+                                    font-size: $font-size-medium;
                                 }
                             }
                         }

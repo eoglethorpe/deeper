@@ -1,68 +1,141 @@
-$color-background: #e0e0e0;
-$color-background-alt: #eee;
+$theme-type-light: 'light';
+$theme-type-dark: 'dark';
 
-$color-foreground: #fff;
-$color-foreground-alt: #f5f5f5;
+$theme-type: $theme-type-light;
 
-$color-background-hover: #cfcfcf;
-$color-background-selected: #ddd;
+@function get-color($color-light, $color-dark) {
+    @if ($theme-type == $theme-type-dark) {
+        @return $color-dark;
+    }
 
-$color-background-header: #cfd8dc;
-$color-text-on-header: rgba(0, 0, 0, .8);
-$color-background-header-alt: #b0bec5;
-$color-background-header-hover: #eccff1;
+    @return $color-light;
+}
 
-$color-background-row: #f0f0f0;
-$color-background-row-alt: #e0e0e0;
+$color-text-on-light: rgba(0, 0, 0, .7);
+$color-text-on-dark: rgba(255, 255, 255, .7);
+$color-text: get-color($color-text-on-light, $color-text-on-dark);
 
-$color-background-disabled: rgba(0, 0, 0, .06);
+$color-text-placeholder-on-light: rgba(0, 0, 0, .4);
+$color-text-placeholder-on-dark: rgba(255, 255, 255, .3);
+$color-text-placeholder: get-color($color-text-placeholder-on-light, $color-text-placeholder-on-dark);
 
-$color-text: rgba(0, 0, 0, .8);
-$color-text-disabled: rgba(0, 0, 0, .3);
-$color-label: rgba(0, 0, 0, .5);
-$color-text-tab: rgba(0, 0, 0, .3);
+$color-text-disabled-on-light: rgba(0, 0, 0, .3);
+$color-text-disabled-on-dark: rgba(255, 255, 255, .2);
+$color-text-disabled: get-color($color-text-disabled-on-light, $color-text-disabled-on-dark);
 
-$color-empty-text: rgba(0, 0, 0, .3);
+$color-text-label-on-light: rgba(0, 0, 0, .5);
+$color-text-label-on-dark: rgba(255, 255, 255, .4);
+$color-text-label: get-color($color-text-label-on-light, $color-text-label-on-dark);
 
-$color-hover: rgba(0, 0, 0, .02);
+$color-primary-light: #4cb176;
+$color-primary-dark: #4ce49c;
+$color-primary: get-color($color-primary-light, $color-primary-dark);
 
-$color-primary: #2956c3;
-$color-text-on-primary: rgba(255, 255, 255, .8);
+$color-accent-light: #c34176;
+$color-accent-dark: #c34176;
+$color-accent: get-color($color-accent-light, $color-accent-dark);
 
-$color-accent: #12b776;
-$color-text-on-accent: rgba(255, 255, 255, .9);
+$color-info-light: #41a1f0;
+$color-info-dark: #41a1f0;
+$color-info: get-color($color-info-light, $color-info-dark);
+
+$color-success-light: #41cf76;
+$color-success-dark: #41cf76;
+$color-success: get-color($color-success-light, $color-success-dark);
+
+$color-warning-light: #e0b652;
+$color-warning-dark: #e0b652;
+$color-warning: get-color($color-warning-light, $color-warning-dark);
+
+$color-danger-light: #d3575e;
+$color-danger-dark: #d3575e;
+$color-danger: get-color($color-danger-light, $color-danger-dark);
+
+$color-background-light: #e0e0e0;
+$color-background-dark: #000;
+$color-background: get-color($color-background-light, $color-background-dark);
+
+$color-background-light-alt: #f0f0f0;
+$color-background-dark-alt: #313131;
+$color-background-alt: get-color($color-background-light-alt, $color-background-dark-alt);
+
+$color-foreground-light: #fff;
+$color-foreground-dark: #414141;
+$color-foreground: get-color($color-foreground-light, $color-foreground-dark);
+
+$color-foreground-light-alt: #f5f5f5;
+$color-foreground-dark-alt: #484848;
+$color-foreground-alt: get-color($color-foreground-light-alt, $color-foreground-dark-alt);
+
+$color-background-header-light: #bbdefb;
+$color-background-header-dark: #263238;
+$color-background-header: get-color($color-background-header-light, $color-background-header-dark);
+
+$color-background-header-alt-light: #90caf9;
+$color-background-header-alt-dark: #263844;
+$color-background-header-alt: get-color($color-background-header-alt-light, $color-background-header-alt-dark);
+
+$color-background-hover-on-light: rgba(0, 0, 0, .03);
+$color-background-hover-on-dark: rgba(255, 255, 255, .03);
+$color-background-hover: get-color($color-background-hover-on-light, $color-background-hover-on-dark);
+
+$color-background-disabled-light: rgba(0, 0, 0, .05);
+$color-background-disabled-dark: rgba(255, 255, 255, .05);
+$color-background-disabled: get-color($color-background-disabled-light, $color-background-disabled-dark);
+
+$color-background-hover-light: rgba(0, 0, 0, .05);
+$color-background-hover-dark: rgba(255, 255, 255, .05);
+$color-background-hover: get-color($color-background-hover-light, $color-background-hover-dark);
+
+$color-background-selected: $color-accent;
+
+$color-background-row-light: #fafafa;
+$color-background-row-dark: #414141;
+$color-background-row: get-color($color-background-row-light, $color-background-row-dark);
+
+$color-background-row-light-alt: #f0f0f0;
+$color-background-row-dark-alt: #484848;
+$color-background-row-alt: get-color($color-background-row-light-alt, $color-background-row-dark-alt);
+
+$color-navbar-light: #fff;
+$color-navbar-dark: #414141;
+$color-navbar: get-color($color-navbar-light, $color-navbar-dark);
 
 $color-text-active-tab: $color-primary;
-
-$color-navbar: $color-primary;
-$color-text-on-navbar: $color-text-on-primary;
-
-$color-danger: #fc575e;
-$color-text-on-danger: rgba(255, 255, 255, .9);
-$color-success: #4c5;
-$color-text-on-success: rgba(255, 255, 255, .9);
-$color-warning: #e83;
-$color-text-on-warning: rgba(255, 255, 255, .9);
-$color-info: #4bf;
 
 $color-negative: $color-danger;
 $color-positive: $color-success;
 
-$color-separator: rgba(0, 0, 0, .1);
-$color-separator-alt: rgba(0, 0, 0, .2);
-$color-separator-hover: rgba(0, 0, 0, .3);
-$color-separator-light: rgba(255, 255, 255, .1);
+$color-separator-on-light: rgba(0, 0, 0, .1);
+$color-separator-on-dark: rgba(255, 255, 255, .08);
+$color-separator: get-color($color-separator-on-light, $color-separator-on-dark);
 
-$color-shadow-normal: rgba(0, 0, 0, .5);
+$color-separator-on-light-alt: rgba(0, 0, 0, .2);
+$color-separator-on-dark-alt: rgba(255, 255, 255, .17);
+$color-separator-alt: get-color($color-separator-on-light-alt, $color-separator-on-dark-alt);
+
+$color-separator-hover-on-light: rgba(0, 0, 0, .3);
+$color-separator-hover-on-dark: rgba(255, 255, 255, .3);
+$color-separator-hover: get-color($color-separator-hover-on-light, $color-separator-hover-on-dark);
+
+$color-shadow-medium: rgba(0, 0, 0, .5);
 $color-shadow-light: rgba(0, 0, 0, .3);
 $color-shadow-dark: rgba(0, 0, 0, .8);
 
 $color-background-button-default: $color-foreground;
-$color-background-button-hover: $color-foreground-alt;
 
-$color-background-scrollbar: #eee;
-$color-foreground-scrollbar: #bbb;
+$color-background-scrollbar-light: #eee;
+$color-background-scrollbar-dark: #616161;
+$color-background-scrollbar: get-color($color-background-scrollbar-light, $color-background-scrollbar-dark);
 
-$color-background-overlay: rgba(255, 255, 255, .77);
+$color-foreground-scrollbar-light: #bbb;
+$color-foreground-scrollbar-dark: #868686;
+$color-foreground-scrollbar: get-color($color-foreground-scrollbar-light, $color-foreground-scrollbar-dark);
 
-$color-background-modal: rgba(0, 0, 0, .77);
+$color-background-overlay-light: rgba(255, 255, 255, .77);
+$color-background-overlay-dark: rgba(0, 0, 0, .7);
+$color-background-overlay: get-color($color-background-overlay-light, $color-background-overlay-dark);
+
+$color-background-modal-light: rgba(0, 0, 0, .77);
+$color-background-modal-dark: rgba(0, 0, 0, .77);
+$color-background-modal: get-color($color-background-modal-light, $color-background-modal-dark);

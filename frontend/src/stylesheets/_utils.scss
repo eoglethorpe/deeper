@@ -1,38 +1,45 @@
 @mixin shadow-medium() {
-    box-shadow: 0 2px 10px -3px $color-shadow-normal;
+    box-shadow: 0 $spacing-small $radius-blur-medium $radius-spread-medium $color-shadow-medium;
 }
 
 @mixin shadow-small() {
-    box-shadow: 0 1px 7px -2px $color-shadow-normal;
+    box-shadow: 0 $spacing-extra-small $radius-blur-small $radius-spread-small $color-shadow-medium;
 }
 
 @mixin shadow-small-upward() {
-    box-shadow: 0 -1px 7px -2px $color-shadow-normal;
-}
-
-@mixin shadow-large-upward() {
-    box-shadow: 0 -3px 15px -5px $color-shadow-normal;
+    box-shadow: 0 (-$spacing-extra-small) $radius-blur-small $radius-spread-small $color-shadow-medium;
 }
 
 @mixin shadow-large() {
-    box-shadow: 0 3px 15px -5px $color-shadow-normal;
+    box-shadow: 0 $spacing-small-alt $radius-blur-medium $radius-spread-medium $color-shadow-medium;
+}
+
+@mixin shadow-large-upward() {
+    box-shadow: 0 (-$spacing-small-alt) $radius-blur-medium $radius-spread-medium $color-shadow-medium;
 }
 
 @mixin shadow-large-dark() {
-    box-shadow: 0 3px 15px -5px $color-shadow-dark;
+    box-shadow: 0 $spacing-small-alt $radius-blur-medium $radius-spread-medium $color-shadow-dark;
 }
 
+@mixin shadow-button() {
+    box-shadow: 0 1px 3px -1px $color-shadow-medium;
+}
+
+@mixin shadow-button-active() {
+    box-shadow: 0 1px 2px -1px $color-shadow-medium;
+}
 
 @mixin transition-slow() {
-    transition: .4s all ease-in-out;
+    transition: $duration-transition-slow all ease-in-out;
 }
 
 @mixin transition-medium() {
-    transition: .2s all ease-in-out;
+    transition: $duration-transition-medium all ease-in-out;
 }
 
 @mixin transition-fast() {
-    transition: .1s all ease-in-out;
+    transition: $duration-transition-fast all ease-in-out;
 }
 
 @keyframes spin {
@@ -43,4 +50,89 @@
     to {
         transform: rotate(360deg);
     }
+}
+
+// Newton's method for calculation of square roots
+@function sqrt($r) {
+    $x0: 1;
+    $x1: $x0;
+
+    @for $i from 1 through 10 {
+        $x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0);
+        $x0: $x1;
+    }
+
+    @return $x1;
+}
+
+@function get-luminance($color) {
+    $r: red($color);
+    $g: green($color);
+    $b: blue($color);
+    $l: sqrt(.299 * $r * $r + .587 * $g * $g + .114 * $b * $b);
+    @return $l;
+}
+
+@function get-text-color($background-color, $color-for-light: $color-text-on-light, $color-for-dark: $color-text-on-dark) {
+    $l: get-luminance($background-color);
+    @if ($l > 176) {
+        @return $color-for-light;
+    }
+
+    @return $color-for-dark;
+}
+
+@mixin background-color($background-color) {
+    background-color: $background-color;
+    color: get-text-color($background-color);
+}
+
+@mixin background-color-with-label-text($background-color) {
+    background-color: $background-color;
+    color: get-text-color($background-color, $color-text-label-on-light, $color-text-label-on-dark);
+}
+
+@mixin background-color-with-disabled-text($background-color) {
+    background-color: $background-color;
+    color: get-text-color($background-color, $color-text-disabled-on-light, $color-text-disabled-on-dark);
+}
+
+@function get-hover-color($color) {
+    $l: get-luminance($color);
+
+    @if ($l > 128) {
+        @return darken($color, 20%);
+    }
+
+    @return lighten ($color, 20%);
+}
+
+%empty-text {
+    color: $color-text-disabled;
+}
+
+%button-like-link {
+    @include shadow-medium;
+    @include background-color($color-foreground);
+
+    border-radius: 3px;
+    padding: $spacing-small $spacing-medium;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: $font-size-small;
+
+    &:active {
+        @include shadow-small;
+        transform: translateY(1px);
+    }
+}
+
+%transparent-button-like-link {
+    border-radius: 3px;
+    background-color: transparent;
+    padding: $spacing-small $spacing-small-alt;
+    text-transform: uppercase;
+    color: $color-text;
+    font-family: inherit;
+    font-size: $font-size-small;
 }
