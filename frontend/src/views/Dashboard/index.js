@@ -1,14 +1,13 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
-import styles from './styles.scss';
 
-import {
-    currentUserActiveProjectSelector,
-} from '../../redux';
+import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
+
+import { currentUserActiveProjectSelector } from '../../redux';
 import BoundError from '../../components/BoundError';
+
+import styles from './styles.scss';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
@@ -21,7 +20,6 @@ const mapStateToProps = (state, props) => ({
 
 @BoundError
 @connect(mapStateToProps, undefined)
-@CSSModules(styles, { allowMultiple: true })
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -29,10 +27,11 @@ export default class Dashboard extends React.PureComponent {
         const { currentUserActiveProject } = this.props;
 
         return (
-            <div styleName="dashboard">
-                <GeoReferencedMap
-                    styleName="dashboard-map"
-                />
+            <div className={styles.dashboard}>
+                <p className={styles.header}>
+                    { currentUserActiveProject.title }
+                </p>
+                <GeoReferencedMap className={styles.dashboardMap} />
             </div>
         );
     }

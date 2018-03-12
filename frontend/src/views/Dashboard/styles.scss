@@ -3,9 +3,15 @@
 .dashboard {
     @extend %main-content;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: $color-foreground-alt;
+    flex-direction: column;
+
+    .header {
+        margin: 0;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-medium $spacing-medium-alt;
+        text-transform: uppercase;
+    }
 
     .dashboard-map {
         width: 100%;
