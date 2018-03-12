@@ -2,15 +2,50 @@
 
 .geo-selection {
     display: flex;
+    position: relative;
+    flex-direction: column;
 
-    .flat-select-input {
-        flex-grow: 1;
+    .header {
+        display: flex;
+        flex-shrink: 0;
+
+        .flat-select-input {
+            flex-grow: 1;
+        }
+
+        .map-modal-button {
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin-bottom: $width-separator-medium;
+        }
     }
 
-    .map-modal-button {
-        flex-shrink: 0;
-        align-self: flex-end;
-        margin-bottom: $width-separator-medium;
+    .region-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .region-name {
+            flex-shrink: 0;
+            padding: $spacing-small 0;
+
+            &::before {
+                display: inline-flex;
+                align-items: center;
+                margin-right: $spacing-small;
+                color: $color-label;
+                font-size: $font-size-extra-large;
+                content: '•';
+            }
+        }
+
+        :global .empty {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }
 

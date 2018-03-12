@@ -4,6 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import update from '../../vendor/react-store/utils/immutable-update';
+import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -32,6 +33,7 @@ const propTypes = {
     value: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
+    hideList: PropTypes.bool,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     entryStrings: PropTypes.func.isRequired,
 };
@@ -40,6 +42,7 @@ const defaultProps = {
     className: '',
     geoOptions: {},
     label: '',
+    hideList: false,
 };
 
 const emptyList = [];
@@ -115,30 +118,31 @@ export default class GeoSelection extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { geoOptions, value } = nextProps;
 
-        if (geoOptions !== this.props.geoOptions) {
+        if (geoOptions !== this.props.geoOptions || value !== this.props.values) {
             const locations = geoOptions;
             const flatLocations = GeoSelection.createFlatLocations(locations);
 
-            const { flatValues } = this.state;
+            const flatValues = value || emptyList;
             const values = GeoSelection.createNonFlatValues(locations, flatValues);
 
             this.setState({
                 values,
                 locations,
+                flatValues,
                 flatLocations,
             });
         }
 
-        if (value !== this.props.value) {
-            const { locations } = this.state;
-            const flatValues = value || emptyList;
-            const values = GeoSelection.createNonFlatValues(locations, flatValues);
+        // if (value !== this.props.value) {
+        //     const { locations } = this.state;
+        //     const flatValues = value || emptyList;
+        //     const values = GeoSelection.createNonFlatValues(locations, flatValues);
 
-            this.setState({
-                flatValues,
-                values,
-            });
-        }
+        //     this.setState({
+        //         flatValues,
+        //         values,
+        //     });
+        // }
     }
 
     handleRegionSelection = (selectedRegion) => {
@@ -277,12 +281,23 @@ export default class GeoSelection extends React.PureComponent {
         </div>
     )
 
+    renderList = (key, data) => (
+        <span
+            key={key}
+            className={styles['region-name']}
+        >
+            {data.label}
+        </span>
+    )
+
+
     render() {
         const {
             className,
             label,
             disabled,
             regions,
+            hideList,
         } = this.props;
 
         const {
@@ -293,6 +308,17 @@ export default class GeoSelection extends React.PureComponent {
             locations,
             flatLocations,
         } = this.state;
+
+        if (flatLocations.length === 0) {
+            return (
+                <div
+                    className={className}
+                    styleName="geo-selection"
+                >
+                    <LoadingAnimation />
+                </div>
+            );
+        }
 
         const selectedRegionSelections = {};
         (values[selectedRegion] || emptyList).forEach((key) => {
@@ -308,32 +334,39 @@ export default class GeoSelection extends React.PureComponent {
             }
         });
         const selectedRegionSelectionsList = Object.values(selectedRegionSelections);
+        const emptyComponent = 'No location selected';
+
+        const flatValuesWithTitle = flatValues.map(v => (
+            flatLocations.find(l => l.key === v)
+        )).filter(v => v);
 
         return (
             <div
                 className={className}
                 styleName="geo-selection"
             >
-                <MultiSelectInput
-                    className="flat-select-input"
-                    styleName="flat-select-input"
-                    label={label}
-                    showHintAndError={false}
-                    hideSelectAllButton
-                    onChange={this.handleFlatSelectChange}
-                    options={flatLocations}
-                    value={flatValues}
-                    disabled={disabled}
-                />
-                <AccentButton
-                    styleName="map-modal-button"
-                    onClick={this.handleGeoSelectButtonClick}
-                    smallVerticalPadding
-                    smallHorizontalPadding
-                    transparent
-                >
-                    <span className={iconNames.globe} />
-                </AccentButton>
+                <div className={styles.header}>
+                    <MultiSelectInput
+                        className="flat-select-input"
+                        styleName="flat-select-input"
+                        label={label}
+                        showHintAndError={false}
+                        hideSelectAllButton
+                        onChange={this.handleFlatSelectChange}
+                        options={flatLocations}
+                        value={flatValues}
+                        disabled={disabled}
+                    />
+                    <AccentButton
+                        styleName="map-modal-button"
+                        onClick={this.handleGeoSelectButtonClick}
+                        smallVerticalPadding
+                        smallHorizontalPadding
+                        transparent
+                    >
+                        <span className={iconNames.globe} />
+                    </AccentButton>
+                </div>
                 { showMapModal &&
                     <Modal
                         styleName="modal"
@@ -399,6 +432,15 @@ export default class GeoSelection extends React.PureComponent {
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>
+                }
+                {!hideList &&
+                    <ListView
+                        className={styles['region-list']}
+                        data={flatValuesWithTitle}
+                        emptyComponent={emptyComponent}
+                        keyExtractor={GeoSelection.valueKeyExtractor}
+                        modifier={this.renderList}
+                    />
                 }
             </div>
         );

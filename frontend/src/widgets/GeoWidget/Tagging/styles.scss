@@ -1,37 +1,7 @@
 @import '../../../stylesheets/base';
 
-.list {
-    display: flex;
-    flex-direction: column;
+.geo-select {
+    margin: $spacing-small 0;
     padding: 0 $spacing-small;
     height: 100%;
-
-    .geo-select {
-        flex-shrink: 0;
-        margin: $spacing-small 0;
-    }
-
-    .region-list {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        overflow-y: auto;
-
-        .region-name {
-            flex-shrink: 0;
-            background-color: $color-background-row;
-            padding: $spacing-small;
-
-            &:nth-child(odd) {
-                background-color: $color-background-row-alt;
-            }
-        }
-
-        :global .empty {
-            display: flex;
-            flex-grow: 1;
-            align-items: center;
-            justify-content: center;
-        }
-    }
 }
