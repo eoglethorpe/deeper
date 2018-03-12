@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import WarningButton from '../../../../vendor/react-store/components/Action/Button/WarningButton';
+import { isTruthy } from '../../../../vendor/react-store/utils/common';
 
 import {
     LEAD_TYPE,
@@ -100,8 +101,10 @@ export default class LeadListItem extends React.PureComponent {
     renderUploadProgress = ({ leadState, upload = {} }) => {
         const hide = leadState !== LEAD_STATUS.uploading || !upload;
 
+        const progress = isTruthy(upload.progress) ? upload.progress : 0;
+
         const classNames = [styles['progress-bar']];
-        if (upload.progress >= 100) {
+        if (progress >= 100) {
             classNames.push(styles.completed);
         }
         if (hide) {
@@ -109,9 +112,7 @@ export default class LeadListItem extends React.PureComponent {
         }
         const className = classNames.join(' ');
 
-        const style = {
-            width: `${upload.progress}%`,
-        };
+        const style = { width: `${progress}%` };
 
         return (
             <span className={className}>

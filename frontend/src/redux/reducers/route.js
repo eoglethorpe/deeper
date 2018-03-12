@@ -5,6 +5,7 @@ import { isTruthy } from '../../vendor/react-store/utils/common';
 // TYPE
 
 export const ROUTE__SET_PARAMS = 'route/SET_PARAMS';
+export const ROUTE__CLEAR_STATE = 'route/CLEAR_STATE';
 
 // ACTION-CREATOR
 
@@ -13,6 +14,10 @@ export const setRouteParamsAction = ({ match, location }) => ({
     match,
     location,
     // params,
+});
+
+export const clearRouteStateAction = () => ({
+    type: ROUTE__CLEAR_STATE,
 });
 
 // REDUCER
@@ -52,8 +57,17 @@ const setRouteParams = (state, action) => {
     return newState;
 };
 
+const clearRouteState = (state) => {
+    const newState = {
+        ...state,
+        routeState: {},
+    };
+    return newState;
+};
+
 export const routeReducers = {
     [ROUTE__SET_PARAMS]: setRouteParams,
+    [ROUTE__CLEAR_STATE]: clearRouteState,
 };
 
 const routeReducer = createReducerWithMap(routeReducers, initialRouteState);

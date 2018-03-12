@@ -84,7 +84,7 @@ export default class EditAdminLevel extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: this.props.adminLevelDetail,
             pending: false,
@@ -92,26 +92,17 @@ export default class EditAdminLevel extends React.PureComponent {
             adminLevelsOfRegion: this.calculateOtherAdminLevels(props.adminLevelsOfRegion),
         };
 
-        this.elements = [
-            'title',
-            'level',
-            'nameProp',
-            'codeProp',
-            'parentNameProp',
-            'parentCodeProp',
-            'parent',
-            'geoShapeFile',
-        ];
-
-        this.validations = {
-            title: [requiredCondition],
-            level: [requiredCondition, integerCondition, greaterThanOrEqualToCondition(0)],
-            nameProp: [],
-            codeProp: [],
-            parentNameProp: [],
-            parentCodeProp: [],
-            parent: [],
-            geoShapeFile: [],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+                level: [requiredCondition, integerCondition, greaterThanOrEqualToCondition(0)],
+                nameProp: [],
+                codeProp: [],
+                parentNameProp: [],
+                parentCodeProp: [],
+                parent: [],
+                geoShapeFile: [],
+            },
         };
     }
 
@@ -193,7 +184,7 @@ export default class EditAdminLevel extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save admin level.'],
+                    formErrors: { errors: ['Error while trying to save admin level.'] },
                 });
             })
             .build();
@@ -252,7 +243,7 @@ export default class EditAdminLevel extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to create admin level.'],
+                    formErrors: { errors: ['Error while trying to create admin level.'] },
                 });
             })
             .build();
@@ -260,18 +251,18 @@ export default class EditAdminLevel extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -357,16 +348,16 @@ export default class EditAdminLevel extends React.PureComponent {
                     changeCallback={this.changeCallback}
                     failureCallback={this.failureCallback}
                     successCallback={this.successCallback}
-                    elements={this.elements}
-                    validations={this.validations}
+                    schema={this.schema}
                     value={formValues}
-                    error={formFieldErrors}
+                    fieldErrors={formFieldErrors}
+                    formErrors={formErrors}
                     disabled={pending}
                 >
                     {
                         pending && <LoadingAnimation />
                     }
-                    <NonFieldErrors errors={formErrors} />
+                    <NonFieldErrors formerror="" />
                     <div styleName="admin-level-details" >
                         <TextInput
                             formname="level"

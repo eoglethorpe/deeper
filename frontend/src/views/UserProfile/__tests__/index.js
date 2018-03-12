@@ -30,17 +30,12 @@ describe('<User Profile Edit Form />', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    const elements = [
-        'firstName',
-        'lastName',
-        'organization',
-    ];
-
-    const validation = {};
-    const validations = {
-        firstName: [requiredCondition],
-        lastName: [requiredCondition],
-        organization: [requiredCondition],
+    const schema = {
+        fields: {
+            firstName: [requiredCondition],
+            lastName: [requiredCondition],
+            organization: [requiredCondition],
+        },
     };
 
     const wrapper = shallow(
@@ -48,12 +43,10 @@ describe('<User Profile Edit Form />', () => {
             store={store}
         >
             <Form
+                schema={schema}
                 changeCallback={() => {}}
-                elements={elements}
                 failureCallback={() => {}}
                 successCallback={() => {}}
-                validation={validation}
-                validations={validations}
             >
                 <TextInput />
             </Form>

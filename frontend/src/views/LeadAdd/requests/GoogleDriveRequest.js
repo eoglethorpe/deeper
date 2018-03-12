@@ -1,6 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
+import { leadAccessor } from '../../../entities/lead';
 
 import {
     urlForGoogleDriveFileUpload,
@@ -16,10 +17,12 @@ export default class GoogleDriveUploadRequest {
         const {
             driveUploadCoordinator,
             addLeadViewLeadChange,
+            getLeadFromId,
         } = params;
-        this.driveUploadCoordinator = driveUploadCoordinator;
 
+        this.driveUploadCoordinator = driveUploadCoordinator;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
+        this.getLeadFromId = getLeadFromId;
     }
 
     create = ({ leadId, title, accessToken, fileId, mimeType }) => {
@@ -39,9 +42,14 @@ export default class GoogleDriveUploadRequest {
         try {
             schema.validate(response, 'galleryFile');
 
+            const lead = this.getLeadFromId(leadId);
+            const leadValues = leadAccessor.getValues(lead);
             this.addLeadViewLeadChange({
                 leadId,
-                values: { attachment: { id: response.id } },
+                values: {
+                    ...leadValues,
+                    attachment: { id: response.id },
+                },
                 upload: {
                     title: response.title,
                     url: response.file,

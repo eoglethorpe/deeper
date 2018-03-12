@@ -13,8 +13,12 @@ const aryViewFromRouteSelector = createSelector(
     (view, id) => view[id] || emptyObject,
 );
 
-// eslint-disable-next-line import/prefer-default-export
 export const aryViewMetadataSelector = createSelector(
     aryViewFromRouteSelector,
     view => view.metaData || emptyObject,
+);
+
+export const aryViewMethodologySelector = createSelector(
+    aryViewFromRouteSelector,
+    view => view.methodology || emptyObject,
 );

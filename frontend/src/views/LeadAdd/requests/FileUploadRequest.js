@@ -1,5 +1,6 @@
 import { UploadBuilder } from '../../../vendor/react-store/utils/upload';
 import update from '../../../vendor/react-store/utils/immutable-update';
+import { leadAccessor } from '../../../entities/lead';
 
 import {
     urlForUpload,
@@ -17,10 +18,12 @@ export default class FileUploadRequest {
             uploadCoordinator,
             addLeadViewLeadChange,
             leadsStrings,
+            getLeadFromId,
         } = params;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.uploadCoordinator = uploadCoordinator;
         this.leadsStrings = leadsStrings;
+        this.getLeadFromId = getLeadFromId;
     }
 
     create = ({ file, leadId }) => {
@@ -54,9 +57,14 @@ export default class FileUploadRequest {
 
     handleLeadUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
+        const lead = this.getLeadFromId(leadId);
+        const leadValues = leadAccessor.getValues(lead);
         this.addLeadViewLeadChange({
             leadId,
-            values: { attachment: { id: response.id } },
+            values: {
+                ...leadValues,
+                attachment: { id: response.id },
+            },
             upload: {
                 title: response.title,
                 url: response.file,
@@ -80,10 +88,19 @@ export default class FileUploadRequest {
 
     handleLeadUploadFailure = leadId => (response) => {
         // FOR DATA CHANGE
+        const lead = this.getLeadFromId(leadId);
+        const leadValues = leadAccessor.getValues(lead);
         this.addLeadViewLeadChange({
             leadId,
-            values: { attachment: undefined },
-            formErrors: [`${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`],
+            values: {
+                ...leadValues,
+                attachment: undefined,
+            },
+            formErrors: {
+                errors: [
+                    `${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`,
+                ],
+            },
             uiState: { serverError: false },
         });
 

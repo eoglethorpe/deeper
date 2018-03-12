@@ -69,6 +69,7 @@ const mapDispatchToProps = dispatch => ({
 
 const emptyList = [];
 
+// XXX: Skipping refactor as this is to be removed
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class AddProjectMembers extends React.PureComponent {
@@ -87,23 +88,19 @@ export default class AddProjectMembers extends React.PureComponent {
         } = props;
 
         const formValues = {
-            ...projectDetails,
             memberships: [],
-            membersBlackList: (projectDetails.memberships || emptyList).map(d => d.member),
         };
 
-        const usersWithRole = users.map(user => ({
-            ...user,
-            role: 'normal',
-        }));
+        const usersWithRole = users.map(user => ({ ...user, role: 'normal' }));
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues,
             pending: false,
             pristine: false,
             usersWithRole,
+            membersBlackList: (projectDetails.memberships || emptyList).map(d => d.member),
         };
 
         this.memberHeaders = [
@@ -148,14 +145,11 @@ export default class AddProjectMembers extends React.PureComponent {
             },
         ];
 
-        this.elements = [
-            'memberships',
-        ];
-        this.validations = {
-            memberships: [requiredCondition],
+        this.schema = {
+            fields: {
+                memberships: [requiredCondition],
+            },
         };
-
-        this.usersFields = ['display_name', 'email', 'id'];
     }
 
     componentWillMount() {
@@ -204,8 +198,9 @@ export default class AddProjectMembers extends React.PureComponent {
     }
 
     createRequestForUsers = () => {
+        const usersFields = ['display_name', 'email', 'id'];
         const usersRequest = new FgRestBuilder()
-            .url(createUrlForUsers([this.usersFields]))
+            .url(createUrlForUsers(usersFields))
             .params(() => createParamsForUser())
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
@@ -218,12 +213,6 @@ export default class AddProjectMembers extends React.PureComponent {
                 } catch (er) {
                     console.error(er);
                 }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
             })
             .build();
         return usersRequest;
@@ -283,7 +272,7 @@ export default class AddProjectMembers extends React.PureComponent {
                 });
                 this.setState({
                     // FIXME: use strings
-                    formErrors: ['Error while trying to save project.'],
+                    formErrors: { errors: ['Error while trying to save project.'] },
                 });
             })
             .build();
@@ -291,18 +280,18 @@ export default class AddProjectMembers extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -329,7 +318,7 @@ export default class AddProjectMembers extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
@@ -337,44 +326,40 @@ export default class AddProjectMembers extends React.PureComponent {
             usersWithRole,
         } = this.state;
 
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         return (
             <Form
                 className={className}
                 styleName="add-member-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validation={this.validation}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
-                disabled={pending}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
                     styleName="non-field-errors"
-                    errors={formErrors}
+                    formerror=""
                 />
                 <TabularSelectInput
                     formname="memberships"
                     styleName="tabular-select"
-                    blackList={formValues.membersBlackList}
+                    blackList={this.state.membersBlackList}
                     options={usersWithRole}
                     optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddProjectMembers.optionLabelSelector}
                     keySelector={AddProjectMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
-                    error={formFieldErrors.memberships}
                 />
                 <div styleName="action-buttons">
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"
+                        disabled={pending}
                     >
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>

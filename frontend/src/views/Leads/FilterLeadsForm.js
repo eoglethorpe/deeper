@@ -85,14 +85,16 @@ export default class FilterLeadsForm extends React.PureComponent {
             pristine: false,
         };
 
-        this.formElements = [
-            'search',
-            'assignee',
-            'created_at',
-            'published_on',
-            'confidentiality',
-            'status',
-        ];
+        this.schema = {
+            fields: {
+                search: [],
+                assignee: [],
+                created_at: [],
+                published_on: [],
+                confidentiality: [],
+                status: [],
+            },
+        };
     }
 
     componentWillMount() {
@@ -164,7 +166,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
     handleChange = (values) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
+            formValues: values,
             pristine: true,
         }, () => {
             if (this.props.applyOnChange) {
@@ -190,9 +192,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         if (!this.state.pristine) {
             this.props.unsetLeadPageFilter();
         } else {
-            this.setState({
-                formValues: {},
-            });
+            this.setState({ formValues: {} });
         }
     }
 
@@ -221,7 +221,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                 className={`leads-filters ${className}`}
                 successCallback={this.handleSubmit}
                 changeCallback={this.handleChange}
-                elements={this.formElements}
+                schema={this.schema}
                 value={formValues}
             >
                 <MultiSelectInput

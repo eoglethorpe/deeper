@@ -19,19 +19,17 @@ describe('<UserGroupAdd />', () => {
     };
     const successCallback = () => {
     };
-    const validations = {};
-    const elements = [];
+    const schema = {};
     const wrapper = shallow(
         <Provider
             store={store}
         >
             <UserGroupAdd>
                 <Form
+                    schema={schema}
                     changeCallback={changeCallback}
-                    elements={elements}
                     failureCallback={failureCallback}
                     successCallback={successCallback}
-                    validations={validations}
                 >
                     <TextInput />
                 </Form>

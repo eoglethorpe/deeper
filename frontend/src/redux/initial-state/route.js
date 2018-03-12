@@ -1,6 +1,9 @@
 const initialRouteState = {
-    params: {
-    },
+    path: undefined,
+    url: undefined,
+    isExact: undefined,
+    params: {},
+    routeState: {},
 };
 
 export default initialRouteState;

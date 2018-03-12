@@ -16,8 +16,11 @@ export * from './categoryEditor';
 export * from './export';
 
 export const transformResponseErrorToFormError = (errors) => {
-    const { nonFieldErrors: formErrors = [], ...formFieldErrorList } = errors;
+    const { nonFieldErrors = [], ...formFieldErrorList } = errors;
 
+    const formErrors = {
+        errors: nonFieldErrors,
+    };
     const formFieldErrors = Object.keys(formFieldErrorList).reduce(
         (acc, key) => {
             acc[key] = formFieldErrorList[key].join(' ');

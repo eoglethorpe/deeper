@@ -23,10 +23,12 @@ export default class FormSaveRequest {
             formCoordinator,
             addLeadViewLeadChange,
             addLeadViewLeadSave,
+            getLeadFromId,
         } = params;
         this.formCoordinator = formCoordinator;
         this.addLeadViewLeadSave = addLeadViewLeadSave;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
+        this.getLeadFromId = getLeadFromId;
     }
 
     create = (lead, newValues) => {
@@ -68,6 +70,7 @@ export default class FormSaveRequest {
             return { leadRests };
         });
     }
+
     handleLeadSavePostLoad = leadId => () => {
         // FOR REST
         this.setState((state) => {
@@ -80,6 +83,7 @@ export default class FormSaveRequest {
             return { leadRests };
         });
     }
+
     handleLeadSaveSuccess = leadId => (response) => {
         try {
             schema.validate(response, 'lead');
@@ -93,6 +97,7 @@ export default class FormSaveRequest {
             this.formCoordinator.notifyComplete(leadId, true);
         }
     }
+
     handleLeadSaveFailure = leadId => (response) => {
         const {
             formFieldErrors,
@@ -107,11 +112,12 @@ export default class FormSaveRequest {
         });
         this.formCoordinator.notifyComplete(leadId, true);
     }
+
     handleLeadSaveFatal = leadId => () => {
         this.addLeadViewLeadChange({
             leadId,
             // FIXME: use strings
-            formErrors: ['Error while trying to save lead.'],
+            formErrors: { errors: ['Error while trying to save lead.'] },
             uiState: { pristine: true, serverError: true },
         });
         this.formCoordinator.notifyComplete(leadId, true);

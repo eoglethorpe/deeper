@@ -62,19 +62,17 @@ export default class UserGroupAdd extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
             pristine: false,
         };
 
-        this.elements = [
-            'title',
-        ];
-
-        this.validations = {
-            title: [requiredCondition],
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -136,7 +134,7 @@ export default class UserGroupAdd extends React.PureComponent {
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save user group.'],
+                    formErrors: { errors: ['Error while trying to save user group.'] },
                 });
             })
             .build();
@@ -145,18 +143,18 @@ export default class UserGroupAdd extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -178,7 +176,7 @@ export default class UserGroupAdd extends React.PureComponent {
     render() {
         const {
             formValues,
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             pending,
             pristine,
@@ -188,16 +186,16 @@ export default class UserGroupAdd extends React.PureComponent {
             <Form
                 styleName="user-group-add-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
-                validations={this.validations}
+                schema={this.schema}
                 value={formValues}
-                error={formFieldErrors}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors errors={formErrors} />
+                <NonFieldErrors formerror="" />
                 <TextInput
                     label={this.props.userStrings('addUserGroupModalLabel')}
                     formname="title"

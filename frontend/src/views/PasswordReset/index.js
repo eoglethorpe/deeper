@@ -51,7 +51,7 @@ export default class PasswordReset extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
@@ -59,33 +59,33 @@ export default class PasswordReset extends React.PureComponent {
             resetSuccess: false,
         };
 
-        // Data for form elements
-        this.elements = ['email', 'recaptchaResponse'];
-        this.validations = {
-            email: [
-                requiredCondition,
-                emailCondition,
-            ],
-            recaptchaResponse: [
-                requiredCondition,
-            ],
+        this.schema = {
+            fields: {
+                email: [
+                    requiredCondition,
+                    emailCondition,
+                ],
+                recaptchaResponse: [
+                    requiredCondition,
+                ],
+            },
         };
     }
 
     // FORM RELATED
 
-    changeCallback = (values, { formErrors, formFieldErrors }) => {
+    changeCallback = (values, formFieldErrors, formErrors) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formValues: values,
+            formFieldErrors,
             formErrors,
             pristine: true,
         });
     };
 
-    failureCallback = ({ formErrors, formFieldErrors }) => {
+    failureCallback = (formFieldErrors, formErrors) => {
         this.setState({
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
+            formFieldErrors,
             formErrors,
         });
     };
@@ -145,7 +145,7 @@ export default class PasswordReset extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to reset password.'],
+                    formErrors: { errors: ['Error while trying to reset password.'] },
                 });
             })
             .build();
@@ -154,7 +154,7 @@ export default class PasswordReset extends React.PureComponent {
 
     render() {
         const {
-            formErrors = [],
+            formErrors,
             formFieldErrors,
             formValues,
             pending,
@@ -176,16 +176,16 @@ export default class PasswordReset extends React.PureComponent {
                             <Form
                                 styleName="reset-password-form"
                                 changeCallback={this.changeCallback}
-                                elements={this.elements}
                                 failureCallback={this.failureCallback}
                                 successCallback={this.successCallback}
-                                validations={this.validations}
+                                schema={this.schema}
                                 value={formValues}
-                                error={formFieldErrors}
+                                formErrors={formErrors}
+                                fieldErrors={formFieldErrors}
                                 disabled={pending}
                             >
                                 { pending && <LoadingAnimation /> }
-                                <NonFieldErrors errors={formErrors} />
+                                <NonFieldErrors formerror="" />
                                 <TextInput
                                     formname="email"
                                     label={this.props.loginStrings('emailLabel')}
