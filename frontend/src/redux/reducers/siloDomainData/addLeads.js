@@ -114,13 +114,14 @@ const setErrorForLeads = (state, leadIndices) => {
             const lead = leads[leadIndex];
             const errors = leadAccessor.getErrors(lead);
             const fieldErrors = leadAccessor.getFieldErrors(lead);
-            const hasError = analyzeFieldErrors(fieldErrors) && analyzeFormErrors(errors);
+            const hasError = analyzeFieldErrors(fieldErrors) || analyzeFormErrors(errors);
+            console.warn(hasError, fieldErrors, errors);
             const serverError = leadAccessor.hasServerError(lead);
             acc[leadIndex] = {
                 uiState: {
                     error: { $set: hasError },
                     // clear serverError if there is no error
-                    serverError: { $set: serverError && hasError },
+                    serverError: { $set: !!serverError && hasError },
                 },
             };
             return acc;
@@ -421,7 +422,7 @@ const addLeadViewCopyAll = behavior => (state, action) => {
             form: {
                 values: { [attrName]: { $set: valueToCopy } },
                 fieldErrors: { [attrName]: { $set: undefined } },
-                errors: {},
+                errors: { $set: {} },
             },
             uiState: { pristine: { $set: false } },
         };

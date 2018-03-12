@@ -288,12 +288,13 @@ test('should change lead', () => {
                         serverId: 1,
                     },
                     form: {
-                        errors: {},
+                        errors: undefined,
                         fieldErrors: { title: 'Very short' },
                         values: { title: 'Lead #1' },
                     },
                     uiState: {
                         error: true,
+                        serverError: false,
                         pristine: false,
                     },
                 },
@@ -340,6 +341,7 @@ test('should change lead', () => {
                     uiState: {
                         error: true,
                         pristine: true,
+                        serverError: false,
                     },
                 },
             ],
@@ -429,22 +431,22 @@ test('should copy values in all lead', () => {
                 {
                     data: { id: 1, serverId: 1 },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 2, serverId: 2 },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 3, serverId: 3 },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: true },
+                    uiState: { error: false, pristine: true, serverError: false },
                 },
                 {
                     data: { id: 5, serverId: undefined },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
             ],
         },
@@ -491,22 +493,22 @@ test('should copy values in leads below', () => {
                 {
                     data: { id: 1, serverId: 1 },
                     form: { errors: {}, fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: true },
+                    uiState: { error: false, pristine: true, serverError: false },
                 },
                 {
                     data: { id: 2, serverId: 2 },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 3, serverId: 3 },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 5, serverId: undefined },
                     form: { errors: {}, fieldErrors: {}, values: { title: 'ld' } },
-                    uiState: { error: false, pristine: true },
+                    uiState: { error: false, pristine: true, serverError: false },
                 },
             ],
         },
@@ -553,22 +555,22 @@ test('should copy values in all lead, for assignee', () => {
                 {
                     data: { id: 1, serverId: 1 },
                     form: { errors: {}, fieldErrors: {}, values: { assignee: 'ld', project: 1 } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 2, serverId: 2 },
                     form: { errors: {}, fieldErrors: { assignee: 'error' }, values: { assignee: 'ld', project: 1 } },
-                    uiState: { error: true, pristine: false },
+                    uiState: { error: true, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 3, serverId: 3 },
                     form: { errors: {}, fieldErrors: {}, values: { project: 2 } },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
                 {
                     data: { id: 5, serverId: undefined },
                     form: { errors: {}, fieldErrors: {}, values: {} },
-                    uiState: { error: false, pristine: false },
+                    uiState: { error: false, pristine: false, serverError: false },
                 },
             ],
         },
