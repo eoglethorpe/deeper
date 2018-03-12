@@ -98,13 +98,7 @@
 }
 
 @function get-hover-color($color) {
-    $l: get-luminance($color);
-
-    @if ($l > 128) {
-        @return darken($color, 20%);
-    }
-
-    @return lighten ($color, 20%);
+    @return darken($color, 10%);
 }
 
 %empty-text {
