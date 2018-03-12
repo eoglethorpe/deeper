@@ -27,16 +27,18 @@
         overflow-y: auto;
 
         .region-name {
+            display: flex;
             flex-shrink: 0;
-            padding: $spacing-small 0;
 
-            &::before {
-                display: inline-flex;
-                align-items: center;
-                margin-right: $spacing-small;
+            .marker {
+                flex-shrink: 0;
+                align-self: flex-start;
+                padding-right: $spacing-small;
                 color: $color-label;
-                font-size: $font-size-extra-large;
-                content: '•';
+            }
+
+            .label {
+                flex-grow: 1;
             }
         }
 

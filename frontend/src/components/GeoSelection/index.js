@@ -118,7 +118,7 @@ export default class GeoSelection extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { geoOptions, value } = nextProps;
 
-        if (geoOptions !== this.props.geoOptions || value !== this.props.values) {
+        if (geoOptions !== this.props.geoOptions || value !== this.props.value) {
             const locations = geoOptions;
             const flatLocations = GeoSelection.createFlatLocations(locations);
 
@@ -132,17 +132,6 @@ export default class GeoSelection extends React.PureComponent {
                 flatLocations,
             });
         }
-
-        // if (value !== this.props.value) {
-        //     const { locations } = this.state;
-        //     const flatValues = value || emptyList;
-        //     const values = GeoSelection.createNonFlatValues(locations, flatValues);
-
-        //     this.setState({
-        //         flatValues,
-        //         values,
-        //     });
-        // }
     }
 
     handleRegionSelection = (selectedRegion) => {
@@ -281,15 +270,23 @@ export default class GeoSelection extends React.PureComponent {
         </div>
     )
 
-    renderList = (key, data) => (
-        <span
-            key={key}
-            className={styles['region-name']}
-        >
-            {data.label}
-        </span>
-    )
+    renderList = (key, data) => {
+        const marker = '●';
 
+        return (
+            <div
+                key={key}
+                className={styles['region-name']}
+            >
+                <div className={styles.marker}>
+                    { marker }
+                </div>
+                <div className={styles.label}>
+                    { data.label }
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const {
@@ -320,6 +317,7 @@ export default class GeoSelection extends React.PureComponent {
             );
         }
 
+        // TODO: Reduce complexity
         const selectedRegionSelections = {};
         (values[selectedRegion] || emptyList).forEach((key) => {
             const regionData = (flatLocations || emptyList).find(l => l.key === key) || emptyObject;
@@ -334,6 +332,8 @@ export default class GeoSelection extends React.PureComponent {
             }
         });
         const selectedRegionSelectionsList = Object.values(selectedRegionSelections);
+
+        // FIXME: Use strings
         const emptyComponent = 'No location selected';
 
         const flatValuesWithTitle = flatValues.map(v => (
