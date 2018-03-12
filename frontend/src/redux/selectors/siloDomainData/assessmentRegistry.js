@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { aryIdFromRoute, projectIdFromRoute } from '../domainData';
+import { leadIdFromRoute, projectIdFromRoute } from '../domainData';
 
 const emptyObject = {};
 const emptyList = [];
@@ -49,7 +49,7 @@ const aryViewSelector = ({ siloDomainData }) => (
 
 const aryViewFromRouteSelector = createSelector(
     aryViewSelector,
-    aryIdFromRoute,
+    leadIdFromRoute,
     (view, id) => view[id] || emptyObject,
 );
 

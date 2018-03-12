@@ -13,7 +13,6 @@ const leadSchema = [];
             assignee: { type: 'array.uint' },
             attachment: { type: 'object' }, // file url
             confidentiality: { type: 'string', required: true },
-            assessment: { type: 'uint' },
             noOfEntries: { type: 'int' },
             project: { type: 'uint' },
             publishedOn: { type: 'string' },

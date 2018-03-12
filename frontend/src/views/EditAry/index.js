@@ -1,7 +1,6 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types'; import { connect } from 'react-redux';
 
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import ResizableH from '../../vendor/react-store/components/View/Resizable/ResizableH';
@@ -12,23 +11,18 @@ import {
     setProjectAction,
 
     projectDetailsSelector,
-    aryIdFromRoute,
     aryStringsSelector,
-    leadIdFromRoute,
 } from '../../redux';
 
 import ProjectRequest from './requests/ProjectRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
 
-import NewAry from './NewAry';
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
 import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    activeLeadId: PropTypes.number.isRequired,
-    aryId: PropTypes.number,
 
     setProject: PropTypes.func.isRequired,
     setAryTemplate: PropTypes.func.isRequired,
@@ -38,14 +32,11 @@ const propTypes = {
 
 const defaultProps = {
     activeProject: {},
-    aryId: 0,
 };
 
 const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
-    aryId: aryIdFromRoute(state),
     activeProject: projectDetailsSelector(state),
-    activeLeadId: leadIdFromRoute(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -131,12 +122,7 @@ export default class EditAry extends React.PureComponent {
     }
 
     render() {
-        const {
-            aryId,
-            aryStrings,
-            activeProject,
-            activeLeadId,
-        } = this.props;
+        const { aryStrings } = this.props;
         const {
             pending,
             noTemplate,
@@ -151,15 +137,6 @@ export default class EditAry extends React.PureComponent {
                 <div styleName="no-ary-template">
                     <p>{aryStrings('noAryTemplateForProject')}</p>
                 </div>
-            );
-        }
-
-        if (!aryId) {
-            return (
-                <NewAry
-                    leadId={activeLeadId}
-                    projectId={activeProject.id}
-                />
             );
         }
 

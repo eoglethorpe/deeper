@@ -39,7 +39,6 @@ export default class ActionButtons extends React.PureComponent {
                 {
                     projectId: activeProject,
                     leadId: row.lead,
-                    aryId: row.id,
                 },
             ),
         };
