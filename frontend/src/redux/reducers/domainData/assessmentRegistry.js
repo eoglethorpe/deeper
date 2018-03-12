@@ -24,7 +24,6 @@ export const setAryFilterOptionsAction = ({ projectId, aryFilterOptions }) => ({
 
 const setAryTemplate = (state, action) => {
     const { template } = action;
-    console.warn(template);
     const settings = {
         aryTemplates: {
             [template.id]: { $auto: {
@@ -39,7 +38,7 @@ const setAryFilterOptions = (state, action) => {
     const { projectId, aryFilterOptions } = action;
     const settings = {
         aryFilterOptions: {
-            [projectId]: { $autoArray: {
+            [projectId]: { $auto: {
                 $set: aryFilterOptions,
             } },
         },

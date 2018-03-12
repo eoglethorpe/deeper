@@ -81,11 +81,13 @@ export default class FilterArysForm extends React.PureComponent {
             pristine: false,
         };
 
-        this.formElements = [
-            'search',
-            'created_at',
-            'created_by',
-        ];
+        this.schema = {
+            fields: {
+                created_at: [],
+                created_by: [],
+                search: [],
+            },
+        };
     }
 
     componentWillMount() {
@@ -133,7 +135,7 @@ export default class FilterArysForm extends React.PureComponent {
 
     handleChange = (values) => {
         this.setState({
-            formValues: { ...this.state.formValues, ...values },
+            formValues: values,
             pristine: true,
         }, () => {
             if (this.props.applyOnChange) {
@@ -186,7 +188,7 @@ export default class FilterArysForm extends React.PureComponent {
                 className={`arys-filters ${className}`}
                 successCallback={this.handleSubmit}
                 changeCallback={this.handleChange}
-                elements={this.formElements}
+                schema={this.schema}
                 value={formValues}
             >
                 <DateFilter
