@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import BoundError from '../../../components/BoundError';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import styles from './styles.scss';
@@ -48,6 +49,7 @@ export default class OrganigramList extends React.PureComponent {
                 className={styles.list}
                 data={values}
                 modifier={this.renderSelectedOrgan}
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

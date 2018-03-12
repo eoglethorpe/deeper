@@ -97,8 +97,7 @@ $height-tabs: 48px;
             .action-buttons {
                 .goto-link {
                     @extend %button-like-link;
-                    background-color: $color-primary;
-                    color: $color-text-on-primary;
+                    @include background-color($color-primary);
                 }
 
                 .save-button {

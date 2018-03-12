@@ -62,7 +62,8 @@
                 justify-content: space-between;
                 z-index: 11;
                 border-bottom: $width-separator-thin solid $color-separator-alt;
-                background-color: $color-background-header;
+                // background-color: $color-background-header;
+                background-color: $color-foreground-alt;
                 padding: $spacing-small $spacing-medium-alt;
 
                 .heading {
@@ -83,7 +84,7 @@
                 display: inline-block;
 
                 .entry {
-                    background-color: $color-background-row;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
                     min-width: 100%;
 
                     :global {
@@ -92,18 +93,12 @@
 
                             .header {
                                 border: 0;
-                                background-color: transparent;
                             }
 
                             .content {
                                 border: 0;
-                                background-color: transparent;
                             }
                         }
-                    }
-
-                    &:nth-child(even) {
-                        background-color: $color-background-row-alt;
                     }
                 }
             }

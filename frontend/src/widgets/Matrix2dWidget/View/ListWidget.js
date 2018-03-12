@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import BoundError from '../../../components/BoundError';
 
@@ -96,7 +97,7 @@ export default class Matrix2dList extends React.PureComponent {
                     className={styles['tag-sub-sector']}
                     data={data.subsectorsWithTitle || emptyList}
                     keyExtractor={Matrix2dList.rowKeyExtractor}
-                    emptyComponent={'-'}
+                    emptyComponent={WidgetEmptyComponent}
                     modifier={this.renderSubSector}
                 />
             </div>
@@ -125,15 +126,13 @@ export default class Matrix2dList extends React.PureComponent {
         const { data, attribute } = this.props;
         const selectedSectors = this.getSelectedSectors(data, attribute);
 
-        const emptyComponent = 'Nothing here';
-
         return (
             <ListView
                 className={styles.list}
                 keyExtractor={Matrix2dList.rowKeyExtractor}
                 data={selectedSectors || emptyList}
                 modifier={this.renderTagUnit}
-                emptyComponent={emptyComponent}
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

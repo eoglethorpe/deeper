@@ -26,7 +26,7 @@
             .heading {
                 margin-bottom: $spacing-large;
                 border-bottom: $width-separator-thin solid $color-separator;
-                color: $color-label;
+                color: $color-text-label;
             }
 
             .background-child,
@@ -49,7 +49,7 @@
         .heading {
             flex-basis: 100%;
             margin: $spacing-large 0;
-            color: $color-label;
+            color: $color-text-label;
         }
 
         .kobo,

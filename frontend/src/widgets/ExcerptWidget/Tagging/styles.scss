@@ -28,7 +28,7 @@
         justify-content: center;
         height: 100%;
         text-transform: uppercase;
-        color: $color-label;
+        color: $color-text-label;
     }
 
     .textarea {
@@ -63,6 +63,6 @@
 
     .image {
         @extend %image;
-        border: $width-separator-thin dashed $color-label;
+        border: $width-separator-thin dashed $color-text-label;
     }
 }

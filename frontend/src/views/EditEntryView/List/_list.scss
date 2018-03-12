@@ -17,8 +17,7 @@
         .action-buttons {
             .primary-link-button {
                 @extend %button-like-link;
-                background-color: $color-primary;
-                color: $color-text-on-primary;
+                @include background-color($color-primary);
             }
 
             .save-button {
@@ -57,12 +56,12 @@
 
                     .header {
                         border: 0;
-                        background-color: transparent;
+                        // background-color: transparent;
                     }
 
                     .content {
                         border: 0;
-                        background-color: transparent;
+                        // background-color: transparent;
                     }
                 }
             }

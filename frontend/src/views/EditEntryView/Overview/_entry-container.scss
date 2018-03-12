@@ -10,7 +10,7 @@
 
             &.active {
                 border-left: $width-separator-thick solid $color-accent;
-                background-color: $color-hover;
+                background-color: $color-background-hover;
             }
 
             .add-entry-list-item {
@@ -49,7 +49,7 @@
                         flex-shrink: 0;
                         margin-left: $spacing-small;
                         padding: 0;
-                        color: $color-label;
+                        color: $color-text-label;
                         font-size: $font-size-medium-alt;
                     }
 

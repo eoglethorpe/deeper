@@ -15,13 +15,11 @@
 
         .add-lead-link {
             @extend %button-like-link;
+            @include background-color($color-primary);
             flex-shrink: 0;
             align-self: flex-end;
             margin: $spacing-small;
-            background-color: $color-primary;
             padding: $spacing-small $spacing-medium-alt;
-            color: $color-foreground-alt;
-            font-size: $font-size-large;
         }
 
         .filters {
@@ -93,6 +91,7 @@
     .footer {
         display: flex;
         flex-shrink: 0;
+        align-items: center;
         justify-content: space-between;
         border-top: $width-separator-thin solid $color-separator;
         background-color: $color-foreground-alt;
@@ -105,12 +104,10 @@
 
         .link-container {
             display: flex;
-            height: 32px;
 
             .link {
                 @extend %button-like-link;
-                background-color: $color-primary;
-                color: $color-foreground-alt;
+                @include background-color($color-accent);
             }
         }
     }

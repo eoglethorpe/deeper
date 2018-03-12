@@ -85,12 +85,12 @@ $height-overview-edit-modal: 80vh;
                 flex-direction: column;
 
                 .edit-row {
+                    @include background-color($color-foreground);
                     display: flex;
                     flex-shrink: 0;
                     align-items: center;
                     justify-content: space-between;
                     border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: $color-foreground;
                     padding: $spacing-medium-alt;
 
                     .title-input {
@@ -113,12 +113,12 @@ $height-overview-edit-modal: 80vh;
                     flex-grow: 1;
 
                     .header {
+                        @include background-color($color-background-header);
                         display: flex;
                         flex-shrink: 0;
                         align-items: center;
                         justify-content: space-between;
                         border-bottom: $width-separator-thin solid $color-separator;
-                        background-color: $color-background-header;
                         padding: $spacing-small $spacing-medium;
                     }
 
@@ -131,9 +131,9 @@ $height-overview-edit-modal: 80vh;
                         }
 
                         .cell-list-item {
+                            @include background-color($color-foreground);
                             display: flex;
                             border-top: $width-separator-thin solid transparent;
-                            background-color: $color-foreground;
 
                             .edit-cell {
                                 display: flex;
@@ -150,7 +150,7 @@ $height-overview-edit-modal: 80vh;
                             }
 
                             &:nth-child(even) {
-                                background-color: $color-foreground-alt;
+                                @include background-color($color-foreground-alt);
                             }
                         }
                     }
@@ -161,7 +161,7 @@ $height-overview-edit-modal: 80vh;
                     flex-grow: 1;
                     align-items: center;
                     justify-content: center;
-                    color: $color-label;
+                    color: $color-text-label;
                 }
             }
         }
@@ -183,10 +183,10 @@ $height-overview-edit-modal: 80vh;
 }
 
 .cell-list-item {
+    @include background-color($color-foreground);
     display: flex;
     border-top: $width-separator-thin solid $color-separator;
     border-bottom: $width-separator-thin solid $color-separator;
-    background-color: $color-foreground;
     padding: $spacing-small 0;
 
     .drag-handle {
@@ -218,10 +218,10 @@ $height-overview-edit-modal: 80vh;
 }
 
 .row-list-item {
+    @include background-color($color-foreground);
     display: flex;
     border-top: $width-separator-thin solid $color-separator;
     border-bottom: $width-separator-thin solid $color-separator;
-    background-color: $color-foreground;
 
     .drag-handle {
         display: flex;
@@ -233,8 +233,7 @@ $height-overview-edit-modal: 80vh;
         padding: $spacing-small-alt $spacing-medium;
 
         &.active {
-            background-color: $color-accent;
-            color: $color-text-on-primary;
+            @include background-color($color-accent);
         }
     }
 
@@ -251,8 +250,7 @@ $height-overview-edit-modal: 80vh;
         font-family: inherit;
 
         &.active {
-            background-color: $color-accent;
-            color: $color-text-on-accent;
+            @include background-color($color-accent);
         }
     }
 }

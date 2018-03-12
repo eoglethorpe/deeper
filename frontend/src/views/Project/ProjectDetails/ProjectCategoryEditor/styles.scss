@@ -64,11 +64,11 @@
 
                 &.active {
                     border-left: $width-separator-thick solid $color-accent;
-                    background-color: $color-hover;
+                    background-color: $color-background-selected;
                 }
 
                 &:hover {
-                    background-color: $color-hover;
+                    background-color: $color-background-hover;
                 }
             }
         }

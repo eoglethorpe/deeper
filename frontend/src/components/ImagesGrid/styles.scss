@@ -1,5 +1,7 @@
 @import '../../stylesheets/base';
 
+$color-text-on-primary: get-text-color($color-primary);
+
 .images-grid {
     .images {
         display: flex;

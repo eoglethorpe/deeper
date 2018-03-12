@@ -26,12 +26,17 @@
                 flex-shrink: 0;
                 align-self: flex-start;
                 padding-right: $spacing-small;
-                color: $color-label;
+                color: $color-text-label;
             }
 
             .label {
                 flex-grow: 1;
             }
         }
+    }
+
+    :global .empty {
+        display: block;
+        padding: $spacing-small;
     }
 }

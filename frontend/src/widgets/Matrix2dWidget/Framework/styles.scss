@@ -1,6 +1,8 @@
 @import '../../../stylesheets/base';
 @import '../../../stylesheets/matrix-2d-overview-table';
 
+$color-text-on-accent: get-text-color($color-accent);
+
 .list {
     display: flex;
     align-items: center;
@@ -160,7 +162,7 @@ $height-overview-edit-modal: 80vh;
                 flex-basis: 80%;
                 align-items: center;
                 justify-content: center;
-                color: $color-label;
+                color: $color-text-label;
             }
         }
     }
@@ -200,7 +202,7 @@ $height-overview-edit-modal: 80vh;
 
         &.active {
             background-color: $color-accent;
-            color: $color-text-on-primary;
+            color: $color-text-on-accent;
         }
     }
 
@@ -212,7 +214,7 @@ $height-overview-edit-modal: 80vh;
 
         &.active {
             background-color: $color-accent;
-            color: $color-text-on-primary;
+            color: $color-text-on-accent;
         }
     }
 }

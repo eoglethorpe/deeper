@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import BoundError from '../../../components/BoundError';
 
@@ -36,16 +37,13 @@ export default class GeoViewList extends React.PureComponent {
             } = {},
         } = this.props;
 
-        // FIXME: use strings
-        const emptyComponent = 'No location selected';
-
         return (
             <ListView
                 data={values}
                 className={styles.list}
                 keyExtractor={GeoViewList.valueKeyExtractor}
                 modifier={this.mapRegionsList}
-                emptyComponent={emptyComponent}
+                emptyComponent={WidgetEmptyComponent}
             />
         );
     }

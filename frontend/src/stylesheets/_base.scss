@@ -91,10 +91,6 @@ body {
     height: 100%;
 }
 
-%empty-text {
-    color: $color-empty-text;
-}
-
 @keyframes slide-in {
     from {
         transform: rotateX(1deg);
@@ -107,30 +103,3 @@ body {
     }
 }
 
-%button-like-link {
-    @include shadow-medium;
-    border-radius: 3px;
-    background-color: $color-foreground;
-    padding: $spacing-small $spacing-medium;
-    text-transform: uppercase;
-    color: $color-label;
-    font-family: inherit;
-    font-size: $font-size-medium-alt;
-    font-weight: $font-weight-normal;
-
-    &:active {
-        @include shadow-small;
-        transform: translateY(1px);
-    }
-}
-
-%transparent-button-like-link {
-    border-radius: 3px;
-    background-color: transparent;
-    padding: $spacing-small $spacing-medium;
-    text-transform: uppercase;
-    color: $color-label;
-    font-family: inherit;
-    font-size: $font-size-medium-alt;
-    font-weight: $font-weight-normal;
-}
