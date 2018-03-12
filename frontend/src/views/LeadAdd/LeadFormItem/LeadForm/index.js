@@ -379,10 +379,14 @@ export default class LeadForm extends React.PureComponent {
                             key="title"
                             styleName="file-title"
                         >
-                            <InternalGallery
-                                onlyFileName
-                                galleryId={values.attachment && values.attachment.id}
-                            />
+                            {
+                                values.attachment && (
+                                    <InternalGallery
+                                        onlyFileName
+                                        galleryId={values.attachment.id}
+                                    />
+                                )
+                            }
                         </div>,
                         <HiddenInput
                             formname="attachment"

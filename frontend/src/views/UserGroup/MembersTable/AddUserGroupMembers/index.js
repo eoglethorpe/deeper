@@ -89,7 +89,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
         const membersBlackList = (userGroupDetails.memberships || emptyList).map(d => d.member);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
 

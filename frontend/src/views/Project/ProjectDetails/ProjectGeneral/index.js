@@ -288,7 +288,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: ['Error while trying to save jroject.'],
+                    formErrors: { errors: ['Error while trying to save project.'] },
                 });
             })
             .build();

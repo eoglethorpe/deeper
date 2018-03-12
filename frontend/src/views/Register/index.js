@@ -53,7 +53,7 @@ export default class Register extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,
@@ -166,7 +166,7 @@ export default class Register extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to register.'],
+                    formErrors: { errors: ['Error while trying to register.'] },
                 });
             })
             .build();

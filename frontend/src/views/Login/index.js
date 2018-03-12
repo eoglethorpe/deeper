@@ -267,7 +267,7 @@ export default class Login extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to log in.'],
+                    formErrors: { errors: ['Error while trying to log in.'] },
                     pending: false,
                 });
             })

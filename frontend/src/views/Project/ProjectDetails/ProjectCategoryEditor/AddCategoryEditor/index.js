@@ -57,7 +57,7 @@ export default class AddCategoryEditor extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: [],
+            formErrors: {},
             formFieldErrors: {},
             formValues: {},
             pending: false,

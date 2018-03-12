@@ -320,7 +320,7 @@ test('should change lead', () => {
         leadId: 1,
         values: { title: 'Lead #1' },
         formFieldErrors: {},
-        formErrors: ['Network problem'],
+        formErrors: { errors: ['Network problem'] },
         uistate: { pristine: false },
     });
     const after = {
@@ -333,7 +333,7 @@ test('should change lead', () => {
                         serverId: 1,
                     },
                     form: {
-                        errors: ['Network problem'],
+                        errors: { errors: ['Network problem'] },
                         fieldErrors: {},
                         values: { title: 'Lead #1' },
                     },

@@ -30,12 +30,6 @@ describe('<User Profile Edit Form />', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
 
-    const elements = [
-        'firstName',
-        'lastName',
-        'organization',
-    ];
-
     const schema = {
         fields: {
             firstName: [requiredCondition],
@@ -49,7 +43,6 @@ describe('<User Profile Edit Form />', () => {
             store={store}
         >
             <Form
-                elements={elements}
                 schema={schema}
                 changeCallback={() => {}}
                 failureCallback={() => {}}

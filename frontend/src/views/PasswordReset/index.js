@@ -59,7 +59,6 @@ export default class PasswordReset extends React.PureComponent {
             resetSuccess: false,
         };
 
-        // Data for form elements
         this.schema = {
             fields: {
                 email: [
@@ -146,7 +145,7 @@ export default class PasswordReset extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to reset password.'],
+                    formErrors: { errors: ['Error while trying to reset password.'] },
                 });
             })
             .build();

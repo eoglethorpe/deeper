@@ -203,7 +203,7 @@ export default class CountryKeyFigures extends React.PureComponent {
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: ['Error while trying to save region detail.'],
+                    formErrors: { errors: ['Error while trying to save region detail.'] },
                     pending: false,
                 });
             })

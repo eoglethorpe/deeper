@@ -237,7 +237,6 @@ export default class AddRegion extends React.PureComponent {
                 className={className}
                 styleName="add-region-form"
                 changeCallback={this.changeCallback}
-                elements={this.elements}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
                 schema={this.schema}
