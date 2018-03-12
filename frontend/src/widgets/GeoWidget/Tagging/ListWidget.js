@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ListView from '../../../vendor/react-store/components/View/List/ListView';
-
 import GeoSelection from '../../../components/GeoSelection';
 import BoundError from '../../../components/BoundError';
 
@@ -54,15 +52,6 @@ export default class GeoTaggingList extends React.PureComponent {
         }
     }
 
-    mapRegionsList = (key, data) => (
-        <span
-            key={key}
-            className={styles['region-name']}
-        >
-            {data.label}
-        </span>
-    )
-
     handleGeoSelectionChange = (flatValues, values) => {
         this.setState({
             values,
@@ -78,32 +67,20 @@ export default class GeoTaggingList extends React.PureComponent {
 
     render() {
         const {
-            values,
             flatValues,
         } = this.state;
 
         const { api } = this.props;
         const regions = api.getProject().regions;
-        // FIXME: use strings
-        const emptyComponent = 'No location selected';
 
         return (
-            <div className={styles.list}>
-                <GeoSelection
-                    className={styles['geo-select']}
-                    disabled={false}
-                    onChange={this.handleGeoSelectionChange}
-                    regions={regions}
-                    value={flatValues}
-                />
-                <ListView
-                    className={styles['region-list']}
-                    data={values}
-                    emptyComponent={emptyComponent}
-                    keyExtractor={GeoTaggingList.valueKeyExtractor}
-                    modifier={this.mapRegionsList}
-                />
-            </div>
+            <GeoSelection
+                className={styles['geo-select']}
+                disabled={false}
+                onChange={this.handleGeoSelectionChange}
+                regions={regions}
+                value={flatValues}
+            />
         );
     }
 }

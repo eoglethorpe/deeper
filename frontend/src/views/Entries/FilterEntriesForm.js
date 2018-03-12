@@ -301,6 +301,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     regions={this.props.projectDetails.regions}
                     value={filters[key] || emptyList}
                     disabled={this.props.pending}
+                    hideList
                 />
             );
         }

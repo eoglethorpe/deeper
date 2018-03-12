@@ -2,15 +2,52 @@
 
 .geo-selection {
     display: flex;
+    position: relative;
+    flex-direction: column;
 
-    .flat-select-input {
-        flex-grow: 1;
+    .header {
+        display: flex;
+        flex-shrink: 0;
+
+        .flat-select-input {
+            flex-grow: 1;
+        }
+
+        .map-modal-button {
+            flex-shrink: 0;
+            align-self: flex-end;
+            margin-bottom: $width-separator-medium;
+        }
     }
 
-    .map-modal-button {
-        flex-shrink: 0;
-        align-self: flex-end;
-        margin-bottom: $width-separator-medium;
+    .region-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .region-name {
+            display: flex;
+            flex-shrink: 0;
+
+            .marker {
+                flex-shrink: 0;
+                align-self: flex-start;
+                padding-right: $spacing-small;
+                color: $color-label;
+            }
+
+            .label {
+                flex-grow: 1;
+            }
+        }
+
+        :global .empty {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            justify-content: center;
+        }
     }
 }
 
