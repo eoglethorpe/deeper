@@ -8,8 +8,9 @@ from django.views.static import serve
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
 from django.conf import settings
-
 from rest_framework import routers
+
+import autofixture
 
 from user.views import (
     UserViewSet,
@@ -306,3 +307,5 @@ urlpatterns += [
     url(r'^$', FrontendView.as_view()),
     url(get_api_path(''), Api_404View.as_view()),
 ]
+
+autofixture.autodiscover()

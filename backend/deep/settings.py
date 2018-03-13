@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.gis',
 
+    'autofixture',
     'channels',
     'corsheaders',
     'crispy_forms',
@@ -54,9 +55,6 @@ INSTALLED_APPS = [
     'analysis_framework',
     'ary',
     'category_editor',
-    'deep_migration',
-    'docs',
-    'dummy_data',
     'entry',
     'export',
     'gallery',
@@ -67,6 +65,10 @@ INSTALLED_APPS = [
     'user',
     'user_group',
     'user_resource',
+
+    'deep_migration',
+    'docs',
+    'profiling',
 ]
 
 MIDDLEWARE = [
