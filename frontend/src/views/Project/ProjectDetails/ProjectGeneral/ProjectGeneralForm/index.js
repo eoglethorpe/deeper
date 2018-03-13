@@ -15,9 +15,7 @@ import Form, {
     requiredCondition,
 } from '../../../../../vendor/react-store/components/Input/Form';
 
-import {
-    projectStringsSelector,
-} from '../../../../../redux';
+import { projectStringsSelector } from '../../../../../redux';
 
 import styles from './styles.scss';
 
@@ -98,7 +96,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 styleName="project-general-form"
                 changeCallback={changeCallback}
                 failureCallback={failureCallback}
-                className={styles['project-general-form']}
+                className={styles.projectGeneralForm}
                 successCallback={successCallback}
                 schema={this.schema}
                 value={formValues}
@@ -107,7 +105,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <div className={styles['action-buttons']}>
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={handleFormCancel}
                         type="button"
@@ -120,27 +118,27 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     </SuccessButton>
                 </div>
                 <NonFieldErrors
-                    className={styles['non-field-errors']}
+                    className={styles.nonFieldErrors}
                     formerror=""
                 />
-                <div className={styles['inputs-container']}>
+                <div className={styles.inputsContainer}>
                     <TextInput
-                        label={this.props.projectStrings('projectNameLabel')}
+                        label={projectStrings('projectNameLabel')}
                         formname="title"
-                        placeholder={this.props.projectStrings('projectNamePlaceholder')}
+                        placeholder={projectStrings('projectNamePlaceholder')}
                         className={styles.name}
                     />
                     <DateInput
-                        label={this.props.projectStrings('projectStartDateLabel')}
+                        label={projectStrings('projectStartDateLabel')}
                         formname="startDate"
-                        placeholder={this.props.projectStrings('projectStartDatePlaceholder')}
-                        className={styles['start-date']}
+                        placeholder={projectStrings('projectStartDatePlaceholder')}
+                        className={styles.startDate}
                     />
                     <DateInput
-                        label={this.props.projectStrings('projectEndDateLabel')}
+                        label={projectStrings('projectEndDateLabel')}
                         formname="endDate"
-                        placeholder={this.props.projectStrings('projectEndDatePlaceholder')}
-                        className={styles['end-date']}
+                        placeholder={projectStrings('projectEndDatePlaceholder')}
+                        className={styles.endDate}
                     />
                 </div>
                 <TextArea
@@ -150,37 +148,38 @@ export default class ProjectGeneralForm extends React.PureComponent {
                     className={styles.description}
                     rows={3}
                 />
-                <div className={styles['selects-container']}>
-                    <div className={styles['regions-usergroup-container']}>
-                        <SelectInputWithList
-                            label={this.props.projectStrings('projectRegionLabel')}
-                            formname="regions"
-                            placeholder={this.props.projectStrings('projectRegionPlaceholder')}
-                            className={styles.regions}
-                            options={regionOptions}
-                            labelSelector={ProjectGeneralForm.optionLabelSelector}
-                            keySelector={ProjectGeneralForm.optionKeySelector}
-                        />
-                        <SelectInputWithList
-                            label={this.props.projectStrings('projectUserGroupLabel')}
-                            formname="userGroups"
-                            placeholder={this.props.projectStrings('projectUserGroupPlaceholder')}
-                            className={styles['user-groups']}
-                            options={userGroupsOptions}
-                            labelSelector={ProjectGeneralForm.optionLabelSelector}
-                            keySelector={ProjectGeneralForm.optionKeySelector}
-                        />
-                    </div>
+                <div className={styles.selectsContainer}>
+                    <SelectInputWithList
+                        label={projectStrings('projectRegionLabel')}
+                        formname="regions"
+                        placeholder={projectStrings('projectRegionPlaceholder')}
+                        className={styles.regions}
+                        options={regionOptions}
+                        labelSelector={ProjectGeneralForm.optionLabelSelector}
+                        keySelector={ProjectGeneralForm.optionKeySelector}
+                        hideSelectAllButton
+                    />
+                    <SelectInputWithList
+                        label={projectStrings('projectUserGroupLabel')}
+                        formname="userGroups"
+                        placeholder={projectStrings('projectUserGroupPlaceholder')}
+                        className={styles.userGroups}
+                        options={userGroupsOptions}
+                        labelSelector={ProjectGeneralForm.optionLabelSelector}
+                        keySelector={ProjectGeneralForm.optionKeySelector}
+                        hideSelectAllButton
+                    />
                     <TabularSelectInput
                         formname="memberships"
                         className={styles.members}
                         options={memberOptions}
-                        label={this.props.projectStrings('projectMembersLabel')}
+                        label={projectStrings('projectMembersLabel')}
                         optionsIdentifier="select-input-inside-modal"
                         labelSelector={ProjectGeneralForm.memberOptionLabelSelector}
                         keySelector={ProjectGeneralForm.memberOptionKeySelector}
                         tableHeaders={memberHeaders}
                         hideRemoveFromListButton
+                        hideSelectAllButton
                     />
                 </div>
             </Form>
