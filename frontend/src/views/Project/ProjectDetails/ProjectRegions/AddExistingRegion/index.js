@@ -81,7 +81,7 @@ export default class AddExistingRegion extends React.PureComponent {
         } = props;
 
         const formValues = {
-            regions: '',
+            regions: [],
         };
 
         this.state = {
@@ -241,6 +241,7 @@ export default class AddExistingRegion extends React.PureComponent {
         } = this.state;
 
         const { className } = this.props;
+        console.warn(formValues);
 
         return (
             <Form
