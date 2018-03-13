@@ -296,9 +296,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
     successCallback = (values) => {
         const { userGroupId } = this.props;
 
-        let newMembersList = [...values.memberships];
-
-        newMembersList = newMembersList.map(member => ({
+        const newMembersList = values.memberships.map(member => ({
             member: member.id,
             role: member.role,
             group: userGroupId,

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import {
@@ -159,41 +159,43 @@ export default class ProjectGeneral extends React.PureComponent {
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
-                    return ([
-                        <PrimaryButton
-                            smallVerticalPadding
-                            type="button"
-                            key="role-change"
-                            title={
-                                isAdmin
-                                    ? this.props.projectStrings('revokeAdminRightsTitle')
-                                    : this.props.projectStrings('grantAdminRightsTitle')
-                            }
-                            onClick={() => this.handleToggleMemberRoleClick(row)}
-                            iconName={isAdmin ? iconNames.locked : iconNames.person}
-                            transparent
-                        />,
-                        /*
-                        <PrimaryButton
-                            smallVerticalPadding
-                            type="button"
-                            key="goto-link"
-                            title={this.props.projectStrings('viewMemberLinkTitle')}
-                            onClick={() => this.handleGotoUserClick(row.member)}
-                            iconName={iconNames.openLink}
-                            transparent
-                        />,
-                        */
-                        <DangerButton
-                            smallVerticalPadding
-                            type="button"
-                            key="delete-member"
-                            title={this.props.projectStrings('deleteMemberLinkTitle')}
-                            onClick={() => this.handleDeleteMemberClick(row)}
-                            iconName={iconNames.delete}
-                            transparent
-                        />,
-                    ]);
+                    return (
+                        <Fragment>
+                            <PrimaryButton
+                                smallVerticalPadding
+                                type="button"
+                                key="role-change"
+                                title={
+                                    isAdmin
+                                        ? this.props.projectStrings('revokeAdminRightsTitle')
+                                        : this.props.projectStrings('grantAdminRightsTitle')
+                                }
+                                onClick={() => this.handleToggleMemberRoleClick(row)}
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                                transparent
+                            />
+                            {/*
+                            <PrimaryButton
+                                smallVerticalPadding
+                                type="button"
+                                key="goto-link"
+                                title={this.props.projectStrings('viewMemberLinkTitle')}
+                                onClick={() => this.handleGotoUserClick(row.member)}
+                                iconName={iconNames.openLink}
+                                transparent
+                            />
+                            */}
+                            <DangerButton
+                                smallVerticalPadding
+                                type="button"
+                                key="delete-member"
+                                title={this.props.projectStrings('deleteMemberLinkTitle')}
+                                onClick={() => this.handleDeleteMemberClick(row)}
+                                iconName={iconNames.delete}
+                                transparent
+                            />
+                        </Fragment>
+                    );
                 },
             },
         ];
@@ -257,7 +259,10 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     getMemberOptions = (users, members) => {
-        if (!members) return emptyList;
+        if (!members) {
+            return emptyList;
+        }
+
         if (!users) {
             return members.map(m => ({
                 ...m,

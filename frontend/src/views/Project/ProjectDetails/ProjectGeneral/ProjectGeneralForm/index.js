@@ -180,7 +180,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         labelSelector={ProjectGeneralForm.memberOptionLabelSelector}
                         keySelector={ProjectGeneralForm.memberOptionKeySelector}
                         tableHeaders={memberHeaders}
-                        error={formFieldErrors.memberships}
                         hideRemoveFromListButton
                     />
                 </div>
