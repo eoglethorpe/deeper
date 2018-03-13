@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
@@ -19,16 +18,18 @@ import {
     transformResponseErrorToFormError,
     createParamsForProjectPatch,
     createUrlForProject,
+    createParamsForUser,
+    createUrlForUsers,
 } from '../../../../rest';
 import {
     usersInformationListSelector,
-    activeUserSelector,
 
     projectDetailsSelector,
     projectOptionsSelector,
 
     setUserProjectMembershipAction,
     unsetUserProjectMembershipAction,
+    setUsersInformationAction,
     setProjectAction,
 
     notificationStringsSelector,
@@ -50,7 +51,7 @@ const propTypes = {
     projectOptions: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProject: PropTypes.func.isRequired,
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    setUsers: PropTypes.func.isRequired,
     className: PropTypes.string,
     notificationStrings: PropTypes.func.isRequired,
     projectStrings: PropTypes.func.isRequired,
@@ -66,12 +67,12 @@ const mapStateToProps = (state, props) => ({
     projectOptions: projectOptionsSelector(state, props),
     notificationStrings: notificationStringsSelector(state),
     projectStrings: projectStringsSelector(state),
-    activeUser: activeUserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setProject: params => dispatch(setProjectAction(params)),
     unsetUserProjectMembership: params => dispatch(unsetUserProjectMembershipAction(params)),
+    setUsers: params => dispatch(setUsersInformationAction(params)),
     setUserProjectMembership: params => dispatch(setUserProjectMembershipAction(params)),
 });
 
@@ -114,17 +115,10 @@ export default class ProjectGeneral extends React.PureComponent {
 
             regionOptions: projectOptions.regions || emptyList,
             userGroupsOptions: projectOptions.userGroups || emptyList,
-            selectedMember: {},
 
             pristine: false,
             pending: false,
             actionPending: false,
-
-            showAddMemberModal: false,
-            deleteMemberConfirmShow: false,
-            toggleRoleConfirmShow: false,
-
-            confirmText: '',
         };
 
         this.memberHeaders = [
@@ -165,48 +159,53 @@ export default class ProjectGeneral extends React.PureComponent {
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
-                    const isCurrentUser = row.member === this.props.activeUser.userId;
-                    if (isCurrentUser) {
-                        return (
-                            <div>
-                                <Link
-                                    className={styles['view-member-link']}
-                                    title={this.props.projectStrings('viewMemberLinkTitle')}
-                                    key={row.member}
-                                    to={reverseRoute(pathNames.userProfile, { userId: row.member })}
-                                >
-                                    <span className={iconNames.openLink} />
-                                </Link>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div>
-                            <PrimaryButton
-                                smallVerticalPadding
-                                type="button"
-                                title={
-                                    isAdmin
-                                        ? this.props.projectStrings('revokeAdminRightsTitle')
-                                        : this.props.projectStrings('grantAdminRightsTitle')
-                                }
-                                onClick={() => this.handleToggleMemberRoleClick(row)}
-                                iconName={isAdmin ? iconNames.locked : iconNames.person}
-                                transparent
-                            />
-                            <DangerButton
-                                smallVerticalPadding
-                                type="button"
-                                title={this.props.projectStrings('deleteMemberLinkTitle')}
-                                onClick={() => this.handleDeleteMemberClick(row)}
-                                iconName={iconNames.delete}
-                                transparent
-                            />
-                        </div>
-                    );
+                    return ([
+                        <PrimaryButton
+                            smallVerticalPadding
+                            type="button"
+                            key="role-change"
+                            title={
+                                isAdmin
+                                    ? this.props.projectStrings('revokeAdminRightsTitle')
+                                    : this.props.projectStrings('grantAdminRightsTitle')
+                            }
+                            onClick={() => this.handleToggleMemberRoleClick(row)}
+                            iconName={isAdmin ? iconNames.locked : iconNames.person}
+                            transparent
+                        />,
+                        /*
+                        <PrimaryButton
+                            smallVerticalPadding
+                            type="button"
+                            key="goto-link"
+                            title={this.props.projectStrings('viewMemberLinkTitle')}
+                            onClick={() => this.handleGotoUserClick(row.member)}
+                            iconName={iconNames.openLink}
+                            transparent
+                        />,
+                        */
+                        <DangerButton
+                            smallVerticalPadding
+                            type="button"
+                            key="delete-member"
+                            title={this.props.projectStrings('deleteMemberLinkTitle')}
+                            onClick={() => this.handleDeleteMemberClick(row)}
+                            iconName={iconNames.delete}
+                            transparent
+                        />,
+                    ]);
                 },
             },
         ];
+    }
+
+    componentWillMount() {
+        if (this.usersRequest) {
+            this.usersRequest.stop();
+        }
+
+        this.usersRequest = this.createRequestForUsers();
+        this.usersRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -251,6 +250,10 @@ export default class ProjectGeneral extends React.PureComponent {
         if (this.membershipDeleteRequest) {
             this.membershipDeleteRequest.stop();
         }
+
+        if (this.usersRequest) {
+            this.usersRequest.stop();
+        }
     }
 
     getMemberOptions = (users, members) => {
@@ -287,6 +290,27 @@ export default class ProjectGeneral extends React.PureComponent {
         });
 
         return finalOptions;
+    }
+
+    createRequestForUsers = () => {
+        const usersFields = ['display_name', 'email', 'id'];
+        const usersRequest = new FgRestBuilder()
+            .url(createUrlForUsers(usersFields))
+            .params(() => createParamsForUser())
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                try {
+                    schema.validate(response, 'usersGetResponse');
+                    this.props.setUsers({
+                        users: response.results,
+                    });
+                } catch (er) {
+                    console.error(er);
+                }
+            })
+            .build();
+        return usersRequest;
     }
 
     createProjectPatchRequest = (newProjectDetails, projectId) => {
@@ -390,11 +414,18 @@ export default class ProjectGeneral extends React.PureComponent {
 
         const regions = values.regions.map(region => ({ id: region }));
         const userGroups = values.userGroups.map(userGroup => ({ id: userGroup }));
+        const memberships = values.memberships.map(m => ({
+            id: m.memberId,
+            member: m.id,
+            project: projectId,
+            role: m.role,
+        }));
 
         const newProjectDetails = {
             ...values,
             regions,
             userGroups,
+            memberships,
         };
 
         if (this.projectPatchRequest) {
@@ -428,6 +459,13 @@ export default class ProjectGeneral extends React.PureComponent {
             });
         }
     };
+
+    handleGotoUserClick = (userId) => {
+        const params = { userId };
+
+        const win = window.open(reverseRoute(pathNames.userProfile, params), '_blank');
+        win.focus();
+    }
 
     handleDeleteMemberClick = (member) => {
         const { formValues } = this.state;
@@ -466,7 +504,7 @@ export default class ProjectGeneral extends React.PureComponent {
 
         return (
             <div
-                className={`${className} ${styles['project-general']}`}
+                className={`${className} ${styles.projectGeneral}`}
             >
                 {actionPending && <LoadingAnimation />}
                 <ProjectGeneralForm
@@ -481,7 +519,7 @@ export default class ProjectGeneral extends React.PureComponent {
                     handleFormCancel={this.handleFormCancel}
                     successCallback={this.successCallback}
                     memberHeaders={this.memberHeaders}
-                    className={styles['project-general-form']}
+                    className={styles.projectGeneralForm}
                     pristine={pristine}
                     pending={pending}
                 />
