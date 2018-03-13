@@ -1,23 +1,29 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
-    createUrlForAry,
+    createUrlForLeadAry,
     commonParamsForGET,
 } from '../../../rest';
 import schema from '../../../schema';
 
 export default class AryGetRequest {
+    static dataType = {
+        metaData: 'meta_data',
+        methodologyData: 'methodology_data',
+    }
+
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
         };
 
-        const { setAry } = params;
+        const { setAry, dataType } = params;
         this.setAry = setAry;
+        this.dataType = dataType;
     }
 
-    create = (id) => {
+    create = (id) => { // id is lead id
         const aryPutRequest = new FgRestBuilder()
-            .url(createUrlForAry(id))
+            .url(createUrlForLeadAry(id, [this.dataType]))
             .params(commonParamsForGET())
             .preLoad(() => { this.setState({ pending: true }); })
             .postLoad(() => { this.setState({ pending: false }); })

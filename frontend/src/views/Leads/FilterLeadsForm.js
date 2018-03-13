@@ -177,6 +177,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
     handleSubmit = (values) => {
         this.setState({ pristine: false });
+        // FIXME: values is undefined when all values are empty in form
         this.props.setLeadPageFilter({
             filters: values,
         });

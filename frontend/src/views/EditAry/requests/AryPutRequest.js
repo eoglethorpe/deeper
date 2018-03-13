@@ -1,6 +1,6 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
-    createUrlForAry,
+    createUrlForLeadAry,
     createParamsForAryEdit,
 } from '../../../rest';
 import schema from '../../../schema';
@@ -17,7 +17,7 @@ export default class AryPutRequest {
 
     create = (id, data) => {
         const aryPutRequest = new FgRestBuilder()
-            .url(createUrlForAry(id))
+            .url(createUrlForLeadAry(id))
             .params(createParamsForAryEdit(data))
             .preLoad(() => { this.setState({ pending: true }); })
             .postLoad(() => { this.setState({ pending: false }); })

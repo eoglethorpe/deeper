@@ -38,9 +38,9 @@ export const setArysAction = ({ projectId, arys, totalArysCount }) => ({
     totalArysCount,
 });
 
-export const setAryAction = ({ id, metaData, methodologyData }) => ({
+export const setAryAction = ({ lead, metaData, methodologyData }) => ({
     type: ARY__UPDATE,
-    id,
+    lead,
     metaData,
     methodologyData,
 });
@@ -118,18 +118,18 @@ const aryViewSetActiveSort = (state, action) => {
 
 const setAry = (state, action) => {
     const {
-        id,
-        metaData = {},
-        methodologyData = {},
+        lead,
+        metaData,
+        methodologyData,
     } = action;
     const settings = {
         aryView: {
-            [id]: { $auto: {
+            [lead]: { $auto: {
                 metaData: { $auto: {
-                    $merge: metaData,
+                    $set: metaData,
                 } },
                 methodologyData: { $auto: {
-                    $merge: methodologyData,
+                    $set: methodologyData,
                 } },
             } },
         },

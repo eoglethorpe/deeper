@@ -8,11 +8,21 @@ import {
     wsEndpoint,
 } from '../config/rest';
 
+
+const aryUrlFields = ['id', 'title', 'version_id', 'lead', 'created_at', 'modified_at'];
+
 export const urlForAryTemplates = `${wsEndpoint}/assessment-templates/`;
 export const urlForArys = `${wsEndpoint}/assessments/`;
 
 export const createUrlForAryTemplate = id => `${wsEndpoint}/assessment-templates/${id}/`;
 export const createUrlForAry = id => `${wsEndpoint}/assessments/${id}/`;
+export const createUrlForLeadAry = (id, fields) => { // id is lead Id
+    if (fields) {
+        return `${wsEndpoint}/lead-assessments/${id}/?${p({ fields: aryUrlFields.concat(fields) })}`;
+    }
+    return `${wsEndpoint}/lead-assessments/${id}/`;
+};
+
 export const createUrlForAryDelete = createUrlForAry;
 
 export const createUrlForArysOfProject = params => (

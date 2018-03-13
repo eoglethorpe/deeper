@@ -7,7 +7,8 @@ import {
     aryStringsSelector,
     aryViewMetadataSelector,
     aryTemplateMetadataSelector,
-    // setAryAction,
+    leadIdFromRouteSelector,
+    setAryAction,
 } from '../../../../redux';
 import Form, {
     requiredCondition,
@@ -20,13 +21,17 @@ import NumberInput from '../../../../vendor/react-store/components/Input/NumberI
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../../vendor/react-store/components/Action/Button';
 
+import AryPutRequest from '../../requests/AryPutRequest';
+import AryGetRequest from '../../requests/AryGetRequest';
+
 import styles from './styles.scss';
 
 const propTypes = {
+    activeLeadId: PropTypes.number.isRequired,
     aryStrings: PropTypes.func.isRequired,
     metaData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    // setAry: PropTypes.func.isRequired,
+    setAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,18 +41,17 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
+    activeLeadId: leadIdFromRouteSelector(state),
     aryStrings: aryStringsSelector(state),
     metaData: aryViewMetadataSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
 });
 
-/*
 const mapDispatchToProps = dispatch => ({
-    // setAry: params => dispatch(setAryAction(params)),
+    setAry: params => dispatch(setAryAction(params)),
 });
-*/
 
-@connect(mapStateToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 @CSSModules(styles, { allowMultiple: true })
 export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
@@ -118,6 +122,15 @@ export default class Metadata extends React.PureComponent {
         };
     }
 
+    componentWillMount() {
+        const { activeLeadId, setAry } = this.props;
+        const aryGetRequest = new AryGetRequest(this, {
+            setAry, dataType: AryGetRequest.dataType.metaData,
+        });
+        this.aryGetRequest = aryGetRequest.create(activeLeadId);
+        this.aryGetRequest.start();
+    }
+
     componentWillReceiveProps(nextProps) {
         if (this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata) {
             const { aryTemplateMetadata: metadataGroups } = nextProps;
@@ -127,6 +140,20 @@ export default class Metadata extends React.PureComponent {
                 formErrors: {},
                 formFieldErrors: {},
             });
+        }
+        if (this.props.metaData !== nextProps.metaData) {
+            this.setState({
+                formValues: nextProps.metaData || {},
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
+        if (this.aryGetRequest) {
+            this.aryGetRequest.stop();
         }
     }
 
@@ -147,7 +174,15 @@ export default class Metadata extends React.PureComponent {
     };
 
     successCallback = (value) => {
-        console.warn('Submit', value);
+        const { activeLeadId, setAry } = this.props;
+
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
+
+        const aryPutRequest = new AryPutRequest(this, { setAry });
+        this.aryPutRequest = aryPutRequest.create(activeLeadId, { metaData: value });
+        this.aryPutRequest.start();
     };
 
     render() {

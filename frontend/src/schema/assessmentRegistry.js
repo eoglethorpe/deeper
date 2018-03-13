@@ -77,7 +77,7 @@ const assessmentRegistrySchema = [];
             metaData: { type: 'object' },
             methodologyData: { type: 'object' },
             lead: { type: 'uint', required: true },
-            leadTitle: { type: 'string', required: true },
+            leadTitle: { type: 'string' },
         },
     };
     assessmentRegistrySchema.push({ name, schema });
