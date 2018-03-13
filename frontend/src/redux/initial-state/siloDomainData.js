@@ -159,7 +159,7 @@ const initialSiloDomainData = {
 
     aryView: {
         /*
-        // index is assesment registry id
+        // index is lead id
         1: {
             versionId: 0,
             metadata: { },

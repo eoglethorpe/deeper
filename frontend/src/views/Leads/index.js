@@ -343,11 +343,12 @@ export default class Leads extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const { formErrors: { errors = [] } } =
+                    transformResponseErrorToFormError(response.errors);
                 notify.send({
                     title: 'Leads', // FIXME: strings
                     type: notify.type.ERROR,
-                    message,
+                    message: errors.join(''),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -392,11 +393,12 @@ export default class Leads extends React.PureComponent {
                 this.leadRequest.start();
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const { formErrors: { errors = [] } } =
+                    transformResponseErrorToFormError(response.errors);
                 notify.send({
                     title: this.props.leadsStrings('leadDelete'),
                     type: notify.type.ERROR,
-                    message,
+                    message: errors.join(''),
                     duration: notify.duration.MEDIUM,
                 });
             })
