@@ -159,8 +159,8 @@ export default class GalleryViewer extends React.PureComponent {
         );
     }
 
-    renderBar = ({ url, showScreenshot, previewError }) => {
-        const isScreenshotable = showScreenshot && !previewError;
+    renderBar = ({ url, showScreenshot }) => {
+        const isScreenshotable = showScreenshot;
         const urlbarClassNames = [
             styles.urlbar,
             'urlbar',
@@ -256,7 +256,6 @@ export default class GalleryViewer extends React.PureComponent {
                         showUrl,
                         showBar,
                         showScreenshot,
-                        previewError,
                     })
                 }
                 <div className={docContainerClassNames.join(' ')}>
