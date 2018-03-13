@@ -7,6 +7,7 @@ import {
     countriesStringsSelector,
 } from '../../redux';
 
+import ListView from '../../vendor/react-store/components/View/List/ListView';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -34,74 +35,76 @@ export default class RegionDetailView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    render() {
-        const {
-            className,
-            regionDetail,
-        } = this.props;
+    constructor(props) {
+        super(props);
 
-        const regionalGroups = regionDetail.regionalGroups || '';
+        // FIXME: use strings
+        this.regionDetailMeta = {
+            title: 'Name',
+            code: 'Code',
+            wbRegion: 'WB Region',
+            wbIncomeRegion: 'WB Income Region',
+            ochaRegion: 'OCHA Region',
+            echoRegion: 'ECHO Region',
+            unGeoRegion: 'UN Geographical Region',
+            unGeoSubRegion: 'UN Geographical Sub Region',
+        };
+    }
 
-        const keyValues = [
-            {
-                key: 'Name',
-                value: regionDetail.title || '',
-            },
-            {
-                key: 'Code',
-                value: regionDetail.code || '',
-            },
-            {
-                key: 'WB Region',
-                value: regionalGroups.wbRegion || '',
-            },
-            {
-                key: 'WB Income Region',
-                value: regionalGroups.wbIncomeRegion || '',
-            },
-            {
-                key: 'OCHA Region',
-                value: regionalGroups.ochaRegion || '',
-            },
-            {
-                key: 'ECHO Region',
-                value: regionalGroups.echoRegion || '',
-            },
-            {
-                key: 'UN Geographical Region',
-                value: regionalGroups.unGeoRegion || '',
-            },
-            {
-                key: 'UN Geographical Sub Region',
-                value: regionalGroups.unGeoSubRegion || '',
-            },
-        ];
+    renderRegionDetailItem = (key) => {
+        const { regionDetail = {} } = this.props;
+        let { regionalGroups } = regionDetail;
+
+        if (!regionalGroups) {
+            regionalGroups = {};
+        }
+
+        const value = regionDetail[key] || regionalGroups[key];
+
+        if (!value) {
+            return null;
+        }
 
         return (
             <div
-                className={`${className} ${styles['region-detail-view']}`}
+                className={styles.row}
+                key={key}
             >
-                <h3
-                    className={styles.heading}
-                >
-                    {this.props.countriesStrings('regionGeneralInfoLabel')}
+                <div className={styles.title}>
+                    {this.regionDetailMeta[key]}
+                </div>
+                <div className={styles.value}>
+                    { value }
+                </div>
+            </div>
+        );
+    }
+
+    render() {
+        const {
+            className,
+            countriesStrings,
+        } = this.props;
+
+        const regionDetailsList = Object.keys(this.regionDetailMeta);
+
+        const classNames = [
+            className,
+            styles.regionDetailView,
+        ];
+
+        const headingText = countriesStrings('regionGeneralInfoLabel');
+
+        return (
+            <div className={classNames.join(' ')}>
+                <h3 className={styles.heading}>
+                    { headingText }
                 </h3>
-                {
-                    keyValues.map(data => (
-                        data.value !== '' &&
-                        <div
-                            className={styles.row}
-                            key={data.key}
-                        >
-                            <div className={styles.key}>
-                                {data.key}
-                            </div>
-                            <div className={styles.value}>
-                                {data.value}
-                            </div>
-                        </div>
-                    ))
-                }
+                <ListView
+                    className={styles.content}
+                    data={regionDetailsList}
+                    modifier={this.renderRegionDetailItem}
+                />
             </div>
         );
     }

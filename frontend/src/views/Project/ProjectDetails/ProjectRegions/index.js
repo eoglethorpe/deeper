@@ -4,10 +4,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import RadioInput from '../../../../vendor/react-store/components/Input/RadioInput';
-import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import Modal from '../../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../../vendor/react-store/components/View/Modal/Header';
@@ -73,7 +72,7 @@ export default class ProjectRegions extends React.PureComponent {
             selectedRegion,
             selectedAddRegionOption: 'old',
             searchInputValue: '',
-            addRegionModal: false,
+            showAddRegionModal: false,
         };
     }
 
@@ -101,13 +100,17 @@ export default class ProjectRegions extends React.PureComponent {
         }
     }
 
-    getModalStyleName = () => {
+    getModalClassName = () => {
         const { selectedAddRegionOption } = this.state;
-        const styleNames = ['add-region-modal'];
+        const classNames = [
+            styles.showAddRegionModal,
+        ];
+
         if (selectedAddRegionOption === 'old') {
-            styleNames.push('existing-region');
+            classNames.push(styles.existingRegion);
         }
-        return styleNames.join(' ');
+
+        return classNames.join(' ');
     }
 
 
@@ -136,13 +139,13 @@ export default class ProjectRegions extends React.PureComponent {
 
     handleAddRegionButtonClick = () => {
         this.setState({
-            addRegionModal: true,
+            showAddRegionModal: true,
         });
     }
 
     handleModalClose = () => {
         this.setState({
-            addRegionModal: false,
+            showAddRegionModal: false,
             selectedAddRegionOption: 'old',
         });
     };
@@ -161,123 +164,172 @@ export default class ProjectRegions extends React.PureComponent {
         this.setState({ selectedRegion: region });
     }
 
-    calcRegionKey = region => region.id;
+    renderRegionListItem = (key, region) => {
+        const { selectedRegion } = this.state;
 
-    renderRegionList = (key, region) => {
-        const isActive = region.id === this.state.selectedRegion;
+        const classNames = [
+            styles.regionListItem,
+        ];
+
+        if (region.id === selectedRegion) {
+            classNames.push(styles.active);
+        }
+
         return (
-            <ListItem
-                active={isActive}
-                key={key}
-                scrollIntoView={isActive}
+            <button
+                key={region.id}
+                className={classNames.join(' ')}
+                onClick={() => { this.handleRegionClick(region.id); }}
             >
-                <button
-                    className="button"
-                    onClick={() => this.handleRegionClick(region.id)}
-                >
-                    {region.title}
-                </button>
-            </ListItem>
+                {region.title}
+            </button>
         );
     }
 
-    renderSelectedRegionDetails = (projectDetails, selectedRegion) => {
-        if ((projectDetails.regions || emptyList).length > 0) {
+    renderRegionDetails = ({
+        projectDetails = emptyList,
+        selectedRegion,
+    }) => {
+        if (projectDetails.regions.length > 0) {
             return (
-                <ProjectRegionDetail
-                    key={selectedRegion}
-                    countryId={selectedRegion}
-                    onRegionClone={this.handleRegionClone}
+                <div className={styles.regionDetailsContainer}>
+                    <ProjectRegionDetail
+                        key={selectedRegion}
+                        countryId={selectedRegion}
+                        onRegionClone={this.handleRegionClone}
+                    />
+                </div>
+            );
+        }
+
+        const { projectStrings } = this.props;
+        const noRegionText = projectStrings('noRegionText');
+        return (
+            <div className={styles.noRegions}>
+                { noRegionText }
+            </div>
+        );
+    }
+
+    renderAddRegionForm = () => {
+        const { projectDetails } = this.props;
+        const { selectedAddRegionOption } = this.state;
+
+        if (selectedAddRegionOption === 'old') {
+            return (
+                <AddExistingRegion
+                    className={styles.addExistingRegion}
+                    projectId={projectDetails.id}
+                    onModalClose={this.handleModalClose}
+                    onRegionsAdd={this.handleAddedRegions}
                 />
             );
         }
 
         return (
-            <p styleName="no-regions">
-                {this.props.projectStrings('noRegionText')}
-            </p>
+            <AddRegion
+                className={styles.addRegion}
+                projectId={projectDetails.id}
+                onModalClose={this.handleModalClose}
+                onRegionAdd={this.handleAddedRegion}
+            />
         );
     }
 
-
-    render() {
-        const {
-            projectDetails,
-        } = this.props;
+    renderAddRegionModal = () => {
+        const { projectStrings } = this.props;
 
         const {
-            displayRegionList,
-            selectedRegion,
-            addRegionModal,
-            searchInputValue,
+            showAddRegionModal,
             selectedAddRegionOption,
         } = this.state;
 
-        const sortedRegions = [...displayRegionList];
-        sortedRegions.sort((a, b) => compareString(a.title, b.title));
+        if (!showAddRegionModal) {
+            return null;
+        }
+
+        const title = projectStrings('addRegionModalTitle');
+        const bodyClassName = this.getModalClassName();
+        const AddRegionForm = this.renderAddRegionForm;
 
         return (
-            <div styleName="project-regions">
-                <div styleName="list-container">
-                    <div styleName="list-header">
-                        <TextInput
-                            styleName="search-input"
-                            onChange={this.handleSearchInputChange}
-                            placeholder={this.props.projectStrings('searchRegionPlaceholder')}
-                            type="search"
-                            value={searchInputValue}
-                        />
-                        <PrimaryButton
-                            iconName={iconNames.add}
-                            styleName="add-btn"
-                            onClick={this.handleAddRegionButtonClick}
-                        >
-                            {this.props.projectStrings('addRegionButtonLabel')}
-                        </PrimaryButton>
-                        { addRegionModal &&
-                            <Modal>
-                                <ModalHeader title={this.props.projectStrings('addRegionModalTitle')} />
-                                <ModalBody styleName={this.getModalStyleName()}>
-                                    <RadioInput
-                                        styleName="radio-input"
-                                        name="addRegionRadioInput"
-                                        options={this.addRegionOptions}
-                                        onChange={
-                                            selectedOption =>
-                                                this.handleRadioInputChange(selectedOption)
-                                        }
-                                        value={selectedAddRegionOption}
-                                    />
-                                    {selectedAddRegionOption === 'old' &&
-                                        <AddExistingRegion
-                                            styleName="add-existing-region"
-                                            projectId={projectDetails.id}
-                                            onModalClose={this.handleModalClose}
-                                            onRegionsAdd={this.handleAddedRegions}
-                                        />
-                                    }
-                                    {selectedAddRegionOption === 'new' &&
-                                        <AddRegion
-                                            styleName="add-region"
-                                            projectId={projectDetails.id}
-                                            onModalClose={this.handleModalClose}
-                                            onRegionAdd={this.handleAddedRegion}
-                                        />
-                                    }
-                                </ModalBody>
-                            </Modal>
-                        }
-                    </div>
-                    <ListView
-                        styleName="list"
-                        modifier={this.renderRegionList}
-                        data={sortedRegions}
-                        keyExtractor={this.calcRegionKey}
+            <Modal>
+                <ModalHeader title={title} />
+                <ModalBody className={bodyClassName}>
+                    <RadioInput
+                        className={styles.regionTypeInput}
+                        name="region-type-input"
+                        options={this.addRegionOptions}
+                        onChange={this.handleRadioInputChange}
+                        value={selectedAddRegionOption}
                     />
-                </div>
-                <div styleName="details-container">
-                    {this.renderSelectedRegionDetails(projectDetails, selectedRegion)}
-                </div>
+                    <AddRegionForm />
+                </ModalBody>
+            </Modal>
+        );
+    }
+
+    renderRegionList = () => {
+        const { projectStrings } = this.props;
+        const {
+            displayRegionList,
+            searchInputValue,
+        } = this.state;
+
+        const sortedRegions = [...displayRegionList]
+            .sort((a, b) => compareString(a.title, b.title));
+
+        const searchPlaceholder = projectStrings('searchRegionPlaceholder');
+        const addRegionButtonLabel = projectStrings('addRegionButtonLabel');
+        const regionLabel = projectStrings('regionLabel');
+
+        return (
+            <div className={styles.regionListContainer}>
+                <header className={styles.header}>
+                    <h4 className={styles.heading}>
+                        { regionLabel }
+                    </h4>
+                    <AccentButton
+                        iconName={iconNames.add}
+                        className={styles.addRegionButton}
+                        onClick={this.handleAddRegionButtonClick}
+                    >
+                        {addRegionButtonLabel}
+                    </AccentButton>
+                    <TextInput
+                        className={styles.regionSearchInput}
+                        onChange={this.handleSearchInputChange}
+                        placeholder={searchPlaceholder}
+                        type="search"
+                        value={searchInputValue}
+                        showHintAndError={false}
+                        showLabel={false}
+                    />
+                </header>
+                <ListView
+                    className={styles.content}
+                    modifier={this.renderRegionListItem}
+                    data={sortedRegions}
+                    keyExtractor={this.calcRegionKey}
+                />
+            </div>
+        );
+    }
+
+    render() {
+        const { projectDetails } = this.props;
+        const { selectedRegion } = this.state;
+
+        const RegionDetails = this.renderRegionDetails;
+        const RegionList = this.renderRegionList;
+
+        return (
+            <div className={styles.projectRegions}>
+                <RegionList />
+                <RegionDetails
+                    projectDetails={projectDetails}
+                    selectedRegion={selectedRegion}
+                />
             </div>
         );
     }

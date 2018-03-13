@@ -8,37 +8,26 @@
     .header {
         display: flex;
         flex-shrink: 0;
-        justify-content: flex-end;
+        align-items: center;
         border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-small $spacing-medium;
+        padding: $spacing-small;
 
-        .action-buttons {
-            button {
-                margin-left: $spacing-medium;
-            }
+        .heading {
+            flex-grow: 1;
         }
 
-        .non-field-errors {
-            .error {
-                color: $color-danger;
+        .action-buttons {
+            flex-shrink: 0;
 
-                &.empty {
-                    color: transparent;
-                    user-select: none;
-                }
-
-                &:not(:last-child) {
-                    &::after {
-                        content: ', ';
-                    }
-                }
+            button {
+                margin-left: $spacing-small;
             }
         }
     }
 
     .input-container {
         flex-grow: 1;
-        padding: $spacing-medium-alt;
+        padding: $spacing-small;
         overflow-y: auto;
 
         .text-input {

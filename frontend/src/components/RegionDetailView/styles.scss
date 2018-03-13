@@ -1,46 +1,58 @@
 @import '../../stylesheets/base';
 
+$width-region-detail-view: 280px;
+$height-region-detail-max: 320px;
+
 .region-detail-view {
     @include shadow-small;
-    display: table;
+    @include background-color($color-foreground);
+    display: flex;
     position: absolute;
-    bottom: $spacing-medium;
-    left: $spacing-medium;
+    top: $spacing-medium;
+    right: $spacing-medium;
+    flex-direction: column;
     z-index: $z-index-region-detail-view;
-    border-right: $width-separator-thin solid $color-separator;
-    background-color: $color-foreground;
-    min-width: 280px;
+    width: $width-region-detail-view;
+    max-height: $height-region-detail-max;
 
     .heading {
-        border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-medium;
+        flex-shrink: 0;
+        padding: $spacing-small;
         color: $color-primary;
     }
 
-    .row {
-        display: table-row;
+    .content {
+        display: table;
+        flex-grow: 1;
+        overflow-y: auto;
 
-        .key {
-            display: table-cell;
-            padding: $spacing-extra-small $spacing-medium;
-            text-transform: uppercase;
-            color: $color-text-label;
-            font-size: $font-size-small;
+        .row {
+            @include background-color($color-background-row);
+            display: table-row;
 
-            &::after {
-                content: ':';
+            .title {
+                display: table-cell;
+                padding: $spacing-small;
+                text-transform: uppercase;
+                color: $color-text-label;
+                font-size: $font-size-small;
+
+                &::after {
+                    content: ':';
+                }
+            }
+
+            .value {
+                display: table-cell;
+                padding: $spacing-extra-small $spacing-medium;
+                width: 100%;
+                font-size: $font-size-medium-alt;
+            }
+
+            &:nth-child(even) {
+                @include background-color($color-background-row-alt);
             }
         }
-
-        .value {
-            display: table-cell;
-            padding: $spacing-extra-small $spacing-medium;
-            color: $color-text;
-            font-size: $font-size-medium-alt;
-        }
-
-        &:nth-child(even) {
-            background-color: $color-background-row-alt;
-        }
     }
+
 }

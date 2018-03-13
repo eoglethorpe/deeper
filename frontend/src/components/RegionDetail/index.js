@@ -245,6 +245,9 @@ export default class RegionDetail extends React.PureComponent {
             pristine,
         } = this.state;
 
+        // FIXME: use strings
+        const headingText = 'Region details';
+
         return (
             <Form
                 className={className}
@@ -261,7 +264,9 @@ export default class RegionDetail extends React.PureComponent {
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header styleName="header">
-                    <NonFieldErrors formerror="" />
+                    <h4 className={styles.heading} >
+                        { headingText }
+                    </h4>
                     <div styleName="action-buttons">
                         <DangerButton
                             type="button"

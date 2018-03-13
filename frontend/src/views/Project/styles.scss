@@ -1,18 +1,21 @@
 @import '../../stylesheets/base';
 @import '../../stylesheets/tabs';
 
+$width-project-bar: 240px;
+
 .project-panel {
-    @extend %main-content;
     display: flex;
+    height: 100%;
 
     .sidebar {
+        @include background-color($color-foreground-alt);
         display: flex;
         position: relative;
-        flex-basis: 16%;
+        flex-basis: $width-project-bar;
         flex-direction: column;
+        flex-shrink: 0;
+        margin: -$spacing-small $spacing-small (-$spacing-small) (-$spacing-small);
         border-right: $width-separator-thin solid $color-separator;
-        background-color: $color-foreground;
-        min-width: 320px;
 
         .header {
             display: flex;
@@ -21,7 +24,7 @@
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-medium solid $color-separator;
-            padding: $spacing-medium;
+            padding: $spacing-small;
 
             .heading {
                 flex-grow: 1;
@@ -40,27 +43,26 @@
             .list-item {
                 display: block;
                 border-bottom: $width-separator-thin solid $color-separator;
-                border-left: $width-separator-thick solid transparent;
 
                 .link {
                     display: block;
                     padding: $spacing-medium $spacing-medium-alt;
                     width: 100%;
                     height: 100%;
-                    text-transform: capitalize;
+                    text-transform: uppercase;
                 }
             }
 
             .active {
-                border-left: $width-separator-thick solid $color-accent;
-                background-color: $color-background-hover;
+                @include background-color($color-background-selected);
             }
         }
     }
 
     .project-details {
-        @include background-color($color-foreground-alt);
-        flex-basis: 84%;
+        @extend %main-content;
+        @include background-color($color-background-alt);
+        flex-grow: 1;
     }
 
     .no-project-text {

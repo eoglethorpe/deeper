@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -73,7 +72,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectRegionDetail extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -83,8 +81,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
         this.regionRequest = this.createRegionRequest(props.countryId);
         this.state = {
             dataLoading: true,
-            deleteConfirmModalShow: false,
-            cloneConfirmModalShow: false,
+            showDeleteConfirm: false,
+            showCloneAndEditConfirm: false,
         };
     }
 
@@ -202,7 +200,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             this.regionCloneRequest.start();
         }
         this.setState({
-            cloneConfirmModalShow: false,
+            showCloneAndEditConfirm: false,
         });
     }
 
@@ -218,109 +216,195 @@ export default class ProjectRegionDetail extends React.PureComponent {
             this.regionRemoveRequest.start();
         }
         this.setState({
-            deleteConfirmModalShow: false,
+            showDeleteConfirm: false,
         });
     }
 
     handleRegionRemoveClick = () => {
         this.setState({
-            deleteConfirmModalShow: true,
+            showDeleteConfirm: true,
         });
     }
 
     handleRegionCloneClick = () => {
         this.setState({
-            cloneConfirmModalShow: true,
+            showCloneAndEditConfirm: true,
         });
     }
 
-    render() {
+    renderCloneAndEditButton = () => {
+        const {
+            regionDetails,
+            projectStrings,
+        } = this.props;
+        const { dataLoading } = this.state;
+
+        const isPublic = regionDetails.public;
+        const cloneAndEditButtonLabel = projectStrings('cloneEditButtonLabel');
+
+        if (!isPublic) {
+            return null;
+        }
+
+        return (
+            <PrimaryButton
+                disabled={dataLoading}
+                className={styles.cloneAndEditButton}
+                onClick={this.handleRegionCloneClick}
+            >
+                {cloneAndEditButtonLabel}
+            </PrimaryButton>
+        );
+    }
+
+    renderHeader = () => {
+        const {
+            regionDetails,
+            projectStrings,
+        } = this.props;
+
+        const { dataLoading } = this.state;
+        const removeRegionButtonLabel = projectStrings('removeRegionButtonLabel');
+        const CloneAndEditButton = this.renderCloneAndEditButton;
+
+        return (
+            <header className={styles.header}>
+                <h2>
+                    {regionDetails.title}
+                </h2>
+                <div className={styles.actionButtons}>
+                    <DangerButton
+                        disabled={dataLoading}
+                        onClick={this.handleRegionRemoveClick}
+                    >
+                        { removeRegionButtonLabel }
+                    </DangerButton>
+                    <CloneAndEditButton />
+                </div>
+            </header>
+        );
+    }
+
+    renderContent = () => {
         const {
             countryId,
             regionDetails,
             activeProject,
-            projectDetails,
         } = this.props;
 
         const { dataLoading } = this.state;
+        const isEditable = regionDetails.public !== undefined && !regionDetails.public;
 
-        const isPublic = regionDetails.public;
+        const classNames = [
+            styles.content,
+        ];
+
+        if (isEditable) {
+            return (
+                <div className={classNames.join(' ')}>
+                    <div className={styles.top}>
+                        <RegionMap
+                            className={styles.regionMap}
+                            regionId={countryId}
+                        />
+                        <RegionDetail
+                            dataLoading={dataLoading}
+                            countryId={countryId}
+                            projectId={activeProject}
+                            className={styles.regionDetailForm}
+                        />
+                    </div>
+                    <RegionAdminLevel
+                        className="admin-level-table"
+                        countryId={countryId}
+                    />
+                </div>
+            );
+        }
+
+        classNames.push(styles.viewOnly);
+        return (
+            <div className={classNames.join(' ')}>
+                <RegionMap
+                    className={styles.regionMap}
+                    regionId={countryId}
+                />
+                <RegionDetailView countryId={countryId} />
+            </div>
+        );
+    }
+
+    renderDeleteRegionConfirm = () => {
+        const {
+            countryId,
+            regionDetails,
+            projectDetails,
+            projectStrings,
+        } = this.props;
+        const { showDeleteConfirm } = this.state;
+        const confirmRemoveText = projectStrings('confirmRemoveText');
 
         return (
-            <div styleName="region-details-container">
-                <header styleName="header">
-                    <h2>
-                        {regionDetails.title}
-                    </h2>
-                    <div styleName="action-btns">
-                        <DangerButton
-                            disabled={dataLoading}
-                            onClick={this.handleRegionRemoveClick}
-                        >
-                            {this.props.projectStrings('removeRegionButtonLabel')}
-                        </DangerButton>
-                        {
-                            isPublic && (
-                                <PrimaryButton
-                                    disabled={dataLoading}
-                                    styleName="clone-btn"
-                                    onClick={this.handleRegionCloneClick}
-                                >
-                                    {this.props.projectStrings('cloneEditButtonLabel')}
-                                </PrimaryButton>
-                            )
-                        }
-                    </div>
-                    <Confirm
-                        show={this.state.deleteConfirmModalShow}
-                        closeOnEscape
-                        onClose={deleteConfirm => this.handleRegionRemove(
-                            deleteConfirm, projectDetails, countryId,
-                        )}
-                    >
-                        <p>{`${this.props.projectStrings('confirmRemoveText')}
-                            ${regionDetails.title} from project ${projectDetails.title}?`}</p>
-                    </Confirm>
-                    <Confirm
-                        show={this.state.cloneConfirmModalShow}
-                        onClose={cloneConfirm => this.handleRegionClone(
-                            cloneConfirm, countryId, activeProject,
-                        )}
-                    >
-                        <p>{`${this.props.projectStrings('confirmCloneText')} ${regionDetails.title}?`}</p>
-                    </Confirm>
-                </header>
-                {
-                    (isPublic !== undefined && !isPublic) ? (
-                        <div styleName="region-details">
-                            <div styleName="detail-map-container">
-                                <RegionDetail
-                                    dataLoading={dataLoading}
-                                    countryId={countryId}
-                                    projectId={activeProject}
-                                    styleName="region-detail-form"
-                                />
-                                <div styleName="map-container">
-                                    <RegionMap regionId={countryId} />
-                                </div>
-                            </div>
-                            <RegionAdminLevel
-                                styleName="admin-levels"
-                                countryId={countryId}
-                            />
-                        </div>
-                    ) : (
-                        <div styleName="region-details-non-edit">
-                            <RegionDetailView
-                                styleName="region-detail-box"
-                                countryId={countryId}
-                            />
-                            <div styleName="map-container-non-edit">
-                                <RegionMap regionId={countryId} />
-                            </div>
-                        </div>
-                    )
+            <Confirm
+                show={showDeleteConfirm}
+                closeOnEscape
+                onClose={
+                    (deleteConfirm) => {
+                        this.handleRegionRemove(deleteConfirm, projectDetails, countryId);
+                    }
                 }
+            >
+                <p>
+                    {`
+                        ${confirmRemoveText}
+                        ${regionDetails.title} from project ${projectDetails.title}?
+                    `}
+                </p>
+            </Confirm>
+        );
+    }
+
+    renderCloneAndEditRegionConfirm = () => {
+        const {
+            countryId,
+            regionDetails,
+            activeProject,
+            projectStrings,
+        } = this.props;
+        const { showCloneAndEditConfirm } = this.state;
+        const confirmCloneText = projectStrings('confirmCloneText');
+
+        return (
+            <Confirm
+                show={showCloneAndEditConfirm}
+                onClose={
+                    (cloneConfirm) => {
+                        this.handleRegionClone(cloneConfirm, countryId, activeProject);
+                    }
+                }
+            >
+                <p>
+                    {`
+                        ${confirmCloneText}
+                        ${regionDetails.title}?
+                    `}
+                </p>
+            </Confirm>
+        );
+    }
+
+    render() {
+        const Header = this.renderHeader;
+        const Content = this.renderContent;
+        const DeleteRegionConfirm = this.renderDeleteRegionConfirm;
+        const CloneAndEditRegionConfirm = this.renderCloneAndEditRegionConfirm;
+
+        return (
+            <div className={styles.regionDetailsContainer}>
+                <Header />
+                <Content />
+                <DeleteRegionConfirm />
+                <CloneAndEditRegionConfirm />
             </div>
         );
     }
