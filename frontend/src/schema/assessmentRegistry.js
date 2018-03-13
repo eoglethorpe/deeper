@@ -77,8 +77,20 @@ const assessmentRegistrySchema = [];
             metaData: { type: 'object' },
             methodologyData: { type: 'object' },
             lead: { type: 'uint', required: true },
-            lead_title: { type: 'string', required: true },
+            leadTitle: { type: 'string', required: true },
         },
+    };
+    assessmentRegistrySchema.push({ name, schema });
+}
+{
+    const name = 'aryEntryFilterOptions';
+    const schema = {
+        doc: {
+            name: 'Ary Entry Filter Options',
+            description: 'Ary Entry Filter Option',
+        },
+        // FIXME: complete this
+        fields: {},
     };
     assessmentRegistrySchema.push({ name, schema });
 }
@@ -103,8 +115,8 @@ const assessmentRegistrySchema = [];
         },
         fields: {
             count: { type: 'number' },
-            next: { type: 'number' },
-            previous: { type: 'number' },
+            next: { type: 'string' },
+            previous: { type: 'string' },
             results: { type: 'array.ary', required: true },
         },
     };
@@ -140,6 +152,17 @@ const assessmentRegistrySchema = [];
             description: 'Analysis Registry POST Reponse',
         },
         extends: 'ary',
+    };
+    assessmentRegistrySchema.push({ name, schema });
+}
+{
+    const name = 'aryEntryFilterOptionsResponse';
+    const schema = {
+        doc: {
+            name: 'Ary Entry Filter Option GET Reponse',
+            description: 'Ary Entry Filter Option GET Reponse',
+        },
+        extends: 'aryEntryFilterOptions',
     };
     assessmentRegistrySchema.push({ name, schema });
 }

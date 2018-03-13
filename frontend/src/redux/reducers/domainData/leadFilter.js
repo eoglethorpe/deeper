@@ -18,7 +18,7 @@ const setLeadFilterOptions = (state, action) => {
     const { projectId, leadFilterOptions } = action;
     const settings = {
         leadFilterOptions: {
-            [projectId]: { $autoArray: {
+            [projectId]: { $auto: {
                 $set: leadFilterOptions,
             } },
         },

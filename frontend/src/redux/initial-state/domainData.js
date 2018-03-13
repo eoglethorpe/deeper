@@ -79,6 +79,14 @@ const initialDomainDataState = {
     },
 
     // index is project id
+    aryFilterOptions: {
+        /*
+        1: {
+        },
+        */
+    },
+
+    // index is project id
     projectsOptions: {
         /*
         1: {

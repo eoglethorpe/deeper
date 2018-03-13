@@ -19,6 +19,10 @@ export const entryFilterOptionsSelector = ({ domainData }) => (
     domainData.entryFilterOptions || emptyObject
 );
 
+export const aryFilterOptionsSelector = ({ domainData }) => (
+    domainData.aryFilterOptions || emptyObject
+);
+
 export const regionsSelector = ({ domainData }) => (
     domainData.regions || emptyObject
 );

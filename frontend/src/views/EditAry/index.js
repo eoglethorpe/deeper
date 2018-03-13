@@ -1,30 +1,32 @@
 import CSSModules from 'react-css-modules';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types'; import { connect } from 'react-redux';
 
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import ResizableH from '../../vendor/react-store/components/View/Resizable/ResizableH';
 import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
-    entryStringsSelector,
-    aryStringsSelector,
     setAryTemplateAction,
-    projectDetailsSelector,
     setProjectAction,
+
+    projectDetailsSelector,
+    aryStringsSelector,
 } from '../../redux';
 
 import ProjectRequest from './requests/ProjectRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
+
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
 import styles from './styles.scss';
 
 const propTypes = {
-    setAryTemplate: PropTypes.func.isRequired,
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+
     setProject: PropTypes.func.isRequired,
+    setAryTemplate: PropTypes.func.isRequired,
+
     aryStrings: PropTypes.func.isRequired,
 };
 
@@ -33,7 +35,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
 });
@@ -80,7 +81,7 @@ export default class EditAry extends React.PureComponent {
         }
     }
 
-    startProjectRequest = (id) => {
+    startProjectRequest = (id) => { // Project Id
         if (isFalsy(id)) {
             return;
         }
@@ -103,7 +104,7 @@ export default class EditAry extends React.PureComponent {
         this.projectRequest.start();
     }
 
-    startAryTemplateRequest = (id) => {
+    startAryTemplateRequest = (id) => { // Ary Template Id
         if (isFalsy(id)) {
             return;
         }

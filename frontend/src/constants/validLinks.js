@@ -71,7 +71,7 @@ const validLinks = {
     entries: allLinks,
     editEntries: allLinksWithProjectDisabled,
 
-    ary: allLinks,
+    arys: allLinks,
     editAry: allLinksWithProjectDisabled,
 
     export: allLinks,

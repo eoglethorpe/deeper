@@ -23,14 +23,20 @@ before_install:
     - git clone https://github.com/toggle-corp/ravl.git frontend/src/vendor/ravl
     - git --git-dir=frontend/src/vendor/ravl/.git --no-pager show --pretty=fuller --quiet
 
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+
     - env > .env
     - docker-compose build
 
 before_script:
     - docker-compose up -d
+    - ./cc-test-reporter before-build
 
 script:
     - docker-compose exec web /code/scripts/run_tests.sh
+    - cd frontend ; ../cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -p frontend/ ; cd ..
+    - cd backend ; ../cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -p backend/ ; cd ..
 
 after_success:
     - ./deploy/scripts/travis_deploy.sh ;
@@ -39,3 +45,7 @@ notifications:
   slack:
     rooms:
         - secure: "V74yUcOmhjKMCyvX5DxZrdOEfkJmzwlB4jqUXCLHYI9maIj8wQGjgXTKjANHgHg4jJheStGXmjTN6cIpk4WLN5YS3DeaKpdpotrUp3m2BV+nt5cPEpjdeQVo5Biii+JY7D/0aiRre15BlT4m0GhrIaR1Gqto5LUNS1sRoF05nn0B8MnhFczcVdk3XipfRgeyvzZ7oWTaFnWN1TQXaqMesJYoBE2Jg0j6Jis6fZO2Mwuk2nxLzm4KptlLCZHPPXLmqwEybmRo/amK7BE0i3NeLp+25UtVImILDjc3jGhA+IH0yhrUF3Cy2rYKqA7MjDJBTFIsLMvIaZ5QjEyr9JCE2b4suOpkvKl4+l+oY0TrM67z1c4/AZK84KyPzNOzdJhv7IeBbRP7j8KgzZvYx7Lq9uyIZAji6yFY53bIFVYn+LztHKb1WYfj6yTC3eLVkdEHk8JtCLixn7I1k32wlreiUCwZ45JfL6ZKIiiF2rVbEVEDd2GE8Bx2SS6bKABLkr2HZEeqf9Xl0G5Xd98hXZ2wtPPmaRSRgmXwQJfe2kFflRgrW3qFmBka7p7oHMH2KJugScLW+ApZSkOfVneX4MpD3ttDGc7e4c7GpNAgXEhO4pvp+dsL3ADcokLqzjuRIxvMydcW4KqDKuNr44bs/IQhPNzt71iPKOTmuFJxNxk+BIA="
+
+env:
+  global:
+    - secure: "f9BEu8RYF8PjzjLg/TYaUNnBstJR5SDXV2I1KQ8P6YiZpJsKvn2NBjScoI8ZIbSIj0/kwFFWa6NA6pLyh1Q2nIbjsc7En3E+MsH3R5HN3Dzk88ypX3ULLe8I/h/18inQQxwn0JQSqETtw0A3fooe4FUihTE68BvDgKekT0aBnOXAS0zRigzm40nLImIaQnf0j7119gOoS4snF5N0UE68xFHjGgrseZtdDspTwyxjKax4WlrVlit4AMhKvTcls+/qjIa7NsSXjmLneRnX9p6Gm2AtKbCAYi6iEXyOzc97VtcUUiFl3XiV5hV+hZKeFuaSetZr2AWha1ST6Q8mh9o5lK704ovCSnU6QKLtLlmGxDyLTT3k7BT2AwZoOrL6Vzw1Br09j+jHPNYSkGlmPcR4jiyxT+hi54rV+YsEN/kZJ1FegITyhiaWlNdOqho0lAPNPWP5yoFABdebNvH1tmnZNkj3BBnZ5Ex+CXq5tQSRB8sFASHWHCzCs5oHPbT9gMrL341dZaENJyv+mbP164s9MHPmeZgjnpBZI3afDUgH4zKCmBvYmq7J8796EBx9448zw6pLDZ9PmSrk0wYUaw7oje9DbNT1R/wdb9wY2guPZrqBPYYWO3P88gAmfI2wiqFHNi+FRLONdHSKPfWzkcsKeCkt7qGUVb5K6dm4mdqGYVg="
