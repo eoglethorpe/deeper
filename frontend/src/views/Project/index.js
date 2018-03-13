@@ -153,9 +153,7 @@ export default class ProjectPanel extends React.PureComponent {
         } = this.state;
 
         const { projectId } = this.props;
-        const {
-            history,
-        } = this.props;
+        const { history } = this.props;
 
         return (
             <div styleName="project-panel">
