@@ -8,6 +8,7 @@
     .header {
         display: flex;
         flex-shrink: 0;
+        flex-wrap: wrap;
         align-items: center;
         border-bottom: $width-separator-thin solid $color-separator;
         padding: $spacing-small;
@@ -23,6 +24,10 @@
                 margin-left: $spacing-small;
             }
         }
+    }
+
+    .non-field-errors {
+        flex-shrink: 0;
     }
 
     .input-container {

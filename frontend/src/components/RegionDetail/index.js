@@ -282,6 +282,10 @@ export default class RegionDetail extends React.PureComponent {
                         </SuccessButton>
                     </div>
                 </header>
+                <NonFieldErrors
+                    formerror=""
+                    className={styles.nonFieldErrors}
+                />
                 <div styleName="input-container">
                     <TextInput
                         formname="countryCode"
