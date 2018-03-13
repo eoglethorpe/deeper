@@ -4,8 +4,9 @@ import {
     p,
 } from '../config/rest';
 
-export const urlForNer = 'https://deepl.togglecorp.com/api/ner/';
-export const urlForFeedback = 'https://deepl.togglecorp.com/api/v2/recommendation/';
+const deeplEndPoint = 'https://deepl.togglecorp.com';
+export const urlForNer = `${deeplEndPoint}/api/ner/`;
+export const urlForFeedback = `${deeplEndPoint}/api/v2/recommendation/`;
 
 export const createParamsForNer = text => ({
     method: POST,
@@ -15,17 +16,28 @@ export const createParamsForNer = text => ({
     }),
 });
 
-export const urlForLeadClassify =
-    'https://deepl.togglecorp.com/api/v2/classify/';
+const isProjectTest = (project) => {
+    if (project.title === 'Board Demo') {
+        return true;
+    }
+    return false;
+};
 
-export const urlForLeadTopicModeling =
-    'https://deepl.togglecorp.com/api/topic-modeling/';
+export const urlForLeadClassify = `${deeplEndPoint}/api/v2/classify/`;
 
-export const urlForLeadTopicCorrelation =
-    'https://deepl.togglecorp.com/api/subtopics/correlation/';
+// export const urlForLeadTopicModeling = `${deeplEndPoint}/api/topic-modeling/`;
+// export const urlForLeadTopicCorrelation = `${deeplEndPoint}/api/subtopics/correlation/`;
+// export const urlForLeadNerDocsId = `${deeplEndPoint}/api/ner-docs/`;
+// export const urlForLeadKeywordCorrelation = `${deeplEndPoint}/api/keywords/correlation/`;
 
-export const urlForLeadNerDocsId =
-    'https://deepl.togglecorp.com/api/ner-docs/';
+export const createUrlForLeadTopicModeling = (project, isFilter) =>
+    `${deeplEndPoint}/api/topic-modeling/?test=${isProjectTest(project)}&filter=${isFilter}`;
+export const createUrlForLeadTopicCorrelation = (project, isFilter) =>
+    `${deeplEndPoint}/api/subtopics/correlation/?test=${isProjectTest(project)}&filter=${isFilter}`;
+export const createUrlForLeadNerDocsId = (project, isFilter) =>
+    `${deeplEndPoint}/api/ner-docs/?test=${isProjectTest(project)}&filter=${isFilter}`;
+export const createUrlForLeadKeywordCorrelation = (project, isFilter) =>
+    `${deeplEndPoint}/api/keywords/correlation/?test=${isProjectTest(project)}&filter=${isFilter}`;
 
 export const createParamsForLeadClassify = body => ({
     method: POST,
@@ -64,6 +76,15 @@ export const createParamsForLeadTopicCorrelation = body => ({
 });
 
 export const createParamsForLeadNer = body => ({
+    method: POST,
+    body: JSON.stringify(body),
+    headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+    },
+});
+
+export const createParamsForLeadKeywordCorrelation = body => ({
     method: POST,
     body: JSON.stringify(body),
     headers: {

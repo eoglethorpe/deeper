@@ -4,8 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import { reverseRoute } from '../../vendor/react-store/utils/common';
+import {
+    reverseRoute,
+    isObjectEmpty,
+} from '../../vendor/react-store/utils/common';
 
 import SunBurstView from '../../vendor/react-store/components/Visualization/SunBurstView';
 import ChordDiagramView from '../../vendor/react-store/components/Visualization/ChordDiagramView';
@@ -19,18 +21,7 @@ import FormattedDate from '../../vendor/react-store/components/View/FormattedDat
 import BoundError from '../../components/BoundError';
 
 import {
-    urlForLeadTopicModeling,
-    urlForLeadTopicCorrelation,
-    urlForLeadNerDocsId,
-    createParamsForUser,
-    createParamsForLeadTopicModeling,
-    createParamsForLeadTopicCorrelation,
-    createUrlForLeadsOfProject,
-    createParamsForLeadNer,
-    transformResponseErrorToFormError,
-} from '../../rest';
-import {
-    activeProjectSelector,
+    projectDetailsSelector,
     leadPageFilterSelector,
 
     setLeadVisualizationAction,
@@ -40,15 +31,22 @@ import {
     forceDirectedDataSelector,
     geoPointsDataSelector,
 } from '../../redux';
-import schema from '../../schema';
-import notify from '../../notify';
 import { pathNames } from '../../constants/';
+
+import LeadKeywordCorrelationRequest from './requests/LeadKeywordCorrelationRequest';
+import LeadTopicCorrelationRequest from './requests/LeadTopicCorrelationRequest';
+import LeadTopicModelingRequest from './requests/LeadTopicModelingRequest';
+import LeadCDIdRequest from './requests/LeadCDIdRequest';
+import LeadNerRequest from './requests/LeadNerRequest';
 
 import FilterLeadsForm from '../Leads/FilterLeadsForm';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.number.isRequired,
+    activeProject: PropTypes.shape({
+        id: PropTypes.number,
+        title: PropTypes.string,
+    }).isRequired,
     filters: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     hierarchicalData: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -65,7 +63,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: projectDetailsSelector(state),
     filters: leadPageFilterSelector(state),
     hierarchicalData: hierarchialDataSelector(state),
     chordData: chordDataSelector(state),
@@ -139,35 +137,20 @@ export default class LeadsViz extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
-            activeProject: this.props.activeProject,
-            filters: this.props.filters,
-        });
-        this.leadCDIdRequest.start();
+        this.startRequestForLeadCDId();
     }
 
     componentWillReceiveProps(nextProps) {
         if (
             nextProps.filters !== this.props.filters ||
-            nextProps.activeProject !== this.props.activeProject
+            nextProps.activeProject.id !== this.props.activeProject.id
         ) {
             if (this.leadCDIdRequest) {
                 this.leadCDIdRequest.stop();
             }
-            if (this.requestForLeadTopicModeling) {
-                this.requestForLeadTopicModeling.stop();
-            }
-            if (this.requestForLeadTopicCorrelaction) {
-                this.requestForLeadTopicCorrelaction.stop();
-            }
-            if (this.requestForLeadNer) {
-                this.requestForLeadNer.stop();
-            }
-            this.leadCDIdRequest = this.createRequestForProjectLeadsCDId({
-                activeProject: nextProps.activeProject,
-                filters: nextProps.filters,
-            });
-            this.leadCDIdRequest.start();
+            this.stopNlpRequests();
+
+            this.startRequestForLeadCDId(nextProps);
         }
     }
 
@@ -175,258 +158,98 @@ export default class LeadsViz extends React.PureComponent {
         if (this.leadCDIdRequest) {
             this.leadCDIdRequest.stop();
         }
-        if (this.requestForLeadTopicModeling) {
-            this.requestForLeadTopicModeling.stop();
+        this.stopNlpRequests();
+    }
+
+    startNlpRequests = (docIds) => {
+        this.startRequestForLeadTopicModeling(docIds);
+        this.startRequestForLeadNer(docIds);
+        this.startRequestForLeadTopicCorrelation(docIds);
+        this.startRequestForLeadKeywordCorrelationRequest(docIds);
+    }
+
+    stopNlpRequests = () => {
+        if (this.leadTopicModelingRequest) {
+            this.leadTopicModelingRequest.stop();
         }
-        if (this.requestForLeadTopicCorrelaction) {
-            this.requestForLeadTopicCorrelaction.stop();
+        if (this.leadNerRequest) {
+            this.leadNerRequest.stop();
         }
-        if (this.requestForLeadNer) {
-            this.requestForLeadNer.stop();
+        if (this.leadTopicCorrelationRequest) {
+            this.leadTopicCorrelationRequest.stop();
+        }
+        if (this.leadKeywordCorrelationRequest) {
+            this.leadKeywordCorrelationRequest.stop();
         }
     }
 
-    createRequestForProjectLeadsCDId = ({ activeProject, filters }) => {
-        const sanitizedFilters = LeadsViz.getFiltersForRequest(filters);
-
-        const urlForProjectLeads = createUrlForLeadsOfProject({
-            project: activeProject,
-            fields: 'classified_doc_id',
-            ...sanitizedFilters,
+    startRequestForLeadCDId = (props = this.props) => {
+        if (this.leadCDIdRequest) {
+            this.leadCDIdRequest.stop();
+        }
+        const { activeProject, filters } = props;
+        const { stopNlpRequests, startNlpRequests } = this;
+        const leadCDIdRequest = new LeadCDIdRequest(this, {
+            stopNlpRequests, startNlpRequests,
         });
-
-        const leadRequest = new FgRestBuilder()
-            .url(urlForProjectLeads)
-            .params(() => createParamsForUser())
-            .preLoad(() => {
-                this.setState({
-                    loadingLeads: true,
-                    hierarchicalDataPending: true,
-                    chordDataPending: true,
-                    correlationDataPending: true,
-                    forceDirectedDataPending: true,
-                    geoPointsDataPending: true,
-                });
-            })
-            .postLoad(() => {
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'leadsCDIdGetResponse');
-                    const docIds = response.results.reduce((acc, lead) => {
-                        if (lead.classifiedDocId) {
-                            acc.push(lead.classifiedDocId);
-                        }
-                        return acc;
-                    }, []);
-
-                    if (this.requestForLeadTopicModeling) {
-                        this.requestForLeadTopicModeling.stop();
-                    }
-                    if (this.requestForLeadTopicCorrelaction) {
-                        this.requestForLeadTopicCorrelaction.stop();
-                    }
-                    if (this.requestForLeadNer) {
-                        this.requestForLeadNer.stop();
-                    }
-
-                    this.requestForLeadTopicModeling =
-                        this.createRequestForLeadTopicModeling(docIds);
-                    this.requestForLeadTopicCorrelaction =
-                        this.createRequestForLeadTopicCorrelation(docIds);
-                    this.requestForLeadNer =
-                        this.createRequestForLeadNer(docIds);
-
-                    this.requestForLeadTopicModeling.start();
-                    this.requestForLeadTopicCorrelaction.start();
-                    this.requestForLeadNer.start();
-
-                    this.setState({ loadingLeads: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message,
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({
-                    loadingLeads: false,
-                    hierarchicalDataPending: false,
-                    chordDataPending: false,
-                    correlationDataPending: false,
-                    forceDirectedDataPending: false,
-                    geoPointsDataPending: false,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({
-                    loadingLeads: false,
-                    hierarchicalDataPending: false,
-                    chordDataPending: false,
-                    correlationDataPending: false,
-                    forceDirectedDataPending: false,
-                    geoPointsDataPending: false,
-                });
-            })
-            .build();
-        return leadRequest;
+        this.leadCDIdRequest = leadCDIdRequest.create({ activeProject, filters });
+        this.leadCDIdRequest.start();
     }
 
-    createRequestForLeadTopicModeling = (docIds) => {
-        const request = new FgRestBuilder()
-            .url(urlForLeadTopicModeling)
-            .params(createParamsForLeadTopicModeling({
-                doc_ids: docIds,
-                number_of_topics: 5,
-                depth: 2,
-                keywords_per_topic: 3,
-            }))
-            .preLoad(() => {
-                this.setState({ hierarchicalDataPending: true });
-            })
-            .postLoad(() => {
-                this.setState({ hierarchicalDataPending: false });
-            })
-            .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.props.setLeadVisualization({
-                        hierarchial: response,
-                        projectId: this.props.activeProject,
-                    });
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.warn('Failure', response);
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Hierarchical Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Hierarchical Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return request;
+    startRequestForLeadTopicModeling = (docIds, props = this.props) => {
+        if (this.leadTopicModelingRequest) {
+            this.leadTopicModelingRequest.stop();
+        }
+        const { activeProject } = props;
+        const leadTopicModelingRequest = new LeadTopicModelingRequest(this, {
+            setLeadVisualization: this.props.setLeadVisualization,
+        });
+        this.leadTopicModelingRequest = leadTopicModelingRequest.create({
+            activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
+        });
+        this.leadTopicModelingRequest.start();
     }
 
-    createRequestForLeadNer = (docIds) => {
-        const request = new FgRestBuilder()
-            .url(urlForLeadNerDocsId)
-            .params(createParamsForLeadNer({
-                doc_ids: docIds,
-            }))
-            .preLoad(() => {
-                this.setState({
-                    geoPointsDataPending: true,
-                });
-            })
-            .postLoad(() => {
-                this.setState({
-                    geoPointsDataPending: false,
-                });
-            })
-            .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.props.setLeadVisualization({
-                        geoPoints: response.locations,
-                        projectId: this.props.activeProject,
-                    });
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.warn('Failure', response);
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Geo Points Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Geo Points Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return request;
+    startRequestForLeadNer = (docIds, props = this.props) => {
+        if (this.leadNerRequest) {
+            this.leadNerRequest.stop();
+        }
+        const { activeProject, setLeadVisualization } = props;
+        const leadNerRequest = new LeadNerRequest(this, {
+            setLeadVisualization,
+        });
+        this.leadNerRequest = leadNerRequest.create({
+            activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
+        });
+        this.leadNerRequest.start();
     }
 
-    createRequestForLeadTopicCorrelation = (docIds) => {
-        const request = new FgRestBuilder()
-            .url(urlForLeadTopicCorrelation)
-            .params(createParamsForLeadTopicCorrelation({
-                doc_ids: docIds,
-            }))
-            .preLoad(() => {
-                this.setState({ correlationDataPending: true,
-                    chordDataPending: true,
-                    forceDirectedDataPending: true,
-                });
-            })
-            .postLoad(() => {
-                this.setState({
-                    correlationDataPending: false,
-                    chordDataPending: false,
-                    forceDirectedDataPending: false,
-                });
-            })
-            .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.props.setLeadVisualization({
-                        correlation: response,
-                        projectId: this.props.activeProject,
-                    });
-                } catch (err) {
-                    console.error(err);
-                }
-            })
-            .failure((response) => {
-                console.warn('Failure', response);
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Topic Correlation Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Failed to load Topic Correlation Data from NLP Server',
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return request;
+    startRequestForLeadTopicCorrelation = (docIds, props = this.props) => {
+        if (this.leadTopicCorrelationRequest) {
+            this.leadTopicCorrelationRequest.stop();
+        }
+        const { activeProject, setLeadVisualization } = props;
+        const leadTopicCorrelationRequest = new LeadTopicCorrelationRequest(this, {
+            setLeadVisualization,
+        });
+        this.leadTopicCorrelationRequest = leadTopicCorrelationRequest.create({
+            activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
+        });
+        this.leadTopicCorrelationRequest.start();
+    }
+
+    startRequestForLeadKeywordCorrelationRequest = (docIds, props = this.props) => {
+        if (this.leadKeywordCorrelationRequest) {
+            this.leadKeywordCorrelationRequest.stop();
+        }
+        const { activeProject, setLeadVisualization } = props;
+        const leadKeywordCorrelationRequest = new LeadKeywordCorrelationRequest(this, {
+            setLeadVisualization,
+        });
+        this.leadKeywordCorrelationRequest = leadKeywordCorrelationRequest.create({
+            activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
+        });
+        this.leadKeywordCorrelationRequest.start();
     }
 
     render() {
@@ -462,7 +285,6 @@ export default class LeadsViz extends React.PureComponent {
                     <TreeMapView
                         styleName="tree-map viz"
                         data={hierarchicalData}
-                        loading={loadingLeads || hierarchicalDataPending}
                         valueAccessor={LeadsViz.sizeValueAccessor}
                         labelAccessor={LeadsViz.labelValueAccessor}
                     />
@@ -513,7 +335,7 @@ export default class LeadsViz extends React.PureComponent {
                     <div styleName="link-container">
                         <Link
                             styleName="link"
-                            to={reverseRoute(pathNames.leads, { projectId: activeProject })}
+                            to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
                             replace
                         >
                             Show Table

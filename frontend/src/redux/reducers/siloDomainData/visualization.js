@@ -6,11 +6,14 @@ export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
 
 // ACTION-CREATOR
 
-export const setLeadVisualizationAction = ({ projectId, hierarchial, correlation, geoPoints }) => ({
+export const setLeadVisualizationAction = ({
+    projectId, hierarchial, correlation, keywordCorrelation, geoPoints,
+}) => ({
     type: SET_LEAD_VISUALIZATION,
     projectId,
     hierarchial,
     correlation,
+    keywordCorrelation,
     geoPoints,
 });
 
@@ -61,6 +64,7 @@ const getCorrelationData = (correlation, scale = 1) => {
     };
 };
 
+/*
 const getForceDirectedData = (correlation) => {
     const labels = Object.keys(correlation);
     const links = [];
@@ -79,6 +83,7 @@ const getForceDirectedData = (correlation) => {
 
     return { nodes, links };
 };
+*/
 
 const getGeoPointsData = (geoPoints) => {
     const points = [];
@@ -102,6 +107,7 @@ const setLeadVisualization = (state, action) => {
     const {
         hierarchial,
         correlation,
+        keywordCorrelation,
         geoPoints,
         projectId,
     } = action;
@@ -135,8 +141,14 @@ const setLeadVisualization = (state, action) => {
             chordData: {
                 $auto: { $set: getCorrelationData(correlation, 100) },
             },
+        };
+    }
+
+    if (keywordCorrelation) {
+        settings.visualization[projectId].$auto = {
             forceDirectedData: {
-                $auto: { $set: getForceDirectedData(correlation) },
+                // $auto: { $set: getForceDirectedData(keywordCorrelation) },
+                $auto: { $set: keywordCorrelation },
             },
         };
     }
