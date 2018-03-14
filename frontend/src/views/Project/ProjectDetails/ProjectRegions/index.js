@@ -41,6 +41,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const emptyList = [];
+const emptyObject = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectRegions extends React.PureComponent {
@@ -179,10 +180,10 @@ export default class ProjectRegions extends React.PureComponent {
     }
 
     renderRegionDetails = ({
-        projectDetails = emptyList,
+        projectDetails = emptyObject,
         selectedRegion,
     }) => {
-        if (projectDetails.regions.length > 0) {
+        if ((projectDetails.regions || emptyList).length > 0) {
             return (
                 <div className={styles.regionDetailsContainer}>
                     <ProjectRegionDetail

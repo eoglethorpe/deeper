@@ -43,7 +43,12 @@ $width-region-list: 240px;
     }
 
     .no-regions {
+        display: flex;
         flex-basis: calc(100% - #{$width-region-list});
+        align-items: center;
+        justify-content: center;
+        color: $color-text-disabled;
+        font-size: $font-size-large;
     }
 }
 
