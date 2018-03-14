@@ -11,7 +11,7 @@ import reducers, {
     setLeadsAction,
 } from './leads';
 
-test('should set leads filter without clearing old filter', () => {
+test('should set leads filter, clearing old filter', () => {
     const state = {
         activeProject: 2,
         leadPage: {
@@ -29,7 +29,7 @@ test('should set leads filter without clearing old filter', () => {
         activeProject: 2,
         leadPage: {
             2: {
-                filter: { search: 'hari', source: 'tv' },
+                filter: { source: 'tv' },
                 activePage: 1,
             },
         },

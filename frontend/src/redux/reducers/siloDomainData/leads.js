@@ -40,12 +40,12 @@ export const setLeadsAction = ({ projectId, leads, totalLeadsCount }) => ({
 // REDUCER
 
 const leadViewSetFilter = (state, action) => {
-    const { filters = {} } = action;
+    const { filters } = action;
     const { activeProject } = state;
     const settings = {
         leadPage: {
             [activeProject]: { $auto: {
-                filter: { $auto: { $merge: filters } },
+                filter: { $set: filters },
                 activePage: { $set: 1 },
             } },
         },
