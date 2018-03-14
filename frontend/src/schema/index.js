@@ -2,6 +2,7 @@ import dict from '../vendor/ravl/schema';
 import attachValidator from '../vendor/ravl/attachValidator';
 
 import leads from './leads';
+import leadsViz from './leadsViz';
 import entries from './entries';
 import projects from './projects';
 import regions from './regions';
@@ -75,6 +76,7 @@ const userDefinedSchemas = [];
 [
     ...userDefinedSchemas,
     ...leads,
+    ...leadsViz,
     ...entries,
     ...projects,
     ...regions,
