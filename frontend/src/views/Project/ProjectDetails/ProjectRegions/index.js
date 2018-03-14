@@ -7,6 +7,7 @@ import AccentButton from '../../../../vendor/react-store/components/Action/Butto
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import RadioInput from '../../../../vendor/react-store/components/Input/RadioInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
+import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import Modal from '../../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../../vendor/react-store/components/View/Modal/Body';
@@ -101,7 +102,7 @@ export default class ProjectRegions extends React.PureComponent {
     getModalClassName = () => {
         const { selectedAddRegionOption } = this.state;
         const classNames = [
-            styles.showAddRegionModal,
+            styles.addRegionModal,
         ];
 
         if (selectedAddRegionOption === 'old') {
@@ -164,23 +165,16 @@ export default class ProjectRegions extends React.PureComponent {
 
     renderRegionListItem = (key, region) => {
         const { selectedRegion } = this.state;
-
-        const classNames = [
-            styles.regionListItem,
-        ];
-
-        if (region.id === selectedRegion) {
-            classNames.push(styles.active);
-        }
+        const isActive = region.id === selectedRegion;
 
         return (
-            <button
+            <ListItem
+                active={isActive}
                 key={region.id}
-                className={classNames.join(' ')}
                 onClick={() => { this.handleRegionClick(region.id); }}
             >
                 {region.title}
-            </button>
+            </ListItem>
         );
     }
 
@@ -247,13 +241,13 @@ export default class ProjectRegions extends React.PureComponent {
         }
 
         const title = projectStrings('addRegionModalTitle');
-        const bodyClassName = this.getModalClassName();
+        const className = this.getModalClassName();
         const AddRegionForm = this.renderAddRegionForm;
 
         return (
-            <Modal>
+            <Modal className={className}>
                 <ModalHeader title={title} />
-                <ModalBody className={bodyClassName}>
+                <ModalBody className={styles.body}>
                     <RadioInput
                         className={styles.regionTypeInput}
                         name="region-type-input"
@@ -282,7 +276,7 @@ export default class ProjectRegions extends React.PureComponent {
         const regionLabel = projectStrings('regionLabel');
 
         return (
-            <div className={styles.regionListContainer}>
+            <div className={styles.regionList}>
                 <header className={styles.header}>
                     <h4 className={styles.heading}>
                         { regionLabel }
@@ -320,6 +314,7 @@ export default class ProjectRegions extends React.PureComponent {
 
         const RegionDetails = this.renderRegionDetails;
         const RegionList = this.renderRegionList;
+        const AddRegionModal = this.renderAddRegionModal;
 
         return (
             <div className={styles.projectRegions}>
@@ -328,6 +323,7 @@ export default class ProjectRegions extends React.PureComponent {
                     projectDetails={projectDetails}
                     selectedRegion={selectedRegion}
                 />
+                <AddRegionModal />
             </div>
         );
     }

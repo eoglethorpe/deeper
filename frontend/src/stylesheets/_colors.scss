@@ -87,7 +87,9 @@ $color-background-hover-light: rgba(0, 0, 0, .05);
 $color-background-hover-dark: rgba(255, 255, 255, .05);
 $color-background-hover: get-color($color-background-hover-light, $color-background-hover-dark);
 
-$color-background-selected: $color-accent;
+$color-background-selected-light: rgba(0, 0, 0, .07);
+$color-background-selected-dark: rgba(255, 255, 255, .07);
+$color-background-selected: get-color($color-background-selected-light, $color-background-selected-dark);
 
 $color-background-row-light: #fafafa;
 $color-background-row-dark: #414141;

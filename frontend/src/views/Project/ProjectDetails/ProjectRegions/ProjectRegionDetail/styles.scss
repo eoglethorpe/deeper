@@ -1,16 +1,12 @@
 @import '../../../../../stylesheets/base';
-@import '../../../../../stylesheets/modal';
 
 $region-detail-form-width: 320px;
 $height-header: 39px;
 
-
 .region-details-container {
-    display: flex;
-    flex-direction: column;
     height: 100%;
 
-    .header {
+    >.header {
         @include background-color($color-background-header);
         display: flex;
         flex-shrink: 0;

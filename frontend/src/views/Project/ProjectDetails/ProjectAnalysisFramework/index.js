@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -6,7 +5,7 @@ import { connect } from 'react-redux';
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
 
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
@@ -57,7 +56,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -81,7 +79,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         }
 
         this.state = {
-            addAfModalShow: false,
+            showAddAFModal: false,
             displayAfList,
             pending: false,
             searchInputValue: '',
@@ -156,6 +154,10 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         this.setState({ selectedAf: afId });
     }
 
+    handleModalClose = () => {
+        this.setState({ showAddAFModal: false });
+    }
+
     handleSearchInputChange = (searchInputValue) => {
         const { analysisFrameworkList } = this.props;
         const displayAfList = analysisFrameworkList.filter(
@@ -169,45 +171,57 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     };
 
     handleAddAfButtonClick = () => {
-        this.setState({ addAfModalShow: true });
+        this.setState({ showAddAFModal: true });
     }
 
-    handleModalClose = () => {
-        this.setState({ addAfModalShow: false });
-    }
-
-    calcAfKey = af => af.id;
-
-    renderAfList = (key, af) => {
+    renderCheckmark = ({ afId }) => {
         const { projectDetails } = this.props;
-        const isActive = af.id === this.state.selectedAf;
-        const isProjectAf = projectDetails.analysisFramework === af.id;
+        if (projectDetails.analysisFramework !== afId) {
+            return null;
+        }
+
+        const className = [
+            iconNames.check,
+            styles.check,
+        ].join(' ');
+
+        return (
+            <span className={className} />
+        );
+    }
+
+    renderAFListItem = (key, af) => {
+        const { selectedAf } = this.state;
+        const isActive = af.id === selectedAf;
+        const Checkmark = this.renderCheckmark;
+
         return (
             <ListItem
                 active={isActive}
-                key={key}
-                scrollIntoView={isActive}
+                className={styles.afListItem}
+                key={af.key}
+                onClick={() => this.handleAfClick(af.id)}
             >
-                <button
-                    className="button"
-                    onClick={() => this.handleAfClick(af.id)}
-                >
-                    {af.title}
-                    {isProjectAf && <span className={`${iconNames.check} check`} />}
-                </button>
+                {af.title}
+                <Checkmark afId={af.id} />
             </ListItem>
         );
     }
 
     renderSelectedAfDetails = () => {
         const { selectedAf } = this.state;
-        const { analysisFrameworkList } = this.props;
+        const {
+            analysisFrameworkList,
+            projectStrings,
+        } = this.props;
+
+        const noAFText = projectStrings('noAfText');
 
         if (analysisFrameworkList.length <= 0) {
             return (
-                <h1 styleName="no-analysis-framework">
-                    {this.props.projectStrings('noAfText')}
-                </h1>
+                <div className={styles.empty}>
+                    { noAFText }
+                </div>
             );
         }
 
@@ -220,66 +234,96 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         );
     }
 
-
-    render() {
+    renderAnalysisFrameworkList = () => {
         const {
-            displayAfList,
-            pending,
             searchInputValue,
+            displayAfList,
         } = this.state;
 
-        const {
-            projectId,
-        } = this.props;
+        const { projectStrings } = this.props;
+
+        const searchAFPlaceholder = projectStrings('searchAfPlaceholder');
+        const addAFButtonLabel = projectStrings('addAfButtonLabel');
 
         const sortedAfs = [...displayAfList];
         sortedAfs.sort((a, b) => compareString(a.title, b.title));
 
+        // FIXME: use strings
+        const headingText = 'Analysis frameworks';
+
         return (
-            <div styleName="project-analysis-framework">
-                <div styleName="list-container">
-                    <div styleName="list-header">
-                        <TextInput
-                            styleName="search-input"
-                            value={searchInputValue}
-                            onChange={this.handleSearchInputChange}
-                            placeholder={this.props.projectStrings('searchAfPlaceholder')}
-                            type="search"
-                        />
-                        <PrimaryButton
-                            styleName="add-btn"
-                            iconName={iconNames.add}
-                            onClick={this.handleAddAfButtonClick}
-                        >
-                            {this.props.projectStrings('addAfButtonLabel')}
-                        </PrimaryButton>
-                        { this.state.addAfModalShow &&
-                            <Modal
-                                closeOnEscape
-                                onClose={this.handleModalClose}
-                                closeOnBlur
-                            >
-                                <ModalHeader title={this.props.projectStrings('addAfModalTitle')} />
-                                <ModalBody>
-                                    <AddAnalysisFramework
-                                        projectId={projectId}
-                                        onModalClose={this.handleModalClose}
-                                    />
-                                </ModalBody>
-                            </Modal>
-                        }
-                    </div>
-                    <ListView
-                        styleName="list"
-                        modifier={this.renderAfList}
-                        data={sortedAfs}
-                        keyExtractor={this.calcAfKey}
+            <div className={styles.afList}>
+                <header className={styles.header}>
+                    <h4 className={styles.heading}>
+                        { headingText }
+                    </h4>
+                    <AccentButton
+                        className={styles.addAfButton}
+                        iconName={iconNames.add}
+                        onClick={this.handleAddAfButtonClick}
+                    >
+                        {addAFButtonLabel}
+                    </AccentButton>
+                    <TextInput
+                        className={styles.searchAfInput}
+                        value={searchInputValue}
+                        onChange={this.handleSearchInputChange}
+                        placeholder={searchAFPlaceholder}
+                        showHintAndError={false}
+                        showLabel={false}
+                        type="search"
                     />
-                </div>
-                <div styleName="details-container">
+                </header>
+                <ListView
+                    data={sortedAfs}
+                    className={styles.content}
+                    modifier={this.renderAFListItem}
+                />
+            </div>
+        );
+    }
+
+    renderAddAFModal = () => {
+        const { showAddAFModal } = this.state;
+        const {
+            projectId,
+            projectStrings,
+        } = this.props;
+
+        if (!showAddAFModal) {
+            return null;
+        }
+
+        const addAFModalTitle = projectStrings('addAfModalTitle');
+
+        return (
+            <Modal>
+                <ModalHeader title={addAFModalTitle} />
+                <ModalBody>
+                    <AddAnalysisFramework
+                        projectId={projectId}
+                        onModalClose={this.handleModalClose}
+                    />
+                </ModalBody>
+            </Modal>
+        );
+    }
+
+    render() {
+        const { pending } = this.state;
+        const AFDetails = this.renderSelectedAfDetails;
+
+        const AddAFModal = this.renderAddAFModal;
+        const AnalysisFrameworkList = this.renderAnalysisFrameworkList;
+
+        return (
+            <div className={styles.projectAnalysisFramework}>
+                <AnalysisFrameworkList />
+                <div className={styles.detailsContainer}>
                     {pending && <LoadingAnimation />}
-                    {this.renderSelectedAfDetails()}
+                    <AFDetails />
                 </div>
+                <AddAFModal />
             </div>
         );
     }

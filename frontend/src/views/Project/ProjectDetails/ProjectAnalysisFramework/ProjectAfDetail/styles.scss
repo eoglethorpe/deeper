@@ -1,39 +1,35 @@
 @import '../../../../../stylesheets/base';
 @import '../../../../../stylesheets/modal';
 
+$af-detail-form-width: 240px;
+$height-header: 39px;
+
 .analysis-framework-detail {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    height: 100%;
 
     .header {
+        @include background-color($color-foreground);
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-small $spacing-large;
+        padding: 0 $spacing-small;
+        height: $height-header;
 
-        .action-btns {
+        .action-buttons {
             button {
-                margin-left: $spacing-medium-alt;
+                margin-left: $spacing-small;
             }
         }
     }
 
-    .af-details {
-        display: flex;
-        flex-basis: 100%;
-        flex-direction: column;
-        flex-grow: 1;
+    .content {
+        height: calc(100% - #{$height-header});
 
-        .project-af-form {
-            flex-shrink: 0;
-        }
-
-        .images-container {
-            flex-grow: 1;
-            margin: $spacing-medium-alt;
+        .af-detail-form {
+            display: block;
+            width: $af-detail-form-width;
         }
     }
 }

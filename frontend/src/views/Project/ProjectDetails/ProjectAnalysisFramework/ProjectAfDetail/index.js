@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 import { reverseRoute } from '../../../../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
-import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
+import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
 
@@ -274,11 +275,92 @@ export default class ProjectAfDetail extends React.PureComponent {
         mainHistory.push(reverseRoute(pathNames.analysisFramework, params));
     }
 
+    renderUseAFButton = () => {
+        const {
+            analysisFrameworkId,
+            projectDetails,
+            projectStrings,
+        } = this.props;
+
+        if (analysisFrameworkId !== projectDetails.analysisFramework) {
+            return null;
+        }
+
+        const { pending } = this.state;
+        const useAFButtonLabel = projectStrings('useAfButtonLabel');
+
+        return (
+            <AccentButton
+                iconName={iconNames.check}
+                onClick={this.handleAfUseClick}
+                disabled={pending}
+            >
+                { useAFButtonLabel }
+            </AccentButton>
+        );
+    }
+
+    renderEditAFButton = () => {
+        const {
+            afDetails,
+            projectStrings,
+        } = this.props;
+
+        if (!afDetails.isAdmin) {
+            return null;
+        }
+
+        const { pending } = this.state;
+        const editAFButtonLabel = projectStrings('editAfButtonLabel');
+
+        return (
+            <WarningButton
+                iconName={iconNames.edit}
+                onClick={this.handleAfEditClick}
+                disabled={pending}
+            >
+                { editAFButtonLabel }
+            </WarningButton>
+        );
+    }
+
+    renderHeader = () => {
+        const {
+            afDetails,
+            projectStrings,
+        } = this.props;
+        const { pending } = this.state;
+
+        const UseAFButton = this.renderUseAFButton;
+        const EditAFButton = this.renderEditAFButton;
+
+        const cloneAndEditAFButtonLabel = projectStrings('cloneEditAfButtonLabel');
+
+        return (
+            <header className={styles.header}>
+                <h2 className={styles.heading}>
+                    {afDetails.title}
+                </h2>
+                <div className={styles.actionButtons}>
+                    <UseAFButton />
+                    <EditAFButton />
+                    <AccentButton
+                        onClick={this.handleAfCloneClick}
+                        disabled={pending}
+                    >
+                        { cloneAndEditAFButtonLabel }
+                    </AccentButton>
+                </div>
+            </header>
+        );
+    }
+
     render() {
         const {
             afDetails,
             analysisFrameworkId,
             projectDetails,
+            projectStrings,
         } = this.props;
 
         const {
@@ -291,67 +373,13 @@ export default class ProjectAfDetail extends React.PureComponent {
             formValues,
         } = this.state;
 
-        const isProjectAf = analysisFrameworkId === projectDetails.analysisFramework;
-        const snapshots = [];
-        if (afDetails.snapshotOne) {
-            snapshots.push(afDetails.snapshotOne);
-        }
-        if (afDetails.snapshotTwo) {
-            snapshots.push(afDetails.snapshotTwo);
-        }
+        const Header = this.renderHeader;
 
         return (
-            <div styleName="analysis-framework-detail">
+            <div className={styles.analysisFrameworkDetail}>
                 { pending && <LoadingAnimation /> }
-                <header styleName="header">
-                    <h2>
-                        {afDetails.title}
-                    </h2>
-                    <div styleName="action-btns">
-                        {!isProjectAf &&
-                            <PrimaryButton
-                                iconName={iconNames.check}
-                                onClick={this.handleAfUseClick}
-                                disabled={pending}
-                            >
-                                {this.props.projectStrings('useAfButtonLabel')}
-                            </PrimaryButton>
-                        }
-                        {afDetails.isAdmin &&
-                            <PrimaryButton
-                                iconName={iconNames.edit}
-                                onClick={this.handleAfEditClick}
-                                disabled={pending}
-                            >
-                                {this.props.projectStrings('editAfButtonLabel')}
-                            </PrimaryButton>
-                        }
-                        <PrimaryButton
-                            onClick={this.handleAfCloneClick}
-                            disabled={pending}
-                        >
-                            {this.props.projectStrings('cloneEditAfButtonLabel')}
-                        </PrimaryButton>
-                    </div>
-                    <Confirm
-                        show={useConfirmModalShow}
-                        onClose={useConfirm => this.handleAfUse(
-                            useConfirm, analysisFrameworkId, projectDetails.id,
-                        )}
-                    >
-                        <p>{`${this.props.projectStrings('confirmUseAf')}${afDetails.title}?`}</p>
-                        <p>{this.props.projectStrings('confirmUseAfText')}</p>
-                    </Confirm>
-                    <Confirm
-                        show={cloneConfirmModalShow}
-                        onClose={cloneConfirm => this.handleAfClone(
-                            cloneConfirm, analysisFrameworkId, projectDetails.id,
-                        )}
-                    >
-                        <p>{`${this.props.projectStrings('confirmCloneAf')} ${afDetails.title}?`}</p>
-                    </Confirm>
-                </header>
-                <div styleName="af-details">
+                <Header />
+                <div className={styles.content}>
                     <ProjectAfForm
                         formValues={formValues}
                         formErrors={formErrors}
@@ -360,12 +388,43 @@ export default class ProjectAfDetail extends React.PureComponent {
                         failureCallback={this.failureCallback}
                         handleFormCancel={this.handleFormCancel}
                         successCallback={this.successCallback}
-                        styleName="project-af-form"
+                        className={styles.afDetailForm}
                         pristine={pristine}
                         pending={pending}
                         readOnly={!afDetails.isAdmin}
                     />
                 </div>
+                <Confirm
+                    show={useConfirmModalShow}
+                    onClose={useConfirm => this.handleAfUse(
+                        useConfirm, analysisFrameworkId, projectDetails.id,
+                    )}
+                >
+                    <p>
+                        {/* FIXME: Use string template */}
+                        {`
+                            ${projectStrings('confirmUseAf')}
+                            ${afDetails.title}?
+                        `}
+                    </p>
+                    <p>
+                        { projectStrings('confirmUseAfText') }
+                    </p>
+                </Confirm>
+                <Confirm
+                    show={cloneConfirmModalShow}
+                    onClose={cloneConfirm => this.handleAfClone(
+                        cloneConfirm, analysisFrameworkId, projectDetails.id,
+                    )}
+                >
+                    <p>
+                        {/* FIXME: Use string template */}
+                        {`
+                            ${projectStrings('confirmCloneAf')}
+                            ${afDetails.title}?
+                        `}
+                    </p>
+                </Confirm>
             </div>
         );
     }
