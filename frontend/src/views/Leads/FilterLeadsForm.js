@@ -53,6 +53,8 @@ const propTypes = {
 const defaultProps = {
     className: '',
     applyOnChange: false,
+    filters: {},
+    leadFilterOptions: {},
 };
 
 const mapStateToProps = (state, props) => ({
@@ -82,7 +84,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         const { similar, ...values } = this.props.filters;
         this.state = {
             formValues: values,
-            pristine: false,
+            pristine: true,
         };
 
         this.schema = {
@@ -109,7 +111,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             const { similar, ...values } = filters;
             this.setState({
                 formValues: values,
-                pristine: false,
+                pristine: true,
             });
         }
 
@@ -119,7 +121,9 @@ export default class FilterLeadsForm extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.leadFilterOptionsRequest.stop();
+        if (this.leadFilterOptionsRequest) {
+            this.leadFilterOptionsRequest.stop();
+        }
     }
 
     // REST
@@ -165,42 +169,60 @@ export default class FilterLeadsForm extends React.PureComponent {
     // UI
 
     handleChange = (values) => {
-        this.setState({
-            formValues: values,
-            pristine: true,
-        }, () => {
-            if (this.props.applyOnChange) {
-                this.formComponent.submit();
-            }
-        });
+        this.setState(
+            {
+                formValues: values,
+                pristine: false,
+            },
+            () => {
+                if (this.props.applyOnChange) {
+                    this.formComponent.submit();
+                }
+            },
+        );
     }
 
     handleSubmit = (values) => {
-        this.setState({ pristine: false });
-        // FIXME: values is undefined when all values are empty in form
+        const { similar } = this.props.filters;
         this.props.setLeadPageFilter({
-            filters: values,
+            filters: {
+                ...values,
+                similar,
+            },
         });
     }
 
     handleClearSimilarSelection = () => {
+        // unsetting only similar from filters
         this.props.setLeadPageFilter({
-            filters: { similar: undefined },
+            filters: {
+                ...this.props.filters,
+                similar: undefined,
+            },
         });
     }
 
     handleClearFilters = () => {
-        if (!this.state.pristine) {
-            this.props.unsetLeadPageFilter();
-        } else {
+        if (isObjectEmpty(this.props.filters)) {
+            // NOTE: Only clear component state,
+            // as the filters in global state is already empty
             this.setState({ formValues: {} });
+        } else {
+            this.props.unsetLeadPageFilter();
         }
     }
 
     render() {
         const {
             className,
-            leadFilterOptions,
+            leadFilterOptions: {
+                confidentiality,
+                status,
+                assignee,
+            },
+            filters,
+            leadsStrings,
+            applyOnChange,
         } = this.props;
 
         const {
@@ -208,13 +230,10 @@ export default class FilterLeadsForm extends React.PureComponent {
             pristine,
         } = this.state;
 
-        const {
-            confidentiality,
-            status,
-            assignee,
-        } = leadFilterOptions;
+        const isApplyDisabled = pristine;
 
-        const isFilterEmpty = isObjectEmpty(formValues);
+        const isFilterEmpty = isObjectEmpty(filters);
+        const isClearDisabled = isFilterEmpty && pristine;
 
         return (
             <Form
@@ -228,26 +247,26 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={this.props.leadsStrings('assigneeLabel')}
+                    label={leadsStrings('assigneeLabel')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={assignee}
-                    placeholder={this.props.leadsStrings('placeholderAnybody')}
+                    placeholder={leadsStrings('placeholderAnybody')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <DateFilter
                     formname="created_at"
-                    label={this.props.leadsStrings('filterDateCreated')}
-                    placeholder={this.props.leadsStrings('placeholderAnytime')}
+                    label={leadsStrings('filterDateCreated')}
+                    placeholder={leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <DateFilter
                     formname="published_on"
-                    label={this.props.leadsStrings('filterDatePublished')}
-                    placeholder={this.props.leadsStrings('placeholderAnytime')}
+                    label={leadsStrings('filterDatePublished')}
+                    placeholder={leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -255,10 +274,10 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={this.props.leadsStrings('filterConfidentiality')}
+                    label={leadsStrings('filterConfidentiality')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={confidentiality}
-                    placeholder={this.props.leadsStrings('placeholderAny')}
+                    placeholder={leadsStrings('placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -266,47 +285,47 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     formname="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={this.props.leadsStrings('filterStatus')}
+                    label={leadsStrings('filterStatus')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={status}
-                    placeholder={this.props.leadsStrings('placeholderAny')}
+                    placeholder={leadsStrings('placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <TextInput
                     formname="search"
-                    label={this.props.leadsStrings('placeholderSearch')}
-                    placeholder={this.props.leadsStrings('placeholderSearch')}
+                    label={leadsStrings('placeholderSearch')}
+                    placeholder={leadsStrings('placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                     type="search"
                 />
-                { !this.props.applyOnChange &&
+                { !applyOnChange &&
                     <Button
                         className="button apply-filter-button"
-                        disabled={!pristine}
+                        disabled={isApplyDisabled}
                     >
-                        {this.props.leadsStrings('filterApplyFilter')}
+                        {leadsStrings('filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
                     className="button clear-filter-button"
                     type="button"
-                    disabled={isFilterEmpty}
+                    disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >
-                    {this.props.leadsStrings('filterClearFilter')}
+                    {leadsStrings('filterClearFilter')}
                 </DangerButton>
                 {
-                    isTruthy(this.props.filters.similar) && (
+                    isTruthy(filters.similar) && (
                         <DangerButton
                             className="button clear-similar-filter-button"
                             type="button"
                             onClick={this.handleClearSimilarSelection}
                         >
-                            {this.props.leadsStrings('filterClearSimilarFilter')}
+                            {leadsStrings('filterClearSimilarFilter')}
                         </DangerButton>
                     )
                 }

@@ -74,11 +74,9 @@ export default class FilterArysForm extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        // eslint-disable-next-line no-unused-vars
-        const { similar, ...values } = this.props.filters;
         this.state = {
-            formValues: values,
-            pristine: false,
+            formValues: this.props.filters,
+            pristine: true,
         };
 
         this.schema = {
@@ -104,17 +102,23 @@ export default class FilterArysForm extends React.PureComponent {
             filters: newFilters,
             activeProject: newActiveProject,
         } = nextProps;
+
         if (oldFilters !== newFilters) {
             // eslint-disable-next-line no-unused-vars
-            const { similar, ...values } = newFilters;
             this.setState({
-                formValues: values,
-                pristine: false,
+                formValues: newFilters,
+                pristine: true,
             });
         }
 
         if (oldActiveProject !== newActiveProject) {
             this.requestProjectAryFilterOptions(newActiveProject);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.aryFilterOptionsRequest) {
+            this.aryFilterOptionsRequest.stop();
         }
     }
 
@@ -134,43 +138,44 @@ export default class FilterArysForm extends React.PureComponent {
     // UI
 
     handleChange = (values) => {
-        this.setState({
-            formValues: values,
-            pristine: true,
-        }, () => {
-            if (this.props.applyOnChange) {
-                this.formComponent.submit();
-            }
-        });
+        this.setState(
+            {
+                formValues: values,
+                pristine: false,
+            },
+            () => {
+                if (this.props.applyOnChange) {
+                    this.formComponent.submit();
+                }
+            },
+        );
     }
 
     handleSubmit = (values) => {
-        this.setState({ pristine: false });
         this.props.setAryPageFilter({
             filters: values,
         });
     }
 
-    handleClearSimilarSelection = () => {
-        this.props.setAryPageFilter({
-            filters: { similar: undefined },
-        });
-    }
-
     handleClearFilters = () => {
-        if (!this.state.pristine) {
-            this.props.unsetAryPageFilter();
+        if (isObjectEmpty(this.props.filters)) {
+            // NOTE: Only clear component state,
+            // as the filters in global state is already empty
+            this.setState({ formValues: {} });
         } else {
-            this.setState({
-                formValues: {},
-            });
+            this.props.unsetAryPageFilter();
         }
     }
 
     render() {
         const {
             className,
-            aryFilterOptions,
+            aryFilterOptions: {
+                createdBy,
+            },
+            applyOnChange,
+            arysStrings,
+            filters,
         } = this.props;
 
         const {
@@ -178,9 +183,10 @@ export default class FilterArysForm extends React.PureComponent {
             pristine,
         } = this.state;
 
-        const isFilterEmpty = isObjectEmpty(formValues);
+        const isApplyDisabled = pristine;
 
-        const { createdBy } = aryFilterOptions;
+        const isFilterEmpty = isObjectEmpty(filters);
+        const isClearDisabled = isFilterEmpty && pristine;
 
         return (
             <Form
@@ -193,8 +199,8 @@ export default class FilterArysForm extends React.PureComponent {
             >
                 <DateFilter
                     formname="created_at"
-                    label={this.props.arysStrings('filterDateCreated')}
-                    placeholder={this.props.arysStrings('placeholderAnytime')}
+                    label={arysStrings('filterDateCreated')}
+                    placeholder={arysStrings('placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="arys-filter"
@@ -203,49 +209,38 @@ export default class FilterArysForm extends React.PureComponent {
                     className="arys-filter"
                     formname="created_by"
                     keySelector={FilterArysForm.optionKeySelector}
-                    label={this.props.arysStrings('createdByFilterLabel')}
+                    label={arysStrings('createdByFilterLabel')}
                     labelSelector={FilterArysForm.optionLabelSelector}
                     options={createdBy}
-                    placeholder={this.props.arysStrings('placeholderAnybody')}
+                    placeholder={arysStrings('placeholderAnybody')}
                     showHintAndError={false}
                     showLabel
                 />
                 <TextInput
                     formname="search"
-                    label={this.props.arysStrings('placeholderSearch')}
-                    placeholder={this.props.arysStrings('placeholderSearch')}
+                    label={arysStrings('placeholderSearch')}
+                    placeholder={arysStrings('placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="arys-filter"
                     type="search"
                 />
-                { !this.props.applyOnChange &&
+                { !applyOnChange &&
                     <Button
                         className="button apply-filter-button"
-                        disabled={!pristine}
+                        disabled={isApplyDisabled}
                     >
-                        {this.props.arysStrings('filterApplyFilter')}
+                        {arysStrings('filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
                     className="button clear-filter-button"
                     type="button"
-                    disabled={isFilterEmpty}
+                    disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >
-                    {this.props.arysStrings('filterClearFilter')}
+                    {arysStrings('filterClearFilter')}
                 </DangerButton>
-                {
-                    isTruthy(this.props.filters.similar) && (
-                        <DangerButton
-                            className="button clear-similar-filter-button"
-                            type="button"
-                            onClick={this.handleClearSimilarSelection}
-                        >
-                            {this.props.arysStrings('filterClearSimilarFilter')}
-                        </DangerButton>
-                    )
-                }
             </Form>
         );
     }

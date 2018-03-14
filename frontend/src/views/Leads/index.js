@@ -418,7 +418,10 @@ export default class Leads extends React.PureComponent {
 
     handleSearchSimilarLead = (row) => {
         this.props.setLeadPageFilter({
-            filters: { similar: row.id },
+            filters: {
+                ...this.props.filters,
+                similar: row.id,
+            },
         });
     };
 

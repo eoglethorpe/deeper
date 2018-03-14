@@ -63,12 +63,12 @@ const setArys = (state, action) => {
 };
 
 const aryViewSetFilter = (state, action) => {
-    const { filters = {} } = action;
+    const { filters } = action;
     const { activeProject } = state;
     const settings = {
         aryPage: {
             [activeProject]: { $auto: {
-                filter: { $auto: { $merge: filters } },
+                filter: { $set: filters },
                 activePage: { $set: 1 },
             } },
         },
