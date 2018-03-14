@@ -2,10 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    isTruthy,
-    isObjectEmpty,
-} from '../../vendor/react-store/utils/common';
+import { isObjectEmpty } from '../../vendor/react-store/utils/common';
 import Button from '../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import Form from '../../vendor/react-store/components/Input/Form';
