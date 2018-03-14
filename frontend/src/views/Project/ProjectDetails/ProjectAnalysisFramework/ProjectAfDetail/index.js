@@ -282,7 +282,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             projectStrings,
         } = this.props;
 
-        if (analysisFrameworkId !== projectDetails.analysisFramework) {
+        if (analysisFrameworkId === projectDetails.analysisFramework) {
             return null;
         }
 
