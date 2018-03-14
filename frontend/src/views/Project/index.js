@@ -12,7 +12,6 @@ import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
-import ListItem from '../../vendor/react-store/components/View/List/ListItem';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';

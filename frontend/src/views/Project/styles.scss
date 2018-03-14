@@ -43,6 +43,7 @@ $width-project-bar: 240px;
             .list-item {
                 display: block;
                 border-bottom: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thick solid transparent;
 
                 .link {
                     display: block;
@@ -54,7 +55,12 @@ $width-project-bar: 240px;
             }
 
             .active {
-                @include background-color($color-background-selected);
+                border-left-color: $color-accent;
+                background-color: $color-background-selected;
+            }
+
+            :hover {
+                background-color: $color-background-hover;
             }
         }
     }
