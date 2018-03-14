@@ -14,7 +14,7 @@ import GridLayout from '../../../vendor/react-store/components/View/GridLayout';
 
 import {
     setActiveEntryAction,
-    editEntryViewCurrentLeadSelector,
+    editEntryCurrentLeadSelector,
     entryStringsSelector,
     afStringsSelector,
 } from '../../../redux';
@@ -27,32 +27,28 @@ import LeftPanel from './LeftPanel';
 import styles from '../styles.scss';
 
 const propTypes = {
-    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     ]).isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    entryStrings: PropTypes.func.isRequired,
+    afStrings: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
 
-    selectedEntryId: PropTypes.string,
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     filteredEntries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    saveAllDisabled: PropTypes.bool.isRequired,
-    saveAllPending: PropTypes.bool.isRequired,
-    widgetDisabled: PropTypes.bool,
-
     onEntryAdd: PropTypes.func.isRequired,
     onEntryDelete: PropTypes.func.isRequired,
     onSaveAll: PropTypes.func.isRequired,
-
-    entryStrings: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
+    saveAllPending: PropTypes.bool.isRequired,
+    selectedEntryId: PropTypes.string,
+    widgetDisabled: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -61,7 +57,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    lead: editEntryViewCurrentLeadSelector(state, props),
+    lead: editEntryCurrentLeadSelector(state, props),
     entryStrings: entryStringsSelector(state),
     afStrings: afStringsSelector(state),
 });
@@ -182,15 +178,24 @@ export default class Overview extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering EditEntry:Overview');
+
         const {
-            selectedEntryId,
+            api,
+            choices,
             entries,
+            entryStrings,
             filteredEntries,
-            onSaveAll,
-            saveAllDisabled,
-            widgetDisabled,
+            lead,
+            leadId,
             onEntryAdd,
             onEntryDelete,
+            onSaveAll,
+            saveAllDisabled,
+            saveAllPending,
+            selectedEntryId,
+            setActiveEntry,
+            widgetDisabled,
         } = this.props;
 
         const selectedEntry = entries.find(
@@ -205,15 +210,15 @@ export default class Overview extends React.PureComponent {
                 rightContainerClassName={styles.right}
                 leftChild={
                     <LeftPanel
-                        api={this.props.api}
-                        lead={this.props.lead}
-                        leadId={this.props.leadId}
-                        setActiveEntry={this.props.setActiveEntry}
-                        selectedEntryId={this.props.selectedEntryId}
-                        entries={this.props.entries}
-                        choices={this.props.choices}
-                        onEntryDelete={this.props.onEntryDelete}
-                        saveAllPending={this.props.saveAllPending}
+                        api={api}
+                        lead={lead}
+                        leadId={leadId}
+                        setActiveEntry={setActiveEntry}
+                        selectedEntryId={selectedEntryId}
+                        entries={entries}
+                        choices={choices}
+                        onEntryDelete={onEntryDelete}
+                        saveAllPending={saveAllPending}
                     />
                 }
                 rightChild={[
@@ -224,7 +229,7 @@ export default class Overview extends React.PureComponent {
                         <div styleName="entry-actions">
                             <SelectInput
                                 styleName="select-input"
-                                placeholder={this.props.entryStrings('selectExcerptPlaceholder')}
+                                placeholder={entryStrings('selectExcerptPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
                                 hideClearButton
@@ -235,14 +240,14 @@ export default class Overview extends React.PureComponent {
                                 onChange={this.handleEntrySelectChange}
                             />
                             <PrimaryButton
-                                title={this.props.entryStrings('addEntryButtonTitle')}
+                                title={entryStrings('addEntryButtonTitle')}
                                 onClick={onEntryAdd}
                             >
                                 <i className={iconNames.add} />
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
-                                    title={this.props.entryStrings('removeEntryButtonTitle')}
+                                    title={entryStrings('removeEntryButtonTitle')}
                                     onClick={() => onEntryDelete(true)}
                                 >
                                     <i className={iconNames.delete} />
@@ -255,14 +260,14 @@ export default class Overview extends React.PureComponent {
                                 to="/list"
                                 replace
                             >
-                                {this.props.entryStrings('gotoListButtonLabel')}
+                                {entryStrings('gotoListButtonLabel')}
                             </Link>
                             <SuccessButton
                                 styleName="save-button"
                                 onClick={onSaveAll}
                                 disabled={saveAllDisabled}
                             >
-                                {this.props.entryStrings('saveButtonLabel')}
+                                {entryStrings('saveButtonLabel')}
                             </SuccessButton>
                         </div>
                     </header>,

@@ -294,6 +294,8 @@ export default class LeftPanel extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering EditEntry:Overview:LeftPanel');
+
         const { lead } = this.props;
         const { images } = this.state;
         let { currentTab } = this.state;

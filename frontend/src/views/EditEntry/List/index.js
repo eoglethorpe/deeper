@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import GridLayout from '../../../vendor/react-store/components/View/GridLayout';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
@@ -20,9 +21,11 @@ import {
     transformResponseErrorToFormError,
 } from '../../../rest';
 import {
-    editEntryViewCurrentLeadSelector,
+    editEntryCurrentLeadSelector,
     projectIdFromRouteSelector,
+    markForDeleteEntryAction,
 
+    setActiveEntryAction,
     setGeoOptionsAction,
     entryStringsSelector,
     afStringsSelector,
@@ -37,28 +40,29 @@ import styles from '../styles.scss';
 
 
 const propTypes = {
-    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    onSaveAll: PropTypes.func.isRequired,
-    widgetDisabled: PropTypes.bool,
-    saveAllDisabled: PropTypes.bool.isRequired,
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
-    setGeoOptions: PropTypes.func.isRequired,
-
     entryStrings: PropTypes.func.isRequired,
     afStrings: PropTypes.func.isRequired,
+    setGeoOptions: PropTypes.func.isRequired,
+    setActiveEntry: PropTypes.func.isRequired,
+    markForDeleteEntry: PropTypes.func.isRequired,
+
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadId: PropTypes.number.isRequired,
+    onSaveAll: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
+    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    widgetDisabled: false,
     projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    leadDetails: editEntryViewCurrentLeadSelector(state, props),
+    leadDetails: editEntryCurrentLeadSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
     entryStrings: entryStringsSelector(state),
     afStrings: afStringsSelector(state),
@@ -66,6 +70,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
+    setActiveEntry: params => dispatch(setActiveEntryAction(params)),
+    markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
 });
 
 const APPLY_MODE = {
@@ -350,9 +356,10 @@ export default class List extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering EditEntry:List');
+
         const {
             entries,
-            widgetDisabled,
         } = this.props;
         const {
             showApplyModal,
@@ -364,7 +371,6 @@ export default class List extends React.PureComponent {
 
         return (
             <div styleName="list">
-                { widgetDisabled && <LoadingAnimation /> }
                 <Header />
                 {
                     (!entries || entries.length <= 0) ? (
@@ -376,20 +382,53 @@ export default class List extends React.PureComponent {
                     ) : (
                         <div styleName="entry-list">
                             {
-                                entries.map(entry => (
-                                    <div
-                                        key={entryAccessor.getKey(entry)}
-                                        styleName="entry"
-                                        style={entryStyle}
-                                    >
-                                        <GridLayout
-                                            styleName="grid-layout"
-                                            modifier={this.getItemView}
-                                            items={this.gridItems[entryAccessor.getKey(entry)]}
-                                            viewOnly
-                                        />
-                                    </div>
-                                ))
+                                entries.map((entry) => {
+                                    const entryKey = entryAccessor.getKey(entry);
+                                    const handleDelete = () => {
+                                        this.props.markForDeleteEntry({
+                                            leadId: this.props.leadId,
+                                            entryId: entryKey,
+                                            mark: true,
+                                        });
+                                    };
+                                    const handleEdit = () => {
+                                        this.props.setActiveEntry({
+                                            leadId: this.props.leadId,
+                                            entryId: entryKey,
+                                        });
+                                    };
+                                    const { isWidgetDisabled } = this.props.choices[entryKey] || {};
+
+                                    return (
+                                        <div
+                                            key={entryAccessor.getKey(entry)}
+                                            styleName="entry"
+                                            style={entryStyle}
+                                        >
+                                            { isWidgetDisabled && <LoadingAnimation /> }
+                                            <GridLayout
+                                                styleName="grid-layout"
+                                                modifier={this.getItemView}
+                                                items={this.gridItems[entryAccessor.getKey(entry)]}
+                                                viewOnly
+                                            />
+                                            <div>
+                                                {/* FIXME: use strings */}
+                                                <DangerButton onClick={handleDelete}>
+                                                    Delete
+                                                </DangerButton>
+                                                {/* FIXME: use strings */}
+                                                <Link
+                                                    onClick={handleEdit}
+                                                    to="/overview"
+                                                    replace
+                                                >
+                                                    Edit
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    );
+                                })
                             }
                         </div>
                     )

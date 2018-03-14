@@ -39,6 +39,7 @@
 
         .entry {
             display: inline-block;
+            position: relative;
             background-color: $color-background-row;
 
             .apply-buttons {

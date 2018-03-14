@@ -14,13 +14,13 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 
 import {
     leadIdFromRoute,
-    editEntryViewCurrentAnalysisFrameworkSelector,
-    editEntryViewEntriesSelector,
-    editEntryViewFilteredEntriesSelector,
-    editEntryViewSelectedEntryIdSelector,
+    editEntryCurrentAnalysisFrameworkSelector,
+    editEntryEntriesSelector,
+    editEntryFilteredEntriesSelector,
+    editEntrySelectedEntryIdSelector,
 
     setAnalysisFrameworkAction,
-    setEditEntryViewLeadAction,
+    setEditEntryLeadAction,
     setProjectAction,
 
     saveEntryAction,
@@ -89,10 +89,10 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     leadId: leadIdFromRoute(state, props),
-    analysisFramework: editEntryViewCurrentAnalysisFrameworkSelector(state, props),
-    entries: editEntryViewEntriesSelector(state, props),
-    filteredEntries: editEntryViewFilteredEntriesSelector(state, props),
-    selectedEntryId: editEntryViewSelectedEntryIdSelector(state, props),
+    analysisFramework: editEntryCurrentAnalysisFrameworkSelector(state, props),
+    entries: editEntryEntriesSelector(state, props),
+    filteredEntries: editEntryFilteredEntriesSelector(state, props),
+    selectedEntryId: editEntrySelectedEntryIdSelector(state, props),
     routeUrl: routeUrlSelector(state),
 
     notificationStrings: notificationStringsSelector(state),
@@ -104,7 +104,7 @@ const mapDispatchToProps = dispatch => ({
     changeEntry: params => dispatch(changeEntryAction(params)),
 
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
-    setLead: params => dispatch(setEditEntryViewLeadAction(params)),
+    setLead: params => dispatch(setEditEntryLeadAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 
     diffEntries: params => dispatch(diffEntriesAction(params)),
@@ -117,7 +117,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class EditEntryView extends React.PureComponent {
+export default class EditEntry extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -406,6 +406,8 @@ export default class EditEntryView extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering EditEntry');
+
         const {
             analysisFramework,
             leadId,
@@ -430,9 +432,11 @@ export default class EditEntryView extends React.PureComponent {
         this.api.setEntries(entries);
         this.api.setSelectedId(selectedEntryId);
 
-        // calculate all choices
+        // FIXME: move this calcChoices to component will update
         this.choices = this.calcChoices();
+
         const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
+
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
         );
@@ -464,21 +468,21 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <Overview
                                 {...props}
-                                api={this.api}
-                                leadId={leadId}
-                                selectedEntryId={selectedEntryId}
+
+                                analysisFramework={analysisFramework}
                                 entries={entries}
                                 filteredEntries={filteredEntries}
-                                analysisFramework={analysisFramework}
-                                onSaveAll={this.handleSaveAll}
+                                leadId={leadId}
                                 onEntryAdd={this.handleAddEntry}
                                 onEntryDelete={this.handleEntryDelete}
+                                selectedEntryId={selectedEntryId}
 
+                                api={this.api}
+                                choices={this.choices}
+                                onSaveAll={this.handleSaveAll}
+                                saveAllDisabled={isSaveAllDisabled}
                                 saveAllPending={pendingSaveAll}
                                 widgetDisabled={isWidgetDisabled}
-                                saveAllDisabled={isSaveAllDisabled}
-
-                                choices={this.choices}
                             />
                         )}
                     />
@@ -487,13 +491,15 @@ export default class EditEntryView extends React.PureComponent {
                         render={props => (
                             <List
                                 {...props}
-                                api={this.api}
+
+                                analysisFramework={analysisFramework}
+                                entries={filteredEntries}
                                 leadId={leadId}
+
+                                api={this.api}
+                                choices={this.choices}
                                 onSaveAll={this.handleSaveAll}
                                 saveAllDisabled={isSaveAllDisabled}
-                                widgetDisabled={isWidgetDisabled}
-                                entries={filteredEntries}
-                                analysisFramework={analysisFramework}
                             />
                         )}
                     />

@@ -36,6 +36,8 @@ export default class LeadPreview extends React.PureComponent {
     );
 
     render() {
+        console.log('Rendering EditEntry:Overview:LeftPanel:LeadPreview');
+
         const { lead } = this.props;
         const { sourceType: type, url, attachment } = lead;
 

@@ -20,7 +20,7 @@ export const EE_REMOVE_ALL_ENTRIES = 'domain-data/EE_REMOVE_ALL_ENTRIES';
 
 // CREATOR
 
-export const setEditEntryViewLeadAction = ({ lead }) => ({
+export const setEditEntryLeadAction = ({ lead }) => ({
     type: EE__SET_LEAD,
     lead,
 });
@@ -83,28 +83,28 @@ export const setActiveEntryAction = ({ leadId, entryId }) => ({
 
 // FIXME: use accessor for entry
 const getIdFromEntry = e => e.data.id;
-const getEntriesByLeadId = (editEntryView, leadId) => (
-    editEntryView[leadId].entries
+const getEntriesByLeadId = (editEntry, leadId) => (
+    editEntry[leadId].entries
 );
-const getSelectedEntryIdByLeadId = (editEntryView, leadId) => (
-    editEntryView[leadId].selectedEntryId
+const getSelectedEntryIdByLeadId = (editEntry, leadId) => (
+    editEntry[leadId].selectedEntryId
 );
-const getEntryIndexByEntryId = (editEntryView, leadId, entryId) => {
-    const entries = getEntriesByLeadId(editEntryView, leadId);
+const getEntryIndexByEntryId = (editEntry, leadId, entryId) => {
+    const entries = getEntriesByLeadId(editEntry, leadId);
     return entries.findIndex(e => getIdFromEntry(e) === entryId);
 };
-const getEntryByEntryId = (editEntryView, leadId, entryId) => {
-    const entries = getEntriesByLeadId(editEntryView, leadId);
+const getEntryByEntryId = (editEntry, leadId, entryId) => {
+    const entries = getEntriesByLeadId(editEntry, leadId);
     return entries.find(e => getIdFromEntry(e) === entryId);
 };
 
 // REDUCER
 
-const editEntryViewSetLead = (state, action) => {
+const editEntrySetLead = (state, action) => {
     const { lead } = action;
     const leadId = lead.id;
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: { $auto: {
                 lead: { $set: lead },
             } },
@@ -113,12 +113,12 @@ const editEntryViewSetLead = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewAddEntry = (state, action) => {
-    const { editEntryView } = state;
+const editEntryAddEntry = (state, action) => {
+    const { editEntry } = state;
     const { entry, leadId } = action;
 
     // Add order to entries during creation
-    const entries = (editEntryView[leadId] || {}).entries || [];
+    const entries = (editEntry[leadId] || {}).entries || [];
     const maxEntryOrder = entries.reduce(
         (acc, e) => {
             const entryValue = entryAccessor.getValues(e);
@@ -139,7 +139,7 @@ const editEntryViewAddEntry = (state, action) => {
     const newEntryId = getIdFromEntry(newEntry);
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: { $auto: {
                 selectedEntryId: { $set: newEntryId },
                 entries: { $autoArray: {
@@ -151,8 +151,8 @@ const editEntryViewAddEntry = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewSaveEntry = (state, action) => {
-    const { editEntryView } = state;
+const editEntrySaveEntry = (state, action) => {
+    const { editEntry } = state;
     const {
         leadId,
         entryId,
@@ -160,10 +160,10 @@ const editEntryViewSaveEntry = (state, action) => {
         data = {},
         values = {},
     } = action;
-    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
+    const entryIndex = getEntryIndexByEntryId(editEntry, leadId, entryId);
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 entries: {
                     [entryIndex]: {
@@ -183,8 +183,8 @@ const editEntryViewSaveEntry = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewChangeEntry = (state, action) => {
-    const { editEntryView } = state;
+const editEntryChangeEntry = (state, action) => {
+    const { editEntry } = state;
     const {
         leadId,
         entryId,
@@ -195,10 +195,10 @@ const editEntryViewChangeEntry = (state, action) => {
         uiState = {},
     } = action;
 
-    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
+    const entryIndex = getEntryIndexByEntryId(editEntry, leadId, entryId);
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 entries: {
                     [entryIndex]: {
@@ -216,20 +216,20 @@ const editEntryViewChangeEntry = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewDiffEntries = (state, action) => {
-    const { editEntryView } = state;
+const editEntryDiffEntries = (state, action) => {
+    const { editEntry } = state;
     const {
         leadId,
         diffs,
     } = action;
 
-    const localEntries = getEntriesByLeadId(editEntryView, leadId);
+    const localEntries = getEntriesByLeadId(editEntry, leadId);
     // Create new entires by applying diff on local entries
     const newEntries = calcNewEntries(localEntries, diffs);
 
     // If last selected was deleted in newEntries,
     // then set the first item as selected
-    const selectedEntryId = getSelectedEntryIdByLeadId(editEntryView, leadId);
+    const selectedEntryId = getSelectedEntryIdByLeadId(editEntry, leadId);
     const selectedEntry = newEntries.find(entry => getIdFromEntry(entry) === selectedEntryId);
 
     let newSelectedEntryId = selectedEntryId;
@@ -239,7 +239,7 @@ const editEntryViewDiffEntries = (state, action) => {
     }
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 entries: { $set: newEntries },
                 selectedEntryId: { $set: newSelectedEntryId },
@@ -250,18 +250,18 @@ const editEntryViewDiffEntries = (state, action) => {
 };
 
 const entryMarkForDelete = (state, action) => {
-    const { editEntryView } = state;
+    const { editEntry } = state;
     const {
         leadId,
         entryId,
         mark,
     } = action;
-    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
+    const entryIndex = getEntryIndexByEntryId(editEntry, leadId, entryId);
 
     // HERE:
     let newSelectedEntryId;
     if (mark) {
-        const entries = getEntriesByLeadId(editEntryView, leadId);
+        const entries = getEntriesByLeadId(editEntry, leadId);
         const filteredEntries = entries.filter(e => !e.markedForDelete);
         const filteredEntryIndex = filteredEntries.findIndex(e => getIdFromEntry(e) === entryId);
         const newSelectedEntry = getElementAround(filteredEntries, filteredEntryIndex);
@@ -271,7 +271,7 @@ const entryMarkForDelete = (state, action) => {
     }
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 selectedEntryId: { $set: newSelectedEntryId },
                 entries: {
@@ -289,19 +289,19 @@ const entryMarkForDelete = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewRemoveEntry = (state, action) => {
-    const { editEntryView } = state;
+const editEntryRemoveEntry = (state, action) => {
+    const { editEntry } = state;
     const { entryId, leadId } = action;
 
     // Get new selected entry id
-    const entryIndex = getEntryIndexByEntryId(editEntryView, leadId, entryId);
-    const entries = getEntriesByLeadId(editEntryView, leadId);
+    const entryIndex = getEntryIndexByEntryId(editEntry, leadId, entryId);
+    const entries = getEntriesByLeadId(editEntry, leadId);
 
     const newSelectedEntry = getElementAround(entries, entryIndex);
     const newSelectedEntryId = newSelectedEntry ? getIdFromEntry(newSelectedEntry) : undefined;
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 selectedEntryId: { $set: newSelectedEntryId },
                 entries: {
@@ -313,11 +313,11 @@ const editEntryViewRemoveEntry = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewRemoveAllEntries = (state, action) => {
+const editEntryRemoveAllEntries = (state, action) => {
     const { leadId } = action;
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 selectedEntryId: { $set: undefined },
                 entries: {
@@ -329,17 +329,17 @@ const editEntryViewRemoveAllEntries = (state, action) => {
     return update(state, settings);
 };
 
-const editEntryViewSetActiveEntry = (state, action) => {
-    const { editEntryView } = state;
+const editEntrySetActiveEntry = (state, action) => {
+    const { editEntry } = state;
     const { leadId, entryId } = action;
 
-    const entry = getEntryByEntryId(editEntryView, leadId, entryId);
+    const entry = getEntryByEntryId(editEntry, leadId, entryId);
     if (entry.markedForDelete) {
         return state;
     }
 
     const settings = {
-        editEntryView: {
+        editEntry: {
             [leadId]: {
                 selectedEntryId: {
                     $set: entryId,
@@ -353,14 +353,14 @@ const editEntryViewSetActiveEntry = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [EE__ADD_ENTRY]: editEntryViewAddEntry,
-    [EE__REMOVE_ENTRY]: editEntryViewRemoveEntry,
-    [EE__SET_ACTIVE_ENTRY]: editEntryViewSetActiveEntry,
-    [EE__SET_LEAD]: editEntryViewSetLead,
-    [EE__ENTRY_SAVE]: editEntryViewSaveEntry,
-    [EE__ENTRY_CHANGE]: editEntryViewChangeEntry,
-    [EE__ENTRY_DIFF]: editEntryViewDiffEntries,
+    [EE__ADD_ENTRY]: editEntryAddEntry,
+    [EE__REMOVE_ENTRY]: editEntryRemoveEntry,
+    [EE__SET_ACTIVE_ENTRY]: editEntrySetActiveEntry,
+    [EE__SET_LEAD]: editEntrySetLead,
+    [EE__ENTRY_SAVE]: editEntrySaveEntry,
+    [EE__ENTRY_CHANGE]: editEntryChangeEntry,
+    [EE__ENTRY_DIFF]: editEntryDiffEntries,
     [EE__ENTRY_MARK_FOR_DELETE]: entryMarkForDelete,
-    [EE_REMOVE_ALL_ENTRIES]: editEntryViewRemoveAllEntries,
+    [EE_REMOVE_ALL_ENTRIES]: editEntryRemoveAllEntries,
 };
 export default reducers;

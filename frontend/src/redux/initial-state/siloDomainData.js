@@ -79,7 +79,7 @@ const initialSiloDomainData = {
     },
 
     // i specifies lead
-    editEntryView: {
+    editEntry: {
         /*
         1: {
             leadId: 1,

@@ -17,6 +17,8 @@ import PrimaryButton from '../../vendor/react-store/components/Action/Button/Pri
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 
+import WidgetEmptyComponent from '../WidgetEmptyComponent';
+
 import {
     geoOptionsForProjectSelector,
     entryStringsSelector,
@@ -333,9 +335,6 @@ export default class GeoSelection extends React.PureComponent {
         });
         const selectedRegionSelectionsList = Object.values(selectedRegionSelections);
 
-        // FIXME: Use strings
-        const emptyComponent = 'No location selected';
-
         const flatValuesWithTitle = flatValues.map(v => (
             flatLocations.find(l => l.key === v)
         )).filter(v => v);
@@ -437,7 +436,7 @@ export default class GeoSelection extends React.PureComponent {
                     <ListView
                         className={styles['region-list']}
                         data={flatValuesWithTitle}
-                        emptyComponent={emptyComponent}
+                        emptyComponent={WidgetEmptyComponent}
                         keyExtractor={GeoSelection.valueKeyExtractor}
                         modifier={this.renderList}
                     />

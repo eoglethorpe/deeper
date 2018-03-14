@@ -66,6 +66,7 @@ export default class LeftPanel extends React.PureComponent {
                 />
             );
         }
+        // FIXME: use strings
         return (
             <div className="entry-excerpt">
                 {values.excerpt || `Excerpt ${values.order}`}
@@ -94,7 +95,7 @@ export default class LeftPanel extends React.PureComponent {
                 className="entries-list-item"
                 key={key}
                 active={isActive}
-                scrollIntoView={isActive}
+                // scrollIntoView={isActive}
             >
                 <button
                     className="add-entry-list-item"
@@ -134,9 +135,11 @@ export default class LeftPanel extends React.PureComponent {
     }
 
     render() {
+        console.log('Rendering EditEntry:Overview:LeftPanel:EntriesListing');
+
         return (
             <ListView
-                className={styles['entries-list']}
+                className={styles.entriesList}
                 modifier={this.renderEntryItem}
                 data={this.props.entries}
                 keyExtractor={LeftPanel.calcEntryKey}
