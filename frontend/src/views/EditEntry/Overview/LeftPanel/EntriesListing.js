@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import Button from '../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
 import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';

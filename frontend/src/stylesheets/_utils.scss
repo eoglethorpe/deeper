@@ -105,28 +105,35 @@
     color: $color-text-disabled;
 }
 
-%button-like-link {
-    @include shadow-medium;
-    @include background-color($color-foreground);
+$radius-button-border: 2px;
 
-    border-radius: 3px;
-    padding: $spacing-small $spacing-medium;
+%button-like-link {
+    @include background-color($color-foreground);
+    border: 0;
+    border-radius: $radius-button-border;
+    padding: $spacing-small $spacing-small-alt;
     text-transform: uppercase;
     font-family: inherit;
     font-size: $font-size-small;
 
     &:active {
-        @include shadow-small;
         transform: translateY(1px);
     }
 }
 
 %transparent-button-like-link {
-    border-radius: 3px;
+    @include background-color($color-foreground);
+
+    border: 0;
+    border-radius: $radius-button-border;
     background-color: transparent;
     padding: $spacing-small $spacing-small-alt;
     text-transform: uppercase;
     color: $color-text;
     font-family: inherit;
     font-size: $font-size-small;
+
+    &:active {
+        transform: translateY(1px);
+    }
 }

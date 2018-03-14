@@ -406,18 +406,21 @@ export default class List extends React.PureComponent {
                                                 items={this.gridItems[entryAccessor.getKey(entry)]}
                                                 viewOnly
                                             />
-                                            <div>
+                                            <div className={styles.actionButtons}>
                                                 {/* FIXME: use strings */}
-                                                <DangerButton onClick={handleDelete}>
-                                                    Delete
-                                                </DangerButton>
+                                                <DangerButton
+                                                    onClick={handleDelete}
+                                                    type="button"
+                                                    iconName={iconNames.delete}
+                                                />
                                                 {/* FIXME: use strings */}
                                                 <Link
                                                     onClick={handleEdit}
                                                     to="/overview"
                                                     replace
+                                                    className={styles.editLink}
                                                 >
-                                                    Edit
+                                                    <i className={iconNames.edit} />
                                                 </Link>
                                             </div>
                                         </div>

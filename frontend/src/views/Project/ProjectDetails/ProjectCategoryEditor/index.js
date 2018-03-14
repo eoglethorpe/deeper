@@ -184,7 +184,6 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             <ListItem
                 active={isActive}
                 key={key}
-                scrollIntoView={isActive}
             >
                 <button
                     className="button"

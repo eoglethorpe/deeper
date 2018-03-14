@@ -51,6 +51,30 @@
                 }
             }
 
+            .action-buttons {
+                @include transition-medium;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                padding: $spacing-extra-small;
+                opacity: 0;
+
+                >* {
+                    margin: $spacing-extra-small;
+                }
+
+                .editLink {
+                    @extend %button-like-link;
+                    @include background-color($color-warning);
+                }
+            }
+
+            &:hover {
+                .action-buttons {
+                    opacity: 1;
+                }
+            }
+
             :global {
                 .grid-item {
                     @extend %grid-item;
