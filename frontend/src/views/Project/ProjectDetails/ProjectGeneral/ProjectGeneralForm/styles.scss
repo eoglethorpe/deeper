@@ -1,12 +1,19 @@
 @import '../../../../../stylesheets/base';
 
 .project-general-form {
+    display: flex;
     position: relative;
-    width: 100%;
-    max-width: 540px;
+    flex-direction: column;
+    flex-grow: 1;
+    align-content: stretch;
+
+    >* {
+        padding: $spacing-small $spacing-medium-alt;
+    }
 
     .action-buttons {
         display: flex;
+        flex-shrink: 0;
         justify-content: flex-end;
         padding: $spacing-small $spacing-medium-alt;
 
@@ -15,21 +22,47 @@
         }
     }
 
-    .name,
-    .description,
-    .start-date,
-    .end-date,
-    .other-members,
-    .admins,
-    .regions,
-    .user-groups {
-        flex-basis: 100%;
-        margin: 0 $spacing-large;
+    .non-field-errors {
+        flex-shrink: 0;
+        padding: 0;
+    }
+
+    .inputs-container {
+        display: flex;
+        flex-shrink: 0;
+
+        .start-date,
+        .end-date,
+        .name {
+            flex-grow: 1;
+
+            &:not(:last-child) {
+                padding-right: $spacing-medium-alt;
+            }
+        }
     }
 
     .description {
+        flex-shrink: 0;
+
         :global .input {
             resize: none;
+        }
+    }
+
+    .selects-container {
+        display: flex;
+        flex-grow: 1;
+
+        .regions,
+        .user-groups {
+            flex-basis: 18%;
+            margin-right: $spacing-medium-alt;
+            overflow-y: auto;
+        }
+
+        .members {
+            flex-grow: 1;
         }
     }
 }
