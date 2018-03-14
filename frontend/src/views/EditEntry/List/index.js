@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -80,7 +79,6 @@ const APPLY_MODE = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -288,7 +286,7 @@ export default class List extends React.PureComponent {
     renderActionButtons = (item, entryId) => (
         <div className="action-buttons">
             <AccentButton
-                className={styles['apply-button']}
+                className={styles.applyButton}
                 type="button"
                 title={this.props.entryStrings('applyAllButtonTitle')}
                 onClick={() =>
@@ -305,7 +303,7 @@ export default class List extends React.PureComponent {
                 <span className={iconNames.applyAll} />
             </AccentButton>
             <WarningButton
-                className={styles['apply-button']}
+                className={styles.applyButton}
                 type="button"
                 title={this.props.entryStrings('applyAllBelowButtonTitle')}
                 onClick={() =>
@@ -335,9 +333,9 @@ export default class List extends React.PureComponent {
                 <h3>
                     {leadDetails.title}
                 </h3>
-                <div className={styles['action-buttons']}>
+                <div className={styles.actionButtons}>
                     <Link
-                        className={styles['primary-link-button']}
+                        className={styles.primaryLinkButton}
                         to="/overview"
                         replace
                     >
@@ -346,7 +344,7 @@ export default class List extends React.PureComponent {
                     <SuccessButton
                         onClick={onSaveAll}
                         disabled={saveAllDisabled}
-                        className={styles['save-button']}
+                        className={styles.saveButton}
                     >
                         {this.props.entryStrings('saveButtonLabel')}
                     </SuccessButton>
@@ -356,11 +354,7 @@ export default class List extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering EditEntry:List');
-
-        const {
-            entries,
-        } = this.props;
+        const { entries } = this.props;
         const {
             showApplyModal,
             applyMode,
@@ -370,17 +364,17 @@ export default class List extends React.PureComponent {
         const Header = this.renderHeader;
 
         return (
-            <div styleName="list">
+            <div className={styles.list}>
                 <Header />
                 {
                     (!entries || entries.length <= 0) ? (
-                        <div styleName="no-entry-wrapper">
+                        <div className={styles.noEntryWrapper}>
                             <h2>
                                 {this.props.entryStrings('noEntryFound')}
                             </h2>
                         </div>
                     ) : (
-                        <div styleName="entry-list">
+                        <div className={styles.entryList}>
                             {
                                 entries.map((entry) => {
                                     const entryKey = entryAccessor.getKey(entry);
@@ -402,12 +396,12 @@ export default class List extends React.PureComponent {
                                     return (
                                         <div
                                             key={entryAccessor.getKey(entry)}
-                                            styleName="entry"
+                                            className={styles.entry}
                                             style={entryStyle}
                                         >
                                             { isWidgetDisabled && <LoadingAnimation /> }
                                             <GridLayout
-                                                styleName="grid-layout"
+                                                className={styles.gridLayout}
                                                 modifier={this.getItemView}
                                                 items={this.gridItems[entryAccessor.getKey(entry)]}
                                                 viewOnly

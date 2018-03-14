@@ -148,7 +148,6 @@ export default class EditEntry extends React.PureComponent {
                 this.setState({ pendingSaveAll: true });
             })
             .postSession((totalErrors) => {
-                // console.warn(totalErrors);
                 if (totalErrors > 0) {
                     notify.send({
                         type: notify.type.ERROR,
@@ -406,8 +405,6 @@ export default class EditEntry extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering EditEntry');
-
         const {
             analysisFramework,
             leadId,
@@ -423,7 +420,7 @@ export default class EditEntry extends React.PureComponent {
 
         if (pendingEntries || pendingAf) {
             return (
-                <div className={styles['edit-entry']} >
+                <div className={styles.editEntry} >
                     <LoadingAnimation />
                 </div>
             );
@@ -457,7 +454,7 @@ export default class EditEntry extends React.PureComponent {
                 }
             />,
             <HashRouter key="router">
-                <div className={styles['edit-entry']}>
+                <div className={styles.editEntry}>
                     <Route
                         exact
                         path="/"

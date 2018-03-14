@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -52,7 +51,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps, undefined)
-@CSSModules(styles, { allowMultiple: true })
 export default class LeftPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -113,7 +111,7 @@ export default class LeftPanel extends React.PureComponent {
         'simplified-preview': {
             component: () => (
                 <SimplifiedLeadPreview
-                    className={styles['simplified-preview']}
+                    className={styles.simplifiedPreview}
                     leadId={this.props.lead.id}
                     highlights={this.props.api.getEntryHighlights()}
                     highlightModifier={this.highlightSimplifiedExcerpt}
@@ -126,7 +124,7 @@ export default class LeftPanel extends React.PureComponent {
         'assisted-tagging': {
             component: () => (
                 <AssistedTagging
-                    className={styles['assisted-tagging']}
+                    className={styles.assistedTagging}
                     lead={this.props.lead}
                     project={this.props.api.getProject()}
                     onEntryAdd={this.handleEntryAdd}
@@ -137,7 +135,7 @@ export default class LeftPanel extends React.PureComponent {
         },
         'original-preview': {
             component: () => (
-                <div className={styles['original-preview']}>
+                <div className={styles.originalPreview}>
                     <LeadPreview
                         lead={this.props.lead}
                         handleScreenshot={this.handleScreenshot}
@@ -150,7 +148,7 @@ export default class LeftPanel extends React.PureComponent {
         'images-preview': {
             component: () => (
                 <ImagesGrid
-                    className={styles['images-preview']}
+                    className={styles.imagesPreview}
                     images={this.state.images}
                 />
             ),
@@ -159,7 +157,7 @@ export default class LeftPanel extends React.PureComponent {
         },
         'entries-listing': {
             component: () => (
-                <div className={styles['entries-list-container']}>
+                <div className={styles.entriesListContainer}>
                     <EntriesListing
                         selectedEntryId={this.props.selectedEntryId}
                         entries={this.props.entries}
@@ -294,8 +292,6 @@ export default class LeftPanel extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering EditEntry:Overview:LeftPanel');
-
         const { lead } = this.props;
         const { images } = this.state;
         let { currentTab } = this.state;

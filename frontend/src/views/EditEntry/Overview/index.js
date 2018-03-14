@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -67,7 +66,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Overview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -153,12 +151,14 @@ export default class Overview extends React.PureComponent {
     calcEntryKey = entry => entryAccessor.getKey(entry);
 
     calcEntryLabelLimited = (entry) => {
+        // FIXME: use strings
         const values = entryAccessor.getValues(entry);
         const text = values.excerpt;
         return text || `Excerpt ${values.order}`;
     }
 
     renderItemView = (item) => {
+        // FIXME: this is slow
         const widget = this.widgets.find(
             w => w.id === item.widgetId,
         );
@@ -178,8 +178,6 @@ export default class Overview extends React.PureComponent {
     }
 
     render() {
-        console.log('Rendering EditEntry:Overview');
-
         const {
             api,
             choices,
@@ -205,7 +203,7 @@ export default class Overview extends React.PureComponent {
 
         return (
             <ResizableH
-                styleName="overview"
+                className={styles.overview}
                 leftContainerClassName={styles.left}
                 rightContainerClassName={styles.right}
                 leftChild={
@@ -224,11 +222,11 @@ export default class Overview extends React.PureComponent {
                 rightChild={[
                     <header
                         key="header"
-                        styleName="header"
+                        className={styles.header}
                     >
-                        <div styleName="entry-actions">
+                        <div className={styles.entryActions}>
                             <SelectInput
-                                styleName="select-input"
+                                className={styles.selectInput}
                                 placeholder={entryStrings('selectExcerptPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
@@ -254,16 +252,16 @@ export default class Overview extends React.PureComponent {
                                 </DangerButton>
                             }
                         </div>
-                        <div styleName="action-buttons">
+                        <div className={styles.actionButtons}>
                             <Link
-                                styleName="goto-link"
+                                className={styles.gotoLink}
                                 to="/list"
                                 replace
                             >
                                 {entryStrings('gotoListButtonLabel')}
                             </Link>
                             <SuccessButton
-                                styleName="save-button"
+                                className={styles.saveButton}
                                 onClick={onSaveAll}
                                 disabled={saveAllDisabled}
                             >
@@ -272,13 +270,13 @@ export default class Overview extends React.PureComponent {
                         </div>
                     </header>,
                     <div
-                        key="container"
                         ref={(el) => { this.gridLayoutContainer = el; }}
-                        styleName="container"
+                        key="container"
+                        className={styles.container}
                     >
                         { widgetDisabled && <LoadingAnimation /> }
                         <GridLayout
-                            styleName="grid-layout"
+                            className={styles.gridLayout}
                             modifier={this.renderItemView}
                             items={this.gridItems}
                             viewOnly

@@ -36,8 +36,6 @@ export default class LeadPreview extends React.PureComponent {
     );
 
     render() {
-        console.log('Rendering EditEntry:Overview:LeftPanel:LeadPreview');
-
         const { lead } = this.props;
         const { sourceType: type, url, attachment } = lead;
 
@@ -54,7 +52,7 @@ export default class LeadPreview extends React.PureComponent {
         } else if (LeadPreview.isTypeWithAttachment(type) && attachment) {
             return (
                 <InternalGallery
-                    classname={styles.preview}
+                    className={styles.preview}
                     galleryId={attachment.id}
                     onScreenshotCapture={this.props.handleScreenshot}
                     showScreenshot
@@ -64,7 +62,7 @@ export default class LeadPreview extends React.PureComponent {
         }
 
         return (
-            <div className={styles['empty-text']}>
+            <div className={styles.emptyText}>
                 <h1>
                     {this.props.entryStrings('previewNotAvailableText')}
                 </h1>
