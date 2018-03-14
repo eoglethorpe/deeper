@@ -127,6 +127,7 @@ export default class LeadsViz extends React.PureComponent {
         super(props);
 
         this.state = {
+            noLeadSelected: false,
             loadingLeads: true,
             hierarchicalDataPending: true,
             chordDataPending: true,
@@ -161,11 +162,16 @@ export default class LeadsViz extends React.PureComponent {
         this.stopNlpRequests();
     }
 
-    startNlpRequests = (docIds) => {
-        this.startRequestForLeadTopicModeling(docIds);
-        this.startRequestForLeadNer(docIds);
-        this.startRequestForLeadTopicCorrelation(docIds);
-        this.startRequestForLeadKeywordCorrelationRequest(docIds);
+    startNlpRequests = (docIds = []) => {
+        if (docIds.length > 0) {
+            this.startRequestForLeadTopicModeling(docIds);
+            this.startRequestForLeadNer(docIds);
+            this.startRequestForLeadTopicCorrelation(docIds);
+            this.startRequestForLeadKeywordCorrelationRequest(docIds);
+            this.setState({ noLeadSelected: false });
+        } else {
+            this.setState({ noLeadSelected: true });
+        }
     }
 
     stopNlpRequests = () => {
@@ -252,16 +258,22 @@ export default class LeadsViz extends React.PureComponent {
         this.leadKeywordCorrelationRequest.start();
     }
 
-    render() {
+    renderNoLeadFound = () => (
+        // FIXME: strings
+        <div styleName="no-lead-found">
+            <h3>No leads found</h3>
+            <p>Try with different filters</p>
+        </div>
+    )
+
+    renderCharts = () => {
         const {
-            activeProject,
             chordData,
             hierarchicalData,
             correlationData,
             forceDirectedData,
             geoPointsData,
         } = this.props;
-
         const {
             loadingLeads,
             hierarchicalDataPending,
@@ -272,65 +284,75 @@ export default class LeadsViz extends React.PureComponent {
         } = this.state;
 
         return (
+            <div styleName="viz-container">
+                <GeoReferencedMap
+                    styleName="geo-referenced-map viz"
+                    loading={loadingLeads || geoPointsDataPending}
+                    geoPoints={geoPointsData.points}
+                />
+                <TreeMapView
+                    styleName="tree-map viz"
+                    data={hierarchicalData}
+                    loading={loadingLeads || hierarchicalDataPending}
+                    valueAccessor={LeadsViz.sizeValueAccessor}
+                    labelAccessor={LeadsViz.labelValueAccessor}
+                />
+                <SunBurstView
+                    styleName="sun-burst viz"
+                    data={hierarchicalData}
+                    loading={loadingLeads || hierarchicalDataPending}
+                    valueAccessor={LeadsViz.sizeValueAccessor}
+                    labelAccessor={LeadsViz.labelValueAccessor}
+                />
+                <ChordDiagramView
+                    styleName="chord-diagram viz"
+                    data={chordData.values}
+                    loading={loadingLeads || chordDataPending}
+                    labelsData={chordData.labels}
+                    valueAccessor={LeadsViz.sizeValueAccessor}
+                    labelAccessor={LeadsViz.labelValueAccessor}
+                />
+                <CorrelationMatrixView
+                    styleName="correlation-matrix viz"
+                    data={correlationData}
+                    loading={loadingLeads || correlationDataPending}
+                    margins={{ top: 100, right: 0, bottom: 50, left: 100 }}
+                />
+                <ForceDirectedGraphView
+                    styleName="force-directed-graph viz"
+                    data={forceDirectedData}
+                    loading={loadingLeads || forceDirectedDataPending}
+                    idAccessor={d => d.id}
+                    groupAccessor={LeadsViz.groupValueAccessor}
+                    valueAccessor={LeadsViz.valueAccessor}
+                    useVoronoi={false}
+                />
+                <CollapsibleTreeView
+                    styleName="collapsible-tree viz"
+                    data={hierarchicalData}
+                    loading={loadingLeads || hierarchicalDataPending}
+                    labelAccessor={LeadsViz.labelValueAccessor}
+                />
+                <RadialDendrogramView
+                    styleName="radial-dendrogram viz"
+                    data={hierarchicalData}
+                    loading={loadingLeads || hierarchicalDataPending}
+                    labelAccessor={LeadsViz.labelValueAccessor}
+                />
+            </div>
+        );
+    }
+
+    render() {
+        const { activeProject } = this.props;
+        const { noLeadSelected } = this.state;
+
+        return (
             <div styleName="leads">
                 <header styleName="header">
                     <FilterLeadsForm styleName="filters" />
                 </header>
-                <div styleName="viz-container">
-                    <GeoReferencedMap
-                        styleName="geo-referenced-map viz"
-                        loading={loadingLeads || geoPointsDataPending}
-                        geoPoints={geoPointsData.points}
-                    />
-                    <TreeMapView
-                        styleName="tree-map viz"
-                        data={hierarchicalData}
-                        valueAccessor={LeadsViz.sizeValueAccessor}
-                        labelAccessor={LeadsViz.labelValueAccessor}
-                    />
-                    <SunBurstView
-                        styleName="sun-burst viz"
-                        data={hierarchicalData}
-                        loading={loadingLeads || hierarchicalDataPending}
-                        valueAccessor={LeadsViz.sizeValueAccessor}
-                        labelAccessor={LeadsViz.labelValueAccessor}
-                    />
-                    <ChordDiagramView
-                        styleName="chord-diagram viz"
-                        data={chordData.values}
-                        loading={loadingLeads || chordDataPending}
-                        labelsData={chordData.labels}
-                        valueAccessor={LeadsViz.sizeValueAccessor}
-                        labelAccessor={LeadsViz.labelValueAccessor}
-                    />
-                    <CorrelationMatrixView
-                        styleName="correlation-matrix viz"
-                        data={correlationData}
-                        loading={loadingLeads || correlationDataPending}
-                        margins={{ top: 100, right: 0, bottom: 50, left: 100 }}
-                    />
-                    <ForceDirectedGraphView
-                        styleName="force-directed-graph viz"
-                        data={forceDirectedData}
-                        loading={loadingLeads || forceDirectedDataPending}
-                        idAccessor={d => d.id}
-                        groupAccessor={LeadsViz.groupValueAccessor}
-                        valueAccessor={LeadsViz.valueAccessor}
-                        useVoronoi={false}
-                    />
-                    <CollapsibleTreeView
-                        styleName="collapsible-tree viz"
-                        data={hierarchicalData}
-                        loading={loadingLeads || hierarchicalDataPending}
-                        labelAccessor={LeadsViz.labelValueAccessor}
-                    />
-                    <RadialDendrogramView
-                        styleName="radial-dendrogram viz"
-                        data={hierarchicalData}
-                        loading={loadingLeads || hierarchicalDataPending}
-                        labelAccessor={LeadsViz.labelValueAccessor}
-                    />
-                </div>
+                { noLeadSelected ? this.renderNoLeadFound() : this.renderCharts() }
                 <footer styleName="footer">
                     <div styleName="link-container">
                         <Link

@@ -25,14 +25,10 @@ export default class LeadKeywordCorrelationRequest {
                 doc_ids: docIds,
             }))
             .preLoad(() => {
-                this.setState({
-                    keywordCorrelationDataPending: true,
-                });
+                this.setState({ keywordCorrelationDataPending: true });
             })
             .postLoad(() => {
-                this.setState({
-                    keywordCorrelationDataPending: false,
-                });
+                this.setState({ keywordCorrelationDataPending: false });
             })
             .success((response) => {
                 try {

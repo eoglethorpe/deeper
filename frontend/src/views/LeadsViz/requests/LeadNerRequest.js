@@ -24,14 +24,10 @@ export default class LeadNerRequest {
                 doc_ids: docIds,
             }))
             .preLoad(() => {
-                this.setState({
-                    geoPointsDataPending: true,
-                });
+                this.setState({ geoPointsDataPending: true });
             })
             .postLoad(() => {
-                this.setState({
-                    geoPointsDataPending: false,
-                });
+                this.setState({ geoPointsDataPending: false });
             })
             .success((response) => {
                 try {
