@@ -184,14 +184,11 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             <ListItem
                 active={isActive}
                 key={key}
+                onClick={() => this.handleCeClick(ce.id)}
+                className={styles.ceListItem}
             >
-                <button
-                    className="button"
-                    onClick={() => this.handleCeClick(ce.id)}
-                >
-                    {ce.title}
-                    {isProjectCe && <span className={`${iconNames.check} check`} />}
-                </button>
+                {ce.title}
+                {isProjectCe && <span className={`${iconNames.check} ${styles.check}`} />}
             </ListItem>
         );
     }

@@ -8,15 +8,19 @@
     height: 100%;
 
     .header {
+        @include background-color($color-background-header);
         flex-shrink: 0;
+        display: flex;
         padding: 0;
 
         .heading {
             padding: $spacing-small $spacing-large;
+            flex-shrink: 0;
         }
 
         .tabs {
             display: flex;
+            flex-grow: 1;
 
             .tab {
                 flex-shrink: 0;

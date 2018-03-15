@@ -35,18 +35,23 @@
 
         .issue-collector {
             position: fixed;
-            right: 0;
+            left: 50%;
             bottom: 0;
             z-index: 999999999;
+            transform: translateX(-50%);
         }
 
         .issue-collector button {
             outline: 0;
             border: 1px solid rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
             background-color: #fff;
-            padding: 0px 5px;
-            font-size: 14px;
+            padding: 2px 4px;
+            font-size: 9px;
             font-family: 'Source Sans Pro', sans-serif;
+            text-transform: uppercase;
+            cursor: pointer;
         }
 
         /*
@@ -68,7 +73,7 @@
 
     <div class="issue-collector">
         <button id="report-a-bug">
-            Feedback? Found a Bug?
+            Feedback or Bug?
         </button>
     </div>
 
