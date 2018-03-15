@@ -283,24 +283,31 @@ export default class LeadsViz extends React.PureComponent {
             geoPointsDataPending,
         } = this.state;
 
+        // FIXME: Use strings in headerText in all views
+
         return (
             <div styleName="viz-container">
                 <GeoReferencedMap
                     styleName="geo-referenced-map viz"
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || geoPointsDataPending}
                     geoPoints={geoPointsData.points}
                 />
                 <TreeMapView
                     styleName="tree-map viz"
                     data={hierarchicalData}
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
+                    headerText="Tree Map"
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <SunBurstView
                     styleName="sun-burst viz"
                     data={hierarchicalData}
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
+                    headerText="Sunburst"
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
@@ -308,6 +315,8 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="chord-diagram viz"
                     data={chordData.values}
                     loading={loadingLeads || chordDataPending}
+                    headerText="Chord diagram"
+                    vizContainerClass={styles.chartContainer}
                     labelsData={chordData.labels}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
@@ -315,13 +324,16 @@ export default class LeadsViz extends React.PureComponent {
                 <CorrelationMatrixView
                     styleName="correlation-matrix viz"
                     data={correlationData}
+                    headerText="Correlation matrix"
                     loading={loadingLeads || correlationDataPending}
-                    margins={{ top: 100, right: 0, bottom: 50, left: 100 }}
+                    vizContainerClass={styles.chartContainer}
                 />
                 <ForceDirectedGraphView
                     styleName="force-directed-graph viz"
                     data={forceDirectedData}
                     loading={loadingLeads || forceDirectedDataPending}
+                    headerText="Force directed graph"
+                    vizContainerClass={styles.chartContainer}
                     idAccessor={d => d.id}
                     groupAccessor={LeadsViz.groupValueAccessor}
                     valueAccessor={LeadsViz.valueAccessor}
@@ -329,14 +341,18 @@ export default class LeadsViz extends React.PureComponent {
                 />
                 <CollapsibleTreeView
                     styleName="collapsible-tree viz"
+                    headerText="Collapsible tree view"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
+                    vizContainerClass={styles.chartContainer}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <RadialDendrogramView
                     styleName="radial-dendrogram viz"
+                    headerText="Radial dendrogram"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
+                    vizContainerClass={styles.chartContainer}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
             </div>
@@ -354,15 +370,13 @@ export default class LeadsViz extends React.PureComponent {
                 </header>
                 { noLeadSelected ? this.renderNoLeadFound() : this.renderCharts() }
                 <footer styleName="footer">
-                    <div styleName="link-container">
-                        <Link
-                            styleName="link"
-                            to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
-                            replace
-                        >
-                            Show Table
-                        </Link>
-                    </div>
+                    <Link
+                        styleName="link"
+                        to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
+                        replace
+                    >
+                        Show Table
+                    </Link>
                 </footer>
             </div>
         );
