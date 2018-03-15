@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from './public/utils/rest';
+import { FgRestBuilder } from './vendor/react-store/utils/rest';
 
 import AddLead from './views/AddLead';
 import Settings from './views/Settings';
@@ -14,7 +14,7 @@ import {
     serverAddressSelector,
 } from './common/redux';
 
-import { AccentButton } from './public-components/Action';
+import AccentButton from './vendor/react-store/components/Action/Button/AccentButton';
 
 import {
     createUrlForTokenRefresh,

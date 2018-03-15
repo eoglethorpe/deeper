@@ -1,4 +1,4 @@
-import update from '../../public/utils/immutable-update';
+import update from '../../vendor/react-store/utils/immutable-update';
 import createReducerWithMap from '../utils/createReducerWithMap';
 import initialAuthState from '../initial-state/auth';
 

@@ -1,5 +1,5 @@
 // import jwtDecode from 'jwt-decode';
-import update from '../../public/utils/immutable-update';
+import update from '../../vendor/react-store/utils/immutable-update';
 import createReducerWithMap from '../utils/createReducerWithMap';
 // import schema from '../../common/schema';
 import initialDomainDataState from '../initial-state/domainData';
