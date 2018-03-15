@@ -178,7 +178,7 @@ const initialLangState = {
                 302: 'Search Project',
                 303: 'Add New Project',
                 304: 'Select a project to view its details',
-                305: 'You do not have enough permissions to view / edit this project',
+                305: 'You do not have enough permissions to edit this project',
                 316: 'Are you sure you want to',
                 319: 'Are you sure you want to remove',
                 323: 'Update',
