@@ -4,7 +4,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import update from '../../vendor/react-store/utils/immutable-update';
-import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -305,39 +304,38 @@ export default class GeoSelection extends React.PureComponent {
             values,
             flatValues,
             locations,
-            flatLocations,
+            flatLocations = emptyList,
         } = this.state;
 
-        if (flatLocations.length === 0) {
-            return (
-                <div
-                    className={className}
-                    styleName="geo-selection"
-                >
-                    <LoadingAnimation />
-                </div>
-            );
-        }
+        // FIXME: move this to componentWillUpdate
+        const selectedRegionMap = {};
+        const valuesForSelectedRegion = values[selectedRegion] || emptyList;
+        valuesForSelectedRegion.forEach((key) => {
+            // FIXME: slow
+            const regionData = flatLocations.find(l => l.key === key);
+            if (!regionData) {
+                return;
+            }
 
-        // TODO: Reduce complexity
-        const selectedRegionSelections = {};
-        (values[selectedRegion] || emptyList).forEach((key) => {
-            const regionData = (flatLocations || emptyList).find(l => l.key === key) || emptyObject;
+            const { adminLevelTitle } = regionData;
 
-            if (!selectedRegionSelections[regionData.adminLevelTitle]) {
-                selectedRegionSelections[regionData.adminLevelTitle] = {
-                    title: regionData.adminLevelTitle,
+            if (!selectedRegionMap[adminLevelTitle]) {
+                const newRegion = {
+                    title: adminLevelTitle,
                     values: [regionData],
                 };
+                selectedRegionMap[adminLevelTitle] = newRegion;
             } else {
-                selectedRegionSelections[regionData.adminLevelTitle].values.push(regionData);
+                selectedRegionMap[adminLevelTitle].values.push(regionData);
             }
         });
-        const selectedRegionSelectionsList = Object.values(selectedRegionSelections);
+        const selectedRegionList = Object.values(selectedRegionMap);
 
-        const flatValuesWithTitle = flatValues.map(v => (
-            flatLocations.find(l => l.key === v)
-        )).filter(v => v);
+        // FIXME: move this to componentWillUpdate
+        // FIXME: slow
+        const flatValuesWithTitle = flatValues
+            .map(v => flatLocations.find(l => l.key === v))
+            .filter(v => v);
 
         return (
             <div
@@ -362,6 +360,7 @@ export default class GeoSelection extends React.PureComponent {
                         smallVerticalPadding
                         smallHorizontalPadding
                         transparent
+                        disabled={disabled}
                     >
                         <span className={iconNames.globe} />
                     </AccentButton>
@@ -412,7 +411,7 @@ export default class GeoSelection extends React.PureComponent {
                             <div styleName="map-selections">
                                 <ListView
                                     styleName="map-selections-list"
-                                    data={selectedRegionSelectionsList}
+                                    data={selectedRegionList}
                                     keyExtractor={GeoSelection.adminLevelKeySelector}
                                     modifier={this.renderAdminLevelList}
                                 />

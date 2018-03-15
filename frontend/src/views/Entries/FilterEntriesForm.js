@@ -93,6 +93,7 @@ export default class FilterEntriesForm extends React.PureComponent {
 
         this.state = {
             pristine: true,
+            geoSelectionEnable: false,
             filters: this.props.entriesFilters,
         };
     }
@@ -142,6 +143,7 @@ export default class FilterEntriesForm extends React.PureComponent {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))
             .params(() => createParamsForGeoOptionsGET())
+            .preLoad(() => this.setState({ geoSelectionEnable: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'geoOptions');
@@ -149,6 +151,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                         projectId,
                         locations: response,
                     });
+                    this.setState({ geoSelectionEnable: true });
                 } catch (er) {
                     console.error(er);
                 }
@@ -300,7 +303,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     onChange={values => this.handleFilterChange(key, values)}
                     regions={this.props.projectDetails.regions}
                     value={filters[key] || emptyList}
-                    disabled={this.props.pending}
+                    disabled={this.props.pending && this.state.geoSelectionEnable}
                     hideList
                 />
             );
