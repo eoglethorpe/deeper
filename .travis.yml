@@ -19,6 +19,7 @@ before_install:
 
     - git clone https://github.com/toggle-corp/react-store.git frontend/src/vendor/react-store
     - git --git-dir=frontend/src/vendor/react-store/.git --no-pager show --pretty=fuller --quiet
+    - cp frontend/src/vendor/react-store/stylesheets/_user-imports-sample.scss frontend/src/vendor/react-store/stylesheets/_user-imports.scss
 
     - git clone https://github.com/toggle-corp/ravl.git frontend/src/vendor/ravl
     - git --git-dir=frontend/src/vendor/ravl/.git --no-pager show --pretty=fuller --quiet
