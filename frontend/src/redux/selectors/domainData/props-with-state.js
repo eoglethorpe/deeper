@@ -127,9 +127,13 @@ export const userProjectsSelector = createSelector(
     projectsSelector,
     userSelector,
     (projects, user) => (
-        (user.projects && user.projects.map(
-            projectId => projects[projectId],
-        )) || emptyList
+        user.projects
+            ? (
+                user.projects
+                    .map(projectId => projects[projectId])
+                    .filter(project => !!project)
+            )
+            : emptyList
     ),
 );
 
@@ -138,9 +142,13 @@ export const userGroupsSelector = createSelector(
     groupsSelector,
     userSelector,
     (userGroups, user) => (
-        (user.userGroups && user.userGroups.map(
-            userGroupId => (userGroups[userGroupId]),
-        )) || emptyList
+        user.userGroups
+            ? (
+                user.userGroups
+                    .map(userGroupId => (userGroups[userGroupId]))
+                    .filter(userGroup => !!userGroup)
+            )
+            : emptyList
     ),
 );
 

@@ -4,7 +4,7 @@
     .edit-admin-level-form {
         .admin-level-details {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: space-between;
 
             .text-input {
@@ -12,14 +12,22 @@
                 background-color: transparent;
             }
 
+            .select-input {
+                margin-bottom: $spacing-small;
+            }
+
             .geo-file {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                margin-top: $spacing-medium;
+                margin: auto;
+                width: auto;
+
+                :global {
+                    label {
+                        @extend %button-like-link;
+                        @include background-color($color-primary);
+                    }
+                }
 
                 .load {
-                    background-color: $color-separator;
                     padding: $spacing-small;
                 }
 
@@ -33,6 +41,10 @@
 
                 p {
                     visibility: hidden;
+                }
+
+                a {
+                    color: inherit;
                 }
             }
         }

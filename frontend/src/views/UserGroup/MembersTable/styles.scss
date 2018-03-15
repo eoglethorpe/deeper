@@ -37,7 +37,9 @@ $height-add-member-modal: 600px;
         overflow-y: auto;
 
         .link {
+            margin: 1px;
             padding: 0 $spacing-medium;
+            text-transform: none;
         }
     }
 }

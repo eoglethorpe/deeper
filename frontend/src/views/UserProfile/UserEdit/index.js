@@ -289,7 +289,7 @@ export default class UserEdit extends React.PureComponent {
                 <NonFieldErrors formerror="" />
                 <HiddenInput formname="displayPicture" />
                 {
-                    showGalleryImage && (
+                    showGalleryImage && formValues.displayPicture && (
                         <InternalGallery
                             styleName="gallery-image"
                             galleryId={formValues.displayPicture}
@@ -297,6 +297,7 @@ export default class UserEdit extends React.PureComponent {
                     )
                 }
                 <ImageInput
+                    className={styles.galleryImageSelect}
                     showPreview={!showGalleryImage}
                     showStatus={false}
                     styleName="display-picture"
