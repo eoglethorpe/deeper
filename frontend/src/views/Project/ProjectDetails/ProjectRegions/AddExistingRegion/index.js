@@ -203,7 +203,7 @@ export default class AddExistingRegion extends React.PureComponent {
             projectDetails,
         } = this.props;
 
-        const regionsFromValues = values.regions.map(region => ({ id: region }));
+        const regionsFromValues = values.regions.map(region => ({ id: region.key }));
 
         const regions = [...new Set([...projectDetails.regions, ...regionsFromValues])];
         const regionsKeys = values.regions.map(r => r.key);
@@ -241,7 +241,6 @@ export default class AddExistingRegion extends React.PureComponent {
         } = this.state;
 
         const { className } = this.props;
-        console.warn(formValues);
 
         return (
             <Form

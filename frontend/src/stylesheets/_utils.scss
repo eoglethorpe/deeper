@@ -128,6 +128,7 @@ $radius-button-border: 2px;
     padding: $spacing-small $spacing-small-alt;
     text-transform: uppercase;
     font-size: $font-size-small;
+    font-weight: $font-weight-bold;
 
     &:active {
         @include shadow-button-active;

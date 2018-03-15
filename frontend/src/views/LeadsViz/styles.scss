@@ -76,36 +76,6 @@
             flex-shrink: 0;
             border: $width-separator-thin solid $color-separator-alt;
             padding-bottom: $spacing-extra-small;
-
-            :global {
-                .action {
-                    @include background-color($color-background-header);
-                    display: flex;
-                    flex-shrink: 0;
-                    align-items: flex-end;
-                    justify-content: space-between;
-                    padding: $spacing-extra-small $spacing-medium-alt;
-
-                    .action-selects {
-                        display: flex;
-
-                        .select-input {
-                            margin-right: $spacing-extra-small;
-                        }
-                    }
-
-                    .action-buttons {
-                        button {
-                            margin-left: $spacing-extra-small;
-                        }
-                    }
-                }
-
-                .responsive-wrapper {
-                    display: flex;
-                    flex-grow: 1;
-                }
-            }
         }
 
         .chart-container {
@@ -157,4 +127,8 @@
             @include button-like-link($color-accent);
         }
     }
+}
+
+.chart-container {
+    padding: $spacing-extra-large-alt;
 }
