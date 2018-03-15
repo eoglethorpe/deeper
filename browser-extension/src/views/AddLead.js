@@ -257,6 +257,7 @@ export default class AddLead extends React.PureComponent {
             })
             .success((response) => {
                 this.props.setLeadOptions({ leadOptions: response });
+                this.fillExtraInfo();
             })
             .failure((response) => {
                 console.error(response);
@@ -327,13 +328,41 @@ export default class AddLead extends React.PureComponent {
         return request;
     }
 
-    fillWebInfo = (webInfo) => {
+    fillExtraInfo = () => {
         const {
             currentTabId,
             inputValues,
             updateInputValues,
             currentUserId,
-            leadOptions = [],
+            leadOptions = {},
+        } = this.props;
+
+        const values = {};
+
+        if (!inputValues.assignee || (inputValues.assignee || []).length === 0) {
+            values.assignee = [currentUserId];
+        }
+
+        if (!inputValues.confidentiality) {
+            values.confidentiality = ((leadOptions.confidentiality || [])[0] || {}).key;
+        }
+
+        const newValues = {
+            ...inputValues,
+            ...values,
+        };
+
+        updateInputValues({
+            tabId: currentTabId,
+            values: newValues,
+        });
+    }
+
+    fillWebInfo = (webInfo) => {
+        const {
+            currentTabId,
+            inputValues,
+            updateInputValues,
         } = this.props;
 
         const values = {};
@@ -355,13 +384,6 @@ export default class AddLead extends React.PureComponent {
         }
         if (webInfo.url && !inputValues.url) {
             values.url = webInfo.url;
-        }
-        if (!inputValues.assignee || (inputValues.assignee || []).length === 0) {
-            values.assignee = [currentUserId];
-        }
-
-        if (!inputValues.confidentiality) {
-            values.confidentiality = ((leadOptions.confidentiality || [])[0] || {}).key;
         }
 
         const newValues = {
