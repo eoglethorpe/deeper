@@ -38,11 +38,14 @@ $height-header: 48px;
         position: relative;
         height: calc(100% - #{$height-header});
         overflow: auto;
+        line-height: 0;
 
         .entry {
             @include background-color($color-background-row);
             display: inline-block;
             position: relative;
+            border-bottom: $width-separator-thin solid $color-separator-alt;
+            line-height: initial;
 
             .apply-buttons {
                 display: flex;
@@ -83,18 +86,12 @@ $height-header: 48px;
 
                     .header {
                         border: 0;
-                        // background-color: transparent;
                     }
 
                     .content {
                         border: 0;
-                        // background-color: transparent;
                     }
                 }
-            }
-
-            &:nth-child(even) {
-                background-color: $color-background-row-alt;
             }
         }
     }

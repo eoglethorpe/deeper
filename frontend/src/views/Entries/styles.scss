@@ -55,6 +55,8 @@
         overflow: auto;
 
         .lead-grouped-entries {
+            line-height: 0;
+
             .header {
                 display: flex;
                 position: sticky;
@@ -62,9 +64,9 @@
                 justify-content: space-between;
                 z-index: 11;
                 border-bottom: $width-separator-thin solid $color-separator-alt;
-                // background-color: $color-background-header;
-                background-color: $color-foreground-alt;
+                background-color: $color-background-header;
                 padding: $spacing-small $spacing-medium-alt;
+                line-height: initial;
 
                 .heading {
                     text-transform: none;
@@ -82,6 +84,7 @@
 
             .entries {
                 display: inline-block;
+                line-height: initial;
 
                 .entry {
                     border-bottom: $width-separator-thin solid $color-separator-alt;
